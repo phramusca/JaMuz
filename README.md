@@ -1,5 +1,3 @@
-# Welcome to JaMuz
-
 **JaMuz** is a **Music management** tool written in Java
 
 See [further information on the wiki](https://github.com/phramusca/JaMuz/wiki).
