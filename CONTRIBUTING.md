@@ -28,8 +28,6 @@ Here are some things to be fixed or added before Beta version 0.1
 
 [CHANGE THIS URL TO weblate.org project](weblate.org)
 
-# FIXME: Quite a few FIXME in code ...
-
 ## License
 
 By contributing to this project you agree to license your contribution under the terms of the [GNU GPLv3](LICENSE).
