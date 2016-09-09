@@ -9,7 +9,7 @@
 Pull requests are welcome.
 Please submit to the `master` branch.
 
-# RoadMap
+### RoadMap
 
 Here are some things to be fixed or added before Beta version 0.1
 
@@ -22,7 +22,7 @@ Here are some things to be fixed or added before Beta version 0.1
  - Files headers (license)
  - Javadoc
 
-# Internationalization
+### Internationalization
 
 [Example of translation guide using git, from rails](https://github.com/mhartl/rails_tutorial_translation/wiki)
 
