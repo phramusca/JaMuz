@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 phramusca
+ * Copyright (C) 2013 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import jamuz.utils.StringManager;
 
 /**
  * Video file information class
- * @author raph
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class VideoTvShow extends VideoAbstract {
 

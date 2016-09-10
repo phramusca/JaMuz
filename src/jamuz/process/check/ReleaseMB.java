@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 phramusca
+ * Copyright (C) 2012 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ import org.musicbrainz.webservice.impl.HttpClientWebServiceWs2;
 // ==> Consider using a cache system (does that really make sense ? as user is not supposed to make identical searches often; except for dev
 /**
  * MusicBrainz release class
- * @author raph
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class ReleaseMB {
     private final ProgressBar progressBar;

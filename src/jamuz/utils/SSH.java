@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author phramusca
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class SSH {
 

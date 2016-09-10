@@ -1,7 +1,10 @@
+#JaMuz specifics
+data/cache
+logs
 dist_Wish
+nbproject/private
 
-
-# Below is from https://github.com/github/gitignore
+# Java ignore from https://github.com/github/gitignore
 *.class
 
 # Mobile Tools for Java (J2ME)

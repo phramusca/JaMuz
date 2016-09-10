@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 raph
+ * Copyright (C) 2015 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ import javax.swing.JToggleButton;
 /**
  *
  * @author https://community.oracle.com/message/5711113#5711113
- * with little modifications by phramusca
+ * with little modifications by phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class TriStateCheckBox extends JCheckBox {
    

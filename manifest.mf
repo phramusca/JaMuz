@@ -3,7 +3,7 @@ Ant-Version: Apache Ant 1.9.4
 Created-By: 1.7.0_80-b15 (Oracle Corporation)
 Bundle-Name: JaMuz
 Bundle-Version: 0.0.24.dev
-Bundle-Date: 2016-08-27 12:49:49 CEST
+Bundle-Date: 2016-09-10 00:41:08 CEST
 Implementation-Title: JaMuz
 Implementation-Version: 0.0.24.dev
 Implementation-URL: http://www.example.com

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 phramusca
+ * Copyright (C) 2012 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import javax.swing.ListSelectionModel;
 // Handles rendering cells in the list using a check box
 /**
  * A JList extension class to display check boxes in list
- * @author raph
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class CheckBoxList extends JList
 {

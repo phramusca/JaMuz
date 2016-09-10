@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 raph
+ * Copyright (C) 2015 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  *
- * @author raph
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 //TODO: This class should be in ProcessCheck & others (or as is in code package ?)
 // (which should not BE a process but include a process ...)

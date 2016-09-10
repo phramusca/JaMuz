@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 phramusca
+ * Copyright (C) 2011 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import javax.swing.table.AbstractTableModel;
 
 /**
  * a TableModel extension
- * @author phramusca
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class TableModel extends AbstractTableModel {
 	private String[] columnNames = {"ToBeDefined"};  //NOI18N

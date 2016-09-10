@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 phramusca
+ * Copyright (C) 2011 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import javax.swing.JViewport;
  * Instead of 
  * jTable.getTableHeader().setPreferredSize(d);
  * Otherwise the JTable display will get very messy !!
- * @author phramusca
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class TableHorizontal extends JTable  {
 

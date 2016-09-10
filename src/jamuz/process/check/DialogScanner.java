@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 raph
+ * Copyright (C) 2016 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ import javax.swing.table.TableRowSorter;
 
 /**
  *
- * @author raph
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class DialogScanner extends javax.swing.JDialog {
 

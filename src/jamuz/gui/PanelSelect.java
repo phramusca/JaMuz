@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 raph
+ * Copyright (C) 2014 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ import jamuz.utils.Swing;
 
 /**
  *
- * @author raph
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class PanelSelect extends javax.swing.JPanel {
 
