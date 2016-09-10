@@ -5,6 +5,7 @@ database/*_for_comparison.sql
 dist_Wish/*
 nbproject/private/*
 *.properties
+manifest.mf
 
 # Java ignore from https://github.com/github/gitignore
 *.class
