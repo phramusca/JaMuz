@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 phramusca
+ * Copyright (C) 2012 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 
 /**
  * Check process class
- * @author raph
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class ProcessCheck {
 	//TODO: Set Genre combobox based on ID3v1 genre IDs

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 raph
+ * Copyright (C) 2015 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import org.jaudiotagger.tag.TagException;
 
 /**
  *
- * @author raph
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class AlbumBuffer {
     private static final Map<String, Album> albums = new HashMap<>();

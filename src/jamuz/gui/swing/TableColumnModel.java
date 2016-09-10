@@ -1,7 +1,7 @@
 //TODO: Update JavaDoc on all other source files taking this class as a reference
 
 /*
- * Copyright (C) 2011 phramusca
+ * Copyright (C) 2011 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

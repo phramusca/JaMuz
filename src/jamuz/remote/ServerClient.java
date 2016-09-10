@@ -24,7 +24,7 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author phramusca
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class ServerClient {
 	private final Socket socket;
