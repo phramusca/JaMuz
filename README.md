@@ -12,9 +12,9 @@
 
 See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
 
-*[CHANGES](CHANGES.md)
-*[CREDITS](CREDITS.md)
-*[LICENSE](LICENSE.md)
+* [Changes](CHANGES.md)
+* [Credits](CREDITS.md)
+* [License](LICENSE.md)
 
 ## Still in alpha stage. 
 ### Wait a little for an out-of-the-box Beta version.
