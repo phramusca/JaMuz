@@ -12,6 +12,7 @@
     <import file="nbproject/build-impl.xml"/>
     <target name="-pre-init">
        <property name="project.name" value="JaMuz" />
+       <property name="project.url" value="https://github.com/phramusca/JaMuz/" />
        <property name="version.num" value="0.0.24.dev" />
        <tstamp>
           <format property="NOW" pattern="yyyy-MM-dd HH:mm:ss z" />
@@ -38,7 +39,7 @@
           <!--<attribute name="Bundle-Revision" value="${svna.version}" />-->
           <attribute name="Implementation-Title" value="${project.name}" />
           <attribute name="Implementation-Version" value="${version.num}" />
-          <attribute name="Implementation-URL" value="http://www.example.com" />
+          <attribute name="Implementation-URL" value="${project.url}" />
        </manifest>
     </target>
 <!--
