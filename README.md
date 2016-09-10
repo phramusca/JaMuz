@@ -12,7 +12,7 @@
 
 See [further information on the wiki](https://github.com/phramusca/JaMuz/wiki).
 
-See [changelog](CHANGES.md) for changes (when available).
+See [changelog](CHANGES.md) for changes.
 
 ## Still in alpha stage. 
 ### Wait a little for an out-of-the-box Beta version.
