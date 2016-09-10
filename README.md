@@ -10,10 +10,11 @@
 
 **JaMuz** is a **Music management** tool written in Java
 
-See [further information on the wiki](https://github.com/phramusca/JaMuz/wiki).
+See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
 
-* [CHANGES.md](CHANGES.md).
-* [CREDITS.md](CREDITS.md).
+*[CHANGES](CHANGES.md)
+*[CREDITS](CREDITS.md)
+*[LICENSE](LICENSE.md)
 
 ## Still in alpha stage. 
 ### Wait a little for an out-of-the-box Beta version.
