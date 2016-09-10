@@ -1,7 +1,0 @@
-[Desktop Entry]
-Comment=
-Terminal=false
-Name=Jamuz
-Exec=sh '/media/raph/Transcend/JaMuz/JaMuz.sh'
-Type=Application
-Icon=/usr/share/icons/default.kde4/32x32/mimetypes/audio-x-speex+ogg.png
