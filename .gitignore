@@ -1,8 +1,10 @@
 #JaMuz specifics
-data/cache
-logs
-dist_Wish
-nbproject/private
+data/cache/*
+logs/*
+database/*_for_comparison.sql
+dist_Wish/*
+nbproject/private/*
+*.properties
 
 # Java ignore from https://github.com/github/gitignore
 *.class
