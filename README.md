@@ -33,8 +33,4 @@
 
 See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
 
-* [Changes](CHANGES.md)
-* [Credits](CREDITS.md)
-* [License](LICENSE.md)
-
-Beta website: [https://phramusca.github.io/JaMuz/](https://phramusca.github.io/JaMuz/)
+ ___ [Changes](CHANGES.md) ___ [Credits](CREDITS.md) ___ [License](LICENSE.md) ___
