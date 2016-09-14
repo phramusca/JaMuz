@@ -6,6 +6,7 @@ dist_Wish/*
 nbproject/private/*
 *.properties
 manifest.mf
+JaMuz.xml
 
 # Java ignore from https://github.com/github/gitignore
 *.class
