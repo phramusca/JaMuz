@@ -8,8 +8,7 @@
 **JaMuz** is a **Music management** tool written in Java
 
 ### <img src="https://github.com/phramusca/JaMuz/blob/master/data/icon/tag/Problème.jpg" width="48"> Code is in ALPHA stage.
-#### Wait a little for an out-of-the-box Beta version.
-
+_________________________________________________________________________________
 * **Features**:
   * ***Merge your statistics between your favorite players:***
     * Guayadeque (Linux)
@@ -34,5 +33,5 @@
 See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
 
 
- _________________________________________________________________________________
+_________________________________________________________________________________
  ___ [Changes](CHANGES.md) ___ [Credits](CREDITS.md) ___ [License](LICENSE.md) ___
