@@ -9,9 +9,7 @@
 Pull requests are welcome.
 Please submit to the `master` branch.
 
-### RoadMap
-
-Here are some things to be fixed or added before Beta version 0.1
+### TODO for Beta version 0.1
 
 - Test, Stabilize and do all other FIX-MEs
 - Obfuscation
@@ -27,6 +25,9 @@ Here are some things to be fixed or added before Beta version 0.1
 [Example of translation guide using git, from rails](https://github.com/mhartl/rails_tutorial_translation/wiki)
 
 [CHANGE THIS URL TO weblate.org project](weblate.org)
+
+### Stat sources
+In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monkey, Mixxx, MyTunes) you can add one simply by extending the jamuz.StatSourceAbstract class and adding entry to database.
 
 ## License
 
