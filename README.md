@@ -11,20 +11,18 @@
 #### Wait a little for an out-of-the-box Beta version.
 
 * **Features**:
-  * *Merge your statistics between your favorite players:*
+  * ***Merge your statistics between your favorite players:***
     * Guayadeque (Linux)
     * Kodi (Linux / Windows)
     * Media Monkey (Windows)
     * Mixxx (Linux / Windows)
     * MyTunes (Android)
     * Please [contribute](CONTRIBUTING.md) to add some more.
-  * ####Check, tag and organize your files: 
+  * ***Check, tag and organize your files:***
     * Get tags and covers from Musicbrainz, last.fm and coverartarchive.org
     * Detect duplicates
     * Compute MP3 gain
-    * Get covers from  (Musicbrainz) and last.fm
-    * 
-  * ####Sync your files to devices (Phone, USB Key/HDD, MP3 player, ...).
+  * ***Sync your files to devices (Phone, USB Key/HDD, MP3 player, ...).***
   * Create complex playlists.
   * Player (basic, not the main feature though).
   * Runs on Windows and Linux (as written in Java), maybe Mac OS (not tested).
