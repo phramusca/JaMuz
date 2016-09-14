@@ -24,6 +24,7 @@ ________________________________________________________________________________
   * ***Sync your files to devices (Phone, USB Key/HDD, MP3 player, ...).***
   * Create complex playlists.
   * Player (basic, not the main feature though).
+  * [Android Remote Control](https://github.com/phramusca/JaMuz-Remote)
   * Runs on Windows and Linux (as written in Java), maybe Mac OS (not tested).
   * Translated in:
     * Français
