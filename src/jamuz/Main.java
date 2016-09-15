@@ -39,7 +39,7 @@ package jamuz;
 //	It can be modified anytime and no schedule is provided.
 //	Releases will occur when I assume it is ready.
 //----------------------------------------------------------
-// FIXME: 0.1
+// FIXME: 0.1 : Move all this to GitHub roadmap in CONTRIBUTING.md
 //	- Test, Stabilize and do all other FIX-MEs
 //  - Code review:
 //      - Exceptions handling
