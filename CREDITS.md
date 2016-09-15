@@ -2,7 +2,7 @@
 
 ###  Libraries
 
-* [Jaudiotagger](http://www.jthink.net/jaudiotagger/): tag auddio files
+* [Jaudiotagger](http://www.jthink.net/jaudiotagger/): tag audio
 * [JAVE](http://www.sauronsoftware.it/projects/jave/): convert audio
 * [musicbrainzws2-java](https://github.com/schnatterer/musicbrainzws2-java): query MusicBrainz database
 * [lastfm-java](https://github.com/jkovacs/lastfm-java): query lst.fm database
