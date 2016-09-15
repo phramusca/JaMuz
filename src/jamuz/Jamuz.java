@@ -164,31 +164,33 @@ public class Jamuz {
 	}
     
     private static boolean connectDatabase() {
-        //Check XML config file presence
-        String configFileName=appPath + "JaMuz.xml";  //NOI18N
+        
+        //This is default database location and name
+		String JaMuzDbPath = "JaMuz.db";
+		
+		//Check XML config file presence (to override database location and name)
+		String configFileName=appPath + "JaMuz.xml";  //NOI18N
         File f = new File(configFileName);
-        if(!f.exists()) {
-            Popup.warning(java.text.MessageFormat.format(Inter.get("Error.XMLFileNotFound"), new Object[] {configFileName}));  //NOI18N
-            return false;
-        }
+        if(f.exists()) {
+			//Open application XML configuration file
+			org.w3c.dom.Document docDatabase = openXmlFile(configFileName);
+			if(docDatabase==null) {
+				Popup.warning(Inter.get("Error.OpenXMLConfigFile")); //NOI18N
+				return false;
+			}
 
-        //Open application XML configuration file
-        org.w3c.dom.Document docDatabase = openXmlFile(configFileName);
-        if(docDatabase==null) {
-            Popup.warning(Inter.get("Error.OpenXMLConfigFile")); //NOI18N
-            return false;
-        }
+			//Check XML configuration file type and version
+			String type = getXmlNodeValue(docDatabase, "header", "type");  //NOI18N
+			String version = getXmlNodeValue(docDatabase, "header", "version");  //NOI18N
+			if(!type.equals("jamuz") || !version.equals("1")) { //NOI18N
+				Popup.warning(java.text.MessageFormat.format(Inter.get("Error.XMLConfigFileInvalid"), new Object[] {configFileName, type, version}));  //NOI18N
+				return false;
+			}
 
-        //Check XML configuration file type and version
-        String type = getXmlNodeValue(docDatabase, "header", "type");  //NOI18N
-        String version = getXmlNodeValue(docDatabase, "header", "version");  //NOI18N
-        if(!type.equals("jamuz") || !version.equals("1")) { //NOI18N
-            Popup.warning(java.text.MessageFormat.format(Inter.get("Error.XMLConfigFileInvalid"), new Object[] {configFileName, type, version}));  //NOI18N
-            return false;
-        }
+			//Get database path from XML configuration file
+			JaMuzDbPath = getXmlNodeValue(docDatabase, "config", "database");  //NOI18N
+		}
 
-        //Get database path from XML configuration file
-        String JaMuzDbPath = getXmlNodeValue(docDatabase, "config", "database");  //NOI18N
         //Check JaMuz JaMuzDbPath file presence
         f = new File(JaMuzDbPath);
         if(!f.exists()) {
@@ -332,9 +334,7 @@ public class Jamuz {
         return logger;
     }
     
-    //TODO: Move below functions to a dedicated class (and optimize getXmlNodeValue by storing XML
-	//file content in openXmlFile to avoid reading the file each time)
-	// (We can take Options class (using Map) as a starting point)
+    //TODO: Move below functions to a dedicated class
 	private static org.w3c.dom.Document openXmlFile(String filename) {
 		try {
 			File file = new File(filename);

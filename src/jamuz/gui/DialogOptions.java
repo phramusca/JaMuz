@@ -21,13 +21,8 @@ import jamuz.process.sync.Device;
 import jamuz.Jamuz;
 import jamuz.Machine;
 import jamuz.Option;
-import jamuz.gui.swing.ProgressBar;
 import jamuz.process.merge.StatSource;
 import jamuz.gui.swing.TableModel;
-import jamuz.process.check.FolderInfo;
-import jamuz.process.check.PanelCheck;
-import static jamuz.process.sync.PanelSync.enableSync;
-import jamuz.process.sync.ProcessSync;
 import jamuz.utils.Inter;
 import java.io.File;
 import javax.swing.DefaultComboBoxModel;
@@ -115,9 +110,9 @@ public class DialogOptions extends javax.swing.JDialog {
 		//Display options
 		jTableOptions.setRowSorter(null);
 		tableModelOptions.clear();
-		for (Option myOption : selOptions.getOptions()) {
+		selOptions.getOptions().stream().forEach((myOption) -> {
 			addRowOption(myOption);
-		}
+		});
 		//Enable row tableSorter (cannot be done if model is empty)
 		if(tableModelOptions.getRowCount()>0) {
 			jTableOptions.setAutoCreateRowSorter(true);
@@ -130,16 +125,16 @@ public class DialogOptions extends javax.swing.JDialog {
 		//Show stat source list for selected machine
 		DefaultListModel listModel=(DefaultListModel) jListStatSources.getModel();
 		listModel.clear();
-        //TODO: Order by name
-		for (StatSource statSource : selOptions.getStatSources()) {
+		//TODO: Order by name
+		selOptions.getStatSources().stream().forEach((statSource) -> {
 			listModel.addElement(statSource);
-		}
+		});
 		//Show device list for selected machine
 		DefaultListModel devicesModel=(DefaultListModel) jListDevices.getModel();
 		devicesModel.clear();
-		for (Device device : selOptions.getDevices()) {
+		selOptions.getDevices().stream().forEach((device) -> {
 			devicesModel.addElement(device);
-		}
+		});
 	}
 	
 	private static void addRowOption(Option myOption) {
@@ -562,7 +557,10 @@ public class DialogOptions extends javax.swing.JDialog {
 	}//GEN-LAST:event_jButtonOptionSelectFolderActionPerformed
 
     private void jCheckBoxOptionBoolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxOptionBoolActionPerformed
-        String s = new Boolean(jCheckBoxOptionBool.isSelected()).toString();
+        //TODO: Does the hint to do the following instead actually does the same
+		//Or was there a trick for doing so ? Or is Boolean.toString simply new ?
+		//Boolean.toString(jCheckBoxOptionBool.isSelected());
+		String s = new Boolean(jCheckBoxOptionBool.isSelected()).toString();
 		jTextFieldOptionValue.setText(s);
     }//GEN-LAST:event_jCheckBoxOptionBoolActionPerformed
 
@@ -653,15 +651,11 @@ public class DialogOptions extends javax.swing.JDialog {
 		//</editor-fold>
 
 		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				DialogOptions dialog = new DialogOptions(new javax.swing.JFrame(), true, machineName);
-				//Center the dialog
-				dialog.setLocationRelativeTo(dialog.getParent());
-                dialog.setVisible(true);
-			}
+		java.awt.EventQueue.invokeLater(() -> {
+			DialogOptions dialog = new DialogOptions(new javax.swing.JFrame(), true, machineName);
+			//Center the dialog
+			dialog.setLocationRelativeTo(dialog.getParent());
+			dialog.setVisible(true);
 		});
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables

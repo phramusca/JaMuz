@@ -9,15 +9,12 @@ import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -190,20 +187,22 @@ public class ServerClient {
 		}
 
 		private boolean isValid(String login, String pass) {
-			boolean connexion = false;
-			try {
-                //FIXME: Use a better authentication & think of moving jamuz to multi-user somehow
-				Scanner sc = new Scanner(new File("zero.txt"));
-				while(sc.hasNext()){
-					if(sc.nextLine().equals(login+" "+pass)){
-						connexion=true;
-						break;
-					}
-				 }
-			} catch (FileNotFoundException ex) {	
-                Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, "Le fichier \"zero.txt\" n'existe pas !");
-			}
-			return connexion;
+			
+			//FIXME: Use a better authentication & think of moving jamuz to multi-user somehow
+			return (login.equals("tata") && pass.equals("tata"));
+//			boolean connexion = false;
+//			try {
+//				Scanner sc = new Scanner(new File("zero.txt"));
+//				while(sc.hasNext()){
+//					if(sc.nextLine().equals(login+" "+pass)){
+//						connexion=true;
+//						break;
+//					}
+//				 }
+//			} catch (FileNotFoundException ex) {	
+//                Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, "Le fichier \"zero.txt\" n'existe pas !");
+//			}
+//			return connexion;
 		}
 	}
 }

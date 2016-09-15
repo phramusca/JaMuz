@@ -125,3 +125,14 @@ CREATE TABLE "path" (
     "copyRight" INTEGER NOT NULL DEFAULT (0),
     "mbId" TEXT
 );
+CREATE TABLE "tag" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "value" TEXT NOT NULL
+);
+CREATE TABLE "tagfile" (
+    "idFile" INTEGER NOT NULL,
+    "idTag" INTEGER NOT NULL,
+	PRIMARY KEY ("idFile", "idTag"),
+	FOREIGN KEY(idFile) REFERENCES file(idFile),
+	FOREIGN KEY(idTag) REFERENCES tag(id) ON DELETE CASCADE
+);
