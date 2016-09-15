@@ -17,6 +17,7 @@
 * [jOpenDocument](http://jopendocument.org/): Open Document (LibreOffice / OpenOffice) support (used in tests)
 * [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
 * [Apache Commons Net](https://commons.apache.org/proper/commons-net/)
+* [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
 
 ### Contributions
 
