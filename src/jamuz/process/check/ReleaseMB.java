@@ -144,6 +144,7 @@ public class ReleaseMB {
             return matches;
 		}
 		catch (Exception ex) {
+			queryDone(); //Free MB for others to search
 			Jamuz.getLogger().log(Level.SEVERE, "", ex);
 			return null;
 		}
@@ -186,6 +187,8 @@ public class ReleaseMB {
 //			release.getIncludes().setWorkLevelRelations(true);
 
             doWait();
+			//FIXME: Getting 403 Forbidden with musicbrainzws2-java-v.3.0.0 (though search works)
+			//No such issue with musicbrainzws2-java_1.01r31_20120103.rar
 			ReleaseWs2 releaseWs2Full= release.lookUp(mbId);
             queryDone();
 			//Get relations
@@ -228,6 +231,7 @@ public class ReleaseMB {
 			return tracks;
 		}
 		catch (Exception ex) {
+			queryDone(); //Free MB for others to search
             Jamuz.getLogger().log(Level.SEVERE, "", ex);
 			return null;
 		}
