@@ -30,6 +30,7 @@ import java.util.List;
 import jamuz.gui.swing.ListRendererCover;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.SortedListModel;
+import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 
 /**
@@ -39,7 +40,7 @@ import jamuz.utils.Inter;
 public class DialogCoverSelect extends javax.swing.JDialog {
    
 	private final List<Cover> coverList;
-
+	private String searchGoogle;
     /**
      * Progress Bar to display images retrieving progress
      */
@@ -53,6 +54,10 @@ public class DialogCoverSelect extends javax.swing.JDialog {
 	public DialogCoverSelect(java.awt.Frame parent, boolean modal, FolderInfo myFolderInfo) {
 		super(parent, modal);
 		initComponents();
+		if(myFolderInfo.getFilesAudio().size()>0) {
+			FileInfoDisplay file = myFolderInfo.getFilesAudio().get(0);
+			searchGoogle = file.getAlbumArtist()+" "+file.getAlbum();
+		}
 		
 		coverList=myFolderInfo.getCoverList();
 
@@ -104,6 +109,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
         jScrollPaneSelectAlbum = new javax.swing.JScrollPane();
         jListSelectCover = new javax.swing.JList();
         jButtonCancel = new javax.swing.JButton();
+        jButtonGoogleImage = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -134,13 +140,24 @@ public class DialogCoverSelect extends javax.swing.JDialog {
             }
         });
 
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("jamuz/process/check/Bundle"); // NOI18N
+        jButtonGoogleImage.setText(bundle1.getString("DialogCoverSelect.jButtonGoogleImage.text")); // NOI18N
+        jButtonGoogleImage.setToolTipText(bundle1.getString("DialogCoverSelect.jButtonGoogleImage.toolTipText")); // NOI18N
+        jButtonGoogleImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGoogleImageActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPaneSelectAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jButtonGoogleImage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonCancel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonOK)
@@ -153,7 +170,8 @@ public class DialogCoverSelect extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonOK)
-                    .addComponent(jButtonCancel))
+                    .addComponent(jButtonCancel)
+                    .addComponent(jButtonGoogleImage))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPaneSelectAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -182,6 +200,10 @@ public class DialogCoverSelect extends javax.swing.JDialog {
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
        this.dispose();
     }//GEN-LAST:event_jButtonCancelActionPerformed
+
+    private void jButtonGoogleImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGoogleImageActionPerformed
+        Desktop.openBrowser("https://www.google.fr/search?q="+searchGoogle+"&tbm=isch");
+    }//GEN-LAST:event_jButtonGoogleImageActionPerformed
     
 	/**
 	 * @param myFolderInfo 
@@ -237,6 +259,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonGoogleImage;
     private javax.swing.JButton jButtonOK;
     private javax.swing.JList jListSelectCover;
     private javax.swing.JProgressBar jProgressBar;

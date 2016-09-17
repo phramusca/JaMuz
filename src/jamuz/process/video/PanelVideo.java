@@ -20,7 +20,6 @@ package jamuz.process.video;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.Jamuz;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +40,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
@@ -66,6 +64,7 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableRowFilterVideo;
 import jamuz.gui.swing.TriStateCheckBox;
 import jamuz.gui.swing.TriStateCheckBox.State;
+import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
@@ -210,19 +209,10 @@ public class PanelVideo extends javax.swing.JPanel {
         }
         @Override
         public void actionPerformed(ActionEvent e) {
-            try {
-                
-                VideoAbstract fileInfoVideo = getSelected();
-                if(fileInfoVideo!=null) {
-                    String uri = this.url;
-                    uri = uri.replaceAll("<title>", fileInfoVideo.getTitle()); //NOI18N
-                    uri = uri.replaceAll(" ", "+"); //NOI18N
-                    openBrowser(new URI(uri));
-                }
-            } catch (URISyntaxException ex) {
-                Popup.error(ex);
-            }
-            
+            VideoAbstract fileInfoVideo = getSelected();
+			if(fileInfoVideo!=null) {
+				Desktop.openBrowser(url.replaceAll("<title>", fileInfoVideo.getTitle()));
+			}
         }
     }
     
@@ -431,18 +421,8 @@ public class PanelVideo extends javax.swing.JPanel {
 
         VideoAbstract fileInfoVideo = getSelected();
         if(fileInfoVideo!=null) {
-            if(!fileInfoVideo.getTrailerURL().startsWith("{")) { //NOI18N
-                if (Desktop.isDesktopSupported()) { 
-                    Desktop desktop = Desktop.getDesktop(); 
-                    if (desktop.isSupported(Desktop.Action.BROWSE)) { 
-                        try { 
-                            String uri = fileInfoVideo.getTrailerURL().replaceAll(" ", "+");  //NOI18N
-                            desktop.browse(new URI(uri)); 
-                        } catch (URISyntaxException | IOException ex) { 
-                            Popup.error(ex); 
-                        } 
-                    } 
-                }
+            if(!fileInfoVideo.getTrailerURL().startsWith("{")) { //NOI18N	
+				Desktop.openBrowser(fileInfoVideo.getTrailerURL()); 
             }
         }
     }
@@ -450,27 +430,17 @@ public class PanelVideo extends javax.swing.JPanel {
     private void menuVideoOpen() {
         VideoAbstract fileInfoVideo = getSelected();
         if(fileInfoVideo!=null) {
-            if (Desktop.isDesktopSupported()) { 
-                Desktop desktop = Desktop.getDesktop(); 
-                String folderPrefix="//";
-                if (desktop.isSupported(Desktop.Action.OPEN)) { 
-                    try {
-                        desktop.open(new File(folderPrefix+Jamuz.getOptions().get("video.source")+fileInfoVideo.getRelativeFullPath()));
-                    } catch (IllegalArgumentException | IOException ex) {
-                        Popup.error(ex);
-                    }
-                }
-            }
+			Desktop.openFolder("//"+Jamuz.getOptions().get("video.source")+fileInfoVideo.getRelativeFullPath());
         }
     }
 
     private void menuVideoHomepage() {
         VideoAbstract fileInfoVideo = getSelected();
         if(fileInfoVideo!=null) {
-            openBrowser(fileInfoVideo.getHomepage());
+			//TODO: Open video within JaMuz
+            Desktop.openBrowser(fileInfoVideo.getHomepage());
         }
     }
-    
     
     private void menuVideoDelete() {
         VideoAbstract video = getSelected();
@@ -489,26 +459,11 @@ public class PanelVideo extends javax.swing.JPanel {
         }
     }
     
-    private void openBrowser(URI uri) {
-        if(uri!=null) {
-            if (Desktop.isDesktopSupported()) { 
-                Desktop desktop = Desktop.getDesktop(); 
-                if (desktop.isSupported(Desktop.Action.BROWSE)) { 
-                    try { 
-                        desktop.browse(uri); 
-                    } catch (IOException ex) { 
-                        Popup.error(ex); 
-                    } 
-                } 
-            }
-        }
-    }
-    
     private void menuVideoIMDb() {
         //TODO: Open within JaMuz
         VideoAbstract fileInfoVideo = getSelected();
         if(fileInfoVideo!=null) {
-            openBrowser(fileInfoVideo.getImdbURI());
+            Desktop.openBrowser(fileInfoVideo.getImdbURI());
         }
     }
         

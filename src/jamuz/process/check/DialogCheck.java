@@ -1451,19 +1451,7 @@ public class DialogCheck extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCheckSaveTagsActionPerformed
 
     private void jButtonCheckOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckOpenActionPerformed
-        if (Desktop.isDesktopSupported()) {
-            Desktop desktop = Desktop.getDesktop();
-            if (desktop.isSupported(Desktop.Action.OPEN)) {
-                try {
-                    File folderToOpen = new File(folder.getFullPath());
-                    if(folderToOpen.exists()) {
-                        desktop.open(folderToOpen);
-                    }
-                } catch (IOException ex) {
-                    Popup.error(ex);
-                }
-            }
-        }
+        jamuz.utils.Desktop.openFolder(folder.getFullPath());
     }//GEN-LAST:event_jButtonCheckOpenActionPerformed
 
     private void jPanelCheckCoverThumbMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelCheckCoverThumbMouseClicked
