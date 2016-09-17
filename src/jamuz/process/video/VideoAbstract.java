@@ -394,14 +394,9 @@ public abstract class VideoAbstract implements Comparable {
      * get imdb uri
      * @return
      */
-    public URI getImdbURI() {
+    public String getImdbURI() {
         if(!imdbId.equals("")) { //NOI18N
-            try {
-                String uri = ("http://www.imdb.com/title/"+imdbId+"/").replaceAll(" ", "+"); //NOI18N
-                return new URI(uri);
-            } catch (URISyntaxException ex) {
-                Popup.error(ex);
-            }
+            return ("http://www.imdb.com/title/"+imdbId+"/");
         }
         return null;
     }
@@ -410,14 +405,9 @@ public abstract class VideoAbstract implements Comparable {
      *
      * @return
      */
-    public URI getHomepage() {
+    public String getHomepage() {
         if(myVideo.getId()>0) { //NOI18N
-            try {
-                String uri =(myVideo.getHomepage()).replaceAll(" ", "+"); //NOI18N
-                return new URI(uri);
-            } catch (NullPointerException | URISyntaxException ex) {
-                //Do nothing
-            }
+            return myVideo.getHomepage();
         }
         return null;
     }

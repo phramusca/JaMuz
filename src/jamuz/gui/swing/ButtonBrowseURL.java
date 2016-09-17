@@ -17,18 +17,14 @@
 
 package jamuz.gui.swing;
 
-import java.awt.Component;  
-import java.awt.Desktop;
+import jamuz.utils.Desktop;
+import java.awt.Component; 
 import java.awt.event.ActionEvent;  
 import java.awt.event.ActionListener;  
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import javax.swing.DefaultCellEditor;  
 import javax.swing.JButton;  
 import javax.swing.JCheckBox;  
 import javax.swing.JTable; 
-import jamuz.utils.Popup;
 
 /**
  * Cell editor extension to display button in a JTable
@@ -74,16 +70,7 @@ public class ButtonBrowseURL extends DefaultCellEditor {
     @Override
     public Object getCellEditorValue() {
         if (isClicked) {
-			if (Desktop.isDesktopSupported()) { 
-				Desktop desktop = Desktop.getDesktop(); 
-				if (desktop.isSupported(Desktop.Action.BROWSE)) { 
-					try { 
-						desktop.browse(new URI(buttonValue)); 
-					} catch (URISyntaxException | IOException ex) { 
-						Popup.error(ex); 
-					} 
-				} 
-			}
+			Desktop.openBrowser(buttonValue);
         }
         isClicked = false;
         return buttonValue;

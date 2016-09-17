@@ -53,7 +53,6 @@ import java.util.LinkedHashMap;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModelCheckTracks;
-import static jamuz.process.check.DialogCheck.progressBar;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import java.awt.Color;
@@ -119,16 +118,6 @@ public class FolderInfo implements java.lang.Comparable {
         this.scanType = scanType;
     }
     
-	//Only for BestOf albumDisplay list 
-	//TODO: Make a special class as very different (to be analyzed first)
-	/**
-	 * Album
-	 */
-	protected String album;
-	/**
-	 * Artist
-	 */
-	protected String artist;
 	/**
 	 * Rating
 	 */
