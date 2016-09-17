@@ -1622,7 +1622,8 @@ public class PanelMain extends javax.swing.JFrame {
 
     private void jButtonOptionsMachinesDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsMachinesDelActionPerformed
         if (jListMachines.getSelectedIndex() > -1) {
-            String machineToDelete = jListMachines.getSelectedValue().toString();
+			String machineToDelete = (((ListElement) jListMachines.getSelectedValue()).getValue());
+//            String machineToDelete = jListMachines.getSelectedValue().toString();
             if (!machineToDelete.equals(Jamuz.getMachine().getName())) {
                 int n = JOptionPane.showConfirmDialog(
                         this, Inter.get("Question.DeleteMachineConfirm"), //NOI18N

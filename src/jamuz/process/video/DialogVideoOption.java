@@ -174,7 +174,7 @@ public class DialogVideoOption extends javax.swing.JDialog {
                     .addComponent(jLabel3)))
         );
 
-        jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/cancel.png"))); // NOI18N
+        jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
         jButtonCancel.setText(bundle.getString("Button.Cancel")); // NOI18N
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -182,7 +182,7 @@ public class DialogVideoOption extends javax.swing.JDialog {
             }
         });
 
-        jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/accept.png"))); // NOI18N
+        jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/accept.png"))); // NOI18N
         jButtonSave.setText(bundle.getString("Button.Save")); // NOI18N
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
