@@ -1399,7 +1399,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             if (nbRowsAffected > 0) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stDeleteMachine, id={0} # row(s) affected: +{1}", new Object[]{machineName, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stDeleteMachine(\"{0}\"). # row(s) affected: {1}", new Object[]{machineName, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {

@@ -58,16 +58,17 @@ public class DialogScanner extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         jTextFieldPath.setText(path);
-        
-        File f = Jamuz.getFile("Patterns.txt", "data");
-        if(f.exists()) {
-            try {
-                patterns = Files.readAllLines(Paths.get(f.getAbsolutePath()), Charset.defaultCharset());
-            } catch (IOException ex) {
-                Jamuz.getLogger().log(Level.SEVERE, null, ex);
-            }
-        }
-        
+        patterns = new ArrayList<>();
+		try {
+			File f = Jamuz.getFile("Patterns.txt", "data");
+			if(!f.exists()) {
+				f.createNewFile();
+			}
+			patterns = Files.readAllLines(Paths.get(f.getAbsolutePath()), Charset.defaultCharset());
+		} catch (IOException ex) {
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
+		}
+		
         jTextFieldPattern.getDocument().addDocumentListener(new DocumentListener(){ 
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -175,12 +176,13 @@ public class DialogScanner extends javax.swing.JDialog {
 			sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
 //			sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
 			tableSorter.setSortKeys(sortKeys);
+			jTableScanner.getSelectionModel().setSelectionInterval(0, 0);
 		}
 		else {
 			jTableScanner.setAutoCreateRowSorter(false);
 		}
         
-        jTableScanner.getSelectionModel().setSelectionInterval(0, 0);
+        
     }
     
     private static void addRow(Map<String, String> extracted) {
