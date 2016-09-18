@@ -93,9 +93,9 @@ public class TableModelCheckTracks extends TableModelGeneric {
 
         switch (columnIndex) {
             case 0: return fileInfoDisplay.getFilename();
-            case 1: return fileInfoDisplay.discNoFull;
+            case 1: return fileInfoDisplay.getDiscNoFull();
             case 2: return fileInfoDisplay.discNoFullDisplay;
-            case 3: return fileInfoDisplay.trackNoFull;
+            case 3: return fileInfoDisplay.getTrackNoFull();
             case 4: return fileInfoDisplay.trackNoFullDisplay;
 			case 5: return fileInfoDisplay.getArtist();
 			case 6: return fileInfoDisplay.artistDisplay;
@@ -153,10 +153,10 @@ public class TableModelCheckTracks extends TableModelGeneric {
 
         switch (col) {
             case 1: 
-				fileInfoDisplay.discNoFull=(String) value;
+				fileInfoDisplay.setDiscNoFull((String) value);
 				break;
             case 3: 
-				fileInfoDisplay.trackNoFull=(String) value;
+				fileInfoDisplay.setTrackNoFull((String) value);
 				break;
 			case 5: 
 				fileInfoDisplay.setArtist((String) value);
@@ -234,12 +234,17 @@ public class TableModelCheckTracks extends TableModelGeneric {
             
             //those new values (from ReleaseMatch Track) do not move
             from.setTitle(toOri.getTitle());
-            from.discNoFull = toOri.discNoFull;
-            from.trackNoFull = toOri.trackNoFull;
+			from.setDiscNo(toOri.getDiscNo());
+			from.setDiscTotal(toOri.getDiscTotal());
+			from.setTrackNo(toOri.getTrackNo());
+			from.setTrackTotal(toOri.getTrackTotal());
+			
             to.setTitle(fromOri.getTitle());
-            to.discNoFull = fromOri.discNoFull;
-            to.trackNoFull = fromOri.trackNoFull;
-            
+			to.setDiscNo(fromOri.getDiscNo());
+			to.setDiscTotal(fromOri.getDiscTotal());
+			to.setTrackNo(fromOri.getTrackNo());
+			to.setTrackTotal(fromOri.getTrackTotal());
+
 			filesAudio.set(fromIndex, to);
 			filesAudio.set(toIndex, from);
 

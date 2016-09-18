@@ -649,7 +649,7 @@ public class FileInfoInt extends FileInfo {
      * @return
      */
     public boolean saveTags(boolean deleteComment) {
-        return this.saveTags(this.artist, this.albumArtist, this.album, this.getTrackNoFull(), this.getDiscNoFull(), 
+        return this.saveTags(this.artist, this.albumArtist, this.album, this.trackNo, this.trackTotal, this.discNo, this.discTotal, 
 			this.genre, this.year, this.coverImage, deleteComment, this.comment, this.title, this.getBPM());  //NOI18N
     }
     
@@ -687,8 +687,10 @@ public class FileInfoInt extends FileInfo {
 	 * @param artist
 	 * @param albumArtist
 	 * @param album
-	 * @param trackNoFull
-	 * @param discNoFull
+	 * @param trackNo
+	 * @param trackTotal
+	 * @param discNo
+	 * @param discTotal
 	 * @param genre
 	 * @param year
      * @param image
@@ -698,7 +700,8 @@ public class FileInfoInt extends FileInfo {
 	 * @param bpm
 	 * @return
 	 */
-	protected boolean saveTags(String artist, String albumArtist, String album, String trackNoFull, String discNoFull,
+	protected boolean saveTags(String artist, String albumArtist, String album, 
+			int trackNo, int trackTotal, int discNo, int discTotal,
 			String genre, String year, BufferedImage image, boolean deleteComment, String comment, String title, float bpm) {
 		try {           
             Artwork myArt = imageToArt(image);
@@ -712,13 +715,13 @@ public class FileInfoInt extends FileInfo {
 					//Create brand new ID3v2 tags
 					AbstractID3v2Tag v2tag = new ID3v23Tag();
 					MP3File.setID3v2Tag(v2tag);
-					this.setTags(v2tag, artist, albumArtist, album, trackNoFull, discNoFull, genre, year, myArt, deleteComment, comment, title, bpm);
+					this.setTags(v2tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, myArt, deleteComment, comment, title, bpm);
 					MP3File.commit();
 					break;
 				default:
 					AudioFile audioFile = AudioFileIO.read(testFile);
 					Tag tag = audioFile.getTag();
-					this.setTags(tag, artist, albumArtist, album, trackNoFull, discNoFull, genre, year, myArt, deleteComment, comment, title, bpm);
+					this.setTags(tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, myArt, deleteComment, comment, title, bpm);
 					audioFile.commit();
 					break;
 			}
@@ -732,7 +735,7 @@ public class FileInfoInt extends FileInfo {
 		} 
 	}
     
-	private void setTags (Tag tag, String artist, String albumArtist, String album, String trackNoFull, String discNoFull,
+	private void setTags (Tag tag, String artist, String albumArtist, String album, int trackNo, int trackTotal, int discNo, int discTotal,
 			String genre, String year, Artwork myArt, boolean deleteComment, String comment, String title, float bpm) throws KeyNotFoundException, FieldDataInvalidException {
 		
 		//Note: Since we are overwritting all tags, we are only inserting non-empty ones		
@@ -745,21 +748,17 @@ public class FileInfoInt extends FileInfo {
 		if(!album.equals("")) {  //NOI18N
 			tag.setField(FieldKey.ALBUM, album);
 		}
-		int trackNoNew = Integer.valueOf(trackNoFull.substring(0, trackNoFull.indexOf("/")));  //NOI18N
-		int trackTotalNew = Integer.valueOf(trackNoFull.substring(trackNoFull.indexOf("/")+1, trackNoFull.length()));  //NOI18N
-		int discNoNew = Integer.valueOf(discNoFull.substring(0, discNoFull.indexOf("/")));  //NOI18N
-		int discTotalNew = Integer.valueOf(discNoFull.substring(discNoFull.indexOf("/")+1, discNoFull.length()));  //NOI18N
-		if(trackNoNew>0) {
-			tag.setField(FieldKey.TRACK, String.valueOf(trackNoNew));
+		if(trackNo>0) {
+			tag.setField(FieldKey.TRACK, String.valueOf(trackNo));
 		}
-		if(trackTotalNew>0) {
-			tag.setField(FieldKey.TRACK_TOTAL, String.valueOf(trackTotalNew));
+		if(trackTotal>0) {
+			tag.setField(FieldKey.TRACK_TOTAL, String.valueOf(trackTotal));
 		}
-		if(discNoNew>0) {
-			tag.setField(FieldKey.DISC_NO, String.valueOf(discNoNew));
+		if(discNo>0) {
+			tag.setField(FieldKey.DISC_NO, String.valueOf(discNo));
 		}
-		if(discTotalNew>0) {
-			tag.setField(FieldKey.DISC_TOTAL, String.valueOf(discTotalNew));
+		if(discTotal>0) {
+			tag.setField(FieldKey.DISC_TOTAL, String.valueOf(discTotal));
 		}
 		if(!title.equals("")) {  //NOI18N
 			tag.setField(FieldKey.TITLE, title);
@@ -936,6 +935,14 @@ public class FileInfoInt extends FileInfo {
         return FolderInfoResult.formatNumber(this.trackNo)+"/"+FolderInfoResult.formatNumber(this.trackTotal);  //NOI18N
     }
 	
+	public void setTrackNoFull(String trackNoFull) {
+		String[] splitted = trackNoFull.split("/");
+		if(splitted.length==2) {
+			this.trackNo = Integer.valueOf(splitted[0]);
+			this.trackTotal = Integer.valueOf(splitted[1]);
+		}
+	}
+	
     /**
     * Return disc number in "xx/yy" format
     * @return
@@ -944,6 +951,14 @@ public class FileInfoInt extends FileInfo {
         return FolderInfoResult.formatNumber(this.discNo)+"/"+FolderInfoResult.formatNumber(this.discTotal);  //NOI18N
     }
     
+	public void setDiscNoFull(String discNoFull) {
+		String[] splitted = discNoFull.split("/");
+		if(splitted.length==2) {
+			this.discNo = Integer.valueOf(splitted[0]);
+			this.discTotal = Integer.valueOf(splitted[1]);
+		}
+	}
+	
 	/**
 	 * Replaces %artist%, %album%, ... by their actual values
 	 * @param mask

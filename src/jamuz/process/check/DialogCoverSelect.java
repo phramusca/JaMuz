@@ -30,6 +30,7 @@ import java.util.List;
 import jamuz.gui.swing.ListRendererCover;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.SortedListModel;
+import jamuz.utils.ClipboardImage;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 
@@ -56,7 +57,8 @@ public class DialogCoverSelect extends javax.swing.JDialog {
 		initComponents();
 		if(myFolderInfo.getFilesAudio().size()>0) {
 			FileInfoDisplay file = myFolderInfo.getFilesAudio().get(0);
-			searchGoogle = file.getAlbumArtist()+" "+file.getAlbum();
+			String artist = file.getAlbumArtist().equals("")?file.getArtist():file.getAlbumArtist();
+			searchGoogle = artist+" "+file.getAlbum();
 		}
 		
 		coverList=myFolderInfo.getCoverList();
@@ -110,6 +112,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
         jListSelectCover = new javax.swing.JList();
         jButtonCancel = new javax.swing.JButton();
         jButtonGoogleImage = new javax.swing.JButton();
+        jButtonClipboard = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -149,6 +152,13 @@ public class DialogCoverSelect extends javax.swing.JDialog {
             }
         });
 
+        jButtonClipboard.setText(bundle1.getString("DialogCoverSelect.jButtonClipboard.text")); // NOI18N
+        jButtonClipboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonClipboardActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,11 +167,13 @@ public class DialogCoverSelect extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButtonGoogleImage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonClipboard)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonCancel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonOK)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
             .addComponent(jProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -171,7 +183,8 @@ public class DialogCoverSelect extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonOK)
                     .addComponent(jButtonCancel)
-                    .addComponent(jButtonGoogleImage))
+                    .addComponent(jButtonGoogleImage)
+                    .addComponent(jButtonClipboard))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPaneSelectAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -187,23 +200,32 @@ public class DialogCoverSelect extends javax.swing.JDialog {
         if(coverId>=0) {
             Cover myCover = model.getElementAt(coverId);
             BufferedImage image = myCover.getImage();
-            if(image!=null) {
-                //Display selected image on MainGUI
-                PanelCover mainCoverImg = (PanelCover) DialogCheck.jPanelCheckCoverThumb;
-                mainCoverImg.setImage(image);
-            }
+            setImage(image);
         }
 
 		this.dispose();
 	}//GEN-LAST:event_jButtonOKActionPerformed
 
+	private void setImage(BufferedImage image) {
+		if(image!=null) {
+			//Display selected image on MainGUI
+			PanelCover mainCoverImg = (PanelCover) DialogCheck.jPanelCheckCoverThumb;
+			mainCoverImg.setImage(image);
+		}
+	}
+	
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
        this.dispose();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonGoogleImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGoogleImageActionPerformed
-        Desktop.openBrowser("https://www.google.fr/search?q="+searchGoogle+"&tbm=isch");
+        Desktop.openBrowser("https://www.google.fr/search?q="+searchGoogle.replaceAll("&", "%26")+"&tbm=isch");
     }//GEN-LAST:event_jButtonGoogleImageActionPerformed
+
+    private void jButtonClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClipboardActionPerformed
+        setImage((BufferedImage) ClipboardImage.getImageFromClipboard());
+		this.dispose();
+    }//GEN-LAST:event_jButtonClipboardActionPerformed
     
 	/**
 	 * @param myFolderInfo 
@@ -259,6 +281,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonClipboard;
     private javax.swing.JButton jButtonGoogleImage;
     private javax.swing.JButton jButtonOK;
     private javax.swing.JList jListSelectCover;
