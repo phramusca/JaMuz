@@ -30,7 +30,7 @@ import java.io.*;
  * Transfer text to/from clipboard
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public final class TextTransfer implements ClipboardOwner {
+public final class ClipboardText implements ClipboardOwner {
 
    /**
    * Empty implementation of the ClipboardOwner interface.

@@ -59,7 +59,7 @@ public final class FileInfoDisplay extends FileInfoInt {
 	/**
 	 * Track # full (NEW)
 	 */
-	public String trackNoFull="";  //NOI18N
+//	private String trackNoFull="";  //NOI18N
 	/**
 	 * Disc # full formatDisplay (xx/yy)
 	 */
@@ -68,7 +68,7 @@ public final class FileInfoDisplay extends FileInfoInt {
 	/**
 	 * Disc # full (NEW)
 	 */
-	public String discNoFull="";  //NOI18N
+//	private String discNoFull="";  //NOI18N
 	/**
 	 * Genre
 	 */
@@ -105,8 +105,10 @@ public final class FileInfoDisplay extends FileInfoInt {
 	 * @param track
 	 */
 	public void setTrack(Track track) {
-		this.discNoFull=track.getDiscNoFull();
-		this.trackNoFull=track.getTrackNoFull();
+		this.discNo = track.getDiscNo();
+		this.discTotal = track.getDiscTotal();
+		this.trackNo = track.getTrackNo();
+		this.trackTotal = track.getTrackTotal();
 		this.artist=track.getArtist();
 		this.title=track.getTitle();
 	}
@@ -117,9 +119,13 @@ public final class FileInfoDisplay extends FileInfoInt {
 	 */
 	public FileInfoDisplay(Track track) {
         super("", ""); //NOI18N
-        this.discNoFull=track.getDiscNoFull();
-		this.trackNoFull=track.getTrackNoFull();
+		this.discNo = track.getDiscNo();
+		this.discTotal = track.getDiscTotal();
+		this.trackNo = track.getTrackNo();
+		this.trackTotal = track.getTrackTotal();
 		String na = "<html><font color=\"red\">N/A</font></html>";  //NOI18N
+		this.discNoFullDisplay=new TableValue(na);
+		this.trackNoFullDisplay=new TableValue(na);
 		this.filename=na;
         this.BPM=0;
 		this.BPMDisplay=new TableValue(na);
@@ -129,13 +135,10 @@ public final class FileInfoDisplay extends FileInfoInt {
 		this.albumArtistDisplay=new TableValue(na);
         this.artist=na;
 		this.artistDisplay=new TableValue(na);
-		this.discNoFullDisplay=new TableValue(na);
+		this.title=track.getTitle();
 		this.titleDisplay=new TableValue(na);
-        this.title=track.getTitle();
-		this.trackNoFullDisplay=new TableValue(na);
         this.year=na;
 		this.yearDisplay=new TableValue(na);
-		
 		this.genre=Inter.get("Label.SelectOne"); //NOI18N
 		this.genreDisplay=new TableValue(Inter.get("Label.SelectOne")); //NOI18N
 	}
@@ -176,23 +179,19 @@ public final class FileInfoDisplay extends FileInfoInt {
     
     public void setTrackNo(int trackNo) {
         this.trackNo = trackNo;
-        this.trackNoFull=FolderInfoResult.formatNumber(this.getTrackNo())+"/"+FolderInfoResult.formatNumber(this.getTrackTotal());
     }
 
     public void setTrackTotal(int trackTotal) {
         this.trackTotal = trackTotal;
-        this.trackNoFull=FolderInfoResult.formatNumber(this.getTrackNo())+"/"+FolderInfoResult.formatNumber(this.getTrackTotal());
     }
 
     public void setDiscNo(int discNo) {
         this.discNo = discNo;
-        this.discNoFull=FolderInfoResult.formatNumber(this.getDiscNo())+"/"+FolderInfoResult.formatNumber(this.getDiscTotal());
-    }
+	}
 
     public void setDiscTotal(int discTotal) {
         this.discTotal = discTotal;
-		this.discNoFull=FolderInfoResult.formatNumber(this.getDiscNo())+"/"+FolderInfoResult.formatNumber(this.getDiscTotal());
-    }
+	}
     
 	/**
 	 * Return length display
@@ -325,7 +324,7 @@ public final class FileInfoDisplay extends FileInfoInt {
 				genreNew="";   //NOI18N
 			}
 			
-            return this.saveTags(this.artist, this.albumArtist, this.album, this.getTrackNoFull(), this.getDiscNoFull(), 
+            return this.saveTags(this.artist, this.albumArtist, this.album, this.trackNo, this.trackTotal, this.discNo, this.discTotal, 
                     genreNew, this.year, image, deleteComment, this.comment, this.title, this.BPM);  //NOI18N
         }
         return true;
