@@ -1323,7 +1323,6 @@ public class FolderInfo implements java.lang.Comparable {
             //Query Last.fm (in case no luck with MusicBrainz)
             
             List<ReleaseMatch> releases = releaseMB.search(artist, album, this.filesAudio.size(), this.idPath);
-//            releaseMB.doContinue();
             progressBar.setIndeterminate(Inter.get("Label.Searching"));  //NOI18N
             if(releases!=null) {
                 releases.addAll(releaseLastFm.search(artist, album, this.idPath));
