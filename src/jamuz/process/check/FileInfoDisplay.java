@@ -123,9 +123,11 @@ public final class FileInfoDisplay extends FileInfoInt {
 		this.discTotal = track.getDiscTotal();
 		this.trackNo = track.getTrackNo();
 		this.trackTotal = track.getTrackTotal();
+		//Do not put "/" (ex: "N/A"= in below String naNumber as discNoFull and trackNoFull are splitted by "/" 
+		String naNumber = "-- --";  //NOI18N
+		this.discNoFullDisplay=new TableValue(naNumber);
+		this.trackNoFullDisplay=new TableValue(naNumber);
 		String na = "<html><font color=\"red\">N/A</font></html>";  //NOI18N
-		this.discNoFullDisplay=new TableValue(na);
-		this.trackNoFullDisplay=new TableValue(na);
 		this.filename=na;
         this.BPM=0;
 		this.BPMDisplay=new TableValue(na);

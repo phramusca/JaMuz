@@ -103,41 +103,49 @@ public class ReleaseMB {
             List<ReleaseResultWs2> releaseResultsWs2List = release.getFirstSearchResultPage();
             queryDone();
 			for (ReleaseResultWs2 releaseResultWs2 : releaseResultsWs2List) {
-				ReleaseWs2 releaseWs2;
-//                doWait();
-				releaseWs2 = releaseResultWs2.getRelease();
-				int score=releaseResultWs2.getScore(); //TODO: Weird how set, check if properly analyzed !
+				try {
+				
+					ReleaseWs2 releaseWs2;
+	//                doWait();
+					releaseWs2 = releaseResultWs2.getRelease();
+					int score=releaseResultWs2.getScore(); //TODO: Weird how set, check if properly analyzed !
 
-                //TODO: Order by medium (reel-to-reel, vinyl, k7, CD), BUT before or after year order ?
+					//TODO: Order by medium (reel-to-reel, vinyl, k7, CD), BUT before or after year order ?
 
-				ReleaseMatch myMatch;
+					ReleaseMatch myMatch;
 
-				MediumListWs2 mediumListWs2 = releaseWs2.getMediumList();
-				List<MediumWs2> mediums = mediumListWs2.getMedia();
-				int discTotalMatch = mediums.size();
+					MediumListWs2 mediumListWs2 = releaseWs2.getMediumList();
+					List<MediumWs2> mediums = mediumListWs2.getMedia();
+					int discTotalMatch = mediums.size();
 
-				if(discTotalMatch>1) {
-					int discNb = 1;
-					for(MediumWs2 medium : mediums) {
-						if(medium.getTracksCount()!=nbAudioFiles) {
-							score=releaseResultWs2.getScore()-20;
+					if(discTotalMatch>1) {
+						int discNb = 1;
+						for(MediumWs2 medium : mediums) {
+							if(medium.getTracksCount()!=nbAudioFiles) {
+								score=releaseResultWs2.getScore()-20;
+							}
+							myMatch = new ReleaseMatch(releaseWs2, score, discNb, discTotalMatch, medium.getTracksCount(), medium.getFormat(), idPath);
+							discNb++;
+							matches.add(myMatch);
 						}
-						myMatch = new ReleaseMatch(releaseWs2, score, discNb, discTotalMatch, medium.getTracksCount(), medium.getFormat(), idPath);
-						discNb++;
-						matches.add(myMatch);
 					}
-				}
 
-				score=releaseResultWs2.getScore();
-				if(releaseWs2.getTracksCount()!=nbAudioFiles) {
-					score=releaseResultWs2.getScore()-20;
-				}
+					score=releaseResultWs2.getScore();
+					if(releaseWs2.getTracksCount()!=nbAudioFiles) {
+						score=releaseResultWs2.getScore()-20;
+					}
 
-				myMatch = new ReleaseMatch(releaseWs2, score, discTotalMatch, idPath);
-				matches.add(myMatch);
-				covers.add(new CoverMB(CoverType.MB, myMatch.getId(), myMatch.toString()));  //NOI18N
+					myMatch = new ReleaseMatch(releaseWs2, score, discTotalMatch, idPath);
+					matches.add(myMatch);
+					covers.add(new CoverMB(CoverType.MB, myMatch.getId(), myMatch.toString()));  //NOI18N
+				}
+				catch (Exception ex) {
+					queryDone(); //Free MB for others to search
+					Jamuz.getLogger().log(Level.SEVERE, "", ex);
+					//Get next releaseWs2, no need to exit yet
+				}
 			}
-
+			
 			//ORDER BY score DESC
 			Collections.sort(matches);
             
