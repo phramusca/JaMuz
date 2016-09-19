@@ -69,3 +69,4 @@
 %z-%b/%n-%t.mp3
 %z = %b ~MP3~/CD #%d %n - %t.mp3
 %z = %b ~MP3~/CD #%d %n %a - %t.mp3
+%i/%i/%z/[www.imperioh2.cl] %n-%i-%t.mp3

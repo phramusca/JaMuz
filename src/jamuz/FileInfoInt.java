@@ -726,9 +726,6 @@ public class FileInfoInt extends FileInfo {
 					break;
 			}
 			return true;
-            //TODO: Why all those OverlappingFileLockException on 0_Marcel (at least ?)
-            //Found the problem (I think): More than one doActions can (how?) run at the same time. This should not happen
-            //The problem should be fixed when using BlockingCollection. Removed OverlappingFileLockException from catch on 2016-04-03 ...
 		} catch (CannotWriteException | CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
 			Popup.error("Error writing tags to \""+this.rootPath+File.separator+this.relativeFullPath+"\"", ex);  //NOI18N
 			return false;
