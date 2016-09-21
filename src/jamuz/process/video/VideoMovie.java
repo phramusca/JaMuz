@@ -22,7 +22,6 @@ import info.movito.themoviedbapi.model.MovieDb;
 import jamuz.process.video.FileInfoVideo.StreamDetails;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.video.ProcessVideo.PathBuffer;
-import static jamuz.process.video.ProcessVideo.themovieDb;
 import java.util.ArrayList;
 import jamuz.utils.SSH;
 import jamuz.utils.StringManager;
@@ -168,12 +167,12 @@ public class VideoMovie extends VideoAbstract {
    
     @Override
     public void setMyVideo() {
-        MyMovieDb myMovieDb = themovieDb.get(getTitle(), Integer.parseInt(getYear()));
+        MyMovieDb myMovieDb = ProcessVideo.themovieDb.get(getTitle(), Integer.parseInt(getYear()));
         if(myMovieDb!=null) {
             setMyVideo(myMovieDb);  
         }
         else {
-            myMovieDb = themovieDb.searchFirst(getTitle(), Integer.parseInt(getYear()));
+            myMovieDb = ProcessVideo.themovieDb.searchFirst(getTitle(), Integer.parseInt(getYear()));
             if(myMovieDb==null) {
                 myMovieDb = new MyMovieDb(new MovieDb());
             }

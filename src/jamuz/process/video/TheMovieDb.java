@@ -34,6 +34,7 @@ import info.movito.themoviedbapi.model.core.SessionToken;
 import info.movito.themoviedbapi.model.tv.TvSeason;
 import info.movito.themoviedbapi.model.tv.TvSeries;
 import jamuz.Jamuz;
+import jamuz.Options;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,11 +63,11 @@ public class TheMovieDb {
     public TheMovieDb(String username, String password, String language) {
         //FIXME: Not getting info in french !
         //language "fr" (ISO 639-1 code as mentionned in doc (http://docs.themoviedb.apiary.io/#reference/movies/movieidreleasedates)
-        // Not better with "fr-FR" as dsiplayed in website
+        // Not better with "fr-FR" as displayed in website
 		
 		//Configure TheMovieDb
         this.language = language; 
-        tmdbApi = new TmdbApi(""); //FIXME: Obfuscate
+        tmdbApi = new TmdbApi(Options.readKey("TheMovieDb")); //FIXME: Obfuscate
         TmdbAuthentication auth = tmdbApi.getAuthentication();
         TokenSession tokenSession = auth.getSessionLogin(username, password);
         sessionToken = new SessionToken(tokenSession.getSessionId());

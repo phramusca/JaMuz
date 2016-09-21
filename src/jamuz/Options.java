@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 import jamuz.utils.Popup;
+import java.io.InputStreamReader;
 
 /**
  *
@@ -87,6 +88,27 @@ public class Options {
                 }
             }
         }
- 
+    }
+	
+	public static String readKey(String keyName) {
+        InputStream input = null;
+        try {
+			input = Options.class.getResourceAsStream("/jamuz/keys.properties");
+			Properties keys = new Properties();
+            keys.load(input);
+            return keys.getProperty(keyName);
+
+        } catch (IOException ex) {
+            Popup.error(ex);
+            return null;
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException ex) {
+                    Popup.error(ex);
+                }
+            }
+        }
     }
 }

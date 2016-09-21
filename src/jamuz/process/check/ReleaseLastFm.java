@@ -21,6 +21,7 @@ package jamuz.process.check;
 import de.umass.lastfm.Album;
 import de.umass.lastfm.Artist;
 import de.umass.lastfm.ImageSize;
+import jamuz.Options;
 import jamuz.process.check.Cover.CoverType;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +36,9 @@ import jamuz.process.check.ReleaseMatch.Track;
 public class ReleaseLastFm {
 	
 	private final String lastFmKey = "";  //NOI18N //FIXME: Obfuscate
+	//Use the following but not here as done too often, move to upper
+//	private final String lastFmKey = Options.readKey("LastFm");
+	
 	private List<ReleaseMatch> matches;
 	private List<Cover> covers;
 		
