@@ -22,7 +22,6 @@ import info.movito.themoviedbapi.model.tv.TvEpisode;
 import info.movito.themoviedbapi.model.tv.TvSeason;
 import info.movito.themoviedbapi.model.tv.TvSeries;
 import jamuz.process.video.ProcessVideo.PathBuffer;
-import static jamuz.process.video.ProcessVideo.themovieDb;
 import java.util.ArrayList;
 import java.util.List;
 import jamuz.utils.Inter;
@@ -247,12 +246,12 @@ public class VideoTvShow extends VideoAbstract {
 
     @Override
     public void setMyVideo() {
-        MyTvShow myTvShow = themovieDb.getTv(getTitle(), Integer.parseInt(getYear()));
+        MyTvShow myTvShow = ProcessVideo.themovieDb.getTv(getTitle(), Integer.parseInt(getYear()));
         if(myTvShow!=null) {
             setMyVideo(myTvShow);
         }
         else {
-            myTvShow = themovieDb.searchFirstTv(getTitle(), Integer.parseInt(getYear()));
+            myTvShow = ProcessVideo.themovieDb.searchFirstTv(getTitle(), Integer.parseInt(getYear()));
             if(myTvShow==null) {
                 myTvShow = new MyTvShow(new TvSeries());
             }
