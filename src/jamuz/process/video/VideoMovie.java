@@ -166,18 +166,18 @@ public class VideoMovie extends VideoAbstract {
     }
    
     @Override
-    public void setMyVideo() {
+    public void setMyVideo(boolean search) {
         MyMovieDb myMovieDb = ProcessVideo.themovieDb.get(getTitle(), Integer.parseInt(getYear()));
         if(myMovieDb!=null) {
             setMyVideo(myMovieDb);  
         }
-        else {
+        else if(search){
             myMovieDb = ProcessVideo.themovieDb.searchFirst(getTitle(), Integer.parseInt(getYear()));
-            if(myMovieDb==null) {
-                myMovieDb = new MyMovieDb(new MovieDb());
-            }
-            setMyVideo(myMovieDb); 
         }
+		if(myMovieDb==null) {
+			myMovieDb = new MyMovieDb(new MovieDb());
+		}
+		setMyVideo(myMovieDb); 
     }
     
     /**
@@ -235,4 +235,13 @@ public class VideoMovie extends VideoAbstract {
     public boolean isMovie() {
         return true;
     }
+
+	@Override
+	protected ArrayList<FileInfoVideo> getFilesToCleanup() {
+		ArrayList<FileInfoVideo> videos = new ArrayList<>();
+		if(files.size()>0) {
+			videos.add(files.firstEntry().getValue());
+		}
+		return videos;
+	}
 } 

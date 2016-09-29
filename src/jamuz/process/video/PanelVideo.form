@@ -28,7 +28,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="733" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="856" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Component id="jPanelVideo" alignment="0" max="32767" attributes="0"/>
           </Group>
@@ -36,7 +36,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="128" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="281" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Component id="jPanelVideo" alignment="0" max="32767" attributes="0"/>
           </Group>
@@ -92,11 +92,11 @@
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="jLabelVideoStatus" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPaneSelectGenre1" pref="22" max="32767" attributes="2"/>
+                          <Component id="jScrollPaneSelectGenre1" pref="73" max="32767" attributes="2"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPaneSelectGenre2" pref="22" max="32767" attributes="2"/>
+                          <Component id="jScrollPaneSelectGenre2" pref="73" max="32767" attributes="2"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPaneSelectGenre4" pref="23" max="32767" attributes="2"/>
+                          <Component id="jScrollPaneSelectGenre4" pref="74" max="32767" attributes="2"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -204,15 +204,15 @@
                                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="triStateSelected" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="47" max="32767" attributes="0"/>
                                   <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                                   <Component id="triStateMovies" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" pref="47" max="32767" attributes="0"/>
                                   <Component id="jComboBoxFilter" min="-2" pref="217" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jButtonRefresh" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="47" max="32767" attributes="0"/>
                                   <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                                   <Component id="triStateLocal" min="-2" max="-2" attributes="0"/>
@@ -240,10 +240,14 @@
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                   <Component id="jButtonVideoList" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jCheckBoxVideoGet" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                                   <Component id="jCheckBoxVideoMove" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxVideoTheMovieDb" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
+                                  <Component id="jButtonVideoCleanup" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="jButtonVideoExport" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
@@ -264,11 +268,13 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jButtonVideoOptions" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jButtonVideoList" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jCheckBoxVideoGet" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jCheckBoxVideoMove" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButtonVideoOptions" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
+                                  <Component id="jButtonVideoCleanup" alignment="3" max="32767" attributes="0"/>
+                                  <Component id="jCheckBoxVideoTheMovieDb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jButtonVideoExport" alignment="1" min="-2" pref="28" max="-2" attributes="0"/>
                           </Group>
@@ -299,7 +305,7 @@
                                       <Component id="jButtonRefresh" alignment="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="jScrollPaneCheckTags1" pref="24" max="32767" attributes="2"/>
+                                  <Component id="jScrollPaneCheckTags1" pref="177" max="32767" attributes="2"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -428,7 +434,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/res/selected.png"/>
+                      <Image iconType="3" name="/jamuz/ressources/selected.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -458,7 +464,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/res/eye.png"/>
+                      <Image iconType="3" name="/jamuz/ressources/eye.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -489,7 +495,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/res/1starC.png"/>
+                      <Image iconType="3" name="/jamuz/ressources/1starC.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -507,7 +513,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/res/wishlist_add.png"/>
+                      <Image iconType="3" name="/jamuz/ressources/wishlist_add.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -538,7 +544,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/res/heart.png"/>
+                      <Image iconType="3" name="/jamuz/ressources/heart.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -590,7 +596,7 @@
                 <Component class="javax.swing.JButton" name="jButtonRefresh">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/res/update.png"/>
+                      <Image iconType="3" name="/jamuz/ressources/update.png"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -604,7 +610,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/res/file_manager.png"/>
+                      <Image iconType="3" name="/jamuz/ressources/file_manager.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -635,7 +641,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/res/hd_ready.png"/>
+                      <Image iconType="3" name="/jamuz/ressources/hd_ready.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -666,7 +672,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/res/movies.png"/>
+                      <Image iconType="3" name="/jamuz/ressources/movies.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -689,6 +695,22 @@
                   <Events>
                     <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="triStateMoviesStateChanged"/>
                   </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JButton" name="jButtonVideoCleanup">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Cleanup"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonVideoCleanupActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="jCheckBoxVideoTheMovieDb">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="TheMovieDb"/>
+                  </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
                   </AuxValues>

@@ -20,8 +20,6 @@ import jamuz.FileInfo;
 import jamuz.process.check.FolderInfo;
 import jamuz.Jamuz;
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +28,6 @@ import javax.swing.ImageIcon;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.SSH;
 import jamuz.utils.StringManager;
 
@@ -62,12 +59,13 @@ public abstract class VideoAbstract implements Comparable {
     abstract public String getRelativeFullPath();
     abstract public void moveFilesAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn);
     abstract protected String getVideoSummary();
+	abstract protected ArrayList<FileInfoVideo> getFilesToCleanup();
     abstract public void removeFavorite();
     abstract public void addFavorite();
     abstract public void removeFromWatchList();
     abstract public void addToWatchList();
     abstract public void setRating(VideoRating rating);
-    abstract public void setMyVideo();
+    abstract public void setMyVideo(boolean search);
     abstract public boolean isLocal();
     abstract public boolean isWatched();
     
@@ -127,15 +125,16 @@ public abstract class VideoAbstract implements Comparable {
         //Build new path
         String originalPath = FilenameUtils.concat(conn.rootPath, fileInfo.getRelativePath());
         String newPath = originalPath;
-        //FIXME: Manage the archival of movies and tv shows.
-        //Does not work now that rootPath is "Vidéos" root folder and not "Films"
+		
+        //TODO: Manage new path filename using a pattern: refer to audio pattern
+        //(the archival of movies and tv shows Does not work now that rootPath is "Vidéos" root folder and not "Films")
 //        if(fileInfo.playCounter>0) {
 //            FilenameUtils.getFullPathNoEndSeparator(originalPath);
 //            newPath = FilenameUtils.concat(conn.rootPath, "Archive")+File.separator;  //NOI18N
 //        }
         
         //Get new idPath from a repository for updating database after file move
-        int newIdPath = buffer.getId(newPath);
+        int newIdPath = buffer.getId(newPath, conn);
         if(newIdPath<=0) { //Check that if is correct
 //            fileInfo.setStatus(Inter.get("Msg.Video.PathNotFound"));
             return Inter.get("Msg.Video.PathNotFound");

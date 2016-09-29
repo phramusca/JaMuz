@@ -89,7 +89,7 @@ public class DbConn {
 	/**
 	 * Disconnect database
 	 */
-	protected final void disconnect() {
+	public final void disconnect() {
 		try {
 			connection.close();
 		} catch (SQLException ex) {

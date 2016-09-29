@@ -17,6 +17,7 @@
 
 package jamuz.process.video;
 
+import com.google.common.collect.Lists;
 import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.tv.TvEpisode;
 import info.movito.themoviedbapi.model.tv.TvSeason;
@@ -162,6 +163,50 @@ public class VideoTvShow extends VideoAbstract {
         return display;
     }
         
+	@Override
+	public ArrayList<FileInfoVideo> getFilesToCleanup() {
+		
+		//FIXME: Add as a parameter: 0 will keep only current season
+		int nbSeasonToKeep = 0;
+		
+		MyTvShow myTvShow = (MyTvShow) myVideo;
+        List<TvSeason> seasons = myTvShow.getSerie().getSeasons();
+        ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
+
+        if(seasons != null) {
+			int currentSeason=-1;
+			int seasonumber;
+			int episodeNumber;
+            for(TvSeason season : Lists.reverse(seasons)) {
+				seasonumber=season.getSeasonNumber();
+                for(TvEpisode episode :  Lists.reverse(season.getEpisodes())) {
+					episodeNumber=episode.getEpisodeNumber();
+                    String key = "S"+seasonumber+"E"+episodeNumber;
+                    if(files.containsKey(key)) {
+						FileInfoVideo fileInfoVideo = files.get(key);
+                        if(fileInfoVideo.getPlayCounter()>0) {
+							if(currentSeason<0) {
+								//This is the last seen episode, and so the current season being watched or watched
+								currentSeason=seasonumber;
+							}
+							if(seasonumber<(currentSeason-nbSeasonToKeep)) {
+								filesToCleanup.add(fileInfoVideo);
+							}
+                        }
+                    }
+                }
+            }
+        }
+		
+		//FIXME: Use status AND lastSeason 
+		String status = ((MyTvShow) myVideo).getSerie().getStatus();
+		//Ended
+		//Returning Series
+		//Cancelled
+		
+        return filesToCleanup;
+	}
+	
     private List<String> getMissing() {
         MyTvShow myTvShow = (MyTvShow) myVideo;
         List<TvSeason> seasons = myTvShow.getSerie().getSeasons();
@@ -245,18 +290,18 @@ public class VideoTvShow extends VideoAbstract {
     }
 
     @Override
-    public void setMyVideo() {
-        MyTvShow myTvShow = ProcessVideo.themovieDb.getTv(getTitle(), Integer.parseInt(getYear()));
+    public void setMyVideo(boolean search) {
+        MyTvShow myTvShow = ProcessVideo.themovieDb.getTv(getTitle(), Integer.parseInt(getYear()), search);
         if(myTvShow!=null) {
             setMyVideo(myTvShow);
         }
-        else {
+        else if(search) {
             myTvShow = ProcessVideo.themovieDb.searchFirstTv(getTitle(), Integer.parseInt(getYear()));
-            if(myTvShow==null) {
-                myTvShow = new MyTvShow(new TvSeries());
-            }
-            setMyVideo(myTvShow);
         }
+		if(myTvShow==null) {
+			myTvShow = new MyTvShow(new TvSeries());
+		}
+		setMyVideo(myTvShow);
     }
     
     /**

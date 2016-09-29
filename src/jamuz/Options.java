@@ -24,14 +24,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 import jamuz.utils.Popup;
-import java.io.InputStreamReader;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Options {
-    
+    //FIXME: Needs the generated JAR to be obfuscated
     private final String filename;
     private final Properties properties;
 

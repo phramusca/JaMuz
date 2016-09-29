@@ -17,11 +17,6 @@
 
 package jamuz.process.video;
 
-import jamuz.process.video.VideoAbstract;
-import jamuz.process.video.VideoMovie;
-import jamuz.process.video.TheMovieDb;
-import jamuz.process.video.VideoTvShow;
-import info.movito.themoviedbapi.model.core.ResponseStatusException;
 import jamuz.DbInfo;
 import jamuz.Jamuz;
 import java.io.File;
@@ -35,7 +30,6 @@ import jamuz.utils.FileSystem;
 import jamuz.utils.SSH;
 import jamuz.utils.Inter;
 import jamuz.utils.ProcessAbstract;
-import java.util.logging.Level;
 
 /**
  * Video process class
@@ -44,12 +38,12 @@ import java.util.logging.Level;
 public class ProcessVideo extends ProcessAbstract {
     
     private final TableModelVideo tableModel;
-    private DbConnVideo conn;
 	private SSH myConn;
     private PathBuffer buffer;
 
     private boolean move;
     private boolean getDb;
+	private boolean doSearch;
 
     public ProcessVideo(String name) {
         super(name);
@@ -103,8 +97,8 @@ public class ProcessVideo extends ProcessAbstract {
                 
                 for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
         
-                    sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), fileInfoVideo.getFilename()));
-                    destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.destination"), fileInfoVideo.getFilename()));
+                    sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), fileInfoVideo.getRelativeFullPath()));
+                    destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.destination"), fileInfoVideo.getRelativeFullPath()));
 
                     //TODO: Allow export over SSH: merge with move option on list process
 
@@ -115,6 +109,7 @@ public class ProcessVideo extends ProcessAbstract {
 
                             try {
                                 FileSystem.copyFile(sourceFile, destinationFile);
+								tableModel.select(video, false);
                             } catch (IOException ex) {
                                 video.setStatus(MessageFormat.format(Inter.get("Msg.Video.ExportFailed"), ex.toString()));
                             }
@@ -127,18 +122,17 @@ public class ProcessVideo extends ProcessAbstract {
                         video.setStatus(Inter.get("Msg.Video.SourceFileMissing"));
                     }
                 }
-                
-                tableModel.select(video, false);
             }
 		}
         return true;
     }
     
-    public void listDb(boolean move, boolean getDb) {
+    public void listDb(boolean move, boolean getDb, boolean search) {
         this.tableModel.clear();
         this.buffer = new PathBuffer();
         this.move = move;
         this.getDb = getDb;
+		this.doSearch = search;
         
         ProcessListDb process = new ProcessListDb("Thread.ProcessVideo.listDb");
         process.start();
@@ -155,7 +149,7 @@ public class ProcessVideo extends ProcessAbstract {
         public void run() {
             this.resetAbort();
             try {
-                listDbfiles(move, getDb);
+                listDbfiles(move, getDb, doSearch);
             } catch (InterruptedException ex) {
                 Popup.error(Inter.get("Msg.Process.Aborted"), ex); //NOI18N
             }
@@ -167,9 +161,9 @@ public class ProcessVideo extends ProcessAbstract {
     }
  
     //TODO: Use this: need to think of options (override or derive StatSource
-    private boolean listFS() throws InterruptedException {
+    private boolean listFS(String rootPath) throws InterruptedException {
         PanelVideo.progressBar.setup(tableModel.getFiles().size());
-        browseFS(new File(conn.rootPath));
+        browseFS(new File(rootPath), rootPath);
 //        for (FileInfoVideo fileInfoVideo : tableModel.getFiles()) {
 //            tableModel.addRow(fileInfoVideo);
 //            PanelVideo.progressBar.progress(fileInfoVideo.getTitle());
@@ -177,7 +171,7 @@ public class ProcessVideo extends ProcessAbstract {
         return true;
     }
 	
-	private boolean listDbfiles(boolean move, boolean getDb) throws InterruptedException {
+	private boolean listDbfiles(boolean move, boolean getDb, boolean doSearch) throws InterruptedException {
 		PanelVideo.progressBar.reset();
         PanelVideo.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
         
@@ -190,32 +184,38 @@ public class ProcessVideo extends ProcessAbstract {
         }
         
 		//Connect to database
-		conn = new DbConnVideo(new DbInfo("sqlite", Jamuz.getOptions().get("video.dbLocation"), ".", "."), Jamuz.getOptions().get("video.rootPath"));
+		DbConnVideo connKodi = new DbConnVideo(new DbInfo("sqlite", Jamuz.getOptions().get("video.dbLocation"), ".", "."), Jamuz.getOptions().get("video.rootPath"));
         if(getDb) {
             //Retrieve XBMC database
             checkAbort();
-            if(!conn.getInfo().copyDB(true, Jamuz.getLogPath())) {
+            if(!connKodi.getInfo().copyDB(true, Jamuz.getLogPath())) {
                 return false;
             }
         }
         else {
             //It is changed when copying, but if we want to use previous local copy directly, need to change work location
-            conn.getInfo().setLocationWork(FilenameUtils.concat(Jamuz.getLogPath(), 
+            connKodi.getInfo().setLocationWork(FilenameUtils.concat(Jamuz.getLogPath(), 
                     FilenameUtils.getName(Jamuz.getOptions().get("video.dbLocation")))); //NOI18N
         }
-        conn.connect();
-		conn.prepareStatements();
+        connKodi.connect();
+		connKodi.prepareStatements();
         
 		//List movies
-		conn.getMovies(tableModel.getFiles(), conn.rootPath);
+		connKodi.getMovies(tableModel.getFiles(), connKodi.rootPath);
         
         //List TV Shows
-        conn.getTvShows(tableModel.getFiles());
+        connKodi.getTvShows(tableModel.getFiles());
 
         //Get TheMovieDb user data
-        themovieDb = new TheMovieDb(Jamuz.getOptions().get("video.themovieDb.user"), 
-                Jamuz.getOptions().get("video.themovieDb.pwd"), 
-                Jamuz.getOptions().get("video.themovieDb.language")); 
+		themovieDb = new TheMovieDb(Jamuz.getOptions().get("video.themovieDb.user"), 
+			Jamuz.getOptions().get("video.themovieDb.pwd"), 
+			Jamuz.getOptions().get("video.themovieDb.language")); 
+		if(doSearch) {
+			themovieDb.getAll();
+		}
+		else {
+			themovieDb.getAllFromCache();
+		}
         
 		//Move - if required - and display movies 
 		PanelVideo.progressBar.setup(tableModel.getFiles().size()*2);
@@ -227,7 +227,7 @@ public class ProcessVideo extends ProcessAbstract {
                 //So for series, you have to go through all or create an "All" playlist and open it
                 //Then wait a while before processing again
                 //FIXME: Warn that kodi needs cleanup/update when at least a file has been moved
-                video.moveFilesAndSrt(buffer, conn, myConn); 
+                video.moveFilesAndSrt(buffer, connKodi, myConn); 
             }
             //Check if files exist locally, and get size if so
             long length = 0;
@@ -249,22 +249,10 @@ public class ProcessVideo extends ProcessAbstract {
         //Load user data from themovieDb.org
         for(VideoAbstract fileInfoVideo : tableModel.getFiles()) {
             PanelVideo.progressBar.progress(fileInfoVideo.getTitle());
-//            try {
-                fileInfoVideo.setMyVideo();
-                tableModel.fireTableDataChanged();
-				
-				//IF this try/catch was somehow useful (commented 2016-04-06), then add it in fileInfoVideo.setMyVideo(); and return a boolean to break;
-//            }
-//            catch(ResponseStatusException ex) {
-//                if(ex.getResponseStatus().getStatusCode()!=25) {
-//                    Popup.error("Code "+ex.getResponseStatus().getStatusCode()+": "+ex.getResponseStatus().getStatusMessage());
-//                }
-//				else {
-//					Jamuz.getLogger().log(Level.FINEST, "Code {0}: {1}", new Object[]{ex.getResponseStatus().getStatusCode(), ex.getResponseStatus().getStatusMessage()});
-//				}
-//                break;
-//            }
+			fileInfoVideo.setMyVideo(doSearch); //This removes from MyMovies or MyTvShows
+			tableModel.fireTableDataChanged();
         }
+		//Now display remaining, not removed as attached to a VideoAbstract above
         for(MyMovieDb myMovieDb : themovieDb.getMyMovies().values()) {
             tableModel.addRow(new VideoMovie(myMovieDb));
         }
@@ -279,15 +267,35 @@ public class ProcessVideo extends ProcessAbstract {
         if(getDb) {
             //Send XBMC dtabase back
             this.checkAbort();
-            if(!conn.getInfo().copyDB(false, Jamuz.getLogPath())) {
+            if(!connKodi.getInfo().copyDB(false, Jamuz.getLogPath())) {
                 return false;
             }
         }
+		if(doSearch) {
+			DbConnVideo connCacheTheMovieDb = new DbConnVideo(new DbInfo("sqlite", "myMovieDb.db", ".", "."), "");
+			connCacheTheMovieDb.connect();
+			//Get the TvShows from the video files, as removed from themovieDb.getMyTvShows() 
+			//	when set in VideoAbstract leaving only the extra from theMovieDb
+			Map<Integer, MyTvShow> myTvShows = new HashMap<>();
+			Map<Integer, MyMovieDb> myMovies = new HashMap<>();
+			for (VideoAbstract video : getTableModel().getFiles()) {
+				if(video.isMovie()) {
+					myMovies.put(video.getMyMovieDb().getId(), (MyMovieDb)video.getMyMovieDb());
+				} else {
+					myTvShows.put(video.getMyMovieDb().getId(), (MyTvShow)video.getMyMovieDb());
+				}
+			}
+			connCacheTheMovieDb.setTvShowsInCache(myTvShows);
+			connCacheTheMovieDb.setMoviesInCache(myMovies);
+			//TODO: Add a cleanup somehow
+			connCacheTheMovieDb.disconnect();
+		}
+		connKodi.disconnect();
 		return true;
 	}
     public static TheMovieDb themovieDb;
     
-    private void browseFS(File path) throws InterruptedException {
+    private void browseFS(File path, String rootPath) throws InterruptedException {
 		this.checkAbort();
 		//Verifying we have a path and not a file
 		if (path.isDirectory()) {
@@ -296,12 +304,12 @@ public class ProcessVideo extends ProcessAbstract {
                 for (File file : files) {
                     this.checkAbort();
                     if (file.isDirectory()) {
-                        browseFS(file);
+                        browseFS(file, rootPath);
                     }
                     else {
                         String absolutePath=file.getAbsolutePath();
                         String filename=file.getName();
-                        String relativeFullPath=absolutePath.substring(this.conn.rootPath.length());
+                        String relativeFullPath=absolutePath.substring(rootPath.length());
 //                        FileInfoVideo fileInfo = new FileInfoVideo(filename, relativeFullPath);
 //                        tableModel.addRow(fileInfo);
                     }
@@ -326,7 +334,7 @@ public class ProcessVideo extends ProcessAbstract {
          * @param strPath
          * @return
          */
-        public int getId(String strPath) {
+        public int getId(String strPath, DbConnVideo conn) {
             if(ids.containsKey(strPath)) {
                 return ids.get(strPath);
             }
