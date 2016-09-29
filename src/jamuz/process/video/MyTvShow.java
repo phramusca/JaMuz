@@ -16,26 +16,27 @@
  */
 package jamuz.process.video;
 
-import jamuz.process.video.MyVideoAbstract;
 import info.movito.themoviedbapi.model.tv.TvSeries;
+import jamuz.DbInfo;
 import static jamuz.process.video.PanelVideo.comboRating;
+import java.io.Serializable;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class MyTvShow extends MyVideoAbstract {
-        private TvSeries serie;
+public class MyTvShow extends MyVideoAbstract implements Serializable {
+	private TvSeries serie;
 
-        public MyTvShow(TvSeries serie) {
-            super();
+	public MyTvShow(TvSeries serie) {
+		super();
 //            this.userRating = comboRating[Math.round(serie.getUserRating())-1];
-            int rating = Math.round(serie.getUserRating());
-            this.userRating = rating<=0?new VideoRating(0, "0 - Not Rated"):comboRating[rating-1];
-            this.serie = serie;
-            
-            if(serie.getFirstAirDate()!=null) {
-                this.year = getYear(serie.getFirstAirDate());
+		int rating = Math.round(serie.getUserRating());
+		this.userRating = rating<=0?new VideoRating(0, "0 - Not Rated"):comboRating[rating-1];
+		this.serie = serie;
+
+		if(serie.getFirstAirDate()!=null) {
+			this.year = getYear(serie.getFirstAirDate());
 //                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  //NOI18N
 //                try {
 //                    Date releaseDate = dateFormat.parse(serie.getFirstAirDate());
@@ -45,24 +46,37 @@ public class MyTvShow extends MyVideoAbstract {
 //                } catch (ParseException ex) {
 ////                    Popup.error(ex);
 //                }
-            }
-        }
+		}
+	}
 
-        public TvSeries getSerie() {
-            return serie;
-        }
+	public TvSeries getSerie() {
+		return serie;
+	}
 
-        public void setSerie(TvSeries movieDb) {
-            this.serie = movieDb;
-        }
-        
-        @Override
-        public int getId() {
-            return this.serie.getId();
-        }
+	public void setSerie(TvSeries movieDb) {
+		this.serie = movieDb;
+	}
 
-        @Override
-        public String getHomepage() {
-            return this.serie.getHomepage();
-        }
-    }
+	@Override
+	public int getId() {
+		return this.serie.getId();
+	}
+
+	@Override
+	public String getHomepage() {
+		return this.serie.getHomepage();
+	}
+
+	@Override
+	public String toString() {
+		return this.serie.getName()+" "+this.serie.getUserRating();
+	}
+
+	@Override
+	public void setMyVideoInCache() {
+		DbConnVideo conn = new DbConnVideo(new DbInfo("sqlite", "myMovieDb.db", ".", "."), "");
+		conn.connect();
+		conn.setTvShowInCache(this);
+		conn.disconnect();
+	}
+}

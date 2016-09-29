@@ -33,6 +33,7 @@ import info.movito.themoviedbapi.model.core.ResponseStatusException;
 import info.movito.themoviedbapi.model.core.SessionToken;
 import info.movito.themoviedbapi.model.tv.TvSeason;
 import info.movito.themoviedbapi.model.tv.TvSeries;
+import jamuz.DbInfo;
 import jamuz.Jamuz;
 import jamuz.Options;
 import java.util.ArrayList;
@@ -41,7 +42,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import jamuz.utils.Popup;
 
 /**
@@ -50,38 +50,48 @@ import jamuz.utils.Popup;
  */
 public class TheMovieDb {
 
-    private final String language; 
+    private String language = ""; 
     
-    private final TmdbApi tmdbApi;
-    private final AccountID accountId;
-    private final SessionToken sessionToken;
-    private final TmdbAccount account;
+    private TmdbApi tmdbApi;
+    private AccountID accountId;
+    private SessionToken sessionToken;
+    private TmdbAccount account;
     
-    private final Map<Integer, MyMovieDb> myMovies;
-    private final Map<Integer, MyTvShow> myTvShows;
+    private Map<Integer, MyMovieDb> myMovies;
+    private Map<Integer, MyTvShow> myTvShows;
     
     public TheMovieDb(String username, String password, String language) {
+		myMovies = new HashMap<>();
+        myTvShows = new HashMap<>();
         //FIXME: Not getting info in french !
         //language "fr" (ISO 639-1 code as mentionned in doc (http://docs.themoviedb.apiary.io/#reference/movies/movieidreleasedates)
         // Not better with "fr-FR" as displayed in website
 		
 		//Configure TheMovieDb
         this.language = language; 
-        tmdbApi = new TmdbApi(Options.readKey("TheMovieDb")); //FIXME: Obfuscate
+        tmdbApi = new TmdbApi(Options.readKey("TheMovieDb"));
         TmdbAuthentication auth = tmdbApi.getAuthentication();
         TokenSession tokenSession = auth.getSessionLogin(username, password);
         sessionToken = new SessionToken(tokenSession.getSessionId());
         account = tmdbApi.getAccount();
         Account user = account.getAccount(sessionToken);
         accountId = new AccountID(user.getId());
-		
-		//Get movies and TV shows
-        myMovies = new HashMap<>();
-        getMovies();
-        myTvShows = new HashMap<>();
-        getTvShows();
     }
     
+	public void getAll() {
+		//Get movies and TV shows
+        getMovies();
+        getTvShows();
+	}
+	
+	public void getAllFromCache() {
+		DbConnVideo conn = new DbConnVideo(new DbInfo("sqlite", "myMovieDb.db", ".", "."), "");
+        conn.connect();
+		conn.getTvShowsFromCache(myTvShows);
+		conn.getMoviesFromCache(myMovies);
+		conn.disconnect();
+	}
+	
     private void getTvShows() {
         //Get user lists and ratings
         Map<Integer, TvSeries> watchList = getWatchListTv();
@@ -433,11 +443,11 @@ public class TheMovieDb {
     }
     
     public MyTvShow searchFirstTv(String name, int year) {
-        List<TvSeries> movies = searchTv(name, year);
+        List<TvSeries> series = searchTv(name, year);
         
-        if(movies.size()>0) {
+        if(series.size()>0) {
             //TODO: Manage if >1 (offer user a choice)
-            TvSeries serie = movies.get(0);
+            TvSeries serie = series.get(0);
             int serieId = serie.getId();
                     
             if(myTvShows.containsKey(serieId)) {
@@ -473,12 +483,12 @@ public class TheMovieDb {
         return null;
     }
     
-    public MyTvShow getTv(String name, int year) {
+    public MyTvShow getTv(String name, int year, boolean search) {
         for(MyTvShow myTvShow : myTvShows.values()) {
             
             if(myTvShow.getSerie().getName().equals(name)) {
                 if(year<=0 || myTvShow.getYear()==year) {
-                    myTvShow.setSerie(getTV(myTvShow.getSerie().getId()));
+                    if(search) { myTvShow.setSerie(getTV(myTvShow.getSerie().getId())); }
                     myTvShows.remove(myTvShow.getSerie().getId());
                     return myTvShow;
                 }

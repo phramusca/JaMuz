@@ -17,10 +17,6 @@
 
 package jamuz.process.video;
 
-import jamuz.process.video.FileInfoVideo;
-import jamuz.process.video.VideoAbstract;
-import jamuz.process.video.VideoMovie;
-import jamuz.process.video.VideoTvShow;
 import jamuz.process.video.FileInfoVideo.StreamDetails;
 import jamuz.Jamuz;
 import jamuz.DbConn;
@@ -32,6 +28,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import jamuz.utils.StringManager;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * Creates a new connection to a XBMC database to get videos information
@@ -127,6 +127,9 @@ public class DbConnVideo extends DbConn {
                     + "INNER JOIN tvshowlinkpath L ON L.idShow=T.idShow "
                     + "INNER JOIN path P ON L.idPath=P.idPath) " //NOI18N
                     + "ORDER BY T.c00");    //NOI18N 
+			
+			
+			
             this.stSelectTvShowEpisodes = connection.prepareStatement("SELECT "
                     + "E.idFile, E.c18 AS originalRelativeFullPath, "
                     + "P.strPath, F.strFilename, E.c03 AS rating, E.c12 AS seasonNumber, "
@@ -380,6 +383,127 @@ public class DbConnVideo extends DbConn {
         }
 	}
     
+
+	public boolean getTvShowsFromCache(Map<Integer, MyTvShow> myTvShows) {
+		return getVideosFromCache(myTvShows, "tvshow", "idTvShow");
+	}
+
+	public boolean setTvShowsInCache(Map<Integer, MyTvShow> myTvShows) {
+		return setVideosInCache(myTvShows, "tvshow", "idTvShow");
+	}
+	
+	public boolean setTvShowInCache(MyTvShow myTvShow) {
+		Map<Integer, MyTvShow> myTvShows = new HashMap<>();
+		myTvShows.put(myTvShow.getSerie().getId(), myTvShow);
+		return setTvShowsInCache(myTvShows);
+	}
+	
+	public boolean getMoviesFromCache(Map<Integer, MyMovieDb> myMovies) {
+		return getVideosFromCache(myMovies, "movie", "idMovie");
+	}
+
+	public boolean setMoviesInCache(Map<Integer, MyMovieDb> myMovies) {
+		return setVideosInCache(myMovies, "movie", "idMovie");
+	}
+	
+	public boolean setMovieInCache(MyMovieDb myMovie) {
+		Map<Integer, MyMovieDb> myMovies = new HashMap<>();
+		myMovies.put(myMovie.getMovieDb().getId(), myMovie);
+		return setMoviesInCache(myMovies);
+	}
+	
+	private boolean getVideosFromCache(Map<Integer, ? extends MyVideoAbstract> myVideos, String table, String idName) {
+		//Get bytes from db
+		Map<Integer, byte[]> objects = new HashMap<>();
+		if(!getBytesFromCache(objects, table, idName)) {
+			return false;
+		}
+		//Deserialize
+		for(Entry<Integer, byte[]> entry : objects.entrySet()) {
+			myVideos.put(entry.getKey(), SerializationUtils.deserialize(entry.getValue()));
+		}
+		return true;
+	}
+	
+	private boolean setVideosInCache(Map<Integer, ? extends MyVideoAbstract> myVideos, String table, String idName) {
+		Map<Integer, byte[]> objects = new HashMap<>();
+		for(Entry<Integer, ? extends MyVideoAbstract> entry : myVideos.entrySet()) {
+			objects.put(entry.getKey(), SerializationUtils.serialize(entry.getValue()));
+		}
+		return setBytesInCache(objects, table, idName);
+	}
+	
+	//TODO: Move to a common library
+	public boolean getBytesFromCache(Map<Integer, byte[]> objects, String table, String idName) {
+        ResultSet rs = null;
+		byte[] bytes;
+		int id;
+		try {
+			PreparedStatement stSelectAllTvShowsFromCache = null;
+			stSelectAllTvShowsFromCache = connection.prepareStatement("SELECT "+idName+", obj FROM "+table+"");    //NOI18N 
+			rs = stSelectAllTvShowsFromCache.executeQuery();
+			while(rs.next()){
+				id=rs.getInt(idName);
+				bytes=rs.getBytes("obj");
+				objects.put(id, bytes);
+			}
+			return true;
+		} catch (SQLException ex) {
+			Popup.error(ex);
+			return false;
+		}
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("getBytesFromCache: Failed to close ResultSet");
+            }
+            
+        }
+	}
+	
+	//TODO: Move to a common library
+	public boolean setBytesInCache(Map<Integer, byte[]> objects, String table, String idName) {
+        ResultSet rs = null;
+		try {
+			connection.setAutoCommit(false);
+			int[] results;
+			PreparedStatement stInsertInCache = connection.prepareStatement("INSERT OR REPLACE INTO "+table+" ("+idName+", obj) VALUES (?, ?)"); //NOI18N 
+			for (Entry<Integer, byte[]> entry : objects.entrySet()) {
+				stInsertInCache.setInt(1, entry.getKey());
+				stInsertInCache.setBytes(2, entry.getValue());
+				stInsertInCache.addBatch();
+			}
+            long startTime = System.currentTimeMillis();
+			results = stInsertInCache.executeBatch();
+			connection.commit();
+			long endTime = System.currentTimeMillis();
+			Jamuz.getLogger().log(Level.FINEST, "setObjectInCache UPDATE done in {0}ms. Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
+
+			//Analyse results
+			//TODO: Get more info to display => add a Map<Integer, EntrySet>. Do that for other similar cases
+			int result;
+			for (int i = 0; i < results.length; i++) {
+				result = results[i];
+				if (result < 0) {
+					Jamuz.getLogger().log(Level.SEVERE, "setObjectInCache in table {1}, result={0}", new Object[]{result, table});   //NOI18N
+				}
+			}
+			connection.setAutoCommit(true);
+			return true;
+		} catch (SQLException ex) {
+			Popup.error(ex);
+			return false;
+		}
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("setObjectInCache: Failed to close ResultSet");
+            }
+        }
+	}
+	
     /**
      * Update file's idPath and filename
      * @param idFile

@@ -16,11 +16,13 @@
  */
 package jamuz.process.video;
 
+import java.io.Serializable;
+
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class VideoRating {
+public class VideoRating implements Serializable {
     private final int rating;
     private final String display;
 

@@ -16,7 +16,7 @@
  */
 package jamuz.process.video;
 
-import static jamuz.process.video.PanelVideo.comboRating;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,66 +27,71 @@ import java.util.Date;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public abstract class MyVideoAbstract {
-        protected boolean isFavorite;
-        protected boolean isInWatchList;
-        protected VideoRating userRating;
-        protected int year;
+public abstract class MyVideoAbstract implements Serializable {
+	protected boolean isFavorite;
+	protected boolean isInWatchList;
+	protected VideoRating userRating;
+	protected int year;
 
-        public MyVideoAbstract() {
-            this.isFavorite=false;
-            this.isInWatchList=false;
-            this.userRating = new VideoRating(0, "Not Rated");
-            this.year = 0;
-        }
+	public MyVideoAbstract() {
+		this.isFavorite=false;
+		this.isInWatchList=false;
+		this.userRating = new VideoRating(0, "Not Rated");
+		this.year = 0;
+	}
 
-        abstract public int getId(); 
-        
-        abstract public String getHomepage();
-        
-        public boolean isIsFavorite() {
-            return isFavorite;
-        }
+	abstract public int getId(); 
 
-        public boolean isIsInWatchList() {
-            return isInWatchList;
-        }
+	abstract public void setMyVideoInCache();
+	
+	abstract public String getHomepage();
 
-        public VideoRating getUserRating() {
-            return userRating;
-        }
+	public boolean isIsFavorite() {
+		return isFavorite;
+	}
 
-        public void setUserRating(VideoRating userRating) {
-            this.userRating = userRating;// userRating;
-        }
+	public boolean isIsInWatchList() {
+		return isInWatchList;
+	}
 
-        public void setIsFavorite(boolean isFavorite) {
-            this.isFavorite = isFavorite;
-        }
+	public VideoRating getUserRating() {
+		return userRating;
+	}
+	
+	public void setUserRating(VideoRating userRating) {
+		this.userRating = userRating;
+		setMyVideoInCache();
+	}
 
-        public void setIsInWatchList(boolean isInWatchList) {
-            this.isInWatchList = isInWatchList;
-        }
+	public void setIsFavorite(boolean isFavorite) {
+		this.isFavorite = isFavorite;
+		setMyVideoInCache();
+	}
 
-        public int getYear() {
-            return year;
-        }
-        
-        /**
-         * Gets year from "yyyy-MM-dd" date format.
-         * Returns 0 if an error occurs.
-         * @param date
-         * @return
-         */
-        public static int getYear(String date) {
-            try {
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Date releaseDate = dateFormat.parse(date);
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(releaseDate);
-                return cal.get(Calendar.YEAR);
-            } catch (ParseException ex) {
-                return 0;
-            }
-        }
-    }
+	public void setIsInWatchList(boolean isInWatchList) {
+		this.isInWatchList = isInWatchList;
+		setMyVideoInCache();
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	/**
+	 * Gets year from "yyyy-MM-dd" date format.
+	 * Returns 0 if an error occurs.
+	 * @param date
+	 * @return
+	 */
+	public static int getYear(String date) {
+		try {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date releaseDate = dateFormat.parse(date);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(releaseDate);
+			return cal.get(Calendar.YEAR);
+		} catch (ParseException ex) {
+			return 0;
+		}
+	}
+}

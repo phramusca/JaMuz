@@ -17,12 +17,10 @@
 
 package jamuz;
 
-import jamuz.gui.DialogTag;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;

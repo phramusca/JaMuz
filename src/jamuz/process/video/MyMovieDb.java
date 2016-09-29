@@ -17,13 +17,15 @@
 package jamuz.process.video;
 
 import info.movito.themoviedbapi.model.MovieDb;
+import jamuz.DbInfo;
 import static jamuz.process.video.PanelVideo.comboRating;
+import java.io.Serializable;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class MyMovieDb extends MyVideoAbstract {
+public class MyMovieDb extends MyVideoAbstract implements Serializable {
         private MovieDb movieDb;
 
         public MyMovieDb(MovieDb movieDb) {
@@ -63,4 +65,12 @@ public class MyMovieDb extends MyVideoAbstract {
         public String getHomepage() {
             return this.movieDb.getHomepage(); //TODO: Lookup if not already done to get the homepage
         }
+		
+		@Override
+		public void setMyVideoInCache() {
+			DbConnVideo conn = new DbConnVideo(new DbInfo("sqlite", "myMovieDb.db", ".", "."), "");
+			conn.connect();
+			conn.setMovieInCache(this);
+			conn.disconnect();
+		}
     }   
