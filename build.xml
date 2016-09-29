@@ -46,20 +46,32 @@
        FIXME: copy/create default configuration files, make 7z package 
 -->
     <target name="-post-jar">
-        <property name="property.sqlitedb.dest" value="dist/JaMuz.db"/>
-        <property name="property.sqlitedb.src" value="database/JaMuz_creation.sql"/>
-        <property name="property.sqlitedb.src2" value="database/JaMuz_insertion_minimal.sql"/>
+        <property name="sqlitedb.JaMuz" value="dist/JaMuz.db"/>
+        <property name="script.creation.JaMuz" value="database/JaMuz_creation.sql"/>
+        <property name="script.insertion.JaMuz" value="database/JaMuz_insertion_minimal.sql"/>
 
-        <echo message="Sqlite creation script : ${property.sqlitedb.src}"/>
-        <echo message="Sqlite creation script : ${property.sqlitedb.src2}"/>
-        <echo message="Sqlite database : ${property.sqlitedb.dest}" />
+	<property name="sqlitedb.myMovieDb" value="dist/myMovieDb.db"/>
+	<property name="script.creation.myMovieDb" value="database/myMovieDb_creation.sql"/>
+
+        <echo message="Sqlite creation script : ${script.creation.JaMuz}"/>
+        <echo message="Sqlite database : ${sqlitedb.JaMuz}" />
         <exec executable = "sqlite3">
-            <arg value="${property.sqlitedb.dest}"/>
-            <arg value=".read ${property.sqlitedb.src}"/>
+            <arg value="${sqlitedb.JaMuz}"/>
+            <arg value=".read ${script.creation.JaMuz}"/>
         </exec>
+
+	<echo message="Sqlite insertion script : ${script.insertion.JaMuz}"/>
+	<echo message="Sqlite database : ${sqlitedb.JaMuz}" />
         <exec executable = "sqlite3">
-            <arg value="${property.sqlitedb.dest}"/>
-            <arg value=".read ${property.sqlitedb.src2}"/>
+            <arg value="${sqlitedb.JaMuz}"/>
+            <arg value=".read ${script.insertion.JaMuz}"/>
+        </exec>
+
+	<echo message="Sqlite creation script : ${script.creation.myMovieDb}"/>
+	<echo message="Sqlite database : ${sqlitedb.myMovieDb}" />
+	<exec executable = "sqlite3">
+            <arg value="${sqlitedb.myMovieDb}"/>
+            <arg value=".read ${script.creation.myMovieDb}"/>
         </exec>
     </target>
     <!--
