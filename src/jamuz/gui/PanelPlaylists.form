@@ -16,7 +16,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jSplitPanePlaylist" alignment="1" pref="1009" max="32767" attributes="0"/>
+          <Component id="jSplitPanePlaylist" alignment="1" pref="1075" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -44,13 +44,13 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanelSelectDisplay1" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jScrollPaneSelect1" alignment="0" pref="1009" max="32767" attributes="0"/>
+                  <Component id="jScrollPaneSelect1" alignment="0" pref="952" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jScrollPaneSelect1" pref="58" max="32767" attributes="0"/>
+                      <Component id="jScrollPaneSelect1" pref="90" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanelSelectDisplay1" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -192,8 +192,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jPanelPlaylist" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jPanelPlaylistLimit" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jPanelPlaylist" max="32767" attributes="0"/>
+                          <Component id="jPanelPlaylistLimit" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jPanelPlaylistFilters" max="32767" attributes="0"/>
@@ -208,12 +208,12 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanelPlaylistFilters" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Component id="jPanelPlaylist" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanelPlaylistLimit" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="jPanelPlaylistFilters" alignment="0" max="32767" attributes="0"/>
                           <Component id="jPanelPlaylistOrders" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -391,16 +391,20 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="jScrollPane1" pref="264" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jButtonPlaylistFieldAdd" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jButtonPlaylistFilterEdit" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jButtonPlaylistFilterDelete" alignment="0" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="jScrollPane1" pref="287" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jButtonPlaylistFieldAdd" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jButtonPlaylistFilterEdit" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jButtonPlaylistFilterDelete" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="jComboBoxPlaylistMatch" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jComboBoxPlaylistMatch" alignment="1" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -418,7 +422,7 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="jComboBoxPlaylistMatch" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -511,20 +515,13 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jScrollPane2" pref="209" max="32767" attributes="0"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jButtonPlaylisOrderDelete" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jButtonPlaylistOrderEdit" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jButtonPlaylistOrderAdd" alignment="0" max="32767" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jCheckBoxRandom" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                          <Component id="jScrollPane2" pref="251" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="jCheckBoxRandom" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jButtonPlaylisOrderDelete" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jButtonPlaylistOrderEdit" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jButtonPlaylistOrderAdd" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -532,20 +529,21 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="jCheckBoxRandom" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jButtonPlaylistOrderAdd" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jButtonPlaylistOrderEdit" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jButtonPlaylisOrderDelete" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="jScrollPane2" alignment="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jCheckBoxRandom" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -601,7 +599,7 @@
                     <Property name="text" type="java.lang.String" value="Random"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jCheckBoxRandomStateChanged"/>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jCheckBoxRandomItemStateChanged"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="jButtonPlaylistOrderEdit">
@@ -623,7 +621,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Limit"/>
+                    <TitledBorder/>
                   </Border>
                 </Property>
               </Properties>
@@ -639,6 +637,8 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jComboBoxLimitUnit" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
+                          <Component id="jCheckBoxHidden" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -648,6 +648,7 @@
                           <Component id="jCheckBoxLimit" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jSpinnerLimitValue" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jComboBoxLimitUnit" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jCheckBoxHidden" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -677,6 +678,15 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxLimitActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="jCheckBoxHidden">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Hidden"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jCheckBoxHiddenItemStateChanged"/>
                   </Events>
                 </Component>
               </SubComponents>

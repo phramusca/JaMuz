@@ -240,6 +240,8 @@ public class PanelMain extends javax.swing.JFrame {
         panelPlaylists.initExtended();
         
         setKeyBindings();
+		
+		startStopRemoteServer();
     }
 
     private void setKeyBindings() {
@@ -913,8 +915,10 @@ public class PanelMain extends javax.swing.JFrame {
             }
         });
 
+        jCheckBoxServerStartOnStartup.setSelected(true);
         jCheckBoxServerStartOnStartup.setText(Inter.get("PanelMain.jCheckBoxServerStartOnStartup.text")); // NOI18N
         jCheckBoxServerStartOnStartup.setToolTipText(Inter.get("PanelMain.jCheckBoxServerStartOnStartup.toolTipText")); // NOI18N
+        jCheckBoxServerStartOnStartup.setEnabled(false);
 
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
@@ -1875,7 +1879,11 @@ public class PanelMain extends javax.swing.JFrame {
     //FIXME: Manage jCheckBoxServerStartOnStartup 
     
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
-        Swing.enableComponents(jPanelRemote, false);
+        startStopRemoteServer();
+    }//GEN-LAST:event_jButtonStartActionPerformed
+
+	private void startStopRemoteServer() {
+		Swing.enableComponents(jPanelRemote, false);
 
         for(String login : clients) {
             server.closeClient(login);
@@ -1901,8 +1909,8 @@ public class PanelMain extends javax.swing.JFrame {
             jButtonStart.setText(Inter.get("Button.Start"));
         }
         jButtonStart.setEnabled(true);
-    }//GEN-LAST:event_jButtonStartActionPerformed
-
+	}
+	
     private void jButtonSendInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendInfoActionPerformed
         if(displayedFile!=null) {
             sendToClients(displayedFile, true);

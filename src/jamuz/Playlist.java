@@ -30,6 +30,12 @@ import java.util.Objects;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Playlist implements Comparable {
+
+	private boolean hidden;
+
+	public boolean isHidden() {
+		return hidden;
+	}
 	
 	/**
 	 * Playlist ID
@@ -146,8 +152,9 @@ public class Playlist implements Comparable {
 	 * @param match
 	 */
 	public Playlist(int id, String name, boolean limit, int limitValue, LimitUnit limitUnit, boolean random, 
-            Type type, Match match) {
+            Type type, Match match, boolean hidden) {
 		this.id=id;
+		this.hidden=hidden;
 		this.name=name;
 		this.limit = limit;
 		this.limitValue=limitValue;
@@ -225,8 +232,10 @@ public class Playlist implements Comparable {
         }
         return true;
     }
-    
-    
+
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
+	}
     
     private static class FileInfoIntComparator implements Comparator {
 

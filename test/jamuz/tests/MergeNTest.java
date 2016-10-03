@@ -273,7 +273,7 @@ public class MergeNTest extends TestCase {
         
         //Create test playlist (genre=reggae) for merge test with a device
         Playlist playlist = new Playlist(0, "TestDevicePlaylist", false, 1, Playlist.LimitUnit.Gio, false,
-            Playlist.Type.Songs, Playlist.Match.All);
+            Playlist.Type.Songs, Playlist.Match.All, false);
         Assert.assertTrue("playlist creation", playlist.insert());
         
         //Getting playlist from library (so that id is set , so we can add filter)

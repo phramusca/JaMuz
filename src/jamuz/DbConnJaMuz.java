@@ -184,7 +184,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public synchronized boolean updatePlaylist(Playlist playlist) {
         try {
             PreparedStatement stUpdatePlaylist = dbConn.connection.prepareStatement("UPDATE playlist "
-                    + "SET limitDo=?, limitValue=?, limitUnit=?, random=?, type=?, match=?, name=? "    //NOI18N
+                    + "SET limitDo=?, limitValue=?, limitUnit=?, random=?, type=?, match=?, name=?, hidden=? "    //NOI18N
                     + "WHERE idPlaylist=?");  //NOI18N
             stUpdatePlaylist.setBoolean(1, playlist.isLimit());
             stUpdatePlaylist.setDouble(2, playlist.getLimitValue());
@@ -193,7 +193,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             stUpdatePlaylist.setString(5, playlist.getType().name());
             stUpdatePlaylist.setString(6, playlist.getMatch().name());
             stUpdatePlaylist.setString(7, playlist.getName());
-            stUpdatePlaylist.setInt(8, playlist.getId());
+			stUpdatePlaylist.setBoolean(8, playlist.isHidden());
+            stUpdatePlaylist.setInt(9, playlist.getId());
             int nbRowsAffected = stUpdatePlaylist.executeUpdate();
             if (nbRowsAffected == 1) {
                 PreparedStatement stDeletePlaylistFilters = dbConn.connection.prepareStatement("DELETE FROM playlistFilter WHERE idPlaylist=?");  //NOI18N
@@ -1417,7 +1418,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean getPlaylists(HashMap<Integer, Playlist> playlists) {
         try {
             PreparedStatement stSelectPlaylists = dbConn.connection.prepareStatement("SELECT idPlaylist, name, limitDo, "
-                    + "limitValue, limitUnit, random, type, match FROM playlist");    //NOI18N
+                    + "limitValue, limitUnit, random, hidden, type, match FROM playlist");    //NOI18N
             ResultSet rs = stSelectPlaylists.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("idPlaylist");  //NOI18N
@@ -1426,9 +1427,10 @@ public class DbConnJaMuz extends StatSourceSQL {
                 int limitValue = rs.getInt("limitValue");  //NOI18N
                 Playlist.LimitUnit limitUnit = Playlist.LimitUnit.valueOf(dbConn.getStringValue(rs, "limitUnit"));  //NOI18N
                 boolean random = rs.getBoolean("random");  //NOI18N
+				boolean hidden = rs.getBoolean("hidden");
                 Playlist.Type type = Playlist.Type.valueOf(dbConn.getStringValue(rs, "type"));  //NOI18N
                 Playlist.Match match = Playlist.Match.valueOf(dbConn.getStringValue(rs, "match"));  //NOI18N
-                Playlist playlist = new Playlist(id, playlistName, limit, limitValue, limitUnit, random, type, match);
+                Playlist playlist = new Playlist(id, playlistName, limit, limitValue, limitUnit, random, type, match, hidden);
 
                 //Get the filters
                 PreparedStatement stSelectPlaylistFilters = dbConn.connection.prepareStatement("SELECT idPlaylistFilter, field, operator, value "

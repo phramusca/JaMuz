@@ -34,7 +34,8 @@ CREATE TABLE "playlist" (
     "limitUnit" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "match" TEXT NOT NULL,
-    "random" INTEGER NOT NULL
+    "random" INTEGER NOT NULL,
+    "hidden" INTEGER NOT NULL
 );
 CREATE TABLE "playlistFilter" (
 	"idPlaylistFilter" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
