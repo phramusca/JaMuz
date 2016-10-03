@@ -152,6 +152,9 @@ public class DialogOptionsNew extends javax.swing.JDialog {
         jPanel15 = new javax.swing.JPanel();
         jTextField11 = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
+        jPanel21 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -320,7 +323,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap(183, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Machine", jPanel4);
+        jTabbedPane1.addTab("Machine and Library", jPanel4);
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("location.add"));
 
@@ -509,7 +512,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Locations", jPanel1);
+        jTabbedPane1.addTab("Locations Check", jPanel1);
 
         jPanel10.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -630,7 +633,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                     .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        jPanel19.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        jPanel19.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jTextField14.setText("jTextField1");
 
@@ -656,7 +659,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                         .addComponent(jTextField14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonOptionSelectFolder8))
-                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE))
+                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel19Layout.setVerticalGroup(
@@ -740,7 +743,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("tab2", jPanel2);
+        jTabbedPane1.addTab("Check options", jPanel2);
 
         jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder("log.limit"));
 
@@ -873,7 +876,41 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap(146, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("tab4", jPanel11);
+        jTabbedPane1.addTab("Proxy & Log", jPanel11);
+
+        jButton1.setText("Create shortcut");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText(" Bla bla bla : ADD EXPLAINATIONS");
+
+        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
+        jPanel21.setLayout(jPanel21Layout);
+        jPanel21Layout.setHorizontalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 809, Short.MAX_VALUE)
+                    .addGroup(jPanel21Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel21Layout.setVerticalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(385, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Installation", jPanel21);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -985,6 +1022,14 @@ public class DialogOptionsNew extends javax.swing.JDialog {
     private void jButtonOptionSelectFolder9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSelectFolder9ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonOptionSelectFolder9ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+		//For Windows:
+		//https://github.com/BlackOverlord666/mslinks
+		//OR https://github.com/jimmc/jshortcut
+		//For linux: ? Simply create a .desktop file ? Is that good for all ditributions ?
+    }//GEN-LAST:event_jButton1ActionPerformed
 	
 	private void doClose(int retStatus) {
 		returnStatus = retStatus;
@@ -1031,6 +1076,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton jButton1;
     private static javax.swing.JButton jButtonOptionSaveDescription;
     private static javax.swing.JButton jButtonOptionSaveSource;
     private javax.swing.JButton jButtonOptionSelectFolder;
@@ -1058,6 +1104,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -1073,6 +1120,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel21;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;

@@ -613,12 +613,14 @@
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="jCheckBoxServerStartOnStartup">
                       <Properties>
+                        <Property name="selected" type="boolean" value="true"/>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.jCheckBoxServerStartOnStartup.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="jamuz/gui/Bundle.properties" key="PanelMain.jCheckBoxServerStartOnStartup.toolTipText" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                         </Property>
+                        <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
                     </Component>
                   </SubComponents>

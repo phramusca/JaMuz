@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
 import org.apache.commons.io.FilenameUtils;
 
@@ -305,11 +306,14 @@ public class Jamuz {
 	 */
 	public static List<Playlist> getPlaylists() {
         List list = new ArrayList(playlists.values());
-//        ArrayList out = (ArrayList) playlists.values();
         Collections.sort(list);
 		return list;
 	}
     
+	public static List<Playlist> getPlaylistsVisible() {
+		return playlists.values().stream().filter(playlist -> !playlist.isHidden()).sorted().collect(Collectors.toList());
+	}
+	
 	/**
 	 * Return requested playlist
 	 * @param id
@@ -320,7 +324,7 @@ public class Jamuz {
 			return playlists.get(id);
 		}
 		else {
-			return new Playlist(0, Inter.get("Playlist.FullLibrary"), false, 1, Playlist.LimitUnit.Gio, false, Playlist.Type.Songs, Playlist.Match.All); //NOI18N
+			return new Playlist(0, Inter.get("Playlist.FullLibrary"), false, 1, Playlist.LimitUnit.Gio, false, Playlist.Type.Songs, Playlist.Match.All, false); //NOI18N
 		}
 	}
     

@@ -128,6 +128,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jComboBoxLimitUnit = new JComboBox(Playlist.LimitUnit.values());
         jSpinnerLimitValue = new javax.swing.JSpinner();
         jCheckBoxLimit = new javax.swing.JCheckBox();
+        jCheckBoxHidden = new javax.swing.JCheckBox();
 
         jSplitPanePlaylist.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
@@ -207,12 +208,12 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jPanelSelectTracks1Layout.setHorizontalGroup(
             jPanelSelectTracks1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelSelectDisplay1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPaneSelect1, javax.swing.GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE)
+            .addComponent(jScrollPaneSelect1, javax.swing.GroupLayout.DEFAULT_SIZE, 952, Short.MAX_VALUE)
         );
         jPanelSelectTracks1Layout.setVerticalGroup(
             jPanelSelectTracks1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSelectTracks1Layout.createSequentialGroup()
-                .addComponent(jScrollPaneSelect1, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                .addComponent(jScrollPaneSelect1, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelSelectDisplay1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -356,14 +357,16 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jPanelPlaylistFiltersLayout.setHorizontalGroup(
             jPanelPlaylistFiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPlaylistFiltersLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelPlaylistFiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonPlaylistFieldAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonPlaylistFilterEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonPlaylistFilterDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanelPlaylistFiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelPlaylistFiltersLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelPlaylistFiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButtonPlaylistFieldAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonPlaylistFilterEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonPlaylistFilterDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jComboBoxPlaylistMatch, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(jComboBoxPlaylistMatch, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelPlaylistFiltersLayout.setVerticalGroup(
             jPanelPlaylistFiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -378,7 +381,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxPlaylistMatch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1))
+                .addContainerGap())
         );
 
         jPanelPlaylistOrders.setBorder(javax.swing.BorderFactory.createTitledBorder("Order By"));
@@ -403,9 +406,9 @@ public class PanelPlaylists extends javax.swing.JPanel {
         });
 
         jCheckBoxRandom.setText("Random");
-        jCheckBoxRandom.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jCheckBoxRandomStateChanged(evt);
+        jCheckBoxRandom.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxRandomItemStateChanged(evt);
             }
         });
 
@@ -422,17 +425,13 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jPanelPlaylistOrdersLayout.setHorizontalGroup(
             jPanelPlaylistOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPlaylistOrdersLayout.createSequentialGroup()
-                .addGroup(jPanelPlaylistOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelPlaylistOrdersLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelPlaylistOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonPlaylisOrderDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonPlaylistOrderEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonPlaylistOrderAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanelPlaylistOrdersLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jCheckBoxRandom)))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelPlaylistOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jCheckBoxRandom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonPlaylisOrderDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonPlaylistOrderEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonPlaylistOrderAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelPlaylistOrdersLayout.setVerticalGroup(
@@ -440,18 +439,19 @@ public class PanelPlaylists extends javax.swing.JPanel {
             .addGroup(jPanelPlaylistOrdersLayout.createSequentialGroup()
                 .addGroup(jPanelPlaylistOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelPlaylistOrdersLayout.createSequentialGroup()
+                        .addComponent(jCheckBoxRandom)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonPlaylistOrderAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonPlaylistOrderEdit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonPlaylisOrderDelete))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxRandom)
-                .addGap(6, 6, 6))
+                        .addComponent(jButtonPlaylisOrderDelete)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
+                .addContainerGap())
         );
 
-        jPanelPlaylistLimit.setBorder(javax.swing.BorderFactory.createTitledBorder("Limit"));
+        jPanelPlaylistLimit.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         jComboBoxLimitUnit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -459,7 +459,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
             }
         });
 
-        jSpinnerLimitValue.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1)));
+        jSpinnerLimitValue.setModel(new javax.swing.SpinnerNumberModel(10, 1, null, 1));
         jSpinnerLimitValue.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerLimitValueStateChanged(evt);
@@ -470,6 +470,14 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jCheckBoxLimit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxLimitActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxHidden.setText("Hidden");
+        jCheckBoxHidden.setEnabled(false);
+        jCheckBoxHidden.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxHiddenItemStateChanged(evt);
             }
         });
 
@@ -484,14 +492,17 @@ public class PanelPlaylists extends javax.swing.JPanel {
                 .addComponent(jSpinnerLimitValue, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxLimitUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jCheckBoxHidden)
+                .addContainerGap())
         );
         jPanelPlaylistLimitLayout.setVerticalGroup(
             jPanelPlaylistLimitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPlaylistLimitLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jCheckBoxLimit)
                 .addComponent(jSpinnerLimitValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jComboBoxLimitUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jComboBoxLimitUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jCheckBoxHidden))
         );
 
         javax.swing.GroupLayout jPanelPlaylistEditLayout = new javax.swing.GroupLayout(jPanelPlaylistEdit);
@@ -514,11 +525,11 @@ public class PanelPlaylists extends javax.swing.JPanel {
             .addGroup(jPanelPlaylistEditLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelPlaylistEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelPlaylistFilters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelPlaylistEditLayout.createSequentialGroup()
                         .addComponent(jPanelPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelPlaylistLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanelPlaylistFilters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanelPlaylistOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -529,7 +540,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPanePlaylist, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE)
+            .addComponent(jSplitPanePlaylist, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1075, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -570,6 +581,8 @@ public class PanelPlaylists extends javax.swing.JPanel {
             //            jComboBoxPlaylistType.setSelectedItem(playlist.type);
 
             jCheckBoxRandom.setSelected(playlist.isRandom());
+			
+			jCheckBoxHidden.setSelected(playlist.isHidden());
 
             //Display filters
             displayFilters(playlist);
@@ -592,7 +605,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
                 Popup.warning(MessageFormat.format(Inter.get("Playlist.NameAlreadyExist"), input));  //NOI18N
             } else if (!input.equals("")) {  //NOI18N
                 Playlist playlist = new Playlist(0, input, false, 1, LimitUnit.Gio, false,
-                    Playlist.Type.Songs, Match.All);
+                    Playlist.Type.Songs, Match.All, false);
 
                 if (playlist.insert()) {
                     fillPlaylistCombo();
@@ -748,15 +761,6 @@ public class PanelPlaylists extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtonPlaylisOrderDeleteActionPerformed
 
-    private void jCheckBoxRandomStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jCheckBoxRandomStateChanged
-        if (jButtonPlaylistSave.isEnabled()) {
-            enableOrder(!jCheckBoxRandom.isSelected());
-            Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-            playlist.setRandom(jCheckBoxRandom.isSelected());
-            fillPlayList();
-        }
-    }//GEN-LAST:event_jCheckBoxRandomStateChanged
-
     private void jButtonPlaylistOrderEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaylistOrderEditActionPerformed
         if (jListPlaylistOrders.getSelectedIndex() > -1) {
             int orderIndex = jListPlaylistOrders.getSelectedIndex();
@@ -786,6 +790,22 @@ public class PanelPlaylists extends javax.swing.JPanel {
         //Disable edition
         enablePlaylistEdit(false);
     }//GEN-LAST:event_jButtonPlaylistCancelActionPerformed
+
+	//TODO: Update all other jCheckBox using StateChanged to use ItemStateChanged instead 
+	//(search all, breakpoint and check if current behavior is expected first)
+    private void jCheckBoxRandomItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxRandomItemStateChanged
+        if (jButtonPlaylistSave.isEnabled()) {
+            enableOrder(!jCheckBoxRandom.isSelected());
+            Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
+            playlist.setRandom(jCheckBoxRandom.isSelected());
+            fillPlayList();
+        }
+    }//GEN-LAST:event_jCheckBoxRandomItemStateChanged
+
+    private void jCheckBoxHiddenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxHiddenItemStateChanged
+        Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
+		playlist.setHidden(jCheckBoxHidden.isSelected());
+    }//GEN-LAST:event_jCheckBoxHiddenItemStateChanged
 
     public static void fillPlayList() {
         //Stop any previously running thread and wait for it to end
@@ -919,6 +939,8 @@ public class PanelPlaylists extends javax.swing.JPanel {
         PanelMain.comboPlaylistsModel.addElement(Inter.get("Label.Selected")); //NOI18N
         for (Playlist playlist : Jamuz.getPlaylists()) {
             comboModelPlaylist.addElement(playlist);
+        }
+		for (Playlist playlist : Jamuz.getPlaylistsVisible()) {
             PanelMain.comboPlaylistsModel.addElement(playlist);
         }
     }
@@ -936,6 +958,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
     private javax.swing.JButton jButtonPlaylistOrderEdit;
     private javax.swing.JButton jButtonPlaylistSave;
     private javax.swing.JButton jButtonPlaylistShow;
+    private javax.swing.JCheckBox jCheckBoxHidden;
     private javax.swing.JCheckBox jCheckBoxLimit;
     private javax.swing.JCheckBox jCheckBoxRandom;
     private javax.swing.JComboBox jComboBoxLimitUnit;
