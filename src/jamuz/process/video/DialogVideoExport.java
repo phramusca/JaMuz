@@ -44,7 +44,11 @@ public class DialogVideoExport extends javax.swing.JDialog {
     }
 
     private void displayOptions() {
-        jTextSource.setText(Jamuz.getOptions().get("video.source"));
+		String source = Jamuz.getOptions().get("video.source");
+		if(source.equals("")) {
+			source = Jamuz.getOptions().get("video.rootPath");
+		}
+        jTextSource.setText(source);
         jTextDestination.setText(Jamuz.getOptions().get("video.destination"));
     }
     
@@ -108,7 +112,7 @@ public class DialogVideoExport extends javax.swing.JDialog {
                     .addComponent(jLabelDestination))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextSource, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+                    .addComponent(jTextSource, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
                     .addComponent(jTextDestination))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,8 +144,8 @@ public class DialogVideoExport extends javax.swing.JDialog {
             }
         });
 
-        jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/accept.png"))); // NOI18N
-        jButtonSave.setText(bundle.getString("Button.Save")); // NOI18N
+        jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/external.png"))); // NOI18N
+        jButtonSave.setText(bundle.getString("Button.Export")); // NOI18N
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveActionPerformed(evt);
@@ -198,7 +202,7 @@ public class DialogVideoExport extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        //TODO: Check options validity
+		//TODO: Check options validity
         setOptions();
         if(Jamuz.getOptions().save()) {
             PanelVideo.export();

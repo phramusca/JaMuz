@@ -30,6 +30,9 @@ import jamuz.utils.FileSystem;
 import jamuz.utils.SSH;
 import jamuz.utils.Inter;
 import jamuz.utils.ProcessAbstract;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Video process class
@@ -90,39 +93,45 @@ public class ProcessVideo extends ProcessAbstract {
         
         checkAbort();
         
-        for (VideoAbstract video : tableModel.getFiles()) {
-            if(video.isSelected()) {
-                checkAbort();
-                PanelVideo.progressBar.progress(video.getTitle());
-                
-                for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
-        
-                    sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), fileInfoVideo.getRelativeFullPath()));
-                    destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.destination"), fileInfoVideo.getRelativeFullPath()));
+		List<VideoAbstract> filestoExport = tableModel.getFiles().stream().filter(video -> video.isSelected()).collect(Collectors.toList());
+		
+		//The following should never happen as it is checked in PanelVideo already
+		if(filestoExport.size()<=0) {
+			Popup.warning("You should select some files to export first");
+			return false;
+		}
+		
+        for (VideoAbstract video : filestoExport) {
+			checkAbort();
+			PanelVideo.progressBar.progress(video.getTitle());
 
-                    //TODO: Allow export over SSH: merge with move option on list process
+			for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
 
-                    if(sourceFile.exists()) {
-                        if(!destinationFile.exists()) {
-                            checkAbort();
-                            PanelVideo.progressBar.setIndeterminate(true);
+				sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), fileInfoVideo.getRelativeFullPath()));
+				destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.destination"), fileInfoVideo.getRelativeFullPath()));
 
-                            try {
-                                FileSystem.copyFile(sourceFile, destinationFile);
-								tableModel.select(video, false);
-                            } catch (IOException ex) {
-                                video.setStatus(MessageFormat.format(Inter.get("Msg.Video.ExportFailed"), ex.toString()));
-                            }
-                        }
-                        else {
-                            video.setStatus(Inter.get("Msg.Video.DestinationExist"));
-                        }
-                    }
-                    else {
-                        video.setStatus(Inter.get("Msg.Video.SourceFileMissing"));
-                    }
-                }
-            }
+				//TODO: Allow export over SSH: merge with move option on list process
+
+				if(sourceFile.exists()) {
+					if(!destinationFile.exists()) {
+						checkAbort();
+						PanelVideo.progressBar.setIndeterminate(true);
+
+						try {
+							FileSystem.copyFile(sourceFile, destinationFile);
+							tableModel.select(video, false);
+						} catch (IOException ex) {
+							video.setStatus(MessageFormat.format(Inter.get("Msg.Video.ExportFailed"), ex.toString()));
+						}
+					}
+					else {
+						video.setStatus(Inter.get("Msg.Video.DestinationExist"));
+					}
+				}
+				else {
+					video.setStatus(Inter.get("Msg.Video.SourceFileMissing"));
+				}
+			}
 		}
         return true;
     }
