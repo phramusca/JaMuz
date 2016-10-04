@@ -415,8 +415,7 @@ public class DialogOptions extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("DialogOptions.jPanel2.border.title"))); // NOI18N
 
         jButtonOptionSaveSource.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/accept.png"))); // NOI18N
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("jamuz/gui/Bundle"); // NOI18N
-        jButtonOptionSaveSource.setText(bundle1.getString("DialogOptions.jButtonOptionSaveSource.text")); // NOI18N
+        jButtonOptionSaveSource.setText(bundle.getString("Button.Save")); // NOI18N
         jButtonOptionSaveSource.setEnabled(false);
         jButtonOptionSaveSource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
