@@ -92,7 +92,9 @@ public class ProcessSync extends ProcessAbstract {
 	}
 	
 	private boolean sync() throws InterruptedException {
-
+		//FIXME: Use a pattern (separated from the one used for library)
+		//Inspire from file tagger in check
+		
         if(!new File(this.device.getDestination()).exists()) {
             Popup.warning(java.text.MessageFormat.format(Inter.get("Msg.Sync.DestinationDoesNotExist"), new Object[] {this.device.getDestination()}));  //NOI18N
             return false;

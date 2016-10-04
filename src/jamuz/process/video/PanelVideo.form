@@ -329,7 +329,7 @@
                       <Image iconType="3" name="/jamuz/ressources/external.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Button.Export" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="jamuz/Bundle.properties" key="Button.Export" replaceFormat="Inter.get(&quot;{key}&quot;)+&quot; ...&quot;"/>
                     </Property>
                   </Properties>
                   <Events>

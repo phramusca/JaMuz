@@ -69,6 +69,7 @@ import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -582,7 +583,7 @@ public class PanelVideo extends javax.swing.JPanel {
 
         jButtonVideoExport.setFont(new java.awt.Font("DejaVu Sans", 1, 18)); // NOI18N
         jButtonVideoExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/external.png"))); // NOI18N
-        jButtonVideoExport.setText(Inter.get("Button.Export")); // NOI18N
+        jButtonVideoExport.setText(Inter.get("Button.Export")+" ..."); // NOI18N
         jButtonVideoExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonVideoExportActionPerformed(evt);
@@ -922,9 +923,16 @@ public class PanelVideo extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonVideoExportActionPerformed
 
     public static void export()  {
-        triStateSelected.setState(State.SELECTED);
-        enableProcess(false);
-        processVideo.export();
+        List<VideoAbstract> filestoExport = processVideo.getTableModel().getFiles().stream()
+				.filter(video -> video.isSelected()).collect(Collectors.toList());
+		
+		if(filestoExport.size()>0) {
+			triStateSelected.setState(State.SELECTED);
+			enableProcess(false);
+			processVideo.export();
+		} else {
+			Popup.warning("You should select some files to export first");
+		}
     }
     
     public static void enableProcess(boolean enable) {
