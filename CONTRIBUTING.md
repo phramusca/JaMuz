@@ -9,6 +9,14 @@
 Pull requests are welcome.
 Please submit to the `master` branch.
 
+### TODO for Alpha 0.0.24
+- new GUI Options
+ - remove table optiontpe, use hashmap instead
+- Obfuscation
+- Make release
+ - update process
+ - tag git
+
 ### TODO for Beta version 0.1
 
 - Test, Stabilize and do all other FIX-MEs
