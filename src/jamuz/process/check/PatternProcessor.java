@@ -40,34 +40,31 @@ public class PatternProcessor {
         Map<String, String> extracted = extract(path, pattern);
         
         StringBuilder sb = new StringBuilder();
-        //FIXME: Sort JList by extracted.size() and select the one having most (as for covers)
         sb.append("<html>".concat(String.valueOf(extracted.size())).concat(" | "));
-        Integer counter=0;
-        appendValue(sb, "%z", Inter.get("Tag.AlbumArtist"), counter, extracted); //album artist);
-        appendValue(sb, "%b", Inter.get("Tag.Album"), counter, extracted);//album
+        appendValue(sb, "%z", Inter.get("Tag.AlbumArtist"), extracted); //album artist);
+        appendValue(sb, "%b", Inter.get("Tag.Album"), extracted);//album
         
-        appendValue(sb, "%n", Inter.get("Tag.TrackNo"), counter, extracted); //track#);
-        appendValue(sb, "%l", Inter.get("Tag.Artist"), counter, extracted); //# of tracks);
+        appendValue(sb, "%n", Inter.get("Tag.TrackNo"), extracted); //track#);
+        appendValue(sb, "%l", Inter.get("Tag.Artist"), extracted); //# of tracks);
         
-        appendValue(sb, "%d", Inter.get("Tag.DiscNo"), counter, extracted); //disc#);
-        appendValue(sb, "%x", Inter.get("Tag.Artist"), counter, extracted); //# of discs);
+        appendValue(sb, "%d", Inter.get("Tag.DiscNo"), extracted); //disc#);
+        appendValue(sb, "%x", Inter.get("Tag.Artist"), extracted); //# of discs);
         
-        appendValue(sb, "%a", Inter.get("Tag.Artist"), counter, extracted); //artist
-        appendValue(sb, "%t", Inter.get("Tag.Title"), counter, extracted); //title);
+        appendValue(sb, "%a", Inter.get("Tag.Artist"), extracted); //artist
+        appendValue(sb, "%t", Inter.get("Tag.Title"), extracted); //title);
         
-        appendValue(sb, "%y", Inter.get("Tag.Year"), counter, extracted); //year);
+        appendValue(sb, "%y", Inter.get("Tag.Year"), extracted); //year);
         
-        appendValue(sb, "%c", Inter.get("Tag.Comment"), counter, extracted); //comment);
+        appendValue(sb, "%c", Inter.get("Tag.Comment"), extracted); //comment);
         sb.append("</html>");
         return sb.toString();
     }
     
-    private static void appendValue(StringBuilder sb, String key, String label, Integer counter, Map<String, String> extracted) {
+    private static void appendValue(StringBuilder sb, String key, String label, Map<String, String> extracted) {
         if(extracted.containsKey(key)) {
             String value = extracted.get(key);
             if(!value.equals("")) {
                 sb.append("".concat(label).concat(" : \"<b>").concat(value).concat("</b>\""));
-                counter++;
             }
             else {
                 sb.append(key.concat(" : {Empty}"));

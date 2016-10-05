@@ -17,8 +17,18 @@
 
 package jamuz;
 
-//FIXME: Ant (build.xml):  copy configuration default files, make 7z package
+//FIXME: Ant (build.xml):  copy configuration default files, make 7z package, obfuscate:
+//BINARY CODE OBFUSCATION (TO PROTECT API KEYS) AND MAKE SURE THERE IS NO API KEY NOR (worse) PASSWORDS IN CODE TO BE COMMITED
 
+
+//----------------------------------------------------------
+// - General TODO:
+//      - TODO: manage database backups in logs
+//		- TODO: Other location for JaMuz Db:
+//			- on a FTP server (should be easy, if not already possible)
+//			- through a webservice ... maybe one day
+//		- Add a "WHERE path LIKE '<rootPath>%' to prevent scanning/merging values that are not from the proper library
+//			OR support multiple librairies :)
 //TODO: Display duplicate files (artist/album)
 // - Best way to display this ?
 // - What will this be used for ?
@@ -30,34 +40,6 @@ package jamuz;
 //    group by artist, title
 //    having count(*) > 1
 //) t on f.artist = t.artist and f.title = t.title
-
-
-//----------------------------------------------------------
-// TODO: MAIN ********************************************
-//----------------------------------------------------------
-//	This is a list of features I'd like to be added.
-//	It can be modified anytime and no schedule is provided.
-//	Releases will occur when I assume it is ready.
-//----------------------------------------------------------
-// FIXME: 0.1 : Move all this to GitHub roadmap in CONTRIBUTING.md
-//	- Test, Stabilize and do all other FIX-MEs
-//  - Code review:
-//      - Exceptions handling
-//      - internationalization
-//      - files headers (license)
-//      - Javadoc
-//  - Set version to 0.1.0 avant sourceforge. Attention à mettre à jour les scripts de database
-//		et les fichiers annexes de release: readme, version.txt (et d'autres ?)
-//  - BINARY CODE OBFUSCATION (TO PROTECT API KEYS) AND MAKE SURE THERE IS NO API KEY NOR (worse) PASSWORDS IN CODE TO BE COMMITED
-//	- Commit SourceForge
-//----------------------------------------------------------
-// - General:
-//      - TODO: manage database backups in logs
-//		- TODO: Other location for JaMuz Db:
-//			- on a FTP server (should be easy, if not already possible)
-//			- through a webservice ... maybe one day
-//		- Add a "WHERE path LIKE '<rootPath>%' to prevent scanning/merging values that are not from the proper library
-//			OR support multiple librairies :)
 // - Player:
 //		- TODO: Support more formats (FLAC at first, then OGG and maybe more)
 //		- TODO: transitions
@@ -88,11 +70,12 @@ package jamuz;
 //		- TODO: Review color choices
 //	- Options tab:
 //		- FIXME: Options
-//                    - Do not display current machine in machines list (cannot be deleted anyway) 
+//                  - Do not display current machine in machines list (cannot be deleted anyway) 
 //                  + "Options" button to select current options (as in all other tabs)
-//                  + Move common options (among machines) to Options panel in panelMain (and think of where is best to store them: db or file)
+//					+ New Options GUI
+//                  + Use some common options (among machines) 
 //                      Ex: files.* and location.mask options should be global (all machines), 
-//                          not fully mandatory as only one machine can be master, but far better if master machine changes!!!
+//                          not fully mandatory as only one machine can be master, but far better if master machine changes !!!
 //	- Videos tab:
 //		- TODO: Enable export over SSH (on remote machine to an device plugged on that remote machine : Intel NUC to friend USB key/HDD for instance)
 //          => Doing this, merge options to copy/move files b/w "Sync" and "Video" (export)

@@ -31,7 +31,7 @@ public class ServerClient {
 	private final ICallBackReception callback;
 	private final ICallBackAuthentication callBackAuth;
 	private String login = "UNKNOWN";
-    private String address; //FIXME: Use the address: do not maintain a permanent socket connection but open a new one each time (try if uses less battery)
+    private String address;
     private PrintWriter printWriter;
     private OutputStream outputStream;
 	
@@ -115,7 +115,7 @@ public class ServerClient {
             outputStream.flush();
         } catch (IOException ex) {
             Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
-            //FIXME: Retry
+            //FIXME: Retry sending cover OR make the remote asking for the cover (at least try)
 //            javax.imageio.IIOException: I/O error writing PNG file!
 //	at com.sun.imageio.plugins.png.PNGImageWriter.write(PNGImageWriter.java:1168)
 //	at javax.imageio.ImageWriter.write(ImageWriter.java:615)

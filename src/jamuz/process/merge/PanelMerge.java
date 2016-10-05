@@ -31,7 +31,7 @@ import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Inter;
-//FIXME: Display lastMergeDate in jListMerge: <Source name> (<lastMergeDate or BETTER formatted interval)>)
+//TODO: Display lastMergeDate in jListMerge: <Source name> (<lastMergeDate or BETTER formatted interval ex: a week ago, 3 hours ago, ...)>)
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )

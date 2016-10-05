@@ -69,7 +69,7 @@ public class ProcessSync extends ProcessAbstract {
         } catch (InterruptedException ex) {
             Popup.info(Inter.get("Msg.Process.Aborted") //NOI18N
             + "\nYou shall sync again if some files have been deleted on destination\n"
-                    + "OR you will face some merge \"not found\" issues.");  //FIXME: Inter
+                    + "OR you will face some merge \"not found\" issues.");  //TODO: Inter
         }
         finally {
             PanelSync.progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
@@ -78,7 +78,7 @@ public class ProcessSync extends ProcessAbstract {
             //This prevents problems in case aborted before any change has been made 
             //BUT problem remains if some changes occur after abortion
             // (database will not reflect reality so merge "not found" errors would be raised)
-            //FIXME: Make a proper toInsertInDeviceFiles list in all cases:
+            //TODO: Make a proper toInsertInDeviceFiles list in all cases:
             //  => Use fileInfoSourceList, fileInfoDestinationList and toInsertInDeviceFiles
             if(toInsertInDeviceFiles.size()>0) {
                 Jamuz.getDb().deleteDeviceFiles(device.getId());

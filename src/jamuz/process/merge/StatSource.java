@@ -103,7 +103,7 @@ public class StatSource {
     public int getId() {
         return id;
     }
-    private int idStatement; //FIXME: Replace by an enum: refer to checkedFlag usage
+    private int idStatement; //TODO: Replace by an enum: refer to checkedFlag usage
     
     public int getIdStatement() {
         return idStatement;

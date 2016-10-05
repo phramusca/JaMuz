@@ -30,7 +30,7 @@ import jamuz.utils.Popup;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Options {
-    //FIXME: Needs the generated JAR to be obfuscated
+ 
     private final String filename;
     private final Properties properties;
 

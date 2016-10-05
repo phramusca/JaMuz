@@ -638,7 +638,7 @@ public class FolderInfo implements java.lang.Comparable {
 		deleteList(this.getFilesConvertible(), progressBar);
 		deleteList(this.getFilesImage(), progressBar);
         
-        //FIXME: If no more files in folder, remove the folder too
+        //TODO: If no more files in folder, remove the folder too
 	}
 
 	private void deleteList(List<? extends FileInfoInt> myList, ProgressBar progressBar) {

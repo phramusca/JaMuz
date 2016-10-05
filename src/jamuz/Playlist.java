@@ -689,6 +689,7 @@ public class Playlist implements Comparable {
 
         //FIXME: Store lyrics in DB ! (we don't need to re-read each time AND we can filter here in playlists)
 //,     LYRICS(Inter.get("Label.Lyrics"), ""); //NOI18N
+		//+ We don't want to remove the lyrics when saving the tags, if not retrieved first
         
         //TODO: Add other fields from file and path tables:
         //Bitrate, fichier, path, fullpath (concat), durée, format ?, taille ?, BPM, Commentaire ?, discNo, 
@@ -873,7 +874,7 @@ public class Playlist implements Comparable {
 			
             if(this.field.equals(Field.PLAYLIST)) {
                 Playlist playlist = Jamuz.getPlaylist(Integer.parseInt(this.value));
-                //FIXME: use a view: https://www.sqlite.org/lang_createview.html
+                //TODO: use a view: https://www.sqlite.org/lang_createview.html
 				sql+=" IN (SELECT F.idFile FROM file F JOIN ("
                         + " SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n" 
                         + " ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"

@@ -157,11 +157,10 @@ public class DbInfo {
                     try {
                         FileSystem.copyFile(sourceFile, destinationFile);
                     } catch (IOException ex) {
-                        //Seen only once, then no more
-                        //FIXME: Source and destination are the same (destination actually) . Why ??
-                        //Seen on windows/mediamonkey:
+						//FIXME: Source and destination are the same (destination actually) . Why ??                        
+                        //Seen on windows/mediamonkey
                         //Seen twice on linux (diferent db sources), though was fine all before...and after! Why was that ??
-                        Popup.error(ex);
+                        Popup.error("sourceFile="+sourceFile+", destinationFile="+destinationFile, ex);
                         return false;
                     }
 				}			
