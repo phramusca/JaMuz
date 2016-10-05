@@ -1269,7 +1269,7 @@ public class FileInfoInt extends FileInfo {
     public void sayRating (boolean sayRated) {
         //TODO: Play a reminder at 1/3 and 2/3 of the track
         
-        //FIXME: Do this as an option (and review calls before enabling back)
+        //TODO: Do this as an option (and review calls before enabling back)
 //        if(this.idFile>-1) {
 //            if(rating<=0) {
 //                playRessouce("HERE COMES A NEW CHALLENGER - YouTube.mp3");

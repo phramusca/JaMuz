@@ -139,7 +139,7 @@ public class DialogScanner extends javax.swing.JDialog {
 		column.setPreferredWidth(20);
 
         //FIXME: Do the same for other badly called mouseClicked event on JTable instead of below
-        http://stackoverflow.com/questions/10467258/netbeans-how-do-i-add-a-valuechanged-listener-to-a-jtable-from-the-design-gu
+        //http://stackoverflow.com/questions/10467258/netbeans-how-do-i-add-a-valuechanged-listener-to-a-jtable-from-the-design-gu
         
         jTableScanner.getSelectionModel().addListSelectionListener(
             new javax.swing.event.ListSelectionListener() {
@@ -160,7 +160,7 @@ public class DialogScanner extends javax.swing.JDialog {
         for(String pattern : patterns) {
             Map<String, String> extracted = PatternProcessor.getMap(path, pattern);
 //            if(extracted.size()>0) {
-            //FIXME: Need to do sthg if we want not to display nul results (as otherwise mismatch btw patterns and tableModel indexes)
+            //FIXME: Need to do sthg if we want not to display null results (as otherwise mismatch btw patterns and tableModel indexes)
                 addRow(extracted);
 //            }
         }

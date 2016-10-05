@@ -30,7 +30,7 @@ public class Server {
 	
 	public boolean connect() {
 		try {
-            //FIXME: Secure connexion
+            //TODO: Secure connexion
             //http://www.java2s.com/Code/Java/Network-Protocol/SecureCommunicationwithJSSE.htm
             
 			//Create the server socket

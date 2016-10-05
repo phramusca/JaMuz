@@ -167,14 +167,6 @@ public class ProcessMerge extends ProcessAbstract {
             //Read options again (only to read lastMergeDate !!)
             //TODO: Make options reading and update easier and nicer
             //FIXME: At least do not refresh GUI if faster to do
-            //FIXME: OPTIONS: move to config files:
-            //  -Easier to read/write
-            //  -Save last used options easier
-            //  -What are con's and other pro's ?
-            ///////////////////
-            // - JaMuz.<MachineName>.Audio.config
-            // - JaMuz.<MachineName>.Video.config
-            // - JaMuz.<MachineName>...
             PanelMain.readOptions(); //TODO: This should enable merge too, but does not as we still are in process merge ...
             //enabling back buttons
             PanelMerge.enableMerge(true);

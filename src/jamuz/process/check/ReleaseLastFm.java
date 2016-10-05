@@ -35,9 +35,8 @@ import jamuz.process.check.ReleaseMatch.Track;
  */
 public class ReleaseLastFm {
 	
-	private final String lastFmKey = "";  //NOI18N //FIXME: Obfuscate
-	//Use the following but not here as done too often, move to upper
-//	private final String lastFmKey = Options.readKey("LastFm");
+	private final String lastFmKey = "";  //NOI18N //Obfuscate
+	//FIXME: Use Options.readKey("LastFm") but not here as done too often, move to upper
 	
 	private List<ReleaseMatch> matches;
 	private List<Cover> covers;

@@ -36,7 +36,6 @@ public class TableModelCheck extends TableModelGeneric {
 	public TableModelCheck() {
         this.folders = new ArrayList<>();
         
-        //FIXME: Add a "Play" button to preview folder
         this.setColumnNames(new String [] {
             "", Inter.get("Label.Path") //NOI18N
         });

@@ -138,7 +138,7 @@ public class IconBufferCover {
                 ImageIO.write(coverImage, "png", coverCacheFile);  //NOI18N
             }
         } catch (IOException ex) { 
-            //FIXME: Why such errors are not caught ????
+            //TODO: Why such errors are not caught ????
             // Path was indeed not created, so OK with the exception
             //But why not caught ? FileNotFoundException derivates IOException
 //            java.io.FileNotFoundException: /home/raph/Documents/04-Creations/Dev/NetBeans/JaMuz/Source/JaMuz_DEV/data/cache/audio/575fc5b16cec2875d676150944ebae72.png (Aucun fichier ou dossier de ce type)

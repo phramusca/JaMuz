@@ -82,11 +82,11 @@ public class ManualTesting {
 //        //https://code.google.com/p/musicbrainzws2-java/wiki/Usage_SubmittingData#Submitting_data    
 //        Release controller = new Release();
 //
-//        //FIXME: Move to options when/if integrated into JaMuz
+//        //TODO: Move to options when/if integrated into JaMuz
 //        controller.getQueryWs().setUsername("phramusca");
 //        controller.getQueryWs().setPassword(""); 
 //         
-//        //FIXME: What the fuck must I set in here ???
+//        //TODO: What the fuck must I set in here ???
 //        controller.getQueryWs().setClient("JaMuz/0.0.22"); 
 //        //            Invalid or not allowed EntityType release
 //         
@@ -106,7 +106,7 @@ public class ManualTesting {
 //        release.getUserTags().add(new TagWs2("rock"));
 //        release.getUserTags().add(new TagWs2("progressive"));
 //
-//        controller.postUserRatings(); // FIXME: Invalid EntityType :(
+//        controller.postUserRatings(); // TODO: Invalid EntityType :(
 //        controller.postUserTags();
 //
 //        controller.lookUp(release);

@@ -83,7 +83,6 @@ public class ReleaseMatch implements java.lang.Comparable {
         //FIXME: Add type in displayed combo (exact duplicate, ...) if color not enough. At least mention "duplicate found: "
         // or " no duplicates"
         
-        //FIXME: Support the following:
         //FIXME: Support  - new album can be a missing CD on a CD serie (ex disc 3/4 missing)
         //FIXME: Support  - duplicate can be from a various folder (check that original is the complete album)
         //FIXME: Support  - check duplicate status (OK, KO,...) and offer to replace if new is better

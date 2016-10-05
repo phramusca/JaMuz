@@ -33,7 +33,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
     //TODO: Make a "StatSourceTheAudioDb" (See TheMovieDb class & website http://www.theaudiodb.com/)
     // => NEED TO FIND A JAVA LIB FIRST !
     
-    //FIXME: Make a "StatSourceMusicBrainz" (See ReleaseMB class and ManualTesting class - stop at ReleaseGroup level, ie not go to Medium level)
+    //TODO: Make a "StatSourceMusicBrainz" (See ReleaseMB class and ManualTesting class - stop at ReleaseGroup level, ie not go to Medium level)
     protected final DbConn dbConn;
 
     public DbConn getDbConn() {

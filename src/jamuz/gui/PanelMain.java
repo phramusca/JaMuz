@@ -1335,7 +1335,7 @@ public class PanelMain extends javax.swing.JFrame {
             jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(currentPosition));
             playerInfo.dispMP3progress(currentPosition);
             //FIXME: Send less often and make a virtual progress on remote side
-            //AND messes up cover sending ...
+            //AND messes up cover sending ... (does it ?)
             sendToClients(currentPosition);
         }
     }

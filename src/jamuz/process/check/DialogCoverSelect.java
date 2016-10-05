@@ -195,7 +195,8 @@ public class DialogCoverSelect extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
-        //FIXME: Add a "clear image" button AND a "From file" button
+        //FIXME: Add a "clear image" button
+		//TODO: Add a "From file" button
         int coverId = jListSelectCover.getSelectedIndex();
         if(coverId>=0) {
             Cover myCover = model.getElementAt(coverId);
