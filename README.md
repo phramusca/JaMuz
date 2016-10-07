@@ -1,10 +1,3 @@
-       ___      ___  ___          
-      |_  |     |  \/  |          
-        | | __ _| .  . |_   _ ____
-        | |/ _` | |\/| | | | |_  /
-    /\__/ / (_| | |  | | |_| |/ / 
-    \____/ \__,_\_|  |_/\__,_/___|
-                                            
 **JaMuz** is a **Music management** tool written in Java
 
 ### <img src="https://github.com/phramusca/JaMuz/blob/master/data/icon/tag/Problème.jpg" width="48"> Code is in ALPHA stage.
