@@ -874,9 +874,7 @@ public class ProcessCheck {
                 enableCheckPanel();
             }
         }
-        
-        
-        
+
         private void dequeue(boolean doKO, boolean doWarning, boolean doManual) throws InterruptedException {
             FolderInfo folderInfo;
             while (!(folderInfo = actionQueue.take()).isLast) {

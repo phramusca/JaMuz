@@ -55,7 +55,6 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
-import org.jaudiotagger.tag.datatype.Artwork;
 import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
 import org.jaudiotagger.tag.id3.ID3v1Tag;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
@@ -64,6 +63,8 @@ import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import org.jaudiotagger.tag.images.Artwork;
+import org.jaudiotagger.tag.images.ArtworkFactory;
 
 /**
  *
@@ -400,7 +401,12 @@ public class FileInfoInt extends FileInfo {
         if(lyrics.equals("(None)")) {
             try {
                 AudioFile myAudioFile = AudioFileIO.read(new File(rootPath + relativeFullPath));
-                lyrics = myAudioFile.getTag().getFirst(FieldKey.LYRICS);
+				Tag tag = myAudioFile.getTag();
+				if(tag!=null) {
+					if(tag.getFirst(FieldKey.LYRICS)!=null) {
+						lyrics = tag.getFirst(FieldKey.LYRICS);
+					}
+				}
             } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
 //                lyrics="(None in file)";
             }
@@ -585,7 +591,7 @@ public class FileInfoInt extends FileInfo {
 	private void readCover(Tag tag) throws IOException {
 		Artwork myArt = tag.getFirstArtwork();
         try {
-            coverImage=myArt.getImage();
+            coverImage=(BufferedImage)myArt.getImage();
             readCoverHash();
         }
         catch(IndexOutOfBoundsException | NullPointerException | NoSuchAlgorithmException ex) {
@@ -650,7 +656,7 @@ public class FileInfoInt extends FileInfo {
      */
     public boolean saveTags(boolean deleteComment) {
         return this.saveTags(this.artist, this.albumArtist, this.album, this.trackNo, this.trackTotal, this.discNo, this.discTotal, 
-			this.genre, this.year, this.coverImage, deleteComment, this.comment, this.title, this.getBPM());  //NOI18N
+			this.genre, this.year, this.coverImage, deleteComment, this.comment, this.title, this.BPM, this.lyrics);  //NOI18N
     }
     
 	/**
@@ -668,7 +674,9 @@ public class FileInfoInt extends FileInfo {
 			if(image!=null) {
 				ImageIO.write(image, "png", file);  //NOI18N
 				if(file.exists()) {
-					myArt = Artwork.createArtworkFromFile(file);
+					myArt = ArtworkFactory.createArtworkFromFile(file);
+//					myArt = Artwork.createArtworkFromFile(file);
+//					Artwork
 				}
 				return myArt;
 			}
@@ -698,30 +706,39 @@ public class FileInfoInt extends FileInfo {
 	 * @param comment
 	 * @param title
 	 * @param bpm
+	 * @param lyrics
 	 * @return
 	 */
 	protected boolean saveTags(String artist, String albumArtist, String album, 
 			int trackNo, int trackTotal, int discNo, int discTotal,
-			String genre, String year, BufferedImage image, boolean deleteComment, String comment, String title, float bpm) {
+			String genre, String year, BufferedImage image, boolean deleteComment, String comment, String title, float bpm, String lyrics) {
 		try {           
-            Artwork myArt = imageToArt(image);
             
-			File testFile = new File(this.rootPath+File.separator+this.relativeFullPath);
+			File file = new File(this.rootPath+File.separator+this.relativeFullPath);
+			if(file.length()<=0) {
+				return false;
+			}
+			Artwork artwork = imageToArt(image);
 			switch (this.ext) {
 				case "mp3": //NOI18N
-					MP3File MP3File = (MP3File)AudioFileIO.read(testFile);
+					//FIXME: org.jaudiotagger.audio.exceptions.InvalidAudioFrameException: No audio header found within 
+					//Happens when file is 0o in size (empty).
+					//In that case, swe shall delete the file, so as in check process
+					MP3File MP3File = (MP3File)AudioFileIO.read(file);
 					//Remove ID3v1 tags
 					MP3File.setID3v1Tag(null);
 					//Create brand new ID3v2 tags
 					AbstractID3v2Tag v2tag = new ID3v23Tag();
 					MP3File.setID3v2Tag(v2tag);
-					this.setTags(v2tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, myArt, deleteComment, comment, title, bpm);
+					this.setTags(v2tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, 
+							artwork, deleteComment, comment, title, bpm, lyrics);
 					MP3File.commit();
 					break;
 				default:
-					AudioFile audioFile = AudioFileIO.read(testFile);
+					AudioFile audioFile = AudioFileIO.read(file);
 					Tag tag = audioFile.getTag();
-					this.setTags(tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, myArt, deleteComment, comment, title, bpm);
+					this.setTags(tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, 
+							artwork, deleteComment, comment, title, bpm, lyrics);
 					audioFile.commit();
 					break;
 			}
@@ -733,9 +750,13 @@ public class FileInfoInt extends FileInfo {
 	}
     
 	private void setTags (Tag tag, String artist, String albumArtist, String album, int trackNo, int trackTotal, int discNo, int discTotal,
-			String genre, String year, Artwork myArt, boolean deleteComment, String comment, String title, float bpm) throws KeyNotFoundException, FieldDataInvalidException {
+			String genre, String year, Artwork myArt, boolean deleteComment, String comment, String title, float bpm, String lyrics) throws KeyNotFoundException, FieldDataInvalidException {
 		
-		//Note: Since we are overwritting all tags, we are only inserting non-empty ones		
+		//Note: Since we are overwritting all tags, we are only inserting non-empty ones
+		
+		if(!lyrics.equals("")) {  //NOI18N
+			tag.setField(FieldKey.LYRICS, lyrics);
+		}
 		if(!artist.equals("")) {  //NOI18N
 			tag.setField(FieldKey.ARTIST, artist);
 		}
@@ -1328,6 +1349,4 @@ public class FileInfoInt extends FileInfo {
             tags.add(value);
         }
     }
-    
-    
 }

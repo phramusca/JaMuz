@@ -73,10 +73,12 @@ import jamuz.remote.ICallBackAuthentication;
 import jamuz.remote.ICallBackReception;
 import jamuz.remote.Server;
 import jamuz.remote.ServerClient;
+import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -179,8 +181,8 @@ public class PanelMain extends javax.swing.JFrame {
         initComponents();
 
         //Change tabs
-        setTab("Label.Merge", "arrow_merge");
-        setTab("PanelMain.panelSync.TabConstraints.tabTitle", "synchronize_ftp_password");
+        setTab("Label.Merge", "arrow_refresh");
+        setTab("PanelMain.panelSync.TabConstraints.tabTitle", "arrow_turn_right");
         setTab("Label.Check", "search_plus");
         setTab("PanelMain.panelSelect.TabConstraints.tabTitle", "music");
         setTab("PanelMain.panelPlaylists.TabConstraints.tabTitle", "application_view_list");
@@ -688,6 +690,8 @@ public class PanelMain extends javax.swing.JFrame {
         jButtonSendInfo = new javax.swing.JButton();
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
         jButton2 = new javax.swing.JButton();
         panelVideo = new jamuz.process.video.PanelVideo();
         jPanelPlayer = new javax.swing.JPanel();
@@ -726,8 +730,8 @@ public class PanelMain extends javax.swing.JFrame {
         jTabbedPaneMain.setMinimumSize(new java.awt.Dimension(0, 0));
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
         jTabbedPaneMain.addTab(bundle.getString("PanelMain.panelSelect.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/music.png")), panelSelect); // NOI18N
-        jTabbedPaneMain.addTab(bundle.getString("Label.Merge"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_merge.png")), panelMerge); // NOI18N
-        jTabbedPaneMain.addTab(bundle.getString("PanelMain.panelSync.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/synchronize_ftp_password.png")), panelSync); // NOI18N
+        jTabbedPaneMain.addTab(bundle.getString("Label.Merge"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_refresh.png")), panelMerge); // NOI18N
+        jTabbedPaneMain.addTab(bundle.getString("PanelMain.panelSync.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_turn_right.png")), panelSync); // NOI18N
         jTabbedPaneMain.addTab(bundle.getString("Label.Check"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/search_plus.png")), panelCheck); // NOI18N
         jTabbedPaneMain.addTab(Inter.get("PanelMain.panelPlaylists.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_view_list.png")), panelPlaylists); // NOI18N
         jTabbedPaneMain.addTab(bundle.getString("Label.Lyrics"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/text.png")), panelLyrics); // NOI18N
@@ -824,7 +828,7 @@ public class PanelMain extends javax.swing.JFrame {
             jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelOptionsGenresLayout.createSequentialGroup()
                 .addGroup(jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneOptionsMachines1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneOptionsMachines1, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                     .addGroup(jPanelOptionsGenresLayout.createSequentialGroup()
                         .addComponent(jButtonOptionsGenresAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -878,18 +882,19 @@ public class PanelMain extends javax.swing.JFrame {
                         .addComponent(jButtonResetCheckedFlagWarning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonResetCheckedFlagOK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(12, 12, 12))))
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(26, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonResetCheckedFlagKO)
                     .addComponent(jButtonResetCheckedFlagWarning)
                     .addComponent(jButtonResetCheckedFlagOK))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBarResetChecked, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jProgressBarResetChecked, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("PanelMain.jPanelRemote.border.title"))); // NOI18N
@@ -951,7 +956,7 @@ public class PanelMain extends javax.swing.JFrame {
                     .addComponent(jButtonSendInfo)
                     .addComponent(jCheckBoxServerStartOnStartup))
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE))
+                .addComponent(jScrollPane1))
         );
 
         jButton1.setText(bundle.getString("PanelMain.jButton1.text")); // NOI18N
@@ -961,12 +966,39 @@ public class PanelMain extends javax.swing.JFrame {
             }
         });
 
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("PanelMain.jPanel4.border.title"))); // NOI18N
+
+        jProgressBarSaveTags.setMinimumSize(new java.awt.Dimension(1, 23));
+        jProgressBarSaveTags.setString(" "); // NOI18N
+        jProgressBarSaveTags.setStringPainted(true);
+
         jButton2.setText(Inter.get("PanelMain.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jProgressBarSaveTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jProgressBarSaveTags, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanelOptionsLayout = new javax.swing.GroupLayout(jPanelOptions);
         jPanelOptions.setLayout(jPanelOptionsLayout);
@@ -975,18 +1007,18 @@ public class PanelMain extends javax.swing.JFrame {
             .addGroup(jPanelOptionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
                         .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
-                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                        .addComponent(jPanelRemote, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelOptionsLayout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanelRemote, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanelOptionsLayout.setVerticalGroup(
@@ -998,15 +1030,15 @@ public class PanelMain extends javax.swing.JFrame {
                         .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
                         .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2))
-                        .addContainerGap())))
+                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
 
         jTabbedPaneMain.addTab(bundle.getString("Label.Options"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/selected.png")), jPanelOptions); // NOI18N
@@ -1311,7 +1343,7 @@ public class PanelMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1188, Short.MAX_VALUE)
+            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1098, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1459,25 +1491,14 @@ public class PanelMain extends javax.swing.JFrame {
                 break;
             //TODO: Support some more formats
         }
-
-        //TODO: This is also done in MP3. Either move this to FLAC (and others) or remove the get lyrics from MP3
-//        int lyricsTabIndex = jTabbedPaneMain.indexOfTab(Inter.get("Label.Lyrics")); //NOI18N
-//        JLabel title = new JLabel(jTabbedPaneMain.getTitleAt(lyricsTabIndex));
+		
         String lyrics = myFileInfo.getLyrics();
         Color textColor=Color.RED;
         if (!lyrics.equals("")) {  //NOI18N
-//            title.setForeground(
-                    textColor=new Color(0, 128, 0);
-            //); //green
-            //TODO: Select (only for debug) AND scroll vertical bar in sync with mp3 position
+			textColor=new Color(0, 128, 0);
         } 
-//        else {
-//            title.setForeground(Color.RED);
-//        }
-//        jTabbedPaneMain.setTabComponentAt(lyricsTabIndex, title);
         setTab("Label.Lyrics", "text", textColor);
-        
-        
+
         PanelLyrics.setText(lyrics);
         jSliderPlayerLength.setEnabled(enablejSliderPlayerLength);
     }
@@ -1938,12 +1959,50 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // FIXME add your handling code here:
-		//To re-save all files and remove all remaining unwanted tags, especially ID3v1 and POPM (popularity meter) that Guayadeque can use and 
+ 		//To re-save all files and remove all remaining unwanted tags, especially ID3v1 and POPM (popularity meter) that Guayadeque can use and 
 		//messes up with the syncing if not used with extra care
-		//Optionaly make an option to save only unsaved files (use a flag in file table, set in check or in here)
+		//FIXME: make an option to save only unsaved files (use a flag in file table, set in check or in here)
+		
+		SaveTags saveTags = new SaveTags();
+        saveTags.start();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+	public class SaveTags extends ProcessAbstract {
+
+        public SaveTags() {
+            super("Thread.PanelMain.SaveTags");
+        }
+                
+        @Override
+        public void run() {
+            try {
+                ArrayList<FileInfoInt> filesToSave = new ArrayList<>();
+				String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
+						+ " FROM file F JOIN path P ON F.idPath=P.idPath WHERE F.deleted=0 AND P.deleted=0 AND saved=0";
+				ProgressBar progressBar = (ProgressBar)jProgressBarSaveTags;
+				
+				progressBar.setIndeterminate("Retrieving list");
+				Jamuz.getDb().getFiles(filesToSave, sql);
+				
+				progressBar.setup(filesToSave.size());
+				for (Iterator<FileInfoInt> iterator = filesToSave.iterator(); iterator.hasNext();) {
+					FileInfoInt file = iterator.next();
+					file.getCoverImage();
+					file.getLyrics();
+					if(file.saveTags(true)) {
+						Jamuz.getDb().setFileSaved(file.getIdFile()); //FIXME: Use that too when saved AND inserted in db (during check)
+					}
+					progressBar.progress(file.getFilename());
+					iterator.remove();
+					checkAbort();
+				}
+				progressBar.reset();
+            } catch (InterruptedException ex) {
+				Popup.info("Aborted by user");
+            } 
+        }
+    }
+	
     class CallBackReception implements ICallBackReception {
 		@Override
 		public void received(String login, String msg) {
@@ -2333,6 +2392,7 @@ public class PanelMain extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelOptions;
     private javax.swing.JPanel jPanelOptionsGenres;
     private javax.swing.JPanel jPanelOptionsMachines;
@@ -2341,6 +2401,7 @@ public class PanelMain extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelPlayerCoverContainer;
     private javax.swing.JPanel jPanelRemote;
     private static javax.swing.JProgressBar jProgressBarResetChecked;
+    private static javax.swing.JProgressBar jProgressBarSaveTags;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines1;

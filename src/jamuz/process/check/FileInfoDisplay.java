@@ -327,7 +327,7 @@ public final class FileInfoDisplay extends FileInfoInt {
 			}
 			
             return this.saveTags(this.artist, this.albumArtist, this.album, this.trackNo, this.trackTotal, this.discNo, this.discTotal, 
-                    genreNew, this.year, image, deleteComment, this.comment, this.title, this.BPM);  //NOI18N
+                    genreNew, this.year, image, deleteComment, this.comment, this.title, this.BPM, this.lyrics);  //NOI18N
         }
         return true;
 	}

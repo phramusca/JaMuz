@@ -26,17 +26,6 @@ CREATE TABLE "option" (
     FOREIGN KEY(idOptionType) REFERENCES optiontype(idOptionType),
 	FOREIGN KEY(idMachine) REFERENCES machine(idMachine) ON DELETE CASCADE
 );
-CREATE TABLE "playlist" (
-    "idPlaylist" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" TEXT NOT NULL,
-    "limitDo" INTEGER NOT NULL,
-    "limitValue" INTEGER NOT NULL,
-    "limitUnit" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "match" TEXT NOT NULL,
-    "random" INTEGER NOT NULL,
-    "hidden" INTEGER NOT NULL
-);
 CREATE TABLE "playlistFilter" (
 	"idPlaylistFilter" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 	"field" TEXT NOT NULL,
@@ -81,6 +70,42 @@ CREATE TABLE "statSource" (
 	FOREIGN KEY(idMachine) REFERENCES machine(idMachine) ON DELETE CASCADE,
 	FOREIGN KEY(idDevice) REFERENCES device(idDevice)
 );
+CREATE TABLE "machine" (
+    "idMachine" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "name" TEXT NOT NULL, 
+    "description" TEXT
+);
+CREATE TABLE "path" (
+    "idPath" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "strPath" TEXT NOT NULL,
+    "modifDate" TEXT NOT NULL,
+    "deleted" INTEGER NOT NULL DEFAULT (0),
+    "checked" INTEGER NOT NULL DEFAULT (0),
+    "copyRight" INTEGER NOT NULL DEFAULT (0),
+    "mbId" TEXT
+);
+CREATE TABLE "tag" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "value" TEXT NOT NULL
+);
+CREATE TABLE "tagfile" (
+    "idFile" INTEGER NOT NULL,
+    "idTag" INTEGER NOT NULL,
+	PRIMARY KEY ("idFile", "idTag"),
+	FOREIGN KEY(idFile) REFERENCES file(idFile),
+	FOREIGN KEY(idTag) REFERENCES tag(id) ON DELETE CASCADE
+);
+CREATE TABLE "playlist" (
+    "idPlaylist" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "name" TEXT NOT NULL,
+    "limitDo" INTEGER NOT NULL,
+    "limitValue" INTEGER NOT NULL,
+    "limitUnit" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "match" TEXT NOT NULL,
+    "random" INTEGER NOT NULL,
+    "hidden" INTEGER NOT NULL
+);
 CREATE TABLE "file" (
     "idFile" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
     "idPath" INTEGER NOT NULL,
@@ -108,32 +133,9 @@ CREATE TABLE "file" (
     "size" INTEGER NOT NULL,
     "modifDate" TEXT NOT NULL,
     "deleted" INTEGER NOT NULL,
-    "coverHash" TEXT  NOT NULL,
-    "ratingModifDate" TEXT NOT NULL DEFAULT "1970-01-01 00:00:00",
+    "coverHash" TEXT NOT NULL,
+    "ratingModifDate" TEXT NOT NULL DEFAULT "1970-01-01 00:00:00", 
+    "saved" INTEGER NOT NULL DEFAULT (0),
 	FOREIGN KEY(idPath) REFERENCES path(idPath)
 );
-CREATE TABLE "machine" (
-    "idMachine" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" TEXT NOT NULL, 
-    "description" TEXT
-);
-CREATE TABLE "path" (
-    "idPath" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "strPath" TEXT NOT NULL,
-    "modifDate" TEXT NOT NULL,
-    "deleted" INTEGER NOT NULL DEFAULT (0),
-    "checked" INTEGER NOT NULL DEFAULT (0),
-    "copyRight" INTEGER NOT NULL DEFAULT (0),
-    "mbId" TEXT
-);
-CREATE TABLE "tag" (
-    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "value" TEXT NOT NULL
-);
-CREATE TABLE "tagfile" (
-    "idFile" INTEGER NOT NULL,
-    "idTag" INTEGER NOT NULL,
-	PRIMARY KEY ("idFile", "idTag"),
-	FOREIGN KEY(idFile) REFERENCES file(idFile),
-	FOREIGN KEY(idTag) REFERENCES tag(id) ON DELETE CASCADE
-);
+

@@ -318,8 +318,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     public synchronized boolean insertPlaylist(Playlist playlist) {
         try {
             PreparedStatement stInsertPlaylist = dbConn.connection.prepareStatement("INSERT INTO playlist "
-                    + "(name, limitDo, limitValue, limitUnit, type, match, random) "    //NOI18N
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)");   //NOI18N
+                    + "(name, limitDo, limitValue, limitUnit, type, match, random, hidden) "    //NOI18N
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");   //NOI18N
             stInsertPlaylist.setString(1, playlist.getName());
             stInsertPlaylist.setBoolean(2, playlist.isLimit());
             stInsertPlaylist.setInt(3, playlist.getLimitValue());
@@ -327,6 +327,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             stInsertPlaylist.setString(5, playlist.getType().name());
             stInsertPlaylist.setString(6, playlist.getMatch().name());
             stInsertPlaylist.setBoolean(7, playlist.isRandom());
+			stInsertPlaylist.setBoolean(8, playlist.isHidden());
 
             int nbRowsAffected = stInsertPlaylist.executeUpdate();
             if (nbRowsAffected == 1) {
@@ -613,6 +614,24 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	public synchronized boolean setFileSaved(int idFile) {
+        try {
+            PreparedStatement stUpdateDeletedFile = dbConn.connection.prepareStatement("UPDATE file SET saved=1 WHERE idFile=?");   //NOI18N
+            
+            stUpdateDeletedFile.setInt(1, idFile);
+            int nbRowsAffected = stUpdateDeletedFile.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "setFileSaved, idFile={0} # row(s) affected: +{1}", new Object[]{idFile, nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("setFileSaved(" + idFile + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+	
     /**
      * Inserts a file (tags)
      *
@@ -2236,8 +2255,9 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param bpmFrom
      * @param bpmTo
      * @param copyRight
+	 * @return 
      */
-    public void getFiles(ArrayList<FileInfoInt> myFileInfoList, String selGenre, String selArtist, String selAlbum, 
+    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String selGenre, String selArtist, String selAlbum, 
             boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) {
 
         selGenre = getSelected(selGenre);
@@ -2247,7 +2267,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "  //NOI18N
                 + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
 
-        getFiles(myFileInfoList, sql);
+        return getFiles(myFileInfoList, sql);
     }
     
     public String getFilesStats(String selGenre, String selArtist, String selAlbum, 

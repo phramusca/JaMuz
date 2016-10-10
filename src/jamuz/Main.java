@@ -125,12 +125,6 @@ public class Main {
 				}
 			});
 
-            //TODO: Recupérer une version plus récente pour ne plus avoir tous ces logs de jaudiotagger
-            //https://java.net/jira/browse/JAUDIOTAGGER-371
-//            Logger.getLogger("org.jaudiotagger").setUseParentHandlers(false);
-            //===> Essai avec jaudiotagger-2.2.3 : Pb avec Artwork
- 
-			//Launch main GUI
 			PanelMain.main(null);
 		}
 		catch(Exception ex) {

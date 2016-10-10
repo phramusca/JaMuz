@@ -1164,6 +1164,9 @@ public class PanelVideo extends javax.swing.JPanel {
 
     
     private static long getSpaceLeft(String pathOrFile) {
+		if(!new File(pathOrFile).exists()) {
+			return 0;
+		}
         Path p = Paths.get(pathOrFile); // where you want to write
         FileSystem fileSystem = FileSystems.getDefault();
         Iterable<FileStore> iterable = fileSystem.getFileStores();
