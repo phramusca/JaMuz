@@ -75,7 +75,7 @@ public class PanelSync extends javax.swing.JPanel {
         jTableSync.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPaneCheckTags3.setViewportView(jTableSync);
 
-        jPanelSyncProcess.setBorder(javax.swing.BorderFactory.createTitledBorder("Sync to device"));
+        jPanelSyncProcess.setBorder(javax.swing.BorderFactory.createTitledBorder("Export files"));
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
         jButtonSyncStart.setText(bundle.getString("Button.Start")); // NOI18N
@@ -139,7 +139,7 @@ public class PanelSync extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanelSyncProcess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

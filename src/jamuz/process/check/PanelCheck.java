@@ -78,7 +78,7 @@ public class PanelCheck extends javax.swing.JPanel {
     
     private JButton jButtonActionInJList;
 
-    public static final TableModelCheck tableModelCheck = new TableModelCheck();
+    public static TableModelCheck tableModelCheck = new TableModelCheck();
        
     /**
      * Creates new form PanelCheck
@@ -468,7 +468,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jProgressBarCheckScanSize.setString("0/0"); // NOI18N
         jProgressBarCheckScanSize.setStringPainted(true);
 
-        jSpinnerCheckScanNbThreads.setModel(new javax.swing.SpinnerNumberModel(4, 1, 30, 1));
+        jSpinnerCheckScanNbThreads.setModel(new javax.swing.SpinnerNumberModel(2, 1, 30, 1));
 
         javax.swing.GroupLayout jPanelScanMainLayout = new javax.swing.GroupLayout(jPanelScanMain);
         jPanelScanMain.setLayout(jPanelScanMainLayout);
@@ -511,7 +511,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jProgressBarCheckAnalysisSize.setString("0/0"); // NOI18N
         jProgressBarCheckAnalysisSize.setStringPainted(true);
 
-        jSpinnerCheckAnalysisNbThreads.setModel(new javax.swing.SpinnerNumberModel(18, 1, 30, 1));
+        jSpinnerCheckAnalysisNbThreads.setModel(new javax.swing.SpinnerNumberModel(4, 1, 30, 1));
 
         javax.swing.GroupLayout jPanelAnalysisMainLayout = new javax.swing.GroupLayout(jPanelAnalysisMain);
         jPanelAnalysisMain.setLayout(jPanelAnalysisMainLayout);
@@ -521,7 +521,7 @@ public class PanelCheck extends javax.swing.JPanel {
                 .addComponent(jProgressBarCheckAnalysisSize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSpinnerCheckAnalysisNbThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanelAnalysis, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+            .addComponent(jPanelAnalysis, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
         );
         jPanelAnalysisMainLayout.setVerticalGroup(
             jPanelAnalysisMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

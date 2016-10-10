@@ -1470,8 +1470,10 @@ public class FolderInfo implements java.lang.Comparable {
         if(!isActionDone) {
             switch(action) {
                 case OK:
+					moveToLibrary(progressBar, CheckedFlag.OK, true);
+                    break;
                 case WARNING:
-                    moveToLibrary(progressBar, CheckedFlag.OK, true);
+                    moveToLibrary(progressBar, CheckedFlag.OK_WARNING, true);
                     break;
                 case KO:
                     KO(progressBar);

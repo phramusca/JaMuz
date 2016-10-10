@@ -1464,6 +1464,8 @@ public class DialogCheck extends javax.swing.JDialog {
                 @Override
                 public void run() {
                     try {
+						//FIXME: How come a previous search done on another folder (closed meantime)
+						//can display its results in this one ? (you can reproduce when musicbrainz is slow, you cole a window, open another and wait a little)
                         displayMatch(jComboBoxCheckMatches.getSelectedIndex());
                     } catch (CloneNotSupportedException ex) {
                         //Should never happen since FileInfoDisplay implements Cloneable

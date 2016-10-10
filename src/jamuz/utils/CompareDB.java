@@ -44,7 +44,7 @@ public class CompareDB {
         boolean compareBPM=true;
         
         compareDB(
-                "/media/raph/Transcend/JaMuz/JaMuz.db.2016-08-26-Rating2OK",
+                "/media/raph/Transcend/JaMuz/JaMuz (4e copie avant check backup fichiers).db",
                 "/media/raph/Transcend/JaMuz/JaMuz.db",
                 "/home/raph/Bureau/LOGS/",
                 comparePlayCounter, compareRating, compareAddedDate, compareLastPlayed, compareBPM

@@ -439,7 +439,7 @@
         <Component class="javax.swing.JSpinner" name="jSpinnerCheckScanNbThreads">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-              <SpinnerModel initial="4" maximum="30" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+              <SpinnerModel initial="2" maximum="30" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
           </Properties>
           <AuxValues>
@@ -468,7 +468,7 @@
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jSpinnerCheckAnalysisNbThreads" min="-2" max="-2" attributes="0"/>
               </Group>
-              <Component id="jPanelAnalysis" pref="353" max="32767" attributes="0"/>
+              <Component id="jPanelAnalysis" pref="592" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -528,7 +528,7 @@
         <Component class="javax.swing.JSpinner" name="jSpinnerCheckAnalysisNbThreads">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-              <SpinnerModel initial="18" maximum="30" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+              <SpinnerModel initial="4" maximum="30" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
           </Properties>
           <AuxValues>
