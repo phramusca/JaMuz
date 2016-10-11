@@ -1150,7 +1150,7 @@
                 <Component class="javax.swing.JButton" name="jButtonTags">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.jButtonTags.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Tags" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>

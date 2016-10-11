@@ -202,7 +202,8 @@ public class DialogTag extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        Jamuz.getDb().insertTagFiles(getHighlightedTags(), file.getIdFile());
+        Jamuz.getDb().deleteTagFiles(file.getIdFile());
+		Jamuz.getDb().insertTagFiles(getHighlightedTags(), file.getIdFile());
         PanelMain.displayFileInfo();
         //Close this GUI
         this.dispose();

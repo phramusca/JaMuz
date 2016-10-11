@@ -675,8 +675,6 @@ public class FileInfoInt extends FileInfo {
 				ImageIO.write(image, "png", file);  //NOI18N
 				if(file.exists()) {
 					myArt = ArtworkFactory.createArtworkFromFile(file);
-//					myArt = Artwork.createArtworkFromFile(file);
-//					Artwork
 				}
 				return myArt;
 			}
