@@ -1215,7 +1215,7 @@ public class PanelMain extends javax.swing.JFrame {
         jLabelTags.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelTags.setText("Tags tags TAGS"); // NOI18N
 
-        jButtonTags.setText(Inter.get("PanelMain.jButtonTags.text")); // NOI18N
+        jButtonTags.setText(Inter.get("Label.Tags")); // NOI18N
         jButtonTags.setEnabled(false);
         jButtonTags.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1987,7 +1987,11 @@ public class PanelMain extends javax.swing.JFrame {
 				progressBar.setup(filesToSave.size());
 				for (Iterator<FileInfoInt> iterator = filesToSave.iterator(); iterator.hasNext();) {
 					FileInfoInt file = iterator.next();
-					file.getCoverImage();
+					//TODO: Maybe offer not to read tags. 
+					//This would be speed up the process but needs a scan library first
+					//Can also be useful (why is that?) so we can modify tags in dB and save that to tags.
+					file.readTags(true);
+//					file.getCoverImage(); //NOTE: This is needed if above not done
 					file.getLyrics();
 					if(file.saveTags(true)) {
 						Jamuz.getDb().setFileSaved(file.getIdFile()); //FIXME: Use that too when saved AND inserted in db (during check)

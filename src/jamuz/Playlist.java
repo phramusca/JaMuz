@@ -270,6 +270,7 @@ public class Playlist implements Comparable {
                         if (f1.getPercentRated() > f2.getPercentRated()) i = order.desc ? -1 : 1;
                          if(i!=0) { return i; }
                     case PLAYLIST: 
+					case TAGS:
                         //not handled, not displayed in GUI anyway
                     case ALBUM: 
                         i = order.desc ? f2.getAlbum().compareTo(f1.getAlbum()) : f1.getAlbum().compareTo(f2.getAlbum());
@@ -639,6 +640,11 @@ public class Playlist implements Comparable {
         ALBUMRATING(Inter.get("Tag.Album")+" "+Inter.get("Stat.Rating"), "albumRating"), //NOI18N
         PERCENTRATED(Inter.get("Stat.PercentRated"), "percentRated"), //NOI18N
 		/**
+		 * Tags
+		 */
+		//FIXME: Manage this TAGS Field item so it can be used in playlists !!!!
+		TAGS(Inter.get("Label.Tags"), "F.idFile"),
+		/**
 		 * Playlist (special case if Match.Inde)
 		 */
 		PLAYLIST(Inter.get("Label.Playlist"), "F.idFile"), //NOI18N
@@ -687,9 +693,10 @@ public class Playlist implements Comparable {
 		
         CHECKEDFLAG(Inter.get("Stat.Checked"), "P.checked");
 
-        //FIXME: Store lyrics in DB ! (we don't need to re-read each time AND we can filter here in playlists)
+        //TODO: Store lyrics in DB. to be able to filter in playlists.
+		//Still need to read before saving and before playing as it may have changed
+		//from Guayadeque for instance.
 //,     LYRICS(Inter.get("Label.Lyrics"), ""); //NOI18N
-		//+ We don't want to remove the lyrics when saving the tags, if not retrieved first
         
         //TODO: Add other fields from file and path tables:
         //Bitrate, fichier, path, fullpath (concat), durée, format ?, taille ?, BPM, Commentaire ?, discNo, 

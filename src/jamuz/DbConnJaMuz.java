@@ -930,22 +930,44 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	public boolean deleteTagFiles(int idFile) {
+        try {
+            PreparedStatement stDeleteTagFiles = dbConn.connection.prepareStatement(
+					"DELETE FROM tagFile WHERE idFile=?");  //NOI18N
+            stDeleteTagFiles.setInt(1, idFile);
+            long startTime = System.currentTimeMillis();
+            int result = stDeleteTagFiles.executeUpdate();
+            long endTime = System.currentTimeMillis();
+            Jamuz.getLogger().log(Level.FINEST, "stDeleteTagFiles DELETE // Total execution time: {0}ms", new Object[]{endTime - startTime});    //NOI18N
+
+            if (result < 0) {
+                Jamuz.getLogger().log(Level.SEVERE, "stDeleteTagFiles, idFile={0}, result={1}", new Object[]{idFile, result});   //NOI18N
+            }
+            
+            return true;
+
+        } catch (SQLException ex) {
+            Popup.error("deleteTagFiles()", ex);   //NOI18N
+            return false;
+        }
+    }
+	
     public boolean insertTagFiles(ArrayList<String> tags, int idFile) {
         try {
-            //FIXME: We never delete from tagFile to remove deleted tags !!!
             if (tags.size() > 0) {
                 dbConn.connection.setAutoCommit(false);
                 int[] results;
-                PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement("INSERT OR IGNORE INTO tagFile "
+                PreparedStatement stInsertTagFile = dbConn.connection.prepareStatement(
+					"INSERT OR IGNORE INTO tagFile "
                     + "(idFile, idTag) "    //NOI18N
                     + "VALUES (?, (SELECT id FROM tag WHERE value=?))");   //NOI18N
                 for (String tag : tags) {
-                    stInsertDeviceFile.setInt(1, idFile);
-                    stInsertDeviceFile.setString(2, tag);
-                    stInsertDeviceFile.addBatch();
+                    stInsertTagFile.setInt(1, idFile);
+                    stInsertTagFile.setString(2, tag);
+                    stInsertTagFile.addBatch();
                 }
                 long startTime = System.currentTimeMillis();
-                results = stInsertDeviceFile.executeBatch();
+                results = stInsertTagFile.executeBatch();
                 dbConn.connection.commit();
                 long endTime = System.currentTimeMillis();
                 Jamuz.getLogger().log(Level.FINEST, "insertTagFiles UPDATE // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
