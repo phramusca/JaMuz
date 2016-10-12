@@ -1,5 +1,7 @@
 #JaMuz specifics
 data/cache/*
+data/Patterns.txt
+data/VideoLinks.txt
 logs/*
 database/*_for_comparison.sql
 dist_Wish/*
@@ -7,7 +9,6 @@ nbproject/private/*
 *.properties
 manifest.mf
 JaMuz.xml
-data/Patterns.txt
 keys.properties
 
 # Java ignore from https://github.com/github/gitignore
