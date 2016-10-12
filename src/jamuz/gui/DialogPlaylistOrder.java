@@ -61,7 +61,7 @@ public class DialogPlaylistOrder extends javax.swing.JDialog {
         DefaultComboBoxModel model = (DefaultComboBoxModel) jComboBoxPlaylistField.getModel();
         model.removeAllElements();
         for(Field field : Field.values()) {
-            if(!field.equals(Field.PLAYLIST)) {
+            if(!(field.equals(Field.PLAYLIST) || field.equals(Field.TAG))) {
                 model.addElement(field);
             }
         }
