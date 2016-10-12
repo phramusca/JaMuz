@@ -876,66 +876,101 @@ public class Playlist implements Comparable {
 
 			StringBuilder sql = new StringBuilder();
 			sql.append("(").append(this.field.getSqlValue()); //NOI18N
-			
-			if(this.field.equals(Field.TAG)) {
-				sql.append(" IN (SELECT F.idFile FROM file F "
-							+ "JOIN tagFile TF ON TF.idFile=F.idFile \n" 
+			switch (this.field) {
+				case TAG:
+					switch (this.operator) {
+						case IS:
+						case CONTAINS:
+						case STARTSWITH:
+						case ENDSWITH:
+							sql.append(" IN ");
+							break;
+						case ISNOT:
+						case DOESNOTCONTAIN:
+							sql.append(" NOT IN ");
+							break;
+					}
+					sql.append("(SELECT F.idFile FROM file F "
+							+ "JOIN tagFile TF ON TF.idFile=F.idFile \n"
 							+ "JOIN tag T ON T.id=TF.idTag\n" 
 							+ "WHERE T.value");
-            }
-			
-            if(this.field.equals(Field.PLAYLIST)) {
-                Playlist playlist = Jamuz.getPlaylist(Integer.parseInt(this.value));
-                //TODO: use a view: https://www.sqlite.org/lang_createview.html
-				sql.append(" IN (SELECT F.idFile FROM file F JOIN (")
-					.append(" SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n")
-					.append(" ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n")
-					.append("     FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath \n")
-					.append(") P ON F.idPath=P.idPath ")
-					.append("WHERE F.deleted=0 ")
-					.append(playlist.getSqlWhere())
-					.append(")"); //NOI18N //NOI18N
-            }
-            else {
-                switch (this.operator) {
-                    case CONTAINS:
-                        sql.append(" LIKE \"%").append(this.value).append("%\""); //NOI18N
-                        break;
-                    case DOESNOTCONTAIN:
-                        sql.append(" NOT LIKE \"%").append(this.value).append("%\""); //NOI18N
-                        break;
-                    case IS:
-                        sql.append(" = \"").append(this.value).append("\""); //NOI18N
-                        break;
-                    case ISNOT:
-                        sql.append(" <> \"").append(this.value).append("\""); //NOI18N
-                        break;
-                    case NUMIS:
-                        sql.append(" = ").append(this.value); //NOI18N
-                        break;
-                    case NUMISNOT:
-                        sql.append(" <> ").append(this.value); //NOI18N
-                        break;
-                    case STARTSWITH:
-                        sql.append(" LIKE \"").append(this.value).append("%\""); //NOI18N
-                        break;
-                    case ENDSWITH:
-                        sql.append(" LIKE \"%").append(this.value).append("\""); //NOI18N
-                        break;
-                    case LESSTHAN:
-                        sql.append(" < ").append(this.value); //NOI18N
-                        break;
-                    case GREATERTHAN:
-                        sql.append(" > ").append(this.value); //NOI18N
-                        break;
-                    case DATELESSTHAN:
-                        sql.append(" < datetime(\"").append(this.value).append("\", \"utc\")"); //NOI18N
-                        break;
-                    case DATEGREATERTHAN:
-                        sql.append(" > datetime(\"").append(this.value).append("\", \"utc\")"); //NOI18N
-                        break;
-                }
-            }
+					switch (this.operator) {
+						case CONTAINS:
+						case DOESNOTCONTAIN: // "NOT IN" in that case
+							sql.append(" LIKE \"%").append(this.value).append("%\""); //NOI18N
+							break;
+						case IS:
+						case ISNOT: // "NOT IN" in that case
+							sql.append(" = \"").append(this.value).append("\""); //NOI18N
+							break;
+						case STARTSWITH:
+							sql.append(" LIKE \"").append(this.value).append("%\""); //NOI18N
+							break;
+						case ENDSWITH:
+							sql.append(" LIKE \"%").append(this.value).append("\""); //NOI18N
+					}	
+					break;
+				case PLAYLIST:
+					Playlist playlist = Jamuz.getPlaylist(Integer.parseInt(this.value));
+					switch (this.operator) {
+						case IS:
+							sql.append(" IN ");
+							break;
+						case ISNOT:
+							sql.append(" NOT IN ");
+							break;
+					}
+					//TODO: use a view: https://www.sqlite.org/lang_createview.html
+					sql.append(" (SELECT F.idFile FROM file F JOIN (")
+							.append(" SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n")
+							.append(" ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n")
+							.append("     FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath \n")
+							.append(") P ON F.idPath=P.idPath ")
+							.append("WHERE F.deleted=0 ")
+							.append(playlist.getSqlWhere())
+							.append(")"); //NOI18N //NOI18N
+					break;
+				default:
+					switch (this.operator) {
+						case CONTAINS:
+							sql.append(" LIKE \"%").append(this.value).append("%\""); //NOI18N
+							break;
+						case DOESNOTCONTAIN:
+							sql.append(" NOT LIKE \"%").append(this.value).append("%\""); //NOI18N
+							break;
+						case IS:
+							sql.append(" = \"").append(this.value).append("\""); //NOI18N
+							break;
+						case ISNOT:
+							sql.append(" <> \"").append(this.value).append("\""); //NOI18N
+							break;
+						case NUMIS:
+							sql.append(" = ").append(this.value); //NOI18N
+							break;
+						case NUMISNOT:
+							sql.append(" <> ").append(this.value); //NOI18N
+							break;
+						case STARTSWITH:
+							sql.append(" LIKE \"").append(this.value).append("%\""); //NOI18N
+							break;
+						case ENDSWITH:
+							sql.append(" LIKE \"%").append(this.value).append("\""); //NOI18N
+							break;
+						case LESSTHAN:
+							sql.append(" < ").append(this.value); //NOI18N
+							break;
+						case GREATERTHAN:
+							sql.append(" > ").append(this.value); //NOI18N
+							break;
+						case DATELESSTHAN:
+							sql.append(" < datetime(\"").append(this.value).append("\", \"utc\")"); //NOI18N
+							break;
+						case DATEGREATERTHAN:
+							sql.append(" > datetime(\"").append(this.value).append("\", \"utc\")"); //NOI18N
+							break;
+					}	
+				break;
+			}
 			if(this.field.equals(Field.TAG)) {
 				sql.append(")"); //NOI18N
             }

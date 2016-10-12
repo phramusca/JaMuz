@@ -1,3 +1,0 @@
-TheMovieDb|https://www.themoviedb.org/search?query=<title>
-Google|https://www.google.fr/#q=<title>&tbm=vid
-Allociné|http://www.allocine.fr/recherche/?q=<title>
