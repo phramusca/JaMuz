@@ -112,7 +112,8 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
             case ARTIST:
             case ALBUMARTIST:
             case TITLE:
-            case YEAR:
+			case TAG:
+            case YEAR: 
             case LASTPLAYED:
 				jTextFieldPlayslitValue.setText(this.filter.getValue());
 				break;
@@ -250,6 +251,7 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
 			case ARTIST:
 			case ALBUMARTIST:
 			case TITLE:
+			case TAG:
 			case YEAR:
 			case LASTPLAYED:
             case ADDEDDATE:
@@ -334,6 +336,7 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
                 case ARTIST:
                 case ALBUMARTIST:
                 case TITLE:
+				case TAG:
                     //String values
                     jTextFieldPlayslitValue.setVisible(true);
                     jComboBoxPlaylistFilter.setVisible(false);
