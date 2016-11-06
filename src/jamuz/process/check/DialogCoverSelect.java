@@ -113,6 +113,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
         jButtonGoogleImage = new javax.swing.JButton();
         jButtonClipboard = new javax.swing.JButton();
+        jButtonRemove = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -159,6 +160,14 @@ public class DialogCoverSelect extends javax.swing.JDialog {
             }
         });
 
+        jButtonRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/bin.png"))); // NOI18N
+        jButtonRemove.setText(Inter.get("DialogCoverSelect.jButtonRemove.text")); // NOI18N
+        jButtonRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,6 +179,8 @@ public class DialogCoverSelect extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonClipboard)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonRemove)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonCancel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonOK)
@@ -184,7 +195,8 @@ public class DialogCoverSelect extends javax.swing.JDialog {
                     .addComponent(jButtonOK)
                     .addComponent(jButtonCancel)
                     .addComponent(jButtonGoogleImage)
-                    .addComponent(jButtonClipboard))
+                    .addComponent(jButtonClipboard)
+                    .addComponent(jButtonRemove))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPaneSelectAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -195,7 +207,6 @@ public class DialogCoverSelect extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
-        //FIXME: Add a "clear image" button
 		//TODO: Add a "From file" button
         int coverId = jListSelectCover.getSelectedIndex();
         if(coverId>=0) {
@@ -208,11 +219,11 @@ public class DialogCoverSelect extends javax.swing.JDialog {
 	}//GEN-LAST:event_jButtonOKActionPerformed
 
 	private void setImage(BufferedImage image) {
-		if(image!=null) {
+//		if(image!=null) {
 			//Display selected image on MainGUI
 			PanelCover mainCoverImg = (PanelCover) DialogCheck.jPanelCheckCoverThumb;
 			mainCoverImg.setImage(image);
-		}
+//		}
 	}
 	
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
@@ -224,9 +235,17 @@ public class DialogCoverSelect extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonGoogleImageActionPerformed
 
     private void jButtonClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClipboardActionPerformed
-        setImage((BufferedImage) ClipboardImage.getImageFromClipboard());
-		this.dispose();
+        BufferedImage image = (BufferedImage) ClipboardImage.getImageFromClipboard();
+		if(image!=null) {
+			setImage(image);
+			this.dispose();
+		}
     }//GEN-LAST:event_jButtonClipboardActionPerformed
+
+    private void jButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveActionPerformed
+        setImage(null);
+		this.dispose();
+    }//GEN-LAST:event_jButtonRemoveActionPerformed
     
 	/**
 	 * @param myFolderInfo 
@@ -285,6 +304,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
     private javax.swing.JButton jButtonClipboard;
     private javax.swing.JButton jButtonGoogleImage;
     private javax.swing.JButton jButtonOK;
+    private javax.swing.JButton jButtonRemove;
     private javax.swing.JList jListSelectCover;
     private javax.swing.JProgressBar jProgressBar;
     private javax.swing.JScrollPane jScrollPaneSelectAlbum;

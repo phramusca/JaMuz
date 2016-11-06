@@ -195,7 +195,7 @@ public class ReleaseMB {
 //			release.getIncludes().setWorkLevelRelations(true);
 
             doWait();
-			//FIXME: Getting 403 Forbidden with musicbrainzws2-java-v.3.0.0 (though search works)
+			//TODO: Getting 403 Forbidden with musicbrainzws2-java-v.3.0.0 (though search works)
 			//No such issue with musicbrainzws2-java_1.01r31_20120103.rar
 			ReleaseWs2 releaseWs2Full= release.lookUp(mbId);
             queryDone();

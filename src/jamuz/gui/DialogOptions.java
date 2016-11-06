@@ -599,13 +599,13 @@ public class DialogOptions extends javax.swing.JDialog {
     private void jButtonOptionSaveSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSaveSourceActionPerformed
         if(jComboBoxDevice.getSelectedIndex()>0) {
             Device device = (Device) jComboBoxDevice.getSelectedItem();
-            //FIXME: Set (and use!) this device into machine options somehow 
+            //TODO: Set (and use!) this device into machine options somehow 
             //and use it as media library source
             // + disable button while saving as for "Description"
             //jButtonOptionSaveSource.setEnabled(false);
         }
         else if(jComboBoxDevice.getSelectedIndex()>-1) {
-            //FIXME: Insert a "Whole library" item (default value, current way) on top of combobox
+            //TODO: Insert a "Whole library" item (default value, current way) on top of combobox
         }
         
     }//GEN-LAST:event_jButtonOptionSaveSourceActionPerformed

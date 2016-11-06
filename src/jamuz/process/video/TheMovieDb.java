@@ -63,7 +63,7 @@ public class TheMovieDb {
     public TheMovieDb(String username, String password, String language) {
 		myMovies = new HashMap<>();
         myTvShows = new HashMap<>();
-        //FIXME: Not getting info in french !
+        //TODO: Not getting info in french !
         //language "fr" (ISO 639-1 code as mentionned in doc (http://docs.themoviedb.apiary.io/#reference/movies/movieidreleasedates)
         // Not better with "fr-FR" as displayed in website
 		
@@ -85,7 +85,7 @@ public class TheMovieDb {
 	}
 	
 	public void getAllFromCache() {
-		DbConnVideo conn = new DbConnVideo(new DbInfo("sqlite", "myMovieDb.db", ".", "."), "");
+		DbConnVideo conn = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, "myMovieDb.db", ".", "."), "");
         conn.connect();
 		conn.getTvShowsFromCache(myTvShows);
 		conn.getMoviesFromCache(myMovies);

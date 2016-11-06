@@ -15,6 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+//TODO: Merge Playlists:
+//					|	Static							|	Dynamic							|	Export				|
+//	MediaMonkey		| Db playlists & playlistsongs		| Db: playlists [QueryData: INI]	| M3U or XSPF			|
+//	Guayadeque		| Db: playlists & plsets			| Bd: idem							| M3U, PLS, ASX, XSPF	|
+//	Kodi			| File M3U in userdata/playlists	| File XSP (XBOX Smart Playlist)	| None					|
+//	Mixxx			| Db: playlist & crates				| Not yet							| None					|
+
+
 package jamuz.process.merge;
 
 import jamuz.StatSourceAbstract;
@@ -223,7 +231,7 @@ public class ProcessMerge extends ProcessAbstract {
             
             //FIXME: Check how was done before. Are we still working with backup dB 
             // => Needs a check !!!
-            this.dBJaMuz = new DbConnJaMuz(new DbInfo("sqlite", Jamuz.getDb().getDbConn().getInfo().getLocationWork(), "", ""));
+            this.dBJaMuz = new DbConnJaMuz(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getDb().getDbConn().getInfo().getLocationWork(), "", ""));
 //			this.dBJaMuz = new DbConnJaMuz(Jamuz.getDb().info); //Create a new connection with backup dB location
 
 			//Connect and create Prepared Statements

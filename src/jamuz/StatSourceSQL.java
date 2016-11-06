@@ -39,8 +39,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
     public DbConn getDbConn() {
         return dbConn;
     }
-    
-    //TODO: Declare and setup where used
+	
     protected PreparedStatement stSelectFileStatistics;
     protected PreparedStatement stUpdateFileStatistics;
     /**

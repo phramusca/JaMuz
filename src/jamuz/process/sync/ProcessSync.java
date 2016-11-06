@@ -92,7 +92,7 @@ public class ProcessSync extends ProcessAbstract {
 	}
 	
 	private boolean sync() throws InterruptedException {
-		//FIXME: Use a pattern (separated from the one used for library)
+		//TODO: Use a pattern (separated from the one used for library)
 		//Inspire from file tagger in check
 		
         if(!new File(this.device.getDestination()).exists()) {
@@ -170,15 +170,15 @@ public class ProcessSync extends ProcessAbstract {
             //TODO: maybe support ignoreCase as an option
 //			if(fileInfo.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)) { return i; }
             //We want sync to be case sensitive
-            //TODO: Check file size too, seen once a file on destination 0 kO in size
             if(file.getRelativeFullPath().equals(relativeFullPath)) { 
-                File fileSource = new File(file.getRelativeFullPath());
-                File fileDestination = new File(relativeFullPath);
-                //Checking size //TODO: Make it an option as takes more time
-                if(fileSource.length()==fileDestination.length()) {
-                    //TODO: Check modification date too, as an option too 
-                    return i; 
-                }
+                File fileSource = new File(FilenameUtils.concat(this.device.getSource(), file.getRelativeFullPath()));
+                File fileDestination = new File(FilenameUtils.concat(this.device.getDestination(), relativeFullPath));
+				
+				//TODO: Make options of these maybe
+				if(fileSource.lastModified()==fileDestination.lastModified()
+						&& fileSource.length()==fileDestination.length()) {
+						return i; 
+				}
             }
 		}
 		return -1;

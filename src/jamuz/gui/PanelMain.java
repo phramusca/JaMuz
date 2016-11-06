@@ -73,9 +73,12 @@ import jamuz.remote.ICallBackAuthentication;
 import jamuz.remote.ICallBackReception;
 import jamuz.remote.Server;
 import jamuz.remote.ServerClient;
+import jamuz.utils.CrunchifyQRCode;
+import jamuz.utils.Encryption;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
+import java.awt.image.BufferedImage;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -126,7 +129,6 @@ public class PanelMain extends javax.swing.JFrame {
      */
     protected static ProgressBar progressBestOf;
 
-    //TODO: Manage jCheckBoxHidden, a checkbox to be added, to hide playlist in playlist lists (except in playlist tab of course)
     //FIXME: Update column numbers for the 4 below, not ok currently for some at least
     private static final int[] BASIC_COLS = {0, 1, 2, 3, 4, 5, 12, 17};
     private static final int[] STATS_COLS = {16, 18, 19};
@@ -485,32 +487,27 @@ public class PanelMain extends javax.swing.JFrame {
     }
     
     private void fillGenreLists() {
-		
-        Jamuz.getGenres();
-
-        //TODO: Manage a local HashSet of authorized genres
-        //instead of querying database each time (moreover twice)
-        //AND move to Jamuz class (somewhere in options)
-        fillOptionList((DefaultListModel) jListGenres.getModel());  //NOI18N
-        
+		Jamuz.readGenres();
+		jListGenres.setModel(Jamuz.getGenreListModel());
         //Fill genreDisplay combo boxes
-        ArrayList<String> myList = new ArrayList<>();
-        Jamuz.getDb().getGenreList(myList);
-        comboGenre = new String[myList.size() + 1];
+		List<String> genreList = Jamuz.getGenres();
+        comboGenre = new String[genreList.size() + 1];
         comboGenre[0] = Inter.get("Label.SelectOne");  //NOI18N
 
         jComboBoxPlayerGenre.setEnabled(false);
         jComboBoxPlayerGenre.removeAllItems();
-
         jComboBoxPlayerGenre.addItem(Inter.get("Label.SelectOne"));  //NOI18N
         int i = 1;
-        for (String myGenre : myList) {
+        for (String myGenre : genreList) {
             jComboBoxPlayerGenre.addItem(myGenre);
             comboGenre[i] = myGenre;
             i++;
         }
-//        PanelCheckDialog.fillGenreLists();
         jComboBoxPlayerGenre.setEnabled(displayedFile.isEnableQuickEdit());
+		
+		//FIXME: When happens at init, the default null cover and "Welcome to JaMuz" messages
+		//are overwritten by default FileInfo (empty values and hugly N/A image)
+		displayFileInfo();
     }
 
     public static void fillMachineList() {
@@ -708,7 +705,7 @@ public class PanelMain extends javax.swing.JFrame {
         if (!Jamuz.getMachine().read()) {
             return false;
         }
-        //FIXME: Rationalize to avoid potential errors
+        //TODO: Rationalize to avoid potential errors
         //(especially when called from a process, this would not do the trick, need a way to bypass process check)
         PanelMerge.setOptions();
         PanelCheck.setOptions();
@@ -716,21 +713,9 @@ public class PanelMain extends javax.swing.JFrame {
         return true;
     }
 
-    /**
-     * Fill option list
-     *
-     * @param listModel
-     * @param table
-     * @param field
-     */
-    private static void fillOptionList(DefaultListModel listModel) {
-        listModel.clear();
-        Jamuz.getDb().fillGenreList(listModel);
-    }
-    
     private static void fillMachineList(DefaultListModel listModel) {
         listModel.clear();
-        Jamuz.getDb().fillMachineList(listModel);
+        Jamuz.getDb().getMachineListModel(listModel);
     }
 
     /**
@@ -776,6 +761,7 @@ public class PanelMain extends javax.swing.JFrame {
         jButtonSendInfo = new javax.swing.JButton();
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
         jLabelIP = new javax.swing.JLabel();
+        jButtonQRcode = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
@@ -1015,6 +1001,13 @@ public class PanelMain extends javax.swing.JFrame {
 
         jLabelIP.setText("IP: xxx.xxx.xxx.xxx"); // NOI18N
 
+        jButtonQRcode.setText(Inter.get("PanelMain.jButtonQRcode.text")); // NOI18N
+        jButtonQRcode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonQRcodeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
@@ -1025,7 +1018,8 @@ public class PanelMain extends javax.swing.JFrame {
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonQRcode))
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -1050,7 +1044,9 @@ public class PanelMain extends javax.swing.JFrame {
                     .addComponent(jButtonSendInfo)
                     .addComponent(jCheckBoxServerStartOnStartup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelIP)
+                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelIP)
+                    .addComponent(jButtonQRcode))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1))
         );
@@ -2005,7 +2001,7 @@ public class PanelMain extends javax.swing.JFrame {
     private static Server server;
     private final List<String> clients;
     
-    //FIXME: Manage jCheckBoxServerStartOnStartup 
+    //TODO: Manage jCheckBoxServerStartOnStartup 
     
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         startStopRemoteServer();
@@ -2028,6 +2024,7 @@ public class PanelMain extends javax.swing.JFrame {
                 Swing.enableComponents(jPanelRemote, false);
                 jTextAreaRemote.setEnabled(true);
                 jButtonSendInfo.setEnabled(true);
+				jButtonQRcode.setEnabled(true);
 //                jCheckBoxSendCover.setEnabled(true);
                 jButtonStart.setText(Inter.get("Button.Pause"));
             }
@@ -2057,11 +2054,23 @@ public class PanelMain extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
  		//To re-save all files and remove all remaining unwanted tags, especially ID3v1 and POPM (popularity meter) that Guayadeque can use and 
 		//messes up with the syncing if not used with extra care
-		//FIXME: make an option to save only unsaved files (use a flag in file table, set in check or in here)
+		//TODO: Add a reset "saved" field in file table, as done for CheckedFlag
 		
 		SaveTags saveTags = new SaveTags();
         saveTags.start();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButtonQRcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQRcodeActionPerformed
+		try {
+			String ip = getLocalHostLANAddress().getHostAddress();
+			int port = (Integer) jSpinnerPort.getValue();
+			String encrypted = Encryption.encrypt(ip+":"+port, "NOTeBrrhzrtestSecretK");
+			String url = "JaMuzRemote://"+encrypted; 
+			BufferedImage bufferedImage = CrunchifyQRCode.createQRcode(url, 250);
+			DialogQRcode.main(bufferedImage);
+		} catch (UnknownHostException ex) {
+		}
+    }//GEN-LAST:event_jButtonQRcodeActionPerformed
 
 	public class SaveTags extends ProcessAbstract {
 
@@ -2159,7 +2168,7 @@ public class PanelMain extends javax.swing.JFrame {
     
     private void resetCheckedFlag(FolderInfo.CheckedFlag checkedFlag) {
         
-        //FIXME: Update message to display checkedFlag
+        //TODO: Update message to display checkedFlag
         int n = JOptionPane.showConfirmDialog(null, 
                 Inter.get("Question.Scan.ResetCheckFlag"), //NOI18N
                 Inter.get("Question.Scan.ResetCheckFlag.Title"), //NOI18N
@@ -2467,6 +2476,7 @@ public class PanelMain extends javax.swing.JFrame {
     private static javax.swing.JButton jButtonPlayerNext;
     protected static javax.swing.JButton jButtonPlayerPlay;
     private static javax.swing.JButton jButtonPlayerPrevious;
+    private javax.swing.JButton jButtonQRcode;
     private javax.swing.JButton jButtonRefreshHiddenQueue;
     private javax.swing.JButton jButtonResetCheckedFlagKO;
     private javax.swing.JButton jButtonResetCheckedFlagOK;

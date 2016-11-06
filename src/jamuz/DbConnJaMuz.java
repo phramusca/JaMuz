@@ -26,7 +26,6 @@ import jamuz.Playlist.Field;
 import jamuz.Playlist.Filter;
 import jamuz.Playlist.Operator;
 import jamuz.Playlist.Order;
-import jamuz.gui.DialogTag.Tag;
 import jamuz.process.check.DuplicateInfo;
 import java.io.File;
 import java.sql.PreparedStatement;
@@ -37,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import javax.swing.DefaultComboBoxModel;
@@ -49,6 +47,7 @@ import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * Creates a new dbConn.connection to JaMuz database
@@ -60,11 +59,10 @@ public class DbConnJaMuz extends StatSourceSQL {
     //TODO: How to log SQL generated queries ?
     //http://code.google.com/p/log4jdbc/
     
-    //TODO: Use PreparedStatement for all queries, then:
-    //check that the return from execute is always used and checked
-    //Check that we check nbRowsAffected properly (==1 or >0 depending)
+    //TODO: code review database methods:
+    //Check that nbRowsAffected is properly checked (==1 or >0 depending)
     //Check that all functions return a boolean and that this one is used
-    //TODO: Check using batches everytime possible
+    //Check that batches are used whenever possible and needed
     //http://stackoverflow.com/questions/2467125/reusing-a-preparedstatement-multiple-times
     
     private PreparedStatement stSelectFilesStats4Source;
@@ -247,11 +245,8 @@ public class DbConnJaMuz extends StatSourceSQL {
                         return false;
                     }
                 }
-				//TODO: Do dbConn.con.setAutoCommit(true);
-                //after each call to dbConn.con.commit() (search on whole project)
-                // in finally block and perform rollbacks in case of an error
-                //Problem is that dbConn.con.setAutoCommit(true); need a SQLException try/catch
-                dbConn.connection.setAutoCommit(true);
+				//TODO: Remove the line below if rollback and finally tests are successfull
+				dbConn.connection.setAutoCommit(true);
                 return true;
             } else {
                 Jamuz.getLogger().log(Level.SEVERE, "stUpdatePlaylist, playlist={0}, # row(s) affected: +{1}", new Object[]{playlist.toString(), nbRowsAffected});   //NOI18N
@@ -259,8 +254,22 @@ public class DbConnJaMuz extends StatSourceSQL {
             }
         } catch (SQLException ex) {
             Popup.error("updatePlaylist(" + playlist.toString() + ")", ex);   //NOI18N
+			//TODO: TEST the rollback block below and apply to other if successfull
+//			try {
+//				dbConn.connection.rollback();
+//			} catch (SQLException ex1) {
+//				Jamuz.getLogger().log(Level.SEVERE, null, ex1);
+//			}
             return false;
-        }
+        } 
+		//TODO: TEST the finally block below and apply to other if successfull
+//		finally {
+//			try {
+//				dbConn.connection.setAutoCommit(true);
+//			} catch (SQLException ex1) {
+//				Jamuz.getLogger().log(Level.SEVERE, null, ex1);
+//			}
+//		}
     }
 
     /**
@@ -1644,19 +1653,19 @@ public class DbConnJaMuz extends StatSourceSQL {
                 myListModel.addElement("%");   //NOI18N
                 break;
         }
-        fillList(myListModel, sql, field);
+        getListModel(myListModel, sql, field);
         
         if(field.equals("album") && myListModel.size()>1) {
             myListModel.insertElementAt(new ListElement("%", field), 0);   //NOI18N
         }
     }
 
-    public void fillGenreList(DefaultListModel myListModel) {
-        fillList(myListModel, "SELECT value FROM genre ORDER BY value", "value");
+    public void getGenreListModel(DefaultListModel myListModel) {
+        getListModel(myListModel, "SELECT value FROM genre ORDER BY value", "value");
     }
     
-    public void fillTagList(DefaultListModel myListModel) {
-        fillList(myListModel, "SELECT value FROM tag ORDER BY value", "value");
+    public void getTagListModel(DefaultListModel myListModel) {
+        getListModel(myListModel, "SELECT value FROM tag ORDER BY value", "value");
     }
     
     /**
@@ -1709,8 +1718,8 @@ public class DbConnJaMuz extends StatSourceSQL {
      *
      * @param myListModel
      */
-    public void fillMachineList(DefaultListModel myListModel) {
-        fillList(myListModel, "SELECT name, description FROM machine ORDER BY name", "name");
+    public void getMachineListModel(DefaultListModel myListModel) {
+        getListModel(myListModel, "SELECT name, description FROM machine ORDER BY name", "name");
     }
 
     private ListElement makeListElement(Object elementToAdd, ResultSet rs) {
@@ -1723,7 +1732,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         return listElement;
     }
 
-    private void fillList(DefaultListModel myListModel, String sql, String field) {
+    private void getListModel(DefaultListModel myListModel, String sql, String field) {
         ResultSet rs=null;
         Statement st = null;
         try {
@@ -2353,8 +2362,6 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public boolean getStatistics(ArrayList<FileInfo> files, StatSource statSource) {
         try {
-            
-            
             if (statSource.getIdDevice() > 0) {
                 // Get all files copied to the device, including locally deleted
                 // RelativeFullPath is retrieved from deviceFile table: the original one on device
@@ -2521,7 +2528,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 format = dbConn.getStringValue(rs, "format");   //NOI18N
                 bitRate = dbConn.getStringValue(rs, "bitRate");   //NOI18N
                 size = rs.getInt("size");   //NOI18N
-                BPM = rs.getFloat("BPM");   //NOI18N                    //TODO: Make BPM a float in database
+                BPM = rs.getFloat("BPM");   //NOI18N
                 album = dbConn.getStringValue(rs, "album");   //NOI18N
                 albumArtist = dbConn.getStringValue(rs, "albumArtist");   //NOI18N
                 artist = dbConn.getStringValue(rs, "artist");   //NOI18N
@@ -2625,8 +2632,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 
     private boolean getFolders(ConcurrentHashMap<String,FolderInfo> folders, String sqlWhere) {
         folders.clear();
-        //TODO: Order by rating DESC.
-        //Refer to getFolderInfoListBestOf for the joined query wih file table
         String sql = "SELECT idPath, strPath, modifDate, deleted, checked FROM path " + sqlWhere;    //NOI18N
         Statement st=null;
         ResultSet rs=null;

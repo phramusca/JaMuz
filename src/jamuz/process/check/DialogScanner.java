@@ -138,7 +138,7 @@ public class DialogScanner extends javax.swing.JDialog {
 		column.setMinWidth(20);
 		column.setPreferredWidth(20);
 
-        //FIXME: Do the same for other badly called mouseClicked event on JTable instead of below
+        //TODO: Do the same for other badly called mouseClicked event on JTable instead of below
         //http://stackoverflow.com/questions/10467258/netbeans-how-do-i-add-a-valuechanged-listener-to-a-jtable-from-the-design-gu
         
         jTableScanner.getSelectionModel().addListSelectionListener(

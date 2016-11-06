@@ -74,7 +74,7 @@ public class MyTvShow extends MyVideoAbstract implements Serializable {
 
 	@Override
 	public void setMyVideoInCache() {
-		DbConnVideo conn = new DbConnVideo(new DbInfo("sqlite", "myMovieDb.db", ".", "."), "");
+		DbConnVideo conn = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, "myMovieDb.db", ".", "."), "");
 		conn.connect();
 		conn.setTvShowInCache(this);
 		conn.disconnect();

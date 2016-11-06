@@ -63,6 +63,12 @@ import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.logging.Logger;
+import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
+import org.jaudiotagger.tag.id3.ID3v24Tag;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyRVAD;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
@@ -253,7 +259,7 @@ public class FileInfoInt extends FileInfo {
         return copyRight;
     }
 
-    protected String lyrics="(None)";
+    protected String lyrics="";
     
     /**
      * Used to merge BPM
@@ -398,7 +404,9 @@ public class FileInfoInt extends FileInfo {
 	}
 	
     public String getLyrics() {
-        if(lyrics.equals("(None)")) {
+        readReplayGain();
+		
+		if(lyrics.equals("")) {
             try {
                 AudioFile myAudioFile = AudioFileIO.read(new File(rootPath + relativeFullPath));
 				Tag tag = myAudioFile.getTag();
@@ -408,18 +416,17 @@ public class FileInfoInt extends FileInfo {
 					}
 				}
             } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
-//                lyrics="(None in file)";
+//                lyrics=""; //Well, do nothing so. Simply not read, so not good probably
             }
         }
         return lyrics;
     }
     
 	//TODO: Make it possible to read cover from a file such as "cover.jpg", "cover.png" or else
-    //TODO: We should not throw OutOfMemoryError or make sure it is properly handled by all callers
 	/**
 	 * Read cover from tag
 	 */
-	private void readCoverFromTag() throws OutOfMemoryError {
+	private void readCoverFromTag() {
 		try {
 			if(this.nbCovers>0) {
 				File currentFile = new File(rootPath+this.relativeFullPath);
@@ -1080,7 +1087,7 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 * @throws OutOfMemoryError  
 	 */
-	public BufferedImage getCoverImage() throws OutOfMemoryError {
+	public BufferedImage getCoverImage() {
 		if(coverImage==null) {
 			//First, try reading from file
 			this.readCoverFromTag();
@@ -1207,56 +1214,60 @@ public class FileInfoInt extends FileInfo {
 		return this.artist + separator + this.album + separator + this.year + separator + this.trackTotal;
 	}
 	
-	
+	//FIXME: Try again reading replaygain since JAUDIOTAGGER has been updated recently to 2.2.6
+	//Cannot find files with replaygain (does id3v2 command line supports this frame ?)
+	// => Check if mp3gain is really performed !!!
 	// TODO: Some unsuccessfull attempts to read replaygain tags
-//	private void foo() {
-//		//TODO: Fix below. Does not seem to work though documented here:
-//					//http://java.net/jira/browse/JAUDIOTAGGER-446?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
-//					
-//					
-////					ID3v24Tag v24Tag = myMP3File.getID3v2TagAsv24();
-//					
-//					
-//					
-//					System.out.println("-------------------------------------------");  //NOI18N
-//					System.out.println(this.relativeFullPath);
-////					System.out.println("TXXX");
-//					System.out.println("-------------------------------------------");  //NOI18N
-//					Iterator<ArrayList> i = v2tag.getFrameOfType("TXXX");  //NOI18N
-//					while(i.hasNext()) {
-//						ArrayList<AbstractID3v2Frame> frames = i.next();
-//						for(AbstractID3v2Frame abstractID3v2Frame : frames) {
-//							FrameBodyTXXX fb = (FrameBodyTXXX)abstractID3v2Frame.getBody();
-//							System.out.println(fb.getDescription()+" ::: "+fb.getText());  //NOI18N
-//							
-//							System.out.println("Content: "+abstractID3v2Frame.getContent());  //NOI18N
-//							System.out.println("Encoding: "+abstractID3v2Frame.getEncoding());  //NOI18N
-//							
-//									
-//							
-//							byte encoding = fb.getTextEncoding();
-//							System.out.println(encoding);
-//						}
-//					}
-//					
-////					System.out.println("RVAD");
-//					System.out.println("-------------------------------------------");  //NOI18N
-////					i = v24Tag.getFrameOfType("RVA2");
-////					while(i.hasNext()) {
-////						ArrayList<AbstractID3v2Frame> frames = i.next();
-////						for(AbstractID3v2Frame abstractID3v2Frame : frames) {
-////							FrameBodyRVAD fb = (FrameBodyRVAD)abstractID3v2Frame.getBody();
-////							System.out.println(fb.getIdentifier()+" ::: "+fb.getUserFriendlyValue());
-////						}
-////					}
-//	}
+	private void readReplayGain() {
+		try {
+			//TODO: Fix below. Does not seem to work though documented here:
+			//http://java.net/jira/browse/JAUDIOTAGGER-446?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
+			File currentFile = new File(rootPath+this.relativeFullPath);
+			MP3File myMP3File = (MP3File)AudioFileIO.read(currentFile);
+			
+//			ID3v24Tag v2tag = myMP3File.getID3v2TagAsv24();
+//			ID3v23Tag v2tag = (ID3v23Tag)myMP3File.getID3v2Tag();
+			AbstractID3v2Tag v2tag = myMP3File.getID3v2Tag();
+			
+			System.out.println("-------------------------------------------");  //NOI18N
+			System.out.println(this.relativeFullPath);
+			//					System.out.println("TXXX");
+			System.out.println("-------------------------------------------");  //NOI18N
+			Iterator<ArrayList> i = v2tag.getFrameOfType("TXXX");  //NOI18N
+			while(i.hasNext()) {
+				ArrayList<AbstractID3v2Frame> frames = i.next();
+				for(AbstractID3v2Frame abstractID3v2Frame : frames) {
+					FrameBodyTXXX fb = (FrameBodyTXXX)abstractID3v2Frame.getBody();
+					System.out.println(fb.getDescription()+" ::: "+fb.getText());  //NOI18N
+
+					System.out.println("Content: "+abstractID3v2Frame.getContent());  //NOI18N
+					System.out.println("Encoding: "+abstractID3v2Frame.getEncoding());  //NOI18N
+
+
+
+					byte encoding = fb.getTextEncoding();
+					System.out.println(encoding);
+				}
+			}
+			
+			i = v2tag.getFrameOfType("RVA2");
+			while(i.hasNext()) {
+				ArrayList<AbstractID3v2Frame> frames = i.next();
+				for(AbstractID3v2Frame abstractID3v2Frame : frames) {
+					FrameBodyRVAD fb = (FrameBodyRVAD)abstractID3v2Frame.getBody();
+					System.out.println(fb.getIdentifier()+" ::: "+fb.getUserFriendlyValue());
+				}
+			}
+		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
+			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 	
 // TODO: Some unsuccessfull attempts to write replaygain tags
-//	private void foo() {
+//	private void saveReaplayGain() {
 //		//			ID3v23Tag v2tag = (ID3v23Tag)myMP3File.getID3v2Tag();
 ////			AbstractID3v2Tag v2tag = myMP3File.getID3v2Tag();
 //			
-//			//TODO: Test only for replaygain 
 ////			AbstractID3v2Frame frame = new ID3v23Frame();
 ////			byte b = 1; //If ISO-8859-1 is used this byte should be $00, if Unicode is used it should be $01.
 ////			FrameBodyTXXX fb;

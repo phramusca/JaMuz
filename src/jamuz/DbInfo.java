@@ -17,7 +17,6 @@
 
 package jamuz;
 
-import jamuz.Jamuz;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.MessageFormat;
-import java.util.Locale;
 import java.util.logging.Level;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
@@ -46,7 +44,7 @@ public class DbInfo {
      * @param user
      * @param pwd
      */
-    public DbInfo(String libType, String location, String user, String pwd) {
+    public DbInfo(LibType libType, String location, String user, String pwd) {
         this.libType = libType;
         this.locationOri = location;
         this.locationWork = location;
@@ -83,8 +81,8 @@ public class DbInfo {
 	 * @return
 	 */
 	public boolean check() {
-        switch (this.libType.toLowerCase(Locale.ENGLISH)) {
-            case "sqlite":
+        switch (this.libType) {
+            case Sqlite:
                 if (locationOri.startsWith("ftp://")) {  //NOI18N
                     //TODO: Check FTP connect (and file ?)
                     return true;
@@ -101,7 +99,7 @@ public class DbInfo {
                         return false;
                     }
                 }
-            case "mysql":
+            case MySQL:
                 //TODO: Check database connect
                 return true;
             default:
@@ -118,8 +116,8 @@ public class DbInfo {
 	 */
 	public boolean copyDB(boolean receive, String locationWork) {
 
-		switch (this.libType.toLowerCase(Locale.ENGLISH)) {
-			case "sqlite":  //NOI18N
+		switch (this.libType) {
+			case Sqlite:  //NOI18N
 				String fileName;  //NOI18N
 				if (this.locationOri.startsWith("ftp://")) {  //NOI18N
 					Ftp myFTP = this.getFtp(locationWork);
@@ -164,7 +162,7 @@ public class DbInfo {
                         return false;
                     }
 				}			
-			case "mysql":  //NOI18N
+			case MySQL:  //NOI18N
 				
 				//No need to retrieve a mysql database ...
 				return true;
@@ -175,11 +173,8 @@ public class DbInfo {
 	}
     
     public boolean backupDB(String destinationPath) {
-		//Checking if process got interrupted
-//		this.checkAbort();
-        
-		switch (this.libType.toLowerCase(Locale.ENGLISH)) {
-			case "sqlite":  //NOI18N
+		switch (this.libType) {
+			case Sqlite:  //NOI18N
 				//Create a backup of that database file
 				File workingFile = new File(this.locationWork);
 				File backupFile = new File(this.locationWork + ".bak");  //NOI18N
@@ -190,7 +185,7 @@ public class DbInfo {
                     return false;
                 }
                 return true;
-			case "mysql":  //NOI18N
+			case MySQL:  //NOI18N
 				String mysqlBackupFile = destinationPath + this.locationOri.replace("/", "-") + "--" + DateTime.getCurrentLocal(DateTime.DateTimeFormat.FILE) + ".sql";  //NOI18N
 				String myCmdLine = "mysqldump -u "+ this.user +" -p"+this.pwd+" --opt --compatible=mysql40 "+this.locationOri.substring(this.locationOri.indexOf("/")+1);  //NOI18N
 				Jamuz.getLogger().finest(myCmdLine);
@@ -293,7 +288,12 @@ public class DbInfo {
 		}
 	}
     
-    protected final String libType; //TODO: Replace by an enum
+    protected final LibType libType;
+	
+	public enum LibType {
+		Sqlite,
+		MySQL
+	}
     /**
 	 * Original location
 	 */

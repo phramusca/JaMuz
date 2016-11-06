@@ -38,17 +38,7 @@ import org.apache.commons.lang3.SerializationUtils;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class DbConnVideo extends DbConn {
-	
-    //FIXME: Move PreparedStatements (in other files too) to where used. 
-    //  No need to have them all loaded at all time !
-    //  + Multi-threading issues !
-    //=> http://www.coderanch.com/t/303474/JDBC/databases/Prepared-statement-static-variable
-	private PreparedStatement stSelectAllMovies = null;
-    private PreparedStatement stSelectStreamdetails = null;
-    private PreparedStatement stSelectAllTvShows = null;
-    private PreparedStatement stSelectTvShowEpisodes = null;
-    private PreparedStatement stUpdateFile = null;
-    private PreparedStatement stSelectPath = null;
+
     protected final String rootPath;
 	
 	/**
@@ -60,94 +50,7 @@ public class DbConnVideo extends DbConn {
 		super(dbInfo);
         this.rootPath = rootPath;
 	}
-	
-	
-	/**
-	 * Initialize prepared statements
-	 * @return
-	 */
-	public boolean prepareStatements() {
-		try {
-			stSelectAllMovies = connection.prepareStatement("SELECT "
-                    + "M.c00 AS title, " //NOI18N
-                    + "M.c01 AS synopsis, "
-                    + "M.c02 AS synopsis2, " //NOI18N
-                    + "M.c03 AS synopsis3, "
-                    + "M.c04 AS ratingVotes, " //NOI18N
-                    + "M.c05 AS rating, "
-                    + "M.c06 AS writers, " //NOI18N
-					+ "M.c07 as year, "
-                    + "M.c08 AS thumbnails, " //NOI18N
-                    + "M.c09 AS imdbId, "
-                    + "M.c11 as runtime, " //NOI18N
-                    + "M.c12 AS mppaRating, "
-                    + "M.c13 AS imdbIdTop250Ranking, " //NOI18N
-                    + "M.c14 AS genre, "
-                    + "M.c15 AS director, " //NOI18N
-					+ "M.c16 AS titleOri, "
-                    + "M.c18 AS studio, " //NOI18N
-                    + "M.c19 AS trailerURL, "
-                    + "M.c20 AS fanartURLs, " //NOI18N
-                    + "M.c21 AS country, "
-					+ "F.idFile, F.strFilename, F.playCount, F.lastPlayed, F.dateAdded, " //NOI18N
-                    + "P.idPath, P.strPath "   //NOI18N
-					+ "FROM ( movie M "
-                    + "INNER JOIN path P ON M.idFile=F.idFile) " //NOI18N
-					+ "INNER JOIN files F ON F.idPath=P.idPath "
-                    + "ORDER BY M.c00");    //NOI18N 
-            
-            stSelectStreamdetails = connection.prepareStatement("SELECT iStreamType, "
-                    + "strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, iVideoDuration, " 
-                    + "strAudioCodec, iAudioChannels, strAudioLanguage, " 
-                    + "strSubtitleLanguage " 
-                    + "FROM streamdetails WHERE idFile=?");
-            
-//            stSelectStreamdetails = con.prepareStatement("SELECT iStreamType, "
-//                    + "strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, iVideoDuration, " 
-//                    + "strAudioCodec, iAudioChannels, strAudioLanguage, " 
-//                    + "strSubtitleLanguage " 
-//                    + "FROM streamdetails WHERE idFile=?");
-            
-            stSelectAllTvShows = connection.prepareStatement("SELECT T.idShow, "
-                    + "T.c00 AS title, " //NOI18N
-                    + "T.c01 AS synopsis, "
-                    + "T.c02 AS status, " //NOI18N //TODO
-                    + "T.c03 AS ratingVotes, "
-                    + "T.c04 AS rating, " //NOI18N
-                    + "T.c05 AS year, "
-                    + "T.c06 AS thumbnails, " //NOI18N
-                    + "T.c08 AS genre, " //NOI18N
-                    + "T.c09 AS titleOri, "
-                    + "T.c10 AS episodeguideURL, " //TODO
-                    + "T.c11 as fanartURLs, " //NOI18N
-                    + "T.c13 AS mppaRating, " //NOI18N
-                    + "T.c14 AS studio, "
-                    + "P.idPath, P.strPath "   //NOI18N
-					+ "FROM ( tvshow T "
-                    + "INNER JOIN tvshowlinkpath L ON L.idShow=T.idShow "
-                    + "INNER JOIN path P ON L.idPath=P.idPath) " //NOI18N
-                    + "ORDER BY T.c00");    //NOI18N 
-			
-			
-			
-            this.stSelectTvShowEpisodes = connection.prepareStatement("SELECT "
-                    + "E.idFile, E.c18 AS originalRelativeFullPath, "
-                    + "P.strPath, F.strFilename, E.c03 AS rating, E.c12 AS seasonNumber, "
-                    + "E.c13 AS episodeNumber, "
-                    + "F.playCount AS playCounter, F.lastPlayed, F.dateAdded AS addedDate " 
-                    + "FROM episode E " 
-                    + "JOIN files F ON F.idFile=E.idFile "
-                    + "JOIN path P on P.idPath=F.idPath  " 
-                    + "WHERE E.idShow=?");
-            stUpdateFile = connection.prepareStatement("UPDATE files SET strFilename=?, idPath=? WHERE idFile=?"); //NOI18N
-            stSelectPath = connection.prepareStatement("SELECT idPath FROM path WHERE strPath=?"); //NOI18N
-			return true;
-		} catch (SQLException ex) {
-			Popup.error(ex);
-			return false;
-		}
-	}
-	
+
     /**
      * Get idPath having strPath as path
      * @param strPath
@@ -156,6 +59,8 @@ public class DbConnVideo extends DbConn {
     public int getIdPath(String strPath) {
         ResultSet rs=null;
         try {
+			PreparedStatement stSelectPath = 
+					connection.prepareStatement("SELECT idPath FROM path WHERE strPath=?"); //NOI18N
             stSelectPath.setString(1, strPath);
             rs = stSelectPath.executeQuery();
             if (rs.next()) { //Check if we have a result, so we can move to this one
@@ -192,6 +97,33 @@ public class DbConnVideo extends DbConn {
 		myFileInfoList.clear();
         ResultSet rs = null;
 		try {
+			PreparedStatement stSelectAllMovies = connection.prepareStatement("SELECT "
+                    + "M.c00 AS title, " //NOI18N
+                    + "M.c01 AS synopsis, "
+                    + "M.c02 AS synopsis2, " //NOI18N
+                    + "M.c03 AS synopsis3, "
+                    + "M.c04 AS ratingVotes, " //NOI18N
+                    + "M.c05 AS rating, "
+                    + "M.c06 AS writers, " //NOI18N
+					+ "M.c07 as year, "
+                    + "M.c08 AS thumbnails, " //NOI18N
+                    + "M.c09 AS imdbId, "
+                    + "M.c11 as runtime, " //NOI18N
+                    + "M.c12 AS mppaRating, "
+                    + "M.c13 AS imdbIdTop250Ranking, " //NOI18N
+                    + "M.c14 AS genre, "
+                    + "M.c15 AS director, " //NOI18N
+					+ "M.c16 AS titleOri, "
+                    + "M.c18 AS studio, " //NOI18N
+                    + "M.c19 AS trailerURL, "
+                    + "M.c20 AS fanartURLs, " //NOI18N
+                    + "M.c21 AS country, "
+					+ "F.idFile, F.strFilename, F.playCount, F.lastPlayed, F.dateAdded, " //NOI18N
+                    + "P.idPath, P.strPath "   //NOI18N
+					+ "FROM ( movie M "
+                    + "INNER JOIN path P ON M.idFile=F.idFile) " //NOI18N
+					+ "INNER JOIN files F ON F.idPath=P.idPath "
+                    + "ORDER BY M.c00");    //NOI18N 
 			//Execute query
 			rs = stSelectAllMovies.executeQuery();
 			while(rs.next()){
@@ -254,6 +186,11 @@ public class DbConnVideo extends DbConn {
         ResultSet rsStream = null;
         //Get stream details
         try {
+			PreparedStatement stSelectStreamdetails = connection.prepareStatement("SELECT iStreamType, "
+                    + "strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, iVideoDuration, " 
+                    + "strAudioCodec, iAudioChannels, strAudioLanguage, " 
+                    + "strSubtitleLanguage " 
+                    + "FROM streamdetails WHERE idFile=?");
             stSelectStreamdetails.setInt(1, idFile);
             rsStream = stSelectStreamdetails.executeQuery();
             while(rsStream.next()){
@@ -306,6 +243,34 @@ public class DbConnVideo extends DbConn {
         ResultSet rs = null;
         ResultSet rsEpisodes = null;
 		try {
+			PreparedStatement stSelectAllTvShows = connection.prepareStatement("SELECT T.idShow, "
+                    + "T.c00 AS title, " //NOI18N
+                    + "T.c01 AS synopsis, "
+                    + "T.c02 AS status, " //NOI18N //TODO
+                    + "T.c03 AS ratingVotes, "
+                    + "T.c04 AS rating, " //NOI18N
+                    + "T.c05 AS year, "
+                    + "T.c06 AS thumbnails, " //NOI18N
+                    + "T.c08 AS genre, " //NOI18N
+                    + "T.c09 AS titleOri, "
+                    + "T.c10 AS episodeguideURL, " //TODO
+                    + "T.c11 as fanartURLs, " //NOI18N
+                    + "T.c13 AS mppaRating, " //NOI18N
+                    + "T.c14 AS studio, "
+                    + "P.idPath, P.strPath "   //NOI18N
+					+ "FROM ( tvshow T "
+                    + "INNER JOIN tvshowlinkpath L ON L.idShow=T.idShow "
+                    + "INNER JOIN path P ON L.idPath=P.idPath) " //NOI18N
+                    + "ORDER BY T.c00");    //NOI18N 
+			PreparedStatement stSelectTvShowEpisodes = connection.prepareStatement("SELECT "
+                    + "E.idFile, E.c18 AS originalRelativeFullPath, "
+                    + "P.strPath, F.strFilename, E.c03 AS rating, E.c12 AS seasonNumber, "
+                    + "E.c13 AS episodeNumber, "
+                    + "F.playCount AS playCounter, F.lastPlayed, F.dateAdded AS addedDate " 
+                    + "FROM episode E " 
+                    + "JOIN files F ON F.idFile=E.idFile "
+                    + "JOIN path P on P.idPath=F.idPath  " 
+                    + "WHERE E.idShow=?");
 			//Execute query
 			rs = stSelectAllTvShows.executeQuery();
 			while(rs.next()){
@@ -513,10 +478,12 @@ public class DbConnVideo extends DbConn {
      */
     public boolean updateFile(int idFile, int newIdPath, String newFilename) {
 		try {
-			this.stUpdateFile.setString(1, newFilename);
-            this.stUpdateFile.setInt(2, newIdPath);
-			this.stUpdateFile.setInt(3, idFile);
-			int nbRowsAffected = this.stUpdateFile.executeUpdate();
+			PreparedStatement stUpdateFile = 
+					connection.prepareStatement("UPDATE files SET strFilename=?, idPath=? WHERE idFile=?"); //NOI18N
+			stUpdateFile.setString(1, newFilename);
+            stUpdateFile.setInt(2, newIdPath);
+			stUpdateFile.setInt(3, idFile);
+			int nbRowsAffected = stUpdateFile.executeUpdate();
 			if(nbRowsAffected==1) {
 				return true;
 			}

@@ -18,6 +18,7 @@ package jamuz.process.video;
 
 import info.movito.themoviedbapi.model.MovieDb;
 import jamuz.DbInfo;
+import jamuz.DbInfo.LibType;
 import static jamuz.process.video.PanelVideo.comboRating;
 import java.io.Serializable;
 
@@ -68,7 +69,7 @@ public class MyMovieDb extends MyVideoAbstract implements Serializable {
 		
 		@Override
 		public void setMyVideoInCache() {
-			DbConnVideo conn = new DbConnVideo(new DbInfo("sqlite", "myMovieDb.db", ".", "."), "");
+			DbConnVideo conn = new DbConnVideo(new DbInfo(LibType.Sqlite, "myMovieDb.db", ".", "."), "");
 			conn.connect();
 			conn.setMovieInCache(this);
 			conn.disconnect();

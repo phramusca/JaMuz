@@ -61,8 +61,8 @@ public class DbConn {
 	 */
 	public boolean connect() {
 		try {
-            switch (this.info.libType.toLowerCase(Locale.ENGLISH)) {
-                case "sqlite":
+            switch (this.info.libType) {
+                case Sqlite:
                     //NOI18N
                     Class.forName("org.sqlite.JDBC");  //NOI18N
                     //This is to enforce foreign keys usage
@@ -70,13 +70,13 @@ public class DbConn {
                     config.enforceForeignKeys(true);
                     connection = DriverManager.getConnection("jdbc:sqlite:" + this.info.locationWork,config.toProperties()); //NOI18N //NOI18N
                     break;
-                case "mysql":
+                case MySQL:
                     //NOI18N
                     Class.forName("com.mysql.jdbc.Driver").newInstance();  //NOI18N
                     connection = DriverManager.getConnection("jdbc:mysql://" + this.info.locationWork, this.info.user, this.info.pwd); //NOI18N //NOI18N
                     break;
                 default: 
-                    Popup.error(Inter.get("Error.ConnectDatabase")+" \""+this.info.locationWork+"\"  "+" \""+this.info.libType.toLowerCase(Locale.ENGLISH)+"\"  ");  //NOI18N
+                    Popup.error(Inter.get("Error.ConnectDatabase")+" \""+this.info.locationWork+"\"  "+" \""+this.info.libType+"\"  ");  //NOI18N
                     return false;
             }
 			return true;

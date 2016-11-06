@@ -21,8 +21,6 @@ import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.IconBuffer;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import jamuz.gui.swing.WrapLayout;
@@ -90,14 +88,20 @@ public class DialogTag extends javax.swing.JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             String tag = e.getActionCommand();
+			
+			//FIXME: This is confusing as if we do not save (by closing window), the tags
+			//appear to be though changed while it is not saved in database
+			// = > add a "Cancel" button that revert changes
+			// = > Revert when window is closed using classic top-right button
+			// = > Make sure NOT to revert on OK (disposing dialog there too ...)
             file.toggleTag(tag);
             highlightTag(tag, file.getTags().contains(tag));
         }
     }
 
     public class Tag {
-        private int id;
-        private String value;
+        private final int id;
+        private final String value;
 
         public Tag(int id, String value) {
             this.id = id;
@@ -126,9 +130,6 @@ public class DialogTag extends javax.swing.JDialog {
             if(icon!=null) {
                 button = new JButton(icon);
                 button.setText(tag); //TODO: Display as an option
-            }
-            else {
-                button = new JButton(tag);
             }
             button.setActionCommand(tag);
             button.addActionListener(actionListener);

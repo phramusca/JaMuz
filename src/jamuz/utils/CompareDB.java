@@ -131,7 +131,7 @@ public class CompareDB {
     }
     
     private static DbConnJaMuz getDb(String path) {
-        return new DbConnJaMuz(new DbInfo("sqlite", path, "", ""));
+        return new DbConnJaMuz(new DbInfo(DbInfo.LibType.Sqlite, path, "", ""));
     }
     
     private static HashMap<Integer,FileInfoInt> toMap(ArrayList<FileInfoInt> files) {

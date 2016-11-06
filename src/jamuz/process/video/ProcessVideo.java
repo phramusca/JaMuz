@@ -193,7 +193,7 @@ public class ProcessVideo extends ProcessAbstract {
         }
         
 		//Connect to database
-		DbConnVideo connKodi = new DbConnVideo(new DbInfo("sqlite", Jamuz.getOptions().get("video.dbLocation"), ".", "."), Jamuz.getOptions().get("video.rootPath"));
+		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getOptions().get("video.dbLocation"), ".", "."), Jamuz.getOptions().get("video.rootPath"));
         if(getDb) {
             //Retrieve XBMC database
             checkAbort();
@@ -207,7 +207,6 @@ public class ProcessVideo extends ProcessAbstract {
                     FilenameUtils.getName(Jamuz.getOptions().get("video.dbLocation")))); //NOI18N
         }
         connKodi.connect();
-		connKodi.prepareStatements();
         
 		//List movies
 		connKodi.getMovies(tableModel.getFiles(), connKodi.rootPath);
@@ -235,7 +234,7 @@ public class ProcessVideo extends ProcessAbstract {
                 // and that happens only when you open files in a liste
                 //So for series, you have to go through all or create an "All" playlist and open it
                 //Then wait a while before processing again
-                //FIXME: Warn that kodi needs cleanup/update when at least a file has been moved
+                //TODO: Warn that kodi needs cleanup/update when at least a file has been moved
                 video.moveFilesAndSrt(buffer, connKodi, myConn); 
             }
             //Check if files exist locally, and get size if so
@@ -281,7 +280,7 @@ public class ProcessVideo extends ProcessAbstract {
             }
         }
 		if(doSearch) {
-			DbConnVideo connCacheTheMovieDb = new DbConnVideo(new DbInfo("sqlite", "myMovieDb.db", ".", "."), "");
+			DbConnVideo connCacheTheMovieDb = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, "myMovieDb.db", ".", "."), "");
 			connCacheTheMovieDb.connect();
 			//Get the TvShows from the video files, as removed from themovieDb.getMyTvShows() 
 			//	when set in VideoAbstract leaving only the extra from theMovieDb
