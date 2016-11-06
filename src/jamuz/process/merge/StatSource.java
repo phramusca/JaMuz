@@ -21,6 +21,7 @@ import jamuz.StatSourceAbstract;
 import jamuz.process.sync.Device;
 import jamuz.Jamuz;
 import jamuz.DbInfo;
+import jamuz.DbInfo.LibType;
 import java.util.Date;
 import jamuz.utils.DateTime;
 
@@ -78,19 +79,19 @@ public class StatSource {
         
         switch (idStatement) {
             case 1: // Guayadeque 	(Linux)
-                this.source = new StatSourceGuayadeque(new DbInfo("sqlite", location, user, pwd), name, rootPath);
+                this.source = new StatSourceGuayadeque(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
                 break;
             case 2: // XBMC 	(Linux/Windows)
-                this.source = new StatSourceXBMC(new DbInfo("sqlite", location, user, pwd), name, rootPath); 
+                this.source = new StatSourceXBMC(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
                 break;
             case 3: // MediaMonkey (Windows)
-                this.source = new StatSourceMediaMonkey(new DbInfo("sqlite", location, user, pwd), name, rootPath); 
+                this.source = new StatSourceMediaMonkey(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
                 break;
             case 4: // Mixxx 	(Linux/Windows)
-                this.source = new StatSourceMixxx(new DbInfo("sqlite", location, user, pwd), name, rootPath); 
+                this.source = new StatSourceMixxx(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
                 break;
             case 5: // MyTunes 	(Android)
-                this.source = new StatSourceMyTunes(new DbInfo("sqlite", location, user, pwd), name, rootPath); 
+                this.source = new StatSourceMyTunes(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
                 break;
             default:
                 this.source = null;

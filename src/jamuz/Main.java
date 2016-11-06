@@ -17,9 +17,8 @@
 
 package jamuz;
 
-//FIXME: Ant (build.xml):  copy configuration default files, make 7z package, obfuscate:
+//FIXME: Ant (build.xml):  copy configuration and other required files, make 7z package, obfuscate:
 //BINARY CODE OBFUSCATION (TO PROTECT API KEYS) AND MAKE SURE THERE IS NO API KEY NOR (worse) PASSWORDS IN CODE TO BE COMMITED
-
 
 //----------------------------------------------------------
 // - General TODO:

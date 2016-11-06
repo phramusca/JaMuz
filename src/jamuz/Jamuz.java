@@ -17,6 +17,7 @@
 
 package jamuz;
 
+import jamuz.DbInfo.LibType;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -198,7 +199,7 @@ public class Jamuz {
         }
         
         //Create and open connection to JaMuz JaMuzDbPath			
-        db= new DbConnJaMuz(new DbInfo("sqlite", JaMuzDbPath, "", ""));
+        db= new DbConnJaMuz(new DbInfo(LibType.Sqlite, JaMuzDbPath, "", ""));
 
         return db.setUp();
     }
@@ -268,17 +269,24 @@ public class Jamuz {
     public static Options getOptions() {
         return options;
     }
-       
-    //FIXME: Use this list when filling other genre lists too (in player, options, ... ?)
-    private static List<String> genres;
-    private static void readGenres() {
-        DefaultListModel listModel = new DefaultListModel();
-        getDb().fillGenreList(listModel);
-        genres = (List<String>)(List<?>) Arrays.asList(listModel.toArray());
+
+	private static DefaultListModel genreListModel;
+	
+    public static void readGenres() {
+        genreListModel = new DefaultListModel();
+        getDb().getGenreListModel(genreListModel);
     }
 
-    public static List<String> getGenres() {
-        return genres;
+	public static List<String> getGenres() {
+        return (List<String>)(List<?>) Arrays.asList(genreListModel.toArray());
+    }
+	
+	/**
+	 *
+	 * @return
+	 */
+	public static DefaultListModel getGenreListModel() {
+        return genreListModel;
     }
     
     private static ArrayList<String> tags;

@@ -54,6 +54,10 @@ import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.Swing;
 
+//FIXME: Bug "Kid Creole and the Coconuts"
+//idPath IN (784, 785)
+//=> Album "Best Of" ne s'affiche pas !!!???
+
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )

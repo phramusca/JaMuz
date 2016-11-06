@@ -90,13 +90,11 @@ public class IconBufferCover {
         BufferedImage coverImage = file.getCoverImage();
         //Generate an icon
         ImageIcon icon = getScaledInstance(coverImage, coverIconSize);
-        //Remove image from RAM. TODO: Is this really a good way ?
+        //Remove image from RAM.
         file.unsetCover(); 
         return icon;
     }
-    
-    //TODO: Move those (and other image related general functions) to a dedicated class in Utils
-    
+	
     private static ImageIcon getScaledInstance(BufferedImage image, int size) {
         return new ImageIcon(image.getScaledInstance(size, size, java.awt.Image.SCALE_SMOOTH));
     }

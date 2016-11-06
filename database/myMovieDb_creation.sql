@@ -2,7 +2,6 @@ CREATE TABLE "tvShow" (
     "idTvShow" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "obj" BLOB NOT NULL
 );
-CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE "movie" (
     "idMovie" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "obj" BLOB NOT NULL

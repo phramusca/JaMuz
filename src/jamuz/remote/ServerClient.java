@@ -188,7 +188,7 @@ public class ServerClient {
 
 		private boolean isValid(String login, String pass) {
 			
-			//FIXME: Use a better authentication & think of moving jamuz to multi-user somehow
+			//TODO: Use a better authentication & think of moving jamuz to multi-user somehow
 			return (login.equals("tata") && pass.equals("tata"));
 //			boolean connexion = false;
 //			try {

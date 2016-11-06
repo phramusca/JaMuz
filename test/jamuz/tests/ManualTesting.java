@@ -43,6 +43,10 @@ public class ManualTesting {
 	 */
 	public static void main(String[] args) {
 
+		
+		
+		
+		
 //        DialogScanner.main(null, 
 //                "/home/raph/Musique/Nouveau/0_pascal/Reggae (JA)/Johnny Clarke = [1976] Authorised Version ~MP3~/[06] Academy Award Version.mp3");
         
@@ -53,19 +57,19 @@ public class ManualTesting {
         //http://www.jsresources.org/faq_audio.html
         
         
-            try {
-                //http://stackoverflow.com/questions/22438353/java-select-audio-device-and-play-mp3
-
-                //Play on a particular sound card (use "aplay -L" for list of sound cards)
-                //aplay -L | grep sysdefault:CARD=
-                java.lang.Process p1 = Runtime.getRuntime().exec(new String[]{"mpg123", "-asysdefault:CARD=Device", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 01 Keep Ya Head Up.mp3"});
-                //Play on the default sound card
-                java.lang.Process p2 = Runtime.getRuntime().exec(new String[]{"mpg123", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 03 Temptations.mp3"});
-                
-                //Use -C option to control the player
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                //http://stackoverflow.com/questions/22438353/java-select-audio-device-and-play-mp3
+//
+//                //Play on a particular sound card (use "aplay -L" for list of sound cards)
+//                //aplay -L | grep sysdefault:CARD=
+//                java.lang.Process p1 = Runtime.getRuntime().exec(new String[]{"mpg123", "-asysdefault:CARD=Device", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 01 Keep Ya Head Up.mp3"});
+//                //Play on the default sound card
+//                java.lang.Process p2 = Runtime.getRuntime().exec(new String[]{"mpg123", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 03 Temptations.mp3"});
+//                
+//                //Use -C option to control the player
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
             //play wav
 //                try {
 //                java.lang.Process p3 = Runtime.getRuntime().exec(new String[]{"aplay", "audio/audio1.wav", "-Dsysdefault:CARD=Intel"});

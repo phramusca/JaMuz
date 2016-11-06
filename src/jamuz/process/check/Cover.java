@@ -156,8 +156,6 @@ public class Cover implements java.lang.Comparable {
             }
             return myImage;
 		} catch (IOException ex) {
-            //FIXME: Causes problems in PanelSelect (button "Extra")
-// => why don't we get the buffered icon which is OK ?
             return null;
 		}
 	}

@@ -15,6 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+//FIXME: Document MusicTunes setup
+//"Settings"
+//	"Automatic index update": enable
+//	"Music Folders": 
+//		/storage/extSdCard/Musique
+//		Enable "In the music library, only list music files located in these directories"
+//	"Advanced Settings"
+//		Enable "Store Index on SD Card"
+
 package jamuz.process.merge;
 
 import jamuz.StatSourceSQL;

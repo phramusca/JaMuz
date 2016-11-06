@@ -1426,7 +1426,7 @@ public class DialogCheck extends javax.swing.JDialog {
             }
         }
 
-        //FIXME: If titles are ok and so is track #, then we shall not ask for confirmation
+        //TODO: If titles are ok and so is track #, then we shall not ask for confirmation
         if(!doSave) {
             int n = JOptionPane.showConfirmDialog(
                 null, Inter.get("Question.Check.TrackOrder"), //NOI18N
@@ -1796,7 +1796,7 @@ public class DialogCheck extends javax.swing.JDialog {
             }
         }
         displayMatchTracks();
-        //FIXME: Re-calculate differences and check AlbumArtist, album, artist, title accordingly
+        //TODO: Is this not done yet ? >> Re-calculate differences and check AlbumArtist, album, artist, title accordingly
         folder.getFilesAudioTableModel().fireTableDataChanged();
         
     }
@@ -1996,7 +1996,7 @@ public class DialogCheck extends javax.swing.JDialog {
     private static void setCover(Cover cover) {
         BufferedImage image = cover.getImage();
         if(image!=null) {
-            //FIXME: Display more text: source string + make jlabel bigger and remove "Search:" label (good as it will reduce year panel)
+            //TODO: Display more text: source string + make jlabel bigger and remove "Search:" label (good as it will reduce year panel)
             jLabelCoverFound.setText(cover.getSizeHTML());
             //Display selected image on MainGUI
             PanelCover mainCoverImg = (PanelCover) DialogCheck.jPanelCheckCoverThumb;
