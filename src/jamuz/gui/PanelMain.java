@@ -68,6 +68,7 @@ import javax.swing.SwingConstants;
 import jamuz.gui.swing.ButtonBrowseURL;
 import jamuz.gui.swing.ListModelQueue;
 import jamuz.gui.swing.TableCellListener;
+import jamuz.player.Mplayer;
 import jamuz.process.check.FolderInfo;
 import jamuz.remote.ICallBackAuthentication;
 import jamuz.remote.ICallBackReception;
@@ -111,6 +112,7 @@ public class PanelMain extends javax.swing.JFrame {
     
     private static final PlayerMP3 mp3Player = new PlayerMP3();
     private static final PlayerFlac flacPlayer = new PlayerFlac();
+	private static final Mplayer mPlayer = new Mplayer();
 
     protected static DefaultComboBoxModel comboPlaylistsModel = new DefaultComboBoxModel();
     
@@ -149,6 +151,7 @@ public class PanelMain extends javax.swing.JFrame {
      */
     public static void next() {
         //update lastPlayed (now) and playCounter (+1)
+		//FIXME: Do not when playing from Nouveau
         FileInfoInt file = queueModel.getPlayingSong().getFile();
         Jamuz.getDb().updateLastPlayedAndCounter(file);
         //Moving next
@@ -780,6 +783,9 @@ public class PanelMain extends javax.swing.JFrame {
         jButtonPlayerPrevious = new javax.swing.JButton();
         jButtonPlayerPlay = new javax.swing.JButton();
         jButtonPlayerNext = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jSpinner1 = new javax.swing.JSpinner();
         jToggleButtonPlayerInfo = new javax.swing.JToggleButton();
         jPanelPlayerCoverContainer = new javax.swing.JPanel();
         jPanelPlayerCover = new jamuz.gui.PanelCover();
@@ -1205,6 +1211,20 @@ public class PanelMain extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setText("+"); // NOI18N
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("-"); // NOI18N
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1212,7 +1232,7 @@ public class PanelMain extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabelPlayerTimeEllapsed)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelPlayerTimeTotal))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -1222,6 +1242,12 @@ public class PanelMain extends javax.swing.JFrame {
                 .addComponent(jButtonPlayerPlay)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonPlayerNext)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3)
+                .addGap(5, 5, 5)
+                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -1236,7 +1262,12 @@ public class PanelMain extends javax.swing.JFrame {
                     .addComponent(jButtonPlayerPrevious)
                     .addComponent(jButtonPlayerPlay, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonPlayerNext)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jButton3)
+                                .addComponent(jButton4)
+                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButtonPlayerNext))
                         .addGap(1, 1, 1))))
         );
 
@@ -1415,7 +1446,7 @@ public class PanelMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPanePlayerQueue, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addComponent(jScrollPanePlayerQueue, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonRefreshHiddenQueue)
@@ -1568,21 +1599,23 @@ public class PanelMain extends javax.swing.JFrame {
         
         myFileInfo.sayRating(false);
         boolean enablejSliderPlayerLength=true;
-        switch (myFileInfo.getExt()) {
-            case "mp3": //NOI18N
-//                jSliderPlayerLength.setEnabled(true);
-                mp3Player.play(audioFileName, resume);
-                break;
-            case "flac": //NOI18N
-//                jSliderPlayerLength.setEnabled(false); //TTODO: Remove when doable
-                enablejSliderPlayerLength=false;
-                flacPlayer.play(audioFileName);
-                break;
-            case "ogg": //NOI18N
-                //TODO: Support OGG: http://www.jcraft.com/jorbis/ OR http://www.javazoom.net/vorbisspi/sources.html
-                break;
-            //TODO: Support some more formats
-        }
+//        switch (myFileInfo.getExt()) {
+//            case "mp3": //NOI18N
+////                jSliderPlayerLength.setEnabled(true);
+////                mp3Player.play(audioFileName, resume);
+//				mPlayer.play(audioFileName);
+//                break;
+//            case "flac": //NOI18N
+////                jSliderPlayerLength.setEnabled(false); //TTODO: Remove when doable
+//                enablejSliderPlayerLength=false;
+//                flacPlayer.play(audioFileName);
+//                break;
+//            case "ogg": //NOI18N
+//                //TODO: Support OGG: http://www.jcraft.com/jorbis/ OR http://www.javazoom.net/vorbisspi/sources.html
+//                break;
+//            //TODO: Support some more formats
+//        }
+		mPlayer.play(audioFileName);
 		
         String lyrics = myFileInfo.getLyrics();
         Color textColor=Color.RED;
@@ -1621,8 +1654,10 @@ public class PanelMain extends javax.swing.JFrame {
         jSliderPlayerLength.setEnabled(false);
         queueModel.removeBullet();
 
-        mp3Player.pause();
-        flacPlayer.stop();
+//        mp3Player.pause();
+//        flacPlayer.stop();
+		mPlayer.stop();
+		
         queueModel.setPlayingIndex(-1);
         
         jButtonPlayerPlay.setText(Inter.get("Button.Play"));  //NOI18N
@@ -1712,13 +1747,16 @@ public class PanelMain extends javax.swing.JFrame {
         int position = (int) source.getValue();
         if (!source.getValueIsAdjusting()) {
             if (isManual) {
-                mp3Player.setPosition(position);
-                mp3Player.positionLock = false;
+				mPlayer.setPosition(position);
+//                mp3Player.setPosition(position);
+                mPlayer.positionLock = false;
+//				mp3Player.positionLock = false;
             }
         } else {
             jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(position));
             //TODO: Use a real java Lock
-            mp3Player.positionLock = true;
+            mPlayer.positionLock = true;
+//			mp3Player.positionLock = true;
         }
     }//GEN-LAST:event_jSliderPlayerLengthStateChanged
 
@@ -2064,6 +2102,7 @@ public class PanelMain extends javax.swing.JFrame {
 		try {
 			String ip = getLocalHostLANAddress().getHostAddress();
 			int port = (Integer) jSpinnerPort.getValue();
+			 //TODO: Use user's own secret. It also allows to identify users
 			String encrypted = Encryption.encrypt(ip+":"+port, "NOTeBrrhzrtestSecretK");
 			String url = "JaMuzRemote://"+encrypted; 
 			BufferedImage bufferedImage = CrunchifyQRCode.createQRcode(url, 250);
@@ -2071,6 +2110,16 @@ public class PanelMain extends javax.swing.JFrame {
 		} catch (UnknownHostException ex) {
 		}
     }//GEN-LAST:event_jButtonQRcodeActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        //FIXME: Use the spinner instead ( or a slider ? )
+		mPlayer.volumePlus();
+		
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        mPlayer.volumeMinus();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
 	public class SaveTags extends ProcessAbstract {
 
@@ -2465,6 +2514,8 @@ public class PanelMain extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButtonCheckDown;
     private javax.swing.JButton jButtonCheckUp;
     private javax.swing.JButton jButtonOptionsGenresAdd;
@@ -2518,6 +2569,7 @@ public class PanelMain extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPaneOptionsMachines1;
     private javax.swing.JScrollPane jScrollPanePlayerQueue;
     private static javax.swing.JSlider jSliderPlayerLength;
+    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinnerPort;
     private javax.swing.JSplitPane jSplitPaneMain;
     private static javax.swing.JTabbedPane jTabbedPaneMain;

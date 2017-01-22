@@ -165,20 +165,8 @@ public class DialogQRcode extends javax.swing.JDialog {
 				if(bufferedImage!=null) {
 					DialogQRcode dialog = new DialogQRcode(new javax.swing.JFrame(), true, bufferedImage );
 
-					//Set dialog to mouse location
-					PointerInfo a = MouseInfo.getPointerInfo();
-					Point b  = a.getLocation();
-					int x = (int)b.getX();
-					int y = (int)b.getY();
-					//size of the screen
-					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-					if(x + dialog.getWidth()>screenSize.getWidth() ) {
-						x=(int)screenSize.getWidth() - dialog.getWidth();
-					}
-					if(y + dialog.getHeight()>screenSize.getHeight()) {
-						y=(int)screenSize.getHeight()- dialog.getHeight();
-					}
-					dialog.setLocation(x, y);
+					//Center the dialog
+					dialog.setLocationRelativeTo(dialog.getParent());
 					dialog.setVisible(true);
 				}
 			}
