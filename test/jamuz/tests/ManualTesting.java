@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -57,19 +58,30 @@ public class ManualTesting {
         //http://www.jsresources.org/faq_audio.html
         
         
-//            try {
-//                //http://stackoverflow.com/questions/22438353/java-select-audio-device-and-play-mp3
-//
-//                //Play on a particular sound card (use "aplay -L" for list of sound cards)
-//                //aplay -L | grep sysdefault:CARD=
+            try {
+                //http://stackoverflow.com/questions/22438353/java-select-audio-device-and-play-mp3
+//Play on a particular sound card (use "aplay -L" for list of sound cards)
+				
+			// USING mpg123
+                
+				//Use -C option to control the player
 //                java.lang.Process p1 = Runtime.getRuntime().exec(new String[]{"mpg123", "-asysdefault:CARD=Device", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 01 Keep Ya Head Up.mp3"});
-//                //Play on the default sound card
+                //Play on the default sound card
 //                java.lang.Process p2 = Runtime.getRuntime().exec(new String[]{"mpg123", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 03 Temptations.mp3"});
-//                
-//                //Use -C option to control the player
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+                
+			//USING mplayer
+				//mplayer -ao alsa:device=sysdefault=Device
+//				java.lang.Process p1 = Runtime.getRuntime().exec(new String[]{"mplayer", "-ao", "alsa:device=sysdefault=Device", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 01 Keep Ya Head Up.mp3"});
+				//mplayer FLAC -ao alsa:device=sysdefault=Device
+				java.lang.Process p1 = Runtime.getRuntime().exec(new String[]{"mplayer", "-ao", "alsa:device=sysdefault=Device", "/home/raph/Musique/Archive/Various Artists/3_60_ Reggae Greats/[1-3] - 10 The Heptones - My Guiding Star.flac"});                
+				//Play on the default sound card
+                java.lang.Process p2 = Runtime.getRuntime().exec(new String[]{"mplayer", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 03 Temptations.mp3"});
+				
+				p1.waitFor(30, TimeUnit.SECONDS);
+ 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //play wav
 //                try {
 //                java.lang.Process p3 = Runtime.getRuntime().exec(new String[]{"aplay", "audio/audio1.wav", "-Dsysdefault:CARD=Intel"});
@@ -77,7 +89,7 @@ public class ManualTesting {
 //             } catch (Exception e) {
 //                    e.printStackTrace();
 //                }
-//            }
+            }
 //        }
         
         
@@ -127,4 +139,4 @@ public class ManualTesting {
         
         
     }
-}
+//}
