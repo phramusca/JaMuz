@@ -49,10 +49,14 @@ import jamuz.gui.swing.ListCellRendererSelector;
 import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
+import jamuz.player.Mplayer;
+import jamuz.player.Mplayer.AudioCard;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.Swing;
+import javax.swing.DefaultComboBoxModel;
+import org.apache.commons.io.FilenameUtils;
 
 //FIXME: Bug "Kid Creole and the Coconuts"
 //idPath IN (784, 785)
@@ -182,6 +186,9 @@ public class PanelSelect extends javax.swing.JPanel {
                 else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueueAll.text"))) { //NOI18N
                     menuQueueAll();
                 }
+				else if(sourceTxt.equals("Preview")) { //NOI18N
+                    menuPreview();
+                }
                 else if(sourceTxt.equals(Inter.get("Label.Check"))) { //NOI18N
                     menuCheck();
                 }
@@ -199,6 +206,9 @@ public class PanelSelect extends javax.swing.JPanel {
         menuItem.addActionListener(menuListener);
         jPopupMenu1.add(menuItem);
         menuItem = new JMenuItem(Inter.get("MainGUI.jButtonSelectQueueAll.text")); //NOI18N
+        menuItem.addActionListener(menuListener);
+        jPopupMenu1.add(menuItem);
+		menuItem = new JMenuItem("Preview"); //NOI18N
         menuItem.addActionListener(menuListener);
         jPopupMenu1.add(menuItem);
         menuItem = new JMenuItem(Inter.get("Label.Check")); //NOI18N
@@ -226,7 +236,9 @@ public class PanelSelect extends javax.swing.JPanel {
         ListCellRendererGenre rendererGenre = new ListCellRendererGenre();
         rendererGenre.setPreferredSize(new Dimension(0, IconBuffer.iconSize));
         jListSelectGenre.setCellRenderer(rendererGenre);
-        
+
+		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
+		
         //Get table model
 		tableModel = (TableModel) jTableSelect.getModel();
 		PanelMain.initSelectTable(tableModel, jTableSelect, columnModel);
@@ -322,6 +334,10 @@ public class PanelSelect extends javax.swing.JPanel {
         jToggleButtonSelectShowStats = new javax.swing.JToggleButton();
         jLabelSelected = new javax.swing.JLabel();
         jLabelSelectedSummary = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jButtonPreviewStop = new javax.swing.JButton();
+        jComboBoxSoundCard = new javax.swing.JComboBox<>();
+        jLabelPreviewDisplay = new javax.swing.JLabel();
 
         jSplitPaneSelect.setDividerLocation(300);
         jSplitPaneSelect.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -756,6 +772,37 @@ public class PanelSelect extends javax.swing.JPanel {
 
         jLabelSelectedSummary.setText(" ");
 
+        jButtonPreviewStop.setText(Inter.get("Button.Stop")); // NOI18N
+        jButtonPreviewStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPreviewStopActionPerformed(evt);
+            }
+        });
+
+        jComboBoxSoundCard.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jButtonPreviewStop)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxSoundCard, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelPreviewDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonPreviewStop)
+                    .addComponent(jComboBoxSoundCard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelPreviewDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
         javax.swing.GroupLayout jPanelSelectTracksLayout = new javax.swing.GroupLayout(jPanelSelectTracks);
         jPanelSelectTracks.setLayout(jPanelSelectTracksLayout);
         jPanelSelectTracksLayout.setHorizontalGroup(
@@ -775,7 +822,9 @@ public class PanelSelect extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jToggleButtonSelectShowExtra)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabelSelectedSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabelSelectedSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSelectTracksLayout.createSequentialGroup()
                         .addComponent(jLabelSelected, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
@@ -785,15 +834,17 @@ public class PanelSelect extends javax.swing.JPanel {
             .addGroup(jPanelSelectTracksLayout.createSequentialGroup()
                 .addComponent(jLabelSelected)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButtonSelectShowBasic)
-                    .addComponent(jLabelSelectDisplay)
-                    .addComponent(jToggleButtonSelectShowStats)
-                    .addComponent(jToggleButtonSelectShowFile)
-                    .addComponent(jToggleButtonSelectShowExtra)
-                    .addComponent(jLabelSelectedSummary))
+                .addGroup(jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jToggleButtonSelectShowBasic)
+                        .addComponent(jLabelSelectDisplay)
+                        .addComponent(jToggleButtonSelectShowStats)
+                        .addComponent(jToggleButtonSelectShowFile)
+                        .addComponent(jToggleButtonSelectShowExtra)
+                        .addComponent(jLabelSelectedSummary))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -838,7 +889,26 @@ public class PanelSelect extends javax.swing.JPanel {
             PanelCheck.check(myFileInfo.getIdPath());			 		
 		}
     }
-    
+    private static Mplayer mplayer= new Mplayer();
+	private void menuPreview() {
+		//Getting selected File 		
+		int selectedRow = jTableSelect.getSelectedRow(); 			
+		if(selectedRow>=0) { 	
+			//convert to model index (as sortable model) 		
+			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
+			FileInfoInt myFileInfo = fileInfoList.get(selectedRow); 	 
+
+			mplayer.setAudioCard((AudioCard)jComboBoxSoundCard.getSelectedItem());
+			jLabelPreviewDisplay.setText(myFileInfo.getTrackNo()+" "+myFileInfo.getTitle());
+			mplayer.play(FilenameUtils.concat(myFileInfo.getRootPath(), myFileInfo.getRelativeFullPath()), false);
+		}
+	}
+	
+	public static void stopMplayer() {
+		mplayer.stop();
+		jLabelPreviewDisplay.setText("");
+	}
+	
     private void menuQueue() {
         //Getting selected File 		
 		int selectedRow = jTableSelect.getSelectedRow(); 			
@@ -1344,10 +1414,15 @@ public class PanelSelect extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jRadioSelectArtistRatingItemStateChanged
 
+    private void jButtonPreviewStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviewStopActionPerformed
+        stopMplayer();
+    }//GEN-LAST:event_jButtonPreviewStopActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JButton jButtonPreviewStop;
     private static javax.swing.JCheckBox jCheckBoxSelectCheckedFlag0;
     private static javax.swing.JCheckBox jCheckBoxSelectCheckedFlag1;
     private static javax.swing.JCheckBox jCheckBoxSelectCheckedFlag2;
@@ -1360,9 +1435,11 @@ public class PanelSelect extends javax.swing.JPanel {
     private static javax.swing.JCheckBox jCheckBoxSelectRating5;
     private static javax.swing.JButton jCheckBoxSelectUpdate;
     private static javax.swing.JComboBox jComboBoxBestOfCopyRight;
+    private javax.swing.JComboBox<String> jComboBoxSoundCard;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private static javax.swing.JLabel jLabelPreviewDisplay;
     private javax.swing.JLabel jLabelSelectDisplay;
     private static javax.swing.JLabel jLabelSelected;
     private static javax.swing.JLabel jLabelSelectedSummary;
@@ -1370,6 +1447,7 @@ public class PanelSelect extends javax.swing.JPanel {
     private static javax.swing.JList jListSelectArtist;
     protected static javax.swing.JList jListSelectGenre;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelSelect;
     private javax.swing.JPanel jPanelSelectAlbum;
     private javax.swing.JPanel jPanelSelectArtist;

@@ -237,7 +237,7 @@ public class PlayerMP3 extends PlaybackListener implements Runnable
 		positionUpdater.cancel();
 		positionUpdater.purge();
 		if(goNext) {
-			PanelMain.next();
+//			PanelMain.next();
 		}
     }    
 
@@ -279,7 +279,7 @@ public class PlayerMP3 extends PlaybackListener implements Runnable
 		@Override
 			public void run() {
 				if(!positionLock) {
-					PanelMain.dispMP3progress(positionStart*1000+device.getPosition());
+//					PanelMain.dispMP3progress(positionStart*1000+device.getPosition());
                     PanelLyrics.setPosition(positionStart*1000+device.getPosition(), length);
 				}
 			}

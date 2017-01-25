@@ -21,7 +21,6 @@ package jamuz.player;
 
 import jamuz.Jamuz;
 import jamuz.gui.PanelLyrics;
-import jamuz.gui.PanelMain;
 import jamuz.process.check.MP3gain;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
@@ -40,6 +39,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.EventListenerList;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -59,22 +59,144 @@ public class Mplayer implements Runnable {
 	private int length;
 	public boolean positionLock=false;
     private Updater positionUpdater;
-	Writer writer;
-	BufferedReader inputReader;
-	BufferedReader errorReader;
-	float volume;
+	private Writer writer;
+	private BufferedReader inputReader;
+	private BufferedReader errorReader;
+	private boolean goNext=true;
+	private final Object lockPlayer = new Object();
+	private int lastPosition=0;
+	private AudioCard audioCard= new AudioCard("Default", "default");
+	private final EventListenerList listeners = new EventListenerList();
 	
     /**
      * Mplayer player
      */
     public Mplayer() {
     }
-    
+	
+	public void addListener(MPlaybackListener listener) {
+        listeners.add(MPlaybackListener.class, listener);
+    }
+	
+	public MPlaybackListener[] getListeners() {
+        return listeners.getListeners(MPlaybackListener.class);
+    }
+	
+	protected void fireVolumeChanged(float volume) {
+        for(MPlaybackListener listener : getListeners()) {
+			listener.volumeChanged(volume);
+		}
+    }
+	
+	protected void firePlaybackFinished() {
+        for(MPlaybackListener listener : getListeners()) {
+			listener.playbackFinished();
+		}
+    }
+	
+	protected void firePositionChanged(int position, int length) {
+        for(MPlaybackListener listener : getListeners()) {
+			listener.positionChanged(position, length);
+		}
+    }
+	
     private void play() {
+		this.goNext=true;
+		Jamuz.getLogger().log(Level.FINEST, "*********************** goNext: {0}; play()", goNext);
         this.playerThread = new Thread(this, "Thread.Mplayer.play");  //NOI18N
         this.playerThread.start();
     }
     
+	public class AudioCard {
+		private final String name;
+		private final String value;
+
+		public AudioCard(String name, String value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+	}
+	
+	public void setAudioCard(AudioCard audioCard) {
+		this.audioCard = audioCard;
+	}
+	
+	public ArrayList<AudioCard> getAudioCards() {
+		ArrayList<AudioCard> audioCards = new ArrayList<>();
+		//Build mplayer command array
+		List<String> cmdArray = new ArrayList<>();
+		if(OS.isWindows()) {
+			//FIXME: what is "aplay" equivalent to list audio cards in Windows ?
+			cmdArray.add("aplay");
+		}
+		else {
+			//TODO: Test if it works in MacOS for instance
+			cmdArray.add("aplay");
+			cmdArray.add("-L");
+		}
+		Runtime runtime = Runtime.getRuntime();
+		try {
+			//Start process
+			String[] stockArr = new String[cmdArray.size()];
+			stockArr = cmdArray.toArray(stockArr);
+			Process processSoundCards = runtime.exec(stockArr);
+
+			// Reading Input Stream
+			Thread readInputThread = new Thread("Thread.Mplayer.getAudioCards") {
+				@Override
+				public void run() {
+					BufferedReader iputBufferedReader=null;
+					try {
+						iputBufferedReader = new BufferedReader(new InputStreamReader(processSoundCards.getInputStream()));
+						String line;
+						while((line = iputBufferedReader.readLine()) != null) {
+							if(line.startsWith("sysdefault:")) {  //NOI18N
+								////"-ao", "alsa:device=sysdefault=Device"
+								//sysdefault:CARD=PCH
+								//sysdefault:CARD=Device
+								audioCards.add(
+									new AudioCard(
+										line.replaceAll("sysdefault:CARD=", ""), 
+										"alsa:device="+line.replaceAll(":CARD", "")
+									)
+								);
+							}
+						}
+					} catch(IOException ex) {
+						Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
+						//TODO: return false
+					} finally {
+						if(iputBufferedReader!=null) {
+							try {
+								iputBufferedReader.close();
+							} catch (IOException ex) {
+								Logger.getLogger(MP3gain.class.getName()).log(Level.SEVERE, null, ex);
+							}
+						}
+					}
+				}
+			};
+			readInputThread.start();
+
+			processSoundCards.waitFor();
+			readInputThread.join();
+			
+		} catch (IOException | InterruptedException ex) {
+			Popup.error(ex);
+		} 
+		return audioCards;
+	}
+	
+	
 	public boolean startMplayer() {
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
@@ -87,20 +209,18 @@ public class Mplayer implements Runnable {
 			cmdArray.add("mplayer");
 		}
 
-		//FIXME: Allow this in Select tab to preview a song
-		
 		//Play on a particular sound card (use "aplay -L" for list of sound cards)
 		//http://stackoverflow.com/questions/22438353/java-select-audio-device-and-play-mp3
 		//Adapted for mplayer
 		//"-ao", "alsa:device=sysdefault=Device"
-//		cmdArray.add("-ao");
-//		cmdArray.add("alsa:device=sysdefault=Device");
-
+//		if(!audioCard.equals("")) {
+			cmdArray.add("-ao");
+			cmdArray.add("alsa:device="+audioCard.getValue());
+//		}
 		
 		cmdArray.add("-slave");
 		cmdArray.add("-quiet");
 //		cmdArray.add("-idle");
-
 
 		cmdArray.add(filePath);
 
@@ -162,7 +282,6 @@ public class Mplayer implements Runnable {
 						errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 						String line;
 						while((line = errorReader.readLine()) != null) {
-//							System.err.println(line);
 							System.err.println("errorReader: "+line);
 							Jamuz.getLogger().log(Level.SEVERE, line);  //NOI18N
 						}
@@ -186,14 +305,32 @@ public class Mplayer implements Runnable {
 			
 			positionUpdater = new Updater();
 			positionUpdater.start();
-			
-			volume = getVolume();
-			
+
+			fireVolumeChanged(getVolume());
+					
 			//Waiting for process
 			process.waitFor();
-//			readInputThread.join();
-			readErrorThread.join();
-			Jamuz.getLogger().finest("COMPLETE");  //NOI18N
+			
+			synchronized(lockPlayer) {
+			
+	//			readInputThread.join();
+	//			readErrorThread.join();
+				Jamuz.getLogger().finest("Playback finished");  //NOI18N
+
+				if(positionUpdater!=null) {
+					positionUpdater.cancel();
+					positionUpdater.purge();
+				}
+				process = null;
+
+				Jamuz.getLogger().log(Level.FINEST, "*********************** goNext: {0}; startMplayer() AFTER waitFor()", goNext);
+				if(goNext) {
+					Jamuz.getLogger().finest("*********************** ========> next()");
+					firePlaybackFinished();
+				}
+				lockPlayer.notify();
+			}
+
 			return true;
 
 		} catch (IOException | InterruptedException ex) {
@@ -202,53 +339,54 @@ public class Mplayer implements Runnable {
 		}
 	}
 	
-	//FIXME: Implement Pause: refer to playerMP3
-	//FIXME: when playing stop:
-	//	- Stop positionUpdater (before and anyway ignore stream close errors or at least do not popup)
-	//	- Play next song
-	//FIXME: Stop playing when application is closed !!
-    public void stop() { 
-        //FIXME: Test
+	public void pause() {
 		if(process!=null) {
+			int position = (int) Math.round(getPosition());
+			this.lastPosition=position;
+			stop();
+		}
+    }
+
+	public boolean stop() {
+		this.goNext=false;
+		Jamuz.getLogger().log(Level.FINEST, "*********************** goNext: {0}; stop()", goNext);
+		if (process != null) {
+			execute("quit");
+			return true;
+		}
+		return false;
+	}
+
+	
+	
+    public String play(String filePath, boolean resume) {
+		synchronized(lockPlayer) {
 			try {
-				execute("q");
-				writer.close();
-				process.waitFor(5, TimeUnit.SECONDS);
-				if(process.isAlive()) {
-					process.destroy();
+				if(this.stop()) {
+					lockPlayer.wait();
 				}
-				process=null;
-			} catch (InterruptedException | IOException ex) {
-				Popup.error(Inter.get("Error.stop")+" \""+filePath+"\"", ex);  //NOI18N
+
+				this.filePath = filePath;
+
+				this.play();
+
+				AudioFile audioFile = AudioFileIO.read(new File(filePath));
+				String lyrics = audioFile.getTag().getFirst(FieldKey.LYRICS);
+				length=audioFile.getAudioHeader().getTrackLength();
+
+				//Resume to previous position
+				if(!resume) lastPosition=0;
+				this.setPosition(lastPosition);
+
+				return lyrics;
+			}
+			catch (IOException | CannotReadException | TagException | ReadOnlyFileException 
+					| InterruptedException | InvalidAudioFrameException ex)
+			{
+				Popup.error(Inter.get("Error.Play")+" \""+filePath+"\"", ex);  //NOI18N
+				return "";  //NOI18N
 			} 
 		}
-		
-		if(positionUpdater!=null) {
-			positionUpdater.cancel();
-			positionUpdater.purge();
-		}
-	}
-    
-    public String play(String filePath) {
-        try
-        {
-			this.stop();
-
-			this.filePath = filePath;
-
-			this.play();
-            AudioFile audioFile = AudioFileIO.read(new File(filePath));
-			String lyrics = audioFile.getTag().getFirst(FieldKey.LYRICS);
-			
-			length=audioFile.getAudioHeader().getTrackLength();
-			
-			return lyrics;
-        }
-        catch (IOException | CannotReadException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex)
-        {
-			Popup.error(Inter.get("Error.Play")+" \""+filePath+"\"", ex);  //NOI18N
-			return "";  //NOI18N
-        } 
     }
 
 	/**
@@ -273,19 +411,20 @@ public class Mplayer implements Runnable {
 	private String execute(String command, String expected) {
 		if (process != null) {
 			try {
-				System.out.println("Send to MPlayer the command \"" + command + "\" and expecting "
-						+ (expected != null ? "\"" + expected + "\"" : "no answer"));
+//				System.out.println("Send to MPlayer the command \"" + command + "\" and expecting "
+//						+ (expected != null ? "\"" + expected + "\"" : "no answer"));
 				writer.write(command);
 				writer.write("\n");
 				writer.flush();
-				System.out.println("Command sent");
+//				System.out.println("Command sent");
 				if (expected != null) {
 					String response = waitForAnswer(expected);
-					System.out.println("MPlayer command response: " + response);
+//					System.out.println("MPlayer command response: " + response);
 					return response;
 				}
 			} catch (IOException ex) {
-				Popup.error("Error.execute \""+command+"\"", ex);  //NOI18N
+				Jamuz.getLogger().log(Level.SEVERE, "Error.execute \""+command+"\"", ex);  //NOI18N
+//				Jamuz.getLogger().error("Error.execute \""+command+"\"", ex);  //NOI18N
 			}
 		}
 		return null;
@@ -305,7 +444,7 @@ public class Mplayer implements Runnable {
 		if (expected != null) {
 			try {
 				while ((line = inputReader.readLine()) != null) {
-					System.out.println("Reading line: " + line);
+//					System.out.println("Reading line: " + line);
 					if (line.startsWith(expected)) {
 						return line;
 					}
@@ -359,17 +498,7 @@ public class Mplayer implements Runnable {
 		return x.substring(s.length());
 	}
 	
-	public void volumePlus() {
-		volume++;
-		setVolume();
-	}
-	
-	public void volumeMinus() {
-		volume--;
-		setVolume();
-	}
-	
-	private void setVolume() {
+	public void setVolume(float volume) {
 		execute("set_property volume" + " " + volume);
 	}
 	
@@ -383,7 +512,7 @@ public class Mplayer implements Runnable {
 	/**
 	 * Position updater class
 	 */
-	public class Updater extends Timer{
+	public class Updater extends Timer {
 		
 		/**
 		 * Update period:
@@ -403,7 +532,8 @@ public class Mplayer implements Runnable {
 			public void run() {
 				if(!positionLock) {
 					int position = (int) Math.round(getPosition());
-					PanelMain.dispMP3progress(position*1000);
+					firePositionChanged(position, length);
+					//TODO: make PanelLyrics.setPosition private and use listener instead
 					PanelLyrics.setPosition(position*1000, length);
 				}
 			}
