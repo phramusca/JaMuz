@@ -24,8 +24,6 @@ import jamuz.IconBufferCover;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ListElement;
 import jamuz.Main;
-import jamuz.player.PlayerFlac;
-import jamuz.player.PlayerMP3;
 import jamuz.Playlist;
 import jamuz.gui.swing.ComboBoxRenderer;
 import jamuz.utils.OS;
@@ -89,10 +87,12 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
+import javax.swing.JFormattedTextField;
+import javax.swing.JSpinner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import jamuz.player.MPlaybackListener;
 
 /**
  * Main JaMuz GUI class
@@ -110,10 +110,9 @@ public class PanelMain extends javax.swing.JFrame {
         return queueModel;
     }
     
-    private static final PlayerMP3 mp3Player = new PlayerMP3();
-    private static final PlayerFlac flacPlayer = new PlayerFlac();
-	private static final Mplayer mPlayer = new Mplayer();
-
+//    private static final PlayerMP3 mp3Player = new PlayerMP3();
+//    private static final PlayerFlac flacPlayer = new PlayerFlac();
+	private static Mplayer MPLAYER;
     protected static DefaultComboBoxModel comboPlaylistsModel = new DefaultComboBoxModel();
     
     /**
@@ -137,7 +136,111 @@ public class PanelMain extends javax.swing.JFrame {
     private static final int[] FILE_COLS = {6, 7, 8, 9, 10};
     private static final int[] EXTRA_COLS = {11, 13, 14, 15, 20}; //TODO: move Column 20 (cover) to use a dedicated toggle button
 
-    private static ImageIcon createImageIcon(String path) {
+    /**
+     * Creates new form MainGUI
+     */
+    public PanelMain() {
+        
+        clients = new ArrayList<>();
+        
+        comboGenre = new String[1];
+        comboGenre[0] = ""; //NOI18N
+        initComponents();
+
+        //Change tabs
+        setTab("Label.Merge", "arrow_refresh");
+        setTab("PanelMain.panelSync.TabConstraints.tabTitle", "arrow_turn_right");
+        setTab("Label.Check", "search_plus");
+        setTab("PanelMain.panelSelect.TabConstraints.tabTitle", "music");
+        setTab("PanelMain.panelPlaylists.TabConstraints.tabTitle", "application_view_list");
+        setTab("Label.Lyrics", "text");
+        setTab("PanelMain.panelStats.TabConstraints.tabTitle", "statistics");
+        setTab("Label.Options", "selected");
+        setTab("PanelMain.panelVideo.TabConstraints.tabTitle", "movies");
+
+	//Left pane: player
+        //Set queue model
+        queueModel = new ListModelQueue();
+        jListPlayerQueue.setModel(queueModel);
+        playerInfo = new FramePlayerInfo(getTitle(), queueModel);
+        //Empty the FileInfo labels
+        jLabelTags.setText("-------------------------");
+        jLabelPlayerTitle.setText("Welcome to");  //NOI18N
+        jLabelPlayerAlbum.setText("Jamuz");  //NOI18N
+        jLabelPlayerArtist.setText("---");  //NOI18N
+        jLabelPlayerYear.setText("2014");  //NOI18N
+
+        //Set rating combobox renderer
+        String[] imageNames = {"null", "1star", "2star", "3star", "4star", "5star"}; //NOI18N
+        ratingIcon = new ImageIcon[imageNames.length];
+        for (int i = 0; i < imageNames.length; i++) {
+            ratingIcon[i] = createImageIcon("/jamuz/ressources/" + imageNames[i] + ".png"); //NOI18N
+        }
+        ComboBoxRenderer renderer = new ComboBoxRenderer(ratingIcon);
+        renderer.setPreferredSize(new Dimension(80, 16));
+        jComboBoxPlayerRating.setRenderer(renderer);
+
+        jComboBoxPlayerGenre.setEnabled(false);
+
+        jComboBoxPlaylist.setModel(comboPlaylistsModel);
+                
+		// Disable keyboard edits in the spinner
+		JFormattedTextField tf = ((JSpinner.DefaultEditor) jSpinnerVolume.getEditor()).getTextField();
+		tf.setEditable(false);
+		tf.setBackground(Color.GRAY);
+		
+        //"Options" tab
+        fillMachineList();
+        progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
+
+        panelSync.initExtended();
+        panelMerge.initExtended();
+
+        PanelCheck.setOptions(); //Needs to be static (for now at least)
+        fillGenreLists();
+        panelStats.initExtended();
+
+        panelSelect.initExtended();
+        panelPlaylists.initExtended();
+        
+        setKeyBindings();
+		
+		//TODO: Update when changing port;
+		StringBuilder IP = new StringBuilder();
+		IP.append("<html>Set this in remote: <BR/>");
+		try {
+			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append((Integer) jSpinnerPort.getValue()); 
+		} catch (UnknownHostException ex) {
+			IP.append("Undetermined !");
+		}
+		IP.append("</html>");
+		jLabelIP.setText(IP.toString());
+		
+		startStopRemoteServer();
+		
+		MPLAYER = new Mplayer();
+		
+		MPlaybackListener mPlaybackListener = new MPlaybackListener() {
+			@Override
+			public void volumeChanged(float volume) {
+				jSpinnerVolume.getModel().setValue(volume);
+			}
+
+			@Override
+			public void playbackFinished() {
+				next();
+			}
+
+			@Override
+			public void positionChanged(int position, int length) {
+				dispMP3progress(position);
+			}
+		};
+		
+		MPLAYER.addListener(mPlaybackListener);
+    }
+
+	private static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = PanelMain.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
@@ -149,7 +252,7 @@ public class PanelMain extends javax.swing.JFrame {
     /**
      * Move to next item in queue (when previous song playback finishes)
      */
-    public static void next() {
+    private static void next() {
         //update lastPlayed (now) and playCounter (+1)
 		//FIXME: Do not when playing from Nouveau
         FileInfoInt file = queueModel.getPlayingSong().getFile();
@@ -179,95 +282,7 @@ public class PanelMain extends javax.swing.JFrame {
         ListElement albumElement = new ListElement(fileInfo.toStringQueue(), fileInfo);
         queueModel.add(albumElement);
     }
-
-    /**
-     * Creates new form MainGUI
-     */
-    public PanelMain() {
-        
-        clients = new ArrayList<>();
-        
-        comboGenre = new String[1];
-        comboGenre[0] = ""; //NOI18N
-        initComponents();
-
-        //Change tabs
-        setTab("Label.Merge", "arrow_refresh");
-        setTab("PanelMain.panelSync.TabConstraints.tabTitle", "arrow_turn_right");
-        setTab("Label.Check", "search_plus");
-        setTab("PanelMain.panelSelect.TabConstraints.tabTitle", "music");
-        setTab("PanelMain.panelPlaylists.TabConstraints.tabTitle", "application_view_list");
-        setTab("Label.Lyrics", "text");
-        setTab("PanelMain.panelStats.TabConstraints.tabTitle", "statistics");
-        setTab("Label.Options", "selected");
-        setTab("PanelMain.panelVideo.TabConstraints.tabTitle", "movies");
-        
-        //Center
-        this.setLocationRelativeTo(null);
-        //Maximize
-        this.setExtendedState(PanelMain.MAXIMIZED_BOTH);
-
-        //Set titleDisplay with version and JaMuz database location
-        String version = Main.class.getPackage().getImplementationVersion();
-        String title = this.getTitle() + " " + version; //NOI18N
-        this.setTitle(title + " [" + Jamuz.getDb().getDbConn().getInfo().getLocationOri() + "]");  //NOI18N
-
-	//Left pane: player
-        //Set queue model
-        queueModel = new ListModelQueue();
-        jListPlayerQueue.setModel(queueModel);
-        playerInfo = new FramePlayerInfo(title, queueModel);
-        //Empty the FileInfo labels
-        jLabelTags.setText("-------------------------");
-        jLabelPlayerTitle.setText("Welcome to");  //NOI18N
-        jLabelPlayerAlbum.setText("Jamuz");  //NOI18N
-        jLabelPlayerArtist.setText("---");  //NOI18N
-        jLabelPlayerYear.setText("2014");  //NOI18N
-
-        //Set rating combobox renderer
-        String[] imageNames = {"null", "1star", "2star", "3star", "4star", "5star"}; //NOI18N
-        ratingIcon = new ImageIcon[imageNames.length];
-        for (int i = 0; i < imageNames.length; i++) {
-            ratingIcon[i] = createImageIcon("/jamuz/ressources/" + imageNames[i] + ".png"); //NOI18N
-        }
-        ComboBoxRenderer renderer = new ComboBoxRenderer(ratingIcon);
-        renderer.setPreferredSize(new Dimension(80, 16));
-        jComboBoxPlayerRating.setRenderer(renderer);
-
-        jComboBoxPlayerGenre.setEnabled(false);
-
-        jComboBoxPlaylist.setModel(comboPlaylistsModel);
-                
-        //"Options" tab
-        fillMachineList();
-        progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
-
-        panelSync.initExtended();
-        panelMerge.initExtended();
-
-        PanelCheck.setOptions(); //Needs to be static (for now at least)
-        fillGenreLists();
-        panelStats.initExtended();
-
-        panelSelect.initExtended();
-        panelPlaylists.initExtended();
-        
-        setKeyBindings();
-		
-		//TODO: Update when changing port;
-		StringBuilder IP = new StringBuilder();
-		IP.append("<html>Set this in remote: <BR/>");
-		try {
-			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append((Integer) jSpinnerPort.getValue()); 
-		} catch (UnknownHostException ex) {
-			IP.append("Undetermined !");
-		}
-		IP.append("</html>");
-		jLabelIP.setText(IP.toString());
-		
-		startStopRemoteServer();
-    }
-
+	
 	/**
 	* Returns an <code>InetAddress</code> object encapsulating what is most likely the machine's LAN IP address.
 	* <p/>
@@ -783,9 +798,7 @@ public class PanelMain extends javax.swing.JFrame {
         jButtonPlayerPrevious = new javax.swing.JButton();
         jButtonPlayerPlay = new javax.swing.JButton();
         jButtonPlayerNext = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jSpinner1 = new javax.swing.JSpinner();
+        jSpinnerVolume = new javax.swing.JSpinner();
         jToggleButtonPlayerInfo = new javax.swing.JToggleButton();
         jPanelPlayerCoverContainer = new javax.swing.JPanel();
         jPanelPlayerCover = new jamuz.gui.PanelCover();
@@ -1211,17 +1224,10 @@ public class PanelMain extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("+"); // NOI18N
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton4.setText("-"); // NOI18N
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+        jSpinnerVolume.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(100.0f), Float.valueOf(0.0f), Float.valueOf(100.0f), Float.valueOf(5.0f)));
+        jSpinnerVolume.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinnerVolumeStateChanged(evt);
             }
         });
 
@@ -1232,23 +1238,18 @@ public class PanelMain extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabelPlayerTimeEllapsed)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelPlayerTimeTotal))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(18, Short.MAX_VALUE)
                 .addComponent(jButtonPlayerPrevious)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonPlayerPlay)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonPlayerNext)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
-                .addGap(5, 5, 5)
-                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addComponent(jSpinnerVolume, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1257,18 +1258,14 @@ public class PanelMain extends javax.swing.JFrame {
                     .addComponent(jLabelPlayerTimeEllapsed)
                     .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelPlayerTimeTotal))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonPlayerPrevious)
                     .addComponent(jButtonPlayerPlay, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jButton3)
-                                .addComponent(jButton4)
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButtonPlayerNext))
-                        .addGap(1, 1, 1))))
+                        .addComponent(jButtonPlayerNext)
+                        .addGap(1, 1, 1))
+                    .addComponent(jButtonPlayerPrevious, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSpinnerVolume, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         jToggleButtonPlayerInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/external.png"))); // NOI18N
@@ -1481,9 +1478,8 @@ public class PanelMain extends javax.swing.JFrame {
      *
      * @param currentPosition
      */
-    public static void dispMP3progress(int currentPosition) {
+    private static void dispMP3progress(int currentPosition) {
         if (jSliderPlayerLength.isEnabled()) {
-            currentPosition = currentPosition / 1000;
             isManual = false;
             jSliderPlayerLength.setValue(currentPosition);
             isManual = true;
@@ -1495,6 +1491,8 @@ public class PanelMain extends javax.swing.JFrame {
         }
     }
 
+
+	
     /**
      * Enable/disable previous and next buttons
      *
@@ -1555,6 +1553,7 @@ public class PanelMain extends javax.swing.JFrame {
             if (selected < 0) {
                 selected = 0;
                 jListPlayerQueue.setSelectedIndex(0);
+				resume=false;
             }
             queueModel.setPlayingIndex(selected);
             play(resume);
@@ -1615,7 +1614,7 @@ public class PanelMain extends javax.swing.JFrame {
 //                break;
 //            //TODO: Support some more formats
 //        }
-		mPlayer.play(audioFileName);
+		MPLAYER.play(audioFileName, resume);
 		
         String lyrics = myFileInfo.getLyrics();
         Color textColor=Color.RED;
@@ -1645,25 +1644,24 @@ public class PanelMain extends javax.swing.JFrame {
         jTabbedPaneMain.setTabComponentAt(index, label);
     }
 
+	public static void stopMplayer() {
+		MPLAYER.stop();
+	}
+	
     /**
      * stop player
      */
     public static void pause() {
-//        jLabelPlayerTimeEllapsed.setText("00:00");  //NOI18N
         playerInfo.setMax(0);
         jSliderPlayerLength.setEnabled(false);
         queueModel.removeBullet();
 
-//        mp3Player.pause();
-//        flacPlayer.stop();
-		mPlayer.stop();
+//		MPLAYER.togglePlay(true);
+		MPLAYER.stop();
 		
         queueModel.setPlayingIndex(-1);
-        
         jButtonPlayerPlay.setText(Inter.get("Button.Play"));  //NOI18N
         queueModel.enablePreviousAndNext();
-
-//        playerInfo.setSelectedInQueue(-1);
         FileInfoInt fileInfoInt = new FileInfoInt("", ""); //NOI18N
         //TODO: Create a JaMuz logo to display there
 //        displayFileInfo(fileInfoInt, false);
@@ -1734,6 +1732,7 @@ public class PanelMain extends javax.swing.JFrame {
         if (jButtonPlayerPlay.getText().equals(Inter.get("Button.Pause"))) { //NOI18N
             pause();
         } else {
+			//resume
             playSelected(true);
         }
     }//GEN-LAST:event_jButtonPlayerPlayActionPerformed
@@ -1747,15 +1746,15 @@ public class PanelMain extends javax.swing.JFrame {
         int position = (int) source.getValue();
         if (!source.getValueIsAdjusting()) {
             if (isManual) {
-				mPlayer.setPosition(position);
+				MPLAYER.setPosition(position);
 //                mp3Player.setPosition(position);
-                mPlayer.positionLock = false;
+                MPLAYER.positionLock = false;
 //				mp3Player.positionLock = false;
             }
         } else {
             jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(position));
             //TODO: Use a real java Lock
-            mPlayer.positionLock = true;
+            MPLAYER.positionLock = true;
 //			mp3Player.positionLock = true;
         }
     }//GEN-LAST:event_jSliderPlayerLengthStateChanged
@@ -2111,15 +2110,9 @@ public class PanelMain extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_jButtonQRcodeActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        //FIXME: Use the spinner instead ( or a slider ? )
-		mPlayer.volumePlus();
-		
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        mPlayer.volumeMinus();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void jSpinnerVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVolumeStateChanged
+        MPLAYER.setVolume((float)jSpinnerVolume.getValue());
+    }//GEN-LAST:event_jSpinnerVolumeStateChanged
 
 	public class SaveTags extends ProcessAbstract {
 
@@ -2507,15 +2500,23 @@ public class PanelMain extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                new PanelMain().setVisible(true);
+				PanelMain panel = new PanelMain();
+				//Center
+				panel.setLocationRelativeTo(null);
+				//Maximize
+				panel.setExtendedState(PanelMain.MAXIMIZED_BOTH);
+
+				//Set titleDisplay with version and JaMuz database location
+				String version = Main.class.getPackage().getImplementationVersion();
+				String title = panel.getTitle() + " " + version; //NOI18N
+				panel.setTitle(title + " [" + Jamuz.getDb().getDbConn().getInfo().getLocationOri() + "]");  //NOI18N
+                panel.setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButtonCheckDown;
     private javax.swing.JButton jButtonCheckUp;
     private javax.swing.JButton jButtonOptionsGenresAdd;
@@ -2569,8 +2570,8 @@ public class PanelMain extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPaneOptionsMachines1;
     private javax.swing.JScrollPane jScrollPanePlayerQueue;
     private static javax.swing.JSlider jSliderPlayerLength;
-    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinnerPort;
+    private static javax.swing.JSpinner jSpinnerVolume;
     private javax.swing.JSplitPane jSplitPaneMain;
     private static javax.swing.JTabbedPane jTabbedPaneMain;
     private javax.swing.JTextArea jTextAreaRemote;

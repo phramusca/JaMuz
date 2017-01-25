@@ -189,19 +189,16 @@ public class ListModelQueue extends AbstractListModel {
     public void moveRow(int fromIndex, int toIndex) throws CloneNotSupportedException {
 
 		if(fromIndex>=0 && fromIndex<this.queue.size() && toIndex>=0 && toIndex<this.queue.size()) {
-		
-            ListElement playingOri = queue.get(playingIndex);
-            
-            ListElement fromOri = queue.get(fromIndex).clone();
-            ListElement toOri = queue.get(toIndex).clone();
-            
+
+            ListElement playingOri = getPlayingSong();
+			
 			ListElement from = queue.get(fromIndex).clone();
 			ListElement to = queue.get(toIndex).clone();
             
 			queue.set(fromIndex, to);
 			queue.set(toIndex, from);
             
-            playingIndex = queue.indexOf(playingOri);
+            playingIndex = playingOri==null?-1:queue.indexOf(playingOri);
             
 			//Update list
             this.fireContentsChanged(this, fromIndex, toIndex);

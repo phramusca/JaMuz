@@ -80,6 +80,7 @@ package jamuz;
 //          => Doing this, merge options to copy/move files b/w "Sync" and "Video" (export)
 //TODO: List used librairies (source, version, how to compile if needed,...)
 import jamuz.gui.PanelMain;
+import jamuz.gui.PanelSelect;
 import jamuz.utils.Popup;
 import java.io.File;
 import java.util.logging.Handler;
@@ -121,6 +122,8 @@ public class Main {
 							hd.flush();
 						}
 					}
+					PanelMain.stopMplayer();
+					PanelSelect.stopMplayer();
 				}
 			});
 

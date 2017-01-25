@@ -189,7 +189,7 @@ public class PlayerFlac implements PCMProcessor, LineListener, Runnable {
         //TODO: How to display progress ??
         
         //This is called on "Open" and "Start" events only
-        PanelMain.dispMP3progress((int) event.getFramePosition());
+//        PanelMain.dispMP3progress((int) event.getFramePosition());
 //        PanelLyrics.setPosition(positionStart*1000+device.getPosition(), length);
     }
 }

@@ -815,6 +815,8 @@
                                   <Component id="jToggleButtonSelectShowExtra" min="-2" max="-2" attributes="1"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jLabelSelectedSummary" max="32767" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="jLabelSelected" max="32767" attributes="0"/>
@@ -829,17 +831,20 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabelSelected" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPaneSelect" pref="203" max="32767" attributes="0"/>
+                          <Component id="jScrollPaneSelect" pref="122" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jToggleButtonSelectShowBasic" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabelSelectDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jToggleButtonSelectShowStats" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jToggleButtonSelectShowFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jToggleButtonSelectShowExtra" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabelSelectedSummary" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jToggleButtonSelectShowBasic" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelSelectDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jToggleButtonSelectShowStats" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jToggleButtonSelectShowFile" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jToggleButtonSelectShowExtra" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelSelectedSummary" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -941,6 +946,67 @@
                     <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
                   </AuxValues>
                 </Component>
+                <Container class="javax.swing.JPanel" name="jPanel2">
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jButtonPreviewStop" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jComboBoxSoundCard" min="-2" pref="149" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabelPreviewDisplay" pref="159" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jButtonPreviewStop" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jComboBoxSoundCard" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelPreviewDisplay" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JButton" name="jButtonPreviewStop">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Stop" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPreviewStopActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="jComboBoxSoundCard">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="4">
+                            <StringItem index="0" value="Item 1"/>
+                            <StringItem index="1" value="Item 2"/>
+                            <StringItem index="2" value="Item 3"/>
+                            <StringItem index="3" value="Item 4"/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelPreviewDisplay">
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
           </SubComponents>
