@@ -1001,7 +1001,7 @@ public class FolderInfo implements java.lang.Comparable {
                     audioFile.formatDisplay=FolderInfoResult.colorField(audioFile.getFormat(), 0);
                 }
 
-                this.filesAudioTableModel.addRow((FileInfoDisplay) audioFile.clone());
+                filesAudioTableModel.addRow((FileInfoDisplay) audioFile.clone());
                 
                 progressBar.progress(Inter.get("Msg.Check.AnalyzingFolder")+ audioFile.getFilename());
 			}

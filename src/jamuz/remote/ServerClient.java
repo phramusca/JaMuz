@@ -79,64 +79,25 @@ public class ServerClient {
         printWriter.flush();
 	}
     
-//    public void sendFile(String filename) {
-////        emission.sendFile(filename);
-//        try {
-//            BufferedInputStream bis;
-//
-//            File myFile = new File (filename);
-//            bis = new BufferedInputStream(new FileInputStream(myFile));
-//
-//            byte[] bytes = new byte[1024];
-//            int count;
-//            while ((count = bis.read(bytes)) > 0)
-//            {
-//              outputStream.write(bytes, 0, count);
-//            }
-//            outputStream.flush();
-//        }
-//        catch (FileNotFoundException ex) {
-//            Logger.getLogger(Emission.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(Emission.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-    
-    void sendCover(FileInfoInt displayedFile) {
+    public boolean sendCover(FileInfoInt displayedFile) {
         send("SENDING_COVER");
         try {
-//            ByteArrayOutputStream os = new ByteArrayOutputStream();
             BufferedImage image = displayedFile.getCoverImage();
             int maxWidth=250;
             int newWidth = image.getWidth()>maxWidth?maxWidth:image.getWidth();
             ImageIO.write(IconBufferCover.toBufferedImage(displayedFile.getCoverImage().getScaledInstance(newWidth, -1, java.awt.Image.SCALE_SMOOTH)),"png", outputStream);
-//            InputStream fis = new ByteArrayInputStream(os.toByteArray());
-//            copyStream(fis, outputStream);
             outputStream.flush();
+			return true;
         } catch (IOException ex) {
-            Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
-            //FIXME: Retry sending cover OR make the remote asking for the cover (at least try)
-//            javax.imageio.IIOException: I/O error writing PNG file!
-//	at com.sun.imageio.plugins.png.PNGImageWriter.write(PNGImageWriter.java:1168)
-//	at javax.imageio.ImageWriter.write(ImageWriter.java:615)
-//	at javax.imageio.ImageIO.doWrite(ImageIO.java:1612)
-//	at javax.imageio.ImageIO.write(ImageIO.java:1578)
-//	at jamuz.remote.ServerClient.sendCover(ServerClient.java:115)
-//	at jamuz.remote.Server.sendCover(Server.java:129)
-//	at jamuz.gui.PanelMain.sendToClients(PanelMain.java:2051)
-//	at jamuz.gui.PanelMain.access$4000(PanelMain.java:90)
-//	at jamuz.gui.PanelMain$CallBackAuthentication.authenticated(PanelMain.java:1917)
-//	at jamuz.remote.Server$CallBackAuthentication.authenticated(Server.java:111)
-//	at jamuz.remote.ServerClient$Authentication.run(ServerClient.java:160)
-//Caused by: java.net.SocketException: Socket closed
-//	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:121)
-//	at java.net.SocketOutputStream.write(SocketOutputStream.java:159)
-//	at javax.imageio.stream.FileCacheImageOutputStream.flushBefore(FileCacheImageOutputStream.java:255)
-//	at com.sun.imageio.plugins.png.ChunkStream.finish(PNGImageWriter.java:140)
-//	at com.sun.imageio.plugins.png.PNGImageWriter.write_IHDR(PNGImageWriter.java:401)
-//	at com.sun.imageio.plugins.png.PNGImageWriter.write(PNGImageWriter.java:1135)
-//	... 10 more
-
+			//TODO: Check if that happens often (does not seem)
+			//Note: tried adding a retry sending cover
+			//during tests, cover sending always returned true
+			//even if cover not received in android
+			//so the problem can only be solved in remote android app
+			//Therefore 
+            //FIXME: Cover not received in JaMuz Android Remote
+			Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+			return false;
         }
     }
 
