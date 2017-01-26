@@ -127,8 +127,8 @@ public class Server {
     public void sendCover(FileInfoInt displayedFile) {
         for(ServerClient client : clients.values()) {
             client.sendCover(displayedFile);
-        }
-    }
+				}
+			}
     
 	public void send(String login, String msg) {
 		clients.get(login).send(msg);
