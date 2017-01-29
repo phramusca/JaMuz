@@ -34,6 +34,8 @@ public final class FileInfoDisplay extends FileInfoInt {
 	 */
 	public boolean isAudioFile=false;
 
+	public int index;
+	
 	//Tags
 	/**
 	 * Artist
@@ -179,19 +181,35 @@ public final class FileInfoDisplay extends FileInfoInt {
 		this.BPMDisplay=new TableValue(Float.toString(this.BPM));
     }
     
-    public void setTrackNo(int trackNo) {
+	/**
+	 *
+	 * @param trackNo
+	 */
+	public void setTrackNo(int trackNo) {
         this.trackNo = trackNo;
     }
 
-    public void setTrackTotal(int trackTotal) {
+	/**
+	 *
+	 * @param trackTotal
+	 */
+	public void setTrackTotal(int trackTotal) {
         this.trackTotal = trackTotal;
     }
 
-    public void setDiscNo(int discNo) {
+	/**
+	 *
+	 * @param discNo
+	 */
+	public void setDiscNo(int discNo) {
         this.discNo = discNo;
 	}
 
-    public void setDiscTotal(int discTotal) {
+	/**
+	 *
+	 * @param discTotal
+	 */
+	public void setDiscTotal(int discTotal) {
         this.discTotal = discTotal;
 	}
     
@@ -215,6 +233,7 @@ public final class FileInfoDisplay extends FileInfoInt {
 	 * Return filename
 	 * @return
 	 */
+	@Override
 	public String getFilename() {
         return filename;
     }
@@ -223,6 +242,7 @@ public final class FileInfoDisplay extends FileInfoInt {
 	 * Return comment
 	 * @return
 	 */
+	@Override
 	public String getComment() {
 		return comment;
 	}
@@ -231,6 +251,7 @@ public final class FileInfoDisplay extends FileInfoInt {
 	 * Return BPM
 	 * @return
 	 */
+	@Override
 	public float getBPM() {
 		return BPM;
 	}
@@ -241,6 +262,7 @@ public final class FileInfoDisplay extends FileInfoInt {
 	 * DO NOT REMOVE before having done a "Find in Projects..." !  
 	 * @return
 	 */
+	@Override
 	public int getDiscNo() {
 		if(!this.discNoFullDisplay.getValue().contains("/")) { //NOI18N
 			return -2;
@@ -300,6 +322,7 @@ public final class FileInfoDisplay extends FileInfoInt {
 	 * Set BPM
 	 * @param BPM
 	 */
+	@Override
 	public void setBPM(float BPM) {
 		this.BPM = BPM;
 	}

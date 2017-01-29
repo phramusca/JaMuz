@@ -69,7 +69,7 @@ import org.apache.commons.io.FilenameUtils;
 public class PanelSelect extends javax.swing.JPanel {
 
     private static TableModel tableModel;
-    private static final TableColumnModel columnModel = new TableColumnModel();
+    private static final TableColumnModel TABLE_COLUMN_MODEL = new TableColumnModel();
     
     private static FillMainListThread tFillMainTable;
     private static FillListsThread tFilllists;
@@ -241,7 +241,7 @@ public class PanelSelect extends javax.swing.JPanel {
 		
         //Get table model
 		tableModel = (TableModel) jTableSelect.getModel();
-		PanelMain.initSelectTable(tableModel, jTableSelect, columnModel);
+		PanelMain.initSelectTable(tableModel, jTableSelect, TABLE_COLUMN_MODEL);
 
         selGenre="%";  //NOI18N
         selArtist = new ListElement("%", "artist"); //NOI18N
@@ -1120,10 +1120,10 @@ public class PanelSelect extends javax.swing.JPanel {
                     PanelMain.addRowSelect(tableModel, myFileInfoInt);
                 }
                 //Displaying or not genre, artist and album, if selected or not
-                PanelMain.setColumnVisible(columnModel, 4, selGenre.equals("%"));  //NOI18N
-                PanelMain.setColumnVisible(columnModel, 1, selAlbum.getValue().equals("%"));  //NOI18N
-                PanelMain.setColumnVisible(columnModel, 0, checkList(0));  //NOI18N
-                PanelMain.setColumnVisible(columnModel, 12, checkList(12));  //NOI18N
+                PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 4, selGenre.equals("%"));  //NOI18N
+                PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 1, selAlbum.getValue().equals("%"));  //NOI18N
+                PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 0, checkList(0));  //NOI18N
+                PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 12, checkList(12));  //NOI18N
                 //Enable row tableSorter (cannot be done if model is empty)
                 if(tableModel.getRowCount()>0) {
                     //Enable auto sorter
@@ -1349,11 +1349,11 @@ public class PanelSelect extends javax.swing.JPanel {
     }//GEN-LAST:event_jTableSelectMousePressed
 
     private void jToggleButtonSelectShowBasicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonSelectShowBasicActionPerformed
-        PanelMain.setBasicVisible(columnModel, jToggleButtonSelectShowBasic.isSelected());
+        PanelMain.setBasicVisible(TABLE_COLUMN_MODEL, jToggleButtonSelectShowBasic.isSelected());
     }//GEN-LAST:event_jToggleButtonSelectShowBasicActionPerformed
 
     private void jToggleButtonSelectShowExtraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonSelectShowExtraActionPerformed
-        PanelMain.setExtraVisible(columnModel, jToggleButtonSelectShowExtra.isSelected());
+        PanelMain.setExtraVisible(TABLE_COLUMN_MODEL, jToggleButtonSelectShowExtra.isSelected());
         if(jToggleButtonSelectShowExtra.isSelected()) {
             jTableSelect.setRowHeight(IconBufferCover.getCoverIconSize());
         }
@@ -1363,11 +1363,11 @@ public class PanelSelect extends javax.swing.JPanel {
     }//GEN-LAST:event_jToggleButtonSelectShowExtraActionPerformed
 
     private void jToggleButtonSelectShowFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonSelectShowFileActionPerformed
-        PanelMain.setFileVisible(columnModel, jToggleButtonSelectShowFile.isSelected());
+        PanelMain.setFileVisible(TABLE_COLUMN_MODEL, jToggleButtonSelectShowFile.isSelected());
     }//GEN-LAST:event_jToggleButtonSelectShowFileActionPerformed
 
     private void jToggleButtonSelectShowStatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonSelectShowStatsActionPerformed
-        PanelMain.setStatsVisible(columnModel, jToggleButtonSelectShowStats.isSelected());
+        PanelMain.setStatsVisible(TABLE_COLUMN_MODEL, jToggleButtonSelectShowStats.isSelected());
     }//GEN-LAST:event_jToggleButtonSelectShowStatsActionPerformed
 
     private void jRadioSelectAlbumNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioSelectAlbumNameItemStateChanged

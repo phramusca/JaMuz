@@ -35,7 +35,7 @@ public class TableModelCheckTracks extends TableModelGeneric {
 	 */
 	public TableModelCheckTracks() {
         this.filesAudio = new ArrayList<>();
-        
+        index=0;
         //TODO: Add extra columns (if from library): rating, addedDate, ...
         
         //Set column names
@@ -189,16 +189,18 @@ public class TableModelCheckTracks extends TableModelGeneric {
 	 * Clears the table
 	 */
 	public void clear() {
+		index=0;
         this.filesAudio = new ArrayList<>();
         //Update table
         this.fireTableDataChanged();
     }
-	
+	private int index;
 	/**
     * Add a row to the table
 	 * @param file
     */
     public void addRow(FileInfoDisplay file){
+		file.index=index++;
 		this.filesAudio.add(file);
 		//Update table
 		this.fireTableDataChanged();
@@ -210,9 +212,12 @@ public class TableModelCheckTracks extends TableModelGeneric {
 	 * @param toIndex
 	 * @throws java.lang.CloneNotSupportedException
 	 */
-	public void moveRow(int fromIndex, int toIndex) throws CloneNotSupportedException {
+	public void moveRow(int fromIndex, int toIndex) 
+			throws CloneNotSupportedException {
 
-		if(fromIndex>=0 && fromIndex<this.filesAudio.size() && toIndex>=0 && toIndex<this.filesAudio.size()) {
+		if(fromIndex>=0 
+				&& fromIndex<this.filesAudio.size() 
+				&& toIndex>=0 && toIndex<this.filesAudio.size()) {
 		
             FileInfoDisplay fromOri = filesAudio.get(fromIndex).clone();
             FileInfoDisplay toOri = filesAudio.get(toIndex).clone();
@@ -247,6 +252,11 @@ public class TableModelCheckTracks extends TableModelGeneric {
 
 			filesAudio.set(fromIndex, to);
 			filesAudio.set(toIndex, from);
+			//TODO: Do this a documented:
+			//https://docs.oracle.com/javase/8/docs/api/java/util/List.html#set-int-E-
+			//which shoul be :
+//			FileInfoDisplay fileFrom = files.set(toIndex, files.get(fromIndex));
+//			files.set(fromIndex, fileFrom);
 
 			//Update table
 			this.fireTableDataChanged();

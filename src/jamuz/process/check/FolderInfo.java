@@ -94,8 +94,9 @@ public class FolderInfo implements java.lang.Comparable {
     private String mbId;
     private Map<String, List<ReleaseMatch>> matches;
 	private List<ReleaseMatch> originals;
-	private Map<String, List<Cover>> covers; //Covers from internet
-	private List<Cover> coversTag; //Covers from audio files (tags)
+	private Map<String, List<Cover>> coversInternet;
+	private List<Cover> coversTag;
+	
     private BufferedImage newImage=null;
 	//TODO: ReplayGain: 
 	// - Store information in database by file (so we can check this when checking existing library)
@@ -106,15 +107,31 @@ public class FolderInfo implements java.lang.Comparable {
      * Action (move to OK, Delete, save, ...)
      */
     public Action action;
-    public boolean isActionDone;
-    public boolean isLast=false;
+
+	/**
+	 *
+	 */
+	public boolean isActionDone;
+
+	/**
+	 *
+	 */
+	public boolean isLast=false;
     private ProcessCheck.ScanType scanType = ProcessCheck.ScanType.SCAN; 
 
-    public ProcessCheck.ScanType getScanType() {
+	/**
+	 *
+	 * @return
+	 */
+	public ProcessCheck.ScanType getScanType() {
         return scanType;
     }
 
-    public void setScanType(ProcessCheck.ScanType scanType) {
+	/**
+	 *
+	 * @param scanType
+	 */
+	public void setScanType(ProcessCheck.ScanType scanType) {
         this.scanType = scanType;
     }
     
@@ -135,6 +152,10 @@ public class FolderInfo implements java.lang.Comparable {
 		this.fullPath = this.rootPath+relativePath;
 	}
 	
+	/**
+	 *
+	 * @param isLast
+	 */
 	public FolderInfo(boolean isLast) {
 		this.filesAudio = new ArrayList<>();
 		this.filesDb = new ArrayList<>();
@@ -142,7 +163,7 @@ public class FolderInfo implements java.lang.Comparable {
 		this.filesOther = new ArrayList<>();
 		this.filesImage = new ArrayList<>();
 		this.filesConvertible = new ArrayList<>();
-        this.covers = new LinkedHashMap<>(); // Linked to preserver order
+        this.coversInternet = new LinkedHashMap<>(); // Linked to preserver order
 		this.matches = new LinkedHashMap<>(); // Linked to preserver order
         this.action = Action.ANALYZING;
         isActionDone=false;
@@ -150,7 +171,10 @@ public class FolderInfo implements java.lang.Comparable {
         this.isLast = isLast;
 	}
     
-    public FolderInfo() {
+	/**
+	 *
+	 */
+	public FolderInfo() {
         this(true);
     }
 	
@@ -381,7 +405,6 @@ public class FolderInfo implements java.lang.Comparable {
 	/**
 	 * Inserts in database
 	 * @param checkedFlag
-     * @param mbId
 	 * @return
 	 */
 	public boolean insertInDb(CheckedFlag checkedFlag) {
@@ -1332,12 +1355,12 @@ public class FolderInfo implements java.lang.Comparable {
                 this.matches.put(this.searchKey, null); //Meaning search issue
             }
         }
-        if(!this.covers.containsKey(this.searchKey)) {
+        if(!this.coversInternet.containsKey(this.searchKey)) {
             //Adding Last.fm covers first (usually more results)
             List<Cover> searchedCovers = releaseLastFm.getCoverList();
             //Then adding MusicBrainz's covers (from covertartarchive)
             searchedCovers.addAll(releaseMB.getCoverList());
-            this.covers.put(this.searchKey, searchedCovers);
+            this.coversInternet.put(this.searchKey, searchedCovers);
         }
 
 		//TODO: Not always return true !
@@ -1466,7 +1489,12 @@ public class FolderInfo implements java.lang.Comparable {
 		}
 	}
     
-    public boolean doAction(ProgressBar progressBar) {
+	/**
+	 *
+	 * @param progressBar
+	 * @return
+	 */
+	public boolean doAction(ProgressBar progressBar) {
         if(!isActionDone) {
             switch(action) {
                 case OK:
@@ -1499,7 +1527,7 @@ public class FolderInfo implements java.lang.Comparable {
             }
             if(isActionDone) {
                 //Deleting potentially huge items, to prevent memory issues
-                this.covers=null;
+                this.coversInternet=null;
                 this.coversTag=null;
                 this.filesAudio=null;
                 this.filesAudioTableModel=null;
@@ -1517,7 +1545,11 @@ public class FolderInfo implements java.lang.Comparable {
         return isActionDone;
     }
 
-    public void setIsReplayGainDone(boolean isReplayGainDone) {
+	/**
+	 *
+	 * @param isReplayGainDone
+	 */
+	public void setIsReplayGainDone(boolean isReplayGainDone) {
         this.isReplayGainDone = isReplayGainDone;
     }
     
@@ -1548,29 +1580,27 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public List<Cover> getCoverList() {
-        if(coversList==null) {
-           coversList=new ArrayList<>();
-            //List non-audio files
-            for (FileInfoInt myFileInfo : this.filesImage) {
-                coversList.add(new Cover(CoverType.FILE, myFileInfo.getRootPath()+File.separator+myFileInfo.getRelativeFullPath(), myFileInfo.getFilename()));  //NOI18N
-            }
-            coversList.addAll(this.coversTag);
-            if(this.searchKey!=null) { //can be null if search not performed, if artist and album are empty
-                coversList.addAll(this.covers.get(this.searchKey));
-            }
-        }
-		
+		ArrayList<Cover> coversList=new ArrayList<>();
+		//List non-audio files
+		for (FileInfoInt myFileInfo : this.filesImage) {
+			coversList.add(new Cover(CoverType.FILE, myFileInfo.getRootPath()+File.separator+myFileInfo.getRelativeFullPath(), myFileInfo.getFilename()));  //NOI18N
+		}
+		coversList.addAll(this.coversTag);
+		if(this.searchKey!=null) { //can be null if search not performed, if artist and album are empty
+			coversList.addAll(this.coversInternet.get(this.searchKey));
+		}
 		return coversList;
 	}
-    
-    private ArrayList<Cover> coversList;
 	
 	/**
 	 * Return list of audio files
 	 * @return
 	 */
 	public List<FileInfoDisplay> getFilesAudio() {
-		Collections.sort(this.filesAudio);
+		//Uncommented to fix sorting for "Save" action in "Check"
+		//Does not look like it was needed, at least not directly
+		//=> remove if no impact elsewhere
+//		Collections.sort(this.filesAudio);
 		return this.filesAudio;
 	}
 	
@@ -1757,15 +1787,27 @@ public class FolderInfo implements java.lang.Comparable {
         return filesAudioTableModel;
     }
 
-    public BufferedImage getNewImage() {
+	/**
+	 *
+	 * @return
+	 */
+	public BufferedImage getNewImage() {
         return newImage;
     }
 
-    public void setNewImage(BufferedImage newImage) {
+	/**
+	 *
+	 * @param newImage
+	 */
+	public void setNewImage(BufferedImage newImage) {
         this.newImage = newImage;
     }
     
-    public void setNewGenre(String text) {
+	/**
+	 *
+	 * @param text
+	 */
+	public void setNewGenre(String text) {
         filesAudioTableModel.setValueAt(text, 9);
     }
 
@@ -1785,7 +1827,11 @@ public class FolderInfo implements java.lang.Comparable {
         filesAudioTableModel.setValueAt(text, 19);
     }
 
-    public void setMbId(String mbId) {
+	/**
+	 *
+	 * @param mbId
+	 */
+	public void setMbId(String mbId) {
         this.mbId = mbId;
     }
     
@@ -1837,7 +1883,11 @@ public class FolderInfo implements java.lang.Comparable {
 			return value;
 		}
 
-        public Color getColor() {
+		/**
+		 *
+		 * @return
+		 */
+		public Color getColor() {
             return color;
         }
         

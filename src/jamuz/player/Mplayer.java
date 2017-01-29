@@ -233,46 +233,6 @@ public class Mplayer implements Runnable {
 
 			writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 			inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//			errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-			// Reading Input Stream
-//			Thread readInputThread = new Thread("Thread.Mplayer.process.mplayer.InputStream") {
-//				@Override
-//				public void run() {
-//					try {
-//						inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//						String line;
-//						while((line = inputReader.readLine()) != null) {
-////							if(!line.trim().equals("")) {  //NOI18N
-////								//A:   1.6 (01.6) of 188.0 (03:08.0)  0.3% 
-////								if(line.startsWith("A:")) {  //NOI18N
-////									String pos = line.substring(2, line.indexOf("("));
-////									int posint = Double.valueOf(pos).intValue()*1000;
-////									if(!positionLock) {
-////										PanelMain.dispMP3progress(posint);
-////										PanelLyrics.setPosition(posint, length);
-////									}
-////								}
-////								else {
-//									System.out.println("inputReader: "+line);
-////								}
-////							}
-//						}
-//					} catch(IOException ex) {
-//						Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
-//						//TODO: return false
-//					} finally {
-//						if(inputReader!=null) {
-//							try {
-//								inputReader.close();
-//							} catch (IOException ex) {
-//								Logger.getLogger(MP3gain.class.getName()).log(Level.SEVERE, null, ex);
-//							}
-//						}
-//					}
-//				}
-//			};
-//			readInputThread.start();
 
 			// Reading Error Stream
 			Thread readErrorThread = new Thread("Thread.Mplayer.process.mplayer.ErrorStream") {
@@ -350,7 +310,7 @@ public class Mplayer implements Runnable {
 	public boolean stop() {
 		this.goNext=false;
 		Jamuz.getLogger().log(Level.FINEST, "*********************** goNext: {0}; stop()", goNext);
-		if (process != null) {
+		if (process != null && process.isAlive()) {
 			execute("quit");
 			return true;
 		}
@@ -409,22 +369,21 @@ public class Mplayer implements Runnable {
 	 * @return the MPlayer answer
 	 */
 	private String execute(String command, String expected) {
-		if (process != null) {
+		if (process != null && process.isAlive()) {
 			try {
-//				System.out.println("Send to MPlayer the command \"" + command + "\" and expecting "
-//						+ (expected != null ? "\"" + expected + "\"" : "no answer"));
+				System.out.println("Send to MPlayer the command \"" + command + "\" and expecting "
+						+ (expected != null ? "\"" + expected + "\"" : "no answer"));
 				writer.write(command);
 				writer.write("\n");
 				writer.flush();
-//				System.out.println("Command sent");
+				System.out.println("Command sent");
 				if (expected != null) {
 					String response = waitForAnswer(expected);
-//					System.out.println("MPlayer command response: " + response);
+					System.out.println("MPlayer command response: " + response);
 					return response;
 				}
 			} catch (IOException ex) {
 				Jamuz.getLogger().log(Level.SEVERE, "Error.execute \""+command+"\"", ex);  //NOI18N
-//				Jamuz.getLogger().error("Error.execute \""+command+"\"", ex);  //NOI18N
 			}
 		}
 		return null;
@@ -486,7 +445,7 @@ public class Mplayer implements Runnable {
 	}
 	
 	protected String getProperty(String name) {
-		if (name == null || process == null) {
+		if (name == null || (process == null && !process.isAlive())) {
 			return null;
 		}
 		String s = "ANS_" + name + "=";

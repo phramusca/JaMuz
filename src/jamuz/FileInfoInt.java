@@ -1344,9 +1344,14 @@ public class FileInfoInt extends FileInfo {
     
     public ArrayList<String> getTags() {
         if(tags==null) {
-            tags = new ArrayList<>();
-            Jamuz.getDb().getTags(tags, idFile);
+            readTags();
         }
+        return tags;
+    }
+	
+	public ArrayList<String> readTags() {
+		tags = new ArrayList<>();
+		Jamuz.getDb().getTags(tags, idFile);
         return tags;
     }
     
