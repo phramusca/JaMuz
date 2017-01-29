@@ -25,13 +25,11 @@ import jamuz.gui.PanelCover;
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,12 +47,12 @@ import jamuz.gui.swing.TableCellListener;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.WrapLayout;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.Swing;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.util.Collections;
+import java.util.Comparator;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -172,9 +170,6 @@ public class DialogCheck extends javax.swing.JDialog {
         progressBarCover = (ProgressBar) jProgressBarCover;
         
         //Set table's model
-        //FIXME: When files order is changed, if we re-open this dialog, order is not kept !!
-        //In the same manner, apply previously selected cover
-        //+keep match values for after save so that we do not need to search matches again
         jTableCheck.setModel(folder.getFilesAudioTableModel());
         
 		//Assigning XTableColumnModel to allow show/hide columns
@@ -432,7 +427,7 @@ public class DialogCheck extends javax.swing.JDialog {
         jLabelCheckID3v1Tag = new javax.swing.JLabel();
         jButtonSelectOriginal = new javax.swing.JButton();
         jButtonSelectDuplicate = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jButtonCheckScanner = new javax.swing.JButton();
         jScrollPaneCheckTags = new javax.swing.JScrollPane();
         jTableCheck = new jamuz.gui.swing.TableHorizontal();
         jButtonCheckUp = new javax.swing.JButton();
@@ -1049,10 +1044,10 @@ public class DialogCheck extends javax.swing.JDialog {
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_form_edit.png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCheckScanner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_form_edit.png"))); // NOI18N
+        jButtonCheckScanner.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonCheckScannerActionPerformed(evt);
             }
         });
 
@@ -1084,7 +1079,7 @@ public class DialogCheck extends javax.swing.JDialog {
                             .addGroup(jPanelCheckTagsLayout.createSequentialGroup()
                                 .addComponent(jButtonSelectOriginal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jButtonCheckScanner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBoxCheckMatches, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1099,7 +1094,7 @@ public class DialogCheck extends javax.swing.JDialog {
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jComboBoxCheckMatches, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
                             .addComponent(jButtonSelectOriginal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jButtonCheckScanner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jComboBoxCheckDuplicates, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1321,7 +1316,6 @@ public class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonCheckSingleFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckSingleFolderActionPerformed
         enableAddOptions(false);
-        //FIXME: Looks like covers are not re-read !
         folder.reCheck();
     }//GEN-LAST:event_jButtonCheckSingleFolderActionPerformed
 
@@ -1437,16 +1431,26 @@ public class DialogCheck extends javax.swing.JDialog {
 
         if(doSave) {
             folder.action = ProcessCheck.Action.SAVE;
-            
-            BufferedImage image=null;
+			int i=0;
+			for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {
+				folder.getFilesAudio().get(file.index).index=i;
+				i++;
+			}
+			Collections.sort(folder.getFilesAudio(), 
+					(FileInfoDisplay o1, FileInfoDisplay o2) -> {
+				return o1.index < o2.index ? -1 : o1.index == o2.index ? 0 : 1;
+			});
+
+			//Set new image
+			BufferedImage image=null;
 			PanelCover coverImg = (PanelCover) DialogCheck.jPanelCheckCoverThumb;
 			if(coverImg.isCover()) {
 				image=coverImg.getImage();
 			}
-            
-            folder.setNewImage(image);
-            PanelCheck.addToActionQueue(folder);
-            this.dispose();
+			folder.setNewImage(image);
+
+			PanelCheck.addToActionQueue(folder);
+			this.dispose();
         }
     }//GEN-LAST:event_jButtonCheckSaveTagsActionPerformed
 
@@ -1464,8 +1468,6 @@ public class DialogCheck extends javax.swing.JDialog {
                 @Override
                 public void run() {
                     try {
-						//FIXME: How come a previous search done on another folder (closed meantime)
-						//can display its results in this one ? (you can reproduce when musicbrainz is slow, you cole a window, open another and wait a little)
                         displayMatch(jComboBoxCheckMatches.getSelectedIndex());
                     } catch (CloneNotSupportedException ex) {
                         //Should never happen since FileInfoDisplay implements Cloneable
@@ -1681,13 +1683,13 @@ public class DialogCheck extends javax.swing.JDialog {
         PanelMain.getQueueModel().previous();
     }//GEN-LAST:event_jButtonPlayerPreviousActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonCheckScannerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckScannerActionPerformed
         if(folder.getFilesAudio().size()>-1) {
             FileInfoDisplay file = folder.getFilesAudio().get(0);
             DialogScanner.main(null, folder.getRelativePath()+file.getFilename());
         }
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonCheckScannerActionPerformed
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
         
@@ -1708,7 +1710,8 @@ public class DialogCheck extends javax.swing.JDialog {
             if(progressBar!=null) {
                 progressBar.reset();
             }
-            //FIXME: Refresh
+			enableAddOptions(false);
+			folder.reCheck();
         }
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
@@ -1888,24 +1891,33 @@ public class DialogCheck extends javax.swing.JDialog {
 			//COVER
                 result=folder.getResults().get("cover"); //NOI18N
 				setAddCheckBox(jCheckBoxCheckCoverDisplay, result, false);  //NOI18N
-				//By default, display first cover from audio files tags
-                BufferedImage myImage = folder.getFirstCoverFromTags();
+				
+				//By default, display cover selected for Saving 
+                BufferedImage myImage = null;
+				if(folder.getNewImage()!=null && folder.action.equals(ProcessCheck.Action.SAVE)) {
+					myImage = folder.getNewImage();
+				}
+				else {
+					//Then, display first cover from audio files tags
+					myImage = folder.getFirstCoverFromTags();
+				}
 				PanelCover coverImg = (PanelCover) jPanelCheckCoverThumb;
 				if(myImage!=null) {
 					coverImg.setImage(myImage);
-                    jLabelCoverInfo.setText(result.getDisplayText());
+					jLabelCoverInfo.setText(result.getDisplayText());
 				}
 				else {
 					coverImg.setImage(null);
 					if(folder.getFilesImage().size()>0) {
 						jPanelCheckCoverThumb.setEnabled(true);
-                        jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.Select"), 2, true)); //NOI18N
+						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.Select"), 2, true)); //NOI18N
 					}
 					else {
 						jPanelCheckCoverThumb.setEnabled(false);
-                        jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.None"), 2, true)); //NOI18N
+						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.None"), 2, true)); //NOI18N
 					}
 				}
+				
 
 			//MATCHES
 				displayMatches();
@@ -1951,12 +1963,11 @@ public class DialogCheck extends javax.swing.JDialog {
          Thread t = new Thread("Thread.CoverSelectGUI.listCovers") {
             @Override
             public void run() {
-                
-                //FIXME: Do this only once !!! Otherwise errors if closing the dialog and re-opening (adding again and again MB covert art archives)
-                
                 jLabelCoverFound.setText(Inter.get("Msg.Select.RetrievingCovers")); //NOI18N
-                progressBarCover.setup(folder.getCoverList().size());
-                for(final Cover cover : folder.getCoverList()) {
+                
+				List<Cover> coversList=folder.getCoverList();
+				progressBarCover.setup(coversList.size());
+                for(final Cover cover : coversList) {
                     cover.readImages();
                     if(cover.getType().equals(Cover.CoverType.MB)) {
                         //List all MB covers
@@ -1964,7 +1975,7 @@ public class DialogCheck extends javax.swing.JDialog {
                             Cover coverMB = new Cover(Cover.CoverType.MB, "", "<html>"+mbImage.getMsg()+"<BR>"+cover.getName()+"</html>"); //NOI18N
                             coverMB.setImage(mbImage.getImage());
                              if(coverMB.getImage()!=null) {
-                                 folder.getCoverList().add(coverMB);
+                                 coversList.add(coverMB); 
                                  setCoverIfBetter(cover);
                              }
                         }
@@ -1977,7 +1988,7 @@ public class DialogCheck extends javax.swing.JDialog {
                 progressBarCover.reset();
                 
                 //Select better image and display a message
-                Cover cover = Collections.min(folder.getCoverList()); //This is best cover found
+                Cover cover = Collections.min(coversList); //This is best cover found
                 setCover(cover);
 
             }
@@ -2250,7 +2261,6 @@ public class DialogCheck extends javax.swing.JDialog {
 	}
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private static javax.swing.JButton jButtonCheckApplyAlbum;
     private static javax.swing.JButton jButtonCheckApplyAlbumArtist;
     private static javax.swing.JButton jButtonCheckApplyArtist;
@@ -2264,6 +2274,7 @@ public class DialogCheck extends javax.swing.JDialog {
     private static javax.swing.JButton jButtonCheckOpen;
     private static javax.swing.JButton jButtonCheckPreview;
     private static javax.swing.JButton jButtonCheckSaveTags;
+    private javax.swing.JButton jButtonCheckScanner;
     private static javax.swing.JButton jButtonCheckSearch;
     private static javax.swing.JButton jButtonCheckSingleFolder;
     private javax.swing.JButton jButtonCheckUp;
@@ -2326,4 +2337,5 @@ public class DialogCheck extends javax.swing.JDialog {
     private static javax.swing.JTextField jTextFieldCheckAlbumArtist;
     private static javax.swing.JTextField jTextFieldCheckYear;
     // End of variables declaration//GEN-END:variables
+
 }

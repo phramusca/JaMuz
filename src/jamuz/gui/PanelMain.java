@@ -1656,8 +1656,7 @@ public class PanelMain extends javax.swing.JFrame {
         jSliderPlayerLength.setEnabled(false);
         queueModel.removeBullet();
 
-//		MPLAYER.togglePlay(true);
-		MPLAYER.stop();
+		MPLAYER.pause();
 		
         queueModel.setPlayingIndex(-1);
         jButtonPlayerPlay.setText(Inter.get("Button.Play"));  //NOI18N

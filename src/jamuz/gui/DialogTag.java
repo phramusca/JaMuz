@@ -24,9 +24,12 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import jamuz.gui.swing.WrapLayout;
+import jamuz.utils.Inter;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -49,7 +52,13 @@ public class DialogTag extends javax.swing.JDialog {
     public DialogTag(java.awt.Frame parent, boolean modal, FileInfoInt file) {
         super(parent, modal);
         initComponents();
-        DialogTag.file = file;
+		DialogTag.file = file;
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				cancel();
+			}
+		});
         initExtended();
     }
 
@@ -84,35 +93,45 @@ public class DialogTag extends javax.swing.JDialog {
         dialog.setVisible(true);
 	}
     
-    private class GenreButtonListener implements ActionListener {
+    private class TagActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             String tag = e.getActionCommand();
-			
-			//FIXME: This is confusing as if we do not save (by closing window), the tags
-			//appear to be though changed while it is not saved in database
-			// = > add a "Cancel" button that revert changes
-			// = > Revert when window is closed using classic top-right button
-			// = > Make sure NOT to revert on OK (disposing dialog there too ...)
             file.toggleTag(tag);
             highlightTag(tag, file.getTags().contains(tag));
         }
     }
 
-    public class Tag {
+	/**
+	 *
+	 */
+	public class Tag {
         private final int id;
         private final String value;
 
-        public Tag(int id, String value) {
+		/**
+		 *
+		 * @param id
+		 * @param value
+		 */
+		public Tag(int id, String value) {
             this.id = id;
             this.value = value;
         }
 
-        public int getId() {
+		/**
+		 *
+		 * @return
+		 */
+		public int getId() {
             return id;
         }
 
-        public String getValue() {
+		/**
+		 *
+		 * @return
+		 */
+		public String getValue() {
             return value;
         }
         
@@ -122,8 +141,8 @@ public class DialogTag extends javax.swing.JDialog {
     private void initExtended() {
 		  
         //Filling genres list
-        ActionListener actionListener = new GenreButtonListener();
-        jPanelGenre.setLayout(new WrapLayout(FlowLayout.LEADING, 0, 0));
+        ActionListener actionListener = new TagActionListener();
+        jPanelTag.setLayout(new WrapLayout(FlowLayout.LEADING, 0, 0));
         for(String tag : Jamuz.getTags()) {
             ImageIcon icon = IconBuffer.getCoverIcon(tag, IconBuffer.IconVersion.NORMAL_30, "tag");
             JButton button= new JButton(tag);
@@ -135,10 +154,10 @@ public class DialogTag extends javax.swing.JDialog {
             button.addActionListener(actionListener);
             button.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); //Counter clockwise
             button.setBackground(Color.LIGHT_GRAY);
-            jPanelGenre.add(button);
+            jPanelTag.add(button);
         }
-        jPanelGenre.validate();
-        jPanelGenre.repaint();
+        jPanelTag.validate();
+        jPanelTag.repaint();
         
         highlightTags();
 	}
@@ -152,22 +171,23 @@ public class DialogTag extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanelGenre = new javax.swing.JPanel();
+        jPanelTag = new javax.swing.JPanel();
         jButtonSave = new javax.swing.JButton();
+        jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanelGenre.setBackground(java.awt.Color.lightGray);
-        jPanelGenre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelTag.setBackground(java.awt.Color.lightGray);
+        jPanelTag.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        javax.swing.GroupLayout jPanelGenreLayout = new javax.swing.GroupLayout(jPanelGenre);
-        jPanelGenre.setLayout(jPanelGenreLayout);
-        jPanelGenreLayout.setHorizontalGroup(
-            jPanelGenreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jPanelTagLayout = new javax.swing.GroupLayout(jPanelTag);
+        jPanelTag.setLayout(jPanelTagLayout);
+        jPanelTagLayout.setHorizontalGroup(
+            jPanelTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 640, Short.MAX_VALUE)
         );
-        jPanelGenreLayout.setVerticalGroup(
-            jPanelGenreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jPanelTagLayout.setVerticalGroup(
+            jPanelTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 165, Short.MAX_VALUE)
         );
 
@@ -180,22 +200,34 @@ public class DialogTag extends javax.swing.JDialog {
             }
         });
 
+        jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
+        jButtonCancel.setText(Inter.get("Button.Cancel")); // NOI18N
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelGenre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonCancel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonSave)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanelGenre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonSave)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonSave)
+                    .addComponent(jButtonCancel))
                 .addContainerGap())
         );
 
@@ -205,14 +237,31 @@ public class DialogTag extends javax.swing.JDialog {
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
         Jamuz.getDb().deleteTagFiles(file.getIdFile());
 		Jamuz.getDb().insertTagFiles(getHighlightedTags(), file.getIdFile());
-        PanelMain.displayFileInfo();
-        //Close this GUI
-        this.dispose();
+        displayAndDispose();
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
-    public static ArrayList<String> getHighlightedTags() {
+    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
+        cancel();
+    }//GEN-LAST:event_jButtonCancelActionPerformed
+
+	private void cancel() {
+		file.readTags();
+		displayAndDispose();
+	}
+	
+	private void displayAndDispose() {
+		PanelMain.displayFileInfo();
+        //Close this GUI
+        this.dispose();
+	}
+	
+	/**
+	 *
+	 * @return
+	 */
+	public static ArrayList<String> getHighlightedTags() {
         ArrayList<String> tags = new ArrayList<>();
-        Component[] components = jPanelGenre.getComponents();
+        Component[] components = jPanelTag.getComponents();
         for (Component component : components) {
             if (component instanceof JButton) {
                 JButton button = (JButton) component;
@@ -224,8 +273,11 @@ public class DialogTag extends javax.swing.JDialog {
         return tags;
     }
     
-    public static void highlightTags() {
-        Component[] components = jPanelGenre.getComponents();
+	/**
+	 *
+	 */
+	public static void highlightTags() {
+        Component[] components = jPanelTag.getComponents();
         for (Component component : components) {
             if (component instanceof JButton) {
                 JButton button = (JButton) component;
@@ -241,8 +293,13 @@ public class DialogTag extends javax.swing.JDialog {
         }
     }
     
-    public static void highlightTag(String tag, boolean highlight) {
-        Component[] components = jPanelGenre.getComponents();
+	/**
+	 *
+	 * @param tag
+	 * @param highlight
+	 */
+	public static void highlightTag(String tag, boolean highlight) {
+        Component[] components = jPanelTag.getComponents();
         for (Component component : components) {
             if (component instanceof JButton) {
                 JButton button = (JButton) component;
@@ -257,7 +314,8 @@ public class DialogTag extends javax.swing.JDialog {
     }
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
-    private static javax.swing.JPanel jPanelGenre;
+    private static javax.swing.JPanel jPanelTag;
     // End of variables declaration//GEN-END:variables
 }

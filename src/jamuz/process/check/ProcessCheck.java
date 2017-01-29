@@ -517,11 +517,7 @@ public class ProcessCheck {
             return true;
         }
     }
-	
-    
 
-	
-	
     public enum ScanType {
         SCAN,
         SCAN_DELETED,

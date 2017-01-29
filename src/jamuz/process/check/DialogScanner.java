@@ -159,10 +159,7 @@ public class DialogScanner extends javax.swing.JDialog {
         
         for(String pattern : patterns) {
             Map<String, String> extracted = PatternProcessor.getMap(path, pattern);
-//            if(extracted.size()>0) {
-            //FIXME: Need to do sthg if we want not to display null results (as otherwise mismatch btw patterns and tableModel indexes)
-                addRow(extracted);
-//            }
+			addRow(extracted);
         }
         
         //Enable row tableSorter (cannot be done if model is empty)
