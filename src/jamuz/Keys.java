@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 phramusca ( https://github.com/phramusca/JaMuz/ )
+ * Copyright (C) 2015 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz.player;
 
-import java.util.EventListener;
+package jamuz;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-//TODO: Use that kind of stuff in every gui
-//http://rom.developpez.com/java-listeners/
+public class Keys extends Options {
 
-public interface MPlaybackListener extends EventListener {
-    void volumeChanged(float volume);
-	void playbackFinished();
-	void positionChanged(int position, int length);
+	/**
+	 *
+	 * @param filename
+	 */
+	public Keys(String filename) {
+		super();
+		input = Keys.class.getResourceAsStream(filename);
+    }
+	
+	@Override
+	public boolean save() {
+		//Not needed and unwanted
+		return false;
+	}
+	
+	@Override
+	public void set(String key, String value) {
+        //Not needed and unwanted
+    }
 }
-

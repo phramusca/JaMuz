@@ -41,10 +41,6 @@ import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
-import java.util.Collection;
-import java.util.List;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
 
 /**
  *
@@ -55,7 +51,8 @@ public class PanelPlaylists extends javax.swing.JPanel {
     private static FillPlaylistThread tFillPlaylistTable;
     private static TableModel tableModelPlaylist;
     private static final TableColumnModel columnModelPlaylist = new TableColumnModel();
-    
+    private boolean enableComboListner=false;
+	
     /**
      * Creates new form PanelPlaylists
      */
@@ -67,7 +64,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
      * extended init
      */
     public void initExtended() {
-        enablePlaylistEdit(false);
+		enablePlaylistEdit(false);
 
         //Fills playlist combobox
         fillPlaylistCombo();
@@ -78,6 +75,8 @@ public class PanelPlaylists extends javax.swing.JPanel {
         //clear the table
         jTablePlaylist.setRowSorter(null);
         tableModelPlaylist.clear();
+		
+		enableComboListner=true;
     }
     
     /**
@@ -570,31 +569,20 @@ public class PanelPlaylists extends javax.swing.JPanel {
     }//GEN-LAST:event_jToggleButtonPlaylistShowExtraActionPerformed
 
     private void jComboBoxPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPlaylistActionPerformed
-        if (jComboBoxPlaylist.getSelectedIndex() > 0) {
-            //Display playlist
-            Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-
-            jCheckBoxLimit.setSelected(playlist.isLimit());
-            jSpinnerLimitValue.setValue(playlist.getLimitValue());
-            jComboBoxLimitUnit.setSelectedItem(playlist.getLimitUnit());
-            jComboBoxPlaylistMatch.setSelectedItem(playlist.getMatch());
-            //            jComboBoxPlaylistType.setSelectedItem(playlist.type);
-
-            jCheckBoxRandom.setSelected(playlist.isRandom());
-			
+		if (jComboBoxPlaylist.getSelectedIndex() > 0 && enableComboListner) {		
+			//Display playlist
+			Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
+			jCheckBoxLimit.setSelected(playlist.isLimit());
+			jSpinnerLimitValue.setValue(playlist.getLimitValue());
+			jComboBoxLimitUnit.setSelectedItem(playlist.getLimitUnit());
+			jComboBoxPlaylistMatch.setSelectedItem(playlist.getMatch());
+//			            jComboBoxPlaylistType.setSelectedItem(playlist.type);
+			jCheckBoxRandom.setSelected(playlist.isRandom());
 			jCheckBoxHidden.setSelected(playlist.isHidden());
-
-            //Display filters
-            displayFilters(playlist);
-
-            //Display orders
-            displayOrders(playlist);
-
-            //Display files for that playlist
-            //             if(playlist.getFilters().size()>0) {
-                fillPlayList();
-                //             }
-        }
+			displayFilters(playlist);
+			displayOrders(playlist);
+			fillPlayList();
+		}
     }//GEN-LAST:event_jComboBoxPlaylistActionPerformed
 
     private void jButtonPlaylistNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaylistNewActionPerformed
@@ -608,15 +596,19 @@ public class PanelPlaylists extends javax.swing.JPanel {
                     Playlist.Type.Songs, Match.All, false);
 
                 if (playlist.insert()) {
+					enableComboListner=false;
                     fillPlaylistCombo();
-                    jComboBoxPlaylist.setSelectedItem(playlist);
-                    jTextFieldPlaylistName.setText(((Playlist) jComboBoxPlaylist.getSelectedItem()).getName());
+                    jTextFieldPlaylistName.setText(input);
                     enablePlaylistEdit(true);
+					enableComboListner=true;
+					//We want to trigger the new created playlist
+					//so it is displayed
+					jComboBoxPlaylist.setSelectedItem(playlist);
                 }
             }
         }
     }//GEN-LAST:event_jButtonPlaylistNewActionPerformed
-
+	
     private ArrayList<Playlist.Filter> tempFilters;
     
     private void jButtonPlaylistEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaylistEditActionPerformed
@@ -628,53 +620,43 @@ public class PanelPlaylists extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonPlaylistEditActionPerformed
 
     private void jButtonPlaylistSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaylistSaveActionPerformed
-        Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
+
+		Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
         String newName=jTextFieldPlaylistName.getText();
-        if(!newName.equals(playlist.getName())) {       
-//            Collection<String> playlists = CollectionUtils.collect(Jamuz.getPlaylists(), new Transformer() {
-//                @Override
-//                public Object transform(Object input) {
-//                    final Playlist playlist = (Playlist) input;
-//                    return playlist.getName();
-//                }
-//            });
-//            if(playlists.contains(newName)) {
-//                Popup.warning("Playlist name already exist !");
-//                return;
-//            }
-            
+        if(!newName.equals(playlist.getName())) {                
             DefaultComboBoxModel model = (DefaultComboBoxModel) jComboBoxPlaylist.getModel();
             if (model.getIndexOf(newName) > -1) {
                 Popup.warning(MessageFormat.format(Inter.get("Playlist.NameAlreadyExist"), newName));  //NOI18N
             } else if (!newName.equals("")) {  //NOI18N
                 playlist.setName(newName);
             }
-            
-            
         }
-        
         playlist.update();
-        //TODO: playlist is displayed twice (need only one):
-        //when list is filled and when playlist is selected in list (to be confirmed)
+		enableComboListner=false;
         fillPlaylistCombo();
         playlist = Jamuz.getPlaylist(playlist.getId()); //because playlist object has changed
-        jComboBoxPlaylist.setSelectedItem(playlist);
         enablePlaylistEdit(false);
+		jComboBoxPlaylist.setSelectedItem(playlist);
+		//We DO NOT want playlist to be redisplayed
+		//as we are out of edition mode so it has already been done
+		enableComboListner=true;
     }//GEN-LAST:event_jButtonPlaylistSaveActionPerformed
 
     private void jButtonPlaylistDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaylistDeleteActionPerformed
-            if (jComboBoxPlaylist.getSelectedIndex() > 0) {
-                int n = JOptionPane.showConfirmDialog(
-                    this, Inter.get("Question.DeletePlaylist"), //NOI18N
-                    Inter.get("Label.Confirm"), //NOI18N
-                    JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.YES_OPTION) {
-                    Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-                    if (playlist.delete()) {
-                        fillPlaylistCombo();
-                    }
-                }
-            }
+		if (jComboBoxPlaylist.getSelectedIndex() > 0) {
+			int n = JOptionPane.showConfirmDialog(
+				this, Inter.get("Question.DeletePlaylist"), //NOI18N
+				Inter.get("Label.Confirm"), //NOI18N
+				JOptionPane.YES_NO_OPTION);
+			if (n == JOptionPane.YES_OPTION) {
+				Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
+				if (playlist.delete()) {
+					enableComboListner=false;
+					fillPlaylistCombo();
+					enableComboListner=true;
+				}
+			}
+		}
     }//GEN-LAST:event_jButtonPlaylistDeleteActionPerformed
 
     private void jButtonPlaylistShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaylistShowActionPerformed
@@ -696,7 +678,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
             //Remove filter from display
             DefaultListModel listModelFilters = (DefaultListModel) jListPlaylistFilters.getModel();
             listModelFilters.removeElementAt(jListPlaylistFilters.getSelectedIndex());
-            PanelPlaylists.fillPlayList();
+            fillPlayList();
         }
     }//GEN-LAST:event_jButtonPlaylistFilterDeleteActionPerformed
 
@@ -718,7 +700,6 @@ public class PanelPlaylists extends javax.swing.JPanel {
             if (playlist.getMatch().equals(Match.Inde)) {
                 //Backup non-playlists filters
                 tempFilters = new ArrayList<>();
-
                 //Using an iterator instead of foreach as we may need to remove elements from list
                 Iterator<Filter> i = playlist.getFilters().iterator();
                 while (i.hasNext()) {
@@ -728,19 +709,17 @@ public class PanelPlaylists extends javax.swing.JPanel {
                         i.remove();
                     }
                 }
-                //Display filters in list
-                displayFilters(playlist);
-                PanelPlaylists.fillPlayList();
             } else {
                 //Restore backed up non-playlists filters
                 for (Filter filter : tempFilters) {
                     playlist.addFilter(filter);
                 }
                 tempFilters = new ArrayList<>();
-                //Display filters in list
-                displayFilters(playlist);
-                PanelPlaylists.fillPlayList();
+                
             }
+			//Display filters in list
+			displayFilters(playlist);
+			fillPlayList();
         }
     }//GEN-LAST:event_jComboBoxPlaylistMatchActionPerformed
 
@@ -757,7 +736,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
             //Remove filter from display
             DefaultListModel listModelOrders = (DefaultListModel) jListPlaylistOrders.getModel();
             listModelOrders.removeElementAt(jListPlaylistOrders.getSelectedIndex());
-            PanelPlaylists.fillPlayList();
+            fillPlayList();
         }
     }//GEN-LAST:event_jButtonPlaylisOrderDeleteActionPerformed
 
@@ -786,9 +765,10 @@ public class PanelPlaylists extends javax.swing.JPanel {
 
     private void jButtonPlaylistCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaylistCancelActionPerformed
         //Reset the playlists
+		enableComboListner=false;
         fillPlaylistCombo();
-        //Disable edition
         enablePlaylistEdit(false);
+		enableComboListner=true;
     }//GEN-LAST:event_jButtonPlaylistCancelActionPerformed
 
 	//TODO: Update all other jCheckBox using StateChanged to use ItemStateChanged instead 
@@ -808,19 +788,28 @@ public class PanelPlaylists extends javax.swing.JPanel {
     }//GEN-LAST:event_jCheckBoxHiddenItemStateChanged
 
     public static void fillPlayList() {
-        //Stop any previously running thread and wait for it to end
-        if (tFillPlaylistTable != null) {
-            tFillPlaylistTable.abort();
-            try {
-                tFillPlaylistTable.join();
-            } catch (InterruptedException ex) {
-                Popup.error(ex);
-            }
-        }
-
-        // Démarrage du thread
-        tFillPlaylistTable = new FillPlaylistThread("Thread.PanelPlaylists.FillPlaylistTable");
-        tFillPlaylistTable.start();
+		
+		//In a thread not to block GUI while waiting on tFillPlaylistTable
+        new Thread("Thread.PanelPlaylists.fillPlayList") {
+			@Override
+			public void run() {
+				//Stop any previously running thread and wait for it to end
+				if (tFillPlaylistTable != null) {
+					tFillPlaylistTable.abort();
+					try {
+						tFillPlaylistTable.join();
+					} catch (InterruptedException ex) {
+						Popup.error(ex);
+					}
+				}
+				Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
+				if(playlist.getFilters().size()>0 || playlist.isLimit()) {
+					// Démarrage du thread
+					tFillPlaylistTable = new FillPlaylistThread("Thread.PanelPlaylists.FillPlaylistTable");
+					tFillPlaylistTable.start();
+				}
+			}
+		}.start();
     }
 
     private static class FillPlaylistThread extends ProcessAbstract {
@@ -839,8 +828,9 @@ public class PanelPlaylists extends javax.swing.JPanel {
                 //Get playlist's files
                 Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
                 ArrayList<FileInfoInt> fileInfoSourceList = new ArrayList<>();
+				this.checkAbort();
                 playlist.getFiles(fileInfoSourceList);
-                
+                this.checkAbort();
                 long totalLength = fileInfoSourceList.stream().mapToLong(o -> o.getLength()).sum();
                 long totalSize = fileInfoSourceList.stream().mapToLong(o -> o.getSize()).sum();
                 
@@ -922,15 +912,12 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jButtonPlaylistOrderAdd.setEnabled(enable);
         jButtonPlaylistOrderEdit.setEnabled(enable);
     }
-    
 
-    private void fillPlaylistCombo() {
+	private void fillPlaylistCombo() {
         tempFilters = new ArrayList<>();
         Jamuz.readPlaylists();
         DefaultComboBoxModel comboModelPlaylist = (DefaultComboBoxModel) jComboBoxPlaylist.getModel();
         
-        //FIXME: Set back the previously selected entry (if still exists) at the end in PanelMain.comboPlaylistsModel
-        //=> What about the queue ?
         comboModelPlaylist.removeAllElements();
         PanelMain.comboPlaylistsModel.removeAllElements();
         comboModelPlaylist.addElement(Inter.get("Label.SelectOne")); //NOI18N

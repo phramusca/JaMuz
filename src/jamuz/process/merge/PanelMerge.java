@@ -272,7 +272,7 @@ public class PanelMerge extends javax.swing.JPanel {
 		//TODO: Though jListMerge is disabled, the included checkboxes are not !!
 		enableMergeStartButton(enable);
 		jListMerge.setEnabled(enable);
-//		jCheckBoxMergeSimulate.setEnabled(enable); //FIXME: Fix the feature before enabling it
+//		jCheckBoxMergeSimulate.setEnabled(enable); //TODO: Fix the feature before enabling it
 		jCheckBoxMergeForce.setEnabled(enable);
         enableRowSorter(enable);
 		if(enable) {

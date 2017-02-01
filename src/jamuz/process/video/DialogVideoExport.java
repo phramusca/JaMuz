@@ -202,7 +202,7 @@ public class DialogVideoExport extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-//FIXME: Use a new option video.library.location that points to local video repository
+//FIXME: VIDEO export: Use a new option video.library.location that points to local video repository
 //By default, set it to root path as should be the same if kodi runs in local
 //In export, use this as source by default, but allow to change that source temporary
 //Use it for deletion and cleanup

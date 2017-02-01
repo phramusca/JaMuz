@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 import jamuz.utils.Popup;
+import java.io.FileNotFoundException;
 
 /**
  *
@@ -31,12 +32,22 @@ import jamuz.utils.Popup;
  */
 public class Options {
  
-    private final String filename;
-    private final Properties properties;
-
+    private String filename="";
+    private Properties properties;
+	protected InputStream input=null;
+	
+	protected Options() {
+		this.properties = new Properties();
+	}
+	
     public Options(String filename) {
+		this.properties = new Properties();
+		try {
+			input = new FileInputStream(filename);
+		} catch (FileNotFoundException ex) {
+			Popup.error(ex);
+		}
         this.filename = filename;
-        properties = new Properties();
     }
 
     public String get(String key) {
@@ -67,39 +78,15 @@ public class Options {
             }
         }
     }
-    
+
     public boolean read() {
-        InputStream input = null;
         try {
-            input = new FileInputStream(filename);
             properties.load(input);
             return true;
 
         } catch (IOException ex) {
             Popup.error(ex);
             return false;
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException ex) {
-                    Popup.error(ex);
-                }
-            }
-        }
-    }
-	
-	public static String readKey(String keyName) {
-        InputStream input = null;
-        try {
-			input = Options.class.getResourceAsStream("/jamuz/keys.properties");
-			Properties keys = new Properties();
-            keys.load(input);
-            return keys.getProperty(keyName);
-
-        } catch (IOException ex) {
-            Popup.error(ex);
-            return null;
         } finally {
             if (input != null) {
                 try {

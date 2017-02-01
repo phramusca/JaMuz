@@ -18,20 +18,6 @@
           <format property="NOW" pattern="yyyy-MM-dd HH:mm:ss z" />
        </tstamp>
 
-       <!--
-       <exec outputproperty="svna.version" executable="svnversion">
-           <arg value="-c" />
-           <redirector>
-               <outputfilterchain>
-                   <tokenfilter>
-                       <replaceregex pattern="^[0-9]*:?" replace="" flags="g"/>
-                       <replaceregex pattern="M" replace="" flags="g"/>
-                   </tokenfilter>
-               </outputfilterchain>
-           </redirector>
-       </exec>
-       -->
-
        <manifest file="manifest.mf">
           <attribute name="Bundle-Name" value="${project.name}" />           
           <attribute name="Bundle-Version" value="${version.num}" />
@@ -50,8 +36,8 @@
         <property name="script.creation.JaMuz" value="database/JaMuz_creation.sql"/>
         <property name="script.insertion.JaMuz" value="database/JaMuz_insertion_minimal.sql"/>
 
-	<property name="sqlitedb.myMovieDb" value="dist/myMovieDb.db"/>
-	<property name="script.creation.myMovieDb" value="database/myMovieDb_creation.sql"/>
+		<property name="sqlitedb.myMovieDb" value="dist/myMovieDb.db"/>
+		<property name="script.creation.myMovieDb" value="database/myMovieDb_creation.sql"/>
 
         <echo message="Sqlite creation script : ${script.creation.JaMuz}"/>
         <echo message="Sqlite database : ${sqlitedb.JaMuz}" />
@@ -60,20 +46,60 @@
             <arg value=".read ${script.creation.JaMuz}"/>
         </exec>
 
-	<echo message="Sqlite insertion script : ${script.insertion.JaMuz}"/>
-	<echo message="Sqlite database : ${sqlitedb.JaMuz}" />
+		<echo message="Sqlite insertion script : ${script.insertion.JaMuz}"/>
+		<echo message="Sqlite database : ${sqlitedb.JaMuz}" />
         <exec executable = "sqlite3">
             <arg value="${sqlitedb.JaMuz}"/>
             <arg value=".read ${script.insertion.JaMuz}"/>
         </exec>
 
-	<echo message="Sqlite creation script : ${script.creation.myMovieDb}"/>
-	<echo message="Sqlite database : ${sqlitedb.myMovieDb}" />
-	<exec executable = "sqlite3">
-            <arg value="${sqlitedb.myMovieDb}"/>
-            <arg value=".read ${script.creation.myMovieDb}"/>
+		<echo message="Sqlite creation script : ${script.creation.myMovieDb}"/>
+		<echo message="Sqlite database : ${sqlitedb.myMovieDb}" />
+		<exec executable = "sqlite3">
+			<arg value="${sqlitedb.myMovieDb}"/>
+			<arg value=".read ${script.creation.myMovieDb}"/>
         </exec>
-    </target>
+
+<!--		 yGuard Ant task.   
+		<taskdef name="yguard"   
+			   classname="com.yworks.yguard.YGuardTask"   
+			   classpath="yguard.jar"/>  
+		 Integrated obfuscation and name adjustment...   
+		<yguard>  
+			 Obfuscate the yFiles Jar.   
+			<inoutpair in="dist/JaMuz.jar" out="dist/JaMuzOb.jar"/>  
+			 While obfuscating, adjust the names of yFiles features in the   
+			 application's Jar file.   
+
+			 ...using the yGuard 'rename' task.   
+			<rename logfile="yGuard.log" replaceClassNameStrings="true">  
+
+				<property name="obfuscation-prefix" value="myprefix"/>  
+				<keep>  
+					<method class="jamuz.Main" name="void main(java.lang.String[])" />
+					<class classes="private" methods="private" fields="private">
+					  <patternset>
+						<include name="jamuz.**" />
+						<include name="jamuz.*" />
+					  </patternset>
+					</class> 
+				</keep>  
+				 Preserve the properties bundles 
+				<adjust replaceName="true">
+				  <include name="**/*.properties"/>
+				</adjust>
+
+				 Adjust the names and contents of service declaration files in the   
+				 'META-INF' directory of the Jar file.   
+				 In particular, this means files related to the multi-threading   
+				 support that need to reflect the yFiles class's obfuscated names.   
+				<adjust replaceName="true" replaceContent="true">  
+				  <include name="META-INF/services/*"/>  
+				</adjust>  
+			</rename>  
+		</yguard>  -->
+	</target>
+	
     <!--
 
     There exist several targets which are by default empty and which can be 
