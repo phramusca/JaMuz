@@ -54,6 +54,7 @@ public class Jamuz {
 	private static String appPath="";  //NOI18N
     private static String logPath="";  //NOI18N
     private static Options options;
+	private static Keys keys;
     private static Machine machine;
     private static DbConnJaMuz db;
 	private static HashMap <Integer, Playlist> playlists;
@@ -101,6 +102,11 @@ public class Jamuz {
         //Read properties file (this is for Video)
         options = new Options(appPath + "JaMuz.properties"); //TODO: Manage potential errors
         if(!options.read()) {
+            return false;
+        }
+		
+		keys = new Keys("/jamuz/keys.properties");
+        if(!keys.read()) {
             return false;
         }
         
@@ -269,6 +275,10 @@ public class Jamuz {
     public static Options getOptions() {
         return options;
     }
+
+	public static Options getKeys() {
+		return keys;
+	}
 
 	private static DefaultListModel genreListModel;
 	

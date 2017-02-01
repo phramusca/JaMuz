@@ -17,8 +17,7 @@
 
 package jamuz;
 
-//FIXME: Ant (build.xml):  copy configuration and other required files, make 7z package, obfuscate:
-//BINARY CODE OBFUSCATION (TO PROTECT API KEYS) AND MAKE SURE THERE IS NO API KEY NOR (worse) PASSWORDS IN CODE TO BE COMMITED
+//TODO: Ant (build.xml):  copy configuration and other required files, make 7z package.
 
 //----------------------------------------------------------
 // - General TODO:
@@ -68,7 +67,7 @@ package jamuz;
 //	- Statistics tab:
 //		- TODO: Review color choices
 //	- Options tab:
-//		- FIXME: Options
+//		- FIXME: OPTIONS NEW: Options
 //                  - Do not display current machine in machines list (cannot be deleted anyway) 
 //                  + "Options" button to select current options (as in all other tabs)
 //					+ New Options GUI

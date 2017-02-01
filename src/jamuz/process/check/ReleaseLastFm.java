@@ -21,6 +21,7 @@ package jamuz.process.check;
 import de.umass.lastfm.Album;
 import de.umass.lastfm.Artist;
 import de.umass.lastfm.ImageSize;
+import jamuz.Jamuz;
 import jamuz.Options;
 import jamuz.process.check.Cover.CoverType;
 import java.util.ArrayList;
@@ -34,9 +35,6 @@ import jamuz.process.check.ReleaseMatch.Track;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class ReleaseLastFm {
-	
-	private final String lastFmKey = "";  //NOI18N //Obfuscate
-	//FIXME: Use Options.readKey("LastFm") but not here as done too often, move to upper
 	
 	private List<ReleaseMatch> matches;
 	private List<Cover> covers;
@@ -62,12 +60,12 @@ public class ReleaseLastFm {
 		try {
 			Collection<Album> albums = new ArrayList<>();
 			if(album.equals("")) {  //NOI18N
-				albums = Artist.getTopAlbums(artist, lastFmKey);
+				albums = Artist.getTopAlbums(artist, Jamuz.getKeys().get("LastFm"));
 			}
 			else {
                 try {
                     
-                    albums = Album.search(album, lastFmKey);
+                    albums = Album.search(album, Jamuz.getKeys().get("LastFm"));
                 } catch (NullPointerException ex) {
                     //TODO: Why those exception occur ???
                 }
@@ -118,7 +116,7 @@ public class ReleaseLastFm {
 		try {
             List<Track> tracksOut = new ArrayList<>();
 			if(!mbId.equals("")) {  //NOI18N
-				Album myAlbum=Album.getInfo("", mbId, lastFmKey);  //NOI18N
+				Album myAlbum=Album.getInfo("", mbId, Jamuz.getKeys().get("LastFm"));  //NOI18N
 				Collection<de.umass.lastfm.Track> tracks=myAlbum.getTracks();
 				int i=1;
 				for (de.umass.lastfm.Track track : tracks) {

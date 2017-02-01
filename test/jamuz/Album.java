@@ -347,7 +347,7 @@ public final class Album {
     private File getFile() {
         return getFile(this.mbId);
     }
-    //FIXME: Replace all TODO in test packages by FIXME once all other have been done (who said never ?)
+    //FIXME: END: Replace all TODO in test packages by FIXME once all other have been done (who said never ?)
     public FolderInfo getCheckedFolder() {
         return PanelCheck.tableModelCheck.getFolders().get(index);
     }

@@ -35,7 +35,6 @@ import info.movito.themoviedbapi.model.tv.TvSeason;
 import info.movito.themoviedbapi.model.tv.TvSeries;
 import jamuz.DbInfo;
 import jamuz.Jamuz;
-import jamuz.Options;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,7 +68,7 @@ public class TheMovieDb {
 		
 		//Configure TheMovieDb
         this.language = language; 
-        tmdbApi = new TmdbApi(Options.readKey("TheMovieDb"));
+        tmdbApi = new TmdbApi(Jamuz.getKeys().get("TheMovieDb"));
         TmdbAuthentication auth = tmdbApi.getAuthentication();
         TokenSession tokenSession = auth.getSessionLogin(username, password);
         sessionToken = new SessionToken(tokenSession.getSessionId());

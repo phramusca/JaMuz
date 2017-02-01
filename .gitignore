@@ -28,3 +28,4 @@ hs_err_pid*
 # Added by Netbeans 8.1
 /dist/
 /myMovieDb.db
+/yGuard.log

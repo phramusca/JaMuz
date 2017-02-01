@@ -54,7 +54,7 @@ public class TrackTag extends FileInfoInt {
     public void create(String option) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         setRootPath(Jamuz.getMachine().getOption(option));
         FileSystem.copyFile(TrackSourceRepo.get(sourceFile).getFile(), new File(rootPath+relativeFullPath));
-        saveTags(false);
+		saveTags(false);
     }
     
     private final String oriAddedDate;

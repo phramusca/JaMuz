@@ -130,7 +130,7 @@ public class PanelMain extends javax.swing.JFrame {
      */
     protected static ProgressBar progressBestOf;
 
-    //FIXME: Update column numbers for the 4 below, not ok currently for some at least
+    //FIXME: TOP: Update column numbers for the 4 below, not ok currently for some at least
     private static final int[] BASIC_COLS = {0, 1, 2, 3, 4, 5, 12, 17};
     private static final int[] STATS_COLS = {16, 18, 19};
     private static final int[] FILE_COLS = {6, 7, 8, 9, 10};
@@ -163,13 +163,16 @@ public class PanelMain extends javax.swing.JFrame {
         queueModel = new ListModelQueue();
         jListPlayerQueue.setModel(queueModel);
         playerInfo = new FramePlayerInfo(getTitle(), queueModel);
+		
+		fillGenreLists();
         //Empty the FileInfo labels
         jLabelTags.setText("-------------------------");
         jLabelPlayerTitle.setText("Welcome to");  //NOI18N
         jLabelPlayerAlbum.setText("Jamuz");  //NOI18N
         jLabelPlayerArtist.setText("---");  //NOI18N
         jLabelPlayerYear.setText("2014");  //NOI18N
-
+		PanelCover coverImg = (PanelCover) jPanelPlayerCover;
+		coverImg.setImage(null);
         //Set rating combobox renderer
         String[] imageNames = {"null", "1star", "2star", "3star", "4star", "5star"}; //NOI18N
         ratingIcon = new ImageIcon[imageNames.length];
@@ -197,7 +200,7 @@ public class PanelMain extends javax.swing.JFrame {
         panelMerge.initExtended();
 
         PanelCheck.setOptions(); //Needs to be static (for now at least)
-        fillGenreLists();
+        
         panelStats.initExtended();
 
         panelSelect.initExtended();
@@ -254,7 +257,7 @@ public class PanelMain extends javax.swing.JFrame {
      */
     private static void next() {
         //update lastPlayed (now) and playCounter (+1)
-		//FIXME: Do not when playing from Nouveau
+		//FIXME: TOP: Do not when playing from Nouveau
         FileInfoInt file = queueModel.getPlayingSong().getFile();
         Jamuz.getDb().updateLastPlayedAndCounter(file);
         //Moving next
@@ -522,9 +525,7 @@ public class PanelMain extends javax.swing.JFrame {
             i++;
         }
         jComboBoxPlayerGenre.setEnabled(displayedFile.isEnableQuickEdit());
-		
-		//FIXME: When happens at init, the default null cover and "Welcome to JaMuz" messages
-		//are overwritten by default FileInfo (empty values and hugly N/A image)
+
 		displayFileInfo();
     }
 
@@ -1485,7 +1486,7 @@ public class PanelMain extends javax.swing.JFrame {
             isManual = true;
             jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(currentPosition));
             playerInfo.dispMP3progress(currentPosition);
-            //FIXME: Send less often and make a virtual progress on remote side
+            //FIXME: TOP: Send less often and make a virtual progress on remote side
             //AND messes up cover sending ... (does it ?)
             sendToClients(currentPosition);
         }
@@ -2005,7 +2006,7 @@ public class PanelMain extends javax.swing.JFrame {
             fillQueue.start();
         }
         else if(jComboBoxPlaylist.getSelectedIndex()==1) {
-            //FIXME: Does this clones FileInfoInt in ArrayList too
+            //FIXME: TOP: Does this clones FileInfoInt in ArrayList too
             //If not, could be used to refresh "Select" tab without refreshing everything ? 
             //(still have to refresh everything if from playlists anyway unless filtering in a FileInfoInt list from memory 
             // ... to be analyzed)
@@ -2139,9 +2140,7 @@ public class PanelMain extends javax.swing.JFrame {
 					file.readTags(true);
 //					file.getCoverImage(); //NOTE: This is needed if above not done
 					file.getLyrics();
-					if(file.saveTags(true)) {
-						Jamuz.getDb().setFileSaved(file.getIdFile()); //FIXME: Use that too when saved AND inserted in db (during check)
-					}
+					file.saveTags(true);
 					progressBar.progress(file.getFilename());
 					iterator.remove();
 					checkAbort();

@@ -726,9 +726,6 @@ public class FileInfoInt extends FileInfo {
 			Artwork artwork = imageToArt(image);
 			switch (this.ext) {
 				case "mp3": //NOI18N
-					//FIXME: org.jaudiotagger.audio.exceptions.InvalidAudioFrameException: No audio header found within 
-					//Happens when file is 0o in size (empty).
-					//In that case, swe shall delete the file, so as in check process
 					MP3File MP3File = (MP3File)AudioFileIO.read(file);
 					//Remove ID3v1 tags
 					MP3File.setID3v1Tag(null);
@@ -747,6 +744,10 @@ public class FileInfoInt extends FileInfo {
 					audioFile.commit();
 					break;
 			}
+			
+			if(this.idFile>-1) { //File displayed in player may not be from database (check new)
+                Jamuz.getDb().setFileSaved(idFile);
+            }
 			return true;
 		} catch (CannotWriteException | CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
 			Popup.error("Error writing tags to \""+this.rootPath+File.separator+this.relativeFullPath+"\"", ex);  //NOI18N
