@@ -247,10 +247,10 @@ public class FileInfoInt extends FileInfo {
 	/**
 	 * Indicates if file is from library so if rating, genre can be edited
 	 */
-	private boolean enableQuickEdit=false;
+	private boolean fromLibrary=false;
 
-    public boolean isEnableQuickEdit() {
-        return enableQuickEdit;
+    public boolean isFromLibrary() {
+        return fromLibrary;
     }
     
     private final int copyRight;
@@ -302,6 +302,8 @@ public class FileInfoInt extends FileInfo {
         return percentRated;
     }
 
+//	Jamuz.getMachine().getOption("location.library")
+	
 	/**
 	 * Used when retrieving file information from database
 	 * @param idFile 
@@ -336,21 +338,23 @@ public class FileInfoInt extends FileInfo {
      * @param copyRight  
      * @param albumRating  
      * @param percentRated  
+	 * @param rootPath  
 	 */
 	public FileInfoInt(int idFile, int idPath, String relativePath, String filename, int length, String format, 
             String bitRate, int size, float BPM, String album, String albumArtist, String artist, String comment, 
-            int discNo, int discTotal, String genre, int nbCovers, String title, int trackNo, int trackTotal, String year,
-			int playCounter, int rating, String addedDate, String lastPlayed, String modifDate, boolean deleted, 
-            String coverHash, CheckedFlag checkedFlag, int copyRight, double albumRating, int percentRated) {
+            int discNo, int discTotal, String genre, int nbCovers, String title, int trackNo, int trackTotal, 
+			String year, int playCounter, int rating, String addedDate, String lastPlayed, String modifDate, 
+			boolean deleted, String coverHash, CheckedFlag checkedFlag, int copyRight, double albumRating, 
+			int percentRated, String rootPath) {
 		
 		super("file");  //NOI18N
-        this.enableQuickEdit=true;
+        this.fromLibrary=true;
 		this.idFile=idFile;
 		this.setIdPath(idPath);
 		this.relativePath=FilenameUtils.separatorsToSystem(relativePath);
 		this.setFilename(filename);
 		this.relativeFullPath=this.relativePath+this.getFilename();
-		this.rootPath = Jamuz.getMachine().getOption("location.library");  //NOI18N
+		this.rootPath = rootPath;  //NOI18N
         this.ext=FilenameUtils.getExtension(this.getFilename()).toLowerCase(Locale.ENGLISH);
 		
 		//Set File (tags) Info
@@ -832,7 +836,7 @@ public class FileInfoInt extends FileInfo {
 		return this.saveTag(FieldKey.BPM, String.valueOf(getBPM()));
     }
     
-    public boolean saveLyrics(String lyrics) {
+    public boolean saveTagLyrics(String lyrics) {
         this.lyrics=lyrics;
 		return this.saveTag(FieldKey.LYRICS, lyrics);
     }

@@ -257,9 +257,10 @@ public class PanelMain extends javax.swing.JFrame {
      */
     private static void next() {
         //update lastPlayed (now) and playCounter (+1)
-		//FIXME: TOP: Do not when playing from Nouveau
-        FileInfoInt file = queueModel.getPlayingSong().getFile();
-        Jamuz.getDb().updateLastPlayedAndCounter(file);
+		FileInfoInt file = queueModel.getPlayingSong().getFile();
+		if(file.isFromLibrary()) {
+			Jamuz.getDb().updateLastPlayedAndCounter(file);
+		}
         //Moving next
         queueModel.next();
     }
@@ -500,7 +501,7 @@ public class PanelMain extends javax.swing.JFrame {
     }
     
     private void setRating(int rating, boolean sayRated) {
-        if(displayedFile.isEnableQuickEdit()) {
+        if(displayedFile.isFromLibrary()) {
             jComboBoxPlayerRating.setSelectedIndex(rating);
             displayedFile.sayRating(sayRated);
             sendToClients(displayedFile, false);
@@ -524,7 +525,7 @@ public class PanelMain extends javax.swing.JFrame {
             comboGenre[i] = myGenre;
             i++;
         }
-        jComboBoxPlayerGenre.setEnabled(displayedFile.isEnableQuickEdit());
+        jComboBoxPlayerGenre.setEnabled(displayedFile.isFromLibrary());
 
 		displayFileInfo();
     }
@@ -1486,13 +1487,9 @@ public class PanelMain extends javax.swing.JFrame {
             isManual = true;
             jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(currentPosition));
             playerInfo.dispMP3progress(currentPosition);
-            //FIXME: TOP: Send less often and make a virtual progress on remote side
-            //AND messes up cover sending ... (does it ?)
-            sendToClients(currentPosition);
+            sendPositionToClients(currentPosition);
         }
     }
-
-
 	
     /**
      * Enable/disable previous and next buttons
@@ -1504,7 +1501,6 @@ public class PanelMain extends javax.swing.JFrame {
         jButtonPlayerPrevious.setEnabled(previous);
         jButtonPlayerNext.setEnabled(next || (fileInfoHiddenQueue.size()>0 && jButtonPlayerPlay.getText().equals(Inter.get("Button.Pause"))));
     }
-
 
 	private void jButtonOptionsMachinesEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsMachinesEditActionPerformed
         DialogOptions.main(((ListElement) jListMachines.getSelectedValue()).getValue());
@@ -1927,9 +1923,6 @@ public class PanelMain extends javax.swing.JFrame {
     private void moveQueueRow(int selectedRow, int newRow) {
 		try {
             queueModel.moveRow(selectedRow, newRow);
-//			folder.getFilesAudioTableModel().moveRow(fromIndex, toIndex);
-//			displayMatchTracks();
-//			jTableCheck.setRowSelectionInterval(toIndex, toIndex);
 		} catch (CloneNotSupportedException ex) {
 			Jamuz.getLogger().log(Level.SEVERE, "moveCheckRow", ex); //NOI18N
 		}
@@ -2244,7 +2237,7 @@ public class PanelMain extends javax.swing.JFrame {
 
     public static void displayFileInfo() {
         FileInfoInt playingFile = queueModel.getPlayingSong()==null?displayedFile:queueModel.getPlayingSong().getFile();
-//        if(playingFile==null) playingFile=displayedFile; //In case we have stopped/paused so it gets refreshed anyway
+		//In case we have stopped/paused so it gets refreshed anyway
         displayFileInfo(playingFile, true);
     }
     
@@ -2279,13 +2272,13 @@ public class PanelMain extends javax.swing.JFrame {
 
             jComboBoxPlayerGenre.setEnabled(false);
             jComboBoxPlayerGenre.setSelectedItem(getGenre(fileInfo.getGenre()));
-            jComboBoxPlayerGenre.setEnabled(fileInfo.isEnableQuickEdit());
+            jComboBoxPlayerGenre.setEnabled(fileInfo.isFromLibrary());
 
             jComboBoxPlayerRating.setEnabled(false);
             jComboBoxPlayerRating.setSelectedIndex(fileInfo.getRating());
-            jComboBoxPlayerRating.setEnabled(fileInfo.isEnableQuickEdit());
+            jComboBoxPlayerRating.setEnabled(fileInfo.isFromLibrary());
             
-            jButtonTags.setEnabled(fileInfo.isEnableQuickEdit());
+            jButtonTags.setEnabled(fileInfo.isFromLibrary());
 
             jLabelPlayerYear.setText(fileInfo.getYear());  //NOI18N
             PanelCover coverImg = (PanelCover) jPanelPlayerCover;
@@ -2302,7 +2295,7 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
     private static long startTime=System.currentTimeMillis();
-    private static void sendToClients(int currentPosition) {
+    private static void sendPositionToClients(int currentPosition) {
         long currentTime=System.currentTimeMillis();
         if(currentTime-startTime>1000) {
             Map map = new HashMap();

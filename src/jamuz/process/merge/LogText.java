@@ -17,14 +17,12 @@
 
 package jamuz.process.merge;
 
-import jamuz.Jamuz;
 import jamuz.utils.Popup;
 import jamuz.utils.Inter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
 
 /**
  * Text log class
@@ -69,12 +67,8 @@ public class LogText {
 	 * @param str
 	 */
 	public void add(String str) {
-		//TODO: Same should be done in createFile (instead of in caller one)
-		if(Level.INFO.intValue()>=Jamuz.getLogger().getLevel().intValue()) {
-			this.logPrintWriter.println(str);
-			this.logPrintWriter.flush();
-		}
-        
+		this.logPrintWriter.println(str);
+		this.logPrintWriter.flush();
     }
 	
 	//TODO: Call below function

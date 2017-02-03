@@ -1,5 +1,3 @@
-//TODO: Update JavaDoc on all other source files taking this class as a reference
-
 /*
  * Copyright (C) 2011 phramusca ( https://github.com/phramusca/JaMuz/ )
  *

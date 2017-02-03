@@ -19,7 +19,6 @@ package jamuz.utils;
 import jamuz.DbConnJaMuz;
 import jamuz.DbInfo;
 import jamuz.FileInfoInt;
-import jamuz.Jamuz;
 import jamuz.process.merge.LogText;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -44,32 +43,30 @@ public class CompareDB {
         boolean compareBPM=true;
         
         compareDB(
-                "/media/raph/Transcend/JaMuz/JaMuz (4e copie avant check backup fichiers).db",
+                "/media/raph/Transcend/JaMuz/JaMuz (copie avant simulation merge).db",
                 "/media/raph/Transcend/JaMuz/JaMuz.db",
                 "/home/raph/Bureau/LOGS/",
-                comparePlayCounter, compareRating, compareAddedDate, compareLastPlayed, compareBPM
+                comparePlayCounter, compareRating, compareAddedDate, 
+				compareLastPlayed, compareBPM
         );
     } 
     
     private static void compareDB(String pathDb1, String pathDb2, String pathLogs,
-            boolean comparePlayCounter, boolean compareRating, boolean compareAddedDate, boolean compareLastPlayed, boolean compareBPM) {
+            boolean comparePlayCounter, boolean compareRating, boolean compareAddedDate, 
+			boolean compareLastPlayed, boolean compareBPM) {
         //Connecting databases
         DbConnJaMuz db1= getDb(pathDb1);
         DbConnJaMuz db2= getDb(pathDb2);
         db1.getDbConn().connect();
         db2.getDbConn().connect();
-       
-        //Reading JaMuz options (rootPath is read in getFiles, so this is needed or it fails, though we do not need rootPath in here)
-        Jamuz.configure(pathLogs);
-        Jamuz.getMachine().read();
-        
+
         //Getting list of files from databases
         ArrayList<FileInfoInt> filesDb1 = new ArrayList<>();
         ArrayList<FileInfoInt> filesDb2 = new ArrayList<>();
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
                 + " FROM file F JOIN path P ON F.idPath=P.idPath ";
-        db1.getFiles(filesDb1, sql);
-        db2.getFiles(filesDb2, sql);
+        db1.getFiles(filesDb1, sql, "");
+        db2.getFiles(filesDb2, sql, "");
         
         //Converting lists to maps
         Map<Integer,FileInfoInt> files1=toMap(filesDb1);

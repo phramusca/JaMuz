@@ -303,7 +303,8 @@ public class TheMovieDb {
     }
     
 	private void popupOrLog(ResponseStatusException ex) {
-		//FIXME: We should retry if a requestCount issue (and other similar cases).
+		//FIXME: LOW: We should retry if a requestCount issue (and other similar cases).
+		//We should not have such errors as calls are delayed
 		
 		if(ex.getResponseStatus().getStatusCode()!=25) {
 			Popup.error("Code "+ex.getResponseStatus().getStatusCode()+": "+ex.getResponseStatus().getStatusMessage());

@@ -60,7 +60,7 @@ public class StatSource {
 	}
 
     public void updateLastMergeDate() {
-        //FIXME: No need to update lastMerge date during merge (really ?), do them all at the end of 
+        //TODO: No need to update lastMerge date during merge (really ?), do them all at the end of 
         //merge process and only if not a simulation and merge OK
         //Then, read options again 
         //(better: Generate String date = DateUtil.getFormattedCurrentSql and update

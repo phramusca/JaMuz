@@ -184,7 +184,6 @@ public class PanelMerge extends javax.swing.JPanel {
 
         jCheckBoxMergeSimulate.setText(Inter.get("Label.Simulate")); // NOI18N
         jCheckBoxMergeSimulate.setToolTipText(Inter.get("Tooltip.Merge.Simulation")); // NOI18N
-        jCheckBoxMergeSimulate.setEnabled(false);
 
         jButtonMergeSources.setText(Inter.get("Label.Options")); // NOI18N
         jButtonMergeSources.addActionListener(new java.awt.event.ActionListener() {
