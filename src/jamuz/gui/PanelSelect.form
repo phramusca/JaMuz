@@ -813,7 +813,9 @@
                                   <Component id="jToggleButtonSelectShowFile" min="-2" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jToggleButtonSelectShowExtra" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jToggleButtonSelectShowRights" min="-2" max="-2" attributes="1"/>
+                                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                                   <Component id="jLabelSelectedSummary" max="32767" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
@@ -831,7 +833,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabelSelected" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPaneSelect" pref="122" max="32767" attributes="0"/>
+                          <Component id="jScrollPaneSelect" pref="201" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -841,6 +843,7 @@
                                   <Component id="jToggleButtonSelectShowFile" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jToggleButtonSelectShowExtra" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabelSelectedSummary" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jToggleButtonSelectShowRights" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -908,6 +911,9 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonSelectShowBasicActionPerformed"/>
                   </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabelSelectDisplay">
                   <Properties>
@@ -1007,6 +1013,14 @@
                     </Component>
                   </SubComponents>
                 </Container>
+                <Component class="javax.swing.JToggleButton" name="jToggleButtonSelectShowRights">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Rights"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonSelectShowRightsActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>

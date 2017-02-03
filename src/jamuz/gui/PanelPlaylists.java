@@ -97,6 +97,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jToggleButtonPlaylistShowFile = new javax.swing.JToggleButton();
         jToggleButtonPlaylistShowExtra = new javax.swing.JToggleButton();
         jLabelSelectedSummary = new javax.swing.JLabel();
+        jToggleButtonSelectShowRights = new javax.swing.JToggleButton();
         jPanelPlaylistEdit = new javax.swing.JPanel();
         jPanelPlaylist = new javax.swing.JPanel();
         jComboBoxPlaylist = new javax.swing.JComboBox();
@@ -168,6 +169,13 @@ public class PanelPlaylists extends javax.swing.JPanel {
 
         jLabelSelectedSummary.setText(" ");
 
+        jToggleButtonSelectShowRights.setText("Rights");
+        jToggleButtonSelectShowRights.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonSelectShowRightsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelSelectDisplay1Layout = new javax.swing.GroupLayout(jPanelSelectDisplay1);
         jPanelSelectDisplay1.setLayout(jPanelSelectDisplay1Layout);
         jPanelSelectDisplay1Layout.setHorizontalGroup(
@@ -183,7 +191,9 @@ public class PanelPlaylists extends javax.swing.JPanel {
                 .addComponent(jToggleButtonPlaylistShowFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToggleButtonPlaylistShowExtra)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButtonSelectShowRights)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelSelectedSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelSelectDisplay1Layout.setVerticalGroup(
@@ -196,7 +206,8 @@ public class PanelPlaylists extends javax.swing.JPanel {
                     .addComponent(jToggleButtonPlaylistShowStats)
                     .addComponent(jToggleButtonPlaylistShowFile)
                     .addComponent(jToggleButtonPlaylistShowExtra)
-                    .addComponent(jLabelSelectedSummary))
+                    .addComponent(jLabelSelectedSummary)
+                    .addComponent(jToggleButtonSelectShowRights))
                 .addContainerGap())
         );
 
@@ -205,7 +216,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jPanelSelectTracks1Layout.setHorizontalGroup(
             jPanelSelectTracks1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelSelectDisplay1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPaneSelect1, javax.swing.GroupLayout.DEFAULT_SIZE, 952, Short.MAX_VALUE)
+            .addComponent(jScrollPaneSelect1, javax.swing.GroupLayout.DEFAULT_SIZE, 1075, Short.MAX_VALUE)
         );
         jPanelSelectTracks1Layout.setVerticalGroup(
             jPanelSelectTracks1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -785,6 +796,10 @@ public class PanelPlaylists extends javax.swing.JPanel {
 		playlist.setHidden(jCheckBoxHidden.isSelected());
     }//GEN-LAST:event_jCheckBoxHiddenItemStateChanged
 
+    private void jToggleButtonSelectShowRightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonSelectShowRightsActionPerformed
+        PanelMain.setRightsVisible(columnModelPlaylist, jToggleButtonSelectShowRights.isSelected());
+    }//GEN-LAST:event_jToggleButtonSelectShowRightsActionPerformed
+
     public static void fillPlayList() {
 		
 		//In a thread not to block GUI while waiting on tFillPlaylistTable
@@ -971,5 +986,6 @@ public class PanelPlaylists extends javax.swing.JPanel {
     private javax.swing.JToggleButton jToggleButtonPlaylistShowExtra;
     private javax.swing.JToggleButton jToggleButtonPlaylistShowFile;
     private javax.swing.JToggleButton jToggleButtonPlaylistShowStats;
+    private javax.swing.JToggleButton jToggleButtonSelectShowRights;
     // End of variables declaration//GEN-END:variables
 }
