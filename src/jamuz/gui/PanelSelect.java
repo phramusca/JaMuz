@@ -139,10 +139,14 @@ public class PanelSelect extends javax.swing.JPanel {
      */
     public void initExtended() {
 
-        jCheckBoxSelectCheckedFlag0.setBackground(getColor(FolderInfo.CheckedFlag.UNCHECKED));
-        jCheckBoxSelectCheckedFlag1.setBackground(getColor(FolderInfo.CheckedFlag.KO));
-        jCheckBoxSelectCheckedFlag2.setBackground(getColor(FolderInfo.CheckedFlag.OK_WARNING));
-        jCheckBoxSelectCheckedFlag3.setBackground(getColor(FolderInfo.CheckedFlag.OK));
+        jCheckBoxSelectCheckedFlag0.setBackground(
+				getColor(FolderInfo.CheckedFlag.UNCHECKED));
+        jCheckBoxSelectCheckedFlag1.setBackground(
+				getColor(FolderInfo.CheckedFlag.KO));
+        jCheckBoxSelectCheckedFlag2.setBackground(
+				getColor(FolderInfo.CheckedFlag.OK_WARNING));
+        jCheckBoxSelectCheckedFlag3.setBackground(
+				getColor(FolderInfo.CheckedFlag.OK));
         
         comboCopyRights = new String[5];
         comboCopyRights[0] = Inter.get("Label.BestOf.NotDefined");  //NOI18N
@@ -338,6 +342,7 @@ public class PanelSelect extends javax.swing.JPanel {
         jButtonPreviewStop = new javax.swing.JButton();
         jComboBoxSoundCard = new javax.swing.JComboBox<>();
         jLabelPreviewDisplay = new javax.swing.JLabel();
+        jToggleButtonSelectShowRights = new javax.swing.JToggleButton();
 
         jSplitPaneSelect.setDividerLocation(300);
         jSplitPaneSelect.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -803,6 +808,13 @@ public class PanelSelect extends javax.swing.JPanel {
                     .addComponent(jLabelPreviewDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
+        jToggleButtonSelectShowRights.setText("Rights");
+        jToggleButtonSelectShowRights.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonSelectShowRightsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelSelectTracksLayout = new javax.swing.GroupLayout(jPanelSelectTracks);
         jPanelSelectTracks.setLayout(jPanelSelectTracksLayout);
         jPanelSelectTracksLayout.setHorizontalGroup(
@@ -821,7 +833,9 @@ public class PanelSelect extends javax.swing.JPanel {
                         .addComponent(jToggleButtonSelectShowFile)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jToggleButtonSelectShowExtra)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jToggleButtonSelectShowRights)
+                        .addGap(33, 33, 33)
                         .addComponent(jLabelSelectedSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -834,7 +848,7 @@ public class PanelSelect extends javax.swing.JPanel {
             .addGroup(jPanelSelectTracksLayout.createSequentialGroup()
                 .addComponent(jLabelSelected)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -843,7 +857,8 @@ public class PanelSelect extends javax.swing.JPanel {
                         .addComponent(jToggleButtonSelectShowStats)
                         .addComponent(jToggleButtonSelectShowFile)
                         .addComponent(jToggleButtonSelectShowExtra)
-                        .addComponent(jLabelSelectedSummary))
+                        .addComponent(jLabelSelectedSummary)
+                        .addComponent(jToggleButtonSelectShowRights))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -1120,10 +1135,13 @@ public class PanelSelect extends javax.swing.JPanel {
                     PanelMain.addRowSelect(tableModel, myFileInfoInt);
                 }
                 //Displaying or not genre, artist and album, if selected or not
-                PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 4, selGenre.equals("%"));  //NOI18N
-                PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 1, selAlbum.getValue().equals("%"));  //NOI18N
-                PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 0, checkList(0));  //NOI18N
-                PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 12, checkList(12));  //NOI18N
+                if(jToggleButtonSelectShowBasic.isSelected()) {
+					PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 4, selGenre.equals("%"));  //NOI18N
+					PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 1, selAlbum.getValue().equals("%"));  //NOI18N
+					PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 0, checkList(0));  //NOI18N
+					PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 12, checkList(12));  //NOI18N
+				}
+				
                 //Enable row tableSorter (cannot be done if model is empty)
                 if(tableModel.getRowCount()>0) {
                     //Enable auto sorter
@@ -1418,6 +1436,10 @@ public class PanelSelect extends javax.swing.JPanel {
         stopMplayer();
     }//GEN-LAST:event_jButtonPreviewStopActionPerformed
 
+    private void jToggleButtonSelectShowRightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonSelectShowRightsActionPerformed
+		PanelMain.setRightsVisible(TABLE_COLUMN_MODEL, jToggleButtonSelectShowRights.isSelected());
+    }//GEN-LAST:event_jToggleButtonSelectShowRightsActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -1476,9 +1498,10 @@ public class PanelSelect extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPaneSelect;
     private javax.swing.JSplitPane jSplitPaneSelectArtistAlbum;
     private static javax.swing.JTable jTableSelect;
-    private javax.swing.JToggleButton jToggleButtonSelectShowBasic;
+    private static javax.swing.JToggleButton jToggleButtonSelectShowBasic;
     private javax.swing.JToggleButton jToggleButtonSelectShowExtra;
     private javax.swing.JToggleButton jToggleButtonSelectShowFile;
+    private javax.swing.JToggleButton jToggleButtonSelectShowRights;
     private javax.swing.JToggleButton jToggleButtonSelectShowStats;
     // End of variables declaration//GEN-END:variables
 }

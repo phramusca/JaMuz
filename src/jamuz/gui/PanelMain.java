@@ -130,11 +130,11 @@ public class PanelMain extends javax.swing.JFrame {
      */
     protected static ProgressBar progressBestOf;
 
-    //FIXME: TOP: Update column numbers for the 4 below, not ok currently for some at least
     private static final int[] BASIC_COLS = {0, 1, 2, 3, 4, 5, 12, 17};
     private static final int[] STATS_COLS = {16, 18, 19};
     private static final int[] FILE_COLS = {6, 7, 8, 9, 10};
-    private static final int[] EXTRA_COLS = {11, 13, 14, 15, 20}; //TODO: move Column 20 (cover) to use a dedicated toggle button
+    private static final int[] EXTRA_COLS = {11, 13, 14, 15, 20};
+	private static final int[] RIGHTS_COLS = {21, 22};
 
     /**
      * Creates new form MainGUI
@@ -547,12 +547,16 @@ public class PanelMain extends javax.swing.JFrame {
     public static void initSelectTable(TableModel tableModel, JTable jTable, TableColumnModel tableColumnModel) {
 
         //Set table model
-        String[] columnNames = {Inter.get("Tag.Artist"), Inter.get("Tag.Album"), Inter.get("Tag.TrackNo"), //NOI18N
-            Inter.get("Tag.Title"), Inter.get("Tag.Genre"), Inter.get("Tag.Year"), Inter.get("Tag.BitRate"), //NOI18N
-            Inter.get("Label.File"), Inter.get("Tag.Length"), Inter.get("Tag.Format"), Inter.get("Tag.Size"), //NOI18N
-            Inter.get("Tag.BPM"), Inter.get("Tag.AlbumArtist"), Inter.get("Tag.Comment"), Inter.get("Tag.DiscNo"), //NOI18N
-            Inter.get("Tag.Cover"), Inter.get("Stat.PlayCounter"), Inter.get("Stat.Rating"), //NOI18N
-            Inter.get("Stat.Added"), Inter.get("Stat.LastPlayed"), Inter.get("Stat.Checked"), Inter.get("Label.BestOf.Ownership"), ""};  //NOI18N
+        String[] columnNames = {Inter.get("Tag.Artist"), Inter.get("Tag.Album"), //NOI18N
+			Inter.get("Tag.TrackNo"), Inter.get("Tag.Title"), //NOI18N
+			Inter.get("Tag.Genre"), Inter.get("Tag.Year"), //NOI18N
+			Inter.get("Tag.BitRate"), Inter.get("Label.File"), //NOI18N
+			Inter.get("Tag.Length"), Inter.get("Tag.Format"), //NOI18N
+			Inter.get("Tag.Size"), Inter.get("Tag.BPM"), Inter.get("Tag.AlbumArtist"), //NOI18N
+			Inter.get("Tag.Comment"), Inter.get("Tag.DiscNo"), Inter.get("Tag.Cover"), //NOI18N
+			Inter.get("Stat.PlayCounter"), Inter.get("Stat.Rating"), //NOI18N
+			Inter.get("Stat.Added"), Inter.get("Stat.LastPlayed"), //NOI18N
+			Inter.get("Stat.Checked"), Inter.get("Label.BestOf.Ownership"), ""};  //NOI18N
         Object[][] data = {
             {"Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", //NOI18N
                 "Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", //NOI18N
@@ -665,8 +669,10 @@ public class PanelMain extends javax.swing.JFrame {
         column.setPreferredWidth(100);
 
         //TODO: Move CopyRight combobox to album folder as it is a path attribute
-        //TODO: Create an Amazon button in album list too, and change the one in this table for searching MP3 single
-        //For the 2 above, this means, changing album jlist (which has a special way of filling) to jtable !!
+        //TODO: Create an Amazon button in album list too, and change the one in this table 
+		//for searching MP3 single
+        //For the 2 above, this means, changing album jlist 
+		// (which has a special way of filling) to jtable !!
         //+managing displaying columns or not (copyright and amazon buttons have to be optionnal)
         
         // 21: Combobox
@@ -712,6 +718,7 @@ public class PanelMain extends javax.swing.JFrame {
         setExtraVisible(tableColumnModel, false);
         setStatsVisible(tableColumnModel, false);
         setFileVisible(tableColumnModel, false);
+		setRightsVisible(tableColumnModel, false);
     }
 
     private static JButton button;
@@ -1983,31 +1990,27 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBoxPlaylistActionPerformed
 
     private void refreshHiddenQueue() {
-        fileInfoHiddenQueue.clear();
-        queueModel.clearNotPlayed();
-        if (jComboBoxPlaylist.getSelectedIndex() > 1) {
-            Thread fillQueue = new Thread("Thread.PanelMain.playlist.getFiles") {
-                @Override
-                public void run() {
-                    //Get playlist's files
-                    Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-                    playlist.getFiles(fileInfoHiddenQueue);
-                    fillQueue();
-                    queueModel.enablePreviousAndNext();
-                }
-            };
-            fillQueue.start();
-        }
-        else if(jComboBoxPlaylist.getSelectedIndex()==1) {
-            //FIXME: TOP: Does this clones FileInfoInt in ArrayList too
-            //If not, could be used to refresh "Select" tab without refreshing everything ? 
-            //(still have to refresh everything if from playlists anyway unless filtering in a FileInfoInt list from memory 
-            // ... to be analyzed)
-            fileInfoHiddenQueue = new ArrayList<>(PanelSelect.getFileInfoList());
-            Collections.shuffle(fileInfoHiddenQueue);
-            fillQueue();
-        }
-        
+        Thread fillQueue = new Thread("Thread.PanelMain.playlist.getFiles") {
+			@Override
+			public void run() {
+				fileInfoHiddenQueue.clear();
+				queueModel.clearNotPlayed();
+				if (jComboBoxPlaylist.getSelectedIndex() > 1) {
+            
+						//Get playlist's files
+						Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
+						playlist.getFiles(fileInfoHiddenQueue);
+						fillQueue();
+						queueModel.enablePreviousAndNext();
+					}
+				else if(jComboBoxPlaylist.getSelectedIndex()==1) {
+					fileInfoHiddenQueue = new ArrayList<>(PanelSelect.getFileInfoList());
+					Collections.shuffle(fileInfoHiddenQueue);
+					fillQueue();
+				}
+			};
+		}
+		fillQueue.start();
     }
     
     protected static ProgressBar progressBarCheckedFlag;
@@ -2414,6 +2417,16 @@ public class PanelMain extends javax.swing.JFrame {
      */
     public static void setExtraVisible(TableColumnModel myXTableColumnModel, boolean state) {
         setColumnVisible(myXTableColumnModel, EXTRA_COLS, state);
+    }
+	
+	/**
+     * set extra colums visible/unvisible
+     *
+     * @param myXTableColumnModel
+     * @param state
+     */
+    public static void setRightsVisible(TableColumnModel myXTableColumnModel, boolean state) {
+        setColumnVisible(myXTableColumnModel, RIGHTS_COLS, state);
     }
 
     /**

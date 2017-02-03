@@ -44,7 +44,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanelSelectDisplay1" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jScrollPaneSelect1" alignment="0" pref="952" max="32767" attributes="0"/>
+                  <Component id="jScrollPaneSelect1" alignment="0" pref="1075" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -96,7 +96,9 @@
                           <Component id="jToggleButtonPlaylistShowFile" min="-2" max="-2" attributes="1"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="jToggleButtonPlaylistShowExtra" min="-2" max="-2" attributes="1"/>
-                          <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jToggleButtonSelectShowRights" min="-2" max="-2" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLabelSelectedSummary" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -112,6 +114,7 @@
                               <Component id="jToggleButtonPlaylistShowFile" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jToggleButtonPlaylistShowExtra" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabelSelectedSummary" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jToggleButtonSelectShowRights" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -174,6 +177,14 @@
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
                   </AuxValues>
+                </Component>
+                <Component class="javax.swing.JToggleButton" name="jToggleButtonSelectShowRights">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Rights"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonSelectShowRightsActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
