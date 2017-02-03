@@ -43,7 +43,7 @@ public class TrackTag extends FileInfoInt {
         super(-1, -1, relativePath, filename, TrackSourceRepo.get(sourceFile).length, TrackSourceRepo.get(sourceFile).format, 
                 TrackSourceRepo.get(sourceFile).bitRate, (int) TrackSourceRepo.get(sourceFile).size, BPM, album, albumArtist, artist, comment, 
                 discNo, discTotal, genre, nbCovers, title, trackNo, trackTotal, year, playCounter, rating, addedDate, lastPlayed, 
-                TrackSourceRepo.get(sourceFile).modifDate, deleted, "", checkedFlag, -1, 0, 0);
+                TrackSourceRepo.get(sourceFile).modifDate, deleted, "", checkedFlag, -1, 0, 0, "");
 
         oriAddedDate=addedDate;
         oriLastPlayed=lastPlayed;

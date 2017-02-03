@@ -95,7 +95,7 @@ public class ServerClient {
 			//even if cover not received in android
 			//so the problem can only be solved in remote android app
 			//Therefore 
-            //FIXME: Cover not received in JaMuz Android Remote
+            //FIXME: LOW: Cover not received in JaMuz Android Remote
 			Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
         }

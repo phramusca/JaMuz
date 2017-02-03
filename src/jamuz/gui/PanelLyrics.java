@@ -155,7 +155,7 @@ public class PanelLyrics extends javax.swing.JPanel {
     private void jButtonLyricsSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLyricsSaveActionPerformed
         FileInfoInt myFileInfo = PanelMain.getQueueModel().getPlayingSong().getFile();
         if(myFileInfo!=null) {
-            myFileInfo.saveLyrics(jTextPaneLyrics.getText());
+            myFileInfo.saveTagLyrics(jTextPaneLyrics.getText());
         }
     }//GEN-LAST:event_jButtonLyricsSaveActionPerformed
 

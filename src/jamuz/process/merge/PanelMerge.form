@@ -229,7 +229,6 @@
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="jamuz/Bundle.properties" key="Tooltip.Merge.Simulation" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                 </Property>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>

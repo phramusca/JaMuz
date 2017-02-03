@@ -2473,6 +2473,18 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @return
      */
     public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql) {
+		return getFiles(myFileInfoList, sql, Jamuz.getMachine().getOption("location.library"));
+	}
+
+	/**
+     * Return list of files
+     *
+     * @param myFileInfoList
+     * @param sql
+	 * @param rootPath
+     * @return
+     */
+    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql, String rootPath) {
 
         int idFile;
         int idPath;
@@ -2552,9 +2564,12 @@ public class DbConnJaMuz extends StatSourceSQL {
                 percentRated = rs.getInt("percentRated");
 
                 myFileInfoList.add(
-                        new FileInfoInt(idFile, idPath, relativePath, filename, length, format, bitRate, size, BPM, album, albumArtist, artist, comment,
-                                discNo, discTotal, genre, nbCovers, title, trackNo, trackTotal, year, playCounter, rating,
-                                addedDate, lastPlayed, modifDate, deleted, coverHash, checkedFlag, copyRight, albumRating, percentRated)
+                        new FileInfoInt(idFile, idPath, relativePath, filename, length, format, bitRate, 
+								size, BPM, album, albumArtist, artist, comment,
+                                discNo, discTotal, genre, nbCovers, title, trackNo, trackTotal, year, 
+								playCounter, rating,
+                                addedDate, lastPlayed, modifDate, deleted, coverHash, checkedFlag, 
+								copyRight, albumRating, percentRated, rootPath)
                 );
             }
             return true;

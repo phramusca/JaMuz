@@ -21,8 +21,6 @@ import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
 import jamuz.Jamuz;
 import jamuz.Playlist;
-import static jamuz.gui.PanelMain.addRowSelect;
-import static jamuz.gui.PanelMain.initSelectTable;
 import jamuz.Playlist.Field;
 import jamuz.Playlist.Filter;
 import jamuz.Playlist.LimitUnit;
@@ -71,7 +69,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
 
         //Get table model
         tableModelPlaylist = (TableModel) jTablePlaylist.getModel();
-        initSelectTable(tableModelPlaylist, jTablePlaylist, columnModelPlaylist);
+        PanelMain.initSelectTable(tableModelPlaylist, jTablePlaylist, columnModelPlaylist);
         //clear the table
         jTablePlaylist.setRowSorter(null);
         tableModelPlaylist.clear();
@@ -840,7 +838,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
                 
                 for (FileInfoInt myFileInfoInt : fileInfoSourceList) {
                     this.checkAbort();
-                    addRowSelect(tableModelPlaylist, myFileInfoInt);
+                    PanelMain.addRowSelect(tableModelPlaylist, myFileInfoInt);
                 }
                 //Not allowing sorter as playlists are sorted !
                 jTablePlaylist.setAutoCreateRowSorter(false);

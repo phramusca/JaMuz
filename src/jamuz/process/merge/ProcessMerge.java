@@ -140,7 +140,9 @@ public class ProcessMerge extends ProcessAbstract {
             f.mkdir();
 
             if(!mergeMain()) {
-                popupMsg=""; //Error will be displayed as a popup when it happens  //NOI18N
+				//A popup will already display error in catch clauses below
+				//Don't want to popup merge results too, which could be wrong anyway
+                popupMsg=""; 
             }
         } catch (InterruptedException ex) {
             popupMsg=Inter.get("Msg.MergeAborted");  //NOI18N
@@ -173,8 +175,7 @@ public class ProcessMerge extends ProcessAbstract {
 
             }
             //Read options again (only to read lastMergeDate !!)
-            //TODO: Make options reading and update easier and nicer
-            //FIXME: At least do not refresh GUI if faster to do
+            //FIXME: LOW: Use listners !!
             PanelMain.readOptions(); //TODO: This should enable merge too, but does not as we still are in process merge ...
             //enabling back buttons
             PanelMerge.enableMerge(true);
@@ -228,12 +229,9 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 		//We will use that copy if simulation mode, otherwise use real JamuzDb
 		if(this.simulate) {
-            
-            //FIXME: Check how was done before. Are we still working with backup dB 
-            // => Needs a check !!!
-            this.dBJaMuz = new DbConnJaMuz(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getDb().getDbConn().getInfo().getLocationWork(), "", ""));
-//			this.dBJaMuz = new DbConnJaMuz(Jamuz.getDb().info); //Create a new connection with backup dB location
-
+            this.dBJaMuz = new DbConnJaMuz(
+					new DbInfo(	DbInfo.LibType.Sqlite, 
+							Jamuz.getDb().getDbConn().getInfo().getLocationWork(), "", ""));
 			//Connect and create Prepared Statements
 			if(!this.dBJaMuz.setUp()) {
 				return false;
@@ -718,6 +716,8 @@ public class ProcessMerge extends ProcessAbstract {
         return dbStats.backupSource(logSubPath); 
         //TODO: guayadeque db is big as contains blobs in covers table.
         //Would be good to remove before backup as we do not need those for merge stats anyway
+		// => as we cannot modify source nor we want to backup copy (as too big)
+		//		then need to create a new db and insert from source
 	}
 	
 	private boolean merge(String run) throws InterruptedException, CloneNotSupportedException {
@@ -763,7 +763,6 @@ public class ProcessMerge extends ProcessAbstract {
         nbFiles = this.mergeListDbJaMuz.size();
 		if(nbFiles>0) {
 			this.checkAbort();
-            //FIXME: We shall update a copy if simulation !!!
 			int[] results = this.dBJaMuz.updateStatistics(mergeListDbJaMuz);
 			if(results.length<nbFiles) {
 				return false;
@@ -788,33 +787,37 @@ public class ProcessMerge extends ProcessAbstract {
 			this.checkAbort();
 		}
 
-        nbFiles=mergeTagListDbJaMuz.size();
-//        PanelMerge.progressBar.setup(nbFiles);
-        PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Updating"), Inter.get("Tag.BPM"))); //NOI18N
-        if(nbFiles>0 && !this.simulate) {
-            Iterator<FileInfoInt> i = mergeTagListDbJaMuz.iterator();
-            while (i.hasNext()) {
-                FileInfoInt fileInfoInt = i.next();
-                this.checkAbort();
-                //FIXME: If aborted, tag will no more be written to file. Need to have a file BPM and a dB BPM to be able to sync both
-                fileInfoInt.saveTagBPM(); //Save retrieved BPM to file tags
-                //FIXME: Are we updating modifiedDate (path and file) and other stats when saving tags (always) ?
-                this.checkAbort();
-                i.remove();
-            }
-        }
+		if(!this.simulate) {
+		
+			nbFiles=mergeTagListDbJaMuz.size();
+			PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Updating"), Inter.get("Tag.BPM"))); //NOI18N
+			if(nbFiles>0) {
+				Iterator<FileInfoInt> i = mergeTagListDbJaMuz.iterator();
+				while (i.hasNext()) {
+					FileInfoInt fileInfoInt = i.next();
+					this.checkAbort();
+					//FIXME: LOW: If aborted, tag will no more be written to file. 
+					//Need to have a file BPM and a dB BPM to be able to sync both
+					fileInfoInt.saveTagBPM(); //Save retrieved BPM to file tags
+					//FIXME: LOW: Are we updating modifiedDate (path and file) 
+					//and other stats when saving tags (always) ?
+					this.checkAbort();
+					i.remove();
+				}
+			}
 
-        if(filesToUpdatePlayCounter.size()>0 && !this.simulate) {
-            //Remove potential duplicates 
-//        filesToUpdatePlayCounter = new ArrayList(new HashSet(filesToUpdatePlayCounter)); //no order
-            filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter)); //If you need to preserve the order use 'LinkedHashSet'
-            //Changing previous play counter if update was successfull
-            if(!this.dBJaMuz.setPreviousPlayCounter(filesToUpdatePlayCounter, this.selectedStatSource.getId())) {
-                return false;
-            }
-        }
+			if(filesToUpdatePlayCounter.size()>0) {
+				//Remove potential duplicates 
+	//	        filesToUpdatePlayCounter = new ArrayList(new HashSet(filesToUpdatePlayCounter)); //no order
+				filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter)); //If you need to preserve the order use 'LinkedHashSet'
+				//Changing previous play counter if update was successfull
+				if(!this.dBJaMuz.setPreviousPlayCounter(filesToUpdatePlayCounter, this.selectedStatSource.getId())) {
+					return false;
+				}
+			}
 
-        this.selectedStatSource.updateLastMergeDate();
+			this.selectedStatSource.updateLastMergeDate();
+		}
 
 		return true;
     }
