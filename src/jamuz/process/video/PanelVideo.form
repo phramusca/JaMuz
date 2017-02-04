@@ -246,6 +246,8 @@
                                   <Component id="jCheckBoxVideoMove" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jCheckBoxVideoTheMovieDb" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
+                                  <Component id="jButtonVideoCleanup" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="jButtonVideoExport" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
@@ -271,6 +273,7 @@
                                   <Component id="jButtonVideoList" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jCheckBoxVideoGet" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jCheckBoxVideoMove" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButtonVideoCleanup" alignment="3" max="32767" attributes="0"/>
                                   <Component id="jCheckBoxVideoTheMovieDb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jButtonVideoExport" alignment="1" min="-2" pref="28" max="-2" attributes="0"/>
@@ -695,6 +698,14 @@
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
                   </AuxValues>
+                </Component>
+                <Component class="javax.swing.JButton" name="jButtonVideoCleanup">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Cleanup"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonVideoCleanupActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxVideoTheMovieDb">
                   <Properties>
