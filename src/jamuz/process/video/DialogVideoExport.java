@@ -23,6 +23,7 @@ import jamuz.gui.DialogOptions;
 import java.io.File;
 import javax.swing.JTextField;
 import jamuz.utils.Inter;
+import jamuz.utils.Swing;
 
 /**
  *
@@ -186,7 +187,7 @@ public class DialogVideoExport extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSelectSouceActionPerformed
 
     private void getFolder(JTextField textField) {
-        String selectedFolder=DialogOptions.selectFolder(textField.getText());
+        String selectedFolder=Swing.selectFolder(textField.getText());
         if(!selectedFolder.equals("")) {  //NOI18N
             textField.setText(selectedFolder+File.separator);
         }

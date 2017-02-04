@@ -513,7 +513,7 @@ public class ProcessMerge extends ProcessAbstract {
                 }
 			}
 
-		//Compare addedDate, only if required (not for XBMC as an example)
+		//Compare addedDate, only if required (not for Kodi as an example)
 			if(this.selectedStatSource.getSource().isUpdateAddedDate()) {
 				if(!fileSelectedDb.getAddedDate().equals(fileJaMuz.getAddedDate())) {
 					if(fileSelectedDb.getAddedDate().after(new Date(0)) && fileJaMuz.getAddedDate().after(new Date(0))) {
@@ -834,19 +834,19 @@ public class ProcessMerge extends ProcessAbstract {
         this.logDbSelected = new LogText(logSubPath);
         String name=this.selectedStatSource.getSource().getName()
                 +" ["+DateTime.formatUTC(this.selectedStatSource.lastMergeDate, DateTime.DateTimeFormat.FILE, false)+"]";
-        if(!this.logDbSelected.createFile(prefix+"1-"+name)) {
+        if(!this.logDbSelected.createFile(prefix+"1-"+name + ".txt")) {
             Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[] {prefix+name+".txt"}));  //NOI18N
             return false;
         }
         //Create Log for JaMuz database
         this.logDbJaMuz = new LogText(logSubPath);
-        if(!this.logDbJaMuz.createFile(prefix+"2-"+this.dBJaMuz.getName())) {
+        if(!this.logDbJaMuz.createFile(prefix+"2-"+this.dBJaMuz.getName() + ".txt")) {
             Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[] {prefix+this.dBJaMuz.getName()+".txt"}));  //NOI18N
             return false;
         }
         //Create Log for NEW info (after comparison)
         this.logDbNew = new LogText(logSubPath);
-        if(!this.logDbNew.createFile(prefix+"3-"+"NEW")) {  //NOI18N
+        if(!this.logDbNew.createFile(prefix+"3-"+"NEW" + ".txt")) {  //NOI18N
             Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[] {prefix+"NEW.txt"}));  //NOI18N
             return false;
         }

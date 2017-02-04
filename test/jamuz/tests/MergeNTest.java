@@ -300,7 +300,7 @@ public class MergeNTest extends TestCase {
         String rootPath; int idDevice; String name;
         int idStatement;
 //        case 1: // Guayadeque 	(Linux)
-//        case 2: // XBMC 	(Linux/Windows)
+//        case 2: // Kodi 	(Linux/Windows)
 //        case 3: // MediaMonkey (Windows)
 //        case 4: // Mixxx 	(Linux/Windows)
 //        case 5: // MyTunes 	(Android)

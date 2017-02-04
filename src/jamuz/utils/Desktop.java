@@ -51,6 +51,10 @@ public class Desktop {
         }
     }
 	
+	public static void openFile(String path) {
+		openFolder(path);
+	}
+	
 	public static void openFolder(String path) {
 		if (java.awt.Desktop.isDesktopSupported()) {
             java.awt.Desktop desktop = java.awt.Desktop.getDesktop();

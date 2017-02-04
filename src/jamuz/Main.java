@@ -50,7 +50,7 @@ package jamuz;
 //		- TODO: Support rating=-1:
 //			Guayadeque default rating is -1, but cannnot be set back to -1 in GUI (only from 0 to 5)
 //			MediaMonkey default is -1 (not rated), 0 is used to mark a file as "to be deleted" (bomb icon)
-//			XBMC: ??
+//			Kodi: ??
 //			AmaroK: ??
 //			Mixxx: ??
 //	- Check tab:

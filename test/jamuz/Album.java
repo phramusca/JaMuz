@@ -309,7 +309,7 @@ public final class Album {
         spreadSheet.getFirstSheet().copy(i++, "MergeTest3");            //Added date changes after initial merge
         
         spreadSheet.getFirstSheet().copy(i++, "MergeTest4_1");          //New statistics to set on Guayadeque 	(Linux)
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_2");          //New statistics to set on XBMC 	(Linux/Windows)
+        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_2");          //New statistics to set on Kodi 	(Linux/Windows)
         spreadSheet.getFirstSheet().copy(i++, "MergeTest4_3");          //New statistics to set on MediaMonkey (Windows)
         spreadSheet.getFirstSheet().copy(i++, "MergeTest4_4");          //New statistics to set on Mixxx 	(Linux/Windows)
         spreadSheet.getFirstSheet().copy(i++, "MergeTest4_5");          //New statistics to set on MyTunes 	(Android)
@@ -323,7 +323,7 @@ public final class Album {
         spreadSheet.getFirstSheet().copy(i++, "MergeDevice4_1stMerge"); //Added date changes after initial merge
         
         spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_1");        //New statistics to set on Guayadeque 	(Linux)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_2");        //New statistics to set on XBMC 	(Linux/Windows)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_2");        //New statistics to set on Kodi 	(Linux/Windows)
         spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_3");        //New statistics to set on MediaMonkey (Windows)
         spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_4");        //New statistics to set on Mixxx 	(Linux/Windows)
         spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_5");        //New statistics to set on MyTunes 	(Android)

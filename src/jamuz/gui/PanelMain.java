@@ -1996,20 +1996,18 @@ public class PanelMain extends javax.swing.JFrame {
 				fileInfoHiddenQueue.clear();
 				queueModel.clearNotPlayed();
 				if (jComboBoxPlaylist.getSelectedIndex() > 1) {
-            
 						//Get playlist's files
 						Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
 						playlist.getFiles(fileInfoHiddenQueue);
 						fillQueue();
 						queueModel.enablePreviousAndNext();
-					}
+				} 
 				else if(jComboBoxPlaylist.getSelectedIndex()==1) {
 					fileInfoHiddenQueue = new ArrayList<>(PanelSelect.getFileInfoList());
 					Collections.shuffle(fileInfoHiddenQueue);
 					fillQueue();
 				}
-			};
-		}
+			}};
 		fillQueue.start();
     }
     

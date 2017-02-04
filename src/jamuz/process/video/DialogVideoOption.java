@@ -22,6 +22,7 @@ import jamuz.gui.DialogOptions;
 import java.io.File;
 import javax.swing.JTextField;
 import jamuz.utils.Inter;
+import jamuz.utils.Swing;
 
 /**
  *
@@ -102,7 +103,7 @@ public class DialogVideoOption extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("XBMC Database"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Kodi Database"));
 
         jLabelVideoLocation.setText(Inter.get("Label.Location")); // NOI18N
 
@@ -271,14 +272,7 @@ public class DialogVideoOption extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void getFolder(JTextField textField) {
-        String selectedFolder=DialogOptions.selectFolder(textField.getText());
-        if(!selectedFolder.equals("")) {  //NOI18N
-            textField.setText(selectedFolder+File.separator);
-        }
-    }
-    
+  
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButtonCancelActionPerformed

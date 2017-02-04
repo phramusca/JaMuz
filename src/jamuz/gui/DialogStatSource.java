@@ -24,6 +24,7 @@ import jamuz.utils.Popup;
 import javax.swing.DefaultComboBoxModel;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Inter;
+import jamuz.utils.Swing;
 
 /**
  * JDialog extension to add/modify Stat source
@@ -100,7 +101,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 
         jLabelType.setText(bundle.getString("Label.Type")); // NOI18N
 
-        jComboBoxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Guayadeque \t(Linux)", "XBMC \t(Linux/Windows)", "MediaMonkey (Windows)", "Mixxx \t(Linux/Windows)", "MyTunes \t(Android)" }));
+        jComboBoxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Guayadeque \t(Linux)", "Kodi \t(Linux/Windows)", "MediaMonkey (Windows)", "Mixxx \t(Linux/Windows)", "MyTunes \t(Android)" }));
 
         jLabelLocation.setText(bundle.getString("Label.Location")); // NOI18N
 
@@ -255,11 +256,11 @@ public class DialogStatSource extends javax.swing.JDialog {
         //TODO: Read database (first need to make sure that database exists and is readable)
         //to read root path. Change button name to "Auto"
         // To determine root path:
-        //Ex, pour XBMC: SELECT strPath FROM path ORDER BY length(strPath) ASC LIMIT 1
+        //Ex, pour Kodi: SELECT strPath FROM path ORDER BY length(strPath) ASC LIMIT 1
         
         //Par contre, utiliser le code ci-dessous pour chercher un dossier
         //(voir aussi si FTP ...)
-		String selectedFolder=DialogOptions.selectFolder(jTextRootPath.getText());
+		String selectedFolder=Swing.selectFolder(jTextRootPath.getText());
 		if(!selectedFolder.equals("")) {  //NOI18N
 			jTextRootPath.setText(selectedFolder); 
 		}
