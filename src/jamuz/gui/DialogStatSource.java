@@ -43,7 +43,7 @@ public class DialogStatSource extends javax.swing.JDialog {
     public DialogStatSource(java.awt.Frame parent, boolean modal, StatSource statSource) {
         super(parent, modal);
         initComponents();
-
+		this.statSource = statSource;
 		//Fill the Playlist Combobox
 		//TODO: Do the same for every combobox in JaMuz (avoid for loop + include whole object with included id)
 		jComboBoxDevice.setModel(new DefaultComboBoxModel(Jamuz.getMachine().getDevices().toArray()));
@@ -58,11 +58,13 @@ public class DialogStatSource extends javax.swing.JDialog {
 		
         jComboBoxType.setSelectedIndex(statSource.getIdStatement() - 1);
         
-		jTextName.setText(statSource.getSource().getName());
+		if(!this.statSource.getSource().getName().equals("")) {
+			jTextName.setText(this.statSource.getSource().getName());
+		}
 		jTextLocation.setText(statSource.getSource().getLocation());
 		jTextRootPath.setText(statSource.getSource().getRootPath());
 		jCheckBoxSelected.setSelected(statSource.isIsSelected());
-		this.statSource = statSource;
+		
     }
 
 
@@ -101,7 +103,12 @@ public class DialogStatSource extends javax.swing.JDialog {
 
         jLabelType.setText(bundle.getString("Label.Type")); // NOI18N
 
-        jComboBoxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Guayadeque \t(Linux)", "Kodi \t(Linux/Windows)", "MediaMonkey (Windows)", "Mixxx \t(Linux/Windows)", "MyTunes \t(Android)" }));
+        jComboBoxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Guayadeque (Linux)", "Kodi (Linux/Windows)", "MediaMonkey (Windows)", "Mixxx (Linux/Windows)", "MyTunes (Android)" }));
+        jComboBoxType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxTypeActionPerformed(evt);
+            }
+        });
 
         jLabelLocation.setText(bundle.getString("Label.Location")); // NOI18N
 
@@ -178,12 +185,12 @@ public class DialogStatSource extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelType)
                     .addComponent(jComboBoxType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelName))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelLocation)
@@ -265,6 +272,12 @@ public class DialogStatSource extends javax.swing.JDialog {
 			jTextRootPath.setText(selectedFolder); 
 		}
 	}//GEN-LAST:event_jButtonSelectActionPerformed
+
+    private void jComboBoxTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTypeActionPerformed
+        if(this.statSource.getSource().getName().equals("")) {
+			jTextName.setText(jComboBoxType.getSelectedItem().toString());
+		}
+    }//GEN-LAST:event_jComboBoxTypeActionPerformed
 
     /**
 	 * Open the GUI
