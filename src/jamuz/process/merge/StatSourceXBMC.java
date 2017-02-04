@@ -27,9 +27,9 @@ import jamuz.utils.Popup;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class StatSourceXBMC extends StatSourceSQL {
+public class StatSourceKodi extends StatSourceSQL {
 
-    public StatSourceXBMC(DbInfo dbInfo, String name, String rootPath) {
+    public StatSourceKodi(DbInfo dbInfo, String name, String rootPath) {
         super(dbInfo, name, rootPath, false, true, false);
     }
     
@@ -53,7 +53,7 @@ public class StatSourceXBMC extends StatSourceSQL {
              return true;
         } catch (SQLException ex) {
             //Proper error handling. We should not have such an error unless above code changes
-            Popup.error("StatSourceXBMC, setUp", ex);   //NOI18N
+            Popup.error("StatSourceKodi, setUp", ex);   //NOI18N
             return false;
         }
     }

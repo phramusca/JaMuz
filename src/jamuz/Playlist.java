@@ -112,7 +112,7 @@ public class Playlist implements Comparable {
     }
     
     /**
-	 * Not yet used. See XBMC playlists for information.
+	 * Not yet used. See Kodi playlists for information.
 	 */
 	private Type type; //TODO: Eventually, use this
 

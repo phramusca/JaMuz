@@ -23,7 +23,9 @@ import jamuz.process.merge.LogText;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -42,16 +44,28 @@ public class CompareDB {
         boolean compareLastPlayed=false;
         boolean compareBPM=true;
         
-        compareDB(
-                "/media/raph/Transcend/JaMuz/JaMuz (copie avant simulation merge).db",
-                "/media/raph/Transcend/JaMuz/JaMuz.db",
-                "/home/raph/Bureau/LOGS/",
-                comparePlayCounter, compareRating, compareAddedDate, 
-				compareLastPlayed, compareBPM
+		String rootPath="/media/raph/Transcend/JaMuz";		
+		String db1=Swing.selectile(rootPath, Swing.FileType.SQLITE, "Select 1st database");
+		if(db1.equals("")) {  //NOI18N
+			Popup.error("Select a db1 file");
+			return;
+		}
+		
+		String db2=Swing.selectile(rootPath, Swing.FileType.SQLITE, "Select 2nd database");
+		if(db2.equals("")) {  //NOI18N
+			Popup.error("Select a db2 file");
+			return;
+		}
+		
+        String resultFile = compareDB(db1, db2, "/home/raph/Bureau/JaMuz Compare/",
+			comparePlayCounter, compareRating, compareAddedDate, 
+			compareLastPlayed, compareBPM
         );
+		
+		Desktop.openFile(resultFile);
     } 
     
-    private static void compareDB(String pathDb1, String pathDb2, String pathLogs,
+    private static String compareDB(String pathDb1, String pathDb2, String pathLogs,
             boolean comparePlayCounter, boolean compareRating, boolean compareAddedDate, 
 			boolean compareLastPlayed, boolean compareBPM) {
         //Connecting databases
@@ -73,8 +87,9 @@ public class CompareDB {
         Map<Integer,FileInfoInt> files2=toMap(filesDb2);
 
         logFile = new LogText(pathLogs);
-        if(!logFile.createFile(DateTime.getCurrentLocal(DateTime.DateTimeFormat.FILE).concat("-Comparison"))) {
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[] {DateTime.getCurrentLocal(DateTime.DateTimeFormat.FILE).concat("-Comparison")+".txt"}));  //NOI18N
+		String logFileName = DateTime.getCurrentLocal(DateTime.DateTimeFormat.FILE).concat("-Comparison") + ".csv";
+        if(!logFile.createFile(logFileName)) {
+            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[] {logFileName}));  //NOI18N
             System.exit(1);
         }
         logFile.add("File\tValue\t"+pathDb1+"\t"+pathDb2);
@@ -84,6 +99,9 @@ public class CompareDB {
         compareDB(files2, files1, true, comparePlayCounter, compareRating, compareAddedDate, compareLastPlayed, compareBPM);
         
         logFile.close();
+		
+		logFileName = FilenameUtils.concat(pathLogs, logFileName);
+		return logFileName;
     }
     
     private static void compareDB(Map<Integer,FileInfoInt> files1, Map<Integer,FileInfoInt> files2, boolean reverse,

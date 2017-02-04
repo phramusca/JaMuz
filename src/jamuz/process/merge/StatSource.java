@@ -81,8 +81,8 @@ public class StatSource {
             case 1: // Guayadeque 	(Linux)
                 this.source = new StatSourceGuayadeque(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
                 break;
-            case 2: // XBMC 	(Linux/Windows)
-                this.source = new StatSourceXBMC(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
+            case 2: // Kodi 	(Linux/Windows)
+                this.source = new StatSourceKodi(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
                 break;
             case 3: // MediaMonkey (Windows)
                 this.source = new StatSourceMediaMonkey(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 

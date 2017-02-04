@@ -34,7 +34,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.SerializationUtils;
 
 /**
- * Creates a new connection to a XBMC database to get videos information
+ * Creates a new connection to a Kodi database to get videos information
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class DbConnVideo extends DbConn {

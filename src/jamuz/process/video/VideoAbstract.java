@@ -159,7 +159,7 @@ public abstract class VideoAbstract implements Comparable {
                     //Rename back
                     moveFile(myConn, destination, source, destinationSrt, sourceSrt);
                     //Not checking result as we could end up in an infinite loop
-                    //A further XBMC library scan will fix the problem anyway
+                    //A further Kodi library scan will fix the problem anyway
                     return Inter.get("Msg.Video.ErrorUpdatingDb");
                 }
             }

@@ -195,7 +195,7 @@ public class ProcessVideo extends ProcessAbstract {
 		//Connect to database
 		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getOptions().get("video.dbLocation"), ".", "."), Jamuz.getOptions().get("video.rootPath"));
         if(getDb) {
-            //Retrieve XBMC database
+            //Retrieve Kodi database
             checkAbort();
             if(!connKodi.getInfo().copyDB(true, Jamuz.getLogPath())) {
                 return false;
@@ -273,7 +273,7 @@ public class ProcessVideo extends ProcessAbstract {
         PanelVideo.diplayLength();
         
         if(getDb) {
-            //Send XBMC dtabase back
+            //Send Kodi dtabase back
             this.checkAbort();
             if(!connKodi.getInfo().copyDB(false, Jamuz.getLogPath())) {
                 return false;

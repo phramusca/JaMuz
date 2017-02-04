@@ -24,6 +24,7 @@ import jamuz.Option;
 import jamuz.process.merge.StatSource;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Inter;
+import jamuz.utils.Swing;
 import java.io.File;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -549,7 +550,7 @@ public class DialogOptions extends javax.swing.JDialog {
 	}//GEN-LAST:event_jButtonStatSouceDelActionPerformed
 
 	private void jButtonOptionSelectFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSelectFolderActionPerformed
-		String selectedFolder=selectFolder(jTextFieldOptionValue.getText());
+		String selectedFolder=Swing.selectFolder(jTextFieldOptionValue.getText());
 		if(!selectedFolder.equals("")) {  //NOI18N
 			jTextFieldOptionValue.setText(selectedFolder); 
 		}
@@ -610,23 +611,7 @@ public class DialogOptions extends javax.swing.JDialog {
         
     }//GEN-LAST:event_jButtonOptionSaveSourceActionPerformed
 
-	//TODO: Move to a generic class
-	/**
-	 * Select a folder (open a folder chooser GUI)
-	 * @param defaultFolder 
-	 * @return
-	 */
-	public static String selectFolder(String defaultFolder) {
-		JFileChooser fc = new JFileChooser(defaultFolder);
-		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		int returnVal = fc.showOpenDialog(null);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File selFile = fc.getSelectedFile();
-			return selFile.getAbsolutePath();
-        } else {
-			return "";  //NOI18N
-        }
-	}
+	
 	
 	/**
 	 * @param machineName 

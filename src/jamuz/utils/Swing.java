@@ -18,6 +18,12 @@ package jamuz.utils;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -41,4 +47,78 @@ public class Swing {
             }
         }
     }
+
+	/**
+	 * Select a folder (open a folder chooser GUI)
+	 * @param defaultFolder 
+	 * @return
+	 */
+	public static String selectFolder(String defaultFolder) {
+		JFileChooser fc = new JFileChooser(defaultFolder);
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int returnVal = fc.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File selFile = fc.getSelectedFile();
+			return selFile.getAbsolutePath();
+        } else {
+			return "";  //NOI18N
+        }
+	}
+	
+	public enum FileType {
+		JPG,
+		SQLITE
+	}
+	
+	/**
+	 * Select a folder (open a folder chooser GUI)
+	 * @param defaultFile 
+	 * @return
+	 */
+	public static String selectile(String defaultFile) {
+		return selectile(defaultFile, new ArrayList<>(), "Select file");
+	}
+	
+	public static String selectile(String defaultFile, FileType fileType, String title) {
+		List<Swing.FileType> fileTypes = new ArrayList<>();
+		fileTypes.add(fileType);
+		return selectile(defaultFile, fileTypes, title);
+	}
+	
+	/**
+	 * Select a folder (open a folder chooser GUI)
+	 * @param defaultFile 
+	 * @param fileTypes 
+	 * @param title 
+	 * @return
+	 */
+	public static String selectile(String defaultFile, List<FileType> fileTypes, String title) {
+		JFileChooser fc = new JFileChooser(defaultFile);
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setDialogTitle(title);
+		if(fileTypes!=null) {
+			for(FileType type : fileTypes) {
+				FileFilter filter;
+				switch(type) {
+					case JPG:
+						filter = new FileNameExtensionFilter("JPEG file", "jpg", "jpeg");
+						fc.addChoosableFileFilter(filter);
+						break;
+					case SQLITE:
+						filter = new FileNameExtensionFilter("SQLITE file", "db", "sqlite");
+						fc.addChoosableFileFilter(filter);
+						break;
+				}
+			}
+			fc.setAcceptAllFileFilterUsed(false);
+		}
+		
+		int returnVal = fc.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File selFile = fc.getSelectedFile();
+			return selFile.getAbsolutePath();
+        } else {
+			return "";  //NOI18N
+        }
+	}
 }

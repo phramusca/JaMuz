@@ -43,13 +43,13 @@ public class LogText {
 	
 	/**
 	 * Creates a text log file
-	 * @param LogName
+	 * @param LogFileName
 	 * @return
 	 */
-	public boolean createFile(String LogName) {
+	public boolean createFile(String LogFileName) {
 		try {
 			//Create LOG file
-			String logFilePath = this.logPath + LogName + ".txt";  //NOI18N
+			String logFilePath = this.logPath + LogFileName;  //NOI18N
 			File f = new File(logFilePath);
 			f.createNewFile(); //Creates if not exist
 			//Open file for writing

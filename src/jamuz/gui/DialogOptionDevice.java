@@ -23,9 +23,9 @@ import jamuz.Playlist;
 import java.io.File;
 import jamuz.utils.Popup;
 import javax.swing.DefaultComboBoxModel;
-import static jamuz.gui.DialogOptions.selectFolder;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Inter;
+import jamuz.utils.Swing;
 
 /**
  * JDialog extension to add/modify Stat source
@@ -232,14 +232,14 @@ public class DialogOptionDevice extends javax.swing.JDialog {
 	}//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSelectDestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDestActionPerformed
-        String selectedFolder=selectFolder(jTextFieldDestination.getText());
+        String selectedFolder=Swing.selectFolder(jTextFieldDestination.getText());
 		if(!selectedFolder.equals("")) {  //NOI18N
 			jTextFieldDestination.setText(selectedFolder); 
 		}
     }//GEN-LAST:event_jButtonSelectDestActionPerformed
 
     private void jButtonSelectSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectSourceActionPerformed
-         String selectedFolder=selectFolder(jTextFieldSource.getText());
+		String selectedFolder=Swing.selectFolder(jTextFieldSource.getText());
 		if(!selectedFolder.equals("")) {  //NOI18N
 			jTextFieldSource.setText(selectedFolder); 
 		}
