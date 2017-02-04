@@ -103,14 +103,17 @@ public class Swing {
 					case JPG:
 						filter = new FileNameExtensionFilter("JPEG file", "jpg", "jpeg");
 						fc.addChoosableFileFilter(filter);
+						fc.setFileFilter(filter); //TODO: Select only first or last or add method parameter
 						break;
 					case SQLITE:
 						filter = new FileNameExtensionFilter("SQLITE file", "db", "sqlite");
 						fc.addChoosableFileFilter(filter);
+						fc.setFileFilter(filter);
 						break;
 				}
 			}
-			fc.setAcceptAllFileFilterUsed(false);
+//			fc.setAcceptAllFileFilterUsed(false); //TODO: method parameter
+			
 		}
 		
 		int returnVal = fc.showOpenDialog(null);
