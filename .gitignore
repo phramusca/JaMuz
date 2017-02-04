@@ -1,5 +1,4 @@
 #JaMuz specifics
-build/*
 data/cache/*
 data/Patterns.txt
 data/VideoLinks.txt
@@ -30,4 +29,3 @@ hs_err_pid*
 /dist/
 /myMovieDb.db
 /yGuard.log
-*.properties~

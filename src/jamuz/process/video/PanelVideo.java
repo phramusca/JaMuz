@@ -521,6 +521,7 @@ public class PanelVideo extends javax.swing.JPanel {
         triStateHd = new jamuz.gui.swing.TriStateCheckBox();
         jLabel12 = new javax.swing.JLabel();
         triStateMovies = new jamuz.gui.swing.TriStateCheckBox();
+        jButtonVideoCleanup = new javax.swing.JButton();
         jCheckBoxVideoTheMovieDb = new javax.swing.JCheckBox();
 
         jSplitPane1.setDividerLocation(150);
@@ -765,6 +766,13 @@ public class PanelVideo extends javax.swing.JPanel {
             }
         });
 
+        jButtonVideoCleanup.setText("Cleanup");
+        jButtonVideoCleanup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVideoCleanupActionPerformed(evt);
+            }
+        });
+
         jCheckBoxVideoTheMovieDb.setText("TheMovieDb");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -819,6 +827,8 @@ public class PanelVideo extends javax.swing.JPanel {
                         .addComponent(jCheckBoxVideoMove)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBoxVideoTheMovieDb)
+                        .addGap(79, 79, 79)
+                        .addComponent(jButtonVideoCleanup)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonVideoExport)
                         .addGap(18, 18, 18)
@@ -839,6 +849,7 @@ public class PanelVideo extends javax.swing.JPanel {
                         .addComponent(jButtonVideoList)
                         .addComponent(jCheckBoxVideoGet)
                         .addComponent(jCheckBoxVideoMove)
+                        .addComponent(jButtonVideoCleanup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jCheckBoxVideoTheMovieDb))
                     .addComponent(jButtonVideoExport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1146,6 +1157,11 @@ public class PanelVideo extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jListVideoRatingValueChanged
 
+    private void jButtonVideoCleanupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoCleanupActionPerformed
+        //FIXME: VIDEO cleanup: Finish this one
+		DialogVideoCleanup.main();
+    }//GEN-LAST:event_jButtonVideoCleanupActionPerformed
+
     
     private static long getSpaceLeft(String pathOrFile) {
 		if(!new File(pathOrFile).exists()) {
@@ -1175,6 +1191,7 @@ public class PanelVideo extends javax.swing.JPanel {
     private javax.swing.ButtonGroup btnGroupSelected;
     private javax.swing.ButtonGroup btnGroupWatched;
     private static javax.swing.JButton jButtonRefresh;
+    private javax.swing.JButton jButtonVideoCleanup;
     private static javax.swing.JButton jButtonVideoExport;
     private static javax.swing.JButton jButtonVideoList;
     private static javax.swing.JButton jButtonVideoOptions;
