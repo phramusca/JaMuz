@@ -152,7 +152,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel4 = new javax.swing.JPanel();
+        jPanelMachineAndLibrary = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jTextFieldDescription = new javax.swing.JTextField();
         jLabelDescription = new javax.swing.JLabel();
@@ -164,7 +164,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
         jButtonOptionSelectFolder = new javax.swing.JButton();
         jLabelOptionLocationLibrary = new javax.swing.JLabel();
         jCheckBoxOptionLibraryIsMaster = new javax.swing.JCheckBox();
-        jPanel1 = new javax.swing.JPanel();
+        jPanelCheckLocations = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jTextFieldOptionLocationAdd = new javax.swing.JTextField();
         jButtonOptionSelectFolder1 = new javax.swing.JButton();
@@ -181,20 +181,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
         jTextFieldOptionLocationKO = new javax.swing.JTextField();
         jButtonOptionSelectFolder6 = new javax.swing.JButton();
         jLabelOptionLocationKO = new javax.swing.JLabel();
-        jPanel22 = new javax.swing.JPanel();
-        jPanelStatSources = new javax.swing.JPanel();
-        jScrollPaneStatSouces = new javax.swing.JScrollPane();
-        jListStatSources = new javax.swing.JList();
-        jButtonStatSouceAdd = new javax.swing.JButton();
-        jButtonStatSouceEdit = new javax.swing.JButton();
-        jButtonStatSouceDel = new javax.swing.JButton();
-        jPanelStatSources1 = new javax.swing.JPanel();
-        jScrollPaneStatSouces1 = new javax.swing.JScrollPane();
-        jListDevices = new javax.swing.JList();
-        jButtonDeviceAdd = new javax.swing.JButton();
-        jButtonDeviceEdit = new javax.swing.JButton();
-        jButtonDeviceDel = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        jPanelCheckOptions = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jTextFieldOptionMask = new javax.swing.JTextField();
         jLabelOptionMask = new javax.swing.JLabel();
@@ -210,7 +197,20 @@ public class DialogOptionsNew extends javax.swing.JDialog {
         jPanel20 = new javax.swing.JPanel();
         jTextFieldOptionsFilesDelete = new javax.swing.JTextField();
         jLabelOptionsFilesDelete = new javax.swing.JLabel();
-        jPanel11 = new javax.swing.JPanel();
+        jPanelSourceAndDevices = new javax.swing.JPanel();
+        jPanelStatSources = new javax.swing.JPanel();
+        jScrollPaneStatSouces = new javax.swing.JScrollPane();
+        jListStatSources = new javax.swing.JList();
+        jButtonStatSouceAdd = new javax.swing.JButton();
+        jButtonStatSouceEdit = new javax.swing.JButton();
+        jButtonStatSouceDel = new javax.swing.JButton();
+        jPanelStatSources1 = new javax.swing.JPanel();
+        jScrollPaneStatSouces1 = new javax.swing.JScrollPane();
+        jListDevices = new javax.swing.JList();
+        jButtonDeviceAdd = new javax.swing.JButton();
+        jButtonDeviceEdit = new javax.swing.JButton();
+        jButtonDeviceDel = new javax.swing.JButton();
+        jPanelProxyAndLog = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         jTextFieldOptionsLogLimit = new javax.swing.JTextField();
         jLabelOptionsLogLimit = new javax.swing.JLabel();
@@ -223,7 +223,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
         jPanel15 = new javax.swing.JPanel();
         jTextFieldOptionsProxy = new javax.swing.JTextField();
         jLabelOptionsProxy = new javax.swing.JLabel();
-        jPanel21 = new javax.swing.JPanel();
+        jPanelInstallation = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         jButtonOptionSaveDescription = new javax.swing.JButton();
@@ -343,21 +343,21 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelMachineAndLibraryLayout = new javax.swing.GroupLayout(jPanelMachineAndLibrary);
+        jPanelMachineAndLibrary.setLayout(jPanelMachineAndLibraryLayout);
+        jPanelMachineAndLibraryLayout.setHorizontalGroup(
+            jPanelMachineAndLibraryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMachineAndLibraryLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanelMachineAndLibraryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        jPanelMachineAndLibraryLayout.setVerticalGroup(
+            jPanelMachineAndLibraryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelMachineAndLibraryLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -367,7 +367,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap(140, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Machine and Library", jPanel4);
+        jTabbedPane1.addTab(Inter.get("Option.Tab.Machine"), jPanelMachineAndLibrary); // NOI18N
 
         jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -525,22 +525,22 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                     .addComponent(jTextFieldOptionLocationKO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelCheckLocationsLayout = new javax.swing.GroupLayout(jPanelCheckLocations);
+        jPanelCheckLocations.setLayout(jPanelCheckLocationsLayout);
+        jPanelCheckLocationsLayout.setHorizontalGroup(
+            jPanelCheckLocationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCheckLocationsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelCheckLocationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        jPanelCheckLocationsLayout.setVerticalGroup(
+            jPanelCheckLocationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCheckLocationsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -552,146 +552,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Locations Check", jPanel1);
-
-        jPanelStatSources.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), bundle.getString("DialogOptions.jPanelStatSources.border.title"))); // NOI18N
-
-        jListStatSources.setModel(new DefaultListModel());
-        jScrollPaneStatSouces.setViewportView(jListStatSources);
-
-        jButtonStatSouceAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/add.png"))); // NOI18N
-        jButtonStatSouceAdd.setText(bundle.getString("Button.Add")); // NOI18N
-        jButtonStatSouceAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonStatSouceAddActionPerformed(evt);
-            }
-        });
-
-        jButtonStatSouceEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_form_edit.png"))); // NOI18N
-        jButtonStatSouceEdit.setText(bundle.getString("Button.Edit")); // NOI18N
-        jButtonStatSouceEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonStatSouceEditActionPerformed(evt);
-            }
-        });
-
-        jButtonStatSouceDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/bin.png"))); // NOI18N
-        jButtonStatSouceDel.setText(bundle.getString("Button.Delete")); // NOI18N
-        jButtonStatSouceDel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonStatSouceDelActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanelStatSourcesLayout = new javax.swing.GroupLayout(jPanelStatSources);
-        jPanelStatSources.setLayout(jPanelStatSourcesLayout);
-        jPanelStatSourcesLayout.setHorizontalGroup(
-            jPanelStatSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelStatSourcesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPaneStatSouces, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelStatSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonStatSouceAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonStatSouceEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonStatSouceDel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanelStatSourcesLayout.setVerticalGroup(
-            jPanelStatSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelStatSourcesLayout.createSequentialGroup()
-                .addGroup(jPanelStatSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelStatSourcesLayout.createSequentialGroup()
-                        .addComponent(jButtonStatSouceAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonStatSouceEdit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonStatSouceDel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPaneStatSouces))
-                .addContainerGap())
-        );
-
-        jPanelStatSources1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), bundle.getString("DialogOptions.jPanelStatSources1.border.title"))); // NOI18N
-
-        jListDevices.setModel(new DefaultListModel());
-        jScrollPaneStatSouces1.setViewportView(jListDevices);
-
-        jButtonDeviceAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/add.png"))); // NOI18N
-        jButtonDeviceAdd.setText(bundle.getString("Button.Add")); // NOI18N
-        jButtonDeviceAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDeviceAddActionPerformed(evt);
-            }
-        });
-
-        jButtonDeviceEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_form_edit.png"))); // NOI18N
-        jButtonDeviceEdit.setText(bundle.getString("Button.Edit")); // NOI18N
-        jButtonDeviceEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDeviceEditActionPerformed(evt);
-            }
-        });
-
-        jButtonDeviceDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/bin.png"))); // NOI18N
-        jButtonDeviceDel.setText(bundle.getString("Button.Delete")); // NOI18N
-        jButtonDeviceDel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDeviceDelActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanelStatSources1Layout = new javax.swing.GroupLayout(jPanelStatSources1);
-        jPanelStatSources1.setLayout(jPanelStatSources1Layout);
-        jPanelStatSources1Layout.setHorizontalGroup(
-            jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelStatSources1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPaneStatSouces1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonDeviceAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonDeviceEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonDeviceDel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanelStatSources1Layout.setVerticalGroup(
-            jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelStatSources1Layout.createSequentialGroup()
-                .addGroup(jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelStatSources1Layout.createSequentialGroup()
-                        .addComponent(jButtonDeviceAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonDeviceEdit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonDeviceDel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPaneStatSouces1))
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
-        jPanel22.setLayout(jPanel22Layout);
-        jPanel22Layout.setHorizontalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel22Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelStatSources, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanelStatSources1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel22Layout.setVerticalGroup(
-            jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel22Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelStatSources1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelStatSources, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-
-        jTabbedPane1.addTab("Source & Devices", jPanel22);
+        jTabbedPane1.addTab(Inter.get("Option.Tab.Check.Locations"), jPanelCheckLocations); // NOI18N
 
         jPanel10.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -814,13 +675,13 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addComponent(jTextFieldOptionsFilesDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelCheckOptionsLayout = new javax.swing.GroupLayout(jPanelCheckOptions);
+        jPanelCheckOptions.setLayout(jPanelCheckOptionsLayout);
+        jPanelCheckOptionsLayout.setHorizontalGroup(
+            jPanelCheckOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCheckOptionsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelCheckOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -828,9 +689,9 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                     .addComponent(jPanel20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        jPanelCheckOptionsLayout.setVerticalGroup(
+            jPanelCheckOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCheckOptionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -844,7 +705,146 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Check options", jPanel2);
+        jTabbedPane1.addTab("Check options", jPanelCheckOptions);
+
+        jPanelStatSources.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), bundle.getString("DialogOptions.jPanelStatSources.border.title"))); // NOI18N
+
+        jListStatSources.setModel(new DefaultListModel());
+        jScrollPaneStatSouces.setViewportView(jListStatSources);
+
+        jButtonStatSouceAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/add.png"))); // NOI18N
+        jButtonStatSouceAdd.setText(bundle.getString("Button.Add")); // NOI18N
+        jButtonStatSouceAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonStatSouceAddActionPerformed(evt);
+            }
+        });
+
+        jButtonStatSouceEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_form_edit.png"))); // NOI18N
+        jButtonStatSouceEdit.setText(bundle.getString("Button.Edit")); // NOI18N
+        jButtonStatSouceEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonStatSouceEditActionPerformed(evt);
+            }
+        });
+
+        jButtonStatSouceDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/bin.png"))); // NOI18N
+        jButtonStatSouceDel.setText(bundle.getString("Button.Delete")); // NOI18N
+        jButtonStatSouceDel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonStatSouceDelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelStatSourcesLayout = new javax.swing.GroupLayout(jPanelStatSources);
+        jPanelStatSources.setLayout(jPanelStatSourcesLayout);
+        jPanelStatSourcesLayout.setHorizontalGroup(
+            jPanelStatSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelStatSourcesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPaneStatSouces, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelStatSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonStatSouceAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonStatSouceEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonStatSouceDel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanelStatSourcesLayout.setVerticalGroup(
+            jPanelStatSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelStatSourcesLayout.createSequentialGroup()
+                .addGroup(jPanelStatSourcesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelStatSourcesLayout.createSequentialGroup()
+                        .addComponent(jButtonStatSouceAdd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonStatSouceEdit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonStatSouceDel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPaneStatSouces))
+                .addContainerGap())
+        );
+
+        jPanelStatSources1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), bundle.getString("DialogOptions.jPanelStatSources1.border.title"))); // NOI18N
+
+        jListDevices.setModel(new DefaultListModel());
+        jScrollPaneStatSouces1.setViewportView(jListDevices);
+
+        jButtonDeviceAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/add.png"))); // NOI18N
+        jButtonDeviceAdd.setText(bundle.getString("Button.Add")); // NOI18N
+        jButtonDeviceAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDeviceAddActionPerformed(evt);
+            }
+        });
+
+        jButtonDeviceEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_form_edit.png"))); // NOI18N
+        jButtonDeviceEdit.setText(bundle.getString("Button.Edit")); // NOI18N
+        jButtonDeviceEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDeviceEditActionPerformed(evt);
+            }
+        });
+
+        jButtonDeviceDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/bin.png"))); // NOI18N
+        jButtonDeviceDel.setText(bundle.getString("Button.Delete")); // NOI18N
+        jButtonDeviceDel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDeviceDelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelStatSources1Layout = new javax.swing.GroupLayout(jPanelStatSources1);
+        jPanelStatSources1.setLayout(jPanelStatSources1Layout);
+        jPanelStatSources1Layout.setHorizontalGroup(
+            jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelStatSources1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPaneStatSouces1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonDeviceAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonDeviceEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonDeviceDel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanelStatSources1Layout.setVerticalGroup(
+            jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelStatSources1Layout.createSequentialGroup()
+                .addGroup(jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelStatSources1Layout.createSequentialGroup()
+                        .addComponent(jButtonDeviceAdd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonDeviceEdit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonDeviceDel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPaneStatSouces1))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanelSourceAndDevicesLayout = new javax.swing.GroupLayout(jPanelSourceAndDevices);
+        jPanelSourceAndDevices.setLayout(jPanelSourceAndDevicesLayout);
+        jPanelSourceAndDevicesLayout.setHorizontalGroup(
+            jPanelSourceAndDevicesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSourceAndDevicesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelStatSources, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanelStatSources1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanelSourceAndDevicesLayout.setVerticalGroup(
+            jPanelSourceAndDevicesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSourceAndDevicesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelSourceAndDevicesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelStatSources1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelStatSources, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Source & Devices", jPanelSourceAndDevices);
 
         jPanel12.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -950,22 +950,22 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addComponent(jTextFieldOptionsProxy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelProxyAndLogLayout = new javax.swing.GroupLayout(jPanelProxyAndLog);
+        jPanelProxyAndLog.setLayout(jPanelProxyAndLogLayout);
+        jPanelProxyAndLogLayout.setHorizontalGroup(
+            jPanelProxyAndLogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelProxyAndLogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelProxyAndLogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
+        jPanelProxyAndLogLayout.setVerticalGroup(
+            jPanelProxyAndLogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelProxyAndLogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -977,7 +977,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap(119, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Proxy & Log", jPanel11);
+        jTabbedPane1.addTab("Proxy & Log", jPanelProxyAndLog);
 
         jButton1.setText("Create shortcut");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -988,22 +988,22 @@ public class DialogOptionsNew extends javax.swing.JDialog {
 
         jLabel7.setText(" Bla bla bla : ADD EXPLAINATIONS");
 
-        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
-        jPanel21.setLayout(jPanel21Layout);
-        jPanel21Layout.setHorizontalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel21Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelInstallationLayout = new javax.swing.GroupLayout(jPanelInstallation);
+        jPanelInstallation.setLayout(jPanelInstallationLayout);
+        jPanelInstallationLayout.setHorizontalGroup(
+            jPanelInstallationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelInstallationLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelInstallationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
-                    .addGroup(jPanel21Layout.createSequentialGroup()
+                    .addGroup(jPanelInstallationLayout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel21Layout.setVerticalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel21Layout.createSequentialGroup()
+        jPanelInstallationLayout.setVerticalGroup(
+            jPanelInstallationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelInstallationLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1011,7 +1011,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
                 .addContainerGap(286, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Installation", jPanel21);
+        jTabbedPane1.addTab("Installation", jPanelInstallation);
 
         jButtonOptionSaveDescription.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/accept.png"))); // NOI18N
         jButtonOptionSaveDescription.setText(bundle.getString("DialogOptions.jButtonOptionSaveDescription.text")); // NOI18N
@@ -1044,7 +1044,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonOptionSaveDescription)
@@ -1269,9 +1269,7 @@ public class DialogOptionsNew extends javax.swing.JDialog {
     private static javax.swing.JLabel jLabelOptionsProxy;
     private static javax.swing.JList jListDevices;
     private static javax.swing.JList jListStatSources;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
@@ -1280,17 +1278,19 @@ public class DialogOptionsNew extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel19;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
-    private javax.swing.JPanel jPanel21;
-    private javax.swing.JPanel jPanel22;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelCheckLocations;
+    private javax.swing.JPanel jPanelCheckOptions;
+    private javax.swing.JPanel jPanelInstallation;
+    private javax.swing.JPanel jPanelMachineAndLibrary;
+    private javax.swing.JPanel jPanelProxyAndLog;
+    private javax.swing.JPanel jPanelSourceAndDevices;
     private javax.swing.JPanel jPanelStatSources;
     private javax.swing.JPanel jPanelStatSources1;
     private javax.swing.JScrollPane jScrollPaneStatSouces;

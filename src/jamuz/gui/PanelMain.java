@@ -93,6 +93,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import jamuz.player.MPlaybackListener;
+import javax.swing.JTabbedPane;
 
 /**
  * Main JaMuz GUI class
@@ -1510,7 +1511,7 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
 	private void jButtonOptionsMachinesEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsMachinesEditActionPerformed
-        DialogOptions.main(((ListElement) jListMachines.getSelectedValue()).getValue());
+        DialogOptionsNew.main(((ListElement) jListMachines.getSelectedValue()).getValue());
 	}//GEN-LAST:event_jButtonOptionsMachinesEditActionPerformed
 
     /**
@@ -1631,6 +1632,16 @@ public class PanelMain extends javax.swing.JFrame {
         jSliderPlayerLength.setEnabled(enablejSliderPlayerLength);
     }
     
+	/**
+	 * Select tab with given title
+	 *
+	 * @param tabbedPane
+	 * @param title
+	 */
+	public static void selectTab(String title) {
+		Swing.selectTab(jTabbedPaneMain, title);
+	}
+	
     private static void setTab(String title, String iconName) {
         setTab(title, iconName, null);
     }
@@ -2375,17 +2386,7 @@ public class PanelMain extends javax.swing.JFrame {
     private static String toHTML(String text) {
         return "<html>" + text + "</html>";  //NOI18N
     }
-
-    /**
-     * Select tab with given title
-     *
-     * @param title
-     */
-    public static void selectTab(String title) {
-        int checkTabIndex = PanelMain.jTabbedPaneMain.indexOfTab(title); //NOI18N
-        jTabbedPaneMain.setSelectedIndex(checkTabIndex);
-    }
-
+	
 	//TODO: Move those setXXXVisible methods to separate class (not TableColumnModel)
     /**
      * set basic colums visible/unvisible

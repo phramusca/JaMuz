@@ -20,6 +20,7 @@ package jamuz.process.sync;
 import jamuz.IconBufferCover;
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
+import jamuz.gui.DialogOptionsNew;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.DefaultComboBoxModel;
@@ -288,7 +289,7 @@ public class PanelSync extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonSyncStartActionPerformed
 
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed
-        DialogOptions.main(Jamuz.getMachine().getName());
+        DialogOptionsNew.main(Jamuz.getMachine().getName());
     }//GEN-LAST:event_jButtonMergeSourcesActionPerformed
 
 
