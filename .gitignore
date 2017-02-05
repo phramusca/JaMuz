@@ -10,6 +10,7 @@ nbproject/private/*
 manifest.mf
 JaMuz.xml
 keys.properties
+build/*
 
 # Java ignore from https://github.com/github/gitignore
 *.class
