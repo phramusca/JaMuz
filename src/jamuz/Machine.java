@@ -77,18 +77,22 @@ public final class Machine {
 		return options.get(index);
 	}
 	
+	public Option getOption(String id){    
+		for (Option myOption : options) {
+			if (myOption.getId().equals(id)) {
+				return myOption;
+			}
+		}
+		return null; 
+	}
+	
 	/**
 	 * Get option by value
 	 * @param id
 	 * @return
 	 */
-	public String getOption(String id){    
-		for (Option myOption : options) {
-			if (myOption.getId().equals(id)) {
-				return myOption.getValue();
-			}
-		}
-		return null; 
+	public String getOptionValue(String id){    
+		return getOption(id).getValue();
 	}
 	
 	/**

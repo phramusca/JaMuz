@@ -1519,7 +1519,38 @@ public class DbConnJaMuz extends StatSourceSQL {
             return false;
         }
     }
+	
+	public synchronized int[] setOptions(Machine selOptions) {
+		try {
+			dbConn.connection.setAutoCommit(false);
+			
+			PreparedStatement stUpdateOptions = dbConn.connection.prepareStatement("UPDATE option SET value=? "
+                    + "WHERE idMachine=? AND idOptionType=?");     //NOI18N    
 
+			for(Option option : selOptions.getOptions()) {
+                if (option.getType().equals("path")) {   //NOI18N
+					option.setValue(FilenameUtils.normalizeNoEndSeparator(option.getValue().trim()) + File.separator);
+				}
+				
+				stUpdateOptions.setString(1, option.getValue());
+				stUpdateOptions.setInt(2, option.getIdMachine());
+				stUpdateOptions.setInt(3, option.getIdOptionType());
+
+				stUpdateOptions.addBatch();
+			}
+			long startTime = System.currentTimeMillis();
+			int[] results = stUpdateOptions.executeBatch();
+			dbConn.connection.commit();
+			long endTime = System.currentTimeMillis();
+			Jamuz.getLogger().log(Level.FINEST, "setOptions // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime-startTime});   //NOI18N
+			dbConn.connection.setAutoCommit(true);
+			return results;
+		} catch (SQLException ex) {
+			Popup.error(ex);
+            return new int[0];
+		}
+	}
+	
     /**
      * Set option value (update)
      *
@@ -1530,7 +1561,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public synchronized boolean setOption(Option myOption, String value) {
         try {
             if (myOption.getType().equals("path")) {   //NOI18N
-                value = FilenameUtils.normalizeNoEndSeparator(value) + File.separator;
+                value = FilenameUtils.normalizeNoEndSeparator(value.trim()) + File.separator;
             }
             PreparedStatement stUpdateOption = dbConn.connection.prepareStatement("UPDATE option SET value=? "
                     + "WHERE idMachine=? AND idOptionType=?");     //NOI18N    
@@ -1724,7 +1755,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 
     private ListElement makeListElement(Object elementToAdd, ResultSet rs) {
         FileInfoInt file = new FileInfoInt(dbConn.getStringValue(rs, "strPath", false) + dbConn.getStringValue(rs, "name"),  //NOI18N
-                Jamuz.getMachine().getOption("location.library"));   //NOI18N
+Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         file.setCoverHash(dbConn.getStringValue(rs, "coverHash", false));  //NOI18N
         file.nbCovers = 1;
         file.albumArtist = dbConn.getStringValue(rs, "albumArtist");  //NOI18N
@@ -2473,7 +2504,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @return
      */
     public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql) {
-		return getFiles(myFileInfoList, sql, Jamuz.getMachine().getOption("location.library"));
+		return getFiles(myFileInfoList, sql, Jamuz.getMachine().getOptionValue("location.library"));
 	}
 
 	/**

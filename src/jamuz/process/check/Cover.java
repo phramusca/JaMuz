@@ -180,7 +180,7 @@ public class Cover implements java.lang.Comparable {
                 //Create connection to covertartarchive
                 //TODO: Use proxy from Main (when done)
                 DefaultHttpClient httpclient = new DefaultHttpClient();
-                String proxy = Jamuz.getMachine().getOption("network.proxy");  //NOI18N
+                String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
                 if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
                     String[] split = proxy.split(":");  //NOI18N
                     HttpHost httpHost = new HttpHost(split[0], Integer.parseInt(split[1]));

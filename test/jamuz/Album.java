@@ -524,7 +524,7 @@ public final class Album {
     
     private void checkFS(String option, boolean renamed) {
         for(TrackTag track: this.tracks) {
-            File file = new File(Jamuz.getMachine().getOption(option)+getFilename(track, renamed));
+            File file = new File(Jamuz.getMachine().getOptionValue(option)+getFilename(track, renamed));
             assertTrue(file + " exists?: ", file.exists());
         }
     }

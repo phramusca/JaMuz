@@ -193,7 +193,7 @@ public class FolderInfo implements java.lang.Comparable {
 		this.deleted=deleted;
 		this.checkedFlag=checkedFlag;
 		
-		this.rootPath = Jamuz.getMachine().getOption("location.library");  //NOI18N
+		this.rootPath = Jamuz.getMachine().getOptionValue("location.library");  //NOI18N
 		this.relativePath = relativePath;
 		this.fullPath = this.rootPath+this.relativePath;
 	}
@@ -442,11 +442,11 @@ public class FolderInfo implements java.lang.Comparable {
 	private boolean browse(boolean readTags, ProgressBar progressBar, boolean transcode) {
 
 		//TODO: Manage potential parsing errors when options are not valid csv
-		List <String> filesAudioExtensions = new ArrayList(Arrays.asList(Jamuz.getMachine().getOption("files.audio").split(","))); //NOI18N
-        List <String> filesImageExtensions = new ArrayList(Arrays.asList(Jamuz.getMachine().getOption("files.image").split(","))); //NOI18N
-        List <String> filesDeletableExtensions = new ArrayList(Arrays.asList(Jamuz.getMachine().getOption("files.delete").split(","))); //NOI18N
+		List <String> filesAudioExtensions = new ArrayList(Arrays.asList(Jamuz.getMachine().getOptionValue("files.audio").split(","))); //NOI18N
+        List <String> filesImageExtensions = new ArrayList(Arrays.asList(Jamuz.getMachine().getOptionValue("files.image").split(","))); //NOI18N
+        List <String> filesDeletableExtensions = new ArrayList(Arrays.asList(Jamuz.getMachine().getOptionValue("files.delete").split(","))); //NOI18N
 		this.filesConvertibleExtensions = new HashMap<>();
-		for(String string : Jamuz.getMachine().getOption("files.convert").split(",")) { //NOI18N
+		for(String string : Jamuz.getMachine().getOptionValue("files.convert").split(",")) { //NOI18N
             String[] strings = string.split(":"); //NOI18N
 			filesConvertibleExtensions.put(strings[0], strings[1]);
         }
@@ -776,7 +776,7 @@ public class FolderInfo implements java.lang.Comparable {
 		Caller.getInstance().setUserAgent(userAgent);
 
 		//TODO: Use global proxy from Main (to be done)		
-		String proxy = Jamuz.getMachine().getOption("network.proxy");  //NOI18N
+		String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
 		if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
 			String[] split = proxy.split(":");  //NOI18N
 			InetSocketAddress sa = new InetSocketAddress(split[0], Integer.parseInt(split[1]));
@@ -1377,7 +1377,7 @@ public class FolderInfo implements java.lang.Comparable {
 	
     private boolean isCheckingMasterLibrary() {
         //idPath = -1 when checking location.add (new files)
-        return (idPath>0 && Jamuz.getMachine().getOption("library.isMaster").equals("true")); //NOI18N
+        return (idPath>0 && Jamuz.getMachine().getOptionValue("library.isMaster").equals("true")); //NOI18N
     }
     
     /**
@@ -1392,8 +1392,8 @@ public class FolderInfo implements java.lang.Comparable {
             updateDatabase=true;
         }
         else {
-            if(FilenameUtils.equalsNormalizedOnSystem(ProcessCheck.getDestinationLocation().getValue(), Jamuz.getMachine().getOption("location.library"))
-                    && Jamuz.getMachine().getOption("library.isMaster").equals("true")) {  //NOI18N
+            if(FilenameUtils.equalsNormalizedOnSystem(ProcessCheck.getDestinationLocation().getValue(), Jamuz.getMachine().getOptionValue("location.library"))
+                    && Jamuz.getMachine().getOptionValue("library.isMaster").equals("true")) {  //NOI18N
                 updateDatabase=true;
             }
             checkDestination=true;
@@ -1576,7 +1576,7 @@ public class FolderInfo implements java.lang.Comparable {
     
     private String getDestination(FileInfoInt fileInfo, boolean useMask) {
 		if(useMask) {
-			return fileInfo.computeMask(Jamuz.getMachine().getOption("location.mask"))+"."+fileInfo.getExt();  //NOI18N
+			return fileInfo.computeMask(Jamuz.getMachine().getOptionValue("location.mask"))+"."+fileInfo.getExt();  //NOI18N
 		}
 		else {
 			return fileInfo.getRelativeFullPath();
