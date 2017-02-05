@@ -23,7 +23,7 @@ import jamuz.process.merge.LogText;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 
@@ -38,10 +38,10 @@ public class CompareDB {
 	 */
 	public static void main(String[] args) {
 
-        boolean comparePlayCounter=false;
+        boolean comparePlayCounter=true;
         boolean compareRating=true;
         boolean compareAddedDate=true;
-        boolean compareLastPlayed=false;
+        boolean compareLastPlayed=true;
         boolean compareBPM=true;
         
 		String rootPath="/media/raph/Transcend/JaMuz";		
@@ -97,44 +97,54 @@ public class CompareDB {
         //Comparing maps
         compareDB(files1, files2, false, comparePlayCounter, compareRating, compareAddedDate, compareLastPlayed, compareBPM);
         compareDB(files2, files1, true, comparePlayCounter, compareRating, compareAddedDate, compareLastPlayed, compareBPM);
-        
+		
         logFile.close();
 		
 		logFileName = FilenameUtils.concat(pathLogs, logFileName);
 		return logFileName;
     }
-    
+
     private static void compareDB(Map<Integer,FileInfoInt> files1, Map<Integer,FileInfoInt> files2, boolean reverse,
-            boolean comparePlayCounter, boolean compareRating, boolean compareAddedDate, boolean compareLastPlayed, boolean compareBPM) {
-        files1.values().stream().forEach((file1) -> {
+            boolean comparePlayCounter, boolean compareRating, boolean compareAddedDate, 
+			boolean compareLastPlayed, boolean compareBPM) {
+        
+		for (Iterator<FileInfoInt> iterator = files1.values().iterator(); iterator.hasNext();) {
+			FileInfoInt file1 = iterator.next();
             if(files2.containsKey(file1.getIdFile())) {
                 FileInfoInt file2 = files2.get(file1.getIdFile());
-                
-                if(comparePlayCounter && file1.getPlayCounter()!=file2.getPlayCounter()) {
-                    addToLog(file1.getRelativeFullPath(), "PlayCounter", String.valueOf(file1.getPlayCounter()), String.valueOf(file2.getPlayCounter()), reverse);
-                }
-                if(compareRating && file1.getRating()!=file2.getRating()) {
-                    addToLog(file1.getRelativeFullPath(), "Rating", String.valueOf(file1.getRating()), String.valueOf(file2.getRating()), reverse);
-                }
-                if(compareAddedDate && !file1.getAddedDate().equals(file2.getAddedDate())) {
-                    addToLog(file1.getRelativeFullPath(), "AddedDate", 
-                            DateTime.formatUTC(file1.getAddedDate(), DateTime.DateTimeFormat.HUMAN, false), 
-                            DateTime.formatUTC(file2.getAddedDate(), DateTime.DateTimeFormat.HUMAN, false), reverse);
-                }
-                if(compareLastPlayed && !file1.getLastPlayed().equals(file2.getLastPlayed())) {
-                    addToLog(file1.getRelativeFullPath(), "LastPlayed", 
-                            DateTime.formatUTC(file1.getLastPlayed(), DateTime.DateTimeFormat.HUMAN, false), 
-                            DateTime.formatUTC(file2.getLastPlayed(), DateTime.DateTimeFormat.HUMAN, false), reverse);
-                }
-                if(compareBPM && file1.getBPM()!=file2.getBPM()) {
-                    addToLog(file1.getRelativeFullPath(), "BPM", String.valueOf(file1.getBPM()), String.valueOf(file2.getBPM()), reverse);
-                }
+                compareFile(file1, file2, false, comparePlayCounter, compareRating, compareAddedDate, compareLastPlayed, compareBPM);
+				files2.remove(file1.getIdFile());
             }
             else {
                 addToLog(file1.getRelativeFullPath(), "MISSING", "", "X", reverse);
             }
-        });
+			iterator.remove();
+        }
     }
+	
+	private static void compareFile(FileInfoInt file1, FileInfoInt file2, boolean reverse, 
+			boolean comparePlayCounter, boolean compareRating, boolean compareAddedDate, 
+			boolean compareLastPlayed, boolean compareBPM) {
+		if(comparePlayCounter && file1.getPlayCounter()!=file2.getPlayCounter()) {
+			addToLog(file1.getRelativeFullPath(), "PlayCounter", String.valueOf(file1.getPlayCounter()), String.valueOf(file2.getPlayCounter()), reverse);
+		}
+		if(compareRating && file1.getRating()!=file2.getRating()) {
+			addToLog(file1.getRelativeFullPath(), "Rating", String.valueOf(file1.getRating()), String.valueOf(file2.getRating()), reverse);
+		}
+		if(compareAddedDate && !file1.getAddedDate().equals(file2.getAddedDate())) {
+			addToLog(file1.getRelativeFullPath(), "AddedDate", 
+					DateTime.formatUTC(file1.getAddedDate(), DateTime.DateTimeFormat.HUMAN, false), 
+					DateTime.formatUTC(file2.getAddedDate(), DateTime.DateTimeFormat.HUMAN, false), reverse);
+		}
+		if(compareLastPlayed && !file1.getLastPlayed().equals(file2.getLastPlayed())) {
+			addToLog(file1.getRelativeFullPath(), "LastPlayed", 
+					DateTime.formatUTC(file1.getLastPlayed(), DateTime.DateTimeFormat.HUMAN, false), 
+					DateTime.formatUTC(file2.getLastPlayed(), DateTime.DateTimeFormat.HUMAN, false), reverse);
+		}
+		if(compareBPM && file1.getBPM()!=file2.getBPM()) {
+			addToLog(file1.getRelativeFullPath(), "BPM", String.valueOf(file1.getBPM()), String.valueOf(file2.getBPM()), reverse);
+		}
+	}
     
     private static LogText logFile;
     

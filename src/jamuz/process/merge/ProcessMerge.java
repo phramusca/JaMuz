@@ -454,37 +454,38 @@ public class ProcessMerge extends ProcessAbstract {
         // one or the other dB cell, and restoring automatic choice by double clicking in "new" cell
 
 		if(!this.forceJaMuz) { //New is by default the one from JaMuz, so not comparing if forcing JaMuz
-		
-		//Compare playCounter
-			//Note: previousPlayCounter (for the selected database) is stored on myFileInfoDbJaMuz
-			//as retrieved during getStatistics on JaMuzDB
-			int playCounterToAdd;
-			if(fileJaMuz.getPreviousPlayCounter()<=fileSelectedDb.getPlayCounter()) {
-				//New play counter seen on selected database that needs to be added
-				if(fileJaMuz.getPreviousPlayCounter()>=0) {
-					playCounterToAdd=fileSelectedDb.getPlayCounter()-fileJaMuz.getPreviousPlayCounter();
+			
+		//Compare playCounter	
+			if(this.selectedStatSource.getSource().isUpdatePlayCounter()) {
+				//Note: previousPlayCounter (for the selected database) is stored on myFileInfoDbJaMuz
+				//as retrieved during getStatistics on JaMuzDB
+				int playCounterToAdd;
+				if(fileJaMuz.getPreviousPlayCounter()<=fileSelectedDb.getPlayCounter()) {
+					//New play counter seen on selected database that needs to be added
+					if(fileJaMuz.getPreviousPlayCounter()>=0) {
+						playCounterToAdd=fileSelectedDb.getPlayCounter()-fileJaMuz.getPreviousPlayCounter();
+					}
+					else {
+						//This happens when no previous playCounter could be retrieved from JaMuzDb
+						//Means that selected Db has not yet been merged
+						playCounterToAdd=fileSelectedDb.getPlayCounter();
+					}
 				}
 				else {
-					//This happens when no previous playCounter could be retrieved from JaMuzDb
-					//Means that selected Db has not yet been merged
-					playCounterToAdd=fileSelectedDb.getPlayCounter();
+					//Current playCounter is less than previous playCounter !!
+					//This can happen if somehow the statistics have been reset in selected database
+					//BUT can also happen if the merge is aborted or fails (for any reason) 
+					//while merging and before the selected DB has been copied back
+					//=> NOT adding anything. The correct playCounter will be reached later on
+					//=> Restarting from current reference, which is JaMuz
+					//(we can only miss some play counts IF the reset is made on selected DB. 
+					//Better than adding some each time the process is aborted)
+					//Do not think -or think well - of updating previousPlayCounter after selected DB is copied back as
+					//the problem will be on the if() above, and could cause more problems - extra play counts added again and again)
+					playCounterToAdd=0;
 				}
+				fileNew.setPlayCounter(fileJaMuz.getPlayCounter()+playCounterToAdd);
 			}
-			else {
-				//Current playCounter is less than previous playCounter !!
-				//This can happen if somehow the statistics have been reset in selected database
-				//BUT can also happen if the merge is aborted or fails (for any reason) 
-				//while merging and before the selected DB has been copied back
-				//=> NOT adding anything. The correct playCounter will be reached later on
-				//=> Restarting from current reference, which is JaMuz
-				//(we can only miss some play counts IF the reset is made on selected DB. 
-				//Better than adding some each time the process is aborted)
-				//Do not think -or think well - of updating previousPlayCounter after selected DB is copied back as
-				//the problem will be on the if() above, and could cause more problems - extra play counts added again and again)
-				playCounterToAdd=0;
-			}
-			fileNew.setPlayCounter(fileJaMuz.getPlayCounter()+playCounterToAdd);
-
 		//Compare lastPlayed, only if required (not for Mixxx as an example)         
             if(this.selectedStatSource.getSource().isUpdateLastPlayed()) {
 				if(!fileSelectedDb.getLastPlayed().equals(fileJaMuz.getLastPlayed())) {
@@ -615,7 +616,6 @@ public class ProcessMerge extends ProcessAbstract {
                 }
             }
 			
-            
 			//Comparing new with JaMuz and add it to merge list if different
 			if(!fileJaMuz.equalsStats(fileNew)) {
 				fileNew.setSourceName(run+"-"+fileJaMuz.getSourceName());
@@ -637,6 +637,9 @@ public class ProcessMerge extends ProcessAbstract {
 		}
         if(!this.selectedStatSource.getSource().isUpdateBPM()) {
             fileNew.setBPM(fileSelectedDb.getBPM());
+		}
+		if(!this.selectedStatSource.getSource().isUpdatePlayCounter()) {
+			fileNew.setPlayCounter(fileSelectedDb.getPlayCounter());
 		}
 		
 		if(!fileSelectedDb.equalsStats(fileNew)) {

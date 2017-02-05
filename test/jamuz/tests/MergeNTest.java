@@ -36,6 +36,7 @@ import junit.framework.TestCase;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Test;
 import jamuz.utils.Inter;
+import jamuz.utils.Swing;
 
 /**
  *
