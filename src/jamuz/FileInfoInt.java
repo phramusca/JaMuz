@@ -270,7 +270,7 @@ public class FileInfoInt extends FileInfo {
         super(file.idFile, file.getIdPath(), file.relativeFullPath, file.rating, file.getFormattedLastPlayed(), file.getFormattedAddedDate(), 
                 file.playCounter, file.sourceName, file.previousPlayCounter, bpm, file.getFormattedRatingModifDate());
         copyRight=-1;
-        this.rootPath = Jamuz.getMachine().getOption("location.library");  //NOI18N
+        this.rootPath = Jamuz.getMachine().getOptionValue("location.library");  //NOI18N
     }
 
 	/**

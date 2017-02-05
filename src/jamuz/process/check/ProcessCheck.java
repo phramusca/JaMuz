@@ -128,7 +128,7 @@ public class ProcessCheck {
        */
       public Location(String optionId) {
           this.optionId = optionId;
-          this.value = Jamuz.getMachine().getOption(this.optionId);
+          this.value = Jamuz.getMachine().getOptionValue(this.optionId);
       }
 
       /**

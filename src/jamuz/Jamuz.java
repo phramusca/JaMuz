@@ -139,17 +139,17 @@ public class Jamuz {
 		logConfig("files.delete");
 
         //Set library location (JaMuz's rootPath)
-        db.setRootPath(getMachine().getOption("location.library"));  //NOI18N
+        db.setRootPath(getMachine().getOptionValue("location.library"));  //NOI18N
         
         return true;
     }
 
 	private static void logConfig(String id) {
-		logger.log(Level.CONFIG, id+": {0}", getMachine().getOption(id)); //NOI18N
+		logger.log(Level.CONFIG, id+": {0}", getMachine().getOptionValue(id)); //NOI18N
 	}
 	
 	private static boolean setProxy() {
-		String proxy = Jamuz.getMachine().getOption("network.proxy");  //NOI18N
+		String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
 		if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
 			String[] split = proxy.split(":");  //NOI18N
 			System.setProperty("http.proxyHost", split[0]);  //NOI18N
@@ -221,10 +221,10 @@ public class Jamuz {
 			
 			//Create Logger
 			String logFilePath = logPath + "log-%g.html";  //NOI18N
-			FileHandler fh=new FileHandler(logFilePath, Integer.parseInt(getMachine().getOption("log.limit")), Integer.parseInt(getMachine().getOption("log.count"))); //NOI18N
+			FileHandler fh=new FileHandler(logFilePath, Integer.parseInt(getMachine().getOptionValue("log.limit")), Integer.parseInt(getMachine().getOptionValue("log.count"))); //NOI18N
 			fh.setFormatter(new LogFormat());
 			logger.addHandler(fh);
-			logger.setLevel(Level.parse(getMachine().getOption("log.level"))); //NOI18N
+			logger.setLevel(Level.parse(getMachine().getOptionValue("log.level"))); //NOI18N
 			
 			return true;
 		} catch (IOException ex) {

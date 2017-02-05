@@ -688,7 +688,7 @@ public class PanelCheck extends javax.swing.JPanel {
             }
         }
         //processCheck is not running, so we can set these up
-        boolean isMaster=Jamuz.getMachine().getOption("library.isMaster").equals("true");
+        boolean isMaster=Jamuz.getMachine().getOptionValue("library.isMaster").equals("true");
         jButtonCheckLibrary.setEnabled(isMaster);
         jButtonScanLibrary.setEnabled(isMaster);
         jButtonScanDeleted.setEnabled(isMaster);
@@ -735,7 +735,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jButtonCheckNew.setEnabled(enabled);
         jSpinnerCheckScanNbThreads.setEnabled(enabled);
         jSpinnerCheckAnalysisNbThreads.setEnabled(enabled);
-        boolean isMaster=Jamuz.getMachine().getOption("library.isMaster").equals("true");
+        boolean isMaster=Jamuz.getMachine().getOptionValue("library.isMaster").equals("true");
         jButtonCheckLibrary.setEnabled(enabled && isMaster);
         jButtonScanLibrary.setEnabled(enabled && isMaster);
         jButtonScanDeleted.setEnabled(enabled && isMaster);

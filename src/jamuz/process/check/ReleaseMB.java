@@ -79,7 +79,7 @@ public class ReleaseMB {
 
 			//TODO: Create getProxy() in OptionsEnv.options that directly returns the Proxy
 			DefaultHttpClient httpclient = new DefaultHttpClient();
-			String proxy = Jamuz.getMachine().getOption("network.proxy");  //NOI18N
+			String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
 			if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
 				String[] split = proxy.split(":");  //NOI18N
 				HttpHost httpHost = new HttpHost(split[0], Integer.parseInt(split[1]));

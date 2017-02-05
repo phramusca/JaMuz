@@ -110,7 +110,7 @@ public class Settings {
     }
     
     private static void deleteAndMakeFolder(String optionId) throws IOException {
-        File file = new File(Jamuz.getMachine().getOption(optionId));
+        File file = new File(Jamuz.getMachine().getOptionValue(optionId));
         FileUtils.deleteDirectory(file);
         file.mkdir();
     }
