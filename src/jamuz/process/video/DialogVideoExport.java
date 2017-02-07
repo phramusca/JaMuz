@@ -17,9 +17,7 @@
 
 package jamuz.process.video;
 
-import jamuz.process.video.PanelVideo;
 import jamuz.Jamuz;
-import jamuz.gui.DialogOptions;
 import java.io.File;
 import javax.swing.JTextField;
 import jamuz.utils.Inter;
@@ -183,18 +181,18 @@ public class DialogVideoExport extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSelectSouceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectSouceActionPerformed
-        getFolder(jTextSource);
+        getFolder(jTextSource, Inter.get("Label.Source"));
     }//GEN-LAST:event_jButtonSelectSouceActionPerformed
 
-    private void getFolder(JTextField textField) {
-        String selectedFolder=Swing.selectFolder(textField.getText());
+    private void getFolder(JTextField textField, String title) {
+        String selectedFolder=Swing.selectFolder(textField.getText(), title);
         if(!selectedFolder.equals("")) {  //NOI18N
             textField.setText(selectedFolder+File.separator);
         }
     }
     
     private void jButtonSelectDestinationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDestinationActionPerformed
-        getFolder(jTextDestination);
+        getFolder(jTextDestination, Inter.get("Label.Destination"));
         PanelVideo.diplayLength();
     }//GEN-LAST:event_jButtonSelectDestinationActionPerformed
 
@@ -203,7 +201,7 @@ public class DialogVideoExport extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-//FIXME: VIDEO export: Use a new option video.library.location that points to local video repository
+//FIXME LOW VIDEO export: Use a new option video.library.location that points to local video repository
 //By default, set it to root path as should be the same if kodi runs in local
 //In export, use this as source by default, but allow to change that source temporary
 //Use it for deletion and cleanup

@@ -1524,12 +1524,15 @@ public class DbConnJaMuz extends StatSourceSQL {
 		try {
 			dbConn.connection.setAutoCommit(false);
 			
-			PreparedStatement stUpdateOptions = dbConn.connection.prepareStatement("UPDATE option SET value=? "
+			PreparedStatement stUpdateOptions = dbConn.connection.prepareStatement(
+					"UPDATE option SET value=? "
                     + "WHERE idMachine=? AND idOptionType=?");     //NOI18N    
 
 			for(Option option : selOptions.getOptions()) {
-                if (option.getType().equals("path")) {   //NOI18N
-					option.setValue(FilenameUtils.normalizeNoEndSeparator(option.getValue().trim()) + File.separator);
+				//FIXME: Test on a new machine if we do not endup with "{Empty}" or "/"
+                if (option.getType().equals("path") && !option.getValue().trim().equals("")) {   //NOI18N
+					option.setValue(FilenameUtils.normalizeNoEndSeparator(option.getValue().trim()) 
+							+ File.separator);
 				}
 				
 				stUpdateOptions.setString(1, option.getValue());
@@ -1542,7 +1545,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 			int[] results = stUpdateOptions.executeBatch();
 			dbConn.connection.commit();
 			long endTime = System.currentTimeMillis();
-			Jamuz.getLogger().log(Level.FINEST, "setOptions // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime-startTime});   //NOI18N
+			Jamuz.getLogger().log(Level.FINEST, "setOptions // {0} // Total execution time: {1}ms", 
+					new Object[]{results.length, endTime-startTime});   //NOI18N
 			dbConn.connection.setAutoCommit(true);
 			return results;
 		} catch (SQLException ex) {

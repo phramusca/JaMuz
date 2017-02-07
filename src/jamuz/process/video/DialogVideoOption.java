@@ -18,11 +18,7 @@
 package jamuz.process.video;
 
 import jamuz.Jamuz;
-import jamuz.gui.DialogOptions;
-import java.io.File;
-import javax.swing.JTextField;
 import jamuz.utils.Inter;
-import jamuz.utils.Swing;
 
 /**
  *

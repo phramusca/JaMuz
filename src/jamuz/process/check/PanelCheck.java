@@ -19,7 +19,6 @@ package jamuz.process.check;
 
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
-import jamuz.gui.DialogOptionsNew;
 import jamuz.gui.PanelMain;
 import java.awt.Color;
 import java.awt.Component;
@@ -38,7 +37,6 @@ import jamuz.gui.swing.TableModelCheck;
 import jamuz.gui.swing.WrapLayout;
 import jamuz.process.check.ProcessCheck.CheckType;
 import jamuz.utils.Inter;
-import jamuz.utils.Swing;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -574,7 +572,7 @@ public class PanelCheck extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonCheckAbortActionPerformed
 
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed
-        DialogOptionsNew.main(Jamuz.getMachine().getName());
+        DialogOptions.main(Jamuz.getMachine().getName());
     }//GEN-LAST:event_jButtonMergeSourcesActionPerformed
 
     private void jCheckBoxDoActionsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxDoActionsItemStateChanged

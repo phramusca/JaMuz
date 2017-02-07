@@ -328,6 +328,10 @@ public class PanelSelect extends javax.swing.JPanel {
         jCheckBoxSelectUpdate = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jComboBoxBestOfCopyRight = new javax.swing.JComboBox();
+        jPanel3 = new javax.swing.JPanel();
+        jLabelPreviewDisplay = new javax.swing.JLabel();
+        jComboBoxSoundCard = new javax.swing.JComboBox<>();
+        jButtonPreviewStop = new javax.swing.JButton();
         jPanelSelectTracks = new javax.swing.JPanel();
         jScrollPaneSelect = new javax.swing.JScrollPane();
         jTableSelect = new javax.swing.JTable();
@@ -338,13 +342,8 @@ public class PanelSelect extends javax.swing.JPanel {
         jToggleButtonSelectShowStats = new javax.swing.JToggleButton();
         jLabelSelected = new javax.swing.JLabel();
         jLabelSelectedSummary = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jButtonPreviewStop = new javax.swing.JButton();
-        jComboBoxSoundCard = new javax.swing.JComboBox<>();
-        jLabelPreviewDisplay = new javax.swing.JLabel();
         jToggleButtonSelectShowRights = new javax.swing.JToggleButton();
 
-        jSplitPaneSelect.setDividerLocation(300);
         jSplitPaneSelect.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jSplitPaneSelectArtistAlbum.setDividerLocation(300);
@@ -397,7 +396,7 @@ public class PanelSelect extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jRadioSelectAlbumRating)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPaneSelectAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)))
+                    .addComponent(jScrollPaneSelectAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)))
         );
         jPanelSelectAlbumLayout.setVerticalGroup(
             jPanelSelectAlbumLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -442,7 +441,7 @@ public class PanelSelect extends javax.swing.JPanel {
         jPanelSelectArtist.setLayout(jPanelSelectArtistLayout);
         jPanelSelectArtistLayout.setHorizontalGroup(
             jPanelSelectArtistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPaneSelectArtist, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jScrollPaneSelectArtist, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(jPanelSelectArtistLayout.createSequentialGroup()
                 .addComponent(jRadioSelectArtistName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -456,7 +455,7 @@ public class PanelSelect extends javax.swing.JPanel {
                     .addComponent(jRadioSelectArtistName)
                     .addComponent(jRadioSelectArtistRating))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSelectArtist, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE))
+                .addComponent(jScrollPaneSelectArtist, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE))
         );
 
         jSplitPaneSelectArtistAlbum.setLeftComponent(jPanelSelectArtist);
@@ -703,6 +702,42 @@ public class PanelSelect extends javax.swing.JPanel {
                 .addGap(0, 0, 0))
         );
 
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabelPreviewDisplay.setBackground(new java.awt.Color(236, 231, 231));
+
+        jComboBoxSoundCard.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jButtonPreviewStop.setText(Inter.get("Button.Stop")); // NOI18N
+        jButtonPreviewStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPreviewStopActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(jButtonPreviewStop)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxSoundCard, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jLabelPreviewDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jLabelPreviewDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonPreviewStop)
+                    .addComponent(jComboBoxSoundCard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0))
+        );
+
         javax.swing.GroupLayout jPanelSelectSelectorLayout = new javax.swing.GroupLayout(jPanelSelectSelector);
         jPanelSelectSelector.setLayout(jPanelSelectSelectorLayout);
         jPanelSelectSelectorLayout.setHorizontalGroup(
@@ -711,19 +746,21 @@ public class PanelSelect extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jScrollPaneSelectGenre, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPaneSelectArtistAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
+                .addComponent(jSplitPaneSelectArtistAlbum)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelSelectFilters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(jPanelSelectSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanelSelectFilters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanelSelectSelectorLayout.setVerticalGroup(
             jPanelSelectSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPaneSelectGenre)
-            .addComponent(jSplitPaneSelectArtistAlbum)
+            .addComponent(jSplitPaneSelectArtistAlbum, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSelectSelectorLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanelSelectFilters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jSplitPaneSelect.setLeftComponent(jPanelSelectSelector);
@@ -777,37 +814,6 @@ public class PanelSelect extends javax.swing.JPanel {
 
         jLabelSelectedSummary.setText(" ");
 
-        jButtonPreviewStop.setText(Inter.get("Button.Stop")); // NOI18N
-        jButtonPreviewStop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPreviewStopActionPerformed(evt);
-            }
-        });
-
-        jComboBoxSoundCard.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jButtonPreviewStop)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBoxSoundCard, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelPreviewDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonPreviewStop)
-                    .addComponent(jComboBoxSoundCard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPreviewDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
-
         jToggleButtonSelectShowRights.setText("Rights");
         jToggleButtonSelectShowRights.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -819,7 +825,6 @@ public class PanelSelect extends javax.swing.JPanel {
         jPanelSelectTracks.setLayout(jPanelSelectTracksLayout);
         jPanelSelectTracksLayout.setHorizontalGroup(
             jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 1066, Short.MAX_VALUE)
             .addGroup(jPanelSelectTracksLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -836,30 +841,26 @@ public class PanelSelect extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jToggleButtonSelectShowRights)
                         .addGap(33, 33, 33)
-                        .addComponent(jLabelSelectedSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSelectTracksLayout.createSequentialGroup()
-                        .addComponent(jLabelSelected, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addComponent(jLabelSelectedSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabelSelected, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+            .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
         );
         jPanelSelectTracksLayout.setVerticalGroup(
             jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSelectTracksLayout.createSequentialGroup()
                 .addComponent(jLabelSelected)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jToggleButtonSelectShowBasic)
-                        .addComponent(jLabelSelectDisplay)
-                        .addComponent(jToggleButtonSelectShowStats)
-                        .addComponent(jToggleButtonSelectShowFile)
-                        .addComponent(jToggleButtonSelectShowExtra)
-                        .addComponent(jLabelSelectedSummary)
-                        .addComponent(jToggleButtonSelectShowRights))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                .addGap(8, 8, 8)
+                .addGroup(jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jToggleButtonSelectShowBasic)
+                    .addComponent(jLabelSelectDisplay)
+                    .addComponent(jToggleButtonSelectShowStats)
+                    .addComponent(jToggleButtonSelectShowFile)
+                    .addComponent(jToggleButtonSelectShowExtra)
+                    .addComponent(jLabelSelectedSummary)
+                    .addComponent(jToggleButtonSelectShowRights))
                 .addContainerGap())
         );
 
@@ -880,7 +881,7 @@ public class PanelSelect extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1066, Short.MAX_VALUE)
+            .addGap(0, 1053, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelSelect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1469,7 +1470,7 @@ public class PanelSelect extends javax.swing.JPanel {
     private static javax.swing.JList jListSelectArtist;
     protected static javax.swing.JList jListSelectGenre;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelSelect;
     private javax.swing.JPanel jPanelSelectAlbum;
     private javax.swing.JPanel jPanelSelectArtist;

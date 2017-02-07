@@ -21,7 +21,6 @@ import jamuz.gui.swing.CheckBoxListItem;
 import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
-import jamuz.gui.DialogOptionsNew;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -368,7 +367,7 @@ public class PanelMerge extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonMergeStartActionPerformed
 
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed
-        DialogOptionsNew.main(Jamuz.getMachine().getName());
+        DialogOptions.main(Jamuz.getMachine().getName());
     }//GEN-LAST:event_jButtonMergeSourcesActionPerformed
 
 
