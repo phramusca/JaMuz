@@ -191,9 +191,7 @@ public class ProcessVideo extends ProcessAbstract {
                 return false;
             }
         }
-        
-		//FIXME: Check database !!!!!
-		
+
 		//Connect to database
 		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getOptions().get("video.dbLocation"), ".", "."), Jamuz.getOptions().get("video.rootPath"));
         File kodiDbFile = new File(Jamuz.getOptions().get("video.dbLocation").replace("~", System.getProperty("user.home")));  //NOI18N

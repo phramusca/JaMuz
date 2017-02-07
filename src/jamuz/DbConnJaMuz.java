@@ -1529,8 +1529,9 @@ public class DbConnJaMuz extends StatSourceSQL {
                     + "WHERE idMachine=? AND idOptionType=?");     //NOI18N    
 
 			for(Option option : selOptions.getOptions()) {
-				//FIXME: Test on a new machine if we do not endup with "{Empty}" or "/"
-                if (option.getType().equals("path") && !option.getValue().trim().equals("")) {   //NOI18N
+                if (option.getType().equals("path") 
+						&& !option.getValue().trim().equals("")
+						&& !option.getValue().trim().startsWith("{")) {   //NOI18N
 					option.setValue(FilenameUtils.normalizeNoEndSeparator(option.getValue().trim()) 
 							+ File.separator);
 				}
