@@ -219,7 +219,7 @@ public class DialogOptionDevice extends javax.swing.JDialog {
 			
 			if(Jamuz.getDb().setDevice(this.device)) {
 				this.dispose();
-				DialogOptions.display();
+				DialogOptions.displayDevices();
 			}
 			else {
 				Popup.warning(Inter.get("Error.Saving")); //NOI18N
@@ -232,14 +232,14 @@ public class DialogOptionDevice extends javax.swing.JDialog {
 	}//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSelectDestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDestActionPerformed
-        String selectedFolder=Swing.selectFolder(jTextFieldDestination.getText());
+        String selectedFolder=Swing.selectFolder(jTextFieldDestination.getText(), Inter.get("Label.Destination"));
 		if(!selectedFolder.equals("")) {  //NOI18N
 			jTextFieldDestination.setText(selectedFolder); 
 		}
     }//GEN-LAST:event_jButtonSelectDestActionPerformed
 
     private void jButtonSelectSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectSourceActionPerformed
-		String selectedFolder=Swing.selectFolder(jTextFieldSource.getText());
+		String selectedFolder=Swing.selectFolder(jTextFieldSource.getText(), Inter.get("Label.Source"));
 		if(!selectedFolder.equals("")) {  //NOI18N
 			jTextFieldSource.setText(selectedFolder); 
 		}

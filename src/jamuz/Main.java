@@ -67,10 +67,9 @@ package jamuz;
 //	- Statistics tab:
 //		- TODO: Review color choices
 //	- Options tab:
-//		- FIXME: OPTIONS NEW: Options
+//		- TODO: Options
 //                  - Do not display current machine in machines list (cannot be deleted anyway) 
 //                  + "Options" button to select current options (as in all other tabs)
-//					+ New Options GUI
 //                  + Use some common options (among machines) 
 //                      Ex: files.* and location.mask options should be global (all machines), 
 //                          not fully mandatory as only one machine can be master, but far better if master machine changes !!!

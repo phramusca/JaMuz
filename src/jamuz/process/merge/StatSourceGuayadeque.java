@@ -38,8 +38,10 @@ public class StatSourceGuayadeque extends StatSourceSQL {
         try {
             this.dbConn.connect();
             
-            this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement("SELECT (song_path || song_filename) AS fullPath, song_rating AS rating, "
-                    + "song_playcount AS playCounter,  datetime(song_lastplay, 'unixepoch') AS lastplayed, "
+            this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement(
+					"SELECT (song_path || song_filename) AS fullPath, song_rating AS rating, "
+                    + "song_playcount AS playCounter,  "
+					+ "datetime(song_lastplay, 'unixepoch') AS lastplayed, "
                     + "datetime(song_addedtime, 'unixepoch') AS addedDate  "
                     + "FROM songs ORDER BY song_path, song_filename");
             

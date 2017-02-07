@@ -159,11 +159,11 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        //FIXME: VIDEO cleanup: add your handling code here:
+        //FIXME LOW VIDEO cleanup: add your handling code here:
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //FIXME: VIDEO cleanup: add your handling code here:
+        //FIXME LOW VIDEO cleanup: add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
 	/**

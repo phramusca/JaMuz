@@ -25,6 +25,7 @@ import java.io.File;
 import junit.framework.TestCase;
 import org.junit.Test;
 import jamuz.utils.Inter;
+import jamuz.utils.Swing;
 
 /**
  *

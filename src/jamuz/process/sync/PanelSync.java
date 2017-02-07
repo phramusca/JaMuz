@@ -17,7 +17,6 @@
 
 package jamuz.process.sync;
 
-import jamuz.IconBufferCover;
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
 import java.awt.event.ComponentAdapter;
