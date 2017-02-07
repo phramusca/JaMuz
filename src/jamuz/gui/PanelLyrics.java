@@ -153,15 +153,25 @@ public class PanelLyrics extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonLyricsSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLyricsSaveActionPerformed
-        FileInfoInt myFileInfo = PanelMain.getQueueModel().getPlayingSong().getFile();
+        FileInfoInt myFileInfo = getPlayingSong();
         if(myFileInfo!=null) {
             myFileInfo.saveTagLyrics(jTextPaneLyrics.getText());
         }
     }//GEN-LAST:event_jButtonLyricsSaveActionPerformed
 
+	private FileInfoInt getPlayingSong() {
+		FileInfoInt fileInfoInt = null;
+		if(PanelMain.getQueueModel().getPlayingSong()!=null) {
+			fileInfoInt = PanelMain.getQueueModel().getPlayingSong().getFile();
+		}
+		return fileInfoInt;
+	}
+	
     private void jButtonLyricsCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLyricsCancelActionPerformed
-        FileInfoInt myFileInfo = PanelMain.getQueueModel().getPlayingSong().getFile();
-        setText(myFileInfo.getLyrics());
+        FileInfoInt myFileInfo = getPlayingSong();
+        if(myFileInfo!=null) {
+			setText(myFileInfo.getLyrics());
+		}
     }//GEN-LAST:event_jButtonLyricsCancelActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

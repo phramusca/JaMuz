@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 import jamuz.utils.Popup;
+import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
@@ -43,7 +44,9 @@ public class Options {
     public Options(String filename) {
 		this.properties = new Properties();
 		try {
-			input = new FileInputStream(filename);
+//			if(new File(filename).exists()) {
+				input = new FileInputStream(filename);
+//			}
 		} catch (FileNotFoundException ex) {
 			Popup.error(ex);
 		}
