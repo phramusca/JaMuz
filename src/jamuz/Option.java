@@ -43,7 +43,7 @@ public class Option {
 	public Option(String id, String value, int idMachine, int idOptionType, String type) {
 		this.id = id;
 		this.value = value;
-		this.comment = "<html><u><i>"+id+"</i></u> : "+Inter.get("Options.Comment."+id)+"</html>";  //NOI18N
+		this.comment = "<html><b>"+Inter.get("Options.Title."+id)+"</b> : "+Inter.get("Options.Comment."+id)+"</html>";  //NOI18N
 		this.idMachine=idMachine;
 		this.idOptionType=idOptionType;
 		this.type=type;

@@ -53,11 +53,13 @@ public class Swing {
 	/**
 	 * Select a folder (open a folder chooser GUI)
 	 * @param defaultFolder 
+	 * @param title 
 	 * @return
 	 */
-	public static String selectFolder(String defaultFolder) {
+	public static String selectFolder(String defaultFolder, String title) {
 		JFileChooser fc = new JFileChooser(defaultFolder);
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setDialogTitle(title);
 		int returnVal = fc.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selFile = fc.getSelectedFile();

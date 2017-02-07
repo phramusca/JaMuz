@@ -245,7 +245,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 //			if(this.myStatSource.check()) {
 				if(Jamuz.getDb().setStatSource(this.statSource)) {
 					this.dispose();
-					DialogOptions.display();
+					DialogOptions.displayStatSources();
 				}
 				else {
 					Popup.warning(Inter.get("Error.Saving")); //NOI18N
@@ -267,7 +267,7 @@ public class DialogStatSource extends javax.swing.JDialog {
         
         //Par contre, utiliser le code ci-dessous pour chercher un dossier
         //(voir aussi si FTP ...)
-		String selectedFolder=Swing.selectFolder(jTextRootPath.getText());
+		String selectedFolder=Swing.selectFolder(jTextRootPath.getText(), Inter.get("Label.RootPath"));
 		if(!selectedFolder.equals("")) {  //NOI18N
 			jTextRootPath.setText(selectedFolder); 
 		}
