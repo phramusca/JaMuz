@@ -82,6 +82,15 @@ public abstract class StatSourceAbstract {
         return updateBPM;
     }
     
+	public boolean isUpdatePlayCounter() {
+		//FIXME: LOW: Fix problem with PlayCounter:
+		//When playcounter is updated (inserted) in a merge, the next merge
+		//play counters starts incrementing !!!!!
+		//Then, eanble back
+		return true;
+//        return false;
+    }
+	
 	/**
 	 * Do we update last played ?
 	 */

@@ -93,6 +93,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import jamuz.player.MPlaybackListener;
+import javax.swing.JTabbedPane;
 
 /**
  * Main JaMuz GUI class
@@ -789,7 +790,6 @@ public class PanelMain extends javax.swing.JFrame {
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
         jLabelIP = new javax.swing.JLabel();
         jButtonQRcode = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
         jButton2 = new javax.swing.JButton();
@@ -1079,13 +1079,6 @@ public class PanelMain extends javax.swing.JFrame {
                 .addComponent(jScrollPane1))
         );
 
-        jButton1.setText(bundle.getString("PanelMain.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("PanelMain.jPanel4.border.title"))); // NOI18N
 
         jProgressBarSaveTags.setMinimumSize(new java.awt.Dimension(1, 23));
@@ -1129,9 +1122,7 @@ public class PanelMain extends javax.swing.JFrame {
                 .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
                         .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 156, Short.MAX_VALUE)
                         .addComponent(jPanelRemote, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelOptionsLayout.createSequentialGroup()
                         .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1147,9 +1138,7 @@ public class PanelMain extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
+                        .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
@@ -1251,13 +1240,13 @@ public class PanelMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelPlayerTimeTotal))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonPlayerPrevious)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonPlayerPlay)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonPlayerNext)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSpinnerVolume, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -1631,6 +1620,16 @@ public class PanelMain extends javax.swing.JFrame {
         jSliderPlayerLength.setEnabled(enablejSliderPlayerLength);
     }
     
+	/**
+	 * Select tab with given title
+	 *
+	 * @param tabbedPane
+	 * @param title
+	 */
+	public static void selectTab(String title) {
+		Swing.selectTab(jTabbedPaneMain, title);
+	}
+	
     private static void setTab(String title, String iconName) {
         setTab(title, iconName, null);
     }
@@ -2078,10 +2077,6 @@ public class PanelMain extends javax.swing.JFrame {
         DialogTag.main(displayedFile);
     }//GEN-LAST:event_jButtonTagsActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DialogOptionsNew.main(Jamuz.getMachine().getName());
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
  		//To re-save all files and remove all remaining unwanted tags, especially ID3v1 and POPM (popularity meter) that Guayadeque can use and 
 		//messes up with the syncing if not used with extra care
@@ -2375,17 +2370,7 @@ public class PanelMain extends javax.swing.JFrame {
     private static String toHTML(String text) {
         return "<html>" + text + "</html>";  //NOI18N
     }
-
-    /**
-     * Select tab with given title
-     *
-     * @param title
-     */
-    public static void selectTab(String title) {
-        int checkTabIndex = PanelMain.jTabbedPaneMain.indexOfTab(title); //NOI18N
-        jTabbedPaneMain.setSelectedIndex(checkTabIndex);
-    }
-
+	
 	//TODO: Move those setXXXVisible methods to separate class (not TableColumnModel)
     /**
      * set basic colums visible/unvisible
@@ -2517,7 +2502,6 @@ public class PanelMain extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonCheckDown;
     private javax.swing.JButton jButtonCheckUp;

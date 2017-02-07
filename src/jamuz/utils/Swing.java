@@ -16,12 +16,14 @@
  */
 package jamuz.utils;
 
+import jamuz.gui.PanelMain;
 import java.awt.Component;
 import java.awt.Container;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -51,11 +53,13 @@ public class Swing {
 	/**
 	 * Select a folder (open a folder chooser GUI)
 	 * @param defaultFolder 
+	 * @param title 
 	 * @return
 	 */
-	public static String selectFolder(String defaultFolder) {
+	public static String selectFolder(String defaultFolder, String title) {
 		JFileChooser fc = new JFileChooser(defaultFolder);
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setDialogTitle(title);
 		int returnVal = fc.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selFile = fc.getSelectedFile();
@@ -63,6 +67,17 @@ public class Swing {
         } else {
 			return "";  //NOI18N
         }
+	}
+
+	/**
+	 * Select tab with given title
+	 *
+	 * @param tabbedPane
+	 * @param title
+	 */
+	public static void selectTab(JTabbedPane tabbedPane, String title) {
+		int checkTabIndex = tabbedPane.indexOfTab(title); //NOI18N
+		tabbedPane.setSelectedIndex(checkTabIndex);
 	}
 	
 	public enum FileType {
