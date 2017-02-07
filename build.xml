@@ -31,6 +31,11 @@
 <!--
        FIXME: copy/create default configuration files, make 7z package 
 -->
+
+	<condition property="sqlite3.path" value="${basedir}\sqlite3.exe" else="sqlite3">
+        <os family="windows" />
+    </condition>
+
     <target name="-post-jar">
         <property name="sqlitedb.JaMuz" value="dist/JaMuz.db"/>
         <property name="script.creation.JaMuz" value="database/JaMuz_creation.sql"/>
@@ -41,23 +46,23 @@
 
         <echo message="Sqlite creation script : ${script.creation.JaMuz}"/>
         <echo message="Sqlite database : ${sqlitedb.JaMuz}" />
-        <exec executable = "sqlite3">
+        <exec executable = "${sqlite3.path}">
             <arg value="${sqlitedb.JaMuz}"/>
             <arg value=".read ${script.creation.JaMuz}"/>
         </exec>
 
 		<echo message="Sqlite insertion script : ${script.insertion.JaMuz}"/>
 		<echo message="Sqlite database : ${sqlitedb.JaMuz}" />
-        <exec executable = "sqlite3">
+        <exec executable = "${sqlite3.path}">
             <arg value="${sqlitedb.JaMuz}"/>
             <arg value=".read ${script.insertion.JaMuz}"/>
         </exec>
 
-		<echo message="Sqlite creation script : ${script.creation.myMovieDb}"/>
-		<echo message="Sqlite database : ${sqlitedb.myMovieDb}" />
-		<exec executable = "sqlite3">
-			<arg value="${sqlitedb.myMovieDb}"/>
-			<arg value=".read ${script.creation.myMovieDb}"/>
+	<echo message="Sqlite creation script : ${script.creation.myMovieDb}"/>
+	<echo message="Sqlite database : ${sqlitedb.myMovieDb}" />
+	<exec executable = "${sqlite3.path}">
+            <arg value="${sqlitedb.myMovieDb}"/>
+            <arg value=".read ${script.creation.myMovieDb}"/>
         </exec>
 
 <!--		 yGuard Ant task.   
