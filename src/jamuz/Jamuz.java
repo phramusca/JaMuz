@@ -100,11 +100,14 @@ public class Jamuz {
         logger.log(Level.CONFIG, "OS: {0}", OS.getName()); //NOI18N
         
         //Read properties file (this is for Video)
-        options = new Options(appPath + "JaMuz.properties"); //TODO: Manage potential errors
-        if(!options.read()) {
-            return false;
-        }
-		
+        String filename = appPath + "JaMuz.properties";
+		options = new Options(filename); 
+        if(new File(filename).exists()) {
+			if(!options.read()) {
+				return false;
+			}
+		}
+
 		keys = new Keys("/jamuz/keys.properties");
         if(!keys.read()) {
             return false;

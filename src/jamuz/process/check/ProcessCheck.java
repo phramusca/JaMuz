@@ -138,7 +138,7 @@ public class ProcessCheck {
       public boolean check() {
           File checked = new File(this.value);
           if(!checked.exists()) {
-              Popup.warning(java.text.MessageFormat.format(Inter.get("Error.Check.SourcePathNotFound"), this.value, this.optionId));  //NOI18N
+              Popup.warning(java.text.MessageFormat.format(Inter.get("Error.Check.SourcePathNotFound"), this.value, Inter.get("Options.Title."+this.optionId)));  //NOI18N
               return false;
           }
           return true;
