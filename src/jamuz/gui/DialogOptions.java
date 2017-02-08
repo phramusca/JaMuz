@@ -1027,6 +1027,8 @@ public class DialogOptions extends javax.swing.JDialog {
 		Jamuz.getDb().setOptions(selOptions);
 		Jamuz.getDb().updateMachine(selOptions.getOption(0).getIdMachine(), jTextFieldDescription.getText());
 		
+		PanelMain.readOptions();
+		PanelMain.fillMachineList();
 		doClose(RET_OK);
     }//GEN-LAST:event_jButtonOptionSaveActionPerformed
 

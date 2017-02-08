@@ -198,7 +198,7 @@ public class VideoTvShow extends VideoAbstract {
             }
         }
 		
-		//FIXME: LOW: Use status AND lastSeason 
+		//FIXME LOW: Use status AND lastSeason 
 		String status = ((MyTvShow) myVideo).getSerie().getStatus();
 		//Ended
 		//Returning Series

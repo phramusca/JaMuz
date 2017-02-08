@@ -135,7 +135,7 @@ public class Mplayer implements Runnable {
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
-			//FIXME: WINDOWS: what is "aplay" equivalent to list audio cards in Windows ?
+			//FIXME HIGH WINDOWS: what is "aplay" equivalent to list audio cards in Windows ?
 			cmdArray.add("aplay");
 		}
 		else {
@@ -201,7 +201,7 @@ public class Mplayer implements Runnable {
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
-			//FIXME: WINDOWS: Check mplayer on Windows
+			//FIXME HIGH WINDOWS: Check mplayer on Windows
 			cmdArray.add("data\\mplayer.exe");
 		}
 		else {
