@@ -175,7 +175,7 @@ public class ProcessMerge extends ProcessAbstract {
 
             }
             //Read options again (only to read lastMergeDate !!)
-            //FIXME LOW Use listners !!
+            //FIXME LOW Use listeners !!
             PanelMain.readOptions(); //TODO: This should enable merge too, but does not as we still are in process merge ...
             //enabling back buttons
             PanelMerge.enableMerge(true);
