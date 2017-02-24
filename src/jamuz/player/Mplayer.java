@@ -135,8 +135,8 @@ public class Mplayer implements Runnable {
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
-			//FIXME HIGH WINDOWS: what is "aplay" equivalent to list audio cards in Windows ?
-			cmdArray.add("aplay");
+			//FIXME LOW WINDOWS: what is "aplay" equivalent to list audio cards in Windows ?
+			return audioCards;
 		}
 		else {
 			//TODO: Test if it works in MacOS for instance
@@ -201,26 +201,20 @@ public class Mplayer implements Runnable {
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
-			//FIXME HIGH WINDOWS: Check mplayer on Windows
 			cmdArray.add("data\\mplayer.exe");
+//			cmdArray.add("-ao");
+//			cmdArray.add("dsound:device=1");
 		}
 		else {
 			//TODO: Test if it works in MacOS for instance
 			cmdArray.add("mplayer");
-		}
-
-		//Play on a particular sound card (use "aplay -L" for list of sound cards)
-		//http://stackoverflow.com/questions/22438353/java-select-audio-device-and-play-mp3
-		//Adapted for mplayer
-		//"-ao", "alsa:device=sysdefault=Device"
-//		if(!audioCard.equals("")) {
 			cmdArray.add("-ao");
 			cmdArray.add("alsa:device="+audioCard.getValue());
-//		}
+		}
+
 		
 		cmdArray.add("-slave");
 		cmdArray.add("-quiet");
-//		cmdArray.add("-idle");
 
 		cmdArray.add(filePath);
 
