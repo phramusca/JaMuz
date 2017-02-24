@@ -179,7 +179,7 @@ public class PanelVideo extends javax.swing.JPanel {
                 for(String line : lines) {
                     if(line.contains("|")) {
                         String[] splitted = line.split("\\|");
-                        JMenuItem    menuItem1 = new JMenuItem(new OpenUrlAction(splitted[0], splitted[1]));
+                        JMenuItem menuItem1 = new JMenuItem(new OpenUrlAction(splitted[0], splitted[1]));
                         menuLinks.add(menuItem1);
                     }
                 }
