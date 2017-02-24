@@ -13,7 +13,7 @@
     <target name="-pre-init">
        <property name="project.name" value="JaMuz" />
        <property name="project.url" value="https://github.com/phramusca/JaMuz/" />
-       <property name="version.num" value="0.0.24" />
+       <property name="version.num" value="0.0.25.master" />
        <tstamp>
           <format property="NOW" pattern="yyyy-MM-dd HH:mm:ss z" />
        </tstamp>
