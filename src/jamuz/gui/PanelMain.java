@@ -2165,6 +2165,8 @@ public class PanelMain extends javax.swing.JFrame {
                         case "forward": forward(); break;
                         case "rewind": rewind(); break;
                         case "pullup": moveCursor(0); break;
+						case "volUp": jSpinnerVolume.setValue((float)jSpinnerVolume.getValue()+5.0f); break;
+						case "volDown": jSpinnerVolume.setValue((float)jSpinnerVolume.getValue()-5.0f); break;
                         case "sayRating": displayedFile.sayRating(true); break;
                         case "MSG_NULL":
                             jTextAreaRemote.append(login.concat(" has disconnected.").concat("\n"));
