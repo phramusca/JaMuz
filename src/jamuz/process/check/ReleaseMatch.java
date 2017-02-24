@@ -80,13 +80,13 @@ public class ReleaseMatch implements java.lang.Comparable {
 		
 		//Search for duplicates
         
-        //FIXME LOW: Add type in displayed combo (exact duplicate, ...) if color not enough. 
+        //FIXME LOW Add type in displayed combo (exact duplicate, ...) if color not enough. 
 		//At least mention "duplicate found: "
         // or " no duplicates"
         
-        //FIXME LOW: Support  - new album can be a missing CD on a CD serie (ex disc 3/4 missing)
-        //FIXME LOW: Support  - duplicate can be from a various folder (check that original is the complete album)
-        //FIXME LOW: Support  - check duplicate status (OK, KO,...) and offer to replace if new is better
+        //FIXME LOW Support  - new album can be a missing CD on a CD serie (ex disc 3/4 missing)
+        //FIXME LOW Support  - duplicate can be from a various folder (check that original is the complete album)
+        //FIXME LOW Support  - check duplicate status (OK, KO,...) and offer to replace if new is better
         
 		this.duplicates = new ArrayList<>();
 		

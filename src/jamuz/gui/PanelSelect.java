@@ -51,14 +51,25 @@ import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
 import jamuz.player.Mplayer.AudioCard;
+import jamuz.process.video.PanelVideo;
+import jamuz.process.video.VideoAbstract;
+import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.Swing;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JMenu;
 import org.apache.commons.io.FilenameUtils;
 
-//FIXME LOW: Bug "Kid Creole and the Coconuts"
+//FIXME LOW Bug "Kid Creole and the Coconuts"
 //idPath IN (784, 785)
 //=> Album "Best Of" ne s'affiche pas !!!???
 
@@ -79,7 +90,7 @@ public class PanelSelect extends javax.swing.JPanel {
     private static String selGenre; //TODO: Deriver ListElement et l'appliquer a selGenre (pour affichage icone de la même façon)
 	private static ListElement selArtist;
 	private static ListElement selAlbum; 
-//FIXME LOW: ex: Album "Charango" is either from Morcheeba or Yannick Noah
+//FIXME LOW ex: Album "Charango" is either from Morcheeba or Yannick Noah
     //BUT seen as only one album in Select tab
     public static String[] comboCopyRights;
 
@@ -203,10 +214,7 @@ public class PanelSelect extends javax.swing.JPanel {
             }
         };
         
-        JMenuItem menuItem = new JMenuItem(Inter.get("Button.Edit")); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
-        menuItem = new JMenuItem(Inter.get("MainGUI.jButtonSelectQueue.text")); //NOI18N
+        JMenuItem  menuItem = new JMenuItem(Inter.get("MainGUI.jButtonSelectQueue.text")); //NOI18N
         menuItem.addActionListener(menuListener);
         jPopupMenu1.add(menuItem);
         menuItem = new JMenuItem(Inter.get("MainGUI.jButtonSelectQueueAll.text")); //NOI18N
@@ -218,7 +226,30 @@ public class PanelSelect extends javax.swing.JPanel {
         menuItem = new JMenuItem(Inter.get("Label.Check")); //NOI18N
         menuItem.addActionListener(menuListener);
         jPopupMenu1.add(menuItem);
-
+		//Add links menu items
+        File f = Jamuz.getFile("AudioLinks.txt", "data");
+        if(f.exists()) {
+            JMenu menuLinks = new JMenu(Inter.get("Label.Links")); //NOI18N
+            List<String> lines;
+            try {
+                lines = Files.readAllLines(Paths.get(f.getAbsolutePath()), Charset.defaultCharset());
+                for(String line : lines) {
+                    if(line.contains("|")) {
+                        String[] splitted = line.split("\\|");
+                        JMenuItem menuItem1 = new JMenuItem(new OpenUrlAction(splitted[0], splitted[1]));
+                        menuLinks.add(menuItem1);
+                    }
+                }
+                jPopupMenu1.add(menuLinks);
+            } catch (IOException ex) {
+                Jamuz.getLogger().log(Level.SEVERE, null, ex);
+            }
+        }
+		//TODO: Add " (external)" to menu name
+		menuItem = new JMenuItem(Inter.get("Button.Edit")); //NOI18N
+        menuItem.addActionListener(menuListener);
+        jPopupMenu1.add(menuItem);
+ 
         //Add listener to components that can bring up popup menus.
         MouseListener popupListener = new PopupListener(jPopupMenu1);
         jTableSelect.addMouseListener(popupListener);
@@ -256,6 +287,29 @@ public class PanelSelect extends javax.swing.JPanel {
 		
 	}
     
+	class OpenUrlAction extends AbstractAction {
+        
+        private final String url;
+        
+        public OpenUrlAction(String text, String url) {
+            super(text, null);
+            this.url = url;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int selectedRow = jTableSelect.getSelectedRow(); 		
+			if(selectedRow>=0) { 	
+				//convert to model index (as sortable model) 		
+				selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
+				FileInfoInt myFileInfo = fileInfoList.get(selectedRow);
+
+				Desktop.openBrowser(url.replaceAll("<album>", 
+						myFileInfo.getAlbumArtist().concat(" ")
+								.concat(myFileInfo.getAlbum())));			 		
+			}
+        }
+    }
+	
     private static void setYearSpinners() {
         double minYear = Jamuz.getDb().getYear("MIN"); //NOI18N
         minYear = (10*Math.floor(minYear/10));
