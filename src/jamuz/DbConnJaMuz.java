@@ -1895,15 +1895,16 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         Statement st=null;
         ResultSet rs=null;
         try {
-            String sql = "SELECT COUNT(*), SUM(size), SUM(length), avg(rating)," + field + " "
+            String sql = "SELECT COUNT(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), avg(rating)," + field + " "
                     + "FROM file WHERE deleted=0 "  //NOI18N
                     + "GROUP BY " + field + " ORDER BY " + field;   //NOI18N //NOI18N
             
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
             while (rs.next()) {
-                stats.add(new StatItem(dbConn.getStringValue(rs, field), dbConn.getStringValue(rs, field), 
-                        rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getDouble(4), null));
+                stats.add(new StatItem(dbConn.getStringValue(rs, field), 
+						dbConn.getStringValue(rs, field), 
+                        rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getDouble(5), null));
             }
         } catch (SQLException ex) {
             Popup.error("getSelectionList4Stats(" + field + ")", ex);   //NOI18N
@@ -1927,9 +1928,9 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         ResultSet rs=null;
         try {
             //Note Using "percent" as "%" is replaced by "-" because of decades. Now also replacing "percent" by "%"
-            String sql = "SELECT count(*), SUM(size), SUM(length), round(avg(albumRating),1 ) as [rating] , t.range as [percentRated] \n" +
+            String sql = "SELECT count(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), round(avg(albumRating),1 ) as [rating] , t.range as [percentRated] \n" +
                     "FROM (\n" +
-                    "SELECT albumRating, size, length, \n" +
+                    "SELECT albumRating, size, length, P.idPath,\n" +
                     "	case  \n" +
                     "    when percentRated< 2 then                          ' 0 -> 2 percent'\n" +
                     "    when percentRated >= 2 and percentRated< 25 then   ' 2 -> 25 percent'\n" +
@@ -1950,8 +1951,9 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
             while (rs.next()) {
-                stats.add(new StatItem(dbConn.getStringValue(rs, "percentRated"), dbConn.getStringValue(rs, "percentRated"), 
-                        rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getDouble(4), null));
+                stats.add(new StatItem(dbConn.getStringValue(rs, "percentRated"), 
+						dbConn.getStringValue(rs, "percentRated"), 
+                        rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getDouble(5), null));
             }
         } catch (SQLException ex) {
             Popup.error("getPercentRatedForStats()", ex);   //NOI18N
@@ -2003,7 +2005,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
     }
 
     public class StatItem {
-        private final long count;
+        private final long countFile;
+		private final long countPath;
         private long size=-1;
         private long length=-1;
         private double rating=-1;
@@ -2022,9 +2025,11 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
          * @param rating
          * @param color
          */
-        public StatItem(String label, String value, long count, long size, long length, double rating, Color color) {
+        public StatItem(String label, String value, long countFile, long countPath,
+				long size, long length, double rating, Color color) {
             this.value = value;
-            this.count = count;
+            this.countFile = countFile;
+			this.countPath = countPath;
             this.size = size;
             this.length = length;
             this.rating = rating;
@@ -2032,9 +2037,13 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             this.color = color;
         }
 
-        public long getCount() {
-            return count;
-        }
+		public long getCountFile() {
+			return countFile;
+		}
+
+		public long getCountPath() {
+			return countPath;
+		}
 
         public long getSize() {
             return size;
@@ -2097,17 +2106,9 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         ResultSet rs=null;
         try {
             value = value.replaceAll("\"", "%");   //NOI18N
-            switch(table) {
-                case "file":
-                    sql = "SELECT COUNT(*), SUM(size), SUM(length), avg(rating) FROM file";   //NOI18N
-                    break;
-                default: //case "path":
-//                    sql = "SELECT COUNT(*) FROM " + table;   //NOI18N
-                    sql = "SELECT COUNT(*), SUM(size), SUM(length), avg(rating) "
-                            + "FROM file JOIN path ON path.idPath=file.idPath ";
-                    break;
-            }
-            
+            sql = "SELECT COUNT(*), COUNT(DISTINCT path.idPath), SUM(size), "
+				+ "SUM(length), avg(rating) "
+				+ "FROM file JOIN path ON path.idPath=file.idPath ";
             if (value.contains("IN (")) {  //NOI18N
                 sql += " WHERE " + table+"."+field + " " + value;   //NOI18N
             } else if (value.startsWith(">")) {   //NOI18N
@@ -2120,11 +2121,11 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             sql += " AND " + table+".deleted=0";   //NOI18N
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
-            return new StatItem(label, value, rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getDouble(4), color);
+            return new StatItem(label, value, rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getDouble(5), color);
 
         } catch (SQLException ex) {
             Popup.error("getStatItem(" + field + "," + value + ")", ex);   //NOI18N
-            return new StatItem(label, value, -1, -1, -1, -1, Color.BLACK);
+            return new StatItem(label, value, -1, -1, -1, -1, -1, Color.BLACK);
         }
         finally {
             try {
