@@ -1895,8 +1895,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         Statement st=null;
         ResultSet rs=null;
         try {
-            String sql = "SELECT COUNT(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), avg(rating)," + field + " "
-                    + "FROM file WHERE deleted=0 "  //NOI18N
+            String sql = "SELECT COUNT(*), COUNT(DISTINCT P.idPath), SUM(size), SUM(length), avg(rating)," + field + " "
+                    + "FROM file F JOIN path P ON P.idPath=F.idPath WHERE F.deleted=0 AND P.deleted=0 "  //NOI18N
                     + "GROUP BY " + field + " ORDER BY " + field;   //NOI18N //NOI18N
             
             st = dbConn.connection.createStatement();
@@ -1945,7 +1945,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                         "FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath\n" +
                         ") "
                     + "P ON F.idPath=P.idPath \n" +
-                    "WHERE F.deleted=0 ) t\n" +
+                    "WHERE F.deleted=0 AND P.deleted=0) t\n" +
                     "GROUP BY t.range ";
 
             st = dbConn.connection.createStatement();
@@ -2118,7 +2118,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             } else {
                 sql += " WHERE " + table+"."+field + "='" + value + "'";   //NOI18N
             }
-            sql += " AND " + table+".deleted=0";   //NOI18N
+            sql += " AND file.deleted=0 AND path.deleted=0";   //NOI18N
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
             return new StatItem(label, value, rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getDouble(5), color);
