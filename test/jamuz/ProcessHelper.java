@@ -35,25 +35,44 @@ import java.util.List;
 // (which should not BE a process but include a process ...)
 public class ProcessHelper {
 
- 
-    public static void scanNewFolder() throws InterruptedException {
+	/**
+	 *
+	 * @throws InterruptedException
+	 */
+	public static void scanNewFolder() throws InterruptedException {
         startProcessCheck(true, ProcessCheck.CheckType.CHECK_NEW, -1);
     }
 
-    public static void checkLibrary() throws InterruptedException {
+	/**
+	 *
+	 * @throws InterruptedException
+	 */
+	public static void checkLibrary() throws InterruptedException {
         startProcessCheck(true, ProcessCheck.CheckType.CHECK_DB, -1);
     }
     
-    public static void scanLibraryQuick() throws InterruptedException {
+	/**
+	 *
+	 * @throws InterruptedException
+	 */
+	public static void scanLibraryQuick() throws InterruptedException {
         startProcessCheck(false, ProcessCheck.CheckType.SCAN_QUICK, -1);
     }
     
-    public static void applyChanges() throws InterruptedException {
+	/**
+	 *
+	 * @throws InterruptedException
+	 */
+	public static void applyChanges() throws InterruptedException {
         processCheck.startActions(true, true, true);
         processCheck.doActions.join();
     }
 
-    public static void merge() throws InterruptedException {
+	/**
+	 *
+	 * @throws InterruptedException
+	 */
+	public static void merge() throws InterruptedException {
         List dbIndexes = new ArrayList();
         for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
             dbIndexes.add(new Integer(statSource.getId()));
@@ -62,7 +81,11 @@ public class ProcessHelper {
         //TODO: Also test simulate and forceJamuz parameters
     }
     
-    public static void sync() throws InterruptedException {
+	/**
+	 *
+	 * @throws InterruptedException
+	 */
+	public static void sync() throws InterruptedException {
         for(Device device : Jamuz.getMachine().getDevices()) {
             startProcessSync(device);
         }
@@ -96,7 +119,10 @@ public class ProcessHelper {
         if(processCheck.doActions!=null)    { processCheck.doActions.join(); }
     }
     
-    public static ProcessMerge processMerge;
+	/**
+	 *
+	 */
+	public static ProcessMerge processMerge;
     private static void startProcessMerge(List<Integer> dbIndexes, boolean simulate, boolean forceJaMuz) throws InterruptedException {
         processMerge = new ProcessMerge("Thread.ProcessHelper.startProcessMerge", dbIndexes, simulate, forceJaMuz);
         PanelMerge.enableMerge(false);

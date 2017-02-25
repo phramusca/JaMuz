@@ -33,7 +33,11 @@ import jamuz.utils.Swing;
  */
 public class Merge1Test extends TestCase {
 
-    @Test
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
     public void test() throws Exception {
         Settings.startGUI("Label.Check"); //Mandatory
         
@@ -70,11 +74,19 @@ public class Merge1Test extends TestCase {
         assertEquals("number of checked folders", expected, PanelCheck.tableModelCheck.getFolders().size());
     }
 
-    public Merge1Test(String testMethodName) {
+	/**
+	 *
+	 * @param testMethodName
+	 */
+	public Merge1Test(String testMethodName) {
         super(testMethodName);
     }
     
-    @Override
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Override
     protected void setUp() throws Exception {
         super.setUp();
         Settings.setupApplication();
@@ -87,7 +99,11 @@ public class Merge1Test extends TestCase {
         );
     }
 
-    @Override
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Override
     protected void tearDown() throws Exception {
         super.tearDown();
     }

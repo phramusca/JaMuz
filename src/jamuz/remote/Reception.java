@@ -10,12 +10,22 @@ package jamuz.remote;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+/**
+ *
+ * @author raph
+ */
 public class Reception  extends ProcessAbstract {
 
 	private final BufferedReader bufferedReader;
 	private final ICallBackReception callback;
 	private final String login;
 	
+	/**
+	 *
+	 * @param bufferedReader
+	 * @param callback
+	 * @param login
+	 */
 	public Reception(BufferedReader bufferedReader, ICallBackReception callback, String login){
 		super("Thread.Common.Reception");
 		this.callback = callback; 

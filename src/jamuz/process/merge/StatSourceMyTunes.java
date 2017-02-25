@@ -38,7 +38,13 @@ import jamuz.utils.Popup;
  */
 public class StatSourceMyTunes extends StatSourceSQL {
 
-    public StatSourceMyTunes(DbInfo dbInfo, String name, String rootPath) {
+	/**
+	 *
+	 * @param dbInfo
+	 * @param name
+	 * @param rootPath
+	 */
+	public StatSourceMyTunes(DbInfo dbInfo, String name, String rootPath) {
         super(dbInfo, name, rootPath, true, true, false);
     }
 

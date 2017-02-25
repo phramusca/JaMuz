@@ -39,7 +39,10 @@ import org.apache.commons.lang3.SerializationUtils;
  */
 public class DbConnVideo extends DbConn {
 
-    protected final String rootPath;
+	/**
+	 *
+	 */
+	protected final String rootPath;
 	
 	/**
 	 * Creates a database connection.
@@ -348,29 +351,58 @@ public class DbConnVideo extends DbConn {
         }
 	}
     
-
+	/**
+	 *
+	 * @param myTvShows
+	 * @return
+	 */
 	public boolean getTvShowsFromCache(Map<Integer, MyTvShow> myTvShows) {
 		return getVideosFromCache(myTvShows, "tvshow", "idTvShow");
 	}
 
+	/**
+	 *
+	 * @param myTvShows
+	 * @return
+	 */
 	public boolean setTvShowsInCache(Map<Integer, MyTvShow> myTvShows) {
 		return setVideosInCache(myTvShows, "tvshow", "idTvShow");
 	}
 	
+	/**
+	 *
+	 * @param myTvShow
+	 * @return
+	 */
 	public boolean setTvShowInCache(MyTvShow myTvShow) {
 		Map<Integer, MyTvShow> myTvShows = new HashMap<>();
 		myTvShows.put(myTvShow.getSerie().getId(), myTvShow);
 		return setTvShowsInCache(myTvShows);
 	}
 	
+	/**
+	 *
+	 * @param myMovies
+	 * @return
+	 */
 	public boolean getMoviesFromCache(Map<Integer, MyMovieDb> myMovies) {
 		return getVideosFromCache(myMovies, "movie", "idMovie");
 	}
 
+	/**
+	 *
+	 * @param myMovies
+	 * @return
+	 */
 	public boolean setMoviesInCache(Map<Integer, MyMovieDb> myMovies) {
 		return setVideosInCache(myMovies, "movie", "idMovie");
 	}
 	
+	/**
+	 *
+	 * @param myMovie
+	 * @return
+	 */
 	public boolean setMovieInCache(MyMovieDb myMovie) {
 		Map<Integer, MyMovieDb> myMovies = new HashMap<>();
 		myMovies.put(myMovie.getMovieDb().getId(), myMovie);
@@ -399,6 +431,14 @@ public class DbConnVideo extends DbConn {
 	}
 	
 	//TODO: Move to a common library
+
+	/**
+	 *
+	 * @param objects
+	 * @param table
+	 * @param idName
+	 * @return
+	 */
 	public boolean getBytesFromCache(Map<Integer, byte[]> objects, String table, String idName) {
         ResultSet rs = null;
 		byte[] bytes;
@@ -428,6 +468,14 @@ public class DbConnVideo extends DbConn {
 	}
 	
 	//TODO: Move to a common library
+
+	/**
+	 *
+	 * @param objects
+	 * @param table
+	 * @param idName
+	 * @return
+	 */
 	public boolean setBytesInCache(Map<Integer, byte[]> objects, String table, String idName) {
         ResultSet rs = null;
 		try {

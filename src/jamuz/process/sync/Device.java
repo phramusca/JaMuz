@@ -31,7 +31,11 @@ public class Device {
 	 */
 	private int id;
 
-    public int getId() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getId() {
         return id;
     }
     
@@ -40,11 +44,19 @@ public class Device {
 	 */
 	private String name;
 
-    public String getName() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+	/**
+	 *
+	 * @param name
+	 */
+	public void setName(String name) {
         this.name = name;
     }
     
@@ -53,11 +65,19 @@ public class Device {
 	 */
 	private String source;
 
-    public String getSource() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getSource() {
         return source;
     }
 
-    public void setSource(String source) {
+	/**
+	 *
+	 * @param source
+	 */
+	public void setSource(String source) {
         this.source = source;
     }
     
@@ -66,11 +86,19 @@ public class Device {
 	 */
 	private String destination;
 
-    public String getDestination() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
+	/**
+	 *
+	 * @param destination
+	 */
+	public void setDestination(String destination) {
         this.destination = destination;
     }
     
@@ -79,11 +107,19 @@ public class Device {
 	 */
 	private int idPlaylist;
 
-    public int getIdPlaylist() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getIdPlaylist() {
         return idPlaylist;
     }
 
-    public void setIdPlaylist(int idPlaylist) {
+	/**
+	 *
+	 * @param idPlaylist
+	 */
+	public void setIdPlaylist(int idPlaylist) {
         this.idPlaylist = idPlaylist;
     }
     
@@ -92,7 +128,11 @@ public class Device {
 	 */
 	private String machineName;
 
-    public String getMachineName() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getMachineName() {
         return machineName;
     }
 

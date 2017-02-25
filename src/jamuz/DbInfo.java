@@ -173,7 +173,12 @@ public class DbInfo {
 		}
 	}
     
-    public boolean backupDB(String destinationPath) {
+	/**
+	 *
+	 * @param destinationPath
+	 * @return
+	 */
+	public boolean backupDB(String destinationPath) {
 		switch (this.libType) {
 			case Sqlite:  //NOI18N
 				//Create a backup of that database file
@@ -289,10 +294,24 @@ public class DbInfo {
 		}
 	}
     
-    protected final LibType libType;
+	/**
+	 *
+	 */
+	protected final LibType libType;
 	
+	/**
+	 *
+	 */
 	public enum LibType {
+
+		/**
+		 *
+		 */
 		Sqlite,
+
+		/**
+		 *
+		 */
 		MySQL
 	}
     /**
@@ -300,7 +319,11 @@ public class DbInfo {
 	 */
 	protected String locationOri;
 
-    public String getLocationOri() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getLocationOri() {
         return locationOri;
     }
     
@@ -309,12 +332,19 @@ public class DbInfo {
 	 */
 	protected String locationWork;
 
-    public String getLocationWork() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getLocationWork() {
         return locationWork;
     }
     
-
-    public void setLocationWork(String locationWork) {
+	/**
+	 *
+	 * @param locationWork
+	 */
+	public void setLocationWork(String locationWork) {
         this.locationWork = locationWork;
     }
     

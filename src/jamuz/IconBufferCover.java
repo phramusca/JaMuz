@@ -41,11 +41,21 @@ public class IconBufferCover {
      */
     private static final int coverIconSize = 50;
 
-    public static int getCoverIconSize() {
+	/**
+	 *
+	 * @return
+	 */
+	public static int getCoverIconSize() {
         return coverIconSize;
     }
     
-    public static ImageIcon getCoverIcon(FileInfoInt file, boolean readIfNotFound) {
+	/**
+	 *
+	 * @param file
+	 * @param readIfNotFound
+	 * @return
+	 */
+	public static ImageIcon getCoverIcon(FileInfoInt file, boolean readIfNotFound) {
         ImageIcon icon;        
         //Read from file cache first
         icon= readIconFromCache(file.getCoverHash());

@@ -27,7 +27,6 @@ public class DuplicateInfo {
      * @param album
      * @param artist
      * @param rating
-     * @param genre
      * @param checkedFlag
      * @param errorLevel
      */

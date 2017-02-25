@@ -79,8 +79,15 @@ import java.util.stream.Collectors;
 
 public class PanelVideo extends javax.swing.JPanel {
 
-    protected static ProgressBar progressBar;
-    protected static ProgressBar progressBarTimer;
+	/**
+	 *
+	 */
+	protected static ProgressBar progressBar;
+
+	/**
+	 *
+	 */
+	protected static ProgressBar progressBarTimer;
 
     /**
      * Creates new form PanelVideo
@@ -90,7 +97,10 @@ public class PanelVideo extends javax.swing.JPanel {
         initExtended();
     }
     
-    protected static VideoRating[] comboRating;
+	/**
+	 *
+	 */
+	protected static VideoRating[] comboRating;
 
     private void initExtended() {
 
@@ -352,11 +362,22 @@ public class PanelVideo extends javax.swing.JPanel {
         }
     }
 
-    public static DefaultListModel getModel(List<String> list) {
+	/**
+	 *
+	 * @param list
+	 * @return
+	 */
+	public static DefaultListModel getModel(List<String> list) {
         return getModel(list, true);
     }
     
-    public static DefaultListModel getModel(List<String> list, boolean sort) {
+	/**
+	 *
+	 * @param list
+	 * @param sort
+	 * @return
+	 */
+	public static DefaultListModel getModel(List<String> list, boolean sort) {
         DefaultListModel model = new DefaultListModel();
         if(sort) { Collections.sort(list); }
         model.addElement(Inter.get("Label.All"));
@@ -911,7 +932,10 @@ public class PanelVideo extends javax.swing.JPanel {
         DialogVideoExport.main(null);
     }//GEN-LAST:event_jButtonVideoExportActionPerformed
 
-    public static void export()  {
+	/**
+	 *
+	 */
+	public static void export()  {
         List<VideoAbstract> filestoExport = processVideo.getTableModel().getFiles().stream()
 				.filter(video -> video.isSelected()).collect(Collectors.toList());
 		
@@ -924,7 +948,11 @@ public class PanelVideo extends javax.swing.JPanel {
 		}
     }
     
-    public static void enableProcess(boolean enable) {
+	/**
+	 *
+	 * @param enable
+	 */
+	public static void enableProcess(boolean enable) {
         jButtonVideoList.setEnabled(enable);
         jCheckBoxVideoGet.setEnabled(enable);
         jCheckBoxVideoMove.setEnabled(enable);
@@ -977,6 +1005,9 @@ public class PanelVideo extends javax.swing.JPanel {
         processVideo.listDb(jCheckBoxVideoMove.isSelected(), jCheckBoxVideoGet.isSelected(), jCheckBoxVideoTheMovieDb.isSelected());
 	}
 	
+	/**
+	 *
+	 */
 	public static void prepareCleanupTvShows() {
 		ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
 		for(VideoAbstract video : processVideo.getTableModel().getFiles()) {

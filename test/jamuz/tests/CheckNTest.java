@@ -31,7 +31,11 @@ import org.junit.Test;
  */
 public class CheckNTest extends TestCase {
 
-    @Test
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
     public void test() throws Exception {
         
         Settings.startGUI("Label.Check"); //Mandatory
@@ -94,17 +98,29 @@ public class CheckNTest extends TestCase {
         assertEquals("number of checked folders", expected, PanelCheck.tableModelCheck.getFolders().size());
     }
     
-    public CheckNTest(String testMethodName) {
+	/**
+	 *
+	 * @param testMethodName
+	 */
+	public CheckNTest(String testMethodName) {
         super(testMethodName);
     }
     
-    @Override
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Override
     protected void setUp() throws Exception {
         super.setUp();
         Settings.setupApplication();
     }
 
-    @Override
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Override
     protected void tearDown() throws Exception {
         super.tearDown();
     }

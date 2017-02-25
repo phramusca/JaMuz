@@ -48,6 +48,11 @@ public class DateTime {
 		private DateTimeFormat(String display) {
 			this.pattern = display;
 		}
+
+		/**
+		 *
+		 * @return
+		 */
 		public String getPattern() {
 			return pattern;
 		}

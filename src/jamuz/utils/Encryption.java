@@ -31,6 +31,10 @@ public class Encryption {
 	
 	private static final String ALGO = "AES";
 	
+	/**
+	 *
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		String clear = "MaChaineAvegrer";
 		System.out.println("clear: "+clear);
@@ -42,6 +46,12 @@ public class Encryption {
 		System.out.println("decryptedWrong: "+decryptedWrong);
 	}
 	
+	/**
+	 *
+	 * @param Data
+	 * @param secret
+	 * @return
+	 */
 	public static String encrypt(String Data, String secret) {
 		try {
 			Key key = generateKey(secret);
@@ -56,7 +66,13 @@ public class Encryption {
 		}
     }
 
-    public static String decrypt(String encryptedData, String secret) {
+	/**
+	 *
+	 * @param encryptedData
+	 * @param secret
+	 * @return
+	 */
+	public static String decrypt(String encryptedData, String secret) {
 		try {
 			Key key = generateKey(secret);
 			Cipher c = Cipher.getInstance(ALGO);

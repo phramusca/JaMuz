@@ -59,7 +59,13 @@ public class TheMovieDb {
     private Map<Integer, MyMovieDb> myMovies;
     private Map<Integer, MyTvShow> myTvShows;
     
-    public TheMovieDb(String username, String password, String language) {
+	/**
+	 *
+	 * @param username
+	 * @param password
+	 * @param language
+	 */
+	public TheMovieDb(String username, String password, String language) {
 		myMovies = new HashMap<>();
         myTvShows = new HashMap<>();
         //TODO: Not getting info in french !
@@ -77,12 +83,18 @@ public class TheMovieDb {
         accountId = new AccountID(user.getId());
     }
     
+	/**
+	 *
+	 */
 	public void getAll() {
 		//Get movies and TV shows
         getMovies();
         getTvShows();
 	}
 	
+	/**
+	 *
+	 */
 	public void getAllFromCache() {
 		DbConnVideo conn = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, "myMovieDb.db", ".", "."), "");
         conn.connect();
@@ -185,52 +197,94 @@ public class TheMovieDb {
         }
     }
     
-    public void setRating(int movieId, int rating) {
+	/**
+	 *
+	 * @param movieId
+	 * @param rating
+	 */
+	public void setRating(int movieId, int rating) {
         doWait();
         account.postMovieRating(sessionToken, movieId, rating);
     }
     
-    public void setRatingTV(int serieId, int rating) {
+	/**
+	 *
+	 * @param serieId
+	 * @param rating
+	 */
+	public void setRatingTV(int serieId, int rating) {
         doWait();
         account.postTvSeriesRating(sessionToken, serieId, rating);
     }
     
-    public void addFavorite(int movieId) {
+	/**
+	 *
+	 * @param movieId
+	 */
+	public void addFavorite(int movieId) {
         doWait();
         account.addFavorite(sessionToken, accountId, movieId, TmdbAccount.MediaType.MOVIE);
     }
     
-    public void addFavoriteTV(int serieId) {
+	/**
+	 *
+	 * @param serieId
+	 */
+	public void addFavoriteTV(int serieId) {
         doWait();
         account.addFavorite(sessionToken, accountId, serieId, TmdbAccount.MediaType.TV);
     }
     
-    public void removeFavorite(int movieId) {
+	/**
+	 *
+	 * @param movieId
+	 */
+	public void removeFavorite(int movieId) {
         doWait();
         account.removeFavorite(sessionToken, accountId, movieId, TmdbAccount.MediaType.MOVIE);
     }
     
-    public void removeFavoriteTV(int movieId) {
+	/**
+	 *
+	 * @param movieId
+	 */
+	public void removeFavoriteTV(int movieId) {
         doWait();
         account.removeFavorite(sessionToken, accountId, movieId, TmdbAccount.MediaType.TV);
     }
     
-    public void addToWatchList(int movieId) {
+	/**
+	 *
+	 * @param movieId
+	 */
+	public void addToWatchList(int movieId) {
         doWait();
         account.addToWatchList(sessionToken, accountId, movieId, TmdbAccount.MediaType.MOVIE);
     }
     
-    public void addToWatchListTV(int movieId) {
+	/**
+	 *
+	 * @param movieId
+	 */
+	public void addToWatchListTV(int movieId) {
         doWait();
         account.addToWatchList(sessionToken, accountId, movieId, TmdbAccount.MediaType.TV);
     }
     
-    public void removeFromWatchList(int movieId) {
+	/**
+	 *
+	 * @param movieId
+	 */
+	public void removeFromWatchList(int movieId) {
         doWait();
         account.removeFromWatchList(sessionToken, accountId, movieId, TmdbAccount.MediaType.MOVIE);
     }
     
-    public void removeFromWatchListTV(int movieId) {
+	/**
+	 *
+	 * @param movieId
+	 */
+	public void removeFromWatchListTV(int movieId) {
         doWait();
         account.removeFromWatchList(sessionToken, accountId, movieId, TmdbAccount.MediaType.TV);
     }
@@ -423,7 +477,13 @@ public class TheMovieDb {
         return page.getResults();
     }
     
-    public MyMovieDb searchFirst(String name, int year) {
+	/**
+	 *
+	 * @param name
+	 * @param year
+	 * @return
+	 */
+	public MyMovieDb searchFirst(String name, int year) {
         List<MovieDb> movies = search(name, year);
         
         if(movies.size()>0) {
@@ -442,7 +502,13 @@ public class TheMovieDb {
         return null;
     }
     
-    public MyTvShow searchFirstTv(String name, int year) {
+	/**
+	 *
+	 * @param name
+	 * @param year
+	 * @return
+	 */
+	public MyTvShow searchFirstTv(String name, int year) {
         List<TvSeries> series = searchTv(name, year);
         
         if(series.size()>0) {
@@ -462,15 +528,29 @@ public class TheMovieDb {
         return null;
     }
 
-    public Map<Integer, MyMovieDb> getMyMovies() {
+	/**
+	 *
+	 * @return
+	 */
+	public Map<Integer, MyMovieDb> getMyMovies() {
         return myMovies;
     }
 
-    public Map<Integer, MyTvShow> getMyTvShows() {
+	/**
+	 *
+	 * @return
+	 */
+	public Map<Integer, MyTvShow> getMyTvShows() {
         return myTvShows;
     }
     
-    public MyMovieDb get(String name, int year) {
+	/**
+	 *
+	 * @param name
+	 * @param year
+	 * @return
+	 */
+	public MyMovieDb get(String name, int year) {
         for(MyMovieDb myMovieDb : myMovies.values()) {
             
             if(myMovieDb.getMovieDb().getTitle().equals(name)) {
@@ -483,7 +563,14 @@ public class TheMovieDb {
         return null;
     }
     
-    public MyTvShow getTv(String name, int year, boolean search) {
+	/**
+	 *
+	 * @param name
+	 * @param year
+	 * @param search
+	 * @return
+	 */
+	public MyTvShow getTv(String name, int year, boolean search) {
         for(MyTvShow myTvShow : myTvShows.values()) {
             
             if(myTvShow.getSerie().getName().equals(name)) {

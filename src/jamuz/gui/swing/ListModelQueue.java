@@ -72,7 +72,10 @@ public class ListModelQueue extends AbstractListModel {
         }
     }
 
-    public void clearNotPlayed() {
+	/**
+	 *
+	 */
+	public void clearNotPlayed() {
         while(queue.size()-1>playingIndex) {
             queue.remove(queue.size()-1);
         }
@@ -169,7 +172,11 @@ public class ListModelQueue extends AbstractListModel {
         return null;
     }
 
-    public ArrayList<ListElement> getQueue() {
+	/**
+	 *
+	 * @return
+	 */
+	public ArrayList<ListElement> getQueue() {
         return queue;
     }
 
@@ -178,7 +185,10 @@ public class ListModelQueue extends AbstractListModel {
         return queue.get(index);
     }
     
-    public void refreshPlayingFile() {
+	/**
+	 *
+	 */
+	public void refreshPlayingFile() {
         ListElement element = this.queue.get(playingIndex);
         FileInfoInt file = element.getFile();
         element.setDisplay(file.toStringQueue());
@@ -186,7 +196,13 @@ public class ListModelQueue extends AbstractListModel {
         this.fireContentsChanged(this, playingIndex, playingIndex);
     }
     
-    public void moveRow(int fromIndex, int toIndex) throws CloneNotSupportedException {
+	/**
+	 *
+	 * @param fromIndex
+	 * @param toIndex
+	 * @throws CloneNotSupportedException
+	 */
+	public void moveRow(int fromIndex, int toIndex) throws CloneNotSupportedException {
 
 		if(fromIndex>=0 && fromIndex<this.queue.size() && toIndex>=0 && toIndex<this.queue.size()) {
 

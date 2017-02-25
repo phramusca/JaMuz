@@ -29,8 +29,25 @@ import javax.swing.JToggleButton;
  */
 public class TriStateCheckBox extends JCheckBox {
    
-  public static enum State {
-    SELECTED, UNSELECTED, ALL 
+	/**
+	 *
+	 */
+	public static enum State {
+ 
+	  /**
+	   *
+	   */
+	  SELECTED, 
+
+	  /**
+	   *
+	   */
+	  UNSELECTED, 
+
+	  /**
+	   *
+	   */
+	  ALL 
   };
   
   /**

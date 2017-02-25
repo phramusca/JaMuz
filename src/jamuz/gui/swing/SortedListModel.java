@@ -33,7 +33,10 @@ public class SortedListModel<T> extends AbstractListModel<T> {
     // Define a SortedSet
     SortedSet model;
 
-    public SortedListModel() {
+	/**
+	 *
+	 */
+	public SortedListModel() {
       // Create a TreeSet
         // Store it in SortedSet variable
         model = new TreeSet();
@@ -52,42 +55,76 @@ public class SortedListModel<T> extends AbstractListModel<T> {
     }
 
     // Other methods
+
+	/**
+	 *
+	 * @param element
+	 */
     public void add(Object element) {
         if (model.add(element)) {
             fireContentsChanged(this, 0, getSize());
         }
     }
 
-    public void addAll(Object elements[]) {
+	/**
+	 *
+	 * @param elements
+	 */
+	public void addAll(Object elements[]) {
         Collection c = Arrays.asList(elements);
         model.addAll(c);
         fireContentsChanged(this, 0, getSize());
     }
 
-    public void clear() {
+	/**
+	 *
+	 */
+	public void clear() {
         model.clear();
         fireContentsChanged(this, 0, getSize());
     }
 
-    public boolean contains(Object element) {
+	/**
+	 *
+	 * @param element
+	 * @return
+	 */
+	public boolean contains(Object element) {
         return model.contains(element);
     }
 
-    public Object firstElement() {
+	/**
+	 *
+	 * @return
+	 */
+	public Object firstElement() {
         // Return the appropriate element
         return model.first();
     }
 
-    public Iterator iterator() {
+	/**
+	 *
+	 * @return
+	 */
+	public Iterator iterator() {
         return model.iterator();
     }
 
-    public Object lastElement() {
+	/**
+	 *
+	 * @return
+	 */
+	public Object lastElement() {
         // Return the appropriate element
         return model.last();
     }
 
-    public boolean removeElement(Object element) {
+	/**
+	 *
+	 * @param element
+	 * @return
+	 */
+	public boolean removeElement(Object element) {
         boolean removed = model.remove(element);
         if (removed) {
             fireContentsChanged(this, 0, getSize());

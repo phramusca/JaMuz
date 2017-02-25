@@ -13,7 +13,15 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ *
+ * @author raph
+ */
 public class Server {
+
+	/**
+	 *
+	 */
 	public static ServerSocket serverSocket = null;
 	private final int port;
 	private HandleLogin handleLogin;
@@ -21,6 +29,12 @@ public class Server {
 	private final ICallBackReception callback;
 	private final ICallBackAuthentication callBackAuth;
 
+	/**
+	 *
+	 * @param port
+	 * @param callback
+	 * @param callBackAuth
+	 */
 	public Server(int port, ICallBackReception callback, ICallBackAuthentication callBackAuth) {
 		this.port = port;
 		clients = new HashMap();
@@ -28,6 +42,10 @@ public class Server {
 		this.callBackAuth = callBackAuth;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public boolean connect() {
 		try {
             //TODO: Secure connexion
@@ -47,6 +65,9 @@ public class Server {
 		}
 	}
 	
+	/**
+	 *
+	 */
 	public void close() {
 		try {
 			handleLogin.abort();
@@ -123,6 +144,11 @@ public class Server {
 //            client.sendFile(filename);
 //        }
 //    }
+
+	/**
+	 *
+	 * @param displayedFile
+	 */
     
     public void sendCover(FileInfoInt displayedFile) {
         for(ServerClient client : clients.values()) {
@@ -130,6 +156,11 @@ public class Server {
 		}
 	}
     
+	/**
+	 *
+	 * @param login
+	 * @param msg
+	 */
 	public void send(String login, String msg) {
 		clients.get(login).send(msg);
 	}
@@ -144,6 +175,10 @@ public class Server {
         }
 	}
 	
+	/**
+	 *
+	 * @param login
+	 */
 	public void closeClient(String login) {
         if(clients.containsKey(login)) {
             clients.get(login).close();

@@ -93,35 +93,67 @@ public class TableRowFilterVideo extends RowFilter {
         this.displaySelected=display;
     }
     
-    public void displayWatched(State display) {
+	/**
+	 *
+	 * @param display
+	 */
+	public void displayWatched(State display) {
         this.displayWatched=display;
     }
     
-    public void displayWatchList(TriStateCheckBox.State display) {
+	/**
+	 *
+	 * @param display
+	 */
+	public void displayWatchList(TriStateCheckBox.State display) {
         this.displayWatchList=display;
     }
     
-    public void displayFavorite(TriStateCheckBox.State display) {
+	/**
+	 *
+	 * @param display
+	 */
+	public void displayFavorite(TriStateCheckBox.State display) {
         this.displayFavorite=display;
     }
     
-    public void displayLocal(TriStateCheckBox.State display) {
+	/**
+	 *
+	 * @param display
+	 */
+	public void displayLocal(TriStateCheckBox.State display) {
         this.displayLocal=display;
     }
     
-    public void displayMovies(TriStateCheckBox.State display) {
+	/**
+	 *
+	 * @param display
+	 */
+	public void displayMovies(TriStateCheckBox.State display) {
         this.displayMovies=display;
     }
     
-    public void displayHD(TriStateCheckBox.State display) {
+	/**
+	 *
+	 * @param display
+	 */
+	public void displayHD(TriStateCheckBox.State display) {
         this.displayHD=display;
     }
     
-    public void displayRated(TriStateCheckBox.State display) {
+	/**
+	 *
+	 * @param display
+	 */
+	public void displayRated(TriStateCheckBox.State display) {
         displayRated=display;
     }
     
-    public void displayByMppaRating(String mppaRating) {
+	/**
+	 *
+	 * @param mppaRating
+	 */
+	public void displayByMppaRating(String mppaRating) {
         if(mppaRating.equals(Inter.get("Label.All"))) {
             this.mppaRating=null;
         }
@@ -130,7 +162,11 @@ public class TableRowFilterVideo extends RowFilter {
         }
     }
     
-    public void displayByRating(String rating) {
+	/**
+	 *
+	 * @param rating
+	 */
+	public void displayByRating(String rating) {
         if(rating.equals(Inter.get("Label.All"))) {
             this.rating=null;
         }
@@ -139,7 +175,11 @@ public class TableRowFilterVideo extends RowFilter {
         }
     }
     
-    public void displayByGenre(String genre) {
+	/**
+	 *
+	 * @param genre
+	 */
+	public void displayByGenre(String genre) {
         if(genre.equals(Inter.get("Label.All"))) {
             this.genre=null;
         }

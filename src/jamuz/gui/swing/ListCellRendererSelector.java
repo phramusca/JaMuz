@@ -24,8 +24,16 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+/**
+ *
+ * @author raph
+ */
 public class ListCellRendererSelector extends JLabel implements ListCellRenderer
 {
+
+	/**
+	 *
+	 */
 	public ListCellRendererSelector()
 	{
 		setOpaque(true);

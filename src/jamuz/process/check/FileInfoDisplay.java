@@ -34,6 +34,9 @@ public final class FileInfoDisplay extends FileInfoInt {
 	 */
 	public boolean isAudioFile=false;
 
+	/**
+	 *
+	 */
 	public int index;
 	
 	//Tags

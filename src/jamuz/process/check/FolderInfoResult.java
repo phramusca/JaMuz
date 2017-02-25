@@ -31,11 +31,19 @@ public class FolderInfoResult {
 	 */
 	protected String value = "";  //NOI18N
 
-    public String getValue() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+	/**
+	 *
+	 * @param value
+	 */
+	public void setValue(String value) {
         this.value = value;
     }
     
@@ -216,7 +224,13 @@ public class FolderInfoResult {
 		}
 	}
 	
-    public String analyseTrackBpm(Float tagValue, Float matchValue) {
+	/**
+	 *
+	 * @param tagValue
+	 * @param matchValue
+	 * @return
+	 */
+	public String analyseTrackBpm(Float tagValue, Float matchValue) {
 		
         boolean checkBPM = true; //TODO: Make this an option
         int errLevel;

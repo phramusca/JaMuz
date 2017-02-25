@@ -34,16 +34,37 @@ import java.awt.Image;
 import javax.swing.GrayFilter;
 import javax.swing.Icon;
 
-
-
+/**
+ *
+ * @author raph
+ */
 public class IconBuffer {
     private static final Map<String, Map<IconVersion, ImageIcon>> icons = new HashMap<>();
 
-    public enum IconVersion {
-        NORMAL_70,
+	/**
+	 *
+	 */
+	public enum IconVersion {
+
+		/**
+		 *
+		 */
+		NORMAL_70,
+
+		/**
+		 *
+		 */
 		NORMAL_50,
-        NORMAL_30,
-        GRAY_30
+
+		/**
+		 *
+		 */
+		NORMAL_30,
+
+		/**
+		 *
+		 */
+		GRAY_30
     }
     
     /**
@@ -51,7 +72,13 @@ public class IconBuffer {
      */
     public static final int iconSize = 70;
     
-    public static ImageIcon getCoverIcon(String name, String location) {
+	/**
+	 *
+	 * @param name
+	 * @param location
+	 * @return
+	 */
+	public static ImageIcon getCoverIcon(String name, String location) {
         return getCoverIcon(name, IconVersion.NORMAL_70, location);
     }
     

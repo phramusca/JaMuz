@@ -105,7 +105,12 @@ public class ReleaseMatch implements java.lang.Comparable {
 		}
 	}
 	
-    public ReleaseMatch(String mbId) throws MBWS2Exception {
+	/**
+	 *
+	 * @param mbId
+	 * @throws MBWS2Exception
+	 */
+	public ReleaseMatch(String mbId) throws MBWS2Exception {
         this.id = mbId;
         //Read album info from MusicBrainz
         Release release = new Release();
@@ -336,7 +341,11 @@ public class ReleaseMatch implements java.lang.Comparable {
 		return tracks;
 	}
 
-    public int getScore() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getScore() {
         return score;
     }
 	

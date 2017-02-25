@@ -29,7 +29,13 @@ import jamuz.utils.Popup;
  */
 public class StatSourceGuayadeque extends StatSourceSQL {
 
-    public StatSourceGuayadeque(DbInfo dbInfo, String name, String rootPath) {
+	/**
+	 *
+	 * @param dbInfo
+	 * @param name
+	 * @param rootPath
+	 */
+	public StatSourceGuayadeque(DbInfo dbInfo, String name, String rootPath) {
         super(dbInfo, name, rootPath, true, true, false);
     }
 

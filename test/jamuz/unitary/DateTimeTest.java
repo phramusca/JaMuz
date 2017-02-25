@@ -26,7 +26,12 @@ import jamuz.utils.DateTime;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class DateTimeTest {
-    @Test
+
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
     public void test() throws Exception {
 
         Assert.assertEquals(new Date(0), DateTime.parseSqlUtc("1970-01-01 00:00:00"));

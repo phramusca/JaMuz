@@ -30,7 +30,13 @@ import jamuz.utils.Popup;
  */
 public class StatSourceMixxx extends StatSourceSQL {
 
-    public StatSourceMixxx(DbInfo dbInfo, String name, String rootPath) {
+	/**
+	 *
+	 * @param dbInfo
+	 * @param name
+	 * @param rootPath
+	 */
+	public StatSourceMixxx(DbInfo dbInfo, String name, String rootPath) {
         super(dbInfo, name, rootPath, true, false, true);
     }
 
@@ -61,7 +67,12 @@ public class StatSourceMixxx extends StatSourceSQL {
         }
     }
 
-    @Override
+	/**
+	 *
+	 * @param rs
+	 * @return
+	 */
+	@Override
     protected FileInfo getStats(ResultSet rs) {
         try {
             String strfullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N

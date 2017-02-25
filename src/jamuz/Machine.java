@@ -77,6 +77,11 @@ public final class Machine {
 		return options.get(index);
 	}
 	
+	/**
+	 *
+	 * @param id
+	 * @return
+	 */
 	public Option getOption(String id){    
 		for (Option myOption : options) {
 			if (myOption.getId().equals(id)) {
@@ -147,11 +152,19 @@ public final class Machine {
 		}
 	}
 
-    public String getName() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getName() {
         return name;
     }
 
-    public String getDescription() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getDescription() {
         return description;
     }
     

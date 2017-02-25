@@ -59,7 +59,12 @@ public class Jamuz {
     private static DbConnJaMuz db;
 	private static HashMap <Integer, Playlist> playlists;
 
-    public static boolean configure(String appPath) {
+	/**
+	 *
+	 * @param appPath
+	 * @return
+	 */
+	public static boolean configure(String appPath) {
         Jamuz.appPath = appPath;
         logPath = appPath + "logs" + File.separator;  //NOI18N //NOI18N //NOI18N
         
@@ -236,7 +241,13 @@ public class Jamuz {
 		}
 	}
     
-    public static File getFile(String filename, String... args) {
+	/**
+	 *
+	 * @param filename
+	 * @param args
+	 * @return
+	 */
+	public static File getFile(String filename, String... args) {
         String file=appPath;
         for (String subFolder : args) {
             file = FilenameUtils.concat(file, subFolder); //NOI18N
@@ -279,17 +290,28 @@ public class Jamuz {
         return options;
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public static Options getKeys() {
 		return keys;
 	}
 
 	private static DefaultListModel genreListModel;
 	
-    public static void readGenres() {
+	/**
+	 *
+	 */
+	public static void readGenres() {
         genreListModel = new DefaultListModel();
         getDb().getGenreListModel(genreListModel);
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public static List<String> getGenres() {
         return (List<String>)(List<?>) Arrays.asList(genreListModel.toArray());
     }
@@ -308,7 +330,11 @@ public class Jamuz {
         getDb().getTags(tags);
     }
 
-    public static ArrayList<String> getTags() {
+	/**
+	 *
+	 * @return
+	 */
+	public static ArrayList<String> getTags() {
         return tags;
     }
 
@@ -331,6 +357,10 @@ public class Jamuz {
 		return list;
 	}
     
+	/**
+	 *
+	 * @return
+	 */
 	public static List<Playlist> getPlaylistsVisible() {
 		return playlists.values().stream().filter(playlist -> !playlist.isHidden()).sorted().collect(Collectors.toList());
 	}
@@ -354,7 +384,11 @@ public class Jamuz {
 	 */
 	private static final Logger logger = Logger.getLogger("JaMuz");  //NOI18N
 
-    public static Logger getLogger() {
+	/**
+	 *
+	 * @return
+	 */
+	public static Logger getLogger() {
         return logger;
     }
     

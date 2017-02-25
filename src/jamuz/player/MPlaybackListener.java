@@ -26,8 +26,23 @@ import java.util.EventListener;
 //http://rom.developpez.com/java-listeners/
 
 public interface MPlaybackListener extends EventListener {
-    void volumeChanged(float volume);
+
+	/**
+	 *
+	 * @param volume
+	 */
+	void volumeChanged(float volume);
+
+	/**
+	 *
+	 */
 	void playbackFinished();
+
+	/**
+	 *
+	 * @param position
+	 * @param length
+	 */
 	void positionChanged(int position, int length);
 }
 

@@ -249,6 +249,11 @@ public class JMPlayer {
 		setProperty("volume", volume);
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
 	protected String getProperty(String name) {
 		if (name == null || mplayerProcess == null) {
 			return null;
@@ -262,6 +267,11 @@ public class JMPlayer {
 		return x.substring(s.length());
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
 	protected long getPropertyAsLong(String name) {
 		try {
 			return Long.parseLong(getProperty(name));
@@ -271,6 +281,11 @@ public class JMPlayer {
 		return 0;
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
 	protected float getPropertyAsFloat(String name) {
 		try {
 			return Float.parseFloat(getProperty(name));
@@ -280,14 +295,29 @@ public class JMPlayer {
 		return 0f;
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param value
+	 */
 	protected void setProperty(String name, String value) {
 		execute("set_property " + name + " " + value);
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param value
+	 */
 	protected void setProperty(String name, long value) {
 		execute("set_property " + name + " " + value);
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param value
+	 */
 	protected void setProperty(String name, float value) {
 		execute("set_property " + name + " " + value);
 	}

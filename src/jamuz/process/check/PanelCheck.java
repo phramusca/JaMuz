@@ -62,23 +62,38 @@ public class PanelCheck extends javax.swing.JPanel {
      * Scan progress bar
      */
     protected static ProgressBar progressBarScanSize;
-    protected static List<ProgressBar> progressBarListScanDequeue=new ArrayList<>();
+
+	/**
+	 *
+	 */
+	protected static List<ProgressBar> progressBarListScanDequeue=new ArrayList<>();
     
     /**
      * Analysis progress bar
      */
     protected static ProgressBar progressBarAnalysisSize;
-    protected static List<ProgressBar> progressBarListAnalysisDequeue=new ArrayList<>();
+
+	/**
+	 *
+	 */
+	protected static List<ProgressBar> progressBarListAnalysisDequeue=new ArrayList<>();
     
     /**
      * Actions progress bar
      */
     protected static ProgressBar progressActionsSize;
-    protected static ProgressBar progressActionsDequeue;
+
+	/**
+	 *
+	 */
+	protected static ProgressBar progressActionsDequeue;
     
     private JButton jButtonActionInJList;
 
-    public static TableModelCheck tableModelCheck = new TableModelCheck();
+	/**
+	 *
+	 */
+	public static TableModelCheck tableModelCheck = new TableModelCheck();
        
     /**
      * Creates new form PanelCheck
@@ -593,7 +608,11 @@ public class PanelCheck extends javax.swing.JPanel {
         jCheckBoxCheckManual.setEnabled(enable); 
     }
     
-    public static void stopActions(boolean enableDoActions) {
+	/**
+	 *
+	 * @param enableDoActions
+	 */
+	public static void stopActions(boolean enableDoActions) {
         
         //Abort doActions
         processCheck.stopActions();
@@ -742,7 +761,10 @@ public class PanelCheck extends javax.swing.JPanel {
         jCheckBoxCheckFull.setEnabled(enabled && isMaster);
     }
     
-    public static void enableAbortButton() {
+	/**
+	 *
+	 */
+	public static void enableAbortButton() {
         jButtonCheckAbort.setEnabled(true);
     }
 

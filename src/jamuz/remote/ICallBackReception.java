@@ -10,5 +10,11 @@ package jamuz.remote;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public interface ICallBackReception {
+
+	/**
+	 *
+	 * @param login
+	 * @param msg
+	 */
 	public void received(String login, String msg);
 }

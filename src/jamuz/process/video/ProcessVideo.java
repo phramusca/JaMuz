@@ -48,7 +48,11 @@ public class ProcessVideo extends ProcessAbstract {
     private boolean getDb;
 	private boolean doSearch;
 
-    public ProcessVideo(String name) {
+	/**
+	 *
+	 * @param name
+	 */
+	public ProcessVideo(String name) {
         super(name);
         tableModel = new TableModelVideo();
         buffer = new PathBuffer();
@@ -136,7 +140,13 @@ public class ProcessVideo extends ProcessAbstract {
         return true;
     }
     
-    public void listDb(boolean move, boolean getDb, boolean search) {
+	/**
+	 *
+	 * @param move
+	 * @param getDb
+	 * @param search
+	 */
+	public void listDb(boolean move, boolean getDb, boolean search) {
         this.tableModel.clear();
         this.buffer = new PathBuffer();
         this.move = move;
@@ -305,7 +315,11 @@ public class ProcessVideo extends ProcessAbstract {
 		connKodi.disconnect();
 		return true;
 	}
-    public static TheMovieDb themovieDb;
+
+	/**
+	 *
+	 */
+	public static TheMovieDb themovieDb;
     
     private void browseFS(File path, String rootPath) throws InterruptedException {
 		this.checkAbort();
@@ -331,7 +345,11 @@ public class ProcessVideo extends ProcessAbstract {
 		}
 	}
     
-    public TableModelVideo getTableModel() {
+	/**
+	 *
+	 * @return
+	 */
+	public TableModelVideo getTableModel() {
         return tableModel;
     }
     
@@ -344,6 +362,7 @@ public class ProcessVideo extends ProcessAbstract {
         /**
          * get id
          * @param strPath
+		 * @param conn
          * @return
          */
         public int getId(String strPath, DbConnVideo conn) {

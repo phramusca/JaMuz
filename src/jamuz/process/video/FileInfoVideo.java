@@ -31,11 +31,19 @@ public class FileInfoVideo extends FileInfo {
     private int seasonNumber=0;
     private int episodeNumber=0;
 
-    public int getSeasonNumber() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getSeasonNumber() {
         return seasonNumber;
     }
 
-    public int getEpisodeNumber() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getEpisodeNumber() {
         return episodeNumber;
     }
     
@@ -60,7 +68,10 @@ public class FileInfoVideo extends FileInfo {
         this.episodeNumber = episodeNumber;
     }
 
-    public FileInfoVideo() {
+	/**
+	 *
+	 */
+	public FileInfoVideo() {
         super("");
     }
     
@@ -72,6 +83,11 @@ public class FileInfoVideo extends FileInfo {
 //    public StreamDetails getStreamDetails() {
 //        return streamDetails;
 //    }
+
+	/**
+	 *
+	 * @return
+	 */
 
     public boolean isHD() {
         //TODO: Why is this function called so may times for the same movie ??
@@ -88,7 +104,11 @@ public class FileInfoVideo extends FileInfo {
         return false;
     }
     
-    public String getVideoStreamDetails() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getVideoStreamDetails() {
         if(streamDetails.video.size()>=1) {
             //TODO: Color if for HTML
             StreamDetails.VideoStream videoStream = streamDetails.video.get(0);
@@ -118,7 +138,11 @@ public class FileInfoVideo extends FileInfo {
         }
     }
     
-    public String getAudioStreamDetails() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getAudioStreamDetails() {
         String display="";
         if(streamDetails.audio.size()>0) {
             for(FileInfoVideo.StreamDetails.AudioStream audioStream : streamDetails.audio) {
@@ -133,7 +157,11 @@ public class FileInfoVideo extends FileInfo {
         return display;
     }
     
-    public String getSubtitlesStreamDetails() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getSubtitlesStreamDetails() {
         String display="";
         if(streamDetails.subtitles.size()>0) {
             for(String language : streamDetails.subtitles) {
@@ -147,9 +175,21 @@ public class FileInfoVideo extends FileInfo {
      *
      */
     public static class StreamDetails {
-        protected final List<AudioStream> audio;
-        protected final List<VideoStream> video;
-        protected final List<String> subtitles;
+
+		/**
+		 *
+		 */
+		protected final List<AudioStream> audio;
+
+		/**
+		 *
+		 */
+		protected final List<VideoStream> video;
+
+		/**
+		 *
+		 */
+		protected final List<String> subtitles;
 
         /**
          *
@@ -220,9 +260,21 @@ public class FileInfoVideo extends FileInfo {
          *
          */
         public class AudioStream {
-            protected final String codec;
-            protected final int channels;
-            protected final String language;  
+
+			/**
+			 *
+			 */
+			protected final String codec;
+
+			/**
+			 *
+			 */
+			protected final int channels;
+  
+			/**
+			 *
+			 */
+			protected final String language;  
 
             /**
              *
@@ -241,11 +293,31 @@ public class FileInfoVideo extends FileInfo {
          *
          */
         public class VideoStream {
-            protected final String codec;
-            protected final double aspect;
-            protected final int width;
-            protected final int height;
-            protected final int duration;
+
+			/**
+			 *
+			 */
+			protected final String codec;
+
+			/**
+			 *
+			 */
+			protected final double aspect;
+
+			/**
+			 *
+			 */
+			protected final int width;
+
+			/**
+			 *
+			 */
+			protected final int height;
+
+			/**
+			 *
+			 */
+			protected final int duration;
 
             /**
              *

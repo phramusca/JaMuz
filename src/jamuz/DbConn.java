@@ -33,7 +33,11 @@ public class DbConn {
      */
     protected Connection connection;
 
-    public Connection getConnnection() {
+	/**
+	 *
+	 * @return
+	 */
+	public Connection getConnnection() {
         return connection;
     }
     
@@ -42,7 +46,11 @@ public class DbConn {
 	 */
 	protected DbInfo info;
 
-    public DbInfo getInfo() {
+	/**
+	 *
+	 * @return
+	 */
+	public DbInfo getInfo() {
         return info;
     }
 

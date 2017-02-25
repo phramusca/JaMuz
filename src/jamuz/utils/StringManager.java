@@ -83,7 +83,12 @@ public class StringManager {
         return str.replaceAll(pattern, "_"); //NOI18N
     }
     
-    public static String getNullableText(String text) {
+	/**
+	 *
+	 * @param text
+	 * @return
+	 */
+	public static String getNullableText(String text) {
         if(text==null) {
             return "null";
         }
@@ -113,21 +118,36 @@ public class StringManager {
         return String.format("%.1f %so", bytes / Math.pow(unit, exp), pre); //NOI18N
     }
     
-    public static String secondsToMMSS(int seconds) {
+	/**
+	 *
+	 * @param seconds
+	 * @return
+	 */
+	public static String secondsToMMSS(int seconds) {
         return String.format("%02d:%02d", //NOI18N
                 TimeUnit.SECONDS.toMinutes(seconds),
                 TimeUnit.SECONDS.toSeconds(seconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(seconds))
         );
     }
     
-    public static String secondsToHHMM(int seconds) {
+	/**
+	 *
+	 * @param seconds
+	 * @return
+	 */
+	public static String secondsToHHMM(int seconds) {
         return String.format("%02d h %02d", //NOI18N
                 TimeUnit.SECONDS.toHours(seconds),
                 TimeUnit.SECONDS.toMinutes(seconds) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(seconds))
         );
     }
     
-    public static String humanReadableSeconds(long seconds) {
+	/**
+	 *
+	 * @param seconds
+	 * @return
+	 */
+	public static String humanReadableSeconds(long seconds) {
         if (seconds <= 0) {
             return "-";
         }

@@ -23,7 +23,11 @@ package jamuz.utils;
  */
 public abstract class ProcessAbstract extends Thread {
 
-    public ProcessAbstract(String name) {
+	/**
+	 *
+	 * @param name
+	 */
+	public ProcessAbstract(String name) {
         super(name);
     }
     

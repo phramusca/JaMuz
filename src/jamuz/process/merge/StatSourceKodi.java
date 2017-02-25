@@ -29,7 +29,13 @@ import jamuz.utils.Popup;
  */
 public class StatSourceKodi extends StatSourceSQL {
 
-    public StatSourceKodi(DbInfo dbInfo, String name, String rootPath) {
+	/**
+	 *
+	 * @param dbInfo
+	 * @param name
+	 * @param rootPath
+	 */
+	public StatSourceKodi(DbInfo dbInfo, String name, String rootPath) {
         super(dbInfo, name, rootPath, false, true, false);
     }
     

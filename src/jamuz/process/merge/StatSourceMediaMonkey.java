@@ -29,7 +29,13 @@ import jamuz.utils.Popup;
  */
 public class StatSourceMediaMonkey extends StatSourceSQL {
 
-    public StatSourceMediaMonkey(DbInfo dbInfo, String name, String rootPath) {
+	/**
+	 *
+	 * @param dbInfo
+	 * @param name
+	 * @param rootPath
+	 */
+	public StatSourceMediaMonkey(DbInfo dbInfo, String name, String rootPath) {
         super(dbInfo, name, rootPath, true, true, false); 
         //TODO: MediaMonkey support BPM I think. Need to get a Windows machine to test and update the SQL scripts below
     }
