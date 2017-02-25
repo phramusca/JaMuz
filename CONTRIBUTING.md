@@ -28,9 +28,7 @@ Please submit to the `master` branch.
 
 ### Internationalization
 
-[Example of translation guide using git, from rails](https://github.com/mhartl/rails_tutorial_translation/wiki)
-
-[CHANGE THIS URL TO weblate.org project](weblate.org)
+Using [weblate.org](https://hosted.weblate.org/engage/jamuz/)
 
 ### Stat sources
 In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monkey, Mixxx, MyTunes) you can add one simply by extending the jamuz.StatSourceAbstract class and adding entry to database.
