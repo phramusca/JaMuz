@@ -69,9 +69,9 @@ public class PanelStats extends javax.swing.JPanel {
 		//Get table model
 		tableModel = (TableModel) jTableStats.getModel();
 		//Set model
-		String[] columnNames = {"#", "%", "Length", "Rating", "Size", ""};  //NOI18N
+		String[] columnNames = {"# file", "# album", "%", "Length", "Rating", "Size", ""};  //NOI18N
 		Object[][] data = {
-			{0, 0, 0, 0, 0, "Default"}  //NOI18N
+			{0, 0, 0, 0, 0, 0, "Default"}  //NOI18N
 		};
 		tableModel.setModel(columnNames, data);
 		//Clear model
@@ -83,28 +83,33 @@ public class PanelStats extends javax.swing.JPanel {
 		column.setMinWidth(100);
 		column.setPreferredWidth(100);
 	
-        //Set "%" column width
+		//Set "#" column width
 		column = jTableStats.getColumnModel().getColumn(1);
+		column.setMinWidth(100);
+		column.setPreferredWidth(100);
+		
+        //Set "%" column width
+		column = jTableStats.getColumnModel().getColumn(2);
 		column.setMinWidth(40);
 		column.setMaxWidth(40);
 
         //"Length"
-        column = jTableStats.getColumnModel().getColumn(2);
+        column = jTableStats.getColumnModel().getColumn(3);
 		column.setMinWidth(170);
 		column.setPreferredWidth(170);
         
         //"Rating"
-        column = jTableStats.getColumnModel().getColumn(3);
+        column = jTableStats.getColumnModel().getColumn(4);
 		column.setMinWidth(50);
 		column.setPreferredWidth(50);
         
         //"Size"
-        column = jTableStats.getColumnModel().getColumn(4);
+        column = jTableStats.getColumnModel().getColumn(5);
 		column.setMinWidth(150);
 		column.setPreferredWidth(150);
         
 		//Set "Label" column width
-		column = jTableStats.getColumnModel().getColumn(5);
+		column = jTableStats.getColumnModel().getColumn(6);
 //		column.setMinWidth(20);
 		column.setPreferredWidth(500);
 		
@@ -513,20 +518,20 @@ public class PanelStats extends javax.swing.JPanel {
         }
 
         StatItem total=Jamuz.getDb().getStatItem(field, totalSelector, table, "", Color.YELLOW);
-        long totalCount = total.getCount();
+        long totalCount = total.getCountFile();
 
         float percentage;
 		ArrayList<PanelPieChart.PieSlice> slices = new ArrayList<>();
 		for (StatItem statItem : stats) {
 			if(totalCount>0) {
-				percentage = statItem.getCount() * 100 / totalCount;
+				percentage = statItem.getCountFile() * 100 / totalCount;
 			}
 			else {
 				percentage = 0;
 			}
             statItem.setPercentage(percentage);
 			this.addRowStats(tableModel, statItem);
-			slices.add(new PanelPieChart.PieSlice(statItem.getLabelForChart()+"\t ("+String.valueOf((int)percentage)+"%)", (double) statItem.getCount(), statItem.getColor()));  //NOI18N
+			slices.add(new PanelPieChart.PieSlice(statItem.getLabelForChart()+"\t ("+String.valueOf((int)percentage)+"%)", (double) statItem.getCountFile(), statItem.getColor()));  //NOI18N
 		}
         
         if(showChart) {
@@ -601,7 +606,7 @@ public class PanelStats extends javax.swing.JPanel {
 	}
 	
     private void addRowStats(TableModel myTableModel, StatItem statItem) {
-		Object[] donnee = new Object[]{statItem.getCount(), statItem.getPercentage(), StringManager.humanReadableSeconds(statItem.getLength()), 
+		Object[] donnee = new Object[]{statItem.getCountFile(), statItem.getCountPath(), statItem.getPercentage(), StringManager.humanReadableSeconds(statItem.getLength()), 
             statItem.getRating(), StringManager.humanReadableByteCount(statItem.getSize(), false), statItem.getLabelForChart()};
 		myTableModel.addRow(donnee);
     }
