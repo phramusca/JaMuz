@@ -6,7 +6,6 @@ logs/*
 database/*_for_comparison.sql
 dist_Wish/*
 nbproject/private/*
-*.properties
 manifest.mf
 JaMuz.xml
 keys.properties
@@ -32,3 +31,4 @@ hs_err_pid*
 /yGuard.log
 /build/
 /data/AudioLinks.txt
+/JaMuz.properties
