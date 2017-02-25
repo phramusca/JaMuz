@@ -47,7 +47,6 @@ import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 /**
  * Creates a new dbConn.connection to JaMuz database
@@ -484,6 +483,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param modifDate
      * @param checkedFlag
      * @param path
+	 * @param mbId
      * @return
      */
     public synchronized boolean updatePath(int idPath, Date modifDate, CheckedFlag checkedFlag, String path, String mbId) {
@@ -623,6 +623,11 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	/**
+	 *
+	 * @param idFile
+	 * @return
+	 */
 	public synchronized boolean setFileSaved(int idFile) {
         try {
             PreparedStatement stUpdateDeletedFile = dbConn.connection.prepareStatement("UPDATE file SET saved=1 WHERE idFile=?");   //NOI18N
@@ -918,7 +923,12 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
  
-    public synchronized boolean deleteDeviceFiles(int idDevice) {
+	/**
+	 *
+	 * @param idDevice
+	 * @return
+	 */
+	public synchronized boolean deleteDeviceFiles(int idDevice) {
         try {
             PreparedStatement stDeleteDeviceFiles = dbConn.connection.prepareStatement("DELETE FROM deviceFile WHERE idDevice=?");  //NOI18N
             stDeleteDeviceFiles.setInt(1, idDevice);
@@ -939,6 +949,11 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	/**
+	 *
+	 * @param idFile
+	 * @return
+	 */
 	public boolean deleteTagFiles(int idFile) {
         try {
             PreparedStatement stDeleteTagFiles = dbConn.connection.prepareStatement(
@@ -961,7 +976,13 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 	
-    public boolean insertTagFiles(ArrayList<String> tags, int idFile) {
+	/**
+	 *
+	 * @param tags
+	 * @param idFile
+	 * @return
+	 */
+	public boolean insertTagFiles(ArrayList<String> tags, int idFile) {
         try {
             if (tags.size() > 0) {
                 dbConn.connection.setAutoCommit(false);
@@ -1368,7 +1389,12 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
-    public synchronized boolean updateLastMergeDate(int idStatSource) {
+	/**
+	 *
+	 * @param idStatSource
+	 * @return
+	 */
+	public synchronized boolean updateLastMergeDate(int idStatSource) {
         try {
             PreparedStatement stUpdateStatSourceLastMergeDate = dbConn.connection.prepareStatement("UPDATE statsource "
                     + "SET lastMergeDate=datetime('now') WHERE idStatSource=?");    
@@ -1520,6 +1546,11 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 	
+	/**
+	 *
+	 * @param selOptions
+	 * @return
+	 */
 	public synchronized int[] setOptions(Machine selOptions) {
 		try {
 			dbConn.connection.setAutoCommit(false);
@@ -1696,11 +1727,19 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
-    public void getGenreListModel(DefaultListModel myListModel) {
+	/**
+	 *
+	 * @param myListModel
+	 */
+	public void getGenreListModel(DefaultListModel myListModel) {
         getListModel(myListModel, "SELECT value FROM genre ORDER BY value", "value");
     }
     
-    public void getTagListModel(DefaultListModel myListModel) {
+	/**
+	 *
+	 * @param myListModel
+	 */
+	public void getTagListModel(DefaultListModel myListModel) {
         getListModel(myListModel, "SELECT value FROM tag ORDER BY value", "value");
     }
     
@@ -1735,7 +1774,12 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
     
-    public void getTags(ArrayList tags, int idFile) {
+	/**
+	 *
+	 * @param tags
+	 * @param idFile
+	 */
+	public void getTags(ArrayList tags, int idFile) {
         try {
             PreparedStatement stSelectPlaylists = dbConn.connection.prepareStatement(
                     "SELECT value FROM tag T JOIN tagFile F ON T.id=F.idTag WHERE F.idFile=?");    //NOI18N
@@ -1923,7 +1967,11 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         }
     }
     
-    public void getPercentRatedForStats(ArrayList<StatItem> stats) {
+	/**
+	 *
+	 * @param stats
+	 */
+	public void getPercentRatedForStats(ArrayList<StatItem> stats) {
         Statement st=null;
         ResultSet rs=null;
         try {
@@ -2004,7 +2052,9 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         }
     }
 
-    public class StatItem {
+	/**
+	 */
+	public class StatItem {
         private final long countFile;
 		private final long countPath;
         private long size=-1;
@@ -2013,14 +2063,15 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         private float percentage=-1;
         private String label;
         private final String value;
-        private Color color;
+        private final Color color;
 
         /**
          *
          * @param label
          * @param value
-         * @param count
+		 * @param countFile
          * @param size
+		 * @param countPath
          * @param length
          * @param rating
          * @param color
@@ -2037,31 +2088,59 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             this.color = color;
         }
 
+		/**
+		 *
+		 * @return
+		 */
 		public long getCountFile() {
 			return countFile;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public long getCountPath() {
 			return countPath;
 		}
 
-        public long getSize() {
+		/**
+		 *
+		 * @return
+		 */
+		public long getSize() {
             return size;
         }
 
-        public long getLength() {
+		/**
+		 *
+		 * @return
+		 */
+		public long getLength() {
             return length;
         }
 
-        public double getRating() {
+		/**
+		 *
+		 * @return
+		 */
+		public double getRating() {
             return rating;
         }
 
-        public String getLabel() {
+		/**
+		 *
+		 * @return
+		 */
+		public String getLabel() {
             return label;
         }
         
-        public String getLabelForChart() {
+		/**
+		 *
+		 * @return
+		 */
+		public String getLabelForChart() {
             String newLabel= label;
             newLabel=newLabel.replaceAll("%", "-");
             newLabel=newLabel.replaceAll("percent", "%");
@@ -2069,23 +2148,43 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 //            return label.replaceAll("%", "-").replaceAll("percent", "%");
         }
 
-        public String getValue() {
+		/**
+		 *
+		 * @return
+		 */
+		public String getValue() {
             return value;
         }
 
-        public float getPercentage() {
+		/**
+		 *
+		 * @return
+		 */
+		public float getPercentage() {
             return percentage;
         }
 
-        public void setPercentage(float percentage) {
+		/**
+		 *
+		 * @param percentage
+		 */
+		public void setPercentage(float percentage) {
             this.percentage = percentage;
         }
 
-        public void setLabel(String label) {
+		/**
+		 *
+		 * @param label
+		 */
+		public void setLabel(String label) {
             this.label = label;
         }
 
-        public Color getColor() {
+		/**
+		 *
+		 * @return
+		 */
+		public Color getColor() {
             return color;
         }
     }
@@ -2338,7 +2437,21 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         return getFiles(myFileInfoList, sql);
     }
     
-    public String getFilesStats(String selGenre, String selArtist, String selAlbum, 
+	/**
+	 *
+	 * @param selGenre
+	 * @param selArtist
+	 * @param selAlbum
+	 * @param selRatings
+	 * @param selCheckedFlag
+	 * @param yearFrom
+	 * @param yearTo
+	 * @param bpmFrom
+	 * @param bpmTo
+	 * @param copyRight
+	 * @return
+	 */
+	public String getFilesStats(String selGenre, String selArtist, String selAlbum, 
             boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) {
 
         selGenre = getSelected(selGenre);
@@ -2353,22 +2466,25 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 //        getFiles(myFileInfoList, sql);
     }
 
-    public String getFilesStats(String sql) {
+	/**
+	 *
+	 * @param sql
+	 * @return
+	 */
+	public String getFilesStats(String sql) {
 
         Statement st = null;
         ResultSet rs=null;
         int nbFiles=0;
-        long totalSize=0;
-        long totalLength=0;
+        long totalSize;
+        long totalLength;
         try {
             //Execute query
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
-//            while (rs.next()) {
                 nbFiles = rs.getInt("nbFiles");   //NOI18N
                 totalSize = rs.getLong("totalSize");   //NOI18N
                 totalLength = rs.getLong("totalLength");   //NOI18N
-//            }
             return nbFiles+" file(s)"
                         +" ; "+StringManager.humanReadableSeconds(totalLength)
                         +" ; "+StringManager.humanReadableByteCount(totalSize, false);

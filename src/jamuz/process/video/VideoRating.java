@@ -26,12 +26,21 @@ public class VideoRating implements Serializable {
     private final int rating;
     private final String display;
 
-    public VideoRating(int rating, String display) {
+	/**
+	 *
+	 * @param rating
+	 * @param display
+	 */
+	public VideoRating(int rating, String display) {
         this.rating = rating;
         this.display = display;
     }
 
-    public int getRating() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getRating() {
         return rating;
     }
 

@@ -53,27 +53,54 @@ public class ProcessCheck {
     //TODO: Would ArrayBlockingQueue be faster ? ( http://examples.javacodegeeks.com/core-java/util/concurrent/linkedblockingqueue/java-util-concurrent-linkedblockingqueue-example/ )
     private BlockingQueue<FolderInfo> scanQueue = new LinkedBlockingQueue<>();
     private BlockingQueue<FolderInfo> analysisQueue = new LinkedBlockingQueue<>();
-    public BlockingQueue<FolderInfo> actionQueue = new LinkedBlockingQueue<>();
+
+	/**
+	 *
+	 */
+	public BlockingQueue<FolderInfo> actionQueue = new LinkedBlockingQueue<>();
     private static final FolderInfo lastFolder = new FolderInfo(); //TODO: Do not display in queues (internal use only)
     private ConcurrentHashMap<String,FolderInfo> foldersDb;
     
     private volatile int nbProcesses=0;
-    public DoBrowse doBrowse;
-    public List<DoAnalyze> doAnalyzeList=new ArrayList<>();
-    public List<DoScan> doScanList=new ArrayList<>();
+
+	/**
+	 *
+	 */
+	public DoBrowse doBrowse;
+
+	/**
+	 *
+	 */
+	public List<DoAnalyze> doAnalyzeList=new ArrayList<>();
+
+	/**
+	 *
+	 */
+	public List<DoScan> doScanList=new ArrayList<>();
     
-    public DoActions doActions;
+	/**
+	 *
+	 */
+	public DoActions doActions;
     private final Object lockScan = new Object();
     private int maxActionQueueSize=30; //TODO: Make this an option (save value automatically when changed, and do the same for nbSan et nbAnalysis spinners)
 
-    public void setMaxActionQueueSize(int maxActionQueueSize) {
+	/**
+	 *
+	 * @param maxActionQueueSize
+	 */
+	public void setMaxActionQueueSize(int maxActionQueueSize) {
         synchronized(lockScan) {
             this.maxActionQueueSize = maxActionQueueSize;
             lockScan.notifyAll();
         }
     }
 
-    public int getMaxActionQueueSize() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getMaxActionQueueSize() {
         synchronized(lockScan) {
             return maxActionQueueSize;
         }
@@ -103,7 +130,11 @@ public class ProcessCheck {
        return koLocation;
    }
 
-    public static Location getManualLocation() {
+	/**
+	 *
+	 * @return
+	 */
+	public static Location getManualLocation() {
        return manualLocation;
    }
 
@@ -168,7 +199,10 @@ public class ProcessCheck {
         doBrowse.start();
     }
     
-    public void stopCheck() {
+	/**
+	 *
+	 */
+	public void stopCheck() {
         doBrowse.abort();
         for(DoScan doScan : doScanList) {
             if(doScan!=null) {
@@ -182,7 +216,11 @@ public class ProcessCheck {
         }
     }
 
-    public boolean isCheckAlive() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isCheckAlive() {
         return nbProcesses>0;
     }
     
@@ -192,7 +230,10 @@ public class ProcessCheck {
         }
     }
   
-    public void displayActionQueue() {
+	/**
+	 *
+	 */
+	public void displayActionQueue() {
         PanelCheck.progressActionsSize.setMaximum(PanelCheck.tableModelCheck.getRowCount());
         PanelCheck.progressActionsSize.progress("", actionQueue.size());
     }
@@ -263,7 +304,13 @@ public class ProcessCheck {
          PanelCheck.progressBarAnalysisSize.progress(msgAnalysis, analysisQueue.size());
     }
     
-    public void startActions(boolean doKO, boolean doWarning, boolean doManual) {
+	/**
+	 *
+	 * @param doKO
+	 * @param doWarning
+	 * @param doManual
+	 */
+	public void startActions(boolean doKO, boolean doWarning, boolean doManual) {
         
         //Adding back those who are no more in queue
         Iterator<FolderInfo> folders = PanelCheck.tableModelCheck.getFolders().iterator();
@@ -284,7 +331,10 @@ public class ProcessCheck {
         doActions.start();
     }
     
-    public void stopActions() {
+	/**
+	 *
+	 */
+	public void stopActions() {
         if(doActions!=null) { //Happens when starting check process for the first time
             try {
                 //Add a "terminate" signal at queue end
@@ -296,7 +346,10 @@ public class ProcessCheck {
         }
     }
     
-    public class DoBrowse extends ProcessAbstract {
+	/**
+	 *
+	 */
+	public class DoBrowse extends ProcessAbstract {
         
         private final int idPath;
         private final CheckType checkType;
@@ -518,13 +571,31 @@ public class ProcessCheck {
         }
     }
 
-    public enum ScanType {
-        SCAN,
-        SCAN_DELETED,
-        CHECK_NEW
+	/**
+	 *
+	 */
+	public enum ScanType {
+
+		/**
+		 *
+		 */
+		SCAN,
+
+		/**
+		 *
+		 */
+		SCAN_DELETED,
+
+		/**
+		 *
+		 */
+		CHECK_NEW
     }
     
-    public class DoScan extends ProcessAbstract {
+	/**
+	 *
+	 */
+	public class DoScan extends ProcessAbstract {
 
         private final boolean full;
         private final boolean analyze;
@@ -663,10 +734,17 @@ public class ProcessCheck {
         }
     }
 
-    public class DoAnalyze extends ProcessAbstract {
+	/**
+	 *
+	 */
+	public class DoAnalyze extends ProcessAbstract {
         private final int progressBarId;
         
-        public DoAnalyze(int progressBarId) {
+		/**
+		 *
+		 * @param progressBarId
+		 */
+		public DoAnalyze(int progressBarId) {
             super("Thread.ProcessCheck.DoAnalyze.#"+progressBarId);
             this.progressBarId = progressBarId;
         }
@@ -840,13 +918,22 @@ public class ProcessCheck {
         }
     }
     
-    public class DoActions extends ProcessAbstract {
+	/**
+	 *
+	 */
+	public class DoActions extends ProcessAbstract {
 
         private final boolean doKO; 
         private final boolean doWarning; 
         private final boolean doManual;
 
-        public DoActions(boolean doKO, boolean doWarning, boolean doManual) {
+		/**
+		 *
+		 * @param doKO
+		 * @param doWarning
+		 * @param doManual
+		 */
+		public DoActions(boolean doKO, boolean doWarning, boolean doManual) {
             super("Thread.ProcessCheck.DoActions");
             this.doKO = doKO;
             this.doWarning = doWarning;
@@ -907,6 +994,10 @@ public class ProcessCheck {
          */
         ANALYZING("...", 0), //NOI18N
 
+		/**
+		 *
+		 */
+
         MANUAL("", -1),
         
         /**
@@ -923,6 +1014,10 @@ public class ProcessCheck {
          * KO
          */
         KO(Inter.get("Check.KO"), 6), //NOI18N
+
+		/**
+		 *
+		 */
 
         KO_LIBRARY(Inter.get("Check.KO.Library"), 5),        
         /**
@@ -956,12 +1051,39 @@ public class ProcessCheck {
 
 	};
     
-    public enum CheckType {
-        SCAN_QUICK,
-        SCAN_FULL,
+	/**
+	 *
+	 */
+	public enum CheckType {
+
+		/**
+		 *
+		 */
+		SCAN_QUICK,
+
+		/**
+		 *
+		 */
+		SCAN_FULL,
+
+		/**
+		 *
+		 */
 		SCAN_DELETED,
-        CHECK_NEW,
-        CHECK_DB,
-        CHECK_FOLDER
+
+		/**
+		 *
+		 */
+		CHECK_NEW,
+
+		/**
+		 *
+		 */
+		CHECK_DB,
+
+		/**
+		 *
+		 */
+		CHECK_FOLDER
     }
 }

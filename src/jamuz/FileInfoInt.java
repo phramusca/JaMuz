@@ -102,7 +102,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected int trackNo=-1;
 
-    public int getTrackNo() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getTrackNo() {
         return trackNo;
     }
     
@@ -111,7 +115,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected int trackTotal=-1;
 
-    public int getTrackTotal() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getTrackTotal() {
         return trackTotal;
     }
     
@@ -120,7 +128,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected int discNo=-1;
 
-    public int getDiscNo() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getDiscNo() {
         return discNo;
     }
 
@@ -144,7 +156,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected String comment="";  //NOI18N
 
-    public String getComment() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getComment() {
         return comment;
     }
     
@@ -154,7 +170,11 @@ public class FileInfoInt extends FileInfo {
 	 */
     protected int nbCovers=0;
 
-    public int getNbCovers() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getNbCovers() {
         return nbCovers;
     }
     
@@ -164,7 +184,11 @@ public class FileInfoInt extends FileInfo {
      */
     private CheckedFlag checkedFlag = CheckedFlag.UNCHECKED;
 
-    public CheckedFlag getCheckedFlag() {
+	/**
+	 *
+	 * @return
+	 */
+	public CheckedFlag getCheckedFlag() {
         return checkedFlag;
     }
     
@@ -181,7 +205,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	private String bitRate="";  //NOI18N
 
-    public String getBitRate() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getBitRate() {
         return bitRate;
     }
 	/**
@@ -189,7 +217,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	private String format="";  //NOI18N
 
-    public String getFormat() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getFormat() {
         return format;
     }
     
@@ -198,7 +230,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected int length;
 
-    public int getLength() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getLength() {
         return length;
     }
     
@@ -207,7 +243,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected String lengthDisplay="";
 
-    public void setLengthDisplay(String lengthDisplay) {
+	/**
+	 *
+	 * @param lengthDisplay
+	 */
+	public void setLengthDisplay(String lengthDisplay) {
         this.lengthDisplay = lengthDisplay;
     }
     
@@ -216,7 +256,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected long size;
 
-    public long getSize() {
+	/**
+	 *
+	 * @return
+	 */
+	public long getSize() {
         return size;
     }
     
@@ -225,7 +269,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected String sizeDisplay="";
 
-    public void setSizeDisplay(String sizeDisplay) {
+	/**
+	 *
+	 * @param sizeDisplay
+	 */
+	public void setSizeDisplay(String sizeDisplay) {
         this.sizeDisplay = sizeDisplay;
     }
     
@@ -239,7 +287,11 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected String rootPath="";  //NOI18N
 
-    public String getRootPath() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getRootPath() {
         return rootPath;
     }
     
@@ -249,17 +301,28 @@ public class FileInfoInt extends FileInfo {
 	 */
 	private boolean fromLibrary=false;
 
-    public boolean isFromLibrary() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isFromLibrary() {
         return fromLibrary;
     }
     
     private final int copyRight;
 
-    public int getCopyRight() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getCopyRight() {
         return copyRight;
     }
 
-    protected String lyrics="";
+	/**
+	 *
+	 */
+	protected String lyrics="";
     
     /**
      * Used to merge BPM
@@ -298,7 +361,11 @@ public class FileInfoInt extends FileInfo {
         return albumRating;
     }
 
-    public double getPercentRated() {
+	/**
+	 *
+	 * @return
+	 */
+	public double getPercentRated() {
         return percentRated;
     }
 
@@ -407,7 +474,11 @@ public class FileInfoInt extends FileInfo {
 		this.rootPath = rootPath;
 	}
 	
-    public String getLyrics() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getLyrics() {
         readReplayGain();
 		
 		if(lyrics.equals("")) {
@@ -836,7 +907,12 @@ public class FileInfoInt extends FileInfo {
 		return this.saveTag(FieldKey.BPM, String.valueOf(getBPM()));
     }
     
-    public boolean saveTagLyrics(String lyrics) {
+	/**
+	 *
+	 * @param lyrics
+	 * @return
+	 */
+	public boolean saveTagLyrics(String lyrics) {
         this.lyrics=lyrics;
 		return this.saveTag(FieldKey.LYRICS, lyrics);
     }
@@ -963,6 +1039,10 @@ public class FileInfoInt extends FileInfo {
         return FolderInfoResult.formatNumber(this.trackNo)+"/"+FolderInfoResult.formatNumber(this.trackTotal);  //NOI18N
     }
 	
+	/**
+	 *
+	 * @param trackNoFull
+	 */
 	public void setTrackNoFull(String trackNoFull) {
 		String[] splitted = trackNoFull.split("/");
 		if(splitted.length==2) {
@@ -979,6 +1059,10 @@ public class FileInfoInt extends FileInfo {
         return FolderInfoResult.formatNumber(this.discNo)+"/"+FolderInfoResult.formatNumber(this.discTotal);  //NOI18N
     }
     
+	/**
+	 *
+	 * @param discNoFull
+	 */
 	public void setDiscNoFull(String discNoFull) {
 		String[] splitted = discNoFull.split("/");
 		if(splitted.length==2) {
@@ -1300,6 +1384,11 @@ public class FileInfoInt extends FileInfo {
 //			
 ////			v2tag.setFrame("TXXX", frames);
 //	}
+
+	/**
+	 *
+	 * @param sayRated
+	 */
 	
     public void sayRating (boolean sayRated) {
         //TODO: Play a reminder at 1/3 and 2/3 of the track
@@ -1315,7 +1404,11 @@ public class FileInfoInt extends FileInfo {
 //        }
     }
     
-    public void playRessouce(final String filename) {
+	/**
+	 *
+	 * @param filename
+	 */
+	public void playRessouce(final String filename) {
         //TODO: Use the basic player (if more efficient as do not need advance features fo that)
         
         Thread t = new Thread("Thread.FileInfoInt.playRessouce") {
@@ -1338,7 +1431,11 @@ public class FileInfoInt extends FileInfo {
         t.start();
     }
     
-    public String toStringQueue() {
+	/**
+	 *
+	 * @return
+	 */
+	public String toStringQueue() {
         return "<html>" + //NOI18N
                 "[" + this.rating + "/5] <b>" + this.title + "</b><BR/>" + //NOI18N
                 "<i>" + this.getAlbum() + "</i><BR/>" + //NOI18N
@@ -1347,20 +1444,32 @@ public class FileInfoInt extends FileInfo {
 
     ArrayList<String> tags = null;
     
-    public ArrayList<String> getTags() {
+	/**
+	 *
+	 * @return
+	 */
+	public ArrayList<String> getTags() {
         if(tags==null) {
             readTags();
         }
         return tags;
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	public ArrayList<String> readTags() {
 		tags = new ArrayList<>();
 		Jamuz.getDb().getTags(tags, idFile);
         return tags;
     }
     
-    public void toggleTag(String value) {
+	/**
+	 *
+	 * @param value
+	 */
+	public void toggleTag(String value) {
         if(tags.contains(value)) {
             tags.remove(value);
         }

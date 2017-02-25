@@ -166,7 +166,10 @@ public class PlayerMP3 extends PlaybackListener implements Runnable
 		}
 	}
 	
-    public void pause() {
+	/**
+	 *
+	 */
+	public void pause() {
 		if(device!=null) {
 			this.lastPosition=positionStart*1000+device.getPosition();
 			stop();

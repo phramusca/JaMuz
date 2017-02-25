@@ -134,7 +134,12 @@ public class TableModelCheckTracks extends TableModelGeneric {
         return this.getValueAt(0, col).getClass();
     }
     
-    public void setValueAt(Object value, int col) {
+	/**
+	 *
+	 * @param value
+	 * @param col
+	 */
+	public void setValueAt(Object value, int col) {
         for(int i=0; i < getRowCount(); i++) {
             setValueAt(value, i, col);
             fireTableDataChanged();

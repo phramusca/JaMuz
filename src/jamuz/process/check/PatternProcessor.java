@@ -31,11 +31,23 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class PatternProcessor {
      
-    public static Map<String, String> getMap(String path, String pattern) {
+	/**
+	 *
+	 * @param path
+	 * @param pattern
+	 * @return
+	 */
+	public static Map<String, String> getMap(String path, String pattern) {
         return extract(path, pattern);
     }
   
-    public static String toString(String path, String pattern) {
+	/**
+	 *
+	 * @param path
+	 * @param pattern
+	 * @return
+	 */
+	public static String toString(String path, String pattern) {
  
         Map<String, String> extracted = extract(path, pattern);
         

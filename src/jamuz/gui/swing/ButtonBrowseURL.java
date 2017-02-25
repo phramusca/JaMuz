@@ -38,7 +38,6 @@ public class ButtonBrowseURL extends DefaultCellEditor {
 
     /**
 	 * Create a new button cell editor
-	 * @param checkBox
 	 */
 	public ButtonBrowseURL() {
         super(new JCheckBox());

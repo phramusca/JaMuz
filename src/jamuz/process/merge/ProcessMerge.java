@@ -72,11 +72,19 @@ public class ProcessMerge extends ProcessAbstract {
 	private int nbFilesErrorJaMuz=0;
 	private ArrayList<FileInfo> errorList;
 
-    public ArrayList<FileInfo> getErrorList() {
+	/**
+	 *
+	 * @return
+	 */
+	public ArrayList<FileInfo> getErrorList() {
         return errorList;
     }
 
-    public ArrayList<FileInfo> getCompletedList() {
+	/**
+	 *
+	 * @return
+	 */
+	public ArrayList<FileInfo> getCompletedList() {
         return completedList;
     }
     

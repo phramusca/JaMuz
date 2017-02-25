@@ -118,6 +118,9 @@ public class DialogOptions extends javax.swing.JDialog {
 		setOption("network.proxy", jTextFieldOptionsProxy, jLabelOptionsProxy);
 	}
 	
+	/**
+	 *
+	 */
 	public static void displayStatSources() {
 		//Show stat source list for selected machine
 		DefaultListModel listModel=(DefaultListModel) jListStatSources.getModel();
@@ -128,6 +131,9 @@ public class DialogOptions extends javax.swing.JDialog {
 		});
 	}
 	
+	/**
+	 *
+	 */
 	public static void displayDevices() {
 		//Show device list for selected machine
 		DefaultListModel devicesModel=(DefaultListModel) jListDevices.getModel();

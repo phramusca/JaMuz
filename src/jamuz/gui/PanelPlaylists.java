@@ -800,7 +800,10 @@ public class PanelPlaylists extends javax.swing.JPanel {
         PanelMain.setRightsVisible(columnModelPlaylist, jToggleButtonSelectShowRights.isSelected());
     }//GEN-LAST:event_jToggleButtonSelectShowRightsActionPerformed
 
-    public static void fillPlayList() {
+	/**
+	 *
+	 */
+	public static void fillPlayList() {
 		
 		//In a thread not to block GUI while waiting on tFillPlaylistTable
         new Thread("Thread.PanelPlaylists.fillPlayList") {

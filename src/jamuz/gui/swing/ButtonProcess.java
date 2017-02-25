@@ -28,7 +28,11 @@ import javax.swing.JButton;
 //Custom text for each state
 public class ButtonProcess extends JButton {
     
-    public ButtonProcess(ImageIcon icon) {
+	/**
+	 *
+	 * @param icon
+	 */
+	public ButtonProcess(ImageIcon icon) {
         this.state = State.STOPPED;
         setIcon(icon);
         setMargin(new Insets(0, 0, 0, 0));
@@ -39,7 +43,11 @@ public class ButtonProcess extends JButton {
         setSize(icon.getImage().getWidth(null), icon.getImage().getHeight(null));
     }
     
-    public ButtonProcess(String text) {
+	/**
+	 *
+	 * @param text
+	 */
+	public ButtonProcess(String text) {
         this.state = State.STOPPED;
         setText(text);
     }
@@ -52,7 +60,11 @@ public class ButtonProcess extends JButton {
     
     private final State state;
     
-    public boolean isRunning() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isRunning() {
         return state.equals(State.RUNNING);
     }
 }

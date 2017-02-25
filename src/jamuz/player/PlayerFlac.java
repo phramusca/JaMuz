@@ -74,7 +74,10 @@ public class PlayerFlac implements PCMProcessor, LineListener, Runnable {
         this.playerThread.start();
     }
     
-    public void stop() { 
+	/**
+	 *
+	 */
+	public void stop() { 
         if (decoder != null) {
             decoder.removePCMProcessor(this);
             decoder=null;
@@ -82,7 +85,12 @@ public class PlayerFlac implements PCMProcessor, LineListener, Runnable {
         //TODO: better Manage Stop at least (stops sometimes), and "setPosition" ideally as for MP3
 	}
     
-    public String play(String filePath) {
+	/**
+	 *
+	 * @param filePath
+	 * @return
+	 */
+	public String play(String filePath) {
         try
         {
 			this.stop();

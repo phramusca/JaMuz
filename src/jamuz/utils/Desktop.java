@@ -27,6 +27,10 @@ import java.net.URISyntaxException;
  */
 public class Desktop {
 	
+	/**
+	 *
+	 * @param url
+	 */
 	public static void openBrowser(String url) {
 		try {
 			String uri = (url).replaceAll(" ", "+"); //NOI18N
@@ -51,10 +55,18 @@ public class Desktop {
         }
     }
 	
+	/**
+	 *
+	 * @param path
+	 */
 	public static void openFile(String path) {
 		openFolder(path);
 	}
 	
+	/**
+	 *
+	 * @param path
+	 */
 	public static void openFolder(String path) {
 		if (java.awt.Desktop.isDesktopSupported()) {
             java.awt.Desktop desktop = java.awt.Desktop.getDesktop();

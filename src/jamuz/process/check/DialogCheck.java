@@ -1749,7 +1749,11 @@ public class DialogCheck extends javax.swing.JDialog {
 		jButtonCheckEditTag.setEnabled(enable);
 	}
     
-    public static void applyPattern(String pattern) {
+	/**
+	 *
+	 * @param pattern
+	 */
+	public static void applyPattern(String pattern) {
 
         String entryValue;
         for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {            
@@ -1925,7 +1929,11 @@ public class DialogCheck extends javax.swing.JDialog {
 		}
 	}
     
-    public static void highlightGenre(boolean highlight) {
+	/**
+	 *
+	 * @param highlight
+	 */
+	public static void highlightGenre(boolean highlight) {
         Component[] components = jPanelGenre.getComponents();
         for (Component component : components) {
             if (component instanceof JButton) {
@@ -1942,7 +1950,12 @@ public class DialogCheck extends javax.swing.JDialog {
         }
     }
     
-    public static void highlightGenre(String genre, Color selectedColor) {
+	/**
+	 *
+	 * @param genre
+	 * @param selectedColor
+	 */
+	public static void highlightGenre(String genre, Color selectedColor) {
         Component[] components = jPanelGenre.getComponents();
         for (Component component : components) {
             if (component instanceof JButton) {

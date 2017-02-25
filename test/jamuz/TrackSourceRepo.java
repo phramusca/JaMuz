@@ -38,7 +38,17 @@ public class TrackSourceRepo {
 
     private static HashMap<String, TrackSource> sources = new HashMap<>();
 
-    public static TrackSource get(String filename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @param filename
+	 * @return
+	 * @throws CannotReadException
+	 * @throws IOException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public static TrackSource get(String filename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         if(!sources.containsKey(filename)) {
             TrackSource source = new TrackSource("1min.mp3");
             sources.put(filename, source);
@@ -47,15 +57,51 @@ public class TrackSourceRepo {
         
     }
     
-    protected static final class TrackSource {
-        public String filename;
-        public int length;
-        public String format;
-        public String bitRate;
-        public long size;
-        public String modifDate;
+	/**
+	 *
+	 */
+	protected static final class TrackSource {
 
-        public TrackSource(String filename, int length, String format, String bitRate, long size, String modifDate) {
+		/**
+		 *
+		 */
+		public String filename;
+
+		/**
+		 *
+		 */
+		public int length;
+
+		/**
+		 *
+		 */
+		public String format;
+
+		/**
+		 *
+		 */
+		public String bitRate;
+
+		/**
+		 *
+		 */
+		public long size;
+
+		/**
+		 *
+		 */
+		public String modifDate;
+
+		/**
+		 *
+		 * @param filename
+		 * @param length
+		 * @param format
+		 * @param bitRate
+		 * @param size
+		 * @param modifDate
+		 */
+		public TrackSource(String filename, int length, String format, String bitRate, long size, String modifDate) {
             this.filename = filename;
             this.length = length;
             this.format = format;
@@ -65,6 +111,16 @@ public class TrackSourceRepo {
         }
 
         //TODO; Only use this to generate a list, to be manually checked with another tool
+
+		/**
+		 *
+		 * @param pFilename
+		 * @throws CannotReadException
+		 * @throws IOException
+		 * @throws TagException
+		 * @throws ReadOnlyFileException
+		 * @throws InvalidAudioFrameException
+		 */
         public TrackSource(String pFilename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
             filename = pFilename;
 
@@ -79,7 +135,11 @@ public class TrackSourceRepo {
             length=header.getTrackLength();
         }
 
-        public File getFile() {
+		/**
+		 *
+		 * @return
+		 */
+		public File getFile() {
             return new File(Settings.getRessourcesPath()+"audioFiles"+File.separator+filename);
         }
     }

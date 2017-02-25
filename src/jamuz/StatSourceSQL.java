@@ -34,14 +34,29 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
     // => NEED TO FIND A JAVA LIB FIRST !
     
     //TODO: Make a "StatSourceMusicBrainz" (See ReleaseMB class and ManualTesting class - stop at ReleaseGroup level, ie not go to Medium level)
+
+	/**
+	 *
+	 */
     protected final DbConn dbConn;
 
-    public DbConn getDbConn() {
+	/**
+	 *
+	 * @return
+	 */
+	public DbConn getDbConn() {
         return dbConn;
     }
 	
-    protected PreparedStatement stSelectFileStatistics;
-    protected PreparedStatement stUpdateFileStatistics;
+	/**
+	 *
+	 */
+	protected PreparedStatement stSelectFileStatistics;
+
+	/**
+	 *
+	 */
+	protected PreparedStatement stUpdateFileStatistics;
     /**
      *
      * @param dbInfo
@@ -83,7 +98,12 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
         }
     }
     
-    protected FileInfo getStats(ResultSet rs) {
+	/**
+	 *
+	 * @param rs
+	 * @return
+	 */
+	protected FileInfo getStats(ResultSet rs) {
 		try {
             String strfullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N
             String relativeFullPath = strfullPath.substring(getRootPath().length());
@@ -124,11 +144,22 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 		}
 	}
     
-    abstract protected void setUpdateStatisticsParameters(FileInfo file) throws SQLException;
+	/**
+	 *
+	 * @param file
+	 * @throws SQLException
+	 */
+	abstract protected void setUpdateStatisticsParameters(FileInfo file) throws SQLException;
 
     // Some audio players do not store path in current OS style
     // Exemple: Mixxx store paths in linux style even running on Windows
     // Since rootPath must use the good separator, we can use it to do conversions
+
+	/**
+	 *
+	 * @param path
+	 * @return
+	 */
     protected String getPath(String path) {
 		if(this.getRootPath().contains("/")) { //NOI18N
 			path = FilenameUtils.separatorsToUnix(path);

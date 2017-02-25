@@ -96,7 +96,11 @@ public class TableModelCheck extends TableModelGeneric {
 		this.fireTableDataChanged();
     }
 
-    public List<FolderInfo> getFolders() {
+	/**
+	 *
+	 * @return
+	 */
+	public List<FolderInfo> getFolders() {
         return folders;
     }
     

@@ -355,7 +355,11 @@ public class Cover implements java.lang.Comparable {
         return hashCode;
     }
 
-    public String getSizeHTML() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getSizeHTML() {
         String msg;
         msg="<html>"; //NOI18N
         msg+=getSizeDisplay();

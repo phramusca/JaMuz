@@ -35,6 +35,12 @@ public class ServerClient {
     private PrintWriter printWriter;
     private OutputStream outputStream;
 	
+	/**
+	 *
+	 * @param socket
+	 * @param callback
+	 * @param callBackAuth
+	 */
 	public ServerClient(Socket socket, ICallBackReception callback, ICallBackAuthentication callBackAuth) {
 		this.socket = socket;
         this.address = socket.getRemoteSocketAddress().toString();
@@ -43,6 +49,10 @@ public class ServerClient {
 		this.callBackAuth = callBackAuth;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public boolean login() {
 		try {
 			//Starting emission thread
@@ -63,6 +73,9 @@ public class ServerClient {
 		}
 	}
 	
+	/**
+	 *
+	 */
 	public void close() {
 		try {
 //            emission.abort();
@@ -73,13 +86,22 @@ public class ServerClient {
 		}
 	}
 	
+	/**
+	 *
+	 * @param msg
+	 */
 	public void send(String msg) {
 //		emission.send(msg);
         printWriter.println(msg+"\n");
         printWriter.flush();
 	}
     
-    public boolean sendCover(FileInfoInt displayedFile) {
+	/**
+	 *
+	 * @param displayedFile
+	 * @return
+	 */
+	public boolean sendCover(FileInfoInt displayedFile) {
         send("SENDING_COVER");
         try {
             BufferedImage image = displayedFile.getCoverImage();
@@ -101,7 +123,13 @@ public class ServerClient {
         }
     }
 
-    public static void copyStream(InputStream input, OutputStream output) throws IOException {
+	/**
+	 *
+	 * @param input
+	 * @param output
+	 * @throws IOException
+	 */
+	public static void copyStream(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[1024]; // Adjust if you want
         int bytesRead;
         while ((bytesRead = input.read(buffer)) != -1)

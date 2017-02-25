@@ -37,9 +37,16 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
  
-
+/**
+ *
+ * @author raph
+ */
 public class CrunchifyQRCode {
 
+	/**
+	 *
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		//TODO: Create QR codes to open JaMuz Remote with given login/pwd
 		//http://stackoverflow.com/questions/10258633/android-start-application-from-qr-code-with-params
@@ -48,6 +55,12 @@ public class CrunchifyQRCode {
 		createQRcodeFile("JaMuzRemote://192.168.0.13:6451", "/home/raph/Bureau/", "png");
 	}
 
+	/**
+	 *
+	 * @param url
+	 * @param path
+	 * @param fileType
+	 */
 	public static void createQRcodeFile(String url, String path, String fileType) {
 		BufferedImage image = createQRcode(url, 250);
 		
@@ -59,6 +72,12 @@ public class CrunchifyQRCode {
 		}
 	}
 
+	/**
+	 *
+	 * @param myCodeText
+	 * @param size
+	 * @return
+	 */
 	public static BufferedImage createQRcode(String myCodeText, int size) {
 		try {
 			

@@ -29,7 +29,11 @@ import java.io.Serializable;
 public class MyMovieDb extends MyVideoAbstract implements Serializable {
         private MovieDb movieDb;
 
-        public MyMovieDb(MovieDb movieDb) {
+	/**
+	 *
+	 * @param movieDb
+	 */
+	public MyMovieDb(MovieDb movieDb) {
             super();
             int rating = Math.round(movieDb.getUserRating());
             this.userRating = rating<=0?new VideoRating(0, "0 - Not Rated"):comboRating[rating-1];
@@ -49,25 +53,44 @@ public class MyMovieDb extends MyVideoAbstract implements Serializable {
             }
         }
 
-        public MovieDb getMovieDb() {
+	/**
+	 *
+	 * @return
+	 */
+	public MovieDb getMovieDb() {
             return movieDb;
         }
 
-        public void setMovieDb(MovieDb movieDb) {
+	/**
+	 *
+	 * @param movieDb
+	 */
+	public void setMovieDb(MovieDb movieDb) {
             this.movieDb = movieDb;
         }
 
-        @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
         public int getId() {
             return this.movieDb.getId();
         }
 
-        @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
         public String getHomepage() {
             return this.movieDb.getHomepage(); //TODO: Lookup if not already done to get the homepage
         }
 		
-		@Override
+	/**
+	 *
+	 */
+	@Override
 		public void setMyVideoInCache() {
 			DbConnVideo conn = new DbConnVideo(new DbInfo(LibType.Sqlite, "myMovieDb.db", ".", "."), "");
 			conn.connect();

@@ -56,7 +56,11 @@ public final class Album {
     private final String mbId;
     private final ArrayList<TrackTag> tracks;
 
-    public int getNbTracks() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getNbTracks() {
         return tracks.size();
     }
     
@@ -64,7 +68,11 @@ public final class Album {
     private int idPath=-1;
     private int idFirstFile=-1;
     private String location="";
-    public int index=-1;  
+  
+	/**
+	 *
+	 */
+	public int index=-1;  
     
     private Album(String mbId) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this.mbId=mbId;
@@ -91,7 +99,17 @@ public final class Album {
         results.put("duplicates", new FolderInfoResult());  //NOI18N
     }
     
-    public Album(String mbId, String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @param mbId
+	 * @param version
+	 * @throws IOException
+	 * @throws CannotReadException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public Album(String mbId, String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this(mbId);
         readFromFile(version);
     }
@@ -203,7 +221,17 @@ public final class Album {
         }
     }
     
-    public static void createFile(String mbId) throws MBWS2Exception, IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @param mbId
+	 * @throws MBWS2Exception
+	 * @throws IOException
+	 * @throws CannotReadException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public static void createFile(String mbId) throws MBWS2Exception, IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 
         //Get info from MusicBrainz
         ReleaseMatch match = new ReleaseMatch(mbId);
@@ -348,6 +376,11 @@ public final class Album {
         return getFile(this.mbId);
     }
     //FIXME Replace all TODO in test packages by FIXME once all other have been done (who said never ?)
+
+	/**
+	 *
+	 * @return
+	 */
     public FolderInfo getCheckedFolder() {
         return PanelCheck.tableModelCheck.getFolders().get(index);
     }
@@ -378,7 +411,15 @@ public final class Album {
         this.results.get(resultKey).setOK();
     }
 
-    public void create() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @throws CannotReadException
+	 * @throws IOException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public void create() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         for(TrackTag track : tracks) {
             track.create(location);
         }
@@ -410,7 +451,17 @@ public final class Album {
         return files;
     }
     
-    public void setAndCheckStatsInStatSource(int idStatSource, boolean isDevice) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @param idStatSource
+	 * @param isDevice
+	 * @throws IOException
+	 * @throws CannotReadException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public void setAndCheckStatsInStatSource(int idStatSource, boolean isDevice) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         StatSource statSource = Jamuz.getMachine().getStatSource(idStatSource);
         statSource.getSource().getSource(System.getProperty("java.io.tmpdir")+File.separator);
         statSource.getSource().setUp();
@@ -420,11 +471,27 @@ public final class Album {
         checkStatSource(idStatSource, isDevice);
     }
 
-    public void checkJaMuz() throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @throws IOException
+	 * @throws CannotReadException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public void checkJaMuz() throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         checkDb();
     }
     
-    public void checkAfterScan() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @throws CannotReadException
+	 * @throws IOException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public void checkAfterScan() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         //Check tracks
         compare((ArrayList<FileInfoInt>)(List<?>)getCheckedFolder().getFilesAudio());
 
@@ -438,13 +505,26 @@ public final class Album {
         }
     }
     
-    public void setAndCheckStatsInJamuzDb() throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @throws IOException
+	 * @throws CannotReadException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public void setAndCheckStatsInJamuzDb() throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 //        readFromFile(version);
         Jamuz.getDb().updateStatistics(getFiles());
         checkDb();
     }
     
-    public void checkStatSource(int idStatSource, boolean isDevice) {
+	/**
+	 *
+	 * @param idStatSource
+	 * @param isDevice
+	 */
+	public void checkStatSource(int idStatSource, boolean isDevice) {
         
         StatSource statSource = Jamuz.getMachine().getStatSource(idStatSource);
         String msg = " (idStatement="+statSource.getIdStatement()+", "+this.mbId+")";
@@ -504,12 +584,26 @@ public final class Album {
 		return null;
 	}
     
-    public void checkDbAndFS(boolean renamed) throws IOException, CannotReadException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @param renamed
+	 * @throws IOException
+	 * @throws CannotReadException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public void checkDbAndFS(boolean renamed) throws IOException, CannotReadException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         checkDb();
         checkFS(location, renamed);
     }
     
-    public void checkFSdevice(Device device, boolean renamed) {
+	/**
+	 *
+	 * @param device
+	 * @param renamed
+	 */
+	public void checkFSdevice(Device device, boolean renamed) {
         for(TrackTag track: this.tracks) {
             File file = new File(device.getDestination()+getFilename(track, renamed));
             if(track.ignore) {

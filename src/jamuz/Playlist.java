@@ -33,6 +33,10 @@ public class Playlist implements Comparable {
 
 	private boolean hidden;
 
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isHidden() {
 		return hidden;
 	}
@@ -42,7 +46,11 @@ public class Playlist implements Comparable {
 	 */
 	private final int id;
 
-    public int getId() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getId() {
         return id;
     }
 	
@@ -51,11 +59,19 @@ public class Playlist implements Comparable {
 	 */
 	private String name;
 
-    public String getName() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+	/**
+	 *
+	 * @param name
+	 */
+	public void setName(String name) {
         this.name = name;
     }
 
@@ -64,11 +80,19 @@ public class Playlist implements Comparable {
 	 */
 	private boolean limit;
 
-    public boolean isLimit() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isLimit() {
         return limit;
     }
 
-    public void setLimit(boolean limit) {
+	/**
+	 *
+	 * @param limit
+	 */
+	public void setLimit(boolean limit) {
         this.limit = limit;
     }
     
@@ -77,11 +101,19 @@ public class Playlist implements Comparable {
 	 */
 	private int limitValue;
 
-    public int getLimitValue() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getLimitValue() {
         return limitValue;
     }
 
-    public void setLimitValue(int limitValue) {
+	/**
+	 *
+	 * @param limitValue
+	 */
+	public void setLimitValue(int limitValue) {
         this.limitValue = limitValue;
     }
     
@@ -90,11 +122,19 @@ public class Playlist implements Comparable {
 	 */
 	private LimitUnit limitUnit;
 
-    public LimitUnit getLimitUnit() {
+	/**
+	 *
+	 * @return
+	 */
+	public LimitUnit getLimitUnit() {
         return limitUnit;
     }
 
-    public void setLimitUnit(LimitUnit limitUnit) {
+	/**
+	 *
+	 * @param limitUnit
+	 */
+	public void setLimitUnit(LimitUnit limitUnit) {
         this.limitUnit = limitUnit;
     }
     
@@ -103,11 +143,19 @@ public class Playlist implements Comparable {
 	 */
 	private boolean random;
 
-    public boolean isRandom() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isRandom() {
         return random;
     }
 
-    public void setRandom(boolean random) {
+	/**
+	 *
+	 * @param random
+	 */
+	public void setRandom(boolean random) {
         this.random = random;
     }
     
@@ -116,11 +164,19 @@ public class Playlist implements Comparable {
 	 */
 	private Type type; //TODO: Eventually, use this
 
-    public Type getType() {
+	/**
+	 *
+	 * @return
+	 */
+	public Type getType() {
         return type;
     }
 
-    public void setType(Type type) {
+	/**
+	 *
+	 * @param type
+	 */
+	public void setType(Type type) {
         this.type = type;
     }
     
@@ -129,11 +185,19 @@ public class Playlist implements Comparable {
 	 */
 	private Match match;
 
-    public Match getMatch() {
+	/**
+	 *
+	 * @return
+	 */
+	public Match getMatch() {
         return match;
     }
 
-    public void setMatch(Match match) {
+	/**
+	 *
+	 * @param match
+	 */
+	public void setMatch(Match match) {
         this.match = match;
     }
     
@@ -231,6 +295,10 @@ public class Playlist implements Comparable {
         return Objects.equals(this.name, other.name);
     }
 
+	/**
+	 *
+	 * @param hidden
+	 */
 	public void setHidden(boolean hidden) {
 		this.hidden = hidden;
 	}
@@ -635,7 +703,15 @@ public class Playlist implements Comparable {
 		 * Rating
 		 */
 		RATING(Inter.get("Stat.Rating"), "F.rating"), //NOI18N
+
+		/**
+		 *
+		 */
         ALBUMRATING(Inter.get("Tag.Album")+" "+Inter.get("Stat.Rating"), "albumRating"), //NOI18N
+
+		/**
+		 *
+		 */
         PERCENTRATED(Inter.get("Stat.PercentRated"), "percentRated"), //NOI18N
 		/**
 		 * Tags
@@ -830,13 +906,19 @@ public class Playlist implements Comparable {
             return field.name();
         }
 
-        public Field getField() {
+		/**
+		 *
+		 * @return
+		 */
+		public Field getField() {
             return field;
         }
         
-        
-
-        public void setField(Field field) {
+		/**
+		 *
+		 * @param field
+		 */
+		public void setField(Field field) {
             this.field = field;
         }
 
@@ -848,11 +930,19 @@ public class Playlist implements Comparable {
             return operator;
         }
         
-        public String getOperatorName() {
+		/**
+		 *
+		 * @return
+		 */
+		public String getOperatorName() {
             return operator.name();
         }
         
-        public void setOperator(Operator operator) {
+		/**
+		 *
+		 * @param operator
+		 */
+		public void setOperator(Operator operator) {
             this.operator = operator;
         }
 
@@ -864,7 +954,11 @@ public class Playlist implements Comparable {
             return value;
         }
 
-        public void setValue(String value) {
+		/**
+		 *
+		 * @param value
+		 */
+		public void setValue(String value) {
             this.value = value;
         }
 
@@ -1036,15 +1130,27 @@ public class Playlist implements Comparable {
             return field.name();
         }
 
-        public Field getField() {
+		/**
+		 *
+		 * @return
+		 */
+		public Field getField() {
             return field;
         }
 
-        public void setDesc(boolean desc) {
+		/**
+		 *
+		 * @param desc
+		 */
+		public void setDesc(boolean desc) {
             this.desc = desc;
         }
 
-        public void setField(Field field) {
+		/**
+		 *
+		 * @param field
+		 */
+		public void setField(Field field) {
             this.field = field;
         }
 

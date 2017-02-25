@@ -30,11 +30,19 @@ public abstract class StatSourceAbstract {
      */
     private String rootPath;
 
-    public String getRootPath() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getRootPath() {
         return rootPath;
     }
 
-    public void setRootPath(String rootPath) {
+	/**
+	 *
+	 * @param rootPath
+	 */
+	public void setRootPath(String rootPath) {
         this.rootPath = rootPath;
     }
     
@@ -43,11 +51,19 @@ public abstract class StatSourceAbstract {
      */
     private String location;
 
-    public String getLocation() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+	/**
+	 *
+	 * @param location
+	 */
+	public void setLocation(String location) {
         this.location = location;
     }
     
@@ -56,11 +72,19 @@ public abstract class StatSourceAbstract {
      */
     private String name;
 
-    public String getName() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+	/**
+	 *
+	 * @param name
+	 */
+	public void setName(String name) {
         this.name = name;
     }
     
@@ -70,18 +94,34 @@ public abstract class StatSourceAbstract {
 	 */
 	protected boolean updateAddedDate = false;
 
-    public boolean isUpdateAddedDate() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isUpdateAddedDate() {
         return updateAddedDate;
     }
 
-    public boolean isUpdateLastPlayed() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isUpdateLastPlayed() {
         return updateLastPlayed;
     }
 
-    public boolean isUpdateBPM() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isUpdateBPM() {
         return updateBPM;
     }
     
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isUpdatePlayCounter() {
 		//FIXME HIGH Fix problem with PlayCounter:
 		//When playcounter is updated (inserted) in a merge, the next merge
@@ -98,7 +138,10 @@ public abstract class StatSourceAbstract {
 	 */
 	protected boolean updateLastPlayed = false;
 
-    protected boolean updateBPM = false;
+	/**
+	 *
+	 */
+	protected boolean updateBPM = false;
     
     /**
      * Create a new Source for Statistics (rating, last played, ...)

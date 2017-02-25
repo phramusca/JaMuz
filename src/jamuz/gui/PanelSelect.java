@@ -92,6 +92,10 @@ public class PanelSelect extends javax.swing.JPanel {
 	private static ListElement selAlbum; 
 //FIXME LOW ex: Album "Charango" is either from Morcheeba or Yannick Noah
     //BUT seen as only one album in Select tab
+
+	/**
+	 *
+	 */
     public static String[] comboCopyRights;
 
     /**
@@ -109,7 +113,10 @@ public class PanelSelect extends javax.swing.JPanel {
         initComponents();
     }
 
-    public static void refreshTable() {
+	/**
+	 *
+	 */
+	public static void refreshTable() {
         		
         //clear the table
 		jTableSelect.setRowSorter(null);
@@ -974,6 +981,9 @@ public class PanelSelect extends javax.swing.JPanel {
 		}
 	}
 	
+	/**
+	 *
+	 */
 	public static void stopMplayer() {
 		mplayer.stop();
 		jLabelPreviewDisplay.setText("");
@@ -1015,7 +1025,12 @@ public class PanelSelect extends javax.swing.JPanel {
 		}
     }
     
-    public static void setSelected(String field, String value) {
+	/**
+	 *
+	 * @param field
+	 * @param value
+	 */
+	public static void setSelected(String field, String value) {
         //Select "Select" jPane
         PanelMain.selectTab(Inter.get("PanelMain.panelSelect.TabConstraints.tabTitle")); //NOI18N
         

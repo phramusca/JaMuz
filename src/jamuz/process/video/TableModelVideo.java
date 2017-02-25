@@ -73,7 +73,13 @@ public class TableModelVideo extends TableModelGeneric {
 		return false;
     }
     
-    public boolean isCellEnabled(int row, int col) {
+	/**
+	 *
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public boolean isCellEnabled(int row, int col) {
         return false;
     }
     
@@ -178,7 +184,12 @@ public class TableModelVideo extends TableModelGeneric {
 		}
     }
 
-    public void select(VideoAbstract fileInfoVideo, boolean selected) {
+	/**
+	 *
+	 * @param fileInfoVideo
+	 * @param selected
+	 */
+	public void select(VideoAbstract fileInfoVideo, boolean selected) {
         fileInfoVideo.setSelected(selected);
         if(selected) {
             lengthSelected+=fileInfoVideo.getLength().getLength(); //Add 
@@ -226,7 +237,11 @@ public class TableModelVideo extends TableModelGeneric {
 		this.fireTableDataChanged();
     }
 
-    public void removeRow(VideoAbstract file){
+	/**
+	 *
+	 * @param file
+	 */
+	public void removeRow(VideoAbstract file){
 		this.files.remove(file);
         this.lengthAll-=file.getLength().getLength();
 		//Update table

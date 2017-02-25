@@ -59,7 +59,10 @@ public class StatSource {
 		this(-1, "", "", "", "", "", machineName, true, 0, 1, "");  //NOI18N
 	}
 
-    public void updateLastMergeDate() {
+	/**
+	 *
+	 */
+	public void updateLastMergeDate() {
         //TODO: No need to update lastMerge date during merge (really ?), do them all at the end of 
         //merge process and only if not a simulation and merge OK
         //Then, read options again 
@@ -101,22 +104,38 @@ public class StatSource {
 
 	private final int id;
 
-    public int getId() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getId() {
         return id;
     }
     private int idStatement; //TODO: Replace by an enum: refer to checkedFlag usage
     
-    public int getIdStatement() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getIdStatement() {
         return idStatement;
     }
 
-    public void setIdStatement(int idStatement) {
+	/**
+	 *
+	 * @param idStatement
+	 */
+	public void setIdStatement(int idStatement) {
         this.idStatement = idStatement;
     }
     
     private StatSourceAbstract source;
 
-    public StatSourceAbstract getSource() {
+	/**
+	 *
+	 * @return
+	 */
+	public StatSourceAbstract getSource() {
         return source;
     }
     
@@ -130,7 +149,11 @@ public class StatSource {
 	 */
 	private final String machineName;
 
-    public String getMachineName() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getMachineName() {
         return machineName;
     }
     
@@ -139,11 +162,19 @@ public class StatSource {
 	 */
 	private boolean isSelected;
 
-    public boolean isIsSelected() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isIsSelected() {
         return isSelected;
     }
 
-    public void setIsSelected(boolean isSelected) {
+	/**
+	 *
+	 * @param isSelected
+	 */
+	public void setIsSelected(boolean isSelected) {
         this.isSelected = isSelected;
     }
 	
@@ -152,11 +183,19 @@ public class StatSource {
 	 */
 	private int idDevice;
 
-    public int getIdDevice() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getIdDevice() {
         return idDevice;
     }
 
-    public void setIdDevice(int idDevice) {
+	/**
+	 *
+	 * @param idDevice
+	 */
+	public void setIdDevice(int idDevice) {
         this.idDevice = idDevice;
     }
 	

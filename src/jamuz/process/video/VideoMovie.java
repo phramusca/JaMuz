@@ -124,7 +124,11 @@ public class VideoMovie extends VideoAbstract {
         movieDb.getVoteCount(); //TODO: Use thos
 	}
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     protected String getVideoSummary() {
         
         //Movie only have one file in list
@@ -134,7 +138,13 @@ public class VideoMovie extends VideoAbstract {
         return display;
     }
 
-    @Override
+	/**
+	 *
+	 * @param buffer
+	 * @param conn
+	 * @param myConn
+	 */
+	@Override
     public void moveFilesAndSrt(PathBuffer buffer, DbConnVideo conn, SSH myConn) {
         
         //There should be only one file in files, list is for tv shows only
@@ -160,12 +170,20 @@ public class VideoMovie extends VideoAbstract {
         return (!playCounterList.contains("0"));
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean isLocal() {
         return getLength().getLength()>0;
     }
    
-    @Override
+	/**
+	 *
+	 * @param search
+	 */
+	@Override
     public void setMyVideo(boolean search) {
         MyMovieDb myMovieDb = ProcessVideo.themovieDb.get(getTitle(), Integer.parseInt(getYear()));
         if(myMovieDb!=null) {
@@ -226,16 +244,28 @@ public class VideoMovie extends VideoAbstract {
         ProcessVideo.themovieDb.removeFavorite(myVideo.getId());
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public String getRelativeFullPath() {
         return files.size()>0?files.firstEntry().getValue().getRelativeFullPath():"";
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean isMovie() {
         return true;
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	protected ArrayList<FileInfoVideo> getFilesToCleanup() {
 		ArrayList<FileInfoVideo> videos = new ArrayList<>();

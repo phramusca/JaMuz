@@ -35,13 +35,24 @@ public class Options {
  
     private String filename="";
     private Properties properties;
+
+	/**
+	 *
+	 */
 	protected InputStream input=null;
 	
+	/**
+	 *
+	 */
 	protected Options() {
 		this.properties = new Properties();
 	}
 	
-    public Options(String filename) {
+	/**
+	 *
+	 * @param filename
+	 */
+	public Options(String filename) {
 		this.properties = new Properties();
 		try {
 //			if(new File(filename).exists()) {
@@ -53,15 +64,29 @@ public class Options {
         this.filename = filename;
     }
 
-    public String get(String key) {
+	/**
+	 *
+	 * @param key
+	 * @return
+	 */
+	public String get(String key) {
         return properties.getProperty(key, "{Missing}");
     }
     
-    public void set(String key, String value) {
+	/**
+	 *
+	 * @param key
+	 * @param value
+	 */
+	public void set(String key, String value) {
         properties.setProperty(key, value);
     }
 
-    public boolean save() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean save() {
         OutputStream output = null;
         try {
             output = new FileOutputStream(filename);
@@ -82,7 +107,11 @@ public class Options {
         }
     }
 
-    public boolean read() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean read() {
         try {
             properties.load(input);
             return true;

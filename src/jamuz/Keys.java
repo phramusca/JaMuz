@@ -32,12 +32,21 @@ public class Keys extends Options {
 		input = Keys.class.getResourceAsStream(filename);
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public boolean save() {
 		//Not needed and unwanted
 		return false;
 	}
 	
+	/**
+	 *
+	 * @param key
+	 * @param value
+	 */
 	@Override
 	public void set(String key, String value) {
         //Not needed and unwanted

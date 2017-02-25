@@ -33,11 +33,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected int idFile;
 
-    public int getIdFile() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getIdFile() {
         return idFile;
     }
 
-    public void setIdFile(int idFile) {
+	/**
+	 *
+	 * @param idFile
+	 */
+	public void setIdFile(int idFile) {
         this.idFile = idFile;
     }
     
@@ -46,11 +54,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	private int idPath;
 
-    public int getIdPath() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getIdPath() {
         return idPath;
     }
 
-    public void setIdPath(int idPath) {
+	/**
+	 *
+	 * @param idPath
+	 */
+	public void setIdPath(int idPath) {
         this.idPath = idPath;
     }
     
@@ -59,11 +75,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected Date lastPlayed;
 
-    public Date getLastPlayed() {
+	/**
+	 *
+	 * @return
+	 */
+	public Date getLastPlayed() {
         return lastPlayed;
     }
 
-    public void setLastPlayed(Date lastPlayed) {
+	/**
+	 *
+	 * @param lastPlayed
+	 */
+	public void setLastPlayed(Date lastPlayed) {
         this.lastPlayed = lastPlayed;
     }
     
@@ -73,11 +97,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected Date addedDate;
 
-    public Date getAddedDate() {
+	/**
+	 *
+	 * @return
+	 */
+	public Date getAddedDate() {
         return addedDate;
     }
 
-    public void setAddedDate(Date addedDate) {
+	/**
+	 *
+	 * @param addedDate
+	 */
+	public void setAddedDate(Date addedDate) {
         this.addedDate = addedDate;
     }
     
@@ -86,7 +118,11 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected String relativeFullPath;
 
-    public void setRelativeFullPath(String relativeFullPath) {
+	/**
+	 *
+	 * @param relativeFullPath
+	 */
+	public void setRelativeFullPath(String relativeFullPath) {
         this.relativeFullPath = relativeFullPath;
     }
     
@@ -95,11 +131,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected String relativePath;
 
-    public String getRelativePath() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getRelativePath() {
         return relativePath;
     }
 
-    public void setRelativePath(String relativePath) {
+	/**
+	 *
+	 * @param relativePath
+	 */
+	public void setRelativePath(String relativePath) {
         this.relativePath = relativePath;
     }
     
@@ -108,7 +152,11 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected String ext;
 
-    public String getExt() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getExt() {
         return ext;
     }
     
@@ -117,11 +165,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected String filename;
 
-    public String getFilename() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getFilename() {
         return filename;
     }
 
-    public void setFilename(String filename) {
+	/**
+	 *
+	 * @param filename
+	 */
+	public void setFilename(String filename) {
         this.filename = filename;
     }
     
@@ -130,22 +186,45 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected int rating;
 
-    public int getRating() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+	/**
+	 *
+	 * @param rating
+	 */
+	public void setRating(int rating) {
         this.rating = rating;
     }
     
-    protected boolean updateRatingModifDate=false;
-    protected Date ratingModifDate;
+	/**
+	 *
+	 */
+	protected boolean updateRatingModifDate=false;
 
-    public Date getRatingModifDate() {
+	/**
+	 *
+	 */
+	protected Date ratingModifDate;
+
+	/**
+	 *
+	 * @return
+	 */
+	public Date getRatingModifDate() {
         return ratingModifDate;
     }
 
-    public void setUpdateRatingModifDate(boolean updateRatingModifDate) {
+	/**
+	 *
+	 * @param updateRatingModifDate
+	 */
+	public void setUpdateRatingModifDate(boolean updateRatingModifDate) {
         this.updateRatingModifDate = updateRatingModifDate;
     }
     
@@ -162,7 +241,11 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return playCounter;
     }
 
-    public void setPlayCounter(int playCounter) {
+	/**
+	 *
+	 * @param playCounter
+	 */
+	public void setPlayCounter(int playCounter) {
         this.playCounter = playCounter;
     }
     
@@ -173,11 +256,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected int previousPlayCounter;
 
-    public int getPreviousPlayCounter() {
+	/**
+	 *
+	 * @return
+	 */
+	public int getPreviousPlayCounter() {
         return previousPlayCounter;
     }
 
-    public void setPreviousPlayCounter(int previousPlayCounter) {
+	/**
+	 *
+	 * @param previousPlayCounter
+	 */
+	public void setPreviousPlayCounter(int previousPlayCounter) {
         this.previousPlayCounter = previousPlayCounter;
     }
     
@@ -186,11 +277,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected float BPM=0;  //NOI18N
 
-    public float getBPM() {
+	/**
+	 *
+	 * @return
+	 */
+	public float getBPM() {
         return BPM;
     }
 
-    public void setBPM(float BPM) {
+	/**
+	 *
+	 * @param BPM
+	 */
+	public void setBPM(float BPM) {
         this.BPM = BPM;
     }
     
@@ -199,11 +298,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected String sourceName;
 
-    public String getSourceName() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getSourceName() {
         return sourceName;
     }
 
-    public void setSourceName(String sourceName) {
+	/**
+	 *
+	 * @param sourceName
+	 */
+	public void setSourceName(String sourceName) {
         this.sourceName = sourceName;
     }
     
@@ -212,7 +319,11 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected boolean deleted;
 
-    public boolean isDeleted() {
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isDeleted() {
         return deleted;
     }
 
@@ -284,7 +395,11 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		return DateTime.formatUTCtoSqlUTC(this.lastPlayed);
 	}
     
-    public String getLastPlayedLocalTime() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getLastPlayedLocalTime() {
         return DateTime.formatUTCtoSqlLocal(this.lastPlayed);
     }
 	
@@ -296,11 +411,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		return DateTime.formatUTCtoSqlUTC(this.addedDate);
 	}
     
-    public String getFormattedRatingModifDate() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getFormattedRatingModifDate() {
         return DateTime.formatUTCtoSqlUTC(ratingModifDate);
     }
     
-    public String getAddedDateLocalTime() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getAddedDateLocalTime() {
         return DateTime.formatUTCtoSqlLocal(this.addedDate);
     }
 

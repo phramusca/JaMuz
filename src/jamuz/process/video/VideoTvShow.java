@@ -115,7 +115,11 @@ public class VideoTvShow extends VideoAbstract {
         return URLs;
     }
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     protected String getVideoSummary() {
         String display="";
         int nbWatched=0;
@@ -163,6 +167,10 @@ public class VideoTvShow extends VideoAbstract {
         return display;
     }
         
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public ArrayList<FileInfoVideo> getFilesToCleanup() {
 		
@@ -283,13 +291,21 @@ public class VideoTvShow extends VideoAbstract {
         return missing==null?false:missing.size()<=0;
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean isLocal() {
         List<String> missing = getMissing();
         return missing==null?false:missing.size()<=0;
     }
 
-    @Override
+	/**
+	 *
+	 * @param search
+	 */
+	@Override
     public void setMyVideo(boolean search) {
         MyTvShow myTvShow = ProcessVideo.themovieDb.getTv(getTitle(), Integer.parseInt(getYear()), search);
         if(myTvShow!=null) {
@@ -350,7 +366,11 @@ public class VideoTvShow extends VideoAbstract {
         ProcessVideo.themovieDb.removeFavoriteTV(myVideo.getId());
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean isMovie() {
         return false;
     }

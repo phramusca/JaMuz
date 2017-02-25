@@ -118,7 +118,13 @@ public class SSH {
 		session.disconnect();
 	}
 
-    public boolean moveFile(String source, String destination) {
+	/**
+	 *
+	 * @param source
+	 * @param destination
+	 * @return
+	 */
+	public boolean moveFile(String source, String destination) {
         StringBuilder result = new StringBuilder (); //TODO: Sould not this be used ? (does it include error output ?)
         int exitStatus = sendAndReceive("mv \"" + source + "\" \"" + destination + "\"", result); //NOI18N
         return !(exitStatus>0);

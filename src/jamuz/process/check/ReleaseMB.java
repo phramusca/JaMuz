@@ -56,7 +56,11 @@ import org.musicbrainz.webservice.impl.HttpClientWebServiceWs2;
 public class ReleaseMB {
     private final ProgressBar progressBar;
 
-    public ReleaseMB(ProgressBar progressBar) {
+	/**
+	 *
+	 * @param progressBar
+	 */
+	public ReleaseMB(ProgressBar progressBar) {
         this.progressBar = progressBar;
     }
 

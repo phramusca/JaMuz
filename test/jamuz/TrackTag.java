@@ -32,9 +32,44 @@ import jamuz.utils.FileSystem;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class TrackTag extends FileInfoInt {
-    public String sourceFile;
 
-    public TrackTag(String sourceFile, String relativePath, String filename,  
+	/**
+	 *
+	 */
+	public String sourceFile;
+
+	/**
+	 *
+	 * @param sourceFile
+	 * @param relativePath
+	 * @param filename
+	 * @param BPM
+	 * @param album
+	 * @param albumArtist
+	 * @param artist
+	 * @param comment
+	 * @param discNo
+	 * @param discTotal
+	 * @param genre
+	 * @param nbCovers
+	 * @param title
+	 * @param trackNo
+	 * @param trackTotal
+	 * @param year
+	 * @param playCounter
+	 * @param rating
+	 * @param addedDate
+	 * @param lastPlayed
+	 * @param deleted
+	 * @param checkedFlag
+	 * @param ignore
+	 * @throws CannotReadException
+	 * @throws IOException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public TrackTag(String sourceFile, String relativePath, String filename,  
             float BPM, String album, String albumArtist, String artist, String comment, int discNo, int discTotal, String genre, 
             int nbCovers, String title, int trackNo, int trackTotal, String year, int playCounter, int rating, String addedDate, 
             String lastPlayed, boolean deleted, FolderInfo.CheckedFlag checkedFlag, boolean ignore) throws CannotReadException, IOException, TagException, 
@@ -51,7 +86,16 @@ public class TrackTag extends FileInfoInt {
         this.ignore = ignore;
     }
 
-    public void create(String option) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	/**
+	 *
+	 * @param option
+	 * @throws CannotReadException
+	 * @throws IOException
+	 * @throws TagException
+	 * @throws ReadOnlyFileException
+	 * @throws InvalidAudioFrameException
+	 */
+	public void create(String option) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         setRootPath(Jamuz.getMachine().getOptionValue(option));
         FileSystem.copyFile(TrackSourceRepo.get(sourceFile).getFile(), new File(rootPath+relativeFullPath));
 		saveTags(false);
@@ -59,7 +103,11 @@ public class TrackTag extends FileInfoInt {
     
     private final String oriAddedDate;
     private final String oriLastPlayed;
-    public boolean ignore = false;
+
+	/**
+	 *
+	 */
+	public boolean ignore = false;
 
     @Override
     public String getFormattedAddedDate() {

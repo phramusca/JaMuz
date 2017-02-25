@@ -21,8 +21,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
+/**
+ *
+ * @author raph
+ */
 public class Benchmark {
 
     private int size;
@@ -62,15 +64,29 @@ public class Benchmark {
         return MessageFormat.format("{0}: {2}, {1}: {3}", Inter.get("Label.ellapsed"), Inter.get("Label.remaining"), ellapsed, remaining); //NOI18N
     }
 
+	/**
+	 *
+	 * @param size
+	 */
 	public void setSize(int size) {
 		this.size = size;
 	}
  
-    public static long mean(List<Long> numbers) {
+	/**
+	 *
+	 * @param numbers
+	 * @return
+	 */
+	public static long mean(List<Long> numbers) {
         return sum(numbers)/numbers.size();
     }
         
-    public static long sum(List<Long> numbers) {
+	/**
+	 *
+	 * @param numbers
+	 * @return
+	 */
+	public static long sum(List<Long> numbers) {
         long sum=0;
         for(long number : numbers) {
             sum+=number;

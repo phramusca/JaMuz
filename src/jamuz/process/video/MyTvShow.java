@@ -28,6 +28,10 @@ import java.io.Serializable;
 public class MyTvShow extends MyVideoAbstract implements Serializable {
 	private TvSeries serie;
 
+	/**
+	 *
+	 * @param serie
+	 */
 	public MyTvShow(TvSeries serie) {
 		super();
 //            this.userRating = comboRating[Math.round(serie.getUserRating())-1];
@@ -49,19 +53,35 @@ public class MyTvShow extends MyVideoAbstract implements Serializable {
 		}
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public TvSeries getSerie() {
 		return serie;
 	}
 
+	/**
+	 *
+	 * @param movieDb
+	 */
 	public void setSerie(TvSeries movieDb) {
 		this.serie = movieDb;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public int getId() {
 		return this.serie.getId();
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public String getHomepage() {
 		return this.serie.getHomepage();
@@ -72,6 +92,9 @@ public class MyTvShow extends MyVideoAbstract implements Serializable {
 		return this.serie.getName()+" "+this.serie.getUserRating();
 	}
 
+	/**
+	 *
+	 */
 	@Override
 	public void setMyVideoInCache() {
 		DbConnVideo conn = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, "myMovieDb.db", ".", "."), "");

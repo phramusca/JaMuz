@@ -19,12 +19,20 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ *
+ * @author raph
+ */
 public class Emission extends ProcessAbstract {
 
 	private final PrintWriter printWriter;
 	private final BlockingQueue<String> outQueue;
     private final OutputStream os;
 	
+	/**
+	 *
+	 * @param os
+	 */
 	public Emission(OutputStream os) {
 		super("Thread.Common.Emission");
 		this.printWriter = new PrintWriter(os);
@@ -32,6 +40,11 @@ public class Emission extends ProcessAbstract {
         this.os = os;
 	}
 
+	/**
+	 *
+	 * @param msg
+	 * @return
+	 */
 	public boolean send(String msg) {
 		try {
 			outQueue.put(msg);
@@ -42,7 +55,11 @@ public class Emission extends ProcessAbstract {
 		}
 	}
     
-    public void sendFile(String file) {
+	/**
+	 *
+	 * @param file
+	 */
+	public void sendFile(String file) {
         try {
             BufferedInputStream bis;
             

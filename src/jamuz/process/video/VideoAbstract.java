@@ -37,39 +37,134 @@ import jamuz.utils.StringManager;
  */
 public abstract class VideoAbstract implements Comparable {
 
-    protected TreeMap<String, FileInfoVideo> files;
-    protected MyVideoAbstract myVideo;
+	/**
+	 *
+	 */
+	protected TreeMap<String, FileInfoVideo> files;
+
+	/**
+	 *
+	 */
+	protected MyVideoAbstract myVideo;
     
     private String title;
 	private String titleOri;
 	private String year;
+
+	/**
+	 *
+	 */
 	protected List<String> genres;
-    protected String genreStr;
+
+	/**
+	 *
+	 */
+	protected String genreStr;
 	private String director;
 	private List<String> writers; //TODO: Use this
     private String studio;
     private final String country;
     private String synopsis;
-    protected Status status;
+
+	/**
+	 *
+	 */
+	protected Status status;
     private int imdbIdTop250Ranking; 
     private final String imdbId;
     private int runtime; //TODO: Use this
     private String mppaRating;
 
-    abstract public String getRelativeFullPath();
-    abstract public void moveFilesAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn);
-    abstract protected String getVideoSummary();
+	/**
+	 *
+	 * @return
+	 */
+	abstract public String getRelativeFullPath();
+
+	/**
+	 *
+	 * @param buffer
+	 * @param conn
+	 * @param myConn
+	 */
+	abstract public void moveFilesAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn);
+
+	/**
+	 *
+	 * @return
+	 */
+	abstract protected String getVideoSummary();
+
+	/**
+	 *
+	 * @return
+	 */
 	abstract protected ArrayList<FileInfoVideo> getFilesToCleanup();
-    abstract public void removeFavorite();
-    abstract public void addFavorite();
-    abstract public void removeFromWatchList();
-    abstract public void addToWatchList();
-    abstract public void setRating(VideoRating rating);
-    abstract public void setMyVideo(boolean search);
-    abstract public boolean isLocal();
-    abstract public boolean isWatched();
+
+	/**
+	 *
+	 */
+	abstract public void removeFavorite();
+
+	/**
+	 *
+	 */
+	abstract public void addFavorite();
+
+	/**
+	 *
+	 */
+	abstract public void removeFromWatchList();
+
+	/**
+	 *
+	 */
+	abstract public void addToWatchList();
+
+	/**
+	 *
+	 * @param rating
+	 */
+	abstract public void setRating(VideoRating rating);
+
+	/**
+	 *
+	 * @param search
+	 */
+	abstract public void setMyVideo(boolean search);
+
+	/**
+	 *
+	 * @return
+	 */
+	abstract public boolean isLocal();
+
+	/**
+	 *
+	 * @return
+	 */
+	abstract public boolean isWatched();
     
-    protected VideoAbstract(String title, String synopsis,
+	/**
+	 *
+	 * @param title
+	 * @param synopsis
+	 * @param ratingVotes
+	 * @param writers
+	 * @param year
+	 * @param imdbId
+	 * @param runtime
+	 * @param mppaRating
+	 * @param imdbIdTop250Ranking
+	 * @param genre
+	 * @param director
+	 * @param titleOri
+	 * @param studio
+	 * @param trailerURL
+	 * @param fanartURLs
+	 * @param country
+	 */
+	protected VideoAbstract(String title, String synopsis,
             int ratingVotes, String writers, String year, 
             String imdbId, int runtime, String mppaRating, int imdbIdTop250Ranking, String genre, String director, 
             String titleOri, String studio, String trailerURL, String fanartURLs, String country) {
@@ -108,7 +203,16 @@ public abstract class VideoAbstract implements Comparable {
         
 	}
 
-    protected String moveFileAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn, FileInfo fileInfo, String newName) {
+	/**
+	 *
+	 * @param buffer
+	 * @param conn
+	 * @param myConn
+	 * @param fileInfo
+	 * @param newName
+	 * @return
+	 */
+	protected String moveFileAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn, FileInfo fileInfo, String newName) {
         
         //Build new filename
           
@@ -167,7 +271,12 @@ public abstract class VideoAbstract implements Comparable {
         return "";
     }
     
-    protected String getStreamDetails4Filename(FileInfoVideo file) {
+	/**
+	 *
+	 * @param file
+	 * @return
+	 */
+	protected String getStreamDetails4Filename(FileInfoVideo file) {
         String newName=" ["+file.getVideoStreamDetails()+"]";
         newName+=""+file.getAudioStreamDetails()+"";
         newName+=""+file.getSubtitlesStreamDetails()+"";
@@ -239,13 +348,26 @@ public abstract class VideoAbstract implements Comparable {
     public String getMppaRating() {
         return mppaRating;
     }
-    public String getRating() {
+
+	/**
+	 *
+	 * @return
+	 */
+	public String getRating() {
         return String.valueOf(myVideo.getUserRating());
     }
     private final int ratingVotes; //TODO: Use this
 	private String trailerURL; 
-    protected List<String> thumbnails;
-    protected List<String> fanarts; //TODO: Use this
+
+	/**
+	 *
+	 */
+	protected List<String> thumbnails;
+
+	/**
+	 *
+	 */
+	protected List<String> fanarts; //TODO: Use this
     private boolean selected;
     private MovieSize length;
     
@@ -287,7 +409,12 @@ public abstract class VideoAbstract implements Comparable {
         }
     }
   
-    protected final List<String> parseURLStringList(String string) {
+	/**
+	 *
+	 * @param string
+	 * @return
+	 */
+	protected final List<String> parseURLStringList(String string) {
         List<String> URLs = new ArrayList<>();
         if(string!=null) {
             for(String splitted : string.split("preview=\"")) { //NOI18N
@@ -451,7 +578,11 @@ public abstract class VideoAbstract implements Comparable {
         return myVideo;
     }
     
-    abstract public boolean isMovie();
+	/**
+	 *
+	 * @return
+	 */
+	abstract public boolean isMovie();
 
     /**
      *

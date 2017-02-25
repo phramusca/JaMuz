@@ -57,6 +57,10 @@ public class Mplayer implements Runnable {
     private String filePath;
 	private Process process;
 	private int length;
+
+	/**
+	 *
+	 */
 	public boolean positionLock=false;
     private Updater positionUpdater;
 	private Writer writer;
@@ -74,26 +78,46 @@ public class Mplayer implements Runnable {
     public Mplayer() {
     }
 	
+	/**
+	 *
+	 * @param listener
+	 */
 	public void addListener(MPlaybackListener listener) {
         listeners.add(MPlaybackListener.class, listener);
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	public MPlaybackListener[] getListeners() {
         return listeners.getListeners(MPlaybackListener.class);
     }
 	
+	/**
+	 *
+	 * @param volume
+	 */
 	protected void fireVolumeChanged(float volume) {
         for(MPlaybackListener listener : getListeners()) {
 			listener.volumeChanged(volume);
 		}
     }
 	
+	/**
+	 *
+	 */
 	protected void firePlaybackFinished() {
         for(MPlaybackListener listener : getListeners()) {
 			listener.playbackFinished();
 		}
     }
 	
+	/**
+	 *
+	 * @param position
+	 * @param length
+	 */
 	protected void firePositionChanged(int position, int length) {
         for(MPlaybackListener listener : getListeners()) {
 			listener.positionChanged(position, length);
@@ -107,15 +131,27 @@ public class Mplayer implements Runnable {
         this.playerThread.start();
     }
     
+	/**
+	 *
+	 */
 	public class AudioCard {
 		private final String name;
 		private final String value;
 
+		/**
+		 *
+		 * @param name
+		 * @param value
+		 */
 		public AudioCard(String name, String value) {
 			this.name = name;
 			this.value = value;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public String getValue() {
 			return value;
 		}
@@ -126,10 +162,18 @@ public class Mplayer implements Runnable {
 		}
 	}
 	
+	/**
+	 *
+	 * @param audioCard
+	 */
 	public void setAudioCard(AudioCard audioCard) {
 		this.audioCard = audioCard;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public ArrayList<AudioCard> getAudioCards() {
 		ArrayList<AudioCard> audioCards = new ArrayList<>();
 		//Build mplayer command array
@@ -196,7 +240,10 @@ public class Mplayer implements Runnable {
 		return audioCards;
 	}
 	
-	
+	/**
+	 *
+	 * @return
+	 */
 	public boolean startMplayer() {
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
@@ -293,6 +340,9 @@ public class Mplayer implements Runnable {
 		}
 	}
 	
+	/**
+	 *
+	 */
 	public void pause() {
 		if(process!=null) {
 			int position = (int) Math.round(getPosition());
@@ -301,6 +351,10 @@ public class Mplayer implements Runnable {
 		}
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public boolean stop() {
 		this.goNext=false;
 		Jamuz.getLogger().log(Level.FINEST, "*********************** goNext: {0}; stop()", goNext);
@@ -311,9 +365,13 @@ public class Mplayer implements Runnable {
 		return false;
 	}
 
-	
-	
-    public String play(String filePath, boolean resume) {
+	/**
+	 *
+	 * @param filePath
+	 * @param resume
+	 * @return
+	 */
+	public String play(String filePath, boolean resume) {
 		synchronized(lockPlayer) {
 			try {
 				if(this.stop()) {
@@ -408,6 +466,10 @@ public class Mplayer implements Runnable {
 		return line;
 	}
 	
+	/**
+	 *
+	 * @param seconds
+	 */
 	public void setPosition(int seconds) {
 		execute("set_property time_pos"+ " " + seconds);
 	}
@@ -419,6 +481,11 @@ public class Mplayer implements Runnable {
 		return getPropertyAsDouble("time_pos");
 	}
 	
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
 	protected double getPropertyAsDouble(String name) {
 		try {
 			String valueS = getProperty(name);
@@ -429,6 +496,11 @@ public class Mplayer implements Runnable {
 		return 0;
 	}
 	
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
 	protected float getPropertyAsFloat(String name) {
 		try {
 			String valueS = getProperty(name);
@@ -438,6 +510,11 @@ public class Mplayer implements Runnable {
 		return 0f;
 	}
 	
+	/**
+	 *
+	 * @param name
+	 * @return
+	 */
 	protected String getProperty(String name) {
 		if (name == null || (process == null && !process.isAlive())) {
 			return null;
@@ -451,6 +528,10 @@ public class Mplayer implements Runnable {
 		return x.substring(s.length());
 	}
 	
+	/**
+	 *
+	 * @param volume
+	 */
 	public void setVolume(float volume) {
 		execute("set_property volume" + " " + volume);
 	}

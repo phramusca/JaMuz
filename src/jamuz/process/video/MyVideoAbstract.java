@@ -28,11 +28,30 @@ import java.util.Date;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public abstract class MyVideoAbstract implements Serializable {
+
+	/**
+	 *
+	 */
 	protected boolean isFavorite;
+
+	/**
+	 *
+	 */
 	protected boolean isInWatchList;
+
+	/**
+	 *
+	 */
 	protected VideoRating userRating;
+
+	/**
+	 *
+	 */
 	protected int year;
 
+	/**
+	 *
+	 */
 	public MyVideoAbstract() {
 		this.isFavorite=false;
 		this.isInWatchList=false;
@@ -40,39 +59,78 @@ public abstract class MyVideoAbstract implements Serializable {
 		this.year = 0;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	abstract public int getId(); 
 
+	/**
+	 *
+	 */
 	abstract public void setMyVideoInCache();
 	
+	/**
+	 *
+	 * @return
+	 */
 	abstract public String getHomepage();
 
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isIsFavorite() {
 		return isFavorite;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isIsInWatchList() {
 		return isInWatchList;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public VideoRating getUserRating() {
 		return userRating;
 	}
 	
+	/**
+	 *
+	 * @param userRating
+	 */
 	public void setUserRating(VideoRating userRating) {
 		this.userRating = userRating;
 		setMyVideoInCache();
 	}
 
+	/**
+	 *
+	 * @param isFavorite
+	 */
 	public void setIsFavorite(boolean isFavorite) {
 		this.isFavorite = isFavorite;
 		setMyVideoInCache();
 	}
 
+	/**
+	 *
+	 * @param isInWatchList
+	 */
 	public void setIsInWatchList(boolean isInWatchList) {
 		this.isInWatchList = isInWatchList;
 		setMyVideoInCache();
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public int getYear() {
 		return year;
 	}

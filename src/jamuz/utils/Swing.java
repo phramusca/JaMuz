@@ -80,8 +80,19 @@ public class Swing {
 		tabbedPane.setSelectedIndex(checkTabIndex);
 	}
 	
+	/**
+	 *
+	 */
 	public enum FileType {
+
+		/**
+		 *
+		 */
 		JPG,
+
+		/**
+		 *
+		 */
 		SQLITE
 	}
 	
@@ -94,6 +105,13 @@ public class Swing {
 		return selectile(defaultFile, new ArrayList<>(), "Select file");
 	}
 	
+	/**
+	 *
+	 * @param defaultFile
+	 * @param fileType
+	 * @param title
+	 * @return
+	 */
 	public static String selectile(String defaultFile, FileType fileType, String title) {
 		List<Swing.FileType> fileTypes = new ArrayList<>();
 		fileTypes.add(fileType);

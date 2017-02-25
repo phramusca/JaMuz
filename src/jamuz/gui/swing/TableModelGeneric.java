@@ -26,6 +26,10 @@ import javax.swing.table.AbstractTableModel;
 
 public abstract class TableModelGeneric extends AbstractTableModel {
     private String[] columnNames = {"ToBeDefined"};  //NOI18N
+
+	/**
+	 *
+	 */
 	protected Integer[] editableColumns = { -1 }; //No column is editable by default
     
     /**

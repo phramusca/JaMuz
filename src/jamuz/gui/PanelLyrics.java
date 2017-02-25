@@ -48,7 +48,12 @@ public class PanelLyrics extends javax.swing.JPanel {
         jTextPaneLyrics.setCaretPosition(0); //Scroll to top
     }
     
-    public static void setPosition(int currentPosition, int length) {
+	/**
+	 *
+	 * @param currentPosition
+	 * @param length
+	 */
+	public static void setPosition(int currentPosition, int length) {
         if(jCheckBoxLyricsScroll.isSelected()) {
             jTextPaneLyrics.setCaretPosition((currentPosition*jTextPaneLyrics.getDocument().getLength())/(length*1000));
             

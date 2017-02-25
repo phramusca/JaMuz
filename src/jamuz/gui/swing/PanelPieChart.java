@@ -46,6 +46,9 @@ public class PanelPieChart extends JPanel  {
 	private Paint[] paints=null;
 	private double[] data=null;
 	
+	/**
+	 *
+	 */
 	public PanelPieChart() {
 	}
 
@@ -123,15 +126,27 @@ public class PanelPieChart extends JPanel  {
 		double value;
 		Color color;
 
-        public double getValue() {
+		/**
+		 *
+		 * @return
+		 */
+		public double getValue() {
             return value;
         }
 
-        public void setColor(Color color) {
+		/**
+		 *
+		 * @param color
+		 */
+		public void setColor(Color color) {
             this.color = color;
         }
 
-        public Color getColor() {
+		/**
+		 *
+		 * @return
+		 */
+		public Color getColor() {
             return color;
         }
 

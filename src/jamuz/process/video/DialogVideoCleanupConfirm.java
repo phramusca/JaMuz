@@ -71,6 +71,9 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 		
 	}
 	
+	/**
+	 *
+	 */
 	public static void display() {
 		jTableOptions.setRowSorter(null);
 		tableModelOptions.clear();

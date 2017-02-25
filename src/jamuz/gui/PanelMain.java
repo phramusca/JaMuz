@@ -107,21 +107,33 @@ public class PanelMain extends javax.swing.JFrame {
      */
     private static ListModelQueue queueModel;
 
-    public static ListModelQueue getQueueModel() {
+	/**
+	 *
+	 * @return
+	 */
+	public static ListModelQueue getQueueModel() {
         return queueModel;
     }
     
 //    private static final PlayerMP3 mp3Player = new PlayerMP3();
 //    private static final PlayerFlac flacPlayer = new PlayerFlac();
 	private static Mplayer MPLAYER;
-    protected static DefaultComboBoxModel comboPlaylistsModel = new DefaultComboBoxModel();
+
+	/**
+	 *
+	 */
+	protected static DefaultComboBoxModel comboPlaylistsModel = new DefaultComboBoxModel();
     
     /**
      * genre combo values
      */
     protected static String[] comboGenre;
 
-    public static String[] getComboGenre() {
+	/**
+	 *
+	 * @return
+	 */
+	public static String[] getComboGenre() {
         return comboGenre;
     }
     
@@ -531,7 +543,10 @@ public class PanelMain extends javax.swing.JFrame {
 		displayFileInfo();
     }
 
-    public static void fillMachineList() {
+	/**
+	 *
+	 */
+	public static void fillMachineList() {
         //Display machines list
         fillMachineList((DefaultListModel) jListMachines.getModel());  //NOI18N
         //Select current machine
@@ -1625,7 +1640,6 @@ public class PanelMain extends javax.swing.JFrame {
 	/**
 	 * Select tab with given title
 	 *
-	 * @param tabbedPane
 	 * @param title
 	 */
 	public static void selectTab(String title) {
@@ -1649,6 +1663,9 @@ public class PanelMain extends javax.swing.JFrame {
         jTabbedPaneMain.setTabComponentAt(index, label);
     }
 
+	/**
+	 *
+	 */
 	public static void stopMplayer() {
 		MPLAYER.stop();
 	}
@@ -2012,7 +2029,10 @@ public class PanelMain extends javax.swing.JFrame {
 		fillQueue.start();
     }
     
-    protected static ProgressBar progressBarCheckedFlag;
+	/**
+	 *
+	 */
+	protected static ProgressBar progressBarCheckedFlag;
     
     private void jButtonResetCheckedFlagKOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetCheckedFlagKOActionPerformed
         resetCheckedFlag(FolderInfo.CheckedFlag.KO);
@@ -2105,9 +2125,15 @@ public class PanelMain extends javax.swing.JFrame {
         MPLAYER.setVolume((float)jSpinnerVolume.getValue());
     }//GEN-LAST:event_jSpinnerVolumeStateChanged
 
+	/**
+	 *
+	 */
 	public class SaveTags extends ProcessAbstract {
 
-        public SaveTags() {
+		/**
+		 *
+		 */
+		public SaveTags() {
             super("Thread.PanelMain.SaveTags");
         }
                 
@@ -2181,11 +2207,17 @@ public class PanelMain extends javax.swing.JFrame {
 		}
 	}
 
-    public static void forward() {
+	/**
+	 *
+	 */
+	public static void forward() {
         moveCursor(jSliderPlayerLength.getValue() + (jSliderPlayerLength.getMaximum()/10));
     }
     
-    public void rewind() {
+	/**
+	 *
+	 */
+	public void rewind() {
         moveCursor(jSliderPlayerLength.getValue() - (jSliderPlayerLength.getMaximum()/10));
     }
     
@@ -2235,7 +2267,10 @@ public class PanelMain extends javax.swing.JFrame {
 
     private static FramePlayerInfo playerInfo;
 
-    public static void displayFileInfo() {
+	/**
+	 *
+	 */
+	public static void displayFileInfo() {
         FileInfoInt playingFile = queueModel.getPlayingSong()==null?displayedFile:queueModel.getPlayingSong().getFile();
 		//In case we have stopped/paused so it gets refreshed anyway
         displayFileInfo(playingFile, true);
@@ -2319,7 +2354,11 @@ public class PanelMain extends javax.swing.JFrame {
             sendToClients("JSON_"+obj.toJSONString());
     }
     
-    public static List<String> getPlaylists() {
+	/**
+	 *
+	 * @return
+	 */
+	public static List<String> getPlaylists() {
         ArrayList<String> list = new ArrayList<>();
         for (int index = 0; index < comboPlaylistsModel.getSize(); index++) {
             Object msg = comboPlaylistsModel.getElementAt(index);

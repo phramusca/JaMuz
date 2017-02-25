@@ -33,7 +33,11 @@ import org.junit.Test;
  */
 public class Check1Test extends TestCase {
    
-    @Test
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
     public void test() throws Exception {
         //Should use NTest instead. This one is not up to date
         return;
@@ -78,17 +82,29 @@ public class Check1Test extends TestCase {
 //        assertEquals("number of checked folders", expected, ProcessCheck.tableModelCheck.getFolders().size());
     }
     
-    public Check1Test(String testMethodName) {
+	/**
+	 *
+	 * @param testMethodName
+	 */
+	public Check1Test(String testMethodName) {
         super(testMethodName);
     }
     
-    @Override
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Override
     protected void setUp() throws Exception {
         super.setUp();
         Settings.setupApplication();
     }
 
-    @Override
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Override
     protected void tearDown() throws Exception {
         super.tearDown();
     }

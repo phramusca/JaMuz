@@ -38,23 +38,43 @@ import jamuz.utils.Swing;
 public class Settings {
     private static final String testRootPath = "/home/raph/Documents/04-Creations/Dev/NetBeans/JaMuz/TestsJunit/"; //Must have trailing separator (/ or \\)
     
-    public static String getMusicFolder() {
+	/**
+	 *
+	 * @return
+	 */
+	public static String getMusicFolder() {
         return testRootPath + "Musique" + File.separator;
     }
     
-    public static String getRessourcesPath() {
+	/**
+	 *
+	 * @return
+	 */
+	public static String getRessourcesPath() {
         return testRootPath+File.separator+"Ressources"+File.separator;
     }
     
-    public static String getAppFolder() {
+	/**
+	 *
+	 * @return
+	 */
+	public static String getAppFolder() {
         return testRootPath + "AppFolder" + File.separator;
     }
     
-    public static String getStatSourcesFolder() {
+	/**
+	 *
+	 * @return
+	 */
+	public static String getStatSourcesFolder() {
         return testRootPath + "StatSources" + File.separator;
     }
     
-    public static BufferedImage getTestCover() {
+	/**
+	 *
+	 * @return
+	 */
+	public static BufferedImage getTestCover() {
         Font f = new Font(Font.SANS_SERIF, Font.BOLD, 50);
         BufferedImage image = new BufferedImage(400, 400, BufferedImage.TYPE_3BYTE_BGR);
         Graphics2D g = image.createGraphics();
@@ -100,7 +120,15 @@ public class Settings {
         deleteAndMakeFolder("location.ko");
     }
 
-    public static void addStatSource(String name, int idStatement, String rootPath, int idDevice) throws IOException {
+	/**
+	 *
+	 * @param name
+	 * @param idStatement
+	 * @param rootPath
+	 * @param idDevice
+	 * @throws IOException
+	 */
+	public static void addStatSource(String name, int idStatement, String rootPath, int idDevice) throws IOException {
         File sourceFile = new File(getRessourcesPath()+"statSources/"+name);
         String destination=getStatSourcesFolder()+name;
         File destinationFile = new File(destination);
@@ -137,7 +165,12 @@ public class Settings {
         return "";
     }
     
-    public static void startGUI(String tab) throws InterruptedException {
+	/**
+	 *
+	 * @param tab
+	 * @throws InterruptedException
+	 */
+	public static void startGUI(String tab) throws InterruptedException {
         PanelMain.main(null); 
         //Need to wait for GUI to load
         //TODO: should not have to do this: need to use some kind of delegates to call back GUI from model
