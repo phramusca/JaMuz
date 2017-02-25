@@ -19,9 +19,10 @@ ________________________________________________________________________________
   * Player (basic, not the main feature though).
   * [Android Remote Control](https://github.com/phramusca/JaMuz-Remote)
   * Runs on Windows and Linux (as written in Java), maybe Mac OS (not tested).
-  * Translated in:
-    * Français
-    * Please [contribute](CONTRIBUTING.md) to add some more.
+  * Translated using [WebLate](https://hosted.weblate.org/engage/jamuz/):
+    <a href="https://hosted.weblate.org/engage/jamuz/?utm_source=widget">
+    <img src="https://hosted.weblate.org/widgets/jamuz/-/multi-auto.svg" alt="État de la traduction" />
+    </a>
   * Bonus: Kodi helper to manage your video files.
 
 See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
