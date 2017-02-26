@@ -96,7 +96,6 @@ public class DialogStatSource extends javax.swing.JDialog {
         jTextLocation = new javax.swing.JTextField();
         jLabelRootPath = new javax.swing.JLabel();
         jTextRootPath = new javax.swing.JTextField();
-        jButtonSelect = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
         jLabelDevice = new javax.swing.JLabel();
@@ -129,15 +128,6 @@ public class DialogStatSource extends javax.swing.JDialog {
         jLabelRootPath.setText(bundle.getString("Label.RootPath")); // NOI18N
 
         jTextRootPath.setText("jTextField1"); // NOI18N
-
-        jButtonSelect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
-        jButtonSelect.setText(bundle.getString("Button.Select")); // NOI18N
-        jButtonSelect.setEnabled(false);
-        jButtonSelect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSelectActionPerformed(evt);
-            }
-        });
 
         jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
         jButtonCancel.setText(bundle.getString("Button.Cancel")); // NOI18N
@@ -191,14 +181,13 @@ public class DialogStatSource extends javax.swing.JDialog {
                             .addComponent(jTextLocation, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jCheckBoxSelected)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 702, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 416, Short.MAX_VALUE)
                                 .addComponent(jButtonCancel))
                             .addComponent(jTextRootPath))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonSelect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonSave, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButtonAuto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jButtonAuto))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -213,15 +202,16 @@ public class DialogStatSource extends javax.swing.JDialog {
                     .addComponent(jTextName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelName))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelLocation)
-                    .addComponent(jTextLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonAuto))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelRootPath)
-                    .addComponent(jTextRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSelect))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelLocation)
+                            .addComponent(jTextLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelRootPath)
+                            .addComponent(jTextRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jButtonAuto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelDevice)
@@ -231,7 +221,7 @@ public class DialogStatSource extends javax.swing.JDialog {
                     .addComponent(jButtonCancel)
                     .addComponent(jButtonSave)
                     .addComponent(jCheckBoxSelected))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
@@ -279,21 +269,6 @@ public class DialogStatSource extends javax.swing.JDialog {
 	private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
 		this.dispose();
 	}//GEN-LAST:event_jButtonCancelActionPerformed
-
-	private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectActionPerformed
-		//Disabled 
-        //FIXME: Read database (first need to make sure that database exists and is readable)
-        //to read root path. Change button name to "Auto"
-        // To determine root path:
-        //Ex, pour Kodi: SELECT strPath FROM path ORDER BY length(strPath) ASC LIMIT 1
-        
-        //Par contre, utiliser le code ci-dessous pour chercher un dossier
-        //(voir aussi si FTP ...)
-		String selectedFolder=Swing.selectFolder(jTextRootPath.getText(), Inter.get("Label.RootPath"));
-		if(!selectedFolder.equals("")) {  //NOI18N
-			jTextRootPath.setText(selectedFolder); 
-		}
-	}//GEN-LAST:event_jButtonSelectActionPerformed
 
     private void jComboBoxTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTypeActionPerformed
         if(this.statSource.getSource().getName().equals("")) {
@@ -397,7 +372,6 @@ public class DialogStatSource extends javax.swing.JDialog {
     private javax.swing.JButton jButtonAuto;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
-    private javax.swing.JButton jButtonSelect;
     private javax.swing.JCheckBox jCheckBoxSelected;
     private javax.swing.JComboBox<Device> jComboBoxDevice;
     private javax.swing.JComboBox jComboBoxType;
