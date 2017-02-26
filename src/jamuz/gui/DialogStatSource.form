@@ -46,16 +46,15 @@
                           <Component id="jTextLocation" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="jCheckBoxSelected" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="702" max="32767" attributes="0"/>
+                              <EmptySpace pref="416" max="32767" attributes="0"/>
                               <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jTextRootPath" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jButtonSelect" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jButtonSave" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonAuto" max="32767" attributes="0"/>
+                          <Component id="jButtonAuto" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -77,16 +76,19 @@
                   <Component id="jLabelName" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabelLocation" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextLocation" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonAuto" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabelRootPath" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTextRootPath" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonSelect" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabelLocation" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextLocation" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabelRootPath" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextRootPath" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="jButtonAuto" alignment="1" min="-2" pref="64" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -99,7 +101,7 @@
                   <Component id="jButtonSave" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jCheckBoxSelected" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="16" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -167,20 +169,6 @@
         <Property name="text" type="java.lang.String" value="jTextField1" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonSelect">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/jamuz/ressources/folder_explore.png"/>
-        </Property>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
-        <Property name="enabled" type="boolean" value="false"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSelectActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JButton" name="jButtonCancel">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -238,7 +226,7 @@
           <Image iconType="3" name="/jamuz/ressources/arrow_refresh.png"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/gui/Bundle.properties" key="DialogStatSource.jButtonAuto.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="jamuz/Bundle.properties" key="DialogStatSource.jButtonAuto.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
