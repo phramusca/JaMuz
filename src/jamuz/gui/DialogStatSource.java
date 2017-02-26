@@ -260,7 +260,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 
 	private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectActionPerformed
 		//Disabled 
-        //TODO: Read database (first need to make sure that database exists and is readable)
+        //FIXME: Read database (first need to make sure that database exists and is readable)
         //to read root path. Change button name to "Auto"
         // To determine root path:
         //Ex, pour Kodi: SELECT strPath FROM path ORDER BY length(strPath) ASC LIMIT 1

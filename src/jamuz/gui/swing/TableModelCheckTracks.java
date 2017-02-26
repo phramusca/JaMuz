@@ -259,7 +259,7 @@ public class TableModelCheckTracks extends TableModelGeneric {
 			filesAudio.set(toIndex, from);
 			//TODO: Do this a documented:
 			//https://docs.oracle.com/javase/8/docs/api/java/util/List.html#set-int-E-
-			//which shoul be :
+			//which should be :
 //			FileInfoDisplay fileFrom = files.set(toIndex, files.get(fromIndex));
 //			files.set(fromIndex, fileFrom);
 

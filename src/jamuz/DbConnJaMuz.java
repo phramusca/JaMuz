@@ -1697,14 +1697,13 @@ public class DbConnJaMuz extends StatSourceSQL {
                 sql += " ORDER BY " + sqlOrder;
                 break;
             case "artist":  //NOI18N
-                //TODO: Get the number of albums too: yep, not that easy ...
-                sql = "SELECT albumArtist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles, 'albumArtist' AS source, "
+                sql = "SELECT albumArtist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles, COUNT(DISTINCT F.idPath) AS nbPaths, 'albumArtist' AS source, "
                         + "ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, " +  //NOI18N
                         "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"  //NOI18N
                         + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight)  //NOI18N
                         + " GROUP BY albumArtist HAVING (sum(case when rating IN "+getCSVlist(selRatings)+" then 1 end))>0 ";  //NOI18N
                 sql += " UNION ";  //NOI18N
-                sql += "SELECT artist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles, 'artist', "  //NOI18N
+                sql += "SELECT artist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles, COUNT(DISTINCT F.idPath) AS nbPaths, 'artist', "  //NOI18N
                         + "ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, " +  //NOI18N
                         "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"  //NOI18N
                         + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight)
@@ -1857,6 +1856,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                             artist = "<b>" + artist + "</b>";  //NOI18N
                         }
                         int nbFiles = rs.getInt("nbFiles");  //NOI18N
+						int nbPaths = rs.getInt("nbPaths");  //NOI18N
                         percentRated = rs.getInt("percentRated");  //NOI18N
                         rating=" [" + rs.getDouble("albumRating")+"]";// + "/5]";
                         if(percentRated!=100) {
@@ -1866,7 +1866,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                             }
                             rating = FolderInfoResult.colorField(rating, errorLevel, false);
                         }
-                        artist = "<html>" + artist + rating + "<BR/>" + nbFiles + " " + Inter.get("Label.File").toLowerCase(Locale.getDefault())+ "(s)</html>";  //NOI18N
+                        artist = "<html>" + artist + rating + "<BR/>" + nbPaths + " " + Inter.get("Tag.Album").toLowerCase(Locale.getDefault())+ "(s), " + nbFiles + " " + Inter.get("Label.File").toLowerCase(Locale.getDefault())+ "(s)</html>";  //NOI18N
                         ListElement artistElement = makeListElement(elementToAdd, rs);
                         artistElement.setDisplay(artist);
                         elementToAdd = artistElement;

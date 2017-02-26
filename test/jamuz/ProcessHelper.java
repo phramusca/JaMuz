@@ -78,7 +78,7 @@ public class ProcessHelper {
             dbIndexes.add(new Integer(statSource.getId()));
         }
         startProcessMerge(dbIndexes, false, false);
-        //TODO: Also test simulate and forceJamuz parameters
+        //FIXME TEST: Also test simulate and forceJamuz parameters
     }
     
 	/**

@@ -643,11 +643,6 @@ public class PanelSelect extends javax.swing.JPanel {
 
         jCheckBoxSelectRating0.setSelected(true);
         jCheckBoxSelectRating0.setText("?"); // NOI18N
-        jCheckBoxSelectRating0.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxSelectRating0ActionPerformed(evt);
-            }
-        });
 
         jCheckBoxSelectRating1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/1starU.png"))); // NOI18N
         jCheckBoxSelectRating1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/1starC.png"))); // NOI18N
@@ -1481,10 +1476,6 @@ public class PanelSelect extends javax.swing.JPanel {
             refreshTable();
         }
     }//GEN-LAST:event_jRadioSelectAlbumRatingItemStateChanged
-
-    private void jCheckBoxSelectRating0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxSelectRating0ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBoxSelectRating0ActionPerformed
 
     private void jRadioSelectArtistNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioSelectArtistNameItemStateChanged
         JRadioButton source = (JRadioButton) evt.getSource();

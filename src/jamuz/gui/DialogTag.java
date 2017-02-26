@@ -87,7 +87,6 @@ public class DialogTag extends javax.swing.JDialog {
         //Center the dialog on screen
         dialog.setLocationRelativeTo(dialog.getParent());
         //Change title
-        //TODO: Color in red words not found in match and in green the ones found 
         dialog.setTitle(file.getArtist().concat(" | ").concat(file.getTitle()).concat(" | (").concat(file.getAlbum()).concat(")"));
         //Display
         dialog.setVisible(true);
