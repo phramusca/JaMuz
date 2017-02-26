@@ -16,10 +16,18 @@
  */
 package jamuz.tests;
 
+import jamuz.utils.FileSystem;
+import jamuz.utils.XML;
+import java.io.File;
+import java.util.ArrayList;
 import org.musicbrainz.MBWS2Exception;
 import org.musicbrainz.controller.Release;
 import org.musicbrainz.model.TagWs2;
 import org.musicbrainz.model.entity.ReleaseWs2;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -32,6 +40,24 @@ public class ManualTesting {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		File file = FileSystem.replaceHome("~/.guayadeque/guayadeque.conf");
+		if(!file.exists()) {
+			System.exit(0);
+		}
+		Document doc = XML.open(file.getAbsolutePath());
+		if(doc==null) {
+			System.exit(0);
+		}
+		ArrayList<Element> elements = XML.getElements(doc, "collection");
+		for(Element element : elements) {
+			if(XML.getAttribute(XML.getElement(element, "Type"), "value").equals("0")) {
+				System.out.println("UniqueId:"+XML.getAttribute(XML.getElement(element, "UniqueId"), "value"));
+				System.out.println("Name:"+XML.getAttribute(XML.getElement(element, "Name"), "value"));
+				System.out.println("Path0:"+XML.getAttribute(XML.getElement(element, "Path0"), "value"));
+			}
+		}
+	
 
 //        try {
 //           

@@ -204,7 +204,7 @@ public class ProcessVideo extends ProcessAbstract {
 
 		//Connect to database
 		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getOptions().get("video.dbLocation"), ".", "."), Jamuz.getOptions().get("video.rootPath"));
-        File kodiDbFile = new File(Jamuz.getOptions().get("video.dbLocation").replace("~", System.getProperty("user.home")));  //NOI18N
+        File kodiDbFile = FileSystem.replaceHome(Jamuz.getOptions().get("video.dbLocation"));
 		if (!kodiDbFile.exists()) { //Not using connKodi.getInfo().check() as we don't want popup
 			return false;
 		}

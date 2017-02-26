@@ -20,9 +20,11 @@ package jamuz.process.merge;
 import jamuz.StatSourceSQL;
 import jamuz.FileInfo;
 import jamuz.DbInfo;
+import jamuz.Jamuz;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
+import java.sql.PreparedStatement;
 
 /**
  *
@@ -105,5 +107,31 @@ public class StatSourceMixxx extends StatSourceSQL {
         this.stUpdateFileStatistics.setInt(4, file.getPlayCounter());
         this.stUpdateFileStatistics.setString(5, this.getRootPath()+getPath(file.getRelativeFullPath())); 
         this.stUpdateFileStatistics.addBatch();
+    }
+	
+	public String guessRootPath() {
+        ResultSet rs = null;
+        try {
+            
+            PreparedStatement stSelectPath = dbConn.getConnnection().prepareStatement(
+					"SELECT directory FROM directories");   //NOI18N
+            rs = stSelectPath.executeQuery();
+            if (rs.next()) { //Check if we have a result, so we can move to this one
+                return rs.getString(1);
+            } else {
+                return "";
+            }
+        } catch (SQLException ex) {
+            Popup.error("guessRootPath()", ex);   //NOI18N
+            return "";
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            
+        }
     }
 }

@@ -90,7 +90,7 @@ public class DbInfo {
                 else {
                     //If not FTP, should be a "usual" path to file
                     //Checking if file exists
-                    File myFile = new File(locationOri.replace("~", System.getProperty("user.home")));  //NOI18N
+                    File myFile = FileSystem.replaceHome(locationOri);
                     if (myFile.exists()) {
                         return true;
                     }
@@ -142,7 +142,7 @@ public class DbInfo {
 					File sourceFile;
 					File destinationFile;
 					if(receive) {
-						sourceFile = new File(this.locationOri.replace("~", System.getProperty("user.home")));  //NOI18N
+						sourceFile = FileSystem.replaceHome(this.locationOri);
 						fileName = sourceFile.getName();
 						destinationFile = new File(locationWork + fileName);
 						//Change the working location

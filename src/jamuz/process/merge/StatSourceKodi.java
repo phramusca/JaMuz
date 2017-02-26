@@ -20,8 +20,11 @@ package jamuz.process.merge;
 import jamuz.StatSourceSQL;
 import jamuz.FileInfo;
 import jamuz.DbInfo;
+import jamuz.Jamuz;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  *
@@ -79,4 +82,30 @@ public class StatSourceKodi extends StatSourceSQL {
         this.stUpdateFileStatistics.addBatch();
     }
 
+	public String guessRootPath() {
+        ResultSet rs = null;
+        try {
+            
+            PreparedStatement stSelectPath = dbConn.getConnnection().prepareStatement(
+					"SELECT strPath FROM path ORDER BY length(strPath) ASC LIMIT 1");   //NOI18N
+            rs = stSelectPath.executeQuery();
+            if (rs.next()) { //Check if we have a result, so we can move to this one
+                return rs.getString(1);
+            } else {
+                return "";
+            }
+        } catch (SQLException ex) {
+            Popup.error("guessRootPath()", ex);   //NOI18N
+            return "";
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            
+        }
+    }
+	
 }

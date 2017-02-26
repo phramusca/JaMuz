@@ -37,6 +37,7 @@ import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
 import jamuz.utils.Popup;
+import jamuz.utils.XML;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -187,22 +188,22 @@ public class Jamuz {
         File f = new File(configFileName);
         if(f.exists()) {
 			//Open application XML configuration file
-			org.w3c.dom.Document docDatabase = openXmlFile(configFileName);
+			org.w3c.dom.Document docDatabase = XML.open(configFileName);
 			if(docDatabase==null) {
 				Popup.warning(Inter.get("Error.OpenXMLConfigFile")); //NOI18N
 				return false;
 			}
 
 			//Check XML configuration file type and version
-			String type = getXmlNodeValue(docDatabase, "header", "type");  //NOI18N
-			String version = getXmlNodeValue(docDatabase, "header", "version");  //NOI18N
+			String type = XML.getNodeValue(docDatabase, "header", "type");  //NOI18N
+			String version = XML.getNodeValue(docDatabase, "header", "version");  //NOI18N
 			if(!type.equals("jamuz") || !version.equals("1")) { //NOI18N
 				Popup.warning(java.text.MessageFormat.format(Inter.get("Error.XMLConfigFileInvalid"), new Object[] {configFileName, type, version}));  //NOI18N
 				return false;
 			}
 
 			//Get database path from XML configuration file
-			JaMuzDbPath = getXmlNodeValue(docDatabase, "config", "database");  //NOI18N
+			JaMuzDbPath = XML.getNodeValue(docDatabase, "config", "database");  //NOI18N
 		}
 
         //Check JaMuz JaMuzDbPath file presence
@@ -392,30 +393,4 @@ public class Jamuz {
         return logger;
     }
     
-    //TODO: Move below functions to a dedicated class
-	private static org.w3c.dom.Document openXmlFile(String filename) {
-		try {
-			File file = new File(filename);
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-			org.w3c.dom.Document doc = documentBuilder.parse(file);
-			doc.getDocumentElement().normalize();
-			return doc;
-		} catch (ParserConfigurationException | SAXException | IOException ex) {
-			//Proper error handling. filename is displayed in ex, so no need to add it again
-			Popup.error(ex); 
-			return null;
-        }
-	}
-
-	private static String getXmlNodeValue(org.w3c.dom.Document doc, String TagNameLev1, String TagNameLev2) {
-		NodeList nodeLst = doc.getElementsByTagName(TagNameLev1);
-		Node fstNode = nodeLst.item(0);
-
-		Element myElement = (Element) fstNode;
-		NodeList myElementList = myElement.getElementsByTagName(TagNameLev2);
-		Element mySubElement = (Element) myElementList.item(0);
-		NodeList mySubElementList = mySubElement.getChildNodes();
-		return ((Node) mySubElementList.item(0)).getNodeValue();
-	}
 }
