@@ -2541,7 +2541,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @return
      */
     @Override
-    protected FileInfo getStats(ResultSet rs) {
+    protected FileInfo getStatistics(ResultSet rs) {
         try {
 			//JaMuz database does not store rootPath in database, only relative one
             String relativeFullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N

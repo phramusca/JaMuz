@@ -79,7 +79,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
             FileInfo myFileInfo;
             rs = this.stSelectFileStatistics.executeQuery();
             while (rs.next()) {
-				myFileInfo = getStats(rs);
+				myFileInfo = getStatistics(rs);
 				files.add(myFileInfo);
             }
             return true;
@@ -103,7 +103,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 	 * @param rs
 	 * @return
 	 */
-	protected FileInfo getStats(ResultSet rs) {
+	protected FileInfo getStatistics(ResultSet rs) {
 		try {
             String strfullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N
             String relativeFullPath = strfullPath.substring(getRootPath().length());
@@ -114,7 +114,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 
 			return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed, addedDate, playCounter, this.getName(), 0, Float.valueOf(0), "");
 		} catch (SQLException ex) {
-			Popup.error("getStats", ex);  //NOI18N
+			Popup.error("getStatistics", ex);  //NOI18N
 			return null;
 		}
 	}
