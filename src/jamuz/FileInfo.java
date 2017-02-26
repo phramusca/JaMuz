@@ -248,9 +248,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public void setPlayCounter(int playCounter) {
         this.playCounter = playCounter;
     }
-    
-    
-    
+
 	/**
 	 * Previous play counter
 	 */
@@ -263,15 +261,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public int getPreviousPlayCounter() {
         return previousPlayCounter;
     }
-
-	/**
-	 *
-	 * @param previousPlayCounter
-	 */
-	public void setPreviousPlayCounter(int previousPlayCounter) {
-        this.previousPlayCounter = previousPlayCounter;
-    }
-    
+  
     /**
 	 * Song BPM
 	 */

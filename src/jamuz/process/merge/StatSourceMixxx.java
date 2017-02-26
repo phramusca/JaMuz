@@ -73,7 +73,7 @@ public class StatSourceMixxx extends StatSourceSQL {
 	 * @return
 	 */
 	@Override
-    protected FileInfo getStats(ResultSet rs) {
+    protected FileInfo getStatistics(ResultSet rs) {
         try {
             String strfullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N
             String relativeFullPath = strfullPath.substring(getRootPath().length());
