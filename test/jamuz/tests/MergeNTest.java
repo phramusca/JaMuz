@@ -106,7 +106,7 @@ public class MergeNTest extends TestCase {
                 //Check merge
                 AlbumBuffer.getAlbum(mbId, "MergeDevice4_1stMerge").checkStatSource(statSource.getId(), playlist.getId()>0);
                 //Change stats in stat source
-                //TODO: change statistics in album defintion files for all stat sources, inclusing jamuz for all albums
+                //FIXME TEST: change statistics in album defintion files for all stat sources, inclusing jamuz for all albums
                 AlbumBuffer.getAlbum(mbId, "MergeDevice5_"+statSource.getIdStatement()).setAndCheckStatsInStatSource(statSource.getId(), playlist.getId()>0);
             }
             //Change stats in JamuZ
@@ -193,7 +193,7 @@ public class MergeNTest extends TestCase {
                 
                 //Change stats in stat source for MyTunes only
                 if(playlist.getId()>0) {
-                    //TODO: Modify more albums, not only one as for now
+                    //FIXME TEST: Modify more albums, not only one as for now
                     AlbumBuffer.getAlbum(mbId, "MergeDevice10_"+statSource.getIdStatement()).setAndCheckStatsInStatSource(statSource.getId(), playlist.getId()>0);
                 }
             }
@@ -226,9 +226,9 @@ public class MergeNTest extends TestCase {
             }
         }
         
-//        //TODO: Merge again but now all stat sources have been synced and scanned 
+//        //FIXME TEST: Merge again but now all stat sources have been synced and scanned 
 //        // so that new path and file can match for merge
-//        //TODO: Update album file definitions for this point
+//        //FIXME TEST: Update album file definitions for this point
 //        // Then use that db (read it: change StatSource.location somewhat)
 //        ProcessHelper.merge();
 //        for(String mbId : mbIds) {
@@ -245,8 +245,8 @@ public class MergeNTest extends TestCase {
         //Sync and Check sync
         PanelMain.selectTab(Inter.get("PanelMain.panelSync.TabConstraints.tabTitle"));
         ProcessHelper.sync(); 
-        //TODO: make sure that devicefile table is properly cleaned up and there are only playlist files
-        //TODO: Do the same check (devicefile) for first sync then
+        //FIXME TEST: make sure that devicefile table is properly cleaned up and there are only playlist files
+        //FIXME TEST: Do the same check (devicefile) for first sync then
         for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
             Device device = statSource.getDevice();
             Playlist playlist = device.getPlaylist();
@@ -257,10 +257,10 @@ public class MergeNTest extends TestCase {
             }
         }
         
-        //TODO: Merge again and check merge is OK for all sources
+        //FIXME TEST: Merge again and check merge is OK for all sources
         
         assertTrue("Not valid test. Shall no pass yet !", false);
-        //TODO: Update other test classes
+        //FIXME TEST: Update other test classes
     }
 
     private void checkNumberScanned(int expected){
@@ -299,7 +299,7 @@ public class MergeNTest extends TestCase {
         playlist.update();
         
         //Create test device
-        //TODO: create a device for each stat source
+        //FIXME TEST: create a device for each stat source
         Device device = new Device(-1, 
                 "TestDevice", 
                 FilenameUtils.normalizeNoEndSeparator(getMusicFolder() + "Archive")+File.separator, 
@@ -307,7 +307,7 @@ public class MergeNTest extends TestCase {
                 1, //playlist.getId()is not set (only when retrieved from db)
                 Jamuz.getMachine().getName()
         );
-        Assert.assertTrue("Device creation", Jamuz.getDb().setDevice(device));
+        assertTrue("Device creation", Jamuz.getDb().setDevice(device));
         
         //Set stat sources
         String rootPath; int idDevice; String name;
@@ -324,18 +324,18 @@ public class MergeNTest extends TestCase {
             idDevice = -1
         );
         Settings.addStatSource(
-                name = "MyMusic32_Device.db", //TODO: Test in Windows and test on a SSH box and a FTP box
+                name = "MyMusic32_Device.db", //FIXME TEST: Test on Windows, on a SSH box and a FTP box
                 idStatement=2, 
                 rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
                 idDevice = -1);
-        //TODO: Enable this when I have a Windows PC available
+        //FIXME TEST: Enable this when I have a Windows PC available
 //        Settings.addStatSource(
 //                name = "MediaMonkey source", 
 //                idStatement=3, 
 //                rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
 //                idDevice = -1);
         Settings.addStatSource(
-                name = "mixxxdb_Device.sqlite", //TODO: Test on windows
+                name = "mixxxdb_Device.sqlite", //FIXME TEST: Test on windows
                 idStatement=4, 
                 rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
                 idDevice = -1);

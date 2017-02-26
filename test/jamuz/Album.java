@@ -272,8 +272,8 @@ public final class Album {
         data[i++] = new Object[] { "result", "nbFiles", "ok", match.getTracks(null).size() };
         data[i++] = new Object[] { "result", "hasID3v1", "ok", Inter.get("Label.No") };
         data[i++] = new Object[] { "result", "isReplayGainDone", "ok", Inter.get("Label.Yes") };
-        data[i++] = new Object[] { "result", "cover", "ko", "{IGNORE}" }; //TODO: Set expected value
-        data[i++] = new Object[] { "result", "bitRate", "ok", "{IGNORE}" }; //TODO: Set expected value (mean bitRate)
+        data[i++] = new Object[] { "result", "cover", "ko", "{IGNORE}" }; //FIXME TEST: Set expected value
+        data[i++] = new Object[] { "result", "bitRate", "ok", "{IGNORE}" }; //FIXME TEST: Set expected value (mean bitRate)
         data[i++] = new Object[] { "result", "length", "ok", "{N/A}" };
         data[i++] = new Object[] { "result", "size", "ok", "{N/A}" }; 
         data[i++] = new Object[] { "result", "format", "ok", "{N/A}" };
@@ -337,10 +337,10 @@ public final class Album {
         spreadSheet.getFirstSheet().copy(i++, "MergeTest3");            //Added date changes after initial merge
         
         spreadSheet.getFirstSheet().copy(i++, "MergeTest4_1");          //New statistics to set on Guayadeque 	(Linux)
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_2");          //New statistics to set on Kodi 	(Linux/Windows)
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_3");          //New statistics to set on MediaMonkey (Windows)
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_4");          //New statistics to set on Mixxx 	(Linux/Windows)
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_5");          //New statistics to set on MyTunes 	(Android)
+//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_2");          //New statistics to set on Kodi 	(Linux/Windows)
+//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_3");          //New statistics to set on MediaMonkey (Windows)
+//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_4");          //New statistics to set on Mixxx 	(Linux/Windows)
+//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_5");          //New statistics to set on MyTunes 	(Android)
         spreadSheet.getFirstSheet().copy(i++, "MergeTest4_JaMuz");      //New statistics to set on JaMuz 	(Linux/Windows)
         
         spreadSheet.getFirstSheet().copy(i++, "MergeTest4_New");        //Expected statistics after merge
@@ -375,7 +375,6 @@ public final class Album {
     private File getFile() {
         return getFile(this.mbId);
     }
-    //FIXME Replace all TODO in test packages by FIXME once all other have been done (who said never ?)
 
 	/**
 	 *
@@ -574,7 +573,7 @@ public final class Album {
         assertEquals("Number of files in album"+msg, nbExpected, nbActual);
     }
     
-    //TODO: Use a Map instead ...
+    //FIXME TEST: Use a Map instead ...
     private FileInfo searchInStatsList(String relativeFullPath, ArrayList<FileInfo> statSourcesFiles) {
         for (FileInfo myFileInfo : statSourcesFiles) {
             if(myFileInfo.getRelativeFullPath().equals(relativeFullPath)) { return myFileInfo; }
@@ -613,7 +612,7 @@ public final class Album {
                 assertTrue(file + " exists?: ", file.exists());
             }
         }
-        //TODO: Browse FS to chekc there are no other files
+        //FIXME TEST: Browse FS to chekc there are no other files
     }
     
     private void checkFS(String option, boolean renamed) {
@@ -683,7 +682,7 @@ public final class Album {
             Date expected = DateTime.parseSqlUtc(tracks.get(indexTrack).getFormattedAddedDate());
             long diffInSeconds = (expected.getTime() - file.addedDate.getTime()) / 1000;
             
-            //TODO: After a merge, need to check addedDate equality, as should be equal, no 30s diff !
+            //FIXME TEST: After a merge, need to check addedDate equality, as should be equal, no 30s diff !
             assertTrue("AddedDate. Expected: " + tracks.get(indexTrack).getFormattedAddedDate() + " +/- 30s, Actual: " + file.getFormattedAddedDate()+msg, diffInSeconds < 30);
             assertEquals("lastPlayed"+msg, tracks.get(indexTrack).getFormattedLastPlayed(), file.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
             

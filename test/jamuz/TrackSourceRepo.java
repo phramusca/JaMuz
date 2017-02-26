@@ -110,8 +110,6 @@ public class TrackSourceRepo {
             this.modifDate = modifDate;
         }
 
-        //TODO; Only use this to generate a list, to be manually checked with another tool
-
 		/**
 		 *
 		 * @param pFilename

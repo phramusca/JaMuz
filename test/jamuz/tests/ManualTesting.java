@@ -16,17 +16,6 @@
  */
 package jamuz.tests;
 
-import jamuz.process.check.DialogScanner;
-import jamuz.process.check.FileInfoDisplay;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.musicbrainz.MBWS2Exception;
 import org.musicbrainz.controller.Release;
 import org.musicbrainz.model.TagWs2;
@@ -44,55 +33,6 @@ public class ManualTesting {
 	 */
 	public static void main(String[] args) {
 
-		
-		
-		
-		
-//        DialogScanner.main(null, 
-//                "/home/raph/Musique/Nouveau/0_pascal/Reggae (JA)/Johnny Clarke = [1976] Authorised Version ~MP3~/[06] Academy Award Version.mp3");
-        
-        //TODO: Try those to play music on different sound card and more
-        //http://www.onjava.com/pub/a/onjava/2004/08/11/javasound-mp3.html?page=2
-        //https://www.ntu.edu.sg/home/ehchua/programming/java/J8c_PlayingSound.html
-        //http://www.developerfusion.com/article/84314/wired-for-sound/
-        //http://www.jsresources.org/faq_audio.html
-        
-        
-            try {
-                //http://stackoverflow.com/questions/22438353/java-select-audio-device-and-play-mp3
-//Play on a particular sound card (use "aplay -L" for list of sound cards)
-				
-			// USING mpg123
-                
-				//Use -C option to control the player
-//                java.lang.Process p1 = Runtime.getRuntime().exec(new String[]{"mpg123", "-asysdefault:CARD=Device", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 01 Keep Ya Head Up.mp3"});
-                //Play on the default sound card
-//                java.lang.Process p2 = Runtime.getRuntime().exec(new String[]{"mpg123", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 03 Temptations.mp3"});
-                
-			//USING mplayer
-				//mplayer -ao alsa:device=sysdefault=Device
-//				java.lang.Process p1 = Runtime.getRuntime().exec(new String[]{"mplayer", "-ao", "alsa:device=sysdefault=Device", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 01 Keep Ya Head Up.mp3"});
-				//mplayer FLAC -ao alsa:device=sysdefault=Device
-				java.lang.Process p1 = Runtime.getRuntime().exec(new String[]{"mplayer", "-ao", "alsa:device=sysdefault=Device", "/home/raph/Musique/Archive/Various Artists/3_60_ Reggae Greats/[1-3] - 10 The Heptones - My Guiding Star.flac"});                
-				//Play on the default sound card
-                java.lang.Process p2 = Runtime.getRuntime().exec(new String[]{"mplayer", "/home/raph/Musique/Archive/2Pac/Greatest Hits/[1-2] - 03 Temptations.mp3"});
-				
-				p1.waitFor(30, TimeUnit.SECONDS);
- 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //play wav
-//                try {
-//                java.lang.Process p3 = Runtime.getRuntime().exec(new String[]{"aplay", "audio/audio1.wav", "-Dsysdefault:CARD=Intel"});
-//                java.lang.Process p4 = Runtime.getRuntime().exec(new String[]{"aplay", "audio/audio2.wav", "-Dsysdefault:CARD=CA0106"});
-//             } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-            }
-//        }
-        
-        
 //        try {
 //           
 //        //https://code.google.com/p/musicbrainzws2-java/wiki/Usage_SubmittingData#Submitting_data    
@@ -139,4 +79,4 @@ public class ManualTesting {
         
         
     }
-//}
+}

@@ -1578,52 +1578,22 @@ public class PanelMain extends javax.swing.JFrame {
 
         fillQueue();
         queueModel.enablePreviousAndNext();
-
         queueModel.addBullet();
         FileInfoInt myFileInfo = queueModel.getPlayingSong().getFile();
         //TODO: Allow to edit rating and genre using a context menu on jList queue (NOT on select table)
         jListPlayerQueue.setSelectedIndex(queueModel.getPlayingIndex());
         playerInfo.setSelected(queueModel.getPlayingIndex());
-
-//        displayFileInfo();
         displayFileInfo(queueModel.getPlayingSong().getFile(), true);
-        
-//        if(!evt.getValueIsAdjusting()) {
-//            int selected = jListPlayerQueue.getSelectedIndex();
-//            if (selected > -1) {
-//                FileInfoInt fileInfo = ((ListElement) queueModel.getElementAt(selected)).getFile();
-//                displayFileInfo(fileInfo, (selected == queueModel.getPlayingIndex()));
-//            }
-//        }
-        
-        
         //TODO: Manage 2 Players instances for transitions
         isManual = false;
         jSliderPlayerLength.setMaximum(myFileInfo.getLength());
         isManual = true;
         jLabelPlayerTimeTotal.setText(StringManager.secondsToMMSS(myFileInfo.getLength()));
         playerInfo.setMax(myFileInfo.getLength());
-
         String audioFileName = myFileInfo.getRootPath() + myFileInfo.getRelativeFullPath();
-        
         myFileInfo.sayRating(false);
         boolean enablejSliderPlayerLength=true;
-//        switch (myFileInfo.getExt()) {
-//            case "mp3": //NOI18N
-////                jSliderPlayerLength.setEnabled(true);
-////                mp3Player.play(audioFileName, resume);
-//				mPlayer.play(audioFileName);
-//                break;
-//            case "flac": //NOI18N
-////                jSliderPlayerLength.setEnabled(false); //TTODO: Remove when doable
-//                enablejSliderPlayerLength=false;
-//                flacPlayer.play(audioFileName);
-//                break;
-//            case "ogg": //NOI18N
-//                //TODO: Support OGG: http://www.jcraft.com/jorbis/ OR http://www.javazoom.net/vorbisspi/sources.html
-//                break;
-//            //TODO: Support some more formats
-//        }
+		
 		MPLAYER.play(audioFileName, resume);
 		
         String lyrics = myFileInfo.getLyrics();
@@ -1632,7 +1602,6 @@ public class PanelMain extends javax.swing.JFrame {
 			textColor=new Color(0, 128, 0);
         } 
         setTab("Label.Lyrics", "text", textColor);
-
         PanelLyrics.setText(lyrics);
         jSliderPlayerLength.setEnabled(enablejSliderPlayerLength);
     }

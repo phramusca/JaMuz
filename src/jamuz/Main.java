@@ -39,9 +39,7 @@ package jamuz;
 //    having count(*) > 1
 //) t on f.artist = t.artist and f.title = t.title
 // - Player:
-//		- TODO: Support more formats (FLAC at first, then OGG and maybe more)
 //		- TODO: transitions
-//		- TODO: Choose playlist or "Select" tab for auto-fill queue mode
 //	- Merge tab:
 //		- TODO: Support Clementine. It is sqlite, cross-platform, amarok1.4 fork, BUT :
 //			- filename is stored as blob and URL encoded (with %20 as space at least) :(
@@ -55,8 +53,7 @@ package jamuz;
 //			Mixxx: ??
 //	- Check tab:
 //		- TODO: Add an import feature, copying only if no duplicate found
-//  - Synchro tab
-//      - //TODO: Check for other devices (whole library) ==> keskidit ??
+//  - Export tab
 //	- Select tab:
 //		- TODO: Quick tag edition in JList (rating and genre) => not that usefull as can be done in player "tab"
 //	- Playlist tab:
@@ -77,6 +74,8 @@ package jamuz;
 //		- TODO: Enable export over SSH (on remote machine to an device plugged on that remote machine : Intel NUC to friend USB key/HDD for instance)
 //          => Doing this, merge options to copy/move files b/w "Sync" and "Video" (export)
 //TODO: List used librairies (source, version, how to compile if needed,...)
+//TODO: Consider using Maven
+
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
 import jamuz.utils.Popup;

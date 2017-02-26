@@ -129,8 +129,8 @@ public abstract class StatSourceAbstract {
 		//=> Seems to occur only when many statsources (more than 2 ?), to
 		// be analyzed
 		//Then, enable back
-//		return true;
-        return false;
+		return true;
+//        return false;
     }
 	
 	/**
@@ -167,7 +167,6 @@ public abstract class StatSourceAbstract {
      * MAKE SURE THAT:
      *  - rating is retrieved out of 5 (x/5)
      *  - dates are in "yyyy-MM-dd HH:mm:ss" format, UTC
-     *  - TODO: State other limitations if any
      * @param files
      * @return
      */

@@ -381,7 +381,7 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
                     };
                     break;
 
-                case RATING: //TODO: Set spinner min to 0 and max to 5
+                case RATING:
                 case ALBUMRATING:
                 case PERCENTRATED:
                 case TRACKNO:
