@@ -17,6 +17,7 @@
 
 package jamuz;
 
+import de.umass.lastfm.Caller;
 import jamuz.DbInfo.LibType;
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +39,8 @@ import jamuz.utils.Inter;
 import jamuz.utils.OS;
 import jamuz.utils.Popup;
 import jamuz.utils.XML;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,6 +48,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.http.HttpHost;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
  *
@@ -165,6 +171,33 @@ public class Jamuz {
 			System.setProperty("http.proxyPort", split[1]);  //NOI18N
 		}
 		return true;
+	}
+	
+	public static DefaultHttpClient getHttpClient() {
+		DefaultHttpClient httpclient = null;
+		if(machine!=null) {
+			String proxy = machine.getOptionValue("network.proxy");  //NOI18N
+			if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
+				String[] split = proxy.split(":");  //NOI18N
+				HttpHost httpHost = new HttpHost(split[0], Integer.parseInt(split[1]));
+				httpclient = new DefaultHttpClient();
+				httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, httpHost);
+			}
+		}
+		return httpclient;
+	}
+	
+	public static Proxy getProxy() {
+		Proxy myProxy = null;
+		if(machine!=null) {
+			String proxy = machine.getOptionValue("network.proxy");  //NOI18N
+			if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
+				String[] split = proxy.split(":");  //NOI18N
+				InetSocketAddress sa = new InetSocketAddress(split[0], Integer.parseInt(split[1]));
+				myProxy = new Proxy(Proxy.Type.HTTP, sa);
+			}
+		}
+		return myProxy;
 	}
 	
     private static boolean getCurrentMachine() {

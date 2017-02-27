@@ -178,15 +178,8 @@ public class Cover implements java.lang.Comparable {
                 CoverArt coverArt;
                 coverArtArchiveList=new ArrayList<>();
                 //Create connection to covertartarchive
-                //TODO: Use proxy from Main (when done)
-                DefaultHttpClient httpclient = new DefaultHttpClient();
-                String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
-                if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
-                    String[] split = proxy.split(":");  //NOI18N
-                    HttpHost httpHost = new HttpHost(split[0], Integer.parseInt(split[1]));
-                    httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, httpHost);
-                }
-                CoverArtArchiveClient client = new DefaultCoverArtArchiveClient(httpclient);
+				DefaultHttpClient httpClient = Jamuz.getHttpClient()==null?new DefaultHttpClient():Jamuz.getHttpClient();
+                CoverArtArchiveClient client = new DefaultCoverArtArchiveClient(httpClient);
                 
                 coverArt = client.getByMbid(mbid);
                 if (coverArt != null) {

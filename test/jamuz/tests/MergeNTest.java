@@ -31,7 +31,7 @@ import static jamuz.Settings.getMusicFolder;
 import jamuz.process.merge.StatSource;
 import java.io.File;
 import java.util.ArrayList;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Test;

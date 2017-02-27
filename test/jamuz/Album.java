@@ -32,8 +32,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import org.junit.Assert;
 import org.apache.commons.io.FileExistsException;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -235,7 +234,7 @@ public final class Album {
 
         //Get info from MusicBrainz
         ReleaseMatch match = new ReleaseMatch(mbId);
-        match.getTracks(null, null);
+        match.getTracks(null);
 
         int i=0; int nbColumns=21;
         final Object[][] data = new Object[match.getTracks(null).size()+25][nbColumns];
@@ -426,7 +425,7 @@ public final class Album {
  
     private void checkDb() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         FolderInfo folder = Jamuz.getDb().getFolder(idPath);
-        assertTrue("Could not retrieve idPath="+idPath, folder!=null);
+        Assert.assertTrue("Could not retrieve idPath="+idPath, folder!=null);
         
         ArrayList<FileInfoInt> files = new ArrayList<>();
         Jamuz.getDb().getFiles(files, idPath, true);
@@ -499,7 +498,7 @@ public final class Album {
             FolderInfoResult resultActual = getCheckedFolder().getResults().get(entry.getKey());
             FolderInfoResult resultExpected = entry.getValue();
             if(!resultExpected.getValue().startsWith("{")) {
-                assertEquals(entry.getKey(), resultExpected, resultActual);
+                Assert.assertEquals(entry.getKey(), resultExpected, resultActual);
             }
         }
     }
@@ -543,18 +542,18 @@ public final class Album {
                 
                 FileInfo statSourceFile=searchInStatsList(albumFile.relativeFullPath, statSourcesFiles);
                 
-                assertTrue("Search "+albumFile.relativeFullPath+msg, statSourceFile!=null);
-                assertEquals("playCounter "+albumFile.relativeFullPath+msg, albumFile.playCounter, statSourceFile.playCounter);
-                assertEquals("rating "+albumFile.relativeFullPath+msg, albumFile.rating, statSourceFile.rating);
+                Assert.assertTrue("Search "+albumFile.relativeFullPath+msg, statSourceFile!=null);
+                Assert.assertEquals("playCounter "+albumFile.relativeFullPath+msg, albumFile.playCounter, statSourceFile.playCounter);
+                Assert.assertEquals("rating "+albumFile.relativeFullPath+msg, albumFile.rating, statSourceFile.rating);
                 if(statSource.getSource().updateAddedDate) {
-                    assertEquals("addedDate "+albumFile.relativeFullPath+msg, albumFile.getFormattedAddedDate(), statSourceFile.getFormattedAddedDate());
+                    Assert.assertEquals("addedDate "+albumFile.relativeFullPath+msg, albumFile.getFormattedAddedDate(), statSourceFile.getFormattedAddedDate());
                 }
                 if(statSource.getSource().updateLastPlayed) {
-                    assertEquals("lastPlayed "+albumFile.relativeFullPath+msg, albumFile.getFormattedLastPlayed(), statSourceFile.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
+                    Assert.assertEquals("lastPlayed "+albumFile.relativeFullPath+msg, albumFile.getFormattedLastPlayed(), statSourceFile.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
                 }
                 
                 if(statSource.getSource().updateBPM) {
-                    assertEquals("BPM "+albumFile.relativeFullPath+msg, albumFile.BPM, statSourceFile.BPM);
+                    Assert.assertEquals("BPM "+albumFile.relativeFullPath+msg, albumFile.BPM, statSourceFile.BPM);
                 }
             }
         }
@@ -570,7 +569,7 @@ public final class Album {
             }
 		}
         
-        assertEquals("Number of files in album"+msg, nbExpected, nbActual);
+        Assert.assertEquals("Number of files in album"+msg, nbExpected, nbActual);
     }
     
     //FIXME TEST: Use a Map instead ...
@@ -606,10 +605,10 @@ public final class Album {
         for(TrackTag track: this.tracks) {
             File file = new File(device.getDestination()+getFilename(track, renamed));
             if(track.ignore) {
-                assertTrue(file + " does not exist?: ", !file.exists());
+                Assert.assertTrue(file + " does not exist?: ", !file.exists());
             }
             else {
-                assertTrue(file + " exists?: ", file.exists());
+                Assert.assertTrue(file + " exists?: ", file.exists());
             }
         }
         //FIXME TEST: Browse FS to chekc there are no other files
@@ -618,7 +617,7 @@ public final class Album {
     private void checkFS(String option, boolean renamed) {
         for(TrackTag track: this.tracks) {
             File file = new File(Jamuz.getMachine().getOptionValue(option)+getFilename(track, renamed));
-            assertTrue(file + " exists?: ", file.exists());
+            Assert.assertTrue(file + " exists?: ", file.exists());
         }
     }
     
@@ -654,46 +653,46 @@ public final class Album {
     }
 
     private void compare(ArrayList<FileInfoInt> files) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        assertEquals("Nb files", tracks.size(), files.size());
+        Assert.assertEquals("Nb files", tracks.size(), files.size());
         int indexTrack=0;
         String msg;
         for (FileInfoInt file : files) {
             msg = " ("+this.mbId+", " + file.filename+")";
-            assertEquals("artist"+msg, tracks.get(indexTrack).artist, file.artist);
-            assertEquals("albumArtist"+msg, tracks.get(indexTrack).albumArtist, file.albumArtist);
-            assertEquals("album"+msg, tracks.get(indexTrack).album, file.album);
-            assertEquals("title"+msg, tracks.get(indexTrack).title, file.title);
-            assertEquals("trackNb"+msg, tracks.get(indexTrack).trackNo, file.trackNo);
-            assertEquals("trackTotal"+msg, tracks.get(indexTrack).trackTotal, file.trackTotal);
-            assertEquals("discNo"+msg, tracks.get(indexTrack).discNo, file.discNo);
-            assertEquals("discTotal"+msg, tracks.get(indexTrack).discTotal, file.discTotal);
-            assertEquals("year"+msg, tracks.get(indexTrack).year, file.year);
-            assertEquals("genre"+msg, tracks.get(indexTrack).genre, format(file.genre));
-            assertEquals("BPM"+msg, tracks.get(indexTrack).BPM, file.BPM);
-            assertEquals("nbCovers"+msg, tracks.get(indexTrack).nbCovers, file.nbCovers);
-            assertEquals("comment"+msg, tracks.get(indexTrack).comment, format(file.comment));
+            Assert.assertEquals("artist"+msg, tracks.get(indexTrack).artist, file.artist);
+            Assert.assertEquals("albumArtist"+msg, tracks.get(indexTrack).albumArtist, file.albumArtist);
+            Assert.assertEquals("album"+msg, tracks.get(indexTrack).album, file.album);
+            Assert.assertEquals("title"+msg, tracks.get(indexTrack).title, file.title);
+            Assert.assertEquals("trackNb"+msg, tracks.get(indexTrack).trackNo, file.trackNo);
+            Assert.assertEquals("trackTotal"+msg, tracks.get(indexTrack).trackTotal, file.trackTotal);
+            Assert.assertEquals("discNo"+msg, tracks.get(indexTrack).discNo, file.discNo);
+            Assert.assertEquals("discTotal"+msg, tracks.get(indexTrack).discTotal, file.discTotal);
+            Assert.assertEquals("year"+msg, tracks.get(indexTrack).year, file.year);
+            Assert.assertEquals("genre"+msg, tracks.get(indexTrack).genre, format(file.genre));
+            Assert.assertEquals("BPM"+msg, tracks.get(indexTrack).BPM, file.BPM);
+            Assert.assertEquals("nbCovers"+msg, tracks.get(indexTrack).nbCovers, file.nbCovers);
+            Assert.assertEquals("comment"+msg, tracks.get(indexTrack).comment, format(file.comment));
             
-            assertEquals("deleted"+msg, tracks.get(indexTrack).deleted, file.deleted);
-            assertEquals("checkedFlag"+msg, tracks.get(indexTrack).getCheckedFlag(), file.getCheckedFlag());
+            Assert.assertEquals("deleted"+msg, tracks.get(indexTrack).deleted, file.deleted);
+            Assert.assertEquals("checkedFlag"+msg, tracks.get(indexTrack).getCheckedFlag(), file.getCheckedFlag());
             
-            assertEquals("playCounter"+msg, tracks.get(indexTrack).playCounter, file.playCounter);
-            assertEquals("rating"+msg, tracks.get(indexTrack).rating, file.rating);
+            Assert.assertEquals("playCounter"+msg, tracks.get(indexTrack).playCounter, file.playCounter);
+            Assert.assertEquals("rating"+msg, tracks.get(indexTrack).rating, file.rating);
             
             Date expected = DateTime.parseSqlUtc(tracks.get(indexTrack).getFormattedAddedDate());
             long diffInSeconds = (expected.getTime() - file.addedDate.getTime()) / 1000;
             
             //FIXME TEST: After a merge, need to check addedDate equality, as should be equal, no 30s diff !
-            assertTrue("AddedDate. Expected: " + tracks.get(indexTrack).getFormattedAddedDate() + " +/- 30s, Actual: " + file.getFormattedAddedDate()+msg, diffInSeconds < 30);
-            assertEquals("lastPlayed"+msg, tracks.get(indexTrack).getFormattedLastPlayed(), file.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
+            Assert.assertTrue("AddedDate. Expected: " + tracks.get(indexTrack).getFormattedAddedDate() + " +/- 30s, Actual: " + file.getFormattedAddedDate()+msg, diffInSeconds < 30);
+            Assert.assertEquals("lastPlayed"+msg, tracks.get(indexTrack).getFormattedLastPlayed(), file.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
             
-            assertEquals("bitRate"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).bitRate, file.getBitRate());
-            assertEquals("length"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).length, file.length);
-            assertEquals("format"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).format, file.getFormat());
+            Assert.assertEquals("bitRate"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).bitRate, file.getBitRate());
+            Assert.assertEquals("length"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).length, file.length);
+            Assert.assertEquals("format"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).format, file.getFormat());
             //Since size varies (increase) after replaygain or tag saving, 
             //only checking it is above initial size and not increased by more than around 5K
             long minimumSize = TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).size;
             long maximumSize = minimumSize + 5000;
-            assertTrue("size. Expected: between "+minimumSize+" and "+maximumSize+", Actual:"+file.size+msg, 
+            Assert.assertTrue("size. Expected: between "+minimumSize+" and "+maximumSize+", Actual:"+file.size+msg, 
                     file.size >= minimumSize && file.size <= maximumSize);
             //This requires to read tracks.get(index).size after each process => not much usefull too
 //            assertEquals("size", tracks.get(index).size, file.size); 

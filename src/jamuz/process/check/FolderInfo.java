@@ -775,13 +775,9 @@ public class FolderInfo implements java.lang.Comparable {
 		String userAgent="tst"; //TODO: What does this userAgent means ??  //NOI18N
 		Caller.getInstance().setUserAgent(userAgent);
 
-		//TODO: Use global proxy from Main (to be done)		
-		String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
-		if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
-			String[] split = proxy.split(":");  //NOI18N
-			InetSocketAddress sa = new InetSocketAddress(split[0], Integer.parseInt(split[1]));
-			Proxy myProxy = new Proxy(Proxy.Type.HTTP, sa);
-			Caller.getInstance().setProxy(myProxy);
+		Proxy proxy = Jamuz.getProxy();
+		if(proxy!=null) {
+			Caller.getInstance().setProxy(proxy);
 		}
 	
 		this.results.get("nbFiles").value=String.valueOf(this.filesAudio.size());  //NOI18N
