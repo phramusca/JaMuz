@@ -280,38 +280,19 @@ public class ReleaseMatch implements java.lang.Comparable {
 		return isErrorDuplicate;
 	}
 
-    /**
-     * Return tracks
-     * @param progressBar
-     * @return
-     */
-    public List<Track> getTracks(ProgressBar progressBar) {
-        
-        DefaultHttpClient httpclient = new DefaultHttpClient();
-        String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
-        if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
-            String[] split = proxy.split(":");  //NOI18N
-            HttpHost httpHost = new HttpHost(split[0], Integer.parseInt(split[1]));
-            httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, httpHost);
-        }
-        
-        return getTracks(httpclient, progressBar);
-    }
-    
     //TODO: Maybe add a connection timeout ? or an abort button ?
 	/**
 	 * Return list of tracks
-     * @param httpclient
      * @param progressBar
 	 * @return  
 	 */
-	public List<Track> getTracks(DefaultHttpClient httpclient, ProgressBar progressBar) {
+	public List<Track> getTracks(ProgressBar progressBar) {
 		//Only lookup if not already done
 		if(!this.isLookup) {
 			if(this.source.equals(ReleaseMatch.musicbrainz)) {
 				//MusicBrainz
                 ReleaseMB releaseMB = new ReleaseMB(progressBar);
-                List<Track> MBtracks = releaseMB.lookup(this.getId(), this.isDiscPart, this.discNb, this.discTotal, httpclient);
+                List<Track> MBtracks = releaseMB.lookup(this.getId(), this.isDiscPart, this.discNb, this.discTotal);
                 if(MBtracks!=null) {
                     this.tracks.addAll(MBtracks);
                     this.isLookup=true;

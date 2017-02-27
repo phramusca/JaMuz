@@ -82,15 +82,11 @@ public class ReleaseMB {
 			release.getSearchFilter().setLimit((long)10);
 
 			//TODO: Create getProxy() in OptionsEnv.options that directly returns the Proxy
-			DefaultHttpClient httpclient = new DefaultHttpClient();
-			String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
-			if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
-				String[] split = proxy.split(":");  //NOI18N
-				HttpHost httpHost = new HttpHost(split[0], Integer.parseInt(split[1]));
-				httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, httpHost);
+			DefaultHttpClient httpclient = Jamuz.getHttpClient();
+			if(httpclient!=null) {
 				release.setQueryWs(new HttpClientWebServiceWs2(httpclient));
 			}
-
+			
 			//Search for album/artist
             doWait();
 			artist = removeIllegal(artist);
@@ -176,14 +172,14 @@ public class ReleaseMB {
 	 * @param discPart
 	 * @param discNb
 	 * @param discTotal
-     * @param httpclient
 	 * @return
 	 */
-	public List<Track> lookup(String mbId, boolean discPart, int discNb, int discTotal, DefaultHttpClient httpclient) {
+	public List<Track> lookup(String mbId, boolean discPart, int discNb, int discTotal) {
 		List<Track> tracks = new ArrayList<>();
         
 		try {
             Release release = new Release();
+			DefaultHttpClient httpclient = Jamuz.getHttpClient();
             if(httpclient!=null) {
                 release.setQueryWs(new HttpClientWebServiceWs2(httpclient));
             }
