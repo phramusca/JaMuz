@@ -91,7 +91,7 @@ public class ProcessHelper {
         }
     }
     private final static int nbAnalysis=4;
-    private final static int nbScan=4;
+    private final static int nbScan=2;
     private static ProcessCheck processCheck;
     private static void startProcessCheck(boolean enableDoActions, ProcessCheck.CheckType checkType, int idPath) throws InterruptedException {
 
@@ -103,6 +103,7 @@ public class ProcessHelper {
         
         //Starting process finally
         PanelCheck.tableModelCheck.clear();
+		PanelCheck.setThreadPanels(checkType);
         processCheck.startCheck(checkType, idPath, nbAnalysis, nbScan);
         
         processCheck.doBrowse.join();

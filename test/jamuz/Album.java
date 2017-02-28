@@ -113,6 +113,36 @@ public final class Album {
         readFromFile(version);
     }
 
+	public String getMbId() {
+		return mbId;
+	}
+
+	public ArrayList<TrackTag> getTracks() {
+		return tracks;
+	}
+
+	public Map<String, FolderInfoResult> getResults() {
+		return results;
+	}
+
+	public int getIdPath() {
+		return idPath;
+	}
+
+	public int getIdFirstFile() {
+		return idFirstFile;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	
+	
     private void readFromFile(String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         
         SpreadSheet spreadSheet = SpreadSheet.createFromFile(getFile());
@@ -236,8 +266,177 @@ public final class Album {
         ReleaseMatch match = new ReleaseMatch(mbId);
         match.getTracks(null);
 
-        int i=0; int nbColumns=21;
-        final Object[][] data = new Object[match.getTracks(null).size()+25][nbColumns];
+        int i=0;
+        String[] columns = new String[21];
+        columns[i++] = "";
+        columns[i++] = "artist";
+        columns[i++] = "albumArtist";
+        columns[i++] = "album";
+        columns[i++] = "title";
+        columns[i++] = "sourceFile";
+        columns[i++] = "discNo";
+        columns[i++] = "discTotal";
+        columns[i++] = "trackNo";
+        columns[i++] = "trackTotal";
+        columns[i++] = "year";
+        columns[i++] = "genre";
+        columns[i++] = "BPM";
+        columns[i++] = "nbCovers";
+        columns[i++] = "comment";
+        columns[i++] = "deleted";
+        columns[i++] = "checkedFlag";
+        columns[i++] = "playCounter";
+        columns[i++] = "rating";
+        columns[i++] = "addedDate";
+        columns[i++] = "lastPlayed";
+
+        // Save the data to an ODS file and open it.
+        TableModel model = new DefaultTableModel(getData(match), columns);
+
+        if(getFile(mbId).exists()) {
+            throw new FileExistsException(getFile(mbId));
+        }
+
+        SpreadSheet spreadSheet = SpreadSheet.createEmpty(model);
+        spreadSheet.getFirstSheet().setName("MusicBrainz_REFERENCE_DO_NOT_MODIFY"); //TODO: Protect this sheet (original data)
+
+		i=0;
+        spreadSheet.getFirstSheet().copy(i++, "CheckTest1_KO");         //Created and scan KO (several modifications)
+        spreadSheet.getFirstSheet().copy(i++, "CheckTest2_OK");         //Modify genre, cover and SAVE
+        spreadSheet.getFirstSheet().copy(i++, "CheckTest3_DbOk");       //Set OK
+        
+        spreadSheet.getFirstSheet().copy(i++, "MergeTest1_Creation");
+        spreadSheet.getFirstSheet().copy(i++, "MergeTest2_DB");         //Same as above with rating 0 instead of -1 (as inserted in Db)
+        spreadSheet.getFirstSheet().copy(i++, "MergeTest3");            //Added date changes after initial merge
+        
+        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_1");          //New statistics to set on Guayadeque 	(Linux)
+//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_2");          //New statistics to set on Kodi 	(Linux/Windows)
+//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_3");          //New statistics to set on MediaMonkey (Windows)
+//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_4");          //New statistics to set on Mixxx 	(Linux/Windows)
+//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_5");          //New statistics to set on MyTunes 	(Android)
+        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_JaMuz");      //New statistics to set on JaMuz 	(Linux/Windows)
+        
+        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_New");        //Expected statistics after merge
+
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice1_KO");       //Created KO (so we can set it OK between 2 merges)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice2_DB");       //Same as above with rating 0 instead of -1 (as inserted in Db)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice3_JaMuz");    //Set some ratings=4 for device sync (playlist)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice4_1stMerge"); //Added date changes after initial merge
+        
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_1");        //New statistics to set on Guayadeque 	(Linux)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_2");        //New statistics to set on Kodi 	(Linux/Windows)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_3");        //New statistics to set on MediaMonkey (Windows)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_4");        //New statistics to set on Mixxx 	(Linux/Windows)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_5");        //New statistics to set on MyTunes 	(Android)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_JaMuz");    //New statistics to set on JaMuz 	(Linux/Windows)
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice6_New");      //Expected statistics after merge
+
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice7_KO");       //Scan library unchecked => KO
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice8_OK");       //Modify genre, cover and SAVE 
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice9_DbOk");     //Set OK
+		
+		//TODO TEST Create files according to latest changes to tests
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice10_NoSync");  //Merge without updating stat sources
+        spreadSheet.getFirstSheet().copy(i++, "MergeDevice11_Sync");    //Merge after updating stat sources
+		
+		//Example, changing location process value
+//		setValue(spreadSheet, "MergeTest1_Creation", "C", getRow(match, "location"), "location.library");
+		//Example changing title of 6th track
+//		setValue(spreadSheet, "MergeTest1_Creation", getCol("title"), 6, "CHANGED TITLE");
+		
+//		setValue(spreadSheet, "MergeDevice1_KO", "C", getRow(match, "location"), "location.library");
+
+        spreadSheet.saveAs(getFile(mbId));
+//        OOUtils.open(getFile(mbId));
+    }
+    
+	private static String getCol(String key) {
+		String value="A";
+		switch(key) {
+			case "artist": value="B"; break;
+			case "albumArtist": value="C"; break;
+			case "album": value="D"; break;
+			case "title": value="E"; break;
+			case "sourceFile": value="F"; break;
+			case "discNo": value="G"; break;
+			case "discTotal": value="H"; break;
+			case "trackNo": value="I"; break;
+			case "trackTotal": value="J"; break;
+			case "year": value="K"; break;
+			case "genre": value="L"; break;
+			case "BPM": value="M"; break;
+			case "nbCovers": value="N"; break;
+			case "comment": value="O"; break;
+			case "deleted": value="P"; break;
+			case "checkedFlag": value="Q"; break;
+			case "playCounter": value="R"; break;
+			case "rating": value="S"; break;
+			case "addedDate": value="T"; break;
+			case "lastPlayed": value="U"; break;
+		}
+		return value;
+	}
+	
+	private static int getRow(ReleaseMatch match, String key) {
+		int index=0;
+		switch(key) {
+			case "nbFiles": index=1;
+				break;
+			case "hasID3v1": index=2;
+				break;
+			case "isReplayGainDone": index=3;
+				break;
+			case "cover": index=4;
+				break;
+			case "bitRate": index=5;
+				break;
+			case "length": index=6;
+				break;
+			case "size": index=7;
+				break;
+			case "format": index=8;
+				break;
+			case "discNoFull": index=9;
+				break;
+			case "trackNoFull": index=10;
+				break;
+			case "comment": index=11;
+				break;
+			case "artist": index=12;
+				break;
+			case "title": index=13;
+				break;
+			case "bpm": index=14;
+				break;
+			case "year": index=15;
+				break;
+			case "genre": index=16;
+				break;
+			case "albumArtist": index=17;
+				break;
+			case "album": index=18;
+				break;
+			case "duplicates": index=19;
+				break;
+			case "index": index=21;
+				break;
+			case "idPath": index=22;
+				break;
+			case "idFirstFile": index=23;
+				break;
+			case "location": index=24;
+				break;
+		}
+		return match.getTracks(null).size()+index+2;
+	}
+	
+	private static void setValue(SpreadSheet spreadSheet, String sheetName, String col, int index, String value) {
+		spreadSheet.getSheet(sheetName).getCellAt(col+index).setValue(value);
+	}
+	
+	private static Object[][] getData(ReleaseMatch match) {
+		int i=0;
+        final Object[][] data = new Object[match.getTracks(null).size()+25][21];
         String trackSource="1min.mp3";
         //Add tracks information
         for(ReleaseMatch.Track track : match.getTracks(null)) {
@@ -293,80 +492,10 @@ public final class Album {
         data[i++] = new Object[] { "process", "idPath", "-1" };
         data[i++] = new Object[] { "process", "idFirstFile", "-1" };
         data[i++] = new Object[] { "process", "location", "location.add" };
-        
-        i=0;
-        String[] columns = new String[nbColumns];
-        columns[i++] = "";
-        columns[i++] = "artist";
-        columns[i++] = "albumArtist";
-        columns[i++] = "album";
-        columns[i++] = "title";
-        columns[i++] = "sourceFile";
-        columns[i++] = "discNo";
-        columns[i++] = "discTotal";
-        columns[i++] = "trackNo";
-        columns[i++] = "trackTotal";
-        columns[i++] = "year";
-        columns[i++] = "genre";
-        columns[i++] = "BPM";
-        columns[i++] = "nbCovers";
-        columns[i++] = "comment";
-        columns[i++] = "deleted";
-        columns[i++] = "checkedFlag";
-        columns[i++] = "playCounter";
-        columns[i++] = "rating";
-        columns[i++] = "addedDate";
-        columns[i++] = "lastPlayed";
-
-        // Save the data to an ODS file and open it.
-        TableModel model = new DefaultTableModel(data, columns);
-
-        if(getFile(mbId).exists()) {
-            throw new FileExistsException(getFile(mbId));
-        }
-        SpreadSheet spreadSheet = SpreadSheet.createEmpty(model);
-        spreadSheet.getFirstSheet().setName("MusicBrainz_REFERENCE_DO_NOT_MODIFY"); //TODO: Protect this sheet (original data)
-        i=0;
-        spreadSheet.getFirstSheet().copy(i++, "CheckTest1_KO");         //Created and scan KO (several modifications)
-        spreadSheet.getFirstSheet().copy(i++, "CheckTest2_OK");         //Modify genre, cover and SAVE
-        spreadSheet.getFirstSheet().copy(i++, "CheckTest3_DbOk");       //Set OK
-        
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest1_Creation");
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest2_DB");         //Same as above with rating 0 instead of -1 (as inserted in Db)
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest3");            //Added date changes after initial merge
-        
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_1");          //New statistics to set on Guayadeque 	(Linux)
-//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_2");          //New statistics to set on Kodi 	(Linux/Windows)
-//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_3");          //New statistics to set on MediaMonkey (Windows)
-//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_4");          //New statistics to set on Mixxx 	(Linux/Windows)
-//        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_5");          //New statistics to set on MyTunes 	(Android)
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_JaMuz");      //New statistics to set on JaMuz 	(Linux/Windows)
-        
-        spreadSheet.getFirstSheet().copy(i++, "MergeTest4_New");        //Expected statistics after merge
-
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice1_KO");       //Created KO (so we can set it OK between 2 merges)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice2_DB");       //Same as above with rating 0 instead of -1 (as inserted in Db)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice3_JaMuz");    //Set some ratings=4 for device sync (playlist)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice4_1stMerge"); //Added date changes after initial merge
-        
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_1");        //New statistics to set on Guayadeque 	(Linux)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_2");        //New statistics to set on Kodi 	(Linux/Windows)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_3");        //New statistics to set on MediaMonkey (Windows)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_4");        //New statistics to set on Mixxx 	(Linux/Windows)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_5");        //New statistics to set on MyTunes 	(Android)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice5_JaMuz");    //New statistics to set on JaMuz 	(Linux/Windows)
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice6_New");      //Expected statistics after merge
-
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice7_KO");       //Scan library unchecked => KO
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice8_OK");       //Modify genre, cover and SAVE 
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice9_DbOk");     //Set OK
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice10_NoSync");  //Merge without updating stat sources
-        spreadSheet.getFirstSheet().copy(i++, "MergeDevice11_Sync");    //Merge after updating stat sources
-        
-        spreadSheet.saveAs(getFile(mbId));
-        OOUtils.open(getFile(mbId));
-    }
-    
+		
+		return data;
+	}
+	
     private static File getFile(String mbId) {
         return new File(Settings.getRessourcesPath()+"albumFiles"+File.separator+mbId+".ods");
     }
@@ -512,7 +641,6 @@ public final class Album {
 	 * @throws InvalidAudioFrameException
 	 */
 	public void setAndCheckStatsInJamuzDb() throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-//        readFromFile(version);
         Jamuz.getDb().updateStatistics(getFiles());
         checkDb();
     }
@@ -533,8 +661,6 @@ public final class Album {
         statSource.getSource().tearDown();
         statSource.getSource().sendSource(System.getProperty("java.io.tmpdir")+File.separator);
 
-        ArrayList<FileInfo> albumFiles = getFiles();
-
         int nbExpected=0;
         for (TrackTag albumFile : tracks) {
             if(!(isDevice && albumFile.ignore)) {
@@ -553,7 +679,7 @@ public final class Album {
                 }
                 
                 if(statSource.getSource().updateBPM) {
-                    Assert.assertEquals("BPM "+albumFile.relativeFullPath+msg, albumFile.BPM, statSourceFile.BPM);
+                    Assert.assertEquals("BPM "+albumFile.relativeFullPath+msg, albumFile.BPM, statSourceFile.BPM, 0.0f);
                 }
             }
         }
@@ -668,7 +794,7 @@ public final class Album {
             Assert.assertEquals("discTotal"+msg, tracks.get(indexTrack).discTotal, file.discTotal);
             Assert.assertEquals("year"+msg, tracks.get(indexTrack).year, file.year);
             Assert.assertEquals("genre"+msg, tracks.get(indexTrack).genre, format(file.genre));
-            Assert.assertEquals("BPM"+msg, tracks.get(indexTrack).BPM, file.BPM);
+            Assert.assertEquals("BPM"+msg, tracks.get(indexTrack).BPM, file.BPM, 0.01f);
             Assert.assertEquals("nbCovers"+msg, tracks.get(indexTrack).nbCovers, file.nbCovers);
             Assert.assertEquals("comment"+msg, tracks.get(indexTrack).comment, format(file.comment));
             

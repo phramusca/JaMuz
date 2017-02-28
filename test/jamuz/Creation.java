@@ -45,6 +45,14 @@ public class Creation {
 	public static void main(String[] args) throws MBWS2Exception, IOException, CannotReadException, TagException, 
             ReadOnlyFileException, InvalidAudioFrameException {
         
+		//Create new ods (OpenDocument SpreadSheet) album test files
+		//This is not up-to-date:
+		//- Some versions (tabs) are missing
+		//- All tabs will be the same
+		//=> Current test files have been manually modified later on.
+		//You can use CompareOO to analyse those
+		
+		
         List<String> mbIds = new ArrayList<>();
 //        mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
 //        mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");

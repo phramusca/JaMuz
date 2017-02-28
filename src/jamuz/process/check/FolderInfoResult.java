@@ -157,6 +157,10 @@ public class FolderInfoResult {
 		return (this.errorLevel == 1);
 	}
 
+	public int getErrorLevel() {
+		return errorLevel;
+	}
+
 	/**
 	 * Get Color to be used for display
 	 * @return
