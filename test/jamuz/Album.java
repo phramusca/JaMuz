@@ -470,8 +470,8 @@ public final class Album {
         data[i++] = new Object[] { "result", "nbFiles", "ok", match.getTracks(null).size() };
         data[i++] = new Object[] { "result", "hasID3v1", "ok", Inter.get("Label.No") };
         data[i++] = new Object[] { "result", "isReplayGainDone", "ok", Inter.get("Label.Yes") };
-        data[i++] = new Object[] { "result", "cover", "ko", "{IGNORE}" }; //FIXME TEST: Set expected value
-        data[i++] = new Object[] { "result", "bitRate", "ok", "{IGNORE}" }; //FIXME TEST: Set expected value (mean bitRate)
+        data[i++] = new Object[] { "result", "cover", "ko", "{IGNORE}" }; //TODO TEST Set expected value
+        data[i++] = new Object[] { "result", "bitRate", "ok", "{IGNORE}" }; //TODO TEST Set expected value (mean bitRate)
         data[i++] = new Object[] { "result", "length", "ok", "{N/A}" };
         data[i++] = new Object[] { "result", "size", "ok", "{N/A}" }; 
         data[i++] = new Object[] { "result", "format", "ok", "{N/A}" };
@@ -698,12 +698,10 @@ public final class Album {
         Assert.assertEquals("Number of files in album"+msg, nbExpected, nbActual);
     }
     
-    //FIXME TEST: Use a Map instead ...
+    //TODO TEST: Use a Map instead ...
     private FileInfo searchInStatsList(String relativeFullPath, ArrayList<FileInfo> statSourcesFiles) {
         for (FileInfo myFileInfo : statSourcesFiles) {
             if(myFileInfo.getRelativeFullPath().equals(relativeFullPath)) { return myFileInfo; }
-            //We want it case-sensite, why was it set IgnoreCase ?
-//			if(myFileInfo.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)) { return myFileInfo; }
         }
 		return null;
 	}
@@ -737,7 +735,7 @@ public final class Album {
                 Assert.assertTrue(file + " exists?: ", file.exists());
             }
         }
-        //FIXME TEST: Browse FS to chekc there are no other files
+        //TODO TEST: Browse FS to check that there are no other files
     }
     
     private void checkFS(String option, boolean renamed) {
@@ -807,7 +805,6 @@ public final class Album {
             Date expected = DateTime.parseSqlUtc(tracks.get(indexTrack).getFormattedAddedDate());
             long diffInSeconds = (expected.getTime() - file.addedDate.getTime()) / 1000;
             
-            //FIXME TEST: After a merge, need to check addedDate equality, as should be equal, no 30s diff !
             Assert.assertTrue("AddedDate. Expected: " + tracks.get(indexTrack).getFormattedAddedDate() + " +/- 30s, Actual: " + file.getFormattedAddedDate()+msg, diffInSeconds < 30);
             Assert.assertEquals("lastPlayed"+msg, tracks.get(indexTrack).getFormattedLastPlayed(), file.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
             

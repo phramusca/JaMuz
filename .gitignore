@@ -32,3 +32,16 @@ hs_err_pid*
 /build/
 /data/AudioLinks.txt
 /JaMuz.properties
+testenv/AppFolder/data/cache/
+
+testenv/AppFolder/logs/
+
+testenv/AppFolder/JaMuz\.db
+
+testenv/Musique/Archive/
+
+testenv/Musique/TestDevice/
+
+testenv/Ressources/albumFiles_MergeNTest/
+
+testenv/StatSources/

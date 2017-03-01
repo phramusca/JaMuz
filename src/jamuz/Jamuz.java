@@ -214,7 +214,7 @@ public class Jamuz {
     private static boolean connectDatabase() {
         
         //This is default database location and name
-		String JaMuzDbPath = "JaMuz.db";
+		String JaMuzDbPath = appPath + "JaMuz.db";
 		
 		//Check XML config file presence (to override database location and name)
 		String configFileName=appPath + "JaMuz.xml";  //NOI18N
@@ -258,7 +258,7 @@ public class Jamuz {
 			File f = new File(logPath);
 			f.mkdir();
 			//TODO: Return an error if something goes wrong
-			//mkdir() return false if folder already exist an no Exception is thrown
+			//mkdir() return false if folder already exist and no Exception is thrown
 			//Need to use f.canRead(); et f.canWrite();
 			
 			//Create Logger

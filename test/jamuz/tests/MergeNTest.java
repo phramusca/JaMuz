@@ -23,7 +23,6 @@ import jamuz.Jamuz;
 import jamuz.process.check.PanelCheck;
 import jamuz.gui.PanelMain;
 import jamuz.Playlist;
-import jamuz.process.check.ProcessCheck;
 import jamuz.process.check.ProcessCheck.Action;
 import jamuz.ProcessHelper;
 import jamuz.Settings;
@@ -36,7 +35,6 @@ import junit.framework.TestCase;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Test;
 import jamuz.utils.Inter;
-import jamuz.utils.Swing;
 
 /**
  *
@@ -53,6 +51,8 @@ public class MergeNTest extends TestCase {
         
         Settings.startGUI("Label.Check"); //Mandatory
         
+		//Read album definition files
+		//AND create audio test files
         ArrayList<String> mbIds = new ArrayList<>();
         mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
         mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
@@ -67,20 +67,21 @@ public class MergeNTest extends TestCase {
         }
 
         //Scan library
-		//FIXME TEST: Does not start scanLibraryQuick. Why ?? It should !!
-		//=> Pb progressBarId !!
         ProcessHelper.scanLibraryQuick();
-			//FIXME: CAN't anymore  as not kept in table during scan
-//        checkNumberScanned(mbIds.size()); 
         for(String mbId : mbIds) {
-			//FIXME: CAN't anymore  as not kept in table during scan
-//            AlbumBuffer.getAlbum(mbId, "MergeDevice1_KO").checkAfterScan(); //Note that there are no results as folder is not analyzed: expected for now
+			//MergeDevice2_DB:
+			// - Update rating -1 -> 0
+			//=> Check database and filesystem
             AlbumBuffer.getAlbum(mbId, "MergeDevice2_DB").checkDbAndFS(false);
         }
 
-        //Update stats in JamuZ (rating=4) to have enough (but not too many) files 
+        //Update rating 0 -> 4 in JaMuz
+		//to have enough (but not too many) files 
         //in test playlist to export to device
         for(String mbId : mbIds) {
+			//MergeDevice3_JaMuz:
+			// - Update rating 0 -> 4 for some files
+			//=> Set and check stats in JaMuz
             AlbumBuffer.getAlbum(mbId, "MergeDevice3_JaMuz").setAndCheckStatsInJamuzDb();
         }
 
@@ -96,13 +97,16 @@ public class MergeNTest extends TestCase {
                 }
             }
         }
-        
+
         PanelMain.selectTab(Inter.get("Label.Merge"));
         ProcessHelper.merge();
         //Check then change statistics on all stat sources, including jamuz for all albums
         for(String mbId : mbIds) {
+			//MergeDevice4_1stMerge:
+			// - Change addedDate from "01/01/1970 00:00:00" to "05/05/2012 19:27:24"
+			//=> Set and check stats in JaMuz
             AlbumBuffer.getAlbum(mbId, "MergeDevice4_1stMerge").checkJaMuz();
-            
+			
             for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
                 Device device = statSource.getDevice();
                 Playlist playlist = device.getPlaylist(); 
@@ -116,6 +120,8 @@ public class MergeNTest extends TestCase {
             AlbumBuffer.getAlbum(mbId, "MergeDevice5_JaMuz").setAndCheckStatsInJamuzDb();
         }
 
+		//FIXME TEST HIGH Continue from here !!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
         //Merge again and check merge ok
         ProcessHelper.merge();
         for(String mbId : mbIds) {

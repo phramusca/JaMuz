@@ -29,21 +29,20 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
-import jamuz.utils.Swing;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Settings {
-    private static final String testRootPath = "/home/raph/Documents/04-Creations/Dev/NetBeans/JaMuz/TestsJunit/"; //Must have trailing separator (/ or \\)
-    
+        
 	/**
 	 *
 	 * @return
 	 */
 	public static String getMusicFolder() {
-        return testRootPath + "Musique" + File.separator;
+		return getFolder("Musique");
     }
     
 	/**
@@ -51,7 +50,7 @@ public class Settings {
 	 * @return
 	 */
 	public static String getRessourcesPath() {
-        return testRootPath+File.separator+"Ressources"+File.separator;
+		return getFolder("Ressources");
     }
     
 	/**
@@ -59,7 +58,7 @@ public class Settings {
 	 * @return
 	 */
 	public static String getAppFolder() {
-        return testRootPath + "AppFolder" + File.separator;
+		return getFolder("AppFolder");
     }
     
 	/**
@@ -67,8 +66,17 @@ public class Settings {
 	 * @return
 	 */
 	public static String getStatSourcesFolder() {
-        return testRootPath + "StatSources" + File.separator;
+		return getFolder("StatSources");
     }
+	
+	private static String getFolder(String folderName) {
+		
+		//Get current application folder
+		File f = new File(".");  //NOI18N
+		String appPath = f.getAbsolutePath();
+		return appPath.substring(0, appPath.length() - 1) 
+				+ "testenv" + File.separator + folderName + File.separator;
+	}
     
 	/**
 	 *
@@ -97,7 +105,7 @@ public class Settings {
     public static void setupApplication() throws Exception {
         //Refresh database (overwrite db test file with reference db)
         File source = new File(getRessourcesPath()+"JaMuz_Minimal.db");
-        File destination = new File(getAppFolder()+"JaMuz_Test.db");
+        File destination = new File(getAppFolder()+"JaMuz.db");
         FileSystem.copyFile(source, destination);
         
         //Configure application
@@ -114,10 +122,13 @@ public class Settings {
         Jamuz.getMachine().read();
 
         //RE-Create folders as needed
-        deleteAndMakeFolder("location.add");
-        deleteAndMakeFolder("location.library");
-        deleteAndMakeFolder("location.ok");
-        deleteAndMakeFolder("location.ko");
+        deleteAndMakeFolderByOption("location.add");
+        deleteAndMakeFolderByOption("location.library");
+        deleteAndMakeFolderByOption("location.ok");
+        deleteAndMakeFolderByOption("location.ko");
+		deleteAndMakeFolderByOption("location.manual");
+		
+		deleteAndMakeFolderByPath(FilenameUtils.normalizeNoEndSeparator(getMusicFolder() + "TestDevice"));
     }
 
 	/**
@@ -138,8 +149,12 @@ public class Settings {
                 rootPath, Jamuz.getMachine().getName(), idDevice, true, ""));
     }
     
-    private static void deleteAndMakeFolder(String optionId) throws IOException {
-        File file = new File(Jamuz.getMachine().getOptionValue(optionId));
+    private static void deleteAndMakeFolderByOption(String optionId) throws IOException {
+			deleteAndMakeFolderByPath(Jamuz.getMachine().getOptionValue(optionId));
+    }
+	
+	private static void deleteAndMakeFolderByPath(String path) throws IOException {
+        File file = new File(path);
         FileUtils.deleteDirectory(file);
         file.mkdir();
     }
