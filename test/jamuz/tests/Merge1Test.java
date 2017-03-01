@@ -41,6 +41,9 @@ public class Merge1Test extends TestCase {
     public void test() throws Exception {
         Settings.startGUI("Label.Check"); //Mandatory
         
+		//FIXME TEST Check this test is valid
+		//using compareOO
+		
         //Create an album, 
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest1_Creation").create();
         
@@ -52,7 +55,7 @@ public class Merge1Test extends TestCase {
         
         PanelMain.selectTab(Inter.get("Label.Merge"));
         ProcessHelper.merge();
-        //FIXME TEST: Click OK button in merge results popup OR disable popup (after each merge)
+        
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkJaMuz();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkStatSource(1, false);
         

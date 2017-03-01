@@ -75,9 +75,13 @@ public class ProcessHelper {
 	public static void merge() throws InterruptedException {
         List dbIndexes = new ArrayList();
         for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
-            dbIndexes.add(new Integer(statSource.getId()));
+//            dbIndexes.add(new Integer(statSource.getId()));
+			dbIndexes.add(statSource.getId());
         }
         startProcessMerge(dbIndexes, false, false);
+		//FIXME TEST: Click OK button in merge results popup 
+		//OR disable popup (after each merge)
+		
         //FIXME TEST: Also test simulate and forceJamuz parameters
     }
     
@@ -91,7 +95,9 @@ public class ProcessHelper {
         }
     }
     private final static int nbAnalysis=4;
-    private final static int nbScan=2;
+	//Cannot use more nbScan for testing as we need to keep fixed idPath
+	//TODO: Support nbScan>1 to check if still OK with more threads
+    private final static int nbScan=1; 
     private static ProcessCheck processCheck;
     private static void startProcessCheck(boolean enableDoActions, ProcessCheck.CheckType checkType, int idPath) throws InterruptedException {
 
@@ -117,7 +123,9 @@ public class ProcessHelper {
                 doAnalyze.join();
             }
         }
-        if(processCheck.doActions!=null)    { processCheck.doActions.join(); }
+        if(processCheck.doActions!=null) { 
+			processCheck.doActions.join(); 
+		}
     }
     
 	/**

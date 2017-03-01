@@ -19,6 +19,7 @@ package jamuz;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.utils.*;
 import jamuz.process.merge.LogText;
+import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -32,19 +33,20 @@ import org.jaudiotagger.tag.TagException;
 
 /**
  * Analyse all albums checked in:
- *  - CheckNTest //FIXME TEST TODO
- *  - Merge1Test //TODO Include this one in check
- *  - MergeNTest //FIXME TEST ONGOING
+ *  - CheckNTest //FIXME TEST CompareOO CheckNTest
+ *  - Merge1Test //TODO CompareOO Merge1Test
+ *  - MergeNTest
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class CompareOO {
-	private static final String pathLogs = "/home/raph/Bureau/JaMuz Album Compare/";
+	
 	
     /**
 	 * Main program.
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
 		List<String> mbIds = new ArrayList<>();
         mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
         mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
@@ -55,7 +57,16 @@ public class CompareOO {
         mbIds.add("7598d527-bc8d-4282-a72c-874f335d05ac");
         mbIds.add("13ca98f6-1a9f-4d76-a3b3-a72a16d91916");
 		
+		compareMergeNTest(mbIds);
+		
+    } 
+	
+	private static void compareMergeNTest(List<String> mbIds) {
+		
+		String testName = "MergeNTest";
+		
 		List<String> versions = new ArrayList<>();
+		versions.add("MusicBrainz_REFERENCE_DO_NOT_MODIFY");
 		versions.add("MergeDevice1_KO");
 		versions.add("MergeDevice2_DB");
 		versions.add("MergeDevice3_JaMuz");
@@ -74,7 +85,6 @@ public class CompareOO {
 		versions.add("MergeDevice10_5");
 		versions.add("MergeDevice10_New");
 		versions.add("MergeDevice11_Sync2");
-		versions.add("MusicBrainz_REFERENCE_DO_NOT_MODIFY");
 		
         for(String mbId : mbIds) {
 			for(int i=0; i<(versions.size()-1); i++) {
@@ -83,18 +93,25 @@ public class CompareOO {
 				compareAlbums(
 					mbId,
 					firstTab,
-					secondTab);
+					secondTab, testName);
 			}
         }
-    } 
-
-	private static void compareAlbums(String mbId, String tab1, String tab2) {
+	}
+	
+	private static void compareAlbums(String mbId, String tab1, String tab2, String testName) {
+		compareAlbums(mbId, mbId, tab1, tab2, testName);
+	}
+	
+	private static void compareAlbums(String mbId1, String mbId2, String tab1, String tab2, String testName) {
 		try {
-			Album firstAlbum = AlbumBuffer.getAlbum(mbId, tab1);
-			Album secondAlbum = AlbumBuffer.getAlbum(mbId, tab2);
+			Album firstAlbum = AlbumBuffer.getAlbum(mbId1, tab1);
+			Album secondAlbum = AlbumBuffer.getAlbum(mbId2, tab2);
 
-			logFile = new LogText(pathLogs);
-			String logFileName = tab1+"-"+tab2+"-"+mbId+".csv";;			
+			String pathLogs = Settings.getRessourcesPath()+"albumFiles_"+testName;
+			File f = new File(pathLogs);
+			f.mkdir();
+			logFile = new LogText(pathLogs+File.separator);
+			String logFileName = tab1+"-"+tab2+"-"+mbId1+".csv";;			
 			if(!logFile.createFile(logFileName)) {
 				Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[] {logFileName}));  //NOI18N
 				System.exit(1);

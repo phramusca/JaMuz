@@ -96,7 +96,9 @@ public class ProcessSync extends ProcessAbstract {
 		//Inspire from file tagger in check
 		
         if(!new File(this.device.getDestination()).exists()) {
-            Popup.warning(java.text.MessageFormat.format(Inter.get("Msg.Sync.DestinationDoesNotExist"), new Object[] {this.device.getDestination()}));  //NOI18N
+            Popup.warning(java.text.MessageFormat.format(
+					"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
+					new Object[] {this.device.getDestination()}));  //NOI18N
             return false;
         }
 
