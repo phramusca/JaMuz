@@ -117,11 +117,12 @@ public class MergeNTest extends TestCase {
                 AlbumBuffer.getAlbum(mbId, "MergeDevice5_"+statSource.getIdStatement()).setAndCheckStatsInStatSource(statSource.getId(), playlist.getId()>0);
             }
             //Change stats in JamuZ
+			//FIXME TEST Update ratingModifDate as done in Jumuz (check that)
+			//and update ratings in 6cc35892-c44f-4aa7-bfee-5f63eca70821.ods 
+			//accordingly
             AlbumBuffer.getAlbum(mbId, "MergeDevice5_JaMuz").setAndCheckStatsInJamuzDb();
         }
 
-		//FIXME TEST HIGH Continue from here !!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
         //Merge again and check merge ok
         ProcessHelper.merge();
         for(String mbId : mbIds) {
@@ -133,11 +134,17 @@ public class MergeNTest extends TestCase {
             }
         }
         
+		//FIXME TEST HIGH Continue from here !!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
         //Scan library and SAVE in order to modiy path and filenames
         PanelMain.selectTab(Inter.get("Label.Check"));
         ProcessHelper.checkLibrary();
         checkNumberScanned(mbIds.size());
         for(String mbId : mbIds) {
+			//FIXME: 
+			//Expcted: {value=De Verdad, Verdad, errorLevel=0}
+			//Actual: {value=De Verdad, Verdad, errorLevel=1}
+			
             AlbumBuffer.getAlbum(mbId, "MergeDevice7_KO").checkAfterScan();
             //Set genre, cover and SAVE action. Apply changes
             //Note that MusiBrainz album should have been retrieved
