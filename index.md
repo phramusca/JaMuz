@@ -1,6 +1,7 @@
 
-[Download First Release version 0.0.24](https://github.com/phramusca/JaMuz/releases/download/0.0.24/JaMuz_v0.0.24_Alpha.7z) <img src="https://github.com/phramusca/JaMuz/blob/master/data/icon/tag/Probl%C3%A8me.jpg" width="48"> **ALPHA version.**
-
+**ALPHA version.**
+[Download First Release version 0.0.24](https://github.com/phramusca/JaMuz/releases/download/0.0.24/JaMuz_v0.0.24_Alpha.7z)  
+**ALPHA version.**
 _________________________________________________________________________________
 
 * **Features**:
