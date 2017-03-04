@@ -1,7 +1,6 @@
-### Welcome to JaMuz.
-JaMuz is a Music Management To.
+### **JaMuz** is a **Music management** tool written in Java
 
-**JaMuz** is a **Music management** tool written in Java
+**[Download First Beta Release version 0.0.24](https://github.com/phramusca/JaMuz/releases/download/0.0.24/JaMuz_v0.0.24_Alpha.7z) 
 
 ### <img src="https://github.com/phramusca/JaMuz/blob/master/data/icon/tag/Problème.jpg" width="48"> Code is in ALPHA stage.
 _________________________________________________________________________________
@@ -29,7 +28,3 @@ ________________________________________________________________________________
   * Bonus: Kodi helper to manage your video files.
 
 See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
-
-
-_________________________________________________________________________________
- ___ [Changes](CHANGES.md) ___ [Credits](CREDITS.md) ___ [License](LICENSE.md) ___
