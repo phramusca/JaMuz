@@ -1,7 +1,9 @@
 ### **JaMuz** is a **Music management** tool written in Java
 
 [Download First Release version 0.0.24](https://github.com/phramusca/JaMuz/releases/download/0.0.24/JaMuz_v0.0.24_Alpha.7z) <img src="https://github.com/phramusca/JaMuz/blob/master/data/icon/tag/Problème.jpg" width="48"> **ALPHA version.**
+
 _________________________________________________________________________________
+
 * **Features**:
   * ***Merge your statistics between your favorite players:***
     * Guayadeque (Linux)
