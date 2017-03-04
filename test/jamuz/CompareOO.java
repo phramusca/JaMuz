@@ -66,25 +66,31 @@ public class CompareOO {
 		String testName = "MergeNTest";
 		
 		List<String> versions = new ArrayList<>();
-		versions.add("MusicBrainz_REFERENCE_DO_NOT_MODIFY");
-		versions.add("MergeDevice1_KO");
-		versions.add("MergeDevice2_DB");
-		versions.add("MergeDevice3_JaMuz");
-		versions.add("MergeDevice4_1stMerge");
+//		versions.add("MusicBrainz_REFERENCE_DO_NOT_MODIFY");
+//		versions.add("MergeDevice1_KO");
+//		versions.add("MergeDevice2_DB");
+//		versions.add("MergeDevice3_JaMuz");
+//		versions.add("MergeDevice6_New");
 		versions.add("MergeDevice5_1");
+		versions.add("MergeDevice6_New");
 		versions.add("MergeDevice5_2");
+		versions.add("MergeDevice6_New");
 		versions.add("MergeDevice5_3");
+		versions.add("MergeDevice6_New");
 		versions.add("MergeDevice5_4");
+		versions.add("MergeDevice6_New");
 		versions.add("MergeDevice5_5");
+		versions.add("MergeDevice6_New");
 		versions.add("MergeDevice5_JaMuz");
 		versions.add("MergeDevice6_New");
-		versions.add("MergeDevice7_KO");
-		versions.add("MergeDevice8_OK");
-		versions.add("MergeDevice9_DbOk");
-		versions.add("MergeDevice10_JaMuz");
-		versions.add("MergeDevice10_5");
-		versions.add("MergeDevice10_New");
-		versions.add("MergeDevice11_Sync2");
+//		versions.add("MergeDevice6_New");
+//		versions.add("MergeDevice7_KO");
+//		versions.add("MergeDevice8_OK");
+//		versions.add("MergeDevice9_DbOk");
+//		versions.add("MergeDevice10_JaMuz");
+//		versions.add("MergeDevice10_5");
+//		versions.add("MergeDevice10_New");
+//		versions.add("MergeDevice11_Sync2");
 		
         for(String mbId : mbIds) {
 			for(int i=0; i<(versions.size()-1); i++) {

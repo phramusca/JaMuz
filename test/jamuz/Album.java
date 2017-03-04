@@ -627,7 +627,7 @@ public final class Album {
             FolderInfoResult resultActual = getCheckedFolder().getResults().get(entry.getKey());
             FolderInfoResult resultExpected = entry.getValue();
             if(!resultExpected.getValue().startsWith("{")) {
-                Assert.assertEquals(entry.getKey(), resultExpected, resultActual);
+                Assert.assertEquals(entry.getKey()+" "+resultActual, resultExpected, resultActual);
             }
         }
     }
@@ -777,11 +777,11 @@ public final class Album {
     }
 
     private void compare(ArrayList<FileInfoInt> files) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        Assert.assertEquals("Nb files", tracks.size(), files.size());
+        Assert.assertEquals("Nb files " + this.mbId, tracks.size(), files.size());
         int indexTrack=0;
         String msg;
         for (FileInfoInt file : files) {
-            msg = " ("+this.mbId+", " + file.filename+")";
+            msg = " ("+file.filename+", " + this.mbId+")";
             Assert.assertEquals("artist"+msg, tracks.get(indexTrack).artist, file.artist);
             Assert.assertEquals("albumArtist"+msg, tracks.get(indexTrack).albumArtist, file.albumArtist);
             Assert.assertEquals("album"+msg, tracks.get(indexTrack).album, file.album);

@@ -25,6 +25,7 @@ import jamuz.process.merge.StatSource;
 import jamuz.process.merge.PanelMerge;
 import jamuz.process.check.PanelCheck;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -111,15 +112,17 @@ public class ProcessHelper {
         PanelCheck.tableModelCheck.clear();
 		PanelCheck.setThreadPanels(checkType);
         processCheck.startCheck(checkType, idPath, nbAnalysis, nbScan);
-        
+
         processCheck.doBrowse.join();
-        for(ProcessCheck.DoScan doScan : processCheck.doScanList) {
+		//FIXME TEST Concurrent modification : why and how to fix this ?
+		//Workaround: breakpoint and manually wait
+		for(ProcessCheck.DoScan doScan : processCheck.doScanList) {
             if(doScan!=null) {
                 doScan.join();
             }
         }
-        for(ProcessCheck.DoAnalyze doAnalyze : processCheck.doAnalyzeList) {
-            if(doAnalyze!=null) {
+		for(ProcessCheck.DoAnalyze doAnalyze : processCheck.doAnalyzeList) {
+			if(doAnalyze!=null) {
                 doAnalyze.join();
             }
         }
