@@ -1,7 +1,6 @@
 
-**ALPHA version.**
 [Download First Release version 0.0.24](https://github.com/phramusca/JaMuz/releases/download/0.0.24/JaMuz_v0.0.24_Alpha.7z)  
-**ALPHA version.**
+!! **ALPHA version.** !!
 _________________________________________________________________________________
 
 * **Features**:
