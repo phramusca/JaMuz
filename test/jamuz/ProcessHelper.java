@@ -25,7 +25,6 @@ import jamuz.process.merge.StatSource;
 import jamuz.process.merge.PanelMerge;
 import jamuz.process.check.PanelCheck;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -66,7 +65,12 @@ public class ProcessHelper {
 	 */
 	public static void applyChanges() throws InterruptedException {
         processCheck.startActions(true, true, true);
-        processCheck.doActions.join();
+//        processCheck.doActions.join();
+//		Thread.sleep(2000);
+		do {
+			Thread.sleep(2000);
+		} while(processCheck.actionQueue.size()>0);
+		processCheck.stopActions();
     }
 
 	/**
@@ -76,12 +80,9 @@ public class ProcessHelper {
 	public static void merge() throws InterruptedException {
         List dbIndexes = new ArrayList();
         for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
-//            dbIndexes.add(new Integer(statSource.getId()));
 			dbIndexes.add(statSource.getId());
         }
         startProcessMerge(dbIndexes, false, false);
-		//FIXME TEST: Click OK button in merge results popup 
-		//OR disable popup (after each merge)
 		
         //FIXME TEST: Also test simulate and forceJamuz parameters
     }
@@ -95,10 +96,11 @@ public class ProcessHelper {
             startProcessSync(device);
         }
     }
-    private final static int nbAnalysis=4;
-	//Cannot use more nbScan for testing as we need to keep fixed idPath
-	//TODO: Support nbScan>1 to check if still OK with more threads
+    
+	//Cannot use more nbScan & nbAnalysis for testing as we need to keep fixed idPath
+	//TODO: Support nbScan>1 & nbAnalysis>1 to check if still OK with more threads
     private final static int nbScan=1; 
+	private final static int nbAnalysis=1;
     private static ProcessCheck processCheck;
     private static void startProcessCheck(boolean enableDoActions, ProcessCheck.CheckType checkType, int idPath) throws InterruptedException {
 
@@ -113,22 +115,27 @@ public class ProcessHelper {
 		PanelCheck.setThreadPanels(checkType);
         processCheck.startCheck(checkType, idPath, nbAnalysis, nbScan);
 
-        processCheck.doBrowse.join();
-		//FIXME TEST Concurrent modification : why and how to fix this ?
-		//Workaround: breakpoint and manually wait
-		for(ProcessCheck.DoScan doScan : processCheck.doScanList) {
-            if(doScan!=null) {
-                doScan.join();
-            }
-        }
-		for(ProcessCheck.DoAnalyze doAnalyze : processCheck.doAnalyzeList) {
-			if(doAnalyze!=null) {
-                doAnalyze.join();
-            }
-        }
-        if(processCheck.doActions!=null) { 
-			processCheck.doActions.join(); 
-		}
+		do {
+			Thread.sleep(2000);
+		} while(processCheck.isCheckAlive());
+
+		
+		//Note: cannot use the following as causing Concurrent modification exceptions
+	
+//      processCheck.doBrowse.join();
+//		for(ProcessCheck.DoScan doScan : processCheck.doScanList) {
+//            if(doScan!=null) {
+//                doScan.join();
+//            }
+//        }
+//		for(ProcessCheck.DoAnalyze doAnalyze : processCheck.doAnalyzeList) {
+//			if(doAnalyze!=null) {
+//                doAnalyze.join();
+//            }
+//        }
+//        if(processCheck.doActions!=null) { 
+//			processCheck.doActions.join(); 
+//		}
     }
     
 	/**

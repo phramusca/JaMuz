@@ -162,6 +162,12 @@ public class ProcessMerge extends ProcessAbstract {
         }
         finally {
             PanelMerge.progressBar.reset();
+			
+			//Disable popup for tests
+			if(this.getName().startsWith("Thread.ProcessHelper")) {
+				popupMsg="";
+			}
+			
             if(!popupMsg.equals("")) {  //NOI18N
                 popupMsg="<html>"
                     + "<h3>"+popupMsg+"</h3>";    //NOI18N //NOI18N
