@@ -134,17 +134,11 @@ public class MergeNTest extends TestCase {
             }
         }
         
-		//FIXME TEST HIGH Continue from here !!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
         //Scan library and SAVE in order to modiy path and filenames
         PanelMain.selectTab(Inter.get("Label.Check"));
         ProcessHelper.checkLibrary();
         checkNumberScanned(mbIds.size());
         for(String mbId : mbIds) {
-			//FIXME: 
-			//Expcted: {value=De Verdad, Verdad, errorLevel=0}
-			//Actual: {value=De Verdad, Verdad, errorLevel=1}
-			
             AlbumBuffer.getAlbum(mbId, "MergeDevice7_KO").checkAfterScan();
             //Set genre, cover and SAVE action. Apply changes
             //Note that MusiBrainz album should have been retrieved
@@ -154,7 +148,7 @@ public class MergeNTest extends TestCase {
             folder.action=Action.SAVE;
             PanelCheck.addToActionQueue(folder);
         }
-
+		
         //Apply changes and scan again 
         ProcessHelper.applyChanges();
         ProcessHelper.checkLibrary();
@@ -170,6 +164,8 @@ public class MergeNTest extends TestCase {
         ProcessHelper.checkLibrary();
         checkNumberScanned(0);
         
+		//FIXME TEST HIGH Continue from here !!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
         for(String mbId : mbIds) {
             AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").checkDbAndFS(true); // In DB and OK
         }

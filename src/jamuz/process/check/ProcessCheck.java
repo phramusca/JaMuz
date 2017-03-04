@@ -336,15 +336,21 @@ public class ProcessCheck {
 	 */
 	public void stopActions() {
         if(doActions!=null) { //Happens when starting check process for the first time
+            putLastFolder();
+            doActions.abort();
+        }
+    }
+	
+	private void putLastFolder() {
+		if(doActions!=null) { //Happens when starting check process for the first time
             try {
                 //Add a "terminate" signal at queue end
                 actionQueue.put(lastFolder);
             } catch (InterruptedException ex) {
                 Jamuz.getLogger().log(Level.SEVERE, null, ex);
             }
-            doActions.abort();
         }
-    }
+	}
     
 	/**
 	 *
