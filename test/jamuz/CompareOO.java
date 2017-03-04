@@ -83,13 +83,14 @@ public class CompareOO {
 //		versions.add("MergeDevice6_New");
 //		versions.add("MergeDevice5_JaMuz");
 //		versions.add("MergeDevice6_New");
-		versions.add("MergeDevice6_New");
-		versions.add("MergeDevice7_KO");
-		versions.add("MergeDevice8_OK");
-		versions.add("MergeDevice9_DbOk");
-//		versions.add("MergeDevice10_JaMuz");
-//		versions.add("MergeDevice10_5");
-//		versions.add("MergeDevice10_New");
+//		versions.add("MergeDevice6_New");
+//		versions.add("MergeDevice7_KO");
+//		versions.add("MergeDevice8_OK");
+//		versions.add("MergeDevice9_DbOk");
+		versions.add("MergeDevice10_JaMuz");
+		versions.add("MergeDevice10_New");
+		versions.add("MergeDevice10_5");
+		versions.add("MergeDevice10_New");
 //		versions.add("MergeDevice11_Sync2");
 		
         for(String mbId : mbIds) {
