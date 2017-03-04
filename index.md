@@ -1,14 +1,35 @@
-### Welcome to GitHub Pages.
-This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here [using GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/), select a template crafted by a designer, and publish. After your page is generated, you can check out the new `gh-pages` branch locally. If you’re using GitHub Desktop, simply sync your repository and you’ll see the new branch.
+### Welcome to JaMuz.
+JaMuz is a Music Management To.
 
-### Designer Templates
-We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.
+**JaMuz** is a **Music management** tool written in Java
 
-### Creating pages manually
-If you prefer to not use the automatic generator, push a branch named `gh-pages` to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.
+### <img src="https://github.com/phramusca/JaMuz/blob/master/data/icon/tag/Problème.jpg" width="48"> Code is in ALPHA stage.
+_________________________________________________________________________________
+* **Features**:
+  * ***Merge your statistics between your favorite players:***
+    * Guayadeque (Linux)
+    * Kodi (Linux / Windows)
+    * Media Monkey (Windows)
+    * Mixxx (Linux / Windows)
+    * MyTunes (Android)
+    * Please [contribute](CONTRIBUTING.md) to add some more.
+  * ***Check, tag and organize your files:***
+    * Get tags and covers from Musicbrainz, last.fm and coverartarchive.org
+    * Detect duplicates
+    * Compute MP3 gain
+  * ***Sync your files to devices (Phone, USB Key/HDD, MP3 player, ...).***
+  * Create complex playlists.
+  * Player (basic, not the main feature though).
+  * [Android Remote Control](https://github.com/phramusca/JaMuz-Remote)
+  * Runs on Windows and Linux (as written in Java), maybe Mac OS (not tested).
+  * Translated using [WebLate](https://hosted.weblate.org/engage/jamuz/):
+    * <a href="https://hosted.weblate.org/engage/jamuz/?utm_source=widget">
+    <img src="https://hosted.weblate.org/widgets/jamuz/-/multi-auto.svg" alt="État de la traduction" />
+    </a>
+  * Bonus: Kodi helper to manage your video files.
 
-### Authors and Contributors
-You can @mention a GitHub username to generate a link to their profile. The resulting `<a>` element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (@defunkt), PJ Hyett (@pjhyett), and Tom Preston-Werner (@mojombo) founded GitHub.
+See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
 
-### Support or Contact
-Having trouble with Pages? Check out our [documentation](https://help.github.com/pages) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+
+_________________________________________________________________________________
+ ___ [Changes](CHANGES.md) ___ [Credits](CREDITS.md) ___ [License](LICENSE.md) ___
