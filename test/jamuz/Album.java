@@ -38,7 +38,6 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
-import org.jopendocument.dom.OOUtils;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.musicbrainz.MBWS2Exception;
@@ -509,7 +508,7 @@ public final class Album {
 	 * @return
 	 */
     public FolderInfo getCheckedFolder() {
-        return PanelCheck.tableModelCheck.getFolders().get(index);
+        return PanelCheck.tableModelActionQueue.getFolders().get(index);
     }
     
     /**
@@ -618,7 +617,7 @@ public final class Album {
 	 * @throws ReadOnlyFileException
 	 * @throws InvalidAudioFrameException
 	 */
-	public void checkAfterScan() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	public void checkActionsTableModel() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         //Check tracks
         compare((ArrayList<FileInfoInt>)(List<?>)getCheckedFolder().getFilesAudio());
 
