@@ -84,7 +84,7 @@ public class ProcessHelper {
         }
         startProcessMerge(dbIndexes, false, false);
 		
-        //FIXME TEST: Also test simulate and forceJamuz parameters
+        //FIXME LOW TEST Also test simulate and forceJamuz parameters
     }
     
 	/**

@@ -123,14 +123,7 @@ public abstract class StatSourceAbstract {
 	 * @return
 	 */
 	public boolean isUpdatePlayCounter() {
-		//FIXME HIGH Fix problem with PlayCounter:
-		//When playcounter is updated (inserted) in a merge, the next merge
-		//play counters starts incrementing !!!!!
-		//=> Seems to occur only when many statsources (more than 2 ?), to
-		// be analyzed
-		//Then, enable back
 		return true;
-//        return false;
     }
 	
 	/**

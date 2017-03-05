@@ -595,7 +595,7 @@ public final class Album {
         statSource.getSource().updateStatistics(getFiles());
         statSource.getSource().tearDown();
         statSource.getSource().sendSource(System.getProperty("java.io.tmpdir")+File.separator);
-        checkStatSource(idStatSource, isDevice);
+        checkStatSource(idStatSource, isDevice, false);
     }
 
 	/**
@@ -649,8 +649,9 @@ public final class Album {
 	 *
 	 * @param idStatSource
 	 * @param isDevice
+	 * @param renamed
 	 */
-	public void checkStatSource(int idStatSource, boolean isDevice) {
+	public void checkStatSource(int idStatSource, boolean isDevice, boolean renamed) {
         
         StatSource statSource = Jamuz.getMachine().getStatSource(idStatSource);
         String msg = " (idStatement="+statSource.getIdStatement()+", "+this.mbId+")";
@@ -665,31 +666,31 @@ public final class Album {
         for (TrackTag albumFile : tracks) {
             if(!(isDevice && albumFile.ignore)) {
                 nbExpected++;
+				
+				String fileName = getFilename(albumFile, renamed);
                 
-                FileInfo statSourceFile=searchInStatsList(albumFile.relativeFullPath, statSourcesFiles);
+                FileInfo statSourceFile=searchInStatsList(fileName, statSourcesFiles);
                 
-                Assert.assertTrue("Search "+albumFile.relativeFullPath+msg, statSourceFile!=null);
-                Assert.assertEquals("playCounter "+albumFile.relativeFullPath+msg, albumFile.playCounter, statSourceFile.playCounter);
-                Assert.assertEquals("rating "+albumFile.relativeFullPath+msg, albumFile.rating, statSourceFile.rating);
+                Assert.assertTrue("Search "+fileName+msg, statSourceFile!=null);
+                Assert.assertEquals("playCounter "+fileName+msg, albumFile.playCounter, statSourceFile.playCounter);
+                Assert.assertEquals("rating "+fileName+msg, albumFile.rating, statSourceFile.rating);
                 if(statSource.getSource().updateAddedDate) {
-                    Assert.assertEquals("addedDate "+albumFile.relativeFullPath+msg, albumFile.getFormattedAddedDate(), statSourceFile.getFormattedAddedDate());
+                    Assert.assertEquals("addedDate "+fileName+msg, albumFile.getFormattedAddedDate(), statSourceFile.getFormattedAddedDate());
                 }
                 if(statSource.getSource().updateLastPlayed) {
-                    Assert.assertEquals("lastPlayed "+albumFile.relativeFullPath+msg, albumFile.getFormattedLastPlayed(), statSourceFile.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
+                    Assert.assertEquals("lastPlayed "+fileName+msg, albumFile.getFormattedLastPlayed(), statSourceFile.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
                 }
                 
                 if(statSource.getSource().updateBPM) {
-                    Assert.assertEquals("BPM "+albumFile.relativeFullPath+msg, albumFile.BPM, statSourceFile.BPM, 0.0f);
+                    Assert.assertEquals("BPM "+fileName+msg, albumFile.BPM, statSourceFile.BPM, 0.0f);
                 }
             }
         }
         
         //Count nb of files with same relativepath as current album in retrieved list from stat source
         int nbActual=0;
-        String albumRelativePath=this.tracks.get(0).relativePath;
+		String albumRelativePath=getPath(this.tracks.get(0), renamed);
         for(FileInfo statSourceFile : statSourcesFiles) {
-            //We want it case-sensite, why was it set IgnoreCase ?
-//			if(statSourceFile.relativePath.equalsIgnoreCase(albumRelativePath)) { 
             if(statSourceFile.relativePath.equals(albumRelativePath)) { 
                 nbActual++;
             }
@@ -729,10 +730,10 @@ public final class Album {
         for(TrackTag track: this.tracks) {
             File file = new File(device.getDestination()+getFilename(track, renamed));
             if(track.ignore) {
-                Assert.assertTrue(file + " does not exist?: ", !file.exists());
+                Assert.assertTrue(file + " exists but expected it does not.", !file.exists());
             }
             else {
-                Assert.assertTrue(file + " exists?: ", file.exists());
+                Assert.assertTrue(file + " does not exists but expected it does.", file.exists());
             }
         }
         //TODO TEST: Browse FS to check that there are no other files
@@ -774,6 +775,20 @@ public final class Album {
             filename = track.relativeFullPath;
         }
         return filename;
+    }
+	
+	private String getPath(FileInfoInt file, boolean renamed) {
+        String path;
+            
+        if(renamed) {
+            //"%albumartist%/%album%/%track% %title%"
+            path = StringManager.removeIllegal(file.albumArtist)+File.separator
+                        + StringManager.removeIllegal(file.album)+File.separator;
+        }
+        else {
+            path = file.relativePath;
+        }
+        return path;
     }
 
     private void compare(ArrayList<FileInfoInt> files) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
