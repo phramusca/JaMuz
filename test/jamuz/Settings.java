@@ -140,14 +140,19 @@ public class Settings {
 	 * @throws IOException
 	 */
 	public static void addStatSource(String name, int idStatement, String rootPath, int idDevice) throws IOException {
-        File sourceFile = new File(getRessourcesPath()+"statSources/"+name);
-        String destination=getStatSourcesFolder()+name;
-        File destinationFile = new File(destination);
-        FileSystem.copyFile(sourceFile, destinationFile);
+		String destination=copyStatSourceDatabase(name, name);
         //Define stat source in Jamuz dB
         Jamuz.getDb().setStatSource(new StatSource(-1, name, idStatement, destination, "", "", 
                 rootPath, Jamuz.getMachine().getName(), idDevice, true, ""));
     }
+	
+	public static String copyStatSourceDatabase(String sourceName, String destinationName) throws IOException {
+		File sourceFile = new File(getRessourcesPath()+"statSources/"+sourceName);
+        String destination=getStatSourcesFolder()+destinationName;
+        File destinationFile = new File(destination);
+        FileSystem.copyFile(sourceFile, destinationFile);
+		return destination;
+	}
     
     private static void deleteAndMakeFolderByOption(String optionId) throws IOException {
 			deleteAndMakeFolderByPath(Jamuz.getMachine().getOptionValue(optionId));

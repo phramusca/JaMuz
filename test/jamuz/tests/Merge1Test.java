@@ -57,7 +57,7 @@ public class Merge1Test extends TestCase {
         ProcessHelper.merge();
         
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkJaMuz();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkStatSource(1, false);
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkStatSource(1, false, false);
         
         //Change stats in stat source
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_1").setAndCheckStatsInStatSource(1, false); // Guayadeque
@@ -67,7 +67,7 @@ public class Merge1Test extends TestCase {
         //Merge again and check merge ok
         ProcessHelper.merge();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_New").checkJaMuz();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_New").checkStatSource(1, false);
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_New").checkStatSource(1, false, false);
         
         assertTrue("Not valid test. Shall no pass yet !", false);
 

@@ -66,11 +66,27 @@ public class CompareOO {
 		String testName = "MergeNTest";
 		
 		List<String> versions = new ArrayList<>();
-//		versions.add("MusicBrainz_REFERENCE_DO_NOT_MODIFY");
+		
 //		versions.add("MergeDevice1_KO");
 //		versions.add("MergeDevice2_DB");
 //		versions.add("MergeDevice3_JaMuz");
-//		versions.add("MergeDevice6_New");
+//		versions.add("MergeDevice4_1stMerge");
+		
+
+//		versions.add("MergeDevice4_1stMerge");
+//		versions.add("MergeDevice5_1");
+//		versions.add("MergeDevice4_1stMerge");
+//		versions.add("MergeDevice5_2");
+//		versions.add("MergeDevice4_1stMerge");
+//		versions.add("MergeDevice5_3");
+//		versions.add("MergeDevice4_1stMerge");
+//		versions.add("MergeDevice5_4");
+//		versions.add("MergeDevice4_1stMerge");
+//		versions.add("MergeDevice5_5");
+//		versions.add("MergeDevice4_1stMerge");
+//		versions.add("MergeDevice5_JaMuz");
+
+
 //		versions.add("MergeDevice5_1");
 //		versions.add("MergeDevice6_New");
 //		versions.add("MergeDevice5_2");
@@ -83,15 +99,28 @@ public class CompareOO {
 //		versions.add("MergeDevice6_New");
 //		versions.add("MergeDevice5_JaMuz");
 //		versions.add("MergeDevice6_New");
+
+
 //		versions.add("MergeDevice6_New");
 //		versions.add("MergeDevice7_KO");
 //		versions.add("MergeDevice8_OK");
 //		versions.add("MergeDevice9_DbOk");
-		versions.add("MergeDevice10_JaMuz");
-		versions.add("MergeDevice10_New");
-		versions.add("MergeDevice10_5");
-		versions.add("MergeDevice10_New");
-//		versions.add("MergeDevice11_Sync2");
+
+
+//		versions.add("MergeDevice9_DbOk");
+//		versions.add("MergeDevice10_5");
+//		versions.add("MergeDevice9_DbOk");
+//		versions.add("MergeDevice10_JaMuz");
+
+		
+//		versions.add("MergeDevice10_5");
+//		versions.add("MergeDevice10_New");
+//		versions.add("MergeDevice10_JaMuz");
+//		versions.add("MergeDevice10_New");
+
+
+		versions.add("MergeDevice11_Sync");
+		versions.add("MergeDevice11_Sync2");
 		
         for(String mbId : mbIds) {
 			for(int i=0; i<(versions.size()-1); i++) {
@@ -181,7 +210,7 @@ public class CompareOO {
 
 	}
 	
-	private static void compareFile(FileInfoInt file1, FileInfoInt file2) {
+	private static void compareFile(TrackTag file1, TrackTag file2) {
 
 		if(!file1.getArtist().equals(file2.getArtist())) {
 			addToLog(file1.getRelativeFullPath(), "artist", file1.getArtist(), file2.getArtist());
@@ -246,6 +275,10 @@ public class CompareOO {
 		}
 		if(file1.getBPM()!=file2.getBPM()) {
 			addToLog(file1.getRelativeFullPath(), "BPM", String.valueOf(file1.getBPM()), String.valueOf(file2.getBPM()));
+		}
+		
+		if(file1.ignore!=file2.ignore) {
+			addToLog(file1.getRelativeFullPath(), "ignore", String.valueOf(file1.ignore), String.valueOf(file2.ignore));
 		}
 	}
     

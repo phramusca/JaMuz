@@ -51,8 +51,9 @@ public class MergeNTest extends TestCase {
         
         Settings.startGUI("Label.Check"); //Mandatory
         
-		//Read album definition files
-		//AND create audio test files
+		/***********************************************************
+		 * Create 8 Album audio files from album definition files
+		***********************************************************/
         ArrayList<String> mbIds = new ArrayList<>();
         mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
         mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
@@ -66,7 +67,10 @@ public class MergeNTest extends TestCase {
             AlbumBuffer.getAlbum(mbId, "MergeDevice1_KO").create();
         }
 
-        //Scan library
+		/***********************************************************
+		 * Scan library quick to insert files in JaMuz
+		 * Check Db and FS
+		***********************************************************/
         ProcessHelper.scanLibraryQuick();
         for(String mbId : mbIds) {
 			//MergeDevice2_DB:
@@ -75,9 +79,11 @@ public class MergeNTest extends TestCase {
             AlbumBuffer.getAlbum(mbId, "MergeDevice2_DB").checkDbAndFS(false);
         }
 
-        //Update rating 0 -> 4 in JaMuz
-		//to have enough (but not too many) files 
-        //in test playlist to export to device
+		/***********************************************************
+		 * Update some rating 0 -> 4 in JaMuz & check
+		 * -> to have enough (but not too many) files 
+		 * in test playlist to export to device MyTunes (Android)
+		***********************************************************/
         for(String mbId : mbIds) {
 			//MergeDevice3_JaMuz:
 			// - Update rating 0 -> 4 for some files
@@ -85,7 +91,9 @@ public class MergeNTest extends TestCase {
             AlbumBuffer.getAlbum(mbId, "MergeDevice3_JaMuz").setAndCheckStatsInJamuzDb();
         }
 
-        //Sync and Check sync
+		/***********************************************************
+		 * Sync to MyTunes (Android) and Check FS on device
+		***********************************************************/
         PanelMain.selectTab(Inter.get("PanelMain.panelSync.TabConstraints.tabTitle"));
         ProcessHelper.sync(); 
         for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
@@ -98,9 +106,12 @@ public class MergeNTest extends TestCase {
             }
         }
 
+		/***********************************************************
+		 * 1st Merge & check
+		 * Then change some stats in stat sources & JaMuz (+check)
+		***********************************************************/
         PanelMain.selectTab(Inter.get("Label.Merge"));
         ProcessHelper.merge();
-        //Check then change statistics on all stat sources, including jamuz for all albums
         for(String mbId : mbIds) {
 			//MergeDevice4_1stMerge:
 			// - Change addedDate from "01/01/1970 00:00:00" to "05/05/2012 19:27:24"
@@ -111,18 +122,21 @@ public class MergeNTest extends TestCase {
                 Device device = statSource.getDevice();
                 Playlist playlist = device.getPlaylist(); 
                 //Check merge
-                AlbumBuffer.getAlbum(mbId, "MergeDevice4_1stMerge").checkStatSource(statSource.getId(), playlist.getId()>0);
+                AlbumBuffer.getAlbum(mbId, "MergeDevice4_1stMerge").checkStatSource(statSource.getId(), playlist.getId()>0, false);
                 //Change stats in stat source
-                //FIXME TEST: change statistics in album defintion files for all stat sources, inclusing jamuz for all albums
+                //FIXME LOW TEST change statistics in album defintion files for all stat sources, inclusing jamuz for all albums
                 AlbumBuffer.getAlbum(mbId, "MergeDevice5_"+statSource.getIdStatement()).setAndCheckStatsInStatSource(statSource.getId(), playlist.getId()>0);
             }
             //Change stats in JamuZ
-			//FIXME TEST Update ratingModifDate as done in Jumuz (check that)
+			//FIXME LOW TEST Update ratingModifDate as done in Jumuz (check that)
 			//and update ratings in 6cc35892-c44f-4aa7-bfee-5f63eca70821.ods 
 			//accordingly
             AlbumBuffer.getAlbum(mbId, "MergeDevice5_JaMuz").setAndCheckStatsInJamuzDb();
         }
 
+		/***********************************************************
+		 * 2nd Merge & check
+		***********************************************************/
         //Merge again and check merge ok
         ProcessHelper.merge();
         for(String mbId : mbIds) {
@@ -130,11 +144,15 @@ public class MergeNTest extends TestCase {
             for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
                 Device device = statSource.getDevice();
                 Playlist playlist = device.getPlaylist(); 
-                AlbumBuffer.getAlbum(mbId, "MergeDevice6_New").checkStatSource(statSource.getId(), playlist.getId()>0);
+                AlbumBuffer.getAlbum(mbId, "MergeDevice6_New").checkStatSource(statSource.getId(), playlist.getId()>0, false);
             }
         }
         
-        //Scan library and SAVE in order to modiy path and filenames
+		/***********************************************************
+		 * Check library in order to modiy path and filenames
+		 * Set genre, cover and SAVE action
+		 * Apply changes
+		***********************************************************/
         PanelMain.selectTab(Inter.get("Label.Check"));
         ProcessHelper.checkLibrary();
         checkNumberScanned(mbIds.size());
@@ -151,24 +169,28 @@ public class MergeNTest extends TestCase {
             folder.action=Action.SAVE;
             PanelCheck.addToActionQueue(folder);
         }
+		ProcessHelper.applyChanges();
 		
-        //Apply changes and scan again 
-        ProcessHelper.applyChanges();
+		/***********************************************************
+		 * Check library again and check changes have been applied
+		 * Then apply changes (OK selected)
+		***********************************************************/
         ProcessHelper.checkLibrary();
         checkNumberScanned(mbIds.size());
-        
         for(String mbId : mbIds) {
 			//MergeDevice8_OK:
 			// - MusicBrainz + Reggae + cover => OK
             AlbumBuffer.getAlbum(mbId, "MergeDevice8_OK").checkAfterScan(); 
         }
-
-        //OK should have been selected. Apply changes
+		//OK should have been selected. Apply changes
         ProcessHelper.applyChanges();
-        //Verifying there is nothing left unchecked
+		
+		/***********************************************************
+		 * Check libray again 
+		 * and check there is nothing left unchecked
+		***********************************************************/
         ProcessHelper.checkLibrary();
         checkNumberScanned(0);
-		
         for(String mbId : mbIds) {
             AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").checkDbAndFS(true); // In DB and OK
         }
@@ -176,9 +198,15 @@ public class MergeNTest extends TestCase {
         //First test that when stat sources are not upated, we have "not found files" issues after merge
         // Except for the one linked to a device as we have stored original path and filename
         
+		/***********************************************************
+		 * 3rd Merge: stat sources are NOT upated:
+		 * -> "not found files" issues after merge
+		 * -> Except MyTunes (Android) as linked to a device 
+		 *         so original path and filename is known
+		 * THEN change some stats in JaMuz and MyTunes (Android)
+		***********************************************************/
         PanelMain.selectTab(Inter.get("Label.Merge"));
         ProcessHelper.merge();
-        
         int nbErrorsExpected=0;
         for(String mbId : mbIds) {
             nbErrorsExpected+=AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").getNbTracks();
@@ -192,27 +220,23 @@ public class MergeNTest extends TestCase {
         nbErrorsExpected=nbErrorsExpected*2*(2*(Jamuz.getMachine().getStatSources().size()-1)+1-1);
         ArrayList<FileInfo> errorList = ProcessHelper.processMerge.getErrorList();
         assertEquals("Nb errors", nbErrorsExpected, errorList.size());
-        
         //None expected completed (all missing on both sides, and MyTunes has no changes)
         ArrayList<FileInfo> completedList = ProcessHelper.processMerge.getCompletedList();
         assertEquals("Nb completed", 0, completedList.size());
-
         //No change expected, so using the same album version finally
         for(String mbId : mbIds) {
             AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").checkJaMuz();            
             for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
                 Device device = statSource.getDevice();
                 Playlist playlist = device.getPlaylist(); 
-                
-                AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").checkStatSource(statSource.getId(), playlist.getId()>0);
-                
+                AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").checkStatSource(statSource.getId(), playlist.getId()>0, false);
                 //Change stats in stat source for MyTunes only
                 if(playlist.getId()>0) {
                     //TODO TEST: Modify more albums, not only one as for now
 					
-					//MergeDevice4_1stMerge:
-					// - Change addedDate from "01/01/1970 00:00:00" to "05/05/2012 19:27:24"
-					//=> Set and check stats in JaMuz
+					//MergeDevice10_xxx:
+					// - Change some stats
+					//=> Set and check stats in JaMuz & stat sources
                     AlbumBuffer.getAlbum(mbId, "MergeDevice10_"+statSource.getIdStatement()).setAndCheckStatsInStatSource(statSource.getId(), playlist.getId()>0);
                 }
             }
@@ -220,56 +244,62 @@ public class MergeNTest extends TestCase {
             AlbumBuffer.getAlbum(mbId, "MergeDevice10_JaMuz").setAndCheckStatsInJamuzDb();
         }
 		
+		/***********************************************************
+		 * 4th Merge: Check only MyTunes is merged and properly
+		***********************************************************/
         //Merge again
         PanelMain.selectTab(Inter.get("Label.Merge"));
         ProcessHelper.merge();
-
-        //Check only MyTunes is merged and properly
         assertEquals("Nb errors", nbErrorsExpected, ProcessHelper.processMerge.getErrorList().size());
-
         for(String mbId : mbIds) {
             AlbumBuffer.getAlbum(mbId, "MergeDevice10_New").checkJaMuz();            
             for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
                 Device device = statSource.getDevice();
                 Playlist playlist = device.getPlaylist(); 
-                
                 if(playlist.getId()>0) {
                     //MyTunes has changed, so checking new values
-                    AlbumBuffer.getAlbum(mbId, "MergeDevice10_New").checkStatSource(statSource.getId(), playlist.getId()>0);
+                    AlbumBuffer.getAlbum(mbId, "MergeDevice10_New").checkStatSource(statSource.getId(), playlist.getId()>0, false);
                 }
                 else {
                     //Other stat sources are not changed. Check no updates.
-                    AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").checkStatSource(statSource.getId(), playlist.getId()>0);
+                    AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").checkStatSource(statSource.getId(), playlist.getId()>0, false);
                 }
             }
         }
-        
-		//FIXME TEST HIGH Continue from here !!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-		
-		
-//        //FIXME TEST: Merge again but now all stat sources have been synced and scanned 
-//        // so that new path and file can match for merge
-//        //FIXME TEST: Update album file definitions for this point
-//        // Then use that db (read it: change StatSource.location somewhat)
-//        ProcessHelper.merge();
-//        for(String mbId : mbIds) {
-//            AlbumBuffer.getAlbum(mbId, "MergeDevice11_Sync").checkJaMuz();
-//            
-//            for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
-//                Device device = statSource.getDevice();
-//                Playlist playlist = device.getPlaylist(); 
-//                
-//                AlbumBuffer.getAlbum(mbId, "MergeDevice11_Sync").checkStatSource(statSource.getId(), playlist.getId()>0);
-//            }
-//        }
-        
+
+		/***********************************************************
+		 * 5th Merge: NOW stat sources HAVE BEEN upated:
+		***********************************************************/
+		//Replace stat source databases with the updated ones
+		//(Manually made using real application, from previous state)
+		Settings.copyStatSourceDatabase("guayadeque_Device_Updated.db", "guayadeque_Device.db");
+		Settings.copyStatSourceDatabase("mixxxdb_Device_Updated.sqlite", "mixxxdb_Device.sqlite");
+		Settings.copyStatSourceDatabase("MyMusic60_Device_Updated.db", "MyMusic32_Device.db");
+		//Before merge, stats are as follows:
+		//JaMuz & MyTunes:		MergeDevice10_New
+		//Other stat sources:	MergeDevice9_DbOk
+        ProcessHelper.merge();
+        for(String mbId : mbIds) {
+            AlbumBuffer.getAlbum(mbId, "MergeDevice11_Sync").checkJaMuz();
+            
+            for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
+                Device device = statSource.getDevice();
+                Playlist playlist = device.getPlaylist(); 
+                
+                AlbumBuffer.getAlbum(mbId, "MergeDevice11_Sync").checkStatSource(statSource.getId(), 
+						playlist.getId()>0, !(playlist.getId()>0));
+				//Note: last parameter means that paths have been renamed for all 
+				//BUT MyTunes which has not been synced 
+				//since checked and inserted OK in JaMuz
+            }
+        }
+ 
+		/***********************************************************
+		 * Sync again MyTunes and check device FS
+		***********************************************************/
         //Sync and Check sync
         PanelMain.selectTab(Inter.get("PanelMain.panelSync.TabConstraints.tabTitle"));
         ProcessHelper.sync(); 
-        //FIXME TEST: make sure that devicefile table is properly cleaned up and 
-		//that there is only playlist files
-        //FIXME TEST: Do the same check (devicefile) for first sync then
         for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
             Device device = statSource.getDevice();
             Playlist playlist = device.getPlaylist();
@@ -279,11 +309,26 @@ public class MergeNTest extends TestCase {
                 }
             }
         }
-        
-        //FIXME TEST: Merge again and check merge is OK for all sources
-        
-        assertTrue("Not valid test. Shall no pass yet !", false);
-        //FIXME TEST: Update other test classes
+        Settings.copyStatSourceDatabase("MusicIndexDatabase_Device_Updated.db", "MusicIndexDatabase_Device.db");
+
+        /***********************************************************
+		 * Merge again and check merge is OK for all sources
+		***********************************************************/
+		ProcessHelper.merge();
+        for(String mbId : mbIds) {
+            AlbumBuffer.getAlbum(mbId, "MergeDevice11_Sync2").checkJaMuz();
+            
+            for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
+                Device device = statSource.getDevice();
+                Playlist playlist = device.getPlaylist(); 
+                
+                AlbumBuffer.getAlbum(mbId, "MergeDevice11_Sync2").checkStatSource(statSource.getId(), 
+						playlist.getId()>0, true);
+				//Note: last parameter means that ALL paths have been renamed for all 
+				//includng MyTunes this time
+            }
+        }
+		
     }
 
     private void checkNumberScanned(int expected){
@@ -322,7 +367,7 @@ public class MergeNTest extends TestCase {
         playlist.update();
         
         //Create test device
-        //FIXME TEST: create a device for each stat source
+        //FIXME LOW TEST create a device for each stat source
         Device device = new Device(-1, 
                 "TestDevice", 
                 FilenameUtils.normalizeNoEndSeparator(getMusicFolder() + "Archive")+File.separator, 
@@ -347,18 +392,20 @@ public class MergeNTest extends TestCase {
             idDevice = -1
         );
         Settings.addStatSource(
-                name = "MyMusic32_Device.db", //FIXME TEST: Test on Windows, on a SSH box and a FTP box
+				//FIXME LOW TEST WINDOWS Test on Windows, on a SSH box and a FTP box
+                name = "MyMusic32_Device.db", 
                 idStatement=2, 
                 rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
                 idDevice = -1);
-        //FIXME TEST: Enable this when I have a Windows PC available
+        //FIXME LOW TEST WINDOWS Enable this when I have a Windows PC available
 //        Settings.addStatSource(
 //                name = "MediaMonkey source", 
 //                idStatement=3, 
 //                rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
 //                idDevice = -1);
         Settings.addStatSource(
-                name = "mixxxdb_Device.sqlite", //FIXME TEST: Test on windows
+				//FIXME LOW TEST WINDOWS Test on windows
+                name = "mixxxdb_Device.sqlite", 
                 idStatement=4, 
                 rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
                 idDevice = -1);
