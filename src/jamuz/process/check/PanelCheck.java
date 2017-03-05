@@ -93,7 +93,7 @@ public class PanelCheck extends javax.swing.JPanel {
 	/**
 	 *
 	 */
-	public static TableModelCheck tableModelCheck = new TableModelCheck();
+	public static TableModelCheck tableModelActionQueue = new TableModelCheck();
        
     /**
      * Creates new form PanelCheck
@@ -103,7 +103,7 @@ public class PanelCheck extends javax.swing.JPanel {
         processCheck = new ProcessCheck();
         jSpinnerCheckMaxActionsInQueue.setValue(processCheck.getMaxActionQueueSize());
         //Set table model
-        jTableCheck.setModel(tableModelCheck);
+        jTableCheck.setModel(tableModelActionQueue);
 
 		//Adding columns from model. Cannot be done automatically on properties
 		// as done, in initComponents, before setColumnModel which removes the columns ...
@@ -222,12 +222,12 @@ public class PanelCheck extends javax.swing.JPanel {
    public static void enableRowSorter(boolean enable) {
            if(enable) {
                    //Enable row tableSorter (cannot be done if model is empty)
-                   if(tableModelCheck.getRowCount()>0) {
+                   if(tableModelActionQueue.getRowCount()>0) {
            if(jTableCheck.getAutoCreateRowSorter()==false) { //No need if already done, avoid blicking
                //Enable auto sorter
                jTableCheck.setAutoCreateRowSorter(true);
                //Sort by action, result
-               TableRowSorter<TableModelCheck> tableSorter = new TableRowSorter<>(tableModelCheck);
+               TableRowSorter<TableModelCheck> tableSorter = new TableRowSorter<>(tableModelActionQueue);
                jTableCheck.setRowSorter(tableSorter);
                List <RowSorter.SortKey> sortKeys = new ArrayList<>();
                sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
@@ -257,7 +257,7 @@ public class PanelCheck extends javax.swing.JPanel {
             processCheck.actionQueue.add(folder);
         }
         //Reflect folder changes (action) in jTable
-        tableModelCheck.fireTableDataChanged();
+        tableModelActionQueue.fireTableDataChanged();
         processCheck.displayActionQueue();
     }
     
@@ -678,7 +678,7 @@ public class PanelCheck extends javax.swing.JPanel {
         stopActions(enableDoActions);
         
         //Ask user if he wants to continue in case checkQueue is not empty as it will be deleted
-        if(tableModelCheck.getRowCount()>0) {
+        if(tableModelActionQueue.getRowCount()>0) {
             int n = JOptionPane.showConfirmDialog(
 					null, Inter.get("Question.Check.RemainingActions"),
 					Inter.get("Label.Confirm"),  //NOI18N
@@ -691,7 +691,7 @@ public class PanelCheck extends javax.swing.JPanel {
         setThreadPanels(checkType);
         jPanelActionsMain.setVisible(enableDoActions);
         //Starting process finally
-        tableModelCheck.clear();
+        tableModelActionQueue.clear();
         processCheck.startCheck(checkType, idPath, (int) jSpinnerCheckAnalysisNbThreads.getValue(), (int) jSpinnerCheckScanNbThreads.getValue());
     }
 

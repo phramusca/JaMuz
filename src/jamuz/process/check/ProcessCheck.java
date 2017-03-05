@@ -234,7 +234,7 @@ public class ProcessCheck {
 	 *
 	 */
 	public void displayActionQueue() {
-        PanelCheck.progressActionsSize.setMaximum(PanelCheck.tableModelCheck.getRowCount());
+        PanelCheck.progressActionsSize.setMaximum(PanelCheck.tableModelActionQueue.getRowCount());
         PanelCheck.progressActionsSize.progress("", actionQueue.size());
     }
     
@@ -313,7 +313,7 @@ public class ProcessCheck {
 	public void startActions(boolean doKO, boolean doWarning, boolean doManual) {
         
         //Adding back those who are no more in queue
-        Iterator<FolderInfo> folders = PanelCheck.tableModelCheck.getFolders().iterator();
+        Iterator<FolderInfo> folders = PanelCheck.tableModelActionQueue.getFolders().iterator();
         while (folders.hasNext()) {
             FolderInfo folderInfo = folders.next();
             if(!actionQueue.contains(folderInfo)) {
@@ -900,8 +900,8 @@ public class ProcessCheck {
             } finally {
                 waitActionQueue(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
                 
-                PanelCheck.tableModelCheck.addRow(folder);
-                enableRowSorter(PanelCheck.tableModelCheck.getRowCount()>0);
+                PanelCheck.tableModelActionQueue.addRow(folder);
+                enableRowSorter(PanelCheck.tableModelActionQueue.getRowCount()>0);
                 PanelCheck.progressBarListAnalysisDequeue.get(progressBarId).reset();
                 PanelCheck.addToActionQueue(folder);
             }
@@ -920,7 +920,7 @@ public class ProcessCheck {
 //            }
 //            return (maxActionQueueSize-nbScanRunning);
             //+nbAnalysisRunning
-            return((PanelCheck.tableModelCheck.getRowCount()) >= maxActionQueueSize);
+            return((PanelCheck.tableModelActionQueue.getRowCount()) >= maxActionQueueSize);
         }
     }
     
@@ -980,9 +980,9 @@ public class ProcessCheck {
                             || (folderInfo.action.equals(Action.MANUAL) && !doManual)    )) {
                          
                         if(folderInfo.doAction(PanelCheck.progressActionsDequeue)) {                           
-                            enableRowSorter(PanelCheck.tableModelCheck.getRowCount()>1);
-                            PanelCheck.tableModelCheck.removeRow(folderInfo);
-                            PanelCheck.tableModelCheck.fireTableDataChanged();
+                            enableRowSorter(PanelCheck.tableModelActionQueue.getRowCount()>1);
+                            PanelCheck.tableModelActionQueue.removeRow(folderInfo);
+                            PanelCheck.tableModelActionQueue.fireTableDataChanged();
                         }
                     }
                 displayActionQueue();

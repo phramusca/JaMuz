@@ -160,7 +160,7 @@ public class MergeNTest extends TestCase {
 			//MergeDevice7_KO:
 			// - Rating -1 et addedDate 01/01/1970 00:00:00
 			//		AS statistics are not read during check process
-            AlbumBuffer.getAlbum(mbId, "MergeDevice7_KO").checkAfterScan();
+            AlbumBuffer.getAlbum(mbId, "MergeDevice7_KO").checkActionsTableModel();
             //Set genre, cover and SAVE action. Apply changes
             //Note that MusiBrainz album should have been retrieved
             FolderInfo folder = AlbumBuffer.getAlbum(mbId, "MergeDevice7_KO").getCheckedFolder();
@@ -180,7 +180,7 @@ public class MergeNTest extends TestCase {
         for(String mbId : mbIds) {
 			//MergeDevice8_OK:
 			// - MusicBrainz + Reggae + cover => OK
-            AlbumBuffer.getAlbum(mbId, "MergeDevice8_OK").checkAfterScan(); 
+            AlbumBuffer.getAlbum(mbId, "MergeDevice8_OK").checkActionsTableModel(); 
         }
 		//OK should have been selected. Apply changes
         ProcessHelper.applyChanges();
@@ -332,7 +332,7 @@ public class MergeNTest extends TestCase {
     }
 
     private void checkNumberScanned(int expected){
-       assertEquals("number of checked folders", expected, PanelCheck.tableModelCheck.getFolders().size());
+       assertEquals("number of checked folders", expected, PanelCheck.tableModelActionQueue.getFolders().size());
     }
 
 	/**

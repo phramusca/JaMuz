@@ -111,7 +111,7 @@ public class ProcessHelper {
         processCheck = new ProcessCheck();
         
         //Starting process finally
-        PanelCheck.tableModelCheck.clear();
+        PanelCheck.tableModelActionQueue.clear();
 		PanelCheck.setThreadPanels(checkType);
         processCheck.startCheck(checkType, idPath, nbAnalysis, nbScan);
 

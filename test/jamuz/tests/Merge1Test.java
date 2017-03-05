@@ -16,8 +16,8 @@
  */
 package jamuz.tests;
 import jamuz.AlbumBuffer;
+import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
-import jamuz.process.check.ProcessCheck;
 import jamuz.ProcessHelper;
 import jamuz.Settings;
 import jamuz.process.check.PanelCheck;
@@ -25,7 +25,6 @@ import java.io.File;
 import junit.framework.TestCase;
 import org.junit.Test;
 import jamuz.utils.Inter;
-import jamuz.utils.Swing;
 
 /**
  *
@@ -40,17 +39,12 @@ public class Merge1Test extends TestCase {
 	@Test
     public void test() throws Exception {
         Settings.startGUI("Label.Check"); //Mandatory
-        
-		//FIXME TEST Check this test is valid
-		//using compareOO
-		
+ 
         //Create an album, 
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest1_Creation").create();
         
         //Scan library
         ProcessHelper.scanLibraryQuick();
-        checkNumberScanned(1);
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest1_Creation").checkAfterScan(); //Note that there are no results as folder is not analyzed: expected for now
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest2_DB").checkDbAndFS(false);
         
         PanelMain.selectTab(Inter.get("Label.Merge"));
@@ -59,6 +53,9 @@ public class Merge1Test extends TestCase {
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkJaMuz();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkStatSource(1, false, false);
         
+		//FIXME TEST Continue from here: Change some statistics
+		//Then use compareOO to double check and doc
+		
         //Change stats in stat source
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_1").setAndCheckStatsInStatSource(1, false); // Guayadeque
         //Change stats in JamuZ
@@ -69,12 +66,15 @@ public class Merge1Test extends TestCase {
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_New").checkJaMuz();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_New").checkStatSource(1, false, false);
         
+		//FIXME TEST ADD some more testing on playCounter especially
+		
+		
         assertTrue("Not valid test. Shall no pass yet !", false);
 
     }
 
     private void checkNumberScanned(int expected){
-        assertEquals("number of checked folders", expected, PanelCheck.tableModelCheck.getFolders().size());
+        assertEquals("number of checked folders", expected, PanelCheck.tableModelActionQueue.getFolders().size());
     }
 
 	/**
@@ -100,6 +100,9 @@ public class Merge1Test extends TestCase {
             Settings.getMusicFolder() + "Archive" + File.separator, 
             -1
         );
+		
+		//Read created options
+        Jamuz.getMachine().read();
     }
 
 	/**

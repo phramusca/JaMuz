@@ -47,19 +47,43 @@ public class CompareOO {
 	 */
 	public static void main(String[] args) {
 
-		List<String> mbIds = new ArrayList<>();
-        mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
-        mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
-        mbIds.add("c212b71b-848c-491c-8ae7-b62a993ae194");
-        mbIds.add("8cfbb741-bd63-449f-9e48-4d234264c8d5");
-        mbIds.add("be04bc1f-fc63-48f5-b1ca-2723f17d241d");
-        mbIds.add("6cc35892-c44f-4aa7-bfee-5f63eca70821");
-        mbIds.add("7598d527-bc8d-4282-a72c-874f335d05ac");
-        mbIds.add("13ca98f6-1a9f-4d76-a3b3-a72a16d91916");
+		compareMerge1Test();
 		
-		compareMergeNTest(mbIds);
+//		List<String> mbIds = new ArrayList<>();
+//        mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
+//        mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
+//        mbIds.add("c212b71b-848c-491c-8ae7-b62a993ae194");
+//        mbIds.add("8cfbb741-bd63-449f-9e48-4d234264c8d5");
+//        mbIds.add("be04bc1f-fc63-48f5-b1ca-2723f17d241d");
+//        mbIds.add("6cc35892-c44f-4aa7-bfee-5f63eca70821");
+//        mbIds.add("7598d527-bc8d-4282-a72c-874f335d05ac");
+//        mbIds.add("13ca98f6-1a9f-4d76-a3b3-a72a16d91916");
+//		compareMergeNTest(mbIds);
 		
     } 
+	
+	private static void compareMerge1Test() {
+		
+		List<String> versions = new ArrayList<>();
+		
+		versions.add("MergeTest1_Creation");
+		versions.add("MergeTest2_DB");
+		versions.add("MergeTest3");
+		versions.add("MergeTest4_1");
+		versions.add("MergeTest4_New");
+		versions.add("MergeTest4_JaMuz");
+		versions.add("MergeTest4_New");
+		
+		
+		for(int i=0; i<(versions.size()-1); i++) {
+			String firstTab = versions.get(i);
+			String secondTab = versions.get(i+1);
+			compareAlbums(
+				"9e097b10-8160-491e-a310-e26e54a86a10",
+				firstTab,
+				secondTab, "Merge1Test");
+		}
+	}
 	
 	private static void compareMergeNTest(List<String> mbIds) {
 		

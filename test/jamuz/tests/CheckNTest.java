@@ -61,7 +61,7 @@ public class CheckNTest extends TestCase {
         ProcessHelper.scanNewFolder();
         checkNumberScanned(mbIds.size());
         for(String mbId : mbIds) {
-            AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").checkAfterScan();
+            AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").checkActionsTableModel();
             
             //Set genre, cover and SAVE action. Apply changes
             //Note that MusiBrainz album should have been retrieved
@@ -78,7 +78,7 @@ public class CheckNTest extends TestCase {
         checkNumberScanned(mbIds.size());
         
         for(String mbId : mbIds) {
-            AlbumBuffer.getAlbum(mbId, "CheckTest2_OK").checkAfterScan(); //MusicBrainz + Reggae + cover => OK
+            AlbumBuffer.getAlbum(mbId, "CheckTest2_OK").checkActionsTableModel(); //MusicBrainz + Reggae + cover => OK
         }
 
         //OK should have been selected. Apply changes
@@ -96,7 +96,7 @@ public class CheckNTest extends TestCase {
     }
 
     private void checkNumberScanned(int expected){
-        assertEquals("number of checked folders", expected, PanelCheck.tableModelCheck.getFolders().size());
+        assertEquals("number of checked folders", expected, PanelCheck.tableModelActionQueue.getFolders().size());
     }
     
 	/**
