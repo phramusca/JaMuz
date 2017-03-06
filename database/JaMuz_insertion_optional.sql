@@ -1,4 +1,4 @@
-﻿BEGIN TRANSACTION;
+BEGIN TRANSACTION;
 insert into genre ("id", "value") values ('1', 'Blues');
 insert into genre ("id", "value") values ('2', 'BO');
 insert into genre ("id", "value") values ('3', 'Chanson');
