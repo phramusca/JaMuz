@@ -194,10 +194,7 @@ public class MergeNTest extends TestCase {
         for(String mbId : mbIds) {
             AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").checkDbAndFS(true); // In DB and OK
         }
-        
-        //First test that when stat sources are not upated, we have "not found files" issues after merge
-        // Except for the one linked to a device as we have stored original path and filename
-        
+
 		/***********************************************************
 		 * 3rd Merge: stat sources are NOT upated:
 		 * -> "not found files" issues after merge
