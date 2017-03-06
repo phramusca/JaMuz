@@ -33,8 +33,8 @@ import org.jaudiotagger.tag.TagException;
 
 /**
  * Analyse all albums checked in:
- *  - CheckNTest //FIXME TEST CompareOO CheckNTest
- *  - Merge1Test //TODO CompareOO Merge1Test
+ *  - CheckNTest
+ *  - Merge1Test
  *  - MergeNTest
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
