@@ -43,9 +43,7 @@ public class CheckNTest extends TestCase {
         //Create somes albums
         ArrayList<String> mbIds = new ArrayList<>();
         mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
-        //FIXME TEST Apply the above changes to the below
-		//AND Re-check, using comparOO
-        //Best would be to add this into Creation.java, BUT BACKUP FIRST AS LOOKS LIKE THERE MANUAL MODIFICATIONS !
+        //FIXME LOW TEST Apply the above changes to the below
 //        mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
 //        mbIds.add("c212b71b-848c-491c-8ae7-b62a993ae194");
 //        mbIds.add("8cfbb741-bd63-449f-9e48-4d234264c8d5");
