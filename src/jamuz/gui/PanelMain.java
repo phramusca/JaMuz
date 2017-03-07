@@ -811,6 +811,7 @@ public class PanelMain extends javax.swing.JFrame {
         jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
         jButton2 = new javax.swing.JButton();
         panelVideo = new jamuz.process.video.PanelVideo();
+        panelBook = new jamuz.process.book.PanelBook();
         jPanelPlayer = new javax.swing.JPanel();
         jLabelPlayerTitle = new javax.swing.JLabel();
         jLabelPlayerAlbum = new javax.swing.JLabel();
@@ -1169,6 +1170,7 @@ public class PanelMain extends javax.swing.JFrame {
 
         jTabbedPaneMain.addTab(bundle.getString("Label.Options"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/selected.png")), jPanelOptions); // NOI18N
         jTabbedPaneMain.addTab(Inter.get("PanelMain.panelVideo.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/movies.png")), panelVideo); // NOI18N
+        jTabbedPaneMain.addTab(Inter.get("PanelMain.panelBook.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/book_open.png")), panelBook); // NOI18N
 
         jSplitPaneMain.setRightComponent(jTabbedPaneMain);
 
@@ -2574,6 +2576,7 @@ public class PanelMain extends javax.swing.JFrame {
     private static javax.swing.JTabbedPane jTabbedPaneMain;
     private javax.swing.JTextArea jTextAreaRemote;
     private static javax.swing.JToggleButton jToggleButtonPlayerInfo;
+    private jamuz.process.book.PanelBook panelBook;
     protected final jamuz.process.check.PanelCheck panelCheck = new jamuz.process.check.PanelCheck();
     private jamuz.gui.PanelLyrics panelLyrics;
     private jamuz.process.merge.PanelMerge panelMerge;

@@ -1,0 +1,336 @@
+/*
+ * Copyright (C) 2013 phramusca ( https://github.com/phramusca/JaMuz/ )
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package jamuz.process.book;
+
+import jamuz.process.video.*;
+import jamuz.DbInfo;
+import jamuz.Jamuz;
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import jamuz.utils.Popup;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.io.FilenameUtils;
+import jamuz.utils.FileSystem;
+import jamuz.utils.SSH;
+import jamuz.utils.Inter;
+import jamuz.utils.ProcessAbstract;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Video process class
+ * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ */
+public class ProcessBook extends ProcessAbstract {
+    
+    private final TableModelBook tableModel;
+	private SSH myConn;
+    private PathBuffer buffer;
+
+    private boolean move;
+    private boolean getDb;
+	private boolean doSearch;
+
+	/**
+	 *
+	 * @param name
+	 */
+	public ProcessBook(String name) {
+        super(name);
+        tableModel = new TableModelBook();
+        buffer = new PathBuffer();
+        move = false;
+        getDb = false;
+    }
+    
+    
+    /**
+     * Export selected files in a thred, updating PanelBook
+     */
+    public void export() {
+        PanelBook.progressBar.setup(tableModel.getNbSelected());
+        ProcessExport process = new ProcessExport("Thread.ProcessVideo.export");
+        process.start();
+    }
+
+    private class ProcessExport extends ProcessAbstract {
+
+        public ProcessExport(String name) {
+            super(name);
+        }
+        
+        @Override
+        public void run() {
+            this.resetAbort();
+            try {
+                exportFiles();
+            } catch (InterruptedException ex) {
+                Popup.error(Inter.get("Msg.Process.Aborted"), ex); //NOI18N
+            }
+            finally {
+                PanelBook.progressBar.reset();
+                PanelBook.enableProcess(true);
+            }
+        }
+    }
+    
+    private boolean exportFiles() throws InterruptedException {
+        File sourceFile;
+        File destinationFile;
+        
+        checkAbort();
+        
+		List<Book> filestoExport = tableModel.getFiles().stream().filter(video -> video.isSelected()).collect(Collectors.toList());
+		
+		//The following should never happen as it is checked in PanelBook already
+		if(filestoExport.size()<=0) {
+			Popup.warning("You should select some files to export first");
+			return false;
+		}
+		
+        for (Book book : filestoExport) {
+			checkAbort();
+			PanelBook.progressBar.progress(book.getTitle());
+
+//			sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("source"), book.getRelativeFullPath()));
+//			destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("destination"), book.getRelativeFullPath()));
+//
+//			//TODO: Allow export over SSH: merge with move option on list process
+//
+//			if(sourceFile.exists()) {
+//				if(!destinationFile.exists()) {
+//					checkAbort();
+//					PanelBook.progressBar.setIndeterminate(true);
+//
+//					try {
+//						FileSystem.copyFile(sourceFile, destinationFile);
+//						tableModel.select(book, false);
+//					} catch (IOException ex) {
+//						book.setStatus(MessageFormat.format(Inter.get("Msg.Video.ExportFailed"), ex.toString()));
+//					}
+//				}
+//				else {
+//					book.setStatus(Inter.get("Msg.Video.DestinationExist"));
+//				}
+//			}
+//			else {
+//				book.setStatus(Inter.get("Msg.Video.SourceFileMissing"));
+//			}
+		}
+        return true;
+    }
+    
+	/**
+	 *
+	 * @param move
+	 * @param getDb
+	 * @param search
+	 */
+	public void listDb(boolean move, boolean getDb, boolean search) {
+        this.tableModel.clear();
+        this.buffer = new PathBuffer();
+        this.move = move;
+        this.getDb = getDb;
+		this.doSearch = search;
+        
+        ProcessListDb process = new ProcessListDb("Thread.ProcessVideo.listDb");
+        process.start();
+    }
+    
+    //TODO: Check if abort works and how in ProcessExport above.
+    //If it does somehow, do the same for other classes extending ProcessAbstract
+    private class ProcessListDb extends ProcessAbstract {
+
+        public ProcessListDb(String name) {
+            super(name);
+        }
+        @Override
+        public void run() {
+            this.resetAbort();
+            try {
+                listDbfiles(move, getDb, doSearch);
+            } catch (InterruptedException ex) {
+                Popup.error(Inter.get("Msg.Process.Aborted"), ex); //NOI18N
+            }
+            finally {
+                PanelBook.progressBar.reset();
+                PanelBook.enableProcess(true);
+            }
+        }
+    }
+ 
+    //TODO: Use this: need to think of options (override or derive StatSource
+    private boolean listFS(String rootPath) throws InterruptedException {
+        PanelBook.progressBar.setup(tableModel.getFiles().size());
+        browseFS(new File(rootPath), rootPath);
+//        for (FileInfoVideo fileInfoVideo : tableModel.getFiles()) {
+//            tableModel.addRow(fileInfoVideo);
+//            PanelBook.progressBar.progress(fileInfoVideo.getTitle());
+//		}
+        return true;
+    }
+	
+	private boolean listDbfiles(boolean move, boolean getDb, boolean doSearch) throws InterruptedException {
+		PanelBook.progressBar.reset();
+        PanelBook.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
+        
+        //Connect to SSH for moving/renaming files
+        if(move && Jamuz.getOptions().get("book.SSH.enabled").equals("true")) {
+            myConn = new SSH(Jamuz.getOptions().get("book.SSH.IP"), Jamuz.getOptions().get("book.SSH.user"), Jamuz.getOptions().get("book.SSH.pwd")); //NOI18N
+            if(!myConn.connect()) {
+                return false;
+            }
+        }
+
+		//Connect to database
+		DbConnBook connCalibre = new DbConnBook(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getOptions().get("book.dbLocation"), ".", "."), Jamuz.getOptions().get("book.rootPath"));
+        File calibreDbFile = FileSystem.replaceHome(Jamuz.getOptions().get("book.dbLocation"));
+		if (!calibreDbFile.exists()) {
+			return false;
+		}
+		if(getDb) {
+            //Retrieve Calibre database
+            checkAbort();
+            if(!connCalibre.getInfo().copyDB(true, Jamuz.getLogPath())) {
+                return false;
+            }
+        }
+        else {
+            //It is changed when copying, but if we want to use previous local copy directly, need to change work location
+            connCalibre.getInfo().setLocationWork(FilenameUtils.concat(Jamuz.getLogPath(), 
+                    FilenameUtils.getName(Jamuz.getOptions().get("book.dbLocation")))); //NOI18N
+        }
+        connCalibre.connect();
+        
+		//List books
+		connCalibre.getBooks(tableModel.getFiles(), connCalibre.rootPath);
+      
+		//Move - if required - and display movies 
+		PanelBook.progressBar.setup(tableModel.getFiles().size()*2);
+		for (Book book : tableModel.getFiles()) {
+            //Check if files exist locally, and get size if so
+            long length = 0;
+//            for(FileInfoVideo fileInfoVideo : book.getFiles().values()) {
+                File file = new File(FilenameUtils.concat(Jamuz.getOptions().get("source"), book.getPath()));
+                if(file.exists()) {
+                    length += file.length();
+                }
+//            }
+//            if(length<=0) {
+//                book.setStatus(Inter.get("Msg.Video.FileNotFound"));
+//            }
+//            book.setLength(length);
+           
+            //Display
+            PanelBook.progressBar.progress(book.getTitle());
+		}
+
+        tableModel.loadThumbnails();
+        
+        PanelBook.diplayLength();
+        
+        if(getDb) {
+            //Send Kodi dtabase back
+            this.checkAbort();
+            if(!connCalibre.getInfo().copyDB(false, Jamuz.getLogPath())) {
+                return false;
+            }
+        }
+		if(doSearch) {
+			DbConnBook connCacheTheMovieDb = new DbConnBook(new DbInfo(DbInfo.LibType.Sqlite, "myMovieDb.db", ".", "."), "");
+			connCacheTheMovieDb.connect();
+			//Get the TvShows from the video files, as removed from themovieDb.getMyTvShows() 
+			//	when set in VideoAbstract leaving only the extra from theMovieDb
+			Map<Integer, MyTvShow> myTvShows = new HashMap<>();
+			Map<Integer, MyMovieDb> myMovies = new HashMap<>();
+			for (Book book : getTableModel().getFiles()) {
+//				if(book.isMovie()) {
+//					myMovies.put(book.getMyMovieDb().getId(), (MyMovieDb)book.getMyMovieDb());
+//				} else {
+//					myTvShows.put(book.getMyMovieDb().getId(), (MyTvShow)book.getMyMovieDb());
+//				}
+			}
+			connCacheTheMovieDb.setTvShowsInCache(myTvShows);
+			connCacheTheMovieDb.setMoviesInCache(myMovies);
+			//TODO: Add a cleanup somehow
+			connCacheTheMovieDb.disconnect();
+		}
+		connCalibre.disconnect();
+		return true;
+	}
+
+    private void browseFS(File path, String rootPath) throws InterruptedException {
+		this.checkAbort();
+		//Verifying we have a path and not a file
+		if (path.isDirectory()) {
+			File[] files = path.listFiles();
+			if (files != null) {
+                for (File file : files) {
+                    this.checkAbort();
+                    if (file.isDirectory()) {
+                        browseFS(file, rootPath);
+                    }
+                    else {
+                        String absolutePath=file.getAbsolutePath();
+                        String filename=file.getName();
+                        String relativeFullPath=absolutePath.substring(rootPath.length());
+//                        FileInfoVideo fileInfo = new FileInfoVideo(filename, relativeFullPath);
+//                        tableModel.addRow(fileInfo);
+                    }
+                    PanelBook.progressBar.progress(": "+FilenameUtils.getBaseName(FilenameUtils.getPathNoEndSeparator(path.getAbsolutePath())));  //NOI18N
+                }
+			} 
+		}
+	}
+    
+	/**
+	 *
+	 * @return
+	 */
+	public TableModelBook getTableModel() {
+        return tableModel;
+    }
+    
+    /**
+     * Path buffer
+     */
+    public class PathBuffer {
+        private final Map<String, Integer> ids = new HashMap<>();
+
+        /**
+         * get id
+         * @param strPath
+		 * @param conn
+         * @return
+         */
+        public int getId(String strPath, DbConnBook conn) {
+            if(ids.containsKey(strPath)) {
+                return ids.get(strPath);
+            }
+            int idPath = conn.getIdPath(strPath);
+            //TODO: Check what id is returned if strPath not found and adapt below if statement accordingly
+            if(idPath>0) {
+                ids.put(strPath, idPath);
+            }
+            return idPath;
+        }
+    }
+
+}
