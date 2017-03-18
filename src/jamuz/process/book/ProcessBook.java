@@ -41,12 +41,7 @@ import java.util.stream.Collectors;
 public class ProcessBook extends ProcessAbstract {
     
     private final TableModelBook tableModel;
-	private SSH myConn;
-    private PathBuffer buffer;
-
-    private boolean move;
     private boolean getDb;
-	private boolean doSearch;
 
 	/**
 	 *
@@ -55,8 +50,6 @@ public class ProcessBook extends ProcessAbstract {
 	public ProcessBook(String name) {
         super(name);
         tableModel = new TableModelBook();
-        buffer = new PathBuffer();
-        move = false;
         getDb = false;
     }
     
@@ -111,9 +104,7 @@ public class ProcessBook extends ProcessAbstract {
 
 //			sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("source"), book.getRelativeFullPath()));
 //			destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("destination"), book.getRelativeFullPath()));
-//
-//			//TODO: Allow export over SSH: merge with move option on list process
-//
+
 //			if(sourceFile.exists()) {
 //				if(!destinationFile.exists()) {
 //					checkAbort();
@@ -139,16 +130,11 @@ public class ProcessBook extends ProcessAbstract {
     
 	/**
 	 *
-	 * @param move
 	 * @param getDb
-	 * @param search
 	 */
-	public void listDb(boolean move, boolean getDb, boolean search) {
+	public void listDb(boolean getDb) {
         this.tableModel.clear();
-        this.buffer = new PathBuffer();
-        this.move = move;
         this.getDb = getDb;
-		this.doSearch = search;
         
         ProcessListDb process = new ProcessListDb("Thread.ProcessVideo.listDb");
         process.start();
@@ -165,7 +151,7 @@ public class ProcessBook extends ProcessAbstract {
         public void run() {
             this.resetAbort();
             try {
-                listDbfiles(move, getDb, doSearch);
+                listDbfiles(getDb);
             } catch (InterruptedException ex) {
                 Popup.error(Inter.get("Msg.Process.Aborted"), ex); //NOI18N
             }
@@ -187,17 +173,9 @@ public class ProcessBook extends ProcessAbstract {
         return true;
     }
 	
-	private boolean listDbfiles(boolean move, boolean getDb, boolean doSearch) throws InterruptedException {
+	private boolean listDbfiles(boolean getDb) throws InterruptedException {
 		PanelBook.progressBar.reset();
         PanelBook.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
-        
-        //Connect to SSH for moving/renaming files
-        if(move && Jamuz.getOptions().get("book.SSH.enabled").equals("true")) {
-            myConn = new SSH(Jamuz.getOptions().get("book.SSH.IP"), Jamuz.getOptions().get("book.SSH.user"), Jamuz.getOptions().get("book.SSH.pwd")); //NOI18N
-            if(!myConn.connect()) {
-                return false;
-            }
-        }
 
 		//Connect to database
 		DbConnBook connCalibre = new DbConnBook(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getOptions().get("book.dbLocation"), ".", "."), Jamuz.getOptions().get("book.rootPath"));
@@ -225,19 +203,15 @@ public class ProcessBook extends ProcessAbstract {
 		//Move - if required - and display movies 
 		PanelBook.progressBar.setup(tableModel.getFiles().size()*2);
 		for (Book book : tableModel.getFiles()) {
-            //Check if files exist locally, and get size if so
-            long length = 0;
-//            for(FileInfoVideo fileInfoVideo : book.getFiles().values()) {
-                File file = new File(FilenameUtils.concat(Jamuz.getOptions().get("source"), book.getPath()));
+			//FIXME BOOK LOW A book can have multiple versions (epub and azw for instance)
+                File file = new File(book.getFilePath());
                 if(file.exists()) {
-                    length += file.length();
+					book.setLength(file.length());
                 }
-//            }
 //            if(length<=0) {
 //                book.setStatus(Inter.get("Msg.Video.FileNotFound"));
 //            }
-//            book.setLength(length);
-           
+            
             //Display
             PanelBook.progressBar.progress(book.getTitle());
 		}
@@ -253,25 +227,6 @@ public class ProcessBook extends ProcessAbstract {
                 return false;
             }
         }
-		if(doSearch) {
-			DbConnBook connCacheTheMovieDb = new DbConnBook(new DbInfo(DbInfo.LibType.Sqlite, "myMovieDb.db", ".", "."), "");
-			connCacheTheMovieDb.connect();
-			//Get the TvShows from the video files, as removed from themovieDb.getMyTvShows() 
-			//	when set in VideoAbstract leaving only the extra from theMovieDb
-			Map<Integer, MyTvShow> myTvShows = new HashMap<>();
-			Map<Integer, MyMovieDb> myMovies = new HashMap<>();
-			for (Book book : getTableModel().getFiles()) {
-//				if(book.isMovie()) {
-//					myMovies.put(book.getMyMovieDb().getId(), (MyMovieDb)book.getMyMovieDb());
-//				} else {
-//					myTvShows.put(book.getMyMovieDb().getId(), (MyTvShow)book.getMyMovieDb());
-//				}
-			}
-			connCacheTheMovieDb.setTvShowsInCache(myTvShows);
-			connCacheTheMovieDb.setMoviesInCache(myMovies);
-			//TODO: Add a cleanup somehow
-			connCacheTheMovieDb.disconnect();
-		}
 		connCalibre.disconnect();
 		return true;
 	}
@@ -306,31 +261,6 @@ public class ProcessBook extends ProcessAbstract {
 	 */
 	public TableModelBook getTableModel() {
         return tableModel;
-    }
-    
-    /**
-     * Path buffer
-     */
-    public class PathBuffer {
-        private final Map<String, Integer> ids = new HashMap<>();
-
-        /**
-         * get id
-         * @param strPath
-		 * @param conn
-         * @return
-         */
-        public int getId(String strPath, DbConnBook conn) {
-            if(ids.containsKey(strPath)) {
-                return ids.get(strPath);
-            }
-            int idPath = conn.getIdPath(strPath);
-            //TODO: Check what id is returned if strPath not found and adapt below if statement accordingly
-            if(idPath>0) {
-                ids.put(strPath, idPath);
-            }
-            return idPath;
-        }
     }
 
 }

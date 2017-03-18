@@ -26,6 +26,8 @@ import java.util.Properties;
 import jamuz.utils.Popup;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 /**
  *
@@ -113,7 +115,7 @@ public class Options {
 	 */
 	public boolean read() {
         try {
-            properties.load(input);
+            properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
             return true;
 
         } catch (IOException ex) {
