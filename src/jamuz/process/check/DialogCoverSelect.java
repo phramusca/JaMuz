@@ -144,16 +144,14 @@ public class DialogCoverSelect extends javax.swing.JDialog {
             }
         });
 
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("jamuz/process/check/Bundle"); // NOI18N
-        jButtonGoogleImage.setText(bundle1.getString("DialogCoverSelect.jButtonGoogleImage.text")); // NOI18N
-        jButtonGoogleImage.setToolTipText(bundle1.getString("DialogCoverSelect.jButtonGoogleImage.toolTipText")); // NOI18N
+        jButtonGoogleImage.setText(bundle.getString("DialogCoverSelect.jButtonGoogleImage.text")); // NOI18N
         jButtonGoogleImage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonGoogleImageActionPerformed(evt);
             }
         });
 
-        jButtonClipboard.setText(bundle1.getString("DialogCoverSelect.jButtonClipboard.text")); // NOI18N
+        jButtonClipboard.setText(bundle.getString("DialogCoverSelect.jButtonClipboard.text")); // NOI18N
         jButtonClipboard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonClipboardActionPerformed(evt);
@@ -172,7 +170,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPaneSelectAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
+            .addComponent(jScrollPaneSelectAlbum)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButtonGoogleImage)

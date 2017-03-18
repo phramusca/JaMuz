@@ -1,0 +1,5 @@
+Google|https://www.google.fr/#q=<title>&tbm=bks
+Babelio (Titre)|https://www.babelio.com/resrecherche.php?item_recherche=titre&Recherche=<title>
+Babelio (Titre, ma librairie)|https://www.babelio.com/resrecherche.php?item_recherche=titre&Recherche_MB=<title>
+Babelio (Auteur)|https://www.babelio.com/resrecherche.php?item_recherche=auteur&Recherche=<author>
+Babelio (Auteur, ma librairie)|https://www.babelio.com/resrecherche.php?item_recherche=auteur&Recherche_MB=<author>

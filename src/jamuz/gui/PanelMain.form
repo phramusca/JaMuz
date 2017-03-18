@@ -660,7 +660,7 @@
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Save all files">
+                        <TitledBorder title="Save files">
                           <ResourceString PropertyName="titleX" bundle="jamuz/Bundle.properties" key="PanelMain.jPanel4.border.title" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                         </TitledBorder>
                       </Border>
@@ -729,6 +729,20 @@
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/jamuz/ressources/movies.png"/>
+                    </Property>
+                  </JTabbedPaneConstraints>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Component class="jamuz.process.book.PanelBook" name="panelBook">
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                  <JTabbedPaneConstraints tabName="Livre">
+                    <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelBook.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                    </Property>
+                    <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/jamuz/ressources/book_open.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
