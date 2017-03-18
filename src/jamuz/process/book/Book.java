@@ -16,33 +16,50 @@
  */
 package jamuz.process.book;
 
-import jamuz.process.video.FileInfoVideo;
+import jamuz.Jamuz;
+import jamuz.gui.swing.FileSizeComparable;
 import jamuz.process.video.VideoAbstract;
-import java.util.List;
-import java.util.TreeMap;
 import javax.swing.ImageIcon;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class Book {
-	private String title; 
-	private String sort;
-	private String pubdate; 
-	private String author_sort;  
-	private String uuid; 
-	private String path; 
-	protected List<String> thumbnails;
+public class Book implements Comparable {
+	private final String title; 
+	private final String title_sort;
+	private final String pubdate; //FIXME BOOK Format pubdate (keep only year & maybe month)
+	private final String author; //FIXME BOOK Can have multiple authors
+	private final String author_sort;  
+	private final String uuid; 
+	private final String filename; //FIXME BOOK Manage multiple formats
+	private final String path; 
+	private FileSizeComparable length;
+	private final String comment; 
+	private final String rating; 
+	private final String language; //FIXME BOOK Fiter language
 	
-
-	public Book(String title, String sort, String pubdate, String author_sort, String uuid, String path) {
+	//FIXME BOOK Read tags and filter
+	//FIXME BOOK Check and complete Export feature
+	//FIXME BOOK Check options gui
+	//FIXME BOOK Fix jList menu
+	
+	public Book(String title, String title_sort, String pubdate, String author_sort, 
+			String uuid, String path, String comment, String rating, 
+			String language, String author, String filename) {
 		this.title = title;
-		this.sort = sort;
+		this.title_sort = title_sort;
 		this.pubdate = pubdate;
 		this.author_sort = author_sort;
 		this.uuid = uuid;
 		this.path = path;
+		this.length = new FileSizeComparable((long) 0);
+		this.comment = comment;
+		this.rating = rating;
+		this.language = language;
+		this.author = author;
+		this.filename = filename;
 	}
 
 	/**
@@ -51,14 +68,7 @@ public class Book {
      * @return
      */
     public ImageIcon getThumbnail(boolean readIfNotFound) {
-        ImageIcon icon=null;
-        for(String url : this.thumbnails) {
-            icon=IconBufferBook.getCoverIcon(url, readIfNotFound);
-            if(icon!=null) {
-                return icon;
-            }
-        }
-        return icon;
+        return IconBufferBook.getCoverIcon(uuid, getCoverFilePath(), readIfNotFound);
     }
 	
 	    /**
@@ -77,16 +87,13 @@ public class Book {
         this.selected = selected;
     }
 	private boolean selected;
-	
 
-
-	
 	public String getTitle() {
 		return title;
 	}
 
 	public String getSort() {
-		return sort;
+		return title_sort;
 	}
 
 	public String getPubdate() {
@@ -101,11 +108,59 @@ public class Book {
 		return uuid;
 	}
 
-	public String getPath() {
-		
-		//FIXME: Return relative Full Path
-		return path;
+	public String getRating() {
+		return rating;
 	}
-		
 	
+	private String getPath() {
+		return FilenameUtils.concat(
+								Jamuz.getOptions().get("book.source"), 
+								path);
+	}
+	
+	private String getCoverFilePath() {
+		return FilenameUtils.concat(
+						getPath(), 
+						"c2o_resizedcover.jpg");
+	}
+	
+	public String getFilePath() {
+		return FilenameUtils.concat(getPath(), filename);
+		
+	}
+
+	/**
+     * set length
+     * @param length
+     */
+    public void setLength(long length) {
+        this.length = new FileSizeComparable(length);
+    }
+
+    /**
+     * get length
+     * @return
+     */
+    public FileSizeComparable getLength() {
+        return length;
+    }
+	
+	public boolean isLocal() {
+        return getLength().getLength()>0;
+    }
+	
+	@Override
+	public String toString() {
+		return "<html><b>"+this.title+"</b><BR/><i>"+author+"</i><BR/>"+comment+"</html>";
+	}
+	
+	/**
+	 * Overring method for sorting by title
+	 * @param o
+	 * @return
+	 */
+	@Override
+	public int compareTo(Object o) {
+		return (this.title_sort.compareTo(((Book) o).title_sort));
+	}
 }

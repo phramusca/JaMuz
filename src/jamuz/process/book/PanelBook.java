@@ -18,7 +18,6 @@
 package jamuz.process.book;
 
 import jamuz.process.video.*;
-import jamuz.DbInfo;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.Jamuz;
 import java.awt.Component;
@@ -41,7 +40,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import javax.swing.AbstractAction;
-import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JComboBox;
@@ -52,25 +50,24 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.gui.swing.TableRowFilterVideo;
 import jamuz.gui.swing.TriStateCheckBox;
 import jamuz.gui.swing.TriStateCheckBox.State;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
@@ -111,68 +108,41 @@ public class PanelBook extends javax.swing.JPanel {
         }
         
         //Disable until a list has been performed
-        jButtonVideoExport.setEnabled(false);
+        jButtonBookExport.setEnabled(false);
         
         processBook = new ProcessBook("Thread.PanelBook.ProcessBook");
-        jTableVideo.setModel(processBook.getTableModel());
-        jTableVideo.setRowSorter(null);
+        jTableBook.setModel(processBook.getTableModel());
+        jTableBook.setRowSorter(null);
 		//Adding columns from model. Cannot be done automatically on properties
 		// as done, in initComponents, before setColumnModel which removes the columns ...
-		jTableVideo.createDefaultColumnsFromModel();
+		jTableBook.createDefaultColumnsFromModel();
 		
         //	0:  "isSelected"
 		setColumn(0, 20);
         setColumnIcon(0, "selected.png");
 		//	1:  "getThumbnails"
-        setColumn(1, IconBufferVideo.iconWidth);
+        setColumn(1, IconBufferBook.iconWidth);
 		//	2:  "getTitle"
-		//	3:  "getYear"
-		setColumn(3, 55);
-        //	4:  "getSynopsis"
-        //	5:  size
-        setColumn(5, 80);
-        //6: Watched
-        setColumn(6, 20);
-        setColumnIcon(6, "eye.png");
-        //7: Rating
-        setColumn(7, 50);
-        setColumnIcon(7, "1starC.png");
+		//	3:  "Author"
+		setColumn(3, 150);
+        //	4:  PubDate
+        setColumn(4, 80);
+		
+        jTableBook.setRowHeight(IconBufferVideo.iconHeight);
         
-        TableColumn column = jTableVideo.getColumnModel().getColumn(7);
-		JComboBox comboBox = new JComboBox(comboRating);
-		column.setCellEditor(new DefaultCellEditor(comboBox));
-        
-        //8: WatchList
-        setColumn(8, 20);
-        setColumnIcon(8, "wishlist_add.png");
-        //9: Favorite
-        setColumn(9, 20);
-        setColumnIcon(9, "heart.png");
-        
-        //TODO: Gray-out checkbox (or cell) if cell disable
-//        column = jTableVideo.getColumnModel().getColumn(9);
-//        column.setCellRenderer(new GrayableCheckboxCellRenderer());
-//        column = jTableVideo.getColumnModel().getColumn(10);
-//        column.setCellRenderer(new GrayableCheckboxCellRenderer());
-        
-        //TODO: Set default height when browsing FS
-        jTableVideo.setRowHeight(IconBufferVideo.iconHeight);
-        
-//        DefaultTableCellRenderer renderer = new TableCellRendererTooltip();
-         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setVerticalAlignment(SwingConstants.TOP);
-        jTableVideo.getColumnModel().getColumn(4).setCellRenderer(renderer);
-        jTableVideo.getColumnModel().getColumn(2).setCellRenderer(renderer);        
-        
+        jTableBook.getColumnModel().getColumn(2).setCellRenderer(renderer);
+		
 		progressBar = (ProgressBar)jProgressBarVideo;
         progressBarTimer = (ProgressBar)jProgressBarVideoTimer;
         
         //Add a list renderer to display genre icons
         //TODO: Make a class for video genre (or make this one or the album one or both more generic)
-//        jListVideoGenre.setBackground(Color.WHITE);
+//        jListBookTag.setBackground(Color.WHITE);
 //        ListRendererGenre rendererGenre = new ListRendererGenre();
 //        rendererGenre.setPreferredSize(new Dimension(0, IconBufferGenre.iconSize));
-//        jListVideoGenre.setCellRenderer(rendererGenre);
+//        jListBookTag.setCellRenderer(rendererGenre);
         
         //Menu listener
         addMenuItem("IMDb"); //NOI18N
@@ -202,7 +172,7 @@ public class PanelBook extends javax.swing.JPanel {
 
         //Add listener to components that can bring up popup menus.
         MouseListener popupListener = new PopupListener(jPopupMenu1);
-        jTableVideo.addMouseListener(popupListener);
+        jTableBook.addMouseListener(popupListener);
         
 //        List<String> ratings = Arrays.asList(
 //                "0", "1", "2", "3", "4", "5",
@@ -240,7 +210,7 @@ public class PanelBook extends javax.swing.JPanel {
       }
     
     private void setColumn(int index, int width) {
-        TableColumn column = jTableVideo.getColumnModel().getColumn(index);
+        TableColumn column = jTableBook.getColumnModel().getColumn(index);
 		column.setMinWidth(width);
         column.setPreferredWidth(width);
         column.setMaxWidth(width*3);
@@ -251,7 +221,7 @@ public class PanelBook extends javax.swing.JPanel {
 //        Border headerBorder = javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0));
         Border headerBorder = javax.swing.BorderFactory.createEtchedBorder();
 //                UIManager.getBorder("TableHeader.cellBorder");
-        TableColumn column = jTableVideo.getColumnModel().getColumn(col);
+        TableColumn column = jTableBook.getColumnModel().getColumn(col);
         column.setHeaderRenderer(rendererHeader);
         Icon blueIcon = new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/"+icon));
         JLabel label = new JLabel("", blueIcon, JLabel.CENTER);
@@ -298,40 +268,37 @@ public class PanelBook extends javax.swing.JPanel {
     };
 
     private static TableRowSorter<TableModelBook> tableSorter;
-//    private static final TableRowFilterVideo filterVideo= new TableRowFilterVideo();
+    private static final TableRowFilterBook filterBook= new TableRowFilterBook();
     
-    private static void filterVideo() {
-        filterVideo(true);
+    private static void filterBook() {
+        filterBook(true);
     }
     
-    private static void filterVideo(boolean fillLists) {
-//        TableRowSorter<TableModelVideo> tableSorter
+    private static void filterBook(boolean fillLists) {
         //Enable row tableSorter (cannot be done if model is empty)
         if(processBook.getTableModel().getRowCount()>0) {
             //Enable auto sorter
-            jTableVideo.setAutoCreateRowSorter(true);
+            jTableBook.setAutoCreateRowSorter(true);
             //Get sorter
-//            tableSorter = new TableRowSorter<>(processBook.getTableModel());
-            jTableVideo.setRowSorter(tableSorter);
-            //Sort by status, title (Debug display problem before enabling)
+            tableSorter = new TableRowSorter<>(processBook.getTableModel());
+            jTableBook.setRowSorter(tableSorter);
+//            //Sort by title, author (Debug display problem before enabling)
 //            List <RowSorter.SortKey> sortKeys = new ArrayList<>();
-//            sortKeys.add(new RowSorter.SortKey(4, SortOrder.ASCENDING));
 //            sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
+//            sortKeys.add(new RowSorter.SortKey(3, SortOrder.ASCENDING));
 //            tableSorter.setSortKeys(sortKeys);
             //Désactive le tri pour
-//            tableSorter.setSortable(0, false); // Checkbox
+            tableSorter.setSortable(0, false); // Checkbox
             tableSorter.setSortable(1, false); // Thumbnail
-            tableSorter.setSortable(4, false); // Synopsis
             //Filter, Apply current filter
-//            tableSorter.setRowFilter(filterVideo);
+            tableSorter.setRowFilter(filterBook);
 
             if(fillLists) {
                 List<String> genres=new ArrayList<>();
-                List<String> mppaRatings=new ArrayList<>();
                 List<String> ratings = new ArrayList<>();
                 int index;
-                for(int i = 0; i < jTableVideo.getRowCount(); i++) {
-                    index = jTableVideo.convertRowIndexToModel(i);
+                for(int i = 0; i < jTableBook.getRowCount(); i++) {
+                    index = jTableBook.convertRowIndexToModel(i);
                     Book book = processBook.getTableModel().getFile(index);
                     //Add genres to the list
 //                    for(String genre : book.getGenres()) {
@@ -339,27 +306,21 @@ public class PanelBook extends javax.swing.JPanel {
 //                            genres.add(genre);
 //                        }
 //                    }
-                    //Add MppaRating to the list
-//                    if(!mppaRatings.contains(book.getMppaRating())) {
-//                        mppaRatings.add(book.getMppaRating());
-//                    }
-//                    //Add rating to the list
-//                    if(!ratings.contains(book.getRating())) {
-//                        ratings.add(book.getRating());
-//                    }
+                    //Add rating to the list
+                    if(!ratings.contains(book.getRating())) {
+                        ratings.add(book.getRating());
+                    }
                 }
 
-                jListVideoGenre.setModel(getModel(genres));
-                jListVideoMppaRating.setModel(getModel(mppaRatings));
+                jListBookTag.setModel(getModel(genres));
                 jListVideoRating.setModel(getModel(ratings));
                 
-                jListVideoGenre.setSelectedIndex(0);
-                jListVideoMppaRating.setSelectedIndex(0);
+                jListBookTag.setSelectedIndex(0);
                 jListVideoRating.setSelectedIndex(0);
             }
         }
         else {
-            jTableVideo.setAutoCreateRowSorter(false);
+            jTableBook.setAutoCreateRowSorter(false);
         }
     }
 
@@ -392,11 +353,9 @@ public class PanelBook extends javax.swing.JPanel {
      * display length
      */
     public static void diplayLength() {
-        long selected=0;  //FIXME: Get back getLengthSelected (& rename to SIZE !!)
-//		processBook.getTableModel().getLengthSelected();
-        
-		
-		long spaceLeft=getSpaceLeft(Jamuz.getOptions().get("video.destination"));
+        long selected=processBook.getTableModel().getLengthSelected();
+        		
+		long spaceLeft=getSpaceLeft(Jamuz.getOptions().get("book.destination"));
         long afterSpace=spaceLeft - selected;
         String afterSpaceStr=StringManager.humanReadableByteCount(afterSpace, false);
         String status = "<html>"; //NOI18N
@@ -431,10 +390,10 @@ public class PanelBook extends javax.swing.JPanel {
     //And replace by below function (if table model extended)
     private Book getSelected() {
         //Getting selected File 		
-		int selectedRow = jTableVideo.getSelectedRow(); 			
+		int selectedRow = jTableBook.getSelectedRow(); 			
 		if(selectedRow>=0) { 	
 			//convert to model index (if sortable model) 		
-			selectedRow = jTableVideo.convertRowIndexToModel(selectedRow); 
+			selectedRow = jTableBook.convertRowIndexToModel(selectedRow); 
             Book book = processBook.getTableModel().getFile(selectedRow);
             return book;		
 		}
@@ -487,64 +446,35 @@ public class PanelBook extends javax.swing.JPanel {
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         jScrollPaneSelectGenre1 = new javax.swing.JScrollPane();
-        jListVideoGenre = new javax.swing.JList();
+        jListBookTag = new javax.swing.JList();
         jLabelVideoStatus = new javax.swing.JLabel();
-        jScrollPaneSelectGenre2 = new javax.swing.JScrollPane();
-        jListVideoMppaRating = new javax.swing.JList();
         jScrollPaneSelectGenre4 = new javax.swing.JScrollPane();
         jListVideoRating = new javax.swing.JList();
         jPanel1 = new javax.swing.JPanel();
-        jButtonVideoExport = new javax.swing.JButton();
+        jButtonBookExport = new javax.swing.JButton();
         jButtonVideoList = new javax.swing.JButton();
         jCheckBoxVideoGet = new javax.swing.JCheckBox();
-        jCheckBoxVideoMove = new javax.swing.JCheckBox();
         jButtonVideoOptions = new javax.swing.JButton();
         jProgressBarVideo = new jamuz.gui.swing.ProgressBar();
         jScrollPaneCheckTags1 = new javax.swing.JScrollPane();
-        jTableVideo = new jamuz.gui.swing.TableHorizontal();
+        jTableBook = new jamuz.gui.swing.TableHorizontal();
         jProgressBarVideoTimer = new jamuz.gui.swing.ProgressBar();
         jLabel5 = new javax.swing.JLabel();
         triStateSelected = new jamuz.gui.swing.TriStateCheckBox();
-        jLabel6 = new javax.swing.JLabel();
-        triStateWatched = new jamuz.gui.swing.TriStateCheckBox();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        triStateWatchList = new jamuz.gui.swing.TriStateCheckBox();
-        jLabel9 = new javax.swing.JLabel();
-        triStateFavorite = new jamuz.gui.swing.TriStateCheckBox();
-        triStateRated = new jamuz.gui.swing.TriStateCheckBox();
-        jComboBoxFilter = new JComboBox(VideoFilter.values());
-        jButtonRefresh = new javax.swing.JButton();
-        jLabel10 = new javax.swing.JLabel();
-        triStateLocal = new jamuz.gui.swing.TriStateCheckBox();
-        jLabel11 = new javax.swing.JLabel();
-        triStateHd = new jamuz.gui.swing.TriStateCheckBox();
-        jLabel12 = new javax.swing.JLabel();
-        triStateMovies = new jamuz.gui.swing.TriStateCheckBox();
-        jCheckBoxVideoTheMovieDb = new javax.swing.JCheckBox();
 
         jSplitPane1.setDividerLocation(150);
 
-        jListVideoGenre.setModel(new DefaultListModel());
-        jListVideoGenre.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jListVideoGenre.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        jListBookTag.setModel(new DefaultListModel());
+        jListBookTag.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListBookTag.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListVideoGenreValueChanged(evt);
+                jListBookTagValueChanged(evt);
             }
         });
-        jScrollPaneSelectGenre1.setViewportView(jListVideoGenre);
+        jScrollPaneSelectGenre1.setViewportView(jListBookTag);
 
         jLabelVideoStatus.setText(" "); // NOI18N
         jLabelVideoStatus.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        jListVideoMppaRating.setModel(new DefaultListModel());
-        jListVideoMppaRating.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jListVideoMppaRating.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListVideoMppaRatingValueChanged(evt);
-            }
-        });
-        jScrollPaneSelectGenre2.setViewportView(jListVideoMppaRating);
 
         jListVideoRating.setModel(new DefaultListModel());
         jListVideoRating.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -559,10 +489,9 @@ public class PanelBook extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabelVideoStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPaneSelectGenre2, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+            .addComponent(jLabelVideoStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+            .addComponent(jScrollPaneSelectGenre4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(jScrollPaneSelectGenre1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(jScrollPaneSelectGenre4, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -570,22 +499,19 @@ public class PanelBook extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabelVideoStatus)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSelectGenre1, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                .addComponent(jScrollPaneSelectGenre4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSelectGenre2, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSelectGenre4, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPaneSelectGenre1, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel2);
 
-        jButtonVideoExport.setFont(new java.awt.Font("DejaVu Sans", 1, 18)); // NOI18N
-        jButtonVideoExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/external.png"))); // NOI18N
-        jButtonVideoExport.setText(Inter.get("Button.Export")+" ..."); // NOI18N
-        jButtonVideoExport.addActionListener(new java.awt.event.ActionListener() {
+        jButtonBookExport.setFont(new java.awt.Font("DejaVu Sans", 1, 18)); // NOI18N
+        jButtonBookExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/external.png"))); // NOI18N
+        jButtonBookExport.setText(Inter.get("Button.Export")+" ..."); // NOI18N
+        jButtonBookExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonVideoExportActionPerformed(evt);
+                jButtonBookExportActionPerformed(evt);
             }
         });
 
@@ -599,8 +525,6 @@ public class PanelBook extends javax.swing.JPanel {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
         jCheckBoxVideoGet.setText(bundle.getString("MainGUI.jCheckBoxVideoGet.text")); // NOI18N
 
-        jCheckBoxVideoMove.setText(bundle.getString("MainGUI.jCheckBoxVideoMove.text")); // NOI18N
-
         jButtonVideoOptions.setText("Options");
         jButtonVideoOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -611,16 +535,16 @@ public class PanelBook extends javax.swing.JPanel {
         jProgressBarVideo.setString("");
         jProgressBarVideo.setStringPainted(true);
 
-        jTableVideo.setAutoCreateColumnsFromModel(false);
-        jTableVideo.setModel(new jamuz.process.book.TableModelBook());
-        jTableVideo.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTableVideo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTableVideo.addMouseListener(new java.awt.event.MouseAdapter() {
+        jTableBook.setAutoCreateColumnsFromModel(false);
+        jTableBook.setModel(new jamuz.process.book.TableModelBook());
+        jTableBook.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jTableBook.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTableBook.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jTableVideoMousePressed(evt);
+                jTableBookMousePressed(evt);
             }
         });
-        jScrollPaneCheckTags1.setViewportView(jTableVideo);
+        jScrollPaneCheckTags1.setViewportView(jTableBook);
 
         jProgressBarVideoTimer.setString("");
         jProgressBarVideoTimer.setStringPainted(true);
@@ -640,133 +564,6 @@ public class PanelBook extends javax.swing.JPanel {
             }
         });
 
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/eye.png"))); // NOI18N
-        jLabel6.setToolTipText("");
-        jLabel6.setMaximumSize(new java.awt.Dimension(21, 22));
-        jLabel6.setMinimumSize(new java.awt.Dimension(21, 22));
-        jLabel6.setPreferredSize(new java.awt.Dimension(21, 22));
-
-        triStateWatched.setText("");
-        triStateWatched.setToolTipText("");
-        triStateWatched.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        triStateWatched.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                triStateWatchedStateChanged(evt);
-            }
-        });
-
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/1starC.png"))); // NOI18N
-        jLabel7.setToolTipText("");
-        jLabel7.setMaximumSize(new java.awt.Dimension(21, 22));
-        jLabel7.setMinimumSize(new java.awt.Dimension(21, 22));
-        jLabel7.setPreferredSize(new java.awt.Dimension(21, 22));
-
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/wishlist_add.png"))); // NOI18N
-        jLabel8.setToolTipText("");
-        jLabel8.setMaximumSize(new java.awt.Dimension(21, 22));
-        jLabel8.setMinimumSize(new java.awt.Dimension(21, 22));
-        jLabel8.setPreferredSize(new java.awt.Dimension(21, 22));
-
-        triStateWatchList.setText("");
-        triStateWatchList.setToolTipText("");
-        triStateWatchList.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        triStateWatchList.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                triStateWatchListStateChanged(evt);
-            }
-        });
-
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/heart.png"))); // NOI18N
-        jLabel9.setToolTipText("");
-        jLabel9.setMaximumSize(new java.awt.Dimension(21, 22));
-        jLabel9.setMinimumSize(new java.awt.Dimension(21, 22));
-        jLabel9.setPreferredSize(new java.awt.Dimension(21, 22));
-
-        triStateFavorite.setText("");
-        triStateFavorite.setToolTipText("");
-        triStateFavorite.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        triStateFavorite.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                triStateFavoriteStateChanged(evt);
-            }
-        });
-
-        triStateRated.setText("");
-        triStateRated.setToolTipText("");
-        triStateRated.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        triStateRated.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                triStateRatedStateChanged(evt);
-            }
-        });
-
-        jComboBoxFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxFilterActionPerformed(evt);
-            }
-        });
-
-        jButtonRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/update.png"))); // NOI18N
-        jButtonRefresh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRefreshActionPerformed(evt);
-            }
-        });
-
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/file_manager.png"))); // NOI18N
-        jLabel10.setToolTipText("");
-        jLabel10.setMaximumSize(new java.awt.Dimension(21, 22));
-        jLabel10.setMinimumSize(new java.awt.Dimension(21, 22));
-        jLabel10.setPreferredSize(new java.awt.Dimension(21, 22));
-
-        triStateLocal.setText("");
-        triStateLocal.setToolTipText("");
-        triStateLocal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        triStateLocal.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                triStateLocalStateChanged(evt);
-            }
-        });
-
-        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/hd_ready.png"))); // NOI18N
-        jLabel11.setToolTipText("");
-        jLabel11.setMaximumSize(new java.awt.Dimension(21, 22));
-        jLabel11.setMinimumSize(new java.awt.Dimension(21, 22));
-        jLabel11.setPreferredSize(new java.awt.Dimension(21, 22));
-
-        triStateHd.setText("");
-        triStateHd.setToolTipText("");
-        triStateHd.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        triStateHd.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                triStateHdStateChanged(evt);
-            }
-        });
-
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/movies.png"))); // NOI18N
-        jLabel12.setToolTipText("");
-        jLabel12.setMaximumSize(new java.awt.Dimension(21, 22));
-        jLabel12.setMinimumSize(new java.awt.Dimension(21, 22));
-        jLabel12.setPreferredSize(new java.awt.Dimension(21, 22));
-
-        triStateMovies.setText("");
-        triStateMovies.setToolTipText("");
-        triStateMovies.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        triStateMovies.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                triStateMoviesStateChanged(evt);
-            }
-        });
-
-        jCheckBoxVideoTheMovieDb.setText("TheMovieDb");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -774,60 +571,28 @@ public class PanelBook extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(triStateSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(triStateMovies, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 47, Short.MAX_VALUE)
-                        .addComponent(jComboBoxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonVideoList))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(triStateSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonRefresh)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(triStateLocal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(triStateHd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(triStateWatched, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(triStateRated, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(triStateWatchList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(triStateFavorite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonVideoList)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBoxVideoGet)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jCheckBoxVideoMove)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBoxVideoTheMovieDb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonVideoExport)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonVideoOptions))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jProgressBarVideo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jProgressBarVideoTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jProgressBarVideo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jProgressBarVideoTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jCheckBoxVideoGet)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonBookExport)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonVideoOptions))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -837,41 +602,17 @@ public class PanelBook extends javax.swing.JPanel {
                     .addComponent(jButtonVideoOptions, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonVideoList)
-                        .addComponent(jCheckBoxVideoGet)
-                        .addComponent(jCheckBoxVideoMove)
-                        .addComponent(jCheckBoxVideoTheMovieDb))
-                    .addComponent(jButtonVideoExport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jCheckBoxVideoGet))
+                    .addComponent(jButtonBookExport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jProgressBarVideoTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jProgressBarVideo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jProgressBarVideo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(triStateSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(triStateRated, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(triStateWatched, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(triStateWatchList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(triStateFavorite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(triStateLocal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(triStateHd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBoxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(triStateSelected, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(triStateMovies, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
         );
 
         jSplitPane1.setRightComponent(jPanel1);
@@ -906,10 +647,10 @@ public class PanelBook extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonVideoExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoExportActionPerformed
+    private void jButtonBookExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBookExportActionPerformed
 
         DialogVideoExport.main(null);
-    }//GEN-LAST:event_jButtonVideoExportActionPerformed
+    }//GEN-LAST:event_jButtonBookExportActionPerformed
 
 	/**
 	 *
@@ -934,37 +675,24 @@ public class PanelBook extends javax.swing.JPanel {
 	public static void enableProcess(boolean enable) {
         jButtonVideoList.setEnabled(enable);
         jCheckBoxVideoGet.setEnabled(enable);
-        jCheckBoxVideoMove.setEnabled(enable);
-		jCheckBoxVideoTheMovieDb.setEnabled(enable);
-        jButtonVideoExport.setEnabled(enable);
+        jButtonBookExport.setEnabled(enable);
         jButtonVideoOptions.setEnabled(enable);
         triStateSelected.setEnabled(enable);
-        triStateWatched.setEnabled(enable);
-        triStateWatchList.setEnabled(enable);
-        triStateFavorite.setEnabled(enable);
-        triStateRated.setEnabled(enable);
-        triStateHd.setEnabled(enable);
-        triStateLocal.setEnabled(enable);
-        triStateMovies.setEnabled(enable);
-        jComboBoxFilter.setEnabled(enable);
-        jButtonRefresh.setEnabled(enable);
-
-        jListVideoGenre.setEnabled(enable);
-        jTableVideo.setEnabled(enable);
-        jListVideoMppaRating.setEnabled(enable);
+        jListBookTag.setEnabled(enable);
+        jTableBook.setEnabled(enable);
         jListVideoRating.setEnabled(enable);
         
         if(enable) {
-            filterVideo();
+            filterBook();
         }
     }
     
-    private void jListVideoGenreValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListVideoGenreValueChanged
-        if(jListVideoGenre.getSelectedValue()!=null && !evt.getValueIsAdjusting()) {
-//            filterVideo.displayByGenre((String) jListVideoGenre.getSelectedValue());
-            filterVideo(false);
+    private void jListBookTagValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListBookTagValueChanged
+        if(jListBookTag.getSelectedValue()!=null && !evt.getValueIsAdjusting()) {
+//            filterVideo.displayByGenre((String) jListBookTag.getSelectedValue());
+            filterBook(false);
         }
-    }//GEN-LAST:event_jListVideoGenreValueChanged
+    }//GEN-LAST:event_jListBookTagValueChanged
 
     private void jButtonVideoListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoListActionPerformed
         listDb();
@@ -972,131 +700,39 @@ public class PanelBook extends javax.swing.JPanel {
 
 	private void listDb() {
 		triStateSelected.setState(State.ALL);
-        triStateWatched.setState(State.ALL);
-        triStateWatchList.setState(State.ALL);
-        triStateFavorite.setState(State.ALL);
-        triStateRated.setState(State.ALL);
-        triStateHd.setState(State.ALL);
-        triStateLocal.setState(State.ALL);
-        triStateMovies.setState(State.ALL);
         enableProcess(false);
-        jTableVideo.setRowSorter(null);
-        processBook.listDb(jCheckBoxVideoMove.isSelected(), jCheckBoxVideoGet.isSelected(), jCheckBoxVideoTheMovieDb.isSelected());
+        jTableBook.setRowSorter(null);
+        processBook.listDb(jCheckBoxVideoGet.isSelected());
 	}
 	
-    private void jTableVideoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableVideoMousePressed
+    private void jTableBookMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableBookMousePressed
         // If Right mouse click, select the line under mouse
         if ( SwingUtilities.isRightMouseButton( evt ) )
         {
             Point p = evt.getPoint();
-            int rowNumber = jTableVideo.rowAtPoint( p );
-            ListSelectionModel model = jTableVideo.getSelectionModel();
+            int rowNumber = jTableBook.rowAtPoint( p );
+            ListSelectionModel model = jTableBook.getSelectionModel();
             model.setSelectionInterval( rowNumber, rowNumber );
         }
-    }//GEN-LAST:event_jTableVideoMousePressed
+    }//GEN-LAST:event_jTableBookMousePressed
 
     private void jButtonVideoOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoOptionsActionPerformed
-        DialogVideoOption.main(null);
+        DialogBookOption.main(null);
     }//GEN-LAST:event_jButtonVideoOptionsActionPerformed
-
-    private void jListVideoMppaRatingValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListVideoMppaRatingValueChanged
-        if(jListVideoMppaRating.getSelectedValue()!=null && !evt.getValueIsAdjusting()) {
-//            filterVideo.displayByMppaRating((String) jListVideoMppaRating.getSelectedValue());
-            filterVideo(false);
-        }
-    }//GEN-LAST:event_jListVideoMppaRatingValueChanged
 
     private void triStateSelectedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_triStateSelectedStateChanged
         TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
         if(!checkbox.getModel().isArmed()) {
-//            filterVideo.displaySelected(checkbox.getState());
-            filterVideo();
+            filterBook.displaySelected(checkbox.getState());
+            filterBook();
         }
     }//GEN-LAST:event_triStateSelectedStateChanged
-
-    private void triStateWatchedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_triStateWatchedStateChanged
-        TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
-        if(!checkbox.getModel().isArmed()) {
-//            filterVideo.displayWatched(checkbox.getState());
-            filterVideo();
-        }
-    }//GEN-LAST:event_triStateWatchedStateChanged
-
-    private void triStateWatchListStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_triStateWatchListStateChanged
-        TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
-        if(!checkbox.getModel().isArmed()) {
-//            filterVideo.displayWatchList(checkbox.getState());
-            filterVideo();
-        }
-    }//GEN-LAST:event_triStateWatchListStateChanged
-
-    private void triStateFavoriteStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_triStateFavoriteStateChanged
-        TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
-        if(!checkbox.getModel().isArmed()) {
-//            filterVideo.displayFavorite(checkbox.getState());
-            filterVideo();
-        }
-    }//GEN-LAST:event_triStateFavoriteStateChanged
-
-    private void triStateRatedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_triStateRatedStateChanged
-         TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
-        if(!checkbox.getModel().isArmed()) {
-//            filterVideo.displayRated(checkbox.getState());
-            filterVideo();
-        }
-    }//GEN-LAST:event_triStateRatedStateChanged
-
-    private void jComboBoxFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFilterActionPerformed
-        filterVideoTriStates();
-    }//GEN-LAST:event_jComboBoxFilterActionPerformed
-
-    private void filterVideoTriStates() {
-        if (jComboBoxFilter.getSelectedIndex() >= 0) {
-            VideoFilter videoFilter = (VideoFilter) jComboBoxFilter.getSelectedItem();
-            switch(videoFilter) {
-                case ALL:
-                    filterVideo(State.ALL, State.ALL, State.ALL, State.ALL, State.ALL, State.ALL);
-                    break;
-                case TOBERATED:
-                    filterVideo(State.SELECTED, State.UNSELECTED, State.ALL, State.ALL, State.ALL, State.ALL);
-                    break;
-                case TOCHECK:
-                    filterVideo(State.UNSELECTED, State.ALL, State.UNSELECTED, State.ALL, State.SELECTED, State.ALL);
-                    break;
-                case TOBEDELETED:
-                    filterVideo(State.SELECTED, State.ALL, State.ALL, State.UNSELECTED, State.SELECTED, State.ALL);
-                    break;
-                case TORETRIEVE:
-                    filterVideo(State.UNSELECTED, State.ALL, State.SELECTED, State.ALL, State.UNSELECTED, State.ALL);
-                    break;
-                case TORETRIEVEHD:
-                    filterVideo(State.UNSELECTED, State.ALL, State.SELECTED, State.ALL, State.SELECTED, State.UNSELECTED);
-                    break;
-                case TOWATCH:
-                    filterVideo(State.UNSELECTED, State.ALL, State.SELECTED, State.ALL, State.SELECTED, State.SELECTED);
-                    break;
-            }
-        }
-    }
-    
-    private void filterVideo(State watched, State rated, State watchlist, State favorite, State local, State hd) {
-        triStateSelected.setState(State.ALL);
-        triStateWatched.setState(watched);
-        triStateRated.setState(rated);
-        triStateWatchList.setState(watchlist);
-        triStateFavorite.setState(favorite);
-        triStateLocal.setState(local);
-        triStateHd.setState(hd);
-    }
-    
+   
     private enum VideoFilter {
         ALL(Inter.get("Label.All")),
         TOBERATED(Inter.get("Label.Video.TOBERATED")),
-        TOCHECK(Inter.get("Label.Video.TOCHECK")),
         TOBEDELETED(Inter.get("Label.Video.TOBEDELETED")),
-        TORETRIEVE(Inter.get("Label.Video.TORETRIEVE")),
-        TORETRIEVEHD(Inter.get("Label.Video.TORETRIEVEHD")),
-        TOWATCH(Inter.get("Label.Video.TOWATCH"));
+        TORETRIEVE(Inter.get("Label.Video.TORETRIEVE"));
         
         private final String display;
 		private VideoFilter(String display) {
@@ -1108,38 +744,10 @@ public class PanelBook extends javax.swing.JPanel {
 		}
     }
     
-    private void triStateLocalStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_triStateLocalStateChanged
-        TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
-        if(!checkbox.getModel().isArmed()) {
-//            filterVideo.displayLocal(checkbox.getState());
-            filterVideo();
-        }
-    }//GEN-LAST:event_triStateLocalStateChanged
-
-    private void triStateHdStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_triStateHdStateChanged
-        TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
-        if(!checkbox.getModel().isArmed()) {
-//            filterVideo.displayHD(checkbox.getState());
-            filterVideo();
-        }
-    }//GEN-LAST:event_triStateHdStateChanged
-
-    private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
-        filterVideoTriStates();
-    }//GEN-LAST:event_jButtonRefreshActionPerformed
-
-    private void triStateMoviesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_triStateMoviesStateChanged
-        TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
-        if(!checkbox.getModel().isArmed()) {
-//            filterVideo.displayMovies(checkbox.getState());
-            filterVideo();
-        }
-    }//GEN-LAST:event_triStateMoviesStateChanged
-
     private void jListVideoRatingValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListVideoRatingValueChanged
         if(jListVideoRating.getSelectedValue()!=null && !evt.getValueIsAdjusting()) {
-//            filterVideo.displayByRating((String) jListVideoRating.getSelectedValue());
-            filterVideo(false);
+            filterBook.displayByRating((String) jListVideoRating.getSelectedValue());
+            filterBook(false);
         }
     }//GEN-LAST:event_jListVideoRatingValueChanged
 
@@ -1171,25 +779,13 @@ public class PanelBook extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup btnGroupSelected;
     private javax.swing.ButtonGroup btnGroupWatched;
-    private static javax.swing.JButton jButtonRefresh;
-    private static javax.swing.JButton jButtonVideoExport;
+    private static javax.swing.JButton jButtonBookExport;
     private static javax.swing.JButton jButtonVideoList;
     private static javax.swing.JButton jButtonVideoOptions;
     private static javax.swing.JCheckBox jCheckBoxVideoGet;
-    private static javax.swing.JCheckBox jCheckBoxVideoMove;
-    private static javax.swing.JCheckBox jCheckBoxVideoTheMovieDb;
-    private static javax.swing.JComboBox jComboBoxFilter;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private static javax.swing.JLabel jLabelVideoStatus;
-    private static javax.swing.JList jListVideoGenre;
-    private static javax.swing.JList jListVideoMppaRating;
+    private static javax.swing.JList jListBookTag;
     private static javax.swing.JList jListVideoRating;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1199,18 +795,10 @@ public class PanelBook extends javax.swing.JPanel {
     private javax.swing.JProgressBar jProgressBarVideoTimer;
     private static javax.swing.JScrollPane jScrollPaneCheckTags1;
     private javax.swing.JScrollPane jScrollPaneSelectGenre1;
-    private javax.swing.JScrollPane jScrollPaneSelectGenre2;
     private javax.swing.JScrollPane jScrollPaneSelectGenre4;
     private javax.swing.JSplitPane jSplitPane1;
-    private static javax.swing.JTable jTableVideo;
-    private static jamuz.gui.swing.TriStateCheckBox triStateFavorite;
-    private static jamuz.gui.swing.TriStateCheckBox triStateHd;
-    private static jamuz.gui.swing.TriStateCheckBox triStateLocal;
-    private static jamuz.gui.swing.TriStateCheckBox triStateMovies;
-    private static jamuz.gui.swing.TriStateCheckBox triStateRated;
+    private static javax.swing.JTable jTableBook;
     private static jamuz.gui.swing.TriStateCheckBox triStateSelected;
-    private static jamuz.gui.swing.TriStateCheckBox triStateWatchList;
-    private static jamuz.gui.swing.TriStateCheckBox triStateWatched;
     // End of variables declaration//GEN-END:variables
 
 }

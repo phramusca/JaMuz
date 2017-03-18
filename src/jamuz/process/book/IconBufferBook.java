@@ -57,34 +57,35 @@ public class IconBufferBook {
     
     /**
      * Get cover icon from cache if exists, from internet if not
-     * @param url
+	 * @param key
+     * @param file
      * @param readIfNotFound
      * @return
      */
-    public static ImageIcon getCoverIcon(String url, boolean readIfNotFound) {
-		if(icons.containsKey(url)) {
-            return icons.get(url);
+    public static ImageIcon getCoverIcon(String key, String file, boolean readIfNotFound) {
+		if(icons.containsKey(key)) {
+            return icons.get(key);
         }
         ImageIcon icon=null;
         if(readIfNotFound) {
             //Icon not found, retrieving it and add it to the map
-            icon= readIconFromCache(url);
+            icon= readIconFromCache(key);
             if(icon!=null) {
-                icons.put(url, icon);
+                icons.put(key, icon);
                 return icon;
             }
-            icon= readIconFromInternet(url);
+            icon= readIcon(key, file);
             if(icon!=null) {
-                icons.put(url, icon);
+                icons.put(key, icon);
             }
         }
         return icon;
 	}
  
     //TODO: Offer at least a cache cleanup function (better would be a smart auto cleanup)
-    private static ImageIcon readIconFromCache(String url) {
+    private static ImageIcon readIconFromCache(String key) {
         try {
-            File file = getCacheFile(url);
+            File file = getCacheFile(key);
             if(file.exists()) {
                 return new ImageIcon(ImageIO.read(file));
             }
@@ -95,15 +96,19 @@ public class IconBufferBook {
         }
     }
     
-    private static File getCacheFile(String url) {
-        return Jamuz.getFile(StringManager.removeIllegal(url)+".png", "data", "cache", "video");
+    private static File getCacheFile(String key) {
+        return Jamuz.getFile(StringManager.removeIllegal(key)+".png", "data", "cache", "book");
     }
 
-    private static ImageIcon readIconFromInternet(String url) {
+    private static ImageIcon readIcon(String key, String file) {
         ImageIcon icon=null;
         try {
-            URL myURL = new URL(url);
-            BufferedImage myImage = ImageIO.read(myURL);
+			File iconFile = new File(file);
+			if(!iconFile.exists()) {
+                return icon;
+            }
+			
+			BufferedImage myImage = ImageIO.read(iconFile);
             icon = new ImageIcon(((new ImageIcon(myImage).getImage()).getScaledInstance(-1, IconBufferBook.iconHeight, java.awt.Image.SCALE_SMOOTH)));
             
             //Write to cache
@@ -111,8 +116,7 @@ public class IconBufferBook {
             Graphics2D g2 = bi.createGraphics();
             g2.drawImage(icon.getImage(), 0, 0, null);
             g2.dispose();
-            ImageIO.write(bi, "png", getCacheFile(url)); //NOI18N
-            
+            ImageIO.write(bi, "png", getCacheFile(key)); //NOI18N
 		} catch (IIOException ex) {
             Jamuz.getLogger().log(Level.SEVERE, "", ex);
         }
@@ -121,5 +125,4 @@ public class IconBufferBook {
 		}
         return icon;
     }
-
 }

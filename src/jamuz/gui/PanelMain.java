@@ -170,6 +170,7 @@ public class PanelMain extends javax.swing.JFrame {
         setTab("PanelMain.panelStats.TabConstraints.tabTitle", "statistics");
         setTab("Label.Options", "selected");
         setTab("PanelMain.panelVideo.TabConstraints.tabTitle", "movies");
+		setTab("PanelMain.panelBook.TabConstraints.tabTitle", "book_open");
 
 	//Left pane: player
         //Set queue model
@@ -1638,7 +1639,9 @@ public class PanelMain extends javax.swing.JFrame {
 	 *
 	 */
 	public static void stopMplayer() {
-		MPLAYER.stop();
+		if(MPLAYER!=null) {
+			MPLAYER.stop();
+		}
 	}
 	
     /**

@@ -19,6 +19,7 @@ package jamuz.process.video;
 import jamuz.FileInfo;
 import jamuz.process.check.FolderInfo;
 import jamuz.Jamuz;
+import jamuz.gui.swing.FileSizeComparable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -198,7 +199,7 @@ public abstract class VideoAbstract implements Comparable {
         this.fanarts = parseURLStringList(fanartURLs);     
         this.imdbId = imdbId;
         this.country = country;
-        this.length = new MovieSize((long) 0);
+        this.length = new FileSizeComparable((long) 0);
         this.files = new TreeMap<>();
         
 	}
@@ -369,7 +370,7 @@ public abstract class VideoAbstract implements Comparable {
 	 */
 	protected List<String> fanarts; //TODO: Use this
     private boolean selected;
-    private MovieSize length;
+    private FileSizeComparable length;
     
     /**
      * Video file Status
@@ -559,14 +560,14 @@ public abstract class VideoAbstract implements Comparable {
      * @param length
      */
     public void setLength(long length) {
-        this.length = new MovieSize(length);
+        this.length = new FileSizeComparable(length);
     }
 
     /**
      * get length
      * @return
      */
-    public MovieSize getLength() {
+    public FileSizeComparable getLength() {
         return length;
     }
  
@@ -656,41 +657,4 @@ public abstract class VideoAbstract implements Comparable {
 		return (this.title.compareTo(((VideoAbstract) o).title));
 	}
     
-    /**
-     *
-     */
-    public class MovieSize implements Comparable {
-        private final Long length;
-
-        /**
-         *
-         * @param length
-         */
-        public MovieSize(Long length) {
-            this.length = length;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public Long getLength() {
-            return length;
-        }
-
-        @Override
-        public String toString() {
-            return StringManager.humanReadableByteCount(length, false);
-        }
-
-        @Override
-        public int compareTo(Object o) {
-//            if (this.length < ((MovieSize) o).length) return -1;
-//            if (this.length > ((MovieSize) o).length) return 1;
-//            
-//            return 0;
-            return this.length.compareTo(((MovieSize) o).length);
-        }
-
-    }
 }
