@@ -60,7 +60,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.gui.swing.TableRowFilterVideo;
 import jamuz.gui.swing.TriStateCheckBox;
 import jamuz.gui.swing.TriStateCheckBox.State;
 import jamuz.utils.Desktop;

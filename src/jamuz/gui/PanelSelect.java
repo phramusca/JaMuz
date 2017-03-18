@@ -51,8 +51,6 @@ import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
 import jamuz.player.Mplayer.AudioCard;
-import jamuz.process.video.PanelVideo;
-import jamuz.process.video.VideoAbstract;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
