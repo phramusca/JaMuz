@@ -17,8 +17,6 @@
 
 package jamuz.process.book;
 
-import jamuz.process.video.*;
-import jamuz.process.video.FileInfoVideo.StreamDetails;
 import jamuz.Jamuz;
 import jamuz.DbConn;
 import jamuz.DbInfo;
@@ -27,12 +25,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import jamuz.utils.StringManager;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * Creates a new connection to a Kodi database to get videos information
@@ -40,19 +32,14 @@ import org.apache.commons.lang3.SerializationUtils;
  */
 public class DbConnBook extends DbConn {
 
-	/**
-	 *
-	 */
-	protected final String rootPath;
-	
+
 	/**
 	 * Creates a database connection.
 	 * @param dbInfo
      * @param rootPath
 	 */
-	public DbConnBook(DbInfo dbInfo, String rootPath) {
+	public DbConnBook(DbInfo dbInfo) {
 		super(dbInfo);
-        this.rootPath = rootPath;
 	}
    
 	/**
@@ -61,21 +48,25 @@ public class DbConnBook extends DbConn {
      * @param rootPath
 	 * @return
 	 */
-	public boolean getBooks(List<Book> books, String rootPath) {
+	public boolean getBooks(List<Book> books) {
 		String title; String title_sort; String pubdate; String author_sort; 
-        String uuid; String path; 
+        String uuid; String path; String formats;
 		String comment; String rating; String language; String author;
-		String filename;
+		String filenameWithoutExtension; String tags;
 		books.clear();
         ResultSet rs = null;
 		try {
 			PreparedStatement stSelectBooks = connection.prepareStatement(
 					"SELECT \n" +
-					"C.text AS comment, (R.rating/2) AS rating, L.lang_code AS language, \n" +
+					"REPLACE(GROUP_CONCAT(DISTINCT A.name), ',', ' / ') AS author, \n" +
+					"CASE WHEN  COUNT(DISTINCT A.id)>1 THEN \"Various\" ELSE A.sort END AS author_sort, \n" +
+					"REPLACE(GROUP_CONCAT(DISTINCT D.format), ',', ' / ') AS formats,\n" +
+					"REPLACE(GROUP_CONCAT(DISTINCT T.name), ',', ' / ') AS tags, \n" +
 					"B.title, B.sort AS title_sort, \n" +
-					"A.name AS author, A.sort AS author_sort, \n" +
-					"B.pubdate, B.path, B.uuid, \n" +
-					"(D.name || \".epub\") AS filename \n" +
+					"(R.rating/2) AS rating, L.lang_code AS language, \n" +
+					"B.pubdate, B.uuid, \n" +
+					"B.path, D.name AS filenameWithoutExtension, \n" +
+					"C.text AS comment\n" +
 					"FROM books B \n" +
 					"LEFT OUTER JOIN books_authors_link AL ON B.id=AL.book \n" +
 					"LEFT OUTER JOIN authors A ON A.id = AL.author \n" +
@@ -83,9 +74,12 @@ public class DbConnBook extends DbConn {
 					"LEFT OUTER JOIN languages L ON L.id = LL.lang_code \n" +
 					"LEFT OUTER JOIN books_ratings_link RL ON B.id=RL.book \n" +
 					"LEFT OUTER JOIN ratings R ON R.id = RL.rating \n" +
-					"LEFT OUTER JOIN comments C ON C.book=B.id \n" + 
+					"LEFT OUTER JOIN books_tags_link TL ON B.id=TL.book \n" +
+					"LEFT OUTER JOIN tags T ON T.id = TL.tag \n" +
+					"LEFT OUTER JOIN comments C ON C.book=B.id \n" +
 					"LEFT OUTER JOIN data D ON B.id = D.book \n" +
-					"WHERE D.format=\"EPUB\"");    //NOI18N
+					"GROUP BY B.id\n" +
+					"ORDER BY B.sort");    //NOI18N
 			//Execute query
 			rs = stSelectBooks.executeQuery();
 			while(rs.next()){
@@ -99,9 +93,12 @@ public class DbConnBook extends DbConn {
 				rating=getStringValue(rs, "rating");  //NOI18N
 				language=getStringValue(rs, "language");  //NOI18N
 				author=getStringValue(rs, "author");  //NOI18N
-				filename=getStringValue(rs, "filename");  //NOI18N
-                Book book = new Book(title, title_sort, pubdate, author_sort, uuid, path,
-						comment, rating, language, author, filename);
+				filenameWithoutExtension=getStringValue(rs, "filenameWithoutExtension");  //NOI18N
+				formats=getStringValue(rs, "formats");  //NOI18N
+				tags=getStringValue(rs, "tags");  //NOI18N
+                Book book = new Book(title, title_sort, pubdate, author_sort, 
+						uuid, path, comment, rating, language, author, 
+						filenameWithoutExtension, formats, tags);
 
 				books.add(book);
 			}

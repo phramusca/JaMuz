@@ -43,7 +43,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButtonCancel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButtonSave" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -68,61 +68,51 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabelVideoRootPath" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelVideoLocation" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="jLabelVideoRootPath1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="jTextSource" min="-2" pref="415" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jTextFieldVideoLocation" max="32767" attributes="0"/>
-                      <Component id="jTextFieldVideoRootPath" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButtonSelectSouce" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabelVideoLocation" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextFieldVideoLocation" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jTextFieldVideoRootPath" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelVideoRootPath" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelVideoRootPath1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonSelectSouce" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextSource" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jLabelVideoLocation">
+        <Component class="javax.swing.JLabel" name="jLabelVideoRootPath1">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Label.Location" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="jamuz/Bundle.properties" key="Label.Source" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldVideoLocation">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="/home/raph/raph-desktop/.xbmc/userdata/Database/MyVideos78.db" noResource="true"/>
-          </Properties>
+        <Component class="javax.swing.JTextField" name="jTextSource">
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldVideoRootPath">
+        <Component class="javax.swing.JButton" name="jButtonSelectSouce">
           <Properties>
-            <Property name="text" type="java.lang.String" value="/home/raph/Vid&#xe9;os/Films/" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabelVideoRootPath">
-          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/jamuz/ressources/folder_explore.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Label.RootPath" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="jamuz/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSelectSouceActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

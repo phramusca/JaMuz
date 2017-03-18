@@ -17,20 +17,17 @@
 
 package jamuz.process.book;
 
-import jamuz.process.video.*;
 import jamuz.Jamuz;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 
@@ -41,19 +38,19 @@ import jamuz.utils.StringManager;
 
 
 public class IconBufferBook {
-    private static final Map<String, ImageIcon> icons = new HashMap<>();
+    private static final Map<String, ImageIcon> ICONS = new HashMap<>();
 
     /**
      * Icon height.
      * Height set to this value
      */
-    public static final int iconHeight = 140;
+    public static final int ICON_HEIGHT = 140;
 
     /**
      * Icon width.
      * Width is set auto based on image ratio, this value is to set column width
      */
-    public static final int iconWidth = 105;
+    public static final int ICON_WIDTH = 105;
     
     /**
      * Get cover icon from cache if exists, from internet if not
@@ -63,20 +60,20 @@ public class IconBufferBook {
      * @return
      */
     public static ImageIcon getCoverIcon(String key, String file, boolean readIfNotFound) {
-		if(icons.containsKey(key)) {
-            return icons.get(key);
+		if(ICONS.containsKey(key)) {
+            return ICONS.get(key);
         }
         ImageIcon icon=null;
         if(readIfNotFound) {
             //Icon not found, retrieving it and add it to the map
             icon= readIconFromCache(key);
             if(icon!=null) {
-                icons.put(key, icon);
+                ICONS.put(key, icon);
                 return icon;
             }
             icon= readIcon(key, file);
             if(icon!=null) {
-                icons.put(key, icon);
+                ICONS.put(key, icon);
             }
         }
         return icon;
@@ -109,7 +106,7 @@ public class IconBufferBook {
             }
 			
 			BufferedImage myImage = ImageIO.read(iconFile);
-            icon = new ImageIcon(((new ImageIcon(myImage).getImage()).getScaledInstance(-1, IconBufferBook.iconHeight, java.awt.Image.SCALE_SMOOTH)));
+            icon = new ImageIcon(((new ImageIcon(myImage).getImage()).getScaledInstance(-1, IconBufferBook.ICON_HEIGHT, java.awt.Image.SCALE_SMOOTH)));
             
             //Write to cache
             BufferedImage bi = new BufferedImage(icon.getImage().getWidth(null),icon.getImage().getHeight(null),BufferedImage.TYPE_3BYTE_BGR);

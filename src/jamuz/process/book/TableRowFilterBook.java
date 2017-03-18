@@ -21,6 +21,7 @@ import jamuz.gui.swing.TriStateCheckBox;
 import javax.swing.RowFilter;
 import jamuz.gui.swing.TriStateCheckBox.State;
 import jamuz.utils.Inter;
+import java.util.List;
 
 /**
  *
@@ -33,7 +34,7 @@ public class TableRowFilterBook extends RowFilter {
     private State displaySelected=State.ALL;
 	private State displayLocal=State.ALL;
 	private String rating = null;
-	private String genre = null;
+	private String tag = null;
  
     /**
      * Change what to be displayed
@@ -59,6 +60,19 @@ public class TableRowFilterBook extends RowFilter {
 	
 	/**
 	 *
+	 * @param tag
+	 */
+	public void displayByTag(String tag) {
+        if(tag.equals(Inter.get("Label.All"))) {
+            this.tag=null;
+        }
+        else {
+            this.tag=tag;
+        }
+    }
+	
+	/**
+	 *
 	 * @param display
 	 */
 	public void displayLocal(TriStateCheckBox.State display) {
@@ -70,7 +84,8 @@ public class TableRowFilterBook extends RowFilter {
         Book book = (Book) entry.getValue(2);
         return isToDisplaySelected(book.isSelected())
 				&& isToDisplayLocal(book.isLocal())
-				&& isToDisplayRating(book.getRating()); 
+				&& isToDisplayRating(book.getRating())
+				&& isToDisplayTag(book.getTags()); 
     }
     
 	private boolean isToDisplayLocal(boolean local) {
@@ -95,6 +110,10 @@ public class TableRowFilterBook extends RowFilter {
  
 	private boolean isToDisplayRating(String rating) {
         return this.rating==null ? true : rating.equals(this.rating);
+    }
+	
+	private boolean isToDisplayTag(List<String> tags) {
+        return this.tag==null ? true : tags.contains(this.tag);
     }
 	
 }

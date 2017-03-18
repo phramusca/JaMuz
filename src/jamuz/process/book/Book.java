@@ -16,9 +16,12 @@
  */
 package jamuz.process.book;
 
+import info.movito.themoviedbapi.Utils;
 import jamuz.Jamuz;
 import jamuz.gui.swing.FileSizeComparable;
-import jamuz.process.video.VideoAbstract;
+import jamuz.utils.StringManager;
+import java.io.File;
+import java.util.List;
 import javax.swing.ImageIcon;
 import org.apache.commons.io.FilenameUtils;
 
@@ -30,24 +33,34 @@ public class Book implements Comparable {
 	private final String title; 
 	private final String title_sort;
 	private final String pubdate; //FIXME BOOK Format pubdate (keep only year & maybe month)
-	private final String author; //FIXME BOOK Can have multiple authors
+	private final String author; //FIXME BOOK Filter author (split by /)
 	private final String author_sort;  
 	private final String uuid; 
-	private final String filename; //FIXME BOOK Manage multiple formats
+	private final String filenameWithoutExtension;
 	private final String path; 
 	private FileSizeComparable length;
 	private final String comment; 
 	private final String rating; 
-	private final String language; //FIXME BOOK Fiter language
-	
-	//FIXME BOOK Read tags and filter
-	//FIXME BOOK Check and complete Export feature
-	//FIXME BOOK Check options gui
-	//FIXME BOOK Fix jList menu
+	private final String language; //FIXME BOOK Filter language
+	private final List<String> formats; //FIXME BOOK Filter format
+	private final List<String> tags;
+	private final String tagStr;
+
+	/**
+	 * Get the value of format
+	 *
+	 * @return the value of format
+	 */
+	public String getFormat() {
+		//FIXME BOOK LOW A book can have multiple versions (epub and azw for instance)
+		//Which to select ?
+		return formats.contains("EPUB")?"epub":formats.get(0).toLowerCase();
+	}
 	
 	public Book(String title, String title_sort, String pubdate, String author_sort, 
 			String uuid, String path, String comment, String rating, 
-			String language, String author, String filename) {
+			String language, String author, String filenameWithoutExtension, 
+			String formats, String tags) {
 		this.title = title;
 		this.title_sort = title_sort;
 		this.pubdate = pubdate;
@@ -59,7 +72,10 @@ public class Book implements Comparable {
 		this.rating = rating;
 		this.language = language;
 		this.author = author;
-		this.filename = filename;
+		this.filenameWithoutExtension = filenameWithoutExtension;		
+		this.formats = StringManager.parseSlashList(formats);
+		this.tagStr=tags;
+		this.tags=StringManager.parseSlashList(tags);
 	}
 
 	/**
@@ -70,7 +86,10 @@ public class Book implements Comparable {
     public ImageIcon getThumbnail(boolean readIfNotFound) {
         return IconBufferBook.getCoverIcon(uuid, getCoverFilePath(), readIfNotFound);
     }
-	
+
+	public List<String> getTags() {
+		return tags;
+	}
 	    /**
      * is selected ?
      * @return
@@ -104,6 +123,10 @@ public class Book implements Comparable {
 		return author_sort;
 	}
 
+	public String getAuthor() {
+		return author;
+	}
+
 	public String getUuid() {
 		return uuid;
 	}
@@ -114,18 +137,26 @@ public class Book implements Comparable {
 	
 	private String getPath() {
 		return FilenameUtils.concat(
-								Jamuz.getOptions().get("book.source"), 
+								Jamuz.getOptions().get("book.calibre"), 
 								path);
 	}
 	
 	private String getCoverFilePath() {
-		return FilenameUtils.concat(
+		String file = FilenameUtils.concat(
 						getPath(), 
 						"c2o_resizedcover.jpg");
+		File iconFile = new File(file);
+		if(!iconFile.exists()) {
+			file = FilenameUtils.concat(
+						getPath(), 
+						"cover.jpg");
+		}
+		return file;
 	}
 	
 	public String getFilePath() {
-		return FilenameUtils.concat(getPath(), filename);
+		return FilenameUtils.concat(getPath(), filenameWithoutExtension)
+				.concat(".").concat(getFormat());
 		
 	}
 
@@ -151,7 +182,7 @@ public class Book implements Comparable {
 	
 	@Override
 	public String toString() {
-		return "<html><b>"+this.title+"</b><BR/><i>"+author+"</i><BR/>"+comment+"</html>";
+		return "<html><b>"+this.title+"</b><BR/><i>"+author+"</i><BR/>"+tagStr+"<BR/><BR/>"+comment+"</html>";
 	}
 	
 	/**
