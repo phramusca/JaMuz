@@ -17,18 +17,12 @@
 
 package jamuz.process.book;
 
-import jamuz.process.video.*;
 import jamuz.DbInfo;
 import jamuz.Jamuz;
 import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
 import jamuz.utils.Popup;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.FileSystem;
-import jamuz.utils.SSH;
 import jamuz.utils.Inter;
 import jamuz.utils.ProcessAbstract;
 import java.util.List;
@@ -52,8 +46,7 @@ public class ProcessBook extends ProcessAbstract {
         tableModel = new TableModelBook();
         getDb = false;
     }
-    
-    
+
     /**
      * Export selected files in a thred, updating PanelBook
      */
@@ -102,6 +95,9 @@ public class ProcessBook extends ProcessAbstract {
 			checkAbort();
 			PanelBook.progressBar.progress(book.getTitle());
 
+			//FIXME BOOK Check and complete Export feature
+			
+			
 //			sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("source"), book.getRelativeFullPath()));
 //			destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("destination"), book.getRelativeFullPath()));
 
@@ -178,8 +174,14 @@ public class ProcessBook extends ProcessAbstract {
         PanelBook.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
 
 		//Connect to database
-		DbConnBook connCalibre = new DbConnBook(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getOptions().get("book.dbLocation"), ".", "."), Jamuz.getOptions().get("book.rootPath"));
-        File calibreDbFile = FileSystem.replaceHome(Jamuz.getOptions().get("book.dbLocation"));
+		String calibreDbFileName = 
+				FilenameUtils.concat(Jamuz.getOptions().get("book.calibre"), 
+				"metadata.db");
+		
+		DbConnBook connCalibre = new DbConnBook(new DbInfo(DbInfo.LibType.Sqlite, 
+				calibreDbFileName, ".", "."));
+        File calibreDbFile = FileSystem.replaceHome(calibreDbFileName);
+
 		if (!calibreDbFile.exists()) {
 			return false;
 		}
@@ -193,33 +195,25 @@ public class ProcessBook extends ProcessAbstract {
         else {
             //It is changed when copying, but if we want to use previous local copy directly, need to change work location
             connCalibre.getInfo().setLocationWork(FilenameUtils.concat(Jamuz.getLogPath(), 
-                    FilenameUtils.getName(Jamuz.getOptions().get("book.dbLocation")))); //NOI18N
+                    FilenameUtils.getName(calibreDbFileName))); //NOI18N
         }
         connCalibre.connect();
         
 		//List books
-		connCalibre.getBooks(tableModel.getFiles(), connCalibre.rootPath);
+		connCalibre.getBooks(tableModel.getFiles());
       
 		//Move - if required - and display movies 
 		PanelBook.progressBar.setup(tableModel.getFiles().size()*2);
 		for (Book book : tableModel.getFiles()) {
-			//FIXME BOOK LOW A book can have multiple versions (epub and azw for instance)
-                File file = new File(book.getFilePath());
-                if(file.exists()) {
-					book.setLength(file.length());
-                }
-//            if(length<=0) {
-//                book.setStatus(Inter.get("Msg.Video.FileNotFound"));
-//            }
-            
+			File file = new File(book.getFilePath());
+			if(file.exists()) {
+				book.setLength(file.length());
+			}
             //Display
             PanelBook.progressBar.progress(book.getTitle());
 		}
-
         tableModel.loadThumbnails();
-        
         PanelBook.diplayLength();
-        
         if(getDb) {
             //Send Kodi dtabase back
             this.checkAbort();

@@ -17,6 +17,8 @@
 
 package jamuz.utils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -186,6 +188,9 @@ public class StringManager {
         return sb.toString();
     }
     
+	public static List<String> parseSlashList(String string) {
+        return Arrays.asList(string.split(" / ")); //NOI18N
+    }
     
     //	public static String humanReadableMilliSeconds(long millis)
 //    {

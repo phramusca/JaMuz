@@ -171,10 +171,10 @@ public abstract class VideoAbstract implements Comparable {
             String titleOri, String studio, String trailerURL, String fanartURLs, String country) {
         
 		this.title = title;
-		this.writers = parseSlashList(writers);
+		this.writers = StringManager.parseSlashList(writers);
 		this.year = year;
         this.imdbIdTop250Ranking = imdbIdTop250Ranking;
-		this.genres = parseSlashList(genre);
+		this.genres = StringManager.parseSlashList(genre);
         this.genreStr = genre;
 		this.director = director;
 		this.titleOri = titleOri;
@@ -427,13 +427,7 @@ public abstract class VideoAbstract implements Comparable {
         }
         return URLs;
     }
-    
 
-    
-    private List<String> parseSlashList(String string) {
-        return Arrays.asList(string.split(" / ")); //NOI18N
-    }
-    
     /**
      * get titel
      * @return

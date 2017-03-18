@@ -19,6 +19,9 @@ package jamuz.process.book;
 
 import jamuz.Jamuz;
 import jamuz.utils.Inter;
+import jamuz.utils.Swing;
+import java.io.File;
+import javax.swing.JTextField;
 
 /**
  *
@@ -40,13 +43,11 @@ public class DialogBookOption extends javax.swing.JDialog {
     }
 
     private void displayOptions() {
-        jTextFieldVideoLocation.setText(Jamuz.getOptions().get("book.dbLocation"));
-        jTextFieldVideoRootPath.setText(Jamuz.getOptions().get("book.rootPath"));
+        jTextSource.setText(Jamuz.getOptions().get("book.calibre"));
     }
     
     private void setOptions() {
-        Jamuz.getOptions().set("book.dbLocation", jTextFieldVideoLocation.getText());
-        Jamuz.getOptions().set("book.rootPath", jTextFieldVideoRootPath.getText());
+        Jamuz.getOptions().set("book.calibre", jTextSource.getText());
     }
     
     /**
@@ -59,10 +60,9 @@ public class DialogBookOption extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabelVideoLocation = new javax.swing.JLabel();
-        jTextFieldVideoLocation = new javax.swing.JTextField();
-        jTextFieldVideoRootPath = new javax.swing.JTextField();
-        jLabelVideoRootPath = new javax.swing.JLabel();
+        jLabelVideoRootPath1 = new javax.swing.JLabel();
+        jTextSource = new javax.swing.JTextField();
+        jButtonSelectSouce = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
 
@@ -70,14 +70,16 @@ public class DialogBookOption extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Calibre Database"));
 
-        jLabelVideoLocation.setText(Inter.get("Label.Location")); // NOI18N
+        jLabelVideoRootPath1.setText(Inter.get("Label.Source")); // NOI18N
 
-        jTextFieldVideoLocation.setText("/home/raph/raph-desktop/.xbmc/userdata/Database/MyVideos78.db"); // NOI18N
-
-        jTextFieldVideoRootPath.setText("/home/raph/Vidéos/Films/"); // NOI18N
-
+        jButtonSelectSouce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
-        jLabelVideoRootPath.setText(bundle.getString("Label.RootPath")); // NOI18N
+        jButtonSelectSouce.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonSelectSouce.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSelectSouceActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -85,13 +87,11 @@ public class DialogBookOption extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelVideoRootPath)
-                    .addComponent(jLabelVideoLocation))
+                .addComponent(jLabelVideoRootPath1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTextSource, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldVideoLocation)
-                    .addComponent(jTextFieldVideoRootPath))
+                .addComponent(jButtonSelectSouce)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -99,13 +99,10 @@ public class DialogBookOption extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelVideoLocation)
-                    .addComponent(jTextFieldVideoLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldVideoRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelVideoRootPath))
-                .addContainerGap())
+                    .addComponent(jLabelVideoRootPath1)
+                    .addComponent(jButtonSelectSouce)
+                    .addComponent(jTextSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
@@ -166,6 +163,17 @@ public class DialogBookOption extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
+    private void jButtonSelectSouceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectSouceActionPerformed
+        getFolder(jTextSource, Inter.get("Label.Source"));
+    }//GEN-LAST:event_jButtonSelectSouceActionPerformed
+
+	private void getFolder(JTextField textField, String title) {
+        String selectedFolder=Swing.selectFolder(textField.getText(), title);
+        if(!selectedFolder.equals("")) {  //NOI18N
+            textField.setText(selectedFolder+File.separator);
+        }
+    }
+	
     /**
      * @param args the command line arguments
      */
@@ -203,10 +211,9 @@ public class DialogBookOption extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
-    private javax.swing.JLabel jLabelVideoLocation;
-    private javax.swing.JLabel jLabelVideoRootPath;
+    private javax.swing.JButton jButtonSelectSouce;
+    private javax.swing.JLabel jLabelVideoRootPath1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextFieldVideoLocation;
-    private javax.swing.JTextField jTextFieldVideoRootPath;
+    private javax.swing.JTextField jTextSource;
     // End of variables declaration//GEN-END:variables
 }

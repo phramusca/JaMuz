@@ -121,7 +121,7 @@ public class PanelBook extends javax.swing.JPanel {
 		setColumn(0, 20);
         setColumnIcon(0, "selected.png");
 		//	1:  "getThumbnails"
-        setColumn(1, IconBufferBook.iconWidth);
+        setColumn(1, IconBufferBook.ICON_WIDTH);
 		//	2:  "getTitle"
 		//	3:  "Author"
 		setColumn(3, 150);
@@ -145,13 +145,9 @@ public class PanelBook extends javax.swing.JPanel {
 //        jListBookTag.setCellRenderer(rendererGenre);
         
         //Menu listener
-        addMenuItem("IMDb"); //NOI18N
         addMenuItem(Inter.get("Button.Open"));  //NOI18N
-        addMenuItem(Inter.get("Label.Trailer")); //NOI18N
-        addMenuItem(Inter.get("Label.Delete")); //NOI18N
-        addMenuItem(Inter.get("Label.Homepage")); //NOI18N
         //Add links menu items
-        File f = Jamuz.getFile("VideoLinks.txt", "data");
+        File f = Jamuz.getFile("BookLinks.txt", "data");
         if(f.exists()) {
             JMenu menuLinks = new JMenu(Inter.get("Label.Links")); //NOI18N
             List<String> lines;
@@ -196,7 +192,10 @@ public class PanelBook extends javax.swing.JPanel {
         public void actionPerformed(ActionEvent e) {
             Book book = getSelected();
 			if(book!=null) {
-				Desktop.openBrowser(url.replaceAll("<title>", book.getTitle()));
+				Desktop.openBrowser(url
+						.replaceAll("<title>", book.getTitle())
+						.replaceAll("<author>", book.getAuthor())
+				);
 			}
         }
     }
@@ -240,26 +239,8 @@ public class PanelBook extends javax.swing.JPanel {
         public void actionPerformed(ActionEvent e) {
             JMenuItem source = (JMenuItem)(e.getSource());
             String sourceTxt=source.getText();
-//                String s = "Action event detected."
-//                           + "\n"
-//                           + "    Event source: " + source.getText()
-//                           + " (an instance of " + getClassName(source) + ")";
-//                Popup.info(s);
-
-            if(sourceTxt.equals("IMDb")) { //NOI18N
-                menuVideoIMDb();
-            }
-//            else if(sourceTxt.equals("Homepage")) {
-//                menuVideoHomepage();
-//            }
-//            else if(sourceTxt.equals(Inter.get("Button.Open"))) { //NOI18N
-//                menuVideoOpen();
-//            }
-//            else if(sourceTxt.equals(Inter.get("Label.Trailer"))) { //NOI18N
-//                menuVideoTrailer();
-//            }
-            else if(sourceTxt.equals(Inter.get("Label.Delete"))) { //NOI18N
-                menuVideoDelete();
+			if(sourceTxt.equals(Inter.get("Button.Open"))) { //NOI18N
+                menuBookOpen();
             }
             else {
                 Popup.error("Unknown menu item: " + sourceTxt); //NOI18N
@@ -267,6 +248,13 @@ public class PanelBook extends javax.swing.JPanel {
         }
     };
 
+	private void menuBookOpen() {
+        Book book = getSelected();
+        if(book!=null) {
+			Desktop.openFolder(book.getFilePath());
+        }
+    }
+	
     private static TableRowSorter<TableModelBook> tableSorter;
     private static final TableRowFilterBook filterBook= new TableRowFilterBook();
     
@@ -294,25 +282,25 @@ public class PanelBook extends javax.swing.JPanel {
             tableSorter.setRowFilter(filterBook);
 
             if(fillLists) {
-                List<String> genres=new ArrayList<>();
+                List<String> tags=new ArrayList<>();
                 List<String> ratings = new ArrayList<>();
                 int index;
                 for(int i = 0; i < jTableBook.getRowCount(); i++) {
                     index = jTableBook.convertRowIndexToModel(i);
                     Book book = processBook.getTableModel().getFile(index);
                     //Add genres to the list
-//                    for(String genre : book.getGenres()) {
-//                        if(!genres.contains(genre)) {
-//                            genres.add(genre);
-//                        }
-//                    }
+                    for(String tag : book.getTags()) {
+                        if(!tags.contains(tag)) {
+                            tags.add(tag);
+                        }
+                    }
                     //Add rating to the list
                     if(!ratings.contains(book.getRating())) {
                         ratings.add(book.getRating());
                     }
                 }
 
-                jListBookTag.setModel(getModel(genres));
+                jListBookTag.setModel(getModel(tags));
                 jListVideoRating.setModel(getModel(ratings));
                 
                 jListBookTag.setSelectedIndex(0);
@@ -400,33 +388,6 @@ public class PanelBook extends javax.swing.JPanel {
         else { 			
             Popup.info(Inter.get("Error.YouMustSelectArow")); 		  //NOI18N
             return null;
-        }
-    }
-    
-    private void menuVideoDelete() {
-        Book book = getSelected();
-        if(book!=null) {
-            int n = JOptionPane.showConfirmDialog(
-					null, Inter.get("Question.DeleteVideo"),  //NOI18N
-					Inter.get("Label.Confirm"),  //NOI18N
-					JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
-//                for(FileInfoVideo fileInfoVideo : book.getFiles().values()) {
-//                    File videoFile = new File(Jamuz.getOptions().get("video.source")+fileInfoVideo.getRelativeFullPath());
-//                    boolean isDeleted = videoFile.delete();
-//                    //TODO: Remove from db (and send db back at some point)
-//                }
-
-//FIXME: Implement ??
-            } 
-        }
-    }
-    
-    private void menuVideoIMDb() {
-        //TODO: Open within JaMuz
-        Book book = getSelected();
-        if(book!=null) {
-//            Desktop.openBrowser(book.getImdbURI());
         }
     }
         
@@ -649,7 +610,7 @@ public class PanelBook extends javax.swing.JPanel {
 
     private void jButtonBookExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBookExportActionPerformed
 
-        DialogVideoExport.main(null);
+        DialogBookExport.main(null);
     }//GEN-LAST:event_jButtonBookExportActionPerformed
 
 	/**
@@ -689,7 +650,7 @@ public class PanelBook extends javax.swing.JPanel {
     
     private void jListBookTagValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListBookTagValueChanged
         if(jListBookTag.getSelectedValue()!=null && !evt.getValueIsAdjusting()) {
-//            filterVideo.displayByGenre((String) jListBookTag.getSelectedValue());
+            filterBook.displayByTag((String) jListBookTag.getSelectedValue());
             filterBook(false);
         }
     }//GEN-LAST:event_jListBookTagValueChanged
