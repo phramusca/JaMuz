@@ -206,6 +206,7 @@ public class ProcessVideo extends ProcessAbstract {
 		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getOptions().get("video.dbLocation"), ".", "."), Jamuz.getOptions().get("video.rootPath"));
         File kodiDbFile = FileSystem.replaceHome(Jamuz.getOptions().get("video.dbLocation"));
 		if (!kodiDbFile.exists()) { //Not using connKodi.getInfo().check() as we don't want popup
+			//TODO: Display error in PanelVideo somehow
 			return false;
 		}
 		if(getDb) {
@@ -246,7 +247,7 @@ public class ProcessVideo extends ProcessAbstract {
                 //TODO: Tell user (doc, options, ?) that stream info is not 
                 //always available. Kodi needs to read it first
                 // and that happens only when you open files in a liste
-                //So for series, you have to go through all or create an "All" playlist and open it
+                //So for tv shows, you have to go through all or create an "All" playlist and open it
                 //Then wait a while before processing again
                 //TODO: Warn that kodi needs cleanup/update when at least a file has been moved
                 video.moveFilesAndSrt(buffer, connKodi, myConn); 

@@ -2152,6 +2152,7 @@ public class PanelMain extends javax.swing.JFrame {
                 }
                 else {
                     switch(msg) {
+						case "sendCover": sendCover(); break;
                         //TODO: Say rating as an option
                         case "setRating1": setRating(1, false); break;
                         case "setRating2": setRating(2, false); break;
@@ -2311,7 +2312,7 @@ public class PanelMain extends javax.swing.JFrame {
             map.put("type", "currentPosition");
             map.put("currentPosition", currentPosition);
             map.put("total", displayedFile.getLength());
-            sendToClients("JSON_"+JSONValue.toJSONString(map));
+//            sendToClients("JSON_"+JSONValue.toJSONString(map));
             startTime=System.currentTimeMillis();
         }
     }
@@ -2355,11 +2356,15 @@ public class PanelMain extends javax.swing.JFrame {
         sendToClients("JSON_"+JSONValue.toJSONString(map));
         
         if(sendCover) {
-             if(server!=null) {
-                server.sendCover(displayedFile);
-            }
+			sendCover();
         } 
     }
+	
+	private static void sendCover() {
+		if(server!=null) {
+			server.sendCover(displayedFile);
+		}
+	}
     
     private static void sendToClients(String msg) {
         if(server!=null) {

@@ -133,7 +133,8 @@ public class VideoTvShow extends VideoAbstract {
                 nbHD+=1;
             }
         }
-        display += "<u>Episodes</u>: "+files.size()+": "+nbWatched+" "+Inter.get("Label.Watched")+", "+nbHD+" HD<BR/>";
+        display += "<u>Episodes</u>: "+files.size()+": "+nbWatched+" "
+				+Inter.get("Label.Watched")+", "+nbHD+" HD<BR/>";
 
         //List missing episodes (from last watched)
         display += "<u>Missing</u>:";
@@ -159,7 +160,7 @@ public class VideoTvShow extends VideoAbstract {
         }
         else {
             display += "<font color=red>";
-            display += " No info.";    
+            display += " "+Inter.get("Msg.Video.NoInfo");    
             display += "</font>";
 
         }
