@@ -185,7 +185,13 @@ public class VideoMovie extends VideoAbstract {
 	 */
 	@Override
     public void setMyVideo(boolean search) {
-        MyMovieDb myMovieDb = ProcessVideo.themovieDb.get(getTitle(), Integer.parseInt(getYear()));
+		int year;
+		try {
+			year = Integer.parseInt(getYear());
+		} catch(java.lang.NumberFormatException ex) {
+			year = 0;
+		}
+        MyMovieDb myMovieDb = ProcessVideo.themovieDb.get(getTitle(), year);
         if(myMovieDb!=null) {
             setMyVideo(myMovieDb);  
         }

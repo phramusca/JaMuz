@@ -19,7 +19,6 @@ package jamuz.process.video;
 import jamuz.FileInfo;
 import java.util.ArrayList;
 import java.util.List;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 
 /**
@@ -30,23 +29,11 @@ public class FileInfoVideo extends FileInfo {
 
     private int seasonNumber=0;
     private int episodeNumber=0;
+	private Quality quality = Quality.UNKNOWN;
+	private String duration;
+	private String subtitlesStreamDetails="";
+	private String audioStreamDetails="";
 
-	/**
-	 *
-	 * @return
-	 */
-	public int getSeasonNumber() {
-        return seasonNumber;
-    }
-
-	/**
-	 *
-	 * @return
-	 */
-	public int getEpisodeNumber() {
-        return episodeNumber;
-    }
-    
     /**
      *
      * @param idFile
@@ -63,9 +50,41 @@ public class FileInfoVideo extends FileInfo {
     public FileInfoVideo(int idFile, int idPath, String relativeFullPath, int rating, String lastPlayed, String addedDate, int playCounter, 
             StreamDetails streamDetails, int seasonNumber, int episodeNumber) {
         super(idFile, idPath, relativeFullPath, rating, lastPlayed, addedDate, playCounter, "", 0, 0, "");
-        this.streamDetails = streamDetails;
         this.seasonNumber = seasonNumber;
         this.episodeNumber = episodeNumber;
+		
+		if(streamDetails.video.size()>0) {
+            //TODO: Color if for HTML
+            StreamDetails.VideoStream videoStream = streamDetails.video.get(0);
+            long size = videoStream.width*videoStream.height;
+			
+			//FIXME: Height can be less than max if ratio not 16:9
+			//Is it specified by aspect ?
+			
+            if(size >= 1900*1000) { // 1080 : 1 920 × 1 080
+                quality = Quality.HD1080;
+            } 
+            else if(size >= 1200*700) { // 720  : 1 280 × 720
+                quality = Quality.HD720;
+            } 
+            else {
+                quality= Quality.SD;
+            }
+			duration = StringManager.secondsToHHMM(videoStream.duration);
+			
+			for(String language : streamDetails.subtitles) {
+                subtitlesStreamDetails += " [ST " + language.toUpperCase() + "]"; //NOI18N
+            }
+			
+			for(FileInfoVideo.StreamDetails.AudioStream audioStream : streamDetails.audio) {
+                //TODO: Offer this has an option
+//                newName += " [" + audioStream.codec + " " + "(" + audioStream.channels + ")"; //NOI18N
+                if(!audioStream.language.startsWith("{")) {
+                    audioStreamDetails += " [" + audioStream.language.toUpperCase()+"]"; //NOI18N
+                }
+//                newName += "]"; //NOI18N
+            }
+        }
     }
 
 	/**
@@ -75,33 +94,14 @@ public class FileInfoVideo extends FileInfo {
         super("");
     }
     
-    /**
-     *
-     */
-    private StreamDetails streamDetails = new StreamDetails();
-
-//    public StreamDetails getStreamDetails() {
-//        return streamDetails;
-//    }
-
 	/**
 	 *
 	 * @return
 	 */
 
     public boolean isHD() {
-        //TODO: Why is this function called so may times for the same movie ??
-        if(streamDetails.video.size()>=1) {
-            StreamDetails.VideoStream videoStream = streamDetails.video.get(0);
-            long size = videoStream.height*videoStream.width;
-            return size >= 1200*700; //(some may be slightly lower than 1280*720)
-        }
-//        else if(streamDetails.video.size()>1) {
-        //This happened in "Made In France" (h264 and jpeg !!). VLC shows a "Piste 2" video which displays the same.
-        //Though we cannot popup an error each time
-//            Popup.warning("HD issue");
-//        }
-        return false;
+		return quality == Quality.HD1080
+			|| quality == Quality.HD720;
     }
     
 	/**
@@ -109,52 +109,17 @@ public class FileInfoVideo extends FileInfo {
 	 * @return
 	 */
 	public String getVideoStreamDetails() {
-        if(streamDetails.video.size()>=1) {
-            //TODO: Color if for HTML
-            StreamDetails.VideoStream videoStream = streamDetails.video.get(0);
-            long size = videoStream.height*videoStream.width;
-            String display;
-            if(size >= 1900*1000) { // 1080 : 1 920 × 1 080 //(some may be slightly lower)
-                display= "HD 1080";
-            } 
-            else if(size >= 1200*700) { // 720  : 1 280 × 720
-                display= "HD 720";
-            } 
-            else {
-                display= "SD";
-            } 
-            display += " - " + StringManager.secondsToHHMM(videoStream.duration);
-            
-            //TODO: Offer as an option
-//            display += " [" + videoStream.codec + " " + videoStream.width + "x" + videoStream.height + "] "; //NOI18N
-            return display;
-        }
-//        else if(streamDetails.video.size()>1) {
-        // Refer to isHD() : same problem
-//            return "More than one video stream";
-//        }
-        else {
-            return "";
-        }
+		//TODO: Offer as an option
+//		display += " [" + videoStream.codec + " " + videoStream.width + "x" + videoStream.height + "] "; //NOI18N
+        return quality + " - " + duration;
     }
-    
+
 	/**
 	 *
 	 * @return
 	 */
 	public String getAudioStreamDetails() {
-        String display="";
-        if(streamDetails.audio.size()>0) {
-            for(FileInfoVideo.StreamDetails.AudioStream audioStream : streamDetails.audio) {
-                //TODO: Offer this has an option
-//                newName += " [" + audioStream.codec + " " + "(" + audioStream.channels + ")"; //NOI18N
-                if(!audioStream.language.startsWith("{")) {
-                    display += " [" + audioStream.language.toUpperCase()+"]"; //NOI18N
-                }
-//                newName += "]"; //NOI18N
-            }
-        }
-        return display;
+        return audioStreamDetails;
     }
     
 	/**
@@ -162,15 +127,27 @@ public class FileInfoVideo extends FileInfo {
 	 * @return
 	 */
 	public String getSubtitlesStreamDetails() {
-        String display="";
-        if(streamDetails.subtitles.size()>0) {
-            for(String language : streamDetails.subtitles) {
-                display += " [ST " + language.toUpperCase() + "]"; //NOI18N
-            }
-        }
-        return display;
+        return subtitlesStreamDetails;
     }
     
+	public enum Quality {
+		HD1080("HD 1080"), //NOI18N
+		HD720("HD 720"), //NOI18N
+		SD("SD"),
+		UNKNOWN(""); //NOI18N
+        
+        private final String display;
+		
+        private Quality(String display) {
+            this.display = display;
+		}
+
+        @Override
+		public String toString() {
+			return display;
+		}
+	}
+	
     /**
      *
      */
@@ -335,6 +312,22 @@ public class FileInfoVideo extends FileInfo {
                 this.duration = duration;
             }
         }
+    }
+	
+	/**
+	 *
+	 * @return
+	 */
+	public int getSeasonNumber() {
+        return seasonNumber;
+    }
+
+	/**
+	 *
+	 * @return
+	 */
+	public int getEpisodeNumber() {
+        return episodeNumber;
     }
     
 }
