@@ -78,8 +78,6 @@ public class Server {
 		}
 	}
 
-    
-	
 	class HandleLogin extends ProcessAbstract {
 
 		public HandleLogin(ServerSocket ss){
@@ -131,19 +129,14 @@ public class Server {
                 clients.put(login, client);
                 callBackAuth.authenticated(login, null);
             }
-            else {
-                client.send("MSG_ERROR_ALREADY_CONNECTED");
-                closeClient(login);
-            }
+//            else {
+//				//TODO: This can happen. why ?
+//				//Until this is solved, considering not a problem
+//                client.send("MSG_ERROR_ALREADY_CONNECTED");
+//                closeClient(login);
+//            }
 		}
 	}
-	
-//    public void sendFile(String filename) {
-//        for(ServerClient client : clients.values()) {
-//            client.send("MSG_SENDING_"+filename);
-//            client.sendFile(filename);
-//        }
-//    }
 
 	/**
 	 *

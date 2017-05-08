@@ -153,9 +153,7 @@ public class PanelMain extends javax.swing.JFrame {
      * Creates new form MainGUI
      */
     public PanelMain() {
-        
-        clients = new ArrayList<>();
-        
+		
         comboGenre = new String[1];
         comboGenre[0] = ""; //NOI18N
         initComponents();
@@ -206,7 +204,9 @@ public class PanelMain extends javax.swing.JFrame {
 		tf.setEditable(false);
 		tf.setBackground(Color.GRAY);
 		
-        //"Options" tab
+	//"Options" tab
+		clients = new ArrayList<>();
+		listModelRemoteClients = (DefaultListModel) jListRemoteClients.getModel();
         fillMachineList();
         progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 
@@ -781,7 +781,7 @@ public class PanelMain extends javax.swing.JFrame {
         panelPlaylists = new jamuz.gui.PanelPlaylists();
         panelLyrics = new jamuz.gui.PanelLyrics();
         panelStats = new jamuz.gui.PanelStats();
-        jPanelOptions = new javax.swing.JPanel();
+        javax.swing.JPanel jPanelOptions = new javax.swing.JPanel();
         jPanelOptionsMachines = new javax.swing.JPanel();
         jScrollPaneOptionsMachines = new javax.swing.JScrollPane();
         jListMachines = new javax.swing.JList();
@@ -801,13 +801,13 @@ public class PanelMain extends javax.swing.JFrame {
         jPanelRemote = new javax.swing.JPanel();
         jSpinnerPort = new javax.swing.JSpinner();
         jButtonStart = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaRemote = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jButtonSendInfo = new javax.swing.JButton();
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
         jLabelIP = new javax.swing.JLabel();
         jButtonQRcode = new javax.swing.JButton();
+        jScrollPanePlayerQueue1 = new javax.swing.JScrollPane();
+        jListRemoteClients = new javax.swing.JList();
         jPanel4 = new javax.swing.JPanel();
         jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
         jButton2 = new javax.swing.JButton();
@@ -1028,10 +1028,6 @@ public class PanelMain extends javax.swing.JFrame {
             }
         });
 
-        jTextAreaRemote.setColumns(20);
-        jTextAreaRemote.setRows(5);
-        jScrollPane1.setViewportView(jTextAreaRemote);
-
         jLabel1.setText(Inter.get("PanelMain.jLabel1.text")); // NOI18N
 
         jButtonSendInfo.setText("Send File Info"); // NOI18N
@@ -1055,18 +1051,26 @@ public class PanelMain extends javax.swing.JFrame {
             }
         });
 
+        jListRemoteClients.setModel(new DefaultListModel());
+        jListRemoteClients.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jListRemoteClientsMouseClicked(evt);
+            }
+        });
+        jListRemoteClients.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListRemoteClientsValueChanged(evt);
+            }
+        });
+        jScrollPanePlayerQueue1.setViewportView(jListRemoteClients);
+
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRemoteLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonQRcode))
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -1077,7 +1081,15 @@ public class PanelMain extends javax.swing.JFrame {
                                 .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonStart))
-                            .addComponent(jCheckBoxServerStartOnStartup, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                            .addComponent(jCheckBoxServerStartOnStartup, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPanePlayerQueue1)
+                            .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                                .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonQRcode)))
+                        .addContainerGap())))
         );
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1094,8 +1106,9 @@ public class PanelMain extends javax.swing.JFrame {
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelIP)
                     .addComponent(jButtonQRcode))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1))
+                .addGap(4, 4, 4)
+                .addComponent(jScrollPanePlayerQueue1)
+                .addContainerGap())
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("PanelMain.jPanel4.border.title"))); // NOI18N
@@ -2026,6 +2039,7 @@ public class PanelMain extends javax.swing.JFrame {
     
     private static Server server;
     private final List<String> clients;
+	private DefaultListModel listModelRemoteClients;
     
     //TODO: Manage jCheckBoxServerStartOnStartup 
     
@@ -2040,18 +2054,18 @@ public class PanelMain extends javax.swing.JFrame {
             server.closeClient(login);
         }
         clients.clear();
+		listModelRemoteClients.clear();
 
         if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
-            jTextAreaRemote.setText(null);
+			listModelRemoteClients.clear();
             CallBackReception callBackReception = new CallBackReception();
             CallBackAuthentication callBackAuthentication = new CallBackAuthentication();
             server = new Server((Integer) jSpinnerPort.getValue(), callBackReception, callBackAuthentication);
             if(server.connect()) {
                 Swing.enableComponents(jPanelRemote, false);
-                jTextAreaRemote.setEnabled(true);
+				jListRemoteClients.setEnabled(true);
                 jButtonSendInfo.setEnabled(true);
 				jButtonQRcode.setEnabled(true);
-//                jCheckBoxSendCover.setEnabled(true);
                 jButtonStart.setText(Inter.get("Button.Pause"));
             }
         }
@@ -2098,6 +2112,14 @@ public class PanelMain extends javax.swing.JFrame {
     private void jSpinnerVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVolumeStateChanged
         MPLAYER.setVolume((float)jSpinnerVolume.getValue());
     }//GEN-LAST:event_jSpinnerVolumeStateChanged
+
+    private void jListRemoteClientsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListRemoteClientsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jListRemoteClientsMouseClicked
+
+    private void jListRemoteClientsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListRemoteClientsValueChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jListRemoteClientsValueChanged
 
 	/**
 	 *
@@ -2152,10 +2174,7 @@ public class PanelMain extends javax.swing.JFrame {
                 }
                 else {
                     switch(msg) {
-						case "sendCover": 
-							System.out.println("Received \"sendCover\" => sending cover");
-							sendCover(); 
-							break;
+						case "sendCover": sendCover(); break;
                         //TODO: Say rating as an option
                         case "setRating1": setRating(1, false); break;
                         case "setRating2": setRating(2, false); break;
@@ -2173,11 +2192,11 @@ public class PanelMain extends javax.swing.JFrame {
 						case "volDown": jSpinnerVolume.setValue((float)jSpinnerVolume.getValue()-5.0f); break;
                         case "sayRating": displayedFile.sayRating(true); break;
                         case "MSG_NULL":
-                            jTextAreaRemote.append(login.concat(" has disconnected.").concat("\n"));
                             clients.remove(login);
+							listModelRemoteClients.removeElement(login);
                             break;
                         default:
-                            jTextAreaRemote.append(login.concat(": ").concat(msg).concat("\n"));
+							Jamuz.getLogger().warning(login.concat(": ").concat(msg).concat("\n"));
                             break;
                     }
                 }
@@ -2202,8 +2221,8 @@ public class PanelMain extends javax.swing.JFrame {
 	class CallBackAuthentication implements ICallBackAuthentication {
 		@Override
 		public void authenticated(String login, ServerClient client) {
-            jTextAreaRemote.append(login.concat(" has connected.").concat("\n"));
 			clients.add(login);
+			listModelRemoteClients.addElement(login);
             sendPlaylistsToClients(jComboBoxPlaylist.getSelectedItem().toString()); //Sends list of playlists
             sendToClients(displayedFile);
 		}
@@ -2559,11 +2578,11 @@ public class PanelMain extends javax.swing.JFrame {
     private javax.swing.JList jListGenres;
     private static javax.swing.JList jListMachines;
     private static javax.swing.JList jListPlayerQueue;
+    private static javax.swing.JList jListRemoteClients;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanelOptions;
     private javax.swing.JPanel jPanelOptionsGenres;
     private javax.swing.JPanel jPanelOptionsMachines;
     private javax.swing.JPanel jPanelPlayer;
@@ -2572,16 +2591,15 @@ public class PanelMain extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelRemote;
     private static javax.swing.JProgressBar jProgressBarResetChecked;
     private static javax.swing.JProgressBar jProgressBarSaveTags;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines1;
     private javax.swing.JScrollPane jScrollPanePlayerQueue;
+    private javax.swing.JScrollPane jScrollPanePlayerQueue1;
     private static javax.swing.JSlider jSliderPlayerLength;
     private javax.swing.JSpinner jSpinnerPort;
     private static javax.swing.JSpinner jSpinnerVolume;
     private javax.swing.JSplitPane jSplitPaneMain;
     private static javax.swing.JTabbedPane jTabbedPaneMain;
-    private javax.swing.JTextArea jTextAreaRemote;
     private static javax.swing.JToggleButton jToggleButtonPlayerInfo;
     private jamuz.process.book.PanelBook panelBook;
     protected final jamuz.process.check.PanelCheck panelCheck = new jamuz.process.check.PanelCheck();
