@@ -47,15 +47,12 @@ public class Reception  extends ProcessAbstract {
                 }
 			}
 		} catch (InterruptedException ex) {
-//            Logger.getLogger(Reception.class.getName()).log(Level.SEVERE, null, ex);
         } catch(IOException ex) {
             callback.received(login, "MSG_ERROR: ".concat(ex.toString()));
-//			Logger.getLogger(Reception.class.getName()).log(Level.SEVERE, null, ex);
 		} finally {
             try {
                 bufferedReader.close();
-            } catch (IOException ex1) {
-//                Logger.getLogger(Reception.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (IOException ex) {
             }
         }
 	}

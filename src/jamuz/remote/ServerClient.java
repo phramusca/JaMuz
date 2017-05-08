@@ -150,7 +150,7 @@ public class ServerClient {
                 send("MSG_ENTER_PWD");
                 String pass = bufferedReader.readLine();
 
-                if(isValid(login, pass)){
+                if(isValid(pass)){
                     send("MSG_CONNECTED");
 
                     //Starting reception thread
@@ -168,23 +168,9 @@ public class ServerClient {
 			}
 		}
 
-		private boolean isValid(String login, String pass) {
-			
+		private boolean isValid(String pass) {
 			//TODO: Use a better authentication & think of moving jamuz to multi-user somehow
-			return (login.equals("tata") && pass.equals("tata"));
-//			boolean connexion = false;
-//			try {
-//				Scanner sc = new Scanner(new File("zero.txt"));
-//				while(sc.hasNext()){
-//					if(sc.nextLine().equals(login+" "+pass)){
-//						connexion=true;
-//						break;
-//					}
-//				 }
-//			} catch (FileNotFoundException ex) {	
-//                Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, "Le fichier \"zero.txt\" n'existe pas !");
-//			}
-//			return connexion;
+			return pass.equals("tata");
 		}
 	}
 }
