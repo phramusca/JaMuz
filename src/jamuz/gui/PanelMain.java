@@ -518,7 +518,7 @@ public class PanelMain extends javax.swing.JFrame {
         if(displayedFile.isFromLibrary()) {
             jComboBoxPlayerRating.setSelectedIndex(rating);
             displayedFile.sayRating(sayRated);
-            sendToClients(displayedFile, false);
+            sendToClients(displayedFile);
         }
     }
     
@@ -2065,7 +2065,7 @@ public class PanelMain extends javax.swing.JFrame {
 	
     private void jButtonSendInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendInfoActionPerformed
         if(displayedFile!=null) {
-            sendToClients(displayedFile, true);
+            sendToClients(displayedFile);
         }
     }//GEN-LAST:event_jButtonSendInfoActionPerformed
 
@@ -2152,7 +2152,10 @@ public class PanelMain extends javax.swing.JFrame {
                 }
                 else {
                     switch(msg) {
-						case "sendCover": sendCover(); break;
+						case "sendCover": 
+							System.out.println("Received \"sendCover\" => sending cover");
+							sendCover(); 
+							break;
                         //TODO: Say rating as an option
                         case "setRating1": setRating(1, false); break;
                         case "setRating2": setRating(2, false); break;
@@ -2202,7 +2205,7 @@ public class PanelMain extends javax.swing.JFrame {
             jTextAreaRemote.append(login.concat(" has connected.").concat("\n"));
 			clients.add(login);
             sendPlaylistsToClients(jComboBoxPlaylist.getSelectedItem().toString()); //Sends list of playlists
-            sendToClients(displayedFile, true);
+            sendToClients(displayedFile);
 		}
 	}
     
@@ -2296,8 +2299,7 @@ public class PanelMain extends javax.swing.JFrame {
 
             if (isPlaying) {
                 playerInfo.displayFileInfo(fileInfo);
-//                sendToServer(fileInfo, jCheckBoxSendCover.isSelected());
-                sendToClients(fileInfo, true);
+                sendToClients(fileInfo);
             }
         } catch (Exception ex) {
             Popup.error(ex);
@@ -2312,7 +2314,7 @@ public class PanelMain extends javax.swing.JFrame {
             map.put("type", "currentPosition");
             map.put("currentPosition", currentPosition);
             map.put("total", displayedFile.getLength());
-//            sendToClients("JSON_"+JSONValue.toJSONString(map));
+            sendToClients("JSON_"+JSONValue.toJSONString(map));
             startTime=System.currentTimeMillis();
         }
     }
@@ -2346,18 +2348,15 @@ public class PanelMain extends javax.swing.JFrame {
         return list;
     }
     
-    private static void sendToClients(FileInfoInt fileInfo, boolean sendCover) {    
+    private static void sendToClients(FileInfoInt fileInfo) {    
         Map map = new HashMap();
         map.put("type", "fileInfoInt");
+		map.put("coverHash", fileInfo.getCoverHash());
         map.put("rating", fileInfo.getRating());
         map.put("title", fileInfo.getTitle());
         map.put("album", fileInfo.getAlbum());
         map.put("artist", fileInfo.getArtist());
         sendToClients("JSON_"+JSONValue.toJSONString(map));
-        
-        if(sendCover) {
-			sendCover();
-        } 
     }
 	
 	private static void sendCover() {

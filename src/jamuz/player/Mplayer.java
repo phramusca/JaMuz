@@ -423,15 +423,15 @@ public class Mplayer implements Runnable {
 	private String execute(String command, String expected) {
 		if (process != null && process.isAlive()) {
 			try {
-				System.out.println("Send to MPlayer the command \"" + command + "\" and expecting "
-						+ (expected != null ? "\"" + expected + "\"" : "no answer"));
+//				System.out.println("Send to MPlayer the command \"" + command + "\" and expecting "
+//						+ (expected != null ? "\"" + expected + "\"" : "no answer"));
 				writer.write(command);
 				writer.write("\n");
 				writer.flush();
-				System.out.println("Command sent");
+//				System.out.println("Command sent");
 				if (expected != null) {
 					String response = waitForAnswer(expected);
-					System.out.println("MPlayer command response: " + response);
+//					System.out.println("MPlayer command response: " + response);
 					return response;
 				}
 			} catch (IOException ex) {
