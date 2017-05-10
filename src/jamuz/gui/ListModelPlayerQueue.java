@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz.gui.swing;
+package jamuz.gui;
 
 import jamuz.FileInfoInt;
-import jamuz.gui.PanelMain;
+import jamuz.gui.swing.ListElement;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
 
@@ -25,7 +25,7 @@ import javax.swing.AbstractListModel;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class ListModelQueue extends AbstractListModel {
+public class ListModelPlayerQueue extends AbstractListModel {
 
     private final ArrayList<ListElement> queue;
     private int playingIndex;
@@ -33,7 +33,7 @@ public class ListModelQueue extends AbstractListModel {
     /**
      * Create a new queue
      */
-    public ListModelQueue() {
+    public ListModelPlayerQueue() {
         queue = new ArrayList<>();
         playingIndex = -1;
     }

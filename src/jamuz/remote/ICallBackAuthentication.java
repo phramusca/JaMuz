@@ -16,5 +16,5 @@ public interface ICallBackAuthentication {
 	 * @param login
 	 * @param client
 	 */
-	public void authenticated(String login, ServerClient client);
+	public void authenticated(Client login, ServerClient client);
 }

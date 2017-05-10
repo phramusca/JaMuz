@@ -124,9 +124,9 @@ public class Server {
     
 	class CallBackAuthentication implements ICallBackAuthentication {
 		@Override
-		public void authenticated(String login, ServerClient client) {
-			if(!clients.containsKey(login)) {
-                clients.put(login, client);
+		public void authenticated(Client login, ServerClient client) {
+			if(!clients.containsKey(login.getId())) {
+                clients.put(login.getId(), client);
                 callBackAuth.authenticated(login, null);
             }
 //            else {
