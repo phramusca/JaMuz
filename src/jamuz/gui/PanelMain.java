@@ -64,7 +64,6 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import jamuz.gui.swing.ButtonBrowseURL;
-import jamuz.gui.swing.ListModelQueue;
 import jamuz.gui.swing.TableCellListener;
 import jamuz.player.Mplayer;
 import jamuz.process.check.FolderInfo;
@@ -93,6 +92,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import jamuz.player.MPlaybackListener;
+import jamuz.remote.Client;
 import javax.swing.JTabbedPane;
 
 /**
@@ -105,13 +105,13 @@ public class PanelMain extends javax.swing.JFrame {
     /**
      * Play queue list model
      */
-    private static ListModelQueue queueModel;
+    private static ListModelPlayerQueue queueModel;
 
 	/**
 	 *
 	 * @return
 	 */
-	public static ListModelQueue getQueueModel() {
+	public static ListModelPlayerQueue getQueueModel() {
         return queueModel;
     }
     
@@ -172,7 +172,7 @@ public class PanelMain extends javax.swing.JFrame {
 
 	//Left pane: player
         //Set queue model
-        queueModel = new ListModelQueue();
+        queueModel = new ListModelPlayerQueue();
         jListPlayerQueue.setModel(queueModel);
         playerInfo = new FramePlayerInfo(getTitle(), queueModel);
 		
@@ -205,8 +205,9 @@ public class PanelMain extends javax.swing.JFrame {
 		tf.setBackground(Color.GRAY);
 		
 	//"Options" tab
-		clients = new ArrayList<>();
-		listModelRemoteClients = (DefaultListModel) jListRemoteClients.getModel();
+		listModelRemoteClients = new ListModelRemoteClients();
+        jListRemoteClients.setModel(listModelRemoteClients);
+		
         fillMachineList();
         progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 
@@ -1052,16 +1053,6 @@ public class PanelMain extends javax.swing.JFrame {
         });
 
         jListRemoteClients.setModel(new DefaultListModel());
-        jListRemoteClients.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jListRemoteClientsMouseClicked(evt);
-            }
-        });
-        jListRemoteClients.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListRemoteClientsValueChanged(evt);
-            }
-        });
         jScrollPanePlayerQueue1.setViewportView(jListRemoteClients);
 
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
@@ -2038,8 +2029,8 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonRefreshHiddenQueueActionPerformed
     
     private static Server server;
-    private final List<String> clients;
-	private DefaultListModel listModelRemoteClients;
+//	private DefaultListModel<Client> listModelRemoteClients;
+	private static ListModelRemoteClients listModelRemoteClients;
     
     //TODO: Manage jCheckBoxServerStartOnStartup 
     
@@ -2050,20 +2041,18 @@ public class PanelMain extends javax.swing.JFrame {
 	private void startStopRemoteServer() {
 		Swing.enableComponents(jPanelRemote, false);
 
-        for(String login : clients) {
-            server.closeClient(login);
+        for(String client : listModelRemoteClients.getClients()) {
+            server.closeClient(client);
         }
-        clients.clear();
 		listModelRemoteClients.clear();
 
         if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
-			listModelRemoteClients.clear();
             CallBackReception callBackReception = new CallBackReception();
             CallBackAuthentication callBackAuthentication = new CallBackAuthentication();
             server = new Server((Integer) jSpinnerPort.getValue(), callBackReception, callBackAuthentication);
             if(server.connect()) {
                 Swing.enableComponents(jPanelRemote, false);
-				jListRemoteClients.setEnabled(true);
+//				jListRemoteClients.setEnabled(true);
                 jButtonSendInfo.setEnabled(true);
 				jButtonQRcode.setEnabled(true);
                 jButtonStart.setText(Inter.get("Button.Pause"));
@@ -2113,14 +2102,6 @@ public class PanelMain extends javax.swing.JFrame {
         MPLAYER.setVolume((float)jSpinnerVolume.getValue());
     }//GEN-LAST:event_jSpinnerVolumeStateChanged
 
-    private void jListRemoteClientsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListRemoteClientsMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jListRemoteClientsMouseClicked
-
-    private void jListRemoteClientsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListRemoteClientsValueChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jListRemoteClientsValueChanged
-
 	/**
 	 *
 	 */
@@ -2168,7 +2149,7 @@ public class PanelMain extends javax.swing.JFrame {
     class CallBackReception implements ICallBackReception {
 		@Override
 		public void received(String login, String msg) {
-			if(clients.contains(login)) {
+			if(listModelRemoteClients.getClients().contains(login)) {
                 if(msg.startsWith("setPlaylist")) {
                     setPlaylist(msg.substring("setPlaylist".length()));
                 }
@@ -2192,8 +2173,7 @@ public class PanelMain extends javax.swing.JFrame {
 						case "volDown": jSpinnerVolume.setValue((float)jSpinnerVolume.getValue()-5.0f); break;
                         case "sayRating": displayedFile.sayRating(true); break;
                         case "MSG_NULL":
-                            clients.remove(login);
-							listModelRemoteClients.removeElement(login);
+							listModelRemoteClients.removeClient(login);
                             break;
                         default:
 							Jamuz.getLogger().warning(login.concat(": ").concat(msg).concat("\n"));
@@ -2220,9 +2200,8 @@ public class PanelMain extends javax.swing.JFrame {
     
 	class CallBackAuthentication implements ICallBackAuthentication {
 		@Override
-		public void authenticated(String login, ServerClient client) {
-			clients.add(login);
-			listModelRemoteClients.addElement(login);
+		public void authenticated(Client login, ServerClient client) {
+			listModelRemoteClients.add(login);
             sendPlaylistsToClients(jComboBoxPlaylist.getSelectedItem().toString()); //Sends list of playlists
             sendToClients(displayedFile);
 		}

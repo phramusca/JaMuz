@@ -7,14 +7,18 @@ package jamuz.remote;
 
 import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
+import jamuz.Jamuz;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -149,8 +153,8 @@ public class ServerClient {
                 login = bufferedReader.readLine();
                 send("MSG_ENTER_PWD");
                 String pass = bufferedReader.readLine();
-
-                if(isValid(pass)){
+				String name = isValid(login, pass);
+                if(!name.equals("")){
                     send("MSG_CONNECTED");
 
                     //Starting reception thread
@@ -158,7 +162,7 @@ public class ServerClient {
                     reception.start();
 
                     //Notify client is authenticated
-                    callBackAuth.authenticated(login, ServerClient.this);
+                    callBackAuth.authenticated(new Client(login, name), ServerClient.this);
                 }
                 else {
                     send("MSG_ERROR_CONNECTION");
@@ -168,9 +172,23 @@ public class ServerClient {
 			}
 		}
 
-		private boolean isValid(String pass) {
-			//TODO: Use a better authentication & think of moving jamuz to multi-user somehow
-			return pass.equals("tata");
+		private String isValid(String login, String pass) {
+			//TODO: Use a better authentication & make jamuz to multi-user somehow
+			try {
+				Scanner sc = new Scanner(Jamuz.getFile("RemoteClients.txt", "data"));
+				while(sc.hasNext()){
+					String line = sc.nextLine().trim();
+					String items[] = line.split("\t");
+					if(items[0].trim().equals(login) && pass.equals("tata")){
+//					if(sc.nextLine().trim().equals(login) && pass.equals("tata")){
+						return items[1];
+					}
+				 }
+			} catch (FileNotFoundException ex) {	
+                Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, "Le fichier \"RemoteClients.txt\" n'existe pas !");
+			}
+			//FIXME: Ask user to validate user (if so add it to RemoteClients.txt)
+			return "";
 		}
 	}
 }

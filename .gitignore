@@ -45,3 +45,5 @@ testenv/Musique/TestDevice/
 testenv/Ressources/albumFiles_MergeNTest/
 
 testenv/StatSources/
+
+data/RemoteClients\.txt

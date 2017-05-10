@@ -19,7 +19,6 @@ package jamuz.gui;
 
 import jamuz.FileInfoInt;
 import javax.swing.DefaultListModel;
-import jamuz.gui.swing.ListModelQueue;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 
@@ -36,7 +35,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
      * @param title
      * @param queueModel
      */
-    public FramePlayerInfo(String title, ListModelQueue queueModel) {
+    public FramePlayerInfo(String title, ListModelPlayerQueue queueModel) {
         initComponents();
         this.setTitle(title);
         jListPlayerQueue.setModel(queueModel);
