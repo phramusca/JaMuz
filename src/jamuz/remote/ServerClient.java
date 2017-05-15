@@ -8,20 +8,26 @@ package jamuz.remote;
 import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
 import jamuz.Jamuz;
+import jamuz.process.check.DialogScanner;
+import jamuz.utils.Inter;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -180,14 +186,25 @@ public class ServerClient {
 					String line = sc.nextLine().trim();
 					String items[] = line.split("\t");
 					if(items[0].trim().equals(login) && pass.equals("tata")){
-//					if(sc.nextLine().trim().equals(login) && pass.equals("tata")){
 						return items[1];
 					}
 				 }
 			} catch (FileNotFoundException ex) {	
                 Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, "Le fichier \"RemoteClients.txt\" n'existe pas !");
 			}
-			//FIXME: Ask user to validate user (if so add it to RemoteClients.txt)
+			//Not found, ask user
+			String input = JOptionPane.showInputDialog(null, "Enter device pretty name for \""+login+"\"", "");  //NOI18N
+			if (input != null) {
+				try {
+					try (Writer output = new BufferedWriter(new FileWriter(Jamuz.getFile("RemoteClients.txt", "data"), true))) {
+						output.append("\n").append(login).append("\t").append(input);
+						return input;
+					}
+				} catch (IOException ex) {
+					Logger.getLogger(DialogScanner.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+			//=> Not authorized then
 			return "";
 		}
 	}
