@@ -466,6 +466,15 @@ public abstract class VideoAbstract implements Comparable {
     public String getYear() {
         return year;
     }
+	
+	public int getYearInt() {
+		int yearInt=0;
+		try {
+			yearInt = Integer.parseInt(getYear());
+		} catch(NumberFormatException ex) {
+		}
+		return yearInt;
+	}
 
 //    /**
 //     * get status

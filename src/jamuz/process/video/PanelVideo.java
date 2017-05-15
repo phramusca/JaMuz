@@ -277,9 +277,6 @@ public class PanelVideo extends javax.swing.JPanel {
             if(sourceTxt.equals("IMDb")) { //NOI18N
                 menuVideoIMDb();
             }
-            else if(sourceTxt.equals("Homepage")) {
-                menuVideoHomepage();
-            }
             else if(sourceTxt.equals(Inter.get("Button.Open"))) { //NOI18N
                 menuVideoOpen();
             }
@@ -288,6 +285,9 @@ public class PanelVideo extends javax.swing.JPanel {
             }
             else if(sourceTxt.equals(Inter.get("Label.Delete"))) { //NOI18N
                 menuVideoDelete();
+            }
+            else if(sourceTxt.equals(Inter.get("Label.Homepage"))) {
+                menuVideoHomepage();
             }
             else {
                 Popup.error("Unknown menu item: " + sourceTxt); //NOI18N

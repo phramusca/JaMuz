@@ -308,12 +308,12 @@ public class VideoTvShow extends VideoAbstract {
 	 */
 	@Override
     public void setMyVideo(boolean search) {
-        MyTvShow myTvShow = ProcessVideo.themovieDb.getTv(getTitle(), Integer.parseInt(getYear()), search);
+        MyTvShow myTvShow = ProcessVideo.themovieDb.getTv(getTitle(), getYearInt(), search);
         if(myTvShow!=null) {
             setMyVideo(myTvShow);
         }
         else if(search) {
-            myTvShow = ProcessVideo.themovieDb.searchFirstTv(getTitle(), Integer.parseInt(getYear()));
+            myTvShow = ProcessVideo.themovieDb.searchFirstTv(getTitle(), getYearInt());
         }
 		if(myTvShow==null) {
 			myTvShow = new MyTvShow(new TvSeries());

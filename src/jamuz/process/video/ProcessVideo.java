@@ -204,12 +204,17 @@ public class ProcessVideo extends ProcessAbstract {
 
 		//Connect to database
 		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, Jamuz.getOptions().get("video.dbLocation"), ".", "."), Jamuz.getOptions().get("video.rootPath"));
-        File kodiDbFile = FileSystem.replaceHome(Jamuz.getOptions().get("video.dbLocation"));
-		if (!kodiDbFile.exists()) { //Not using connKodi.getInfo().check() as we don't want popup
-			//TODO: Display error in PanelVideo somehow
-			return false;
-		}
 		if(getDb) {
+//			//Check Kodi db file exists
+//			File kodiDbFile = FileSystem.replaceHome(Jamuz.getOptions().get("video.dbLocation"));
+//			//Not using connKodi.getInfo().check() as we don't want popup
+//			if (!kodiDbFile.exists()) { 
+//				//TODO: Display error in PanelVideo somehow
+//				return false;
+//			}
+			if(!connKodi.getInfo().check()) {
+				return false;
+			}
             //Retrieve Kodi database
             checkAbort();
             if(!connKodi.getInfo().copyDB(true, Jamuz.getLogPath())) {
@@ -217,9 +222,17 @@ public class ProcessVideo extends ProcessAbstract {
             }
         }
         else {
-            //It is changed when copying, but if we want to use previous local copy directly, need to change work location
-            connKodi.getInfo().setLocationWork(FilenameUtils.concat(Jamuz.getLogPath(), 
-                    FilenameUtils.getName(Jamuz.getOptions().get("video.dbLocation")))); //NOI18N
+			String kodiBackupFile = FilenameUtils.concat(Jamuz.getLogPath(), 
+                    FilenameUtils.getName(Jamuz.getOptions().get("video.dbLocation")));
+			//Check local file exists
+			File kodiDbFile = FileSystem.replaceHome(kodiBackupFile);
+			if (!kodiDbFile.exists()) {
+				//TODO: Explain that backup kodi db is not available
+				//and so user must first run video process with "Get Db" checked
+				Popup.error(java.text.MessageFormat.format(Inter.get("Error.PathNotFound"), new Object[] {kodiBackupFile})); //NOI18N
+				return false;
+			}
+            connKodi.getInfo().setLocationWork(kodiBackupFile); //NOI18N
         }
         connKodi.connect();
         
@@ -252,7 +265,7 @@ public class ProcessVideo extends ProcessAbstract {
                 //TODO: Warn that kodi needs cleanup/update when at least a file has been moved
                 video.moveFilesAndSrt(buffer, connKodi, myConn); 
             }
-            //Check if files exist locally, and get size if so
+            //Check if files exist, and get size if so
             long length = 0;
             for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
                 File file = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), fileInfoVideo.getRelativeFullPath()));
@@ -288,7 +301,7 @@ public class ProcessVideo extends ProcessAbstract {
         PanelVideo.diplayLength();
         
         if(getDb) {
-            //Send Kodi dtabase back
+            //Send Kodi database back
             this.checkAbort();
             if(!connKodi.getInfo().copyDB(false, Jamuz.getLogPath())) {
                 return false;
