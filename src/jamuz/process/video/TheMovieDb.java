@@ -187,7 +187,7 @@ public class TheMovieDb {
                 myMovieDb.isFavorite=true;
             }
             
-            //TODO: This retrieves more movi info but remove user rating :(
+            //TODO: This retrieves more movie info but remove user rating :(
                 //+ it counts as another queryrestaa => really need to store info in dB !!
 //            if(myMovieDb!=null) {
 //                myMovieDb.setMovieDb(getMovie(id));
@@ -552,8 +552,8 @@ public class TheMovieDb {
 	 */
 	public MyMovieDb get(String name, int year) {
         for(MyMovieDb myMovieDb : myMovies.values()) {
-            
-            if(myMovieDb.getMovieDb().getTitle().equals(name)) {
+            String title=myMovieDb.getMovieDb().getTitle()==null?"":myMovieDb.getMovieDb().getTitle();	
+            if(title.equals(name)) {
                 if(year<=0 || myMovieDb.getYear()==year) {
                     myMovies.remove(myMovieDb.getMovieDb().getId());
                     return myMovieDb;
