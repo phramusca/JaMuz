@@ -109,15 +109,16 @@ public class ServerClient {
 	/**
 	 *
 	 * @param displayedFile
+	 * @param maxWidth
 	 * @return
 	 */
-	public boolean sendCover(FileInfoInt displayedFile) {
+	public boolean sendCover(FileInfoInt displayedFile, int maxWidth) {
         send("SENDING_COVER");
         try {
             BufferedImage image = displayedFile.getCoverImage();
-            int maxHeight=250;
-            int newHeight = image.getHeight()>maxHeight?maxHeight:image.getHeight();
-            ImageIO.write(IconBufferCover.toBufferedImage(displayedFile.getCoverImage().getScaledInstance(-1, newHeight, java.awt.Image.SCALE_SMOOTH)),"png", outputStream);
+            int newWidth = image.getWidth()>maxWidth?maxWidth:image.getWidth();
+            ImageIO.write(IconBufferCover.toBufferedImage(displayedFile.getCoverImage()
+					.getScaledInstance(newWidth, -1, java.awt.Image.SCALE_SMOOTH)),"png", outputStream);
             outputStream.flush();
 			return true;
         } catch (IOException ex) {

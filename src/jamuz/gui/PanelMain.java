@@ -2153,9 +2153,12 @@ public class PanelMain extends javax.swing.JFrame {
                 if(msg.startsWith("setPlaylist")) {
                     setPlaylist(msg.substring("setPlaylist".length()));
                 }
+				if(msg.startsWith("sendCover")) {
+                    int maxWidth = Integer.parseInt(msg.substring("sendCover".length()));
+					sendCover(maxWidth); 
+                }
                 else {
                     switch(msg) {
-						case "sendCover": sendCover(); break;
                         //TODO: Say rating as an option
                         case "setRating1": setRating(1, false); break;
                         case "setRating2": setRating(2, false); break;
@@ -2357,9 +2360,9 @@ public class PanelMain extends javax.swing.JFrame {
         sendToClients("JSON_"+JSONValue.toJSONString(map));
     }
 	
-	private static void sendCover() {
+	private static void sendCover(int maxWidth) {
 		if(server!=null) {
-			server.sendCover(displayedFile);
+			server.sendCover(displayedFile, maxWidth);
 		}
 	}
     
