@@ -280,7 +280,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 	private void setLocationAndRootPath() {
 		String locationFilePath="";
 		String rootPath="";
-		//FIXME LOW Windows (Kodi, MediaMonkey, Mixxx)
+		//FIXME Windows (Kodi, MediaMonkey, Mixxx)
 		switch (jComboBoxType.getSelectedIndex()+1) {
             case 1: // Guayadeque 	(Linux)
 				if(OS.isUnix()) {

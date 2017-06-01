@@ -179,7 +179,7 @@ public class Mplayer implements Runnable {
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
-			//FIXME LOW WINDOWS: what is "aplay" equivalent to list audio cards in Windows ?
+			//FIXME WINDOWS: what is "aplay" equivalent to list audio cards in Windows ?
 			return audioCards;
 		}
 		else {

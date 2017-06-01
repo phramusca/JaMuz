@@ -124,11 +124,11 @@ public class MergeNTest extends TestCase {
                 //Check merge
                 AlbumBuffer.getAlbum(mbId, "MergeDevice4_1stMerge").checkStatSource(statSource.getId(), playlist.getId()>0, false);
                 //Change stats in stat source
-                //FIXME LOW TEST change statistics in album defintion files for all stat sources, inclusing jamuz for all albums
+                //FIXME TEST change statistics in album defintion files for all stat sources, inclusing jamuz for all albums
                 AlbumBuffer.getAlbum(mbId, "MergeDevice5_"+statSource.getIdStatement()).setAndCheckStatsInStatSource(statSource.getId(), playlist.getId()>0);
             }
             //Change stats in JamuZ
-			//FIXME LOW TEST Update ratingModifDate as done in Jumuz (check that)
+			//FIXME TEST Update ratingModifDate as done in Jumuz (check that)
 			//and update ratings in 6cc35892-c44f-4aa7-bfee-5f63eca70821.ods 
 			//accordingly
             AlbumBuffer.getAlbum(mbId, "MergeDevice5_JaMuz").setAndCheckStatsInJamuzDb();
@@ -364,7 +364,7 @@ public class MergeNTest extends TestCase {
         playlist.update();
         
         //Create test device
-        //FIXME LOW TEST create a device for each stat source
+        //FIXME TEST create a device for each stat source
         Device device = new Device(-1, 
                 "TestDevice", 
                 FilenameUtils.normalizeNoEndSeparator(getMusicFolder() + "Archive")+File.separator, 
@@ -389,19 +389,19 @@ public class MergeNTest extends TestCase {
             idDevice = -1
         );
         Settings.addStatSource(
-				//FIXME LOW TEST WINDOWS Test on Windows, on a SSH box and a FTP box
+				//FIXME TEST WINDOWS Test on Windows, on a SSH box and a FTP box
                 name = "MyMusic32_Device.db", 
                 idStatement=2, 
                 rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
                 idDevice = -1);
-        //FIXME LOW TEST WINDOWS Enable this when I have a Windows PC available
+        //FIXME TEST WINDOWS Enable this when I have a Windows PC available
 //        Settings.addStatSource(
 //                name = "MediaMonkey source", 
 //                idStatement=3, 
 //                rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
 //                idDevice = -1);
         Settings.addStatSource(
-				//FIXME LOW TEST WINDOWS Test on windows
+				//FIXME TEST WINDOWS Test on windows
                 name = "mixxxdb_Device.sqlite", 
                 idStatement=4, 
                 rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
