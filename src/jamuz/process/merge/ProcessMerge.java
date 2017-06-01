@@ -189,7 +189,7 @@ public class ProcessMerge extends ProcessAbstract {
 
             }
             //Read options again (only to read lastMergeDate !!)
-            //FIXME LOW Use listeners !!
+            //FIXME Use listeners !!
             PanelMain.readOptions(); //TODO: This should enable merge too, but does not as we still are in process merge ...
             //enabling back buttons
             PanelMerge.enableMerge(true);
@@ -813,10 +813,10 @@ public class ProcessMerge extends ProcessAbstract {
 				while (i.hasNext()) {
 					FileInfoInt fileInfoInt = i.next();
 					this.checkAbort();
-					//FIXME LOW If aborted, tag will no more be written to file. 
+					//FIXME If aborted, tag will no more be written to file. 
 					//Need to have a file BPM and a dB BPM to be able to sync both
 					fileInfoInt.saveTagBPM(); //Save retrieved BPM to file tags
-					//FIXME LOW Are we updating modifiedDate (path and file) 
+					//FIXME Are we updating modifiedDate (path and file) 
 					//and other stats when saving tags (always) ?
 					this.checkAbort();
 					i.remove();

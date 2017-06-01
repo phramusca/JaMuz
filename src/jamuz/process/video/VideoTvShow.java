@@ -175,7 +175,7 @@ public class VideoTvShow extends VideoAbstract {
 	@Override
 	public ArrayList<FileInfoVideo> getFilesToCleanup() {
 		
-		//FIXME LOW VIDEO cleanup: Add as a parameter: 0 will keep only current season
+		//FIXME VIDEO cleanup: Add as a parameter: 0 will keep only current season
 		int nbSeasonToKeep = 0;
 		
 		MyTvShow myTvShow = (MyTvShow) myVideo;
@@ -207,7 +207,7 @@ public class VideoTvShow extends VideoAbstract {
             }
         }
 		
-		//FIXME LOW Use status AND lastSeason 
+		//FIXME Use status AND lastSeason 
 		String status = ((MyTvShow) myVideo).getSerie().getStatus();
 		//Ended
 		//Returning Series

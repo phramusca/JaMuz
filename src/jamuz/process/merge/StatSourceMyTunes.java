@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//FIXME LOW Document MyTunes setup
+//FIXME Document MyTunes setup
 //"Settings"
 //	"Automatic index update": enable
 //	"Music Folders": 

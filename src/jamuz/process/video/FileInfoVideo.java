@@ -58,7 +58,7 @@ public class FileInfoVideo extends FileInfo {
             StreamDetails.VideoStream videoStream = streamDetails.video.get(0);
             long size = videoStream.width*videoStream.height;
 			
-			//FIXME: Height can be less than max if ratio not 16:9
+			//TODO: Height can be less than max if ratio not 16:9
 			//Is it specified by aspect ?
 			
             if(size >= 1900*1000) { // 1080 : 1 920 × 1 080

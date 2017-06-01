@@ -46,7 +46,7 @@ public class StatSourceMixxx extends StatSourceSQL {
     public boolean setUp() {
         try {
             this.dbConn.connect();
-			//FIXME LOW mixxx does not update well if folder modification date is not changed
+			//FIXME mixxx does not update well if folder modification date is not changed
 			//So need to make some tests and check that we are always updating date 
 			//when modifying files (tags)
             this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement("SELECT L.location AS fullPath, F.rating, "
