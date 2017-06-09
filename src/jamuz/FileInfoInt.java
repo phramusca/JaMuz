@@ -695,15 +695,26 @@ public class FileInfoInt extends FileInfo {
 	}
 	
 	private void setEmptyCover() {
-		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 18);
-		this.coverImage = new BufferedImage(150, 150, BufferedImage.TYPE_3BYTE_BGR);
+		//FIXME: Looks like ugly RED N/A cover is either embedded in tags or in db or in cache or a mix of those
+		//as this is never called apart for empty FileInfo at startup
+		//Ex: /home/raph/Musique/Archive/Gulli - Dance Kids 2016 CD2
+		// => get coverHash and clean all tags with this this coverHash
+		// !!! Make sure it is not written again !!!
+
+		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 40);
+		this.coverImage = new BufferedImage(500, 500, BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D g = this.coverImage.createGraphics();
 		FontMetrics fm = g.getFontMetrics(f);
-		g.setBackground(Color.WHITE);
+		g.setBackground(Color.LIGHT_GRAY);
 		g.clearRect(0, 0, this.coverImage.getWidth(), this.coverImage.getHeight());
 		g.setFont(f);
-		g.setColor(Color.RED);
-		g.drawString("N/A", 10, fm.getAscent() + 150/2);  //NOI18N
+		g.setColor(Color.DARK_GRAY);
+		
+		//TODO: Translate
+		String text = "No Cover";
+		
+		g.drawString(text, (this.coverImage.getWidth()/2)-(text.length()*12),
+				(this.coverImage.getHeight()/2)+20);  //NOI18N
 	}
 	
 	private int getInt(String value) {

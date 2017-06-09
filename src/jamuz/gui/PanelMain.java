@@ -1982,10 +1982,10 @@ public class PanelMain extends javax.swing.JFrame {
     private boolean refreshHiddenQueue=true;
     
     private void jComboBoxPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPlaylistActionPerformed
-        if(refreshHiddenQueue) refreshHiddenQueue();
+        if(refreshHiddenQueue) refreshHiddenQueue(false);
     }//GEN-LAST:event_jComboBoxPlaylistActionPerformed
 
-    private void refreshHiddenQueue() {
+    public static void refreshHiddenQueue(boolean wait) {
         Thread fillQueue = new Thread("Thread.PanelMain.playlist.getFiles") {
 			@Override
 			public void run() {
@@ -2005,6 +2005,13 @@ public class PanelMain extends javax.swing.JFrame {
 				}
 			}};
 		fillQueue.start();
+		if(wait) {
+			try {
+				fillQueue.join(10000);
+			} catch (InterruptedException ex) {
+				Popup.error(ex);
+			}
+		}
     }
     
 	/**
@@ -2025,7 +2032,7 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonResetCheckedFlagOKActionPerformed
 
     private void jButtonRefreshHiddenQueueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshHiddenQueueActionPerformed
-        refreshHiddenQueue();
+        refreshHiddenQueue(false);
     }//GEN-LAST:event_jButtonRefreshHiddenQueueActionPerformed
     
     private static Server server;

@@ -31,6 +31,9 @@ import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Benchmark;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
+import jamuz.utils.StringManager;
+import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Sync process class
@@ -147,28 +150,35 @@ public class ProcessSync extends ProcessAbstract {
             this.checkAbort();
             File source = new File(FilenameUtils.concat(this.device.getSource(), fileInfo.getRelativeFullPath()));
             File destination = new File(FilenameUtils.concat(this.device.getDestination(), fileInfo.getRelativeFullPath()));
-
+			long startTime=System.currentTimeMillis();
+			String format = "{0} \t ({1})";
             try {
                 FileSystem.copyFile(source, destination);
                 this.toInsertInDeviceFiles.add(fileInfo);
-                PanelSync.addRowSync(fileInfo.getRelativeFullPath(), 1); //NOI18N
+                PanelSync.addRowSync(MessageFormat.format(format, fileInfo.getRelativeFullPath(), StringManager.humanReadableSeconds((System.currentTimeMillis()-startTime)/1000)), 1); //NOI18N
             } catch (IOException ex) {
-                PanelSync.addRowSync(fileInfo.getRelativeFullPath(), MessageFormat.format(Inter.get("Playlist.CopyFailed"), ex.toString())); //NOI18N
-
+                PanelSync.addRowSync(MessageFormat.format(format, fileInfo.getRelativeFullPath(), StringManager.humanReadableSeconds((System.currentTimeMillis()-startTime)/1000)), MessageFormat.format(Inter.get("Playlist.CopyFailed"), ex.toString())); //NOI18N
             }
-
             PanelSync.progressBar.progress(bench.get());
         }
-       
 		return true;
 	}
 	
     //TODO: Use a Map instead ...
 	private int searchInSourceList(String relativeFullPath) throws InterruptedException {
+		
+		//FileSystem.copyFile preserves datetime
+		//Unfortunatly on some devices it does not work
+		//ex: Android (https://stackoverflow.com/questions/18677438/android-set-last-modified-time-for-the-file)
+		//=> FIXME: Make options of these, must be one or the other
+		//to detect if file is different
+		boolean doCheckLastModified = false; // Faster but does not work for android 
+		boolean doCheckContent = false;		// Way Slower (especially over wifi) but more reliable
+
 		for(int i = 0; i < this.fileInfoSourceList.size(); i++) {
 			this.checkAbort();
 			FileInfoInt file = this.fileInfoSourceList.get(i);
-            
+
             //TODO: maybe support ignoreCase as an option
 //			if(fileInfo.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)) { return i; }
             //We want sync to be case sensitive
@@ -176,10 +186,19 @@ public class ProcessSync extends ProcessAbstract {
                 File fileSource = new File(FilenameUtils.concat(this.device.getSource(), file.getRelativeFullPath()));
                 File fileDestination = new File(FilenameUtils.concat(this.device.getDestination(), relativeFullPath));
 				
-				//TODO: Make options of these maybe
-				if(fileSource.lastModified()==fileDestination.lastModified()
-						&& fileSource.length()==fileDestination.length()) {
-						return i; 
+				if(fileSource.length()==fileDestination.length()) {
+					if(!doCheckLastModified || 
+							fileSource.lastModified()==fileDestination.lastModified() ) {
+						try {
+							if(!doCheckContent || 
+									FileUtils.contentEquals(fileSource, fileDestination)) {
+								return i; 
+							}
+						} catch (IOException ex) {
+							Logger.getLogger(ProcessSync.class.getName()).log(Level.SEVERE, null, ex);
+						}
+					} 
+					return i; 
 				}
             }
 		}
