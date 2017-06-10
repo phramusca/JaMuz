@@ -2364,6 +2364,7 @@ public class PanelMain extends javax.swing.JFrame {
         map.put("title", fileInfo.getTitle());
         map.put("album", fileInfo.getAlbum());
         map.put("artist", fileInfo.getArtist());
+		map.put("genre", fileInfo.getGenre());
         sendToClients("JSON_"+JSONValue.toJSONString(map));
     }
 	
