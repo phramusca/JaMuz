@@ -114,7 +114,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 
         jLabelType.setText(bundle.getString("Label.Type")); // NOI18N
 
-        jComboBoxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Guayadeque (Linux)", "Kodi (Linux/Windows)", "MediaMonkey (Windows)", "Mixxx (Linux/Windows)", "MyTunes (Android)" }));
+        jComboBoxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Guayadeque (Linux)", "Kodi (Linux/Windows)", "MediaMonkey (Windows)", "Mixxx (Linux/Windows)", "MyTunes (Android)", "JaMuz Remote (Android)" }));
         jComboBoxType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxTypeActionPerformed(evt);

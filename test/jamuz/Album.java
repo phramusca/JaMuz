@@ -671,15 +671,16 @@ public final class Album {
                 FileInfo statSourceFile=searchInStatsList(fileName, statSourcesFiles);
                 
                 Assert.assertTrue("Search "+fileName+msg, statSourceFile!=null);
-                Assert.assertEquals("playCounter "+fileName+msg, albumFile.playCounter, statSourceFile.playCounter);
-                Assert.assertEquals("rating "+fileName+msg, albumFile.rating, statSourceFile.rating);
+				Assert.assertEquals("rating "+fileName+msg, albumFile.rating, statSourceFile.rating);
+				if(statSource.getSource().updatePlayCounter) {
+					Assert.assertEquals("playCounter "+fileName+msg, albumFile.playCounter, statSourceFile.playCounter);
+				}
                 if(statSource.getSource().updateAddedDate) {
                     Assert.assertEquals("addedDate "+fileName+msg, albumFile.getFormattedAddedDate(), statSourceFile.getFormattedAddedDate());
                 }
                 if(statSource.getSource().updateLastPlayed) {
                     Assert.assertEquals("lastPlayed "+fileName+msg, albumFile.getFormattedLastPlayed(), statSourceFile.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
                 }
-                
                 if(statSource.getSource().updateBPM) {
                     Assert.assertEquals("BPM "+fileName+msg, albumFile.BPM, statSourceFile.BPM, 0.0f);
                 }

@@ -36,7 +36,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceGuayadeque(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false);
+        super(dbInfo, name, rootPath, true, true, false, true);
     }
 
     @Override

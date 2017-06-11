@@ -73,7 +73,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param dbInfo
      */
     public DbConnJaMuz(DbInfo dbInfo) {
-        super(dbInfo, "JaMuz", "", true, true, true);
+        super(dbInfo, "JaMuz", "", true, true, true, true);
     }
     
     /**

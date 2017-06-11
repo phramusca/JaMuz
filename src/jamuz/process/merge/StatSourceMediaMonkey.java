@@ -36,7 +36,7 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceMediaMonkey(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false); 
+        super(dbInfo, name, rootPath, true, true, false, true); 
         //TODO: MediaMonkey support BPM I think. Need to get a Windows machine to test and update the SQL scripts below
     }
     

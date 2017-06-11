@@ -39,7 +39,7 @@ public class StatSourceMixxx extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceMixxx(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, false, true);
+        super(dbInfo, name, rootPath, true, false, true, true);
     }
 
     @Override
