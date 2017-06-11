@@ -67,8 +67,8 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
      * @param updateBPM
      */
     public StatSourceSQL(DbInfo dbInfo, String name, String rootPath, 
-            boolean updateAddedDate, boolean updateLastPlayed, boolean updateBPM) {
-        super(name, rootPath, updateAddedDate, updateLastPlayed, updateBPM, dbInfo.locationOri);
+            boolean updateAddedDate, boolean updateLastPlayed, boolean updateBPM, boolean updatePlayCounter) {
+        super(name, rootPath, updateAddedDate, updateLastPlayed, updateBPM, updatePlayCounter, dbInfo.locationOri);
         dbConn = new DbConn(dbInfo);
     }
 

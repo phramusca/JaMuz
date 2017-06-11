@@ -129,12 +129,13 @@
     <Component class="javax.swing.JComboBox" name="jComboBoxType">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="5">
+          <StringArray count="6">
             <StringItem index="0" value="Guayadeque (Linux)"/>
             <StringItem index="1" value="Kodi (Linux/Windows)"/>
             <StringItem index="2" value="MediaMonkey (Windows)"/>
             <StringItem index="3" value="Mixxx (Linux/Windows)"/>
             <StringItem index="4" value="MyTunes (Android)"/>
+            <StringItem index="5" value="JaMuz Remote (Android)"/>
           </StringArray>
         </Property>
       </Properties>

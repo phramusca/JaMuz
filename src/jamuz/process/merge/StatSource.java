@@ -96,6 +96,9 @@ public class StatSource {
             case 5: // MyTunes 	(Android)
                 this.source = new StatSourceMyTunes(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
                 break;
+			case 6: // JaMuz Remote 	(Android)
+                this.source = new StatSourceJaMuzRemote(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
+                break;
             default:
                 this.source = null;
                 break;

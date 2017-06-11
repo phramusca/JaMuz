@@ -123,7 +123,7 @@ public abstract class StatSourceAbstract {
 	 * @return
 	 */
 	public boolean isUpdatePlayCounter() {
-		return true;
+		return updatePlayCounter;
     }
 	
 	/**
@@ -135,6 +135,8 @@ public abstract class StatSourceAbstract {
 	 *
 	 */
 	protected boolean updateBPM = false;
+	
+	protected boolean updatePlayCounter = false;
     
     /**
      * Create a new Source for Statistics (rating, last played, ...)
@@ -143,15 +145,18 @@ public abstract class StatSourceAbstract {
      * @param updateLastPlayed
      * @param rootPath
      * @param updateBPM
+	 * @param updatePlayCounter
      * @param location
      */
     public StatSourceAbstract(String name, String rootPath, 
-            boolean updateAddedDate, boolean updateLastPlayed, boolean updateBPM, String location) {
+            boolean updateAddedDate, boolean updateLastPlayed, 
+			boolean updateBPM, boolean updatePlayCounter, String location) {
         this.updateAddedDate = updateAddedDate;
 		this.updateLastPlayed = updateLastPlayed;
         this.name = name;
         this.rootPath = rootPath;
         this.updateBPM = updateBPM;
+		this.updatePlayCounter = updatePlayCounter;
         this.location = location;
     }
  

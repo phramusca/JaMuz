@@ -39,7 +39,7 @@ public class StatSourceKodi extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceKodi(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, false, true, false);
+        super(dbInfo, name, rootPath, false, true, false, true);
     }
     
     @Override
