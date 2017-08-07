@@ -30,7 +30,7 @@
               <Component id="jButtonOptionSave" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Component id="jTabbedPane1" alignment="0" max="32767" attributes="0"/>
+          <Component id="jTabbedPane1" alignment="0" pref="666" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -104,7 +104,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jTextFieldDescription" pref="617" max="32767" attributes="0"/>
+                              <Component id="jTextFieldDescription" max="32767" attributes="0"/>
                               <Component id="jLabelDescription" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -156,7 +156,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jCheckBoxOptionLibraryIsMaster" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jTextFieldOptionLocationLibrary" pref="545" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldOptionLocationLibrary" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonOptionSelectFolder" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -288,7 +288,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabelOptionLocationAdd" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <Component id="jTextFieldOptionLocationAdd" pref="545" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldOptionLocationAdd" pref="532" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonOptionSelectFolderNew" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -363,7 +363,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabelOptionLocationManual" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <Component id="jTextFieldOptionLocationManual" pref="545" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldOptionLocationManual" pref="532" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonOptionSelectFolderManual" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -438,7 +438,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabelOptionLocationOK" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <Component id="jTextFieldOptionLocationOK" pref="545" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldOptionLocationOK" pref="532" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonOptionSelectFolderOK" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -511,7 +511,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabelOptionLocationKO" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <Component id="jTextFieldOptionLocationKO" pref="545" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldOptionLocationKO" pref="532" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonOptionSelectFolderKO" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -630,7 +630,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabelOptionMask" pref="629" max="32767" attributes="0"/>
+                              <Component id="jLabelOptionMask" pref="616" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="jTextFieldOptionMask" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -681,7 +681,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabelOptionsFilesAudio" pref="617" max="32767" attributes="0"/>
+                              <Component id="jLabelOptionsFilesAudio" pref="604" max="32767" attributes="0"/>
                               <Component id="jTextFieldOptionsFilesAudio" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -732,7 +732,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabelOptionsFilesImage" pref="617" max="32767" attributes="0"/>
+                              <Component id="jLabelOptionsFilesImage" pref="604" max="32767" attributes="0"/>
                               <Component id="jTextFieldOptionsFilesImage" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -783,7 +783,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabelOptionsFilesConvert" pref="617" max="32767" attributes="0"/>
+                              <Component id="jLabelOptionsFilesConvert" pref="604" max="32767" attributes="0"/>
                               <Component id="jTextFieldOptionsFilesConvert" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -832,7 +832,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabelOptionsFilesDelete" pref="617" max="32767" attributes="0"/>
+                              <Component id="jLabelOptionsFilesDelete" pref="604" max="32767" attributes="0"/>
                               <Component id="jTextFieldOptionsFilesDelete" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -924,7 +924,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPaneStatSouces" pref="160" max="32767" attributes="0"/>
+                          <Component id="jScrollPaneStatSouces" pref="154" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jButtonStatSouceAdd" alignment="0" max="32767" attributes="1"/>
@@ -1034,7 +1034,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPaneStatSouces1" pref="277" max="32767" attributes="0"/>
+                          <Component id="jScrollPaneStatSouces1" pref="270" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jButtonDeviceAdd" alignment="0" max="32767" attributes="1"/>

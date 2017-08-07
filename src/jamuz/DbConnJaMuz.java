@@ -2617,6 +2617,15 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         }
         return getFiles(files, sql);
     }
+	
+	public FileInfoInt getFile(int idFile) {
+		ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();
+        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
+				+ "FROM file F, path P "
+                + "WHERE F.idPath=P.idPath AND F.idFile="+idFile;    //NOI18N
+        getFiles(myFileInfoList, sql);
+		return myFileInfoList.get(0);
+    }
 
     /**
      * Return list of files

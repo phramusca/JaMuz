@@ -9,11 +9,13 @@ import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
 import jamuz.Jamuz;
 import jamuz.process.check.DialogScanner;
-import jamuz.utils.Inter;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -101,7 +104,6 @@ public class ServerClient {
 	 * @param msg
 	 */
 	public void send(String msg) {
-//		emission.send(msg);
         printWriter.println(msg+"\n");
         printWriter.flush();
 	}
@@ -126,6 +128,35 @@ public class ServerClient {
 			return false;
         }
     }
+	
+	public boolean sendFile(FileInfoInt fileInfoInt) {
+        send("SENDING_FILE"+fileInfoInt.getIdFile());
+        try {
+			File source = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
+			DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(outputStream));			
+			sendFile(fileInfoInt, dos);
+			return true;
+        } catch (IOException ex) {
+			Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+			return false;
+        }
+    }
+	
+	public void sendFile(FileInfoInt fileInfoInt, DataOutputStream dos) throws IOException {
+		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
+		if(dos!=null&&file.exists()&&file.isFile())
+		{
+			try (FileInputStream input = new FileInputStream(file)) {
+				dos.writeLong(file.length());
+				System.out.println(file.getAbsolutePath());
+				int read = 0;
+				while ((read = input.read()) != -1)
+					dos.writeByte(read);
+				dos.flush();
+				System.out.println("File successfully sent!");
+			}
+		}
+	}
 
 	/**
 	 *
@@ -141,7 +172,7 @@ public class ServerClient {
             output.write(buffer, 0, bytesRead);
         }
     }
-    
+	
 	@Override
 	public String toString() {
 		return login;

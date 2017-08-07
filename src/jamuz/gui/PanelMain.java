@@ -93,6 +93,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import jamuz.player.MPlaybackListener;
 import jamuz.remote.Client;
+import java.util.Random;
 import javax.swing.JTabbedPane;
 
 /**
@@ -103,7 +104,7 @@ import javax.swing.JTabbedPane;
 public class PanelMain extends javax.swing.JFrame {
 
     /**
-     * Play queue list model
+     * Play queue filesToGet model
      */
     private static ListModelPlayerQueue queueModel;
 
@@ -549,7 +550,7 @@ public class PanelMain extends javax.swing.JFrame {
 	 *
 	 */
 	public static void fillMachineList() {
-        //Display machines list
+        //Display machines filesToGet
         fillMachineList((DefaultListModel) jListMachines.getModel());  //NOI18N
         //Select current machine
         jListMachines.setSelectedValue(new ListElement(Jamuz.getMachine().getName(), ""), true);
@@ -687,7 +688,7 @@ public class PanelMain extends javax.swing.JFrame {
         column.setPreferredWidth(100);
 
         //TODO: Move CopyRight combobox to album folder as it is a path attribute
-        //TODO: Create an Amazon button in album list too, and change the one in this table 
+        //TODO: Create an Amazon button in album filesToGet too, and change the one in this table 
 		//for searching MP3 single
         //For the 2 above, this means, changing album jlist 
 		// (which has a special way of filling) to jtable !!
@@ -809,6 +810,7 @@ public class PanelMain extends javax.swing.JFrame {
         jButtonQRcode = new javax.swing.JButton();
         jScrollPanePlayerQueue1 = new javax.swing.JScrollPane();
         jListRemoteClients = new javax.swing.JList();
+        jButton1 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
         jButton2 = new javax.swing.JButton();
@@ -1055,6 +1057,13 @@ public class PanelMain extends javax.swing.JFrame {
         jListRemoteClients.setModel(new DefaultListModel());
         jScrollPanePlayerQueue1.setViewportView(jListRemoteClients);
 
+        jButton1.setText(Inter.get("PanelMain.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
@@ -1079,6 +1088,8 @@ public class PanelMain extends javax.swing.JFrame {
                             .addGroup(jPanelRemoteLayout.createSequentialGroup()
                                 .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1)
+                                .addGap(12, 12, 12)
                                 .addComponent(jButtonQRcode)))
                         .addContainerGap())))
         );
@@ -1096,7 +1107,8 @@ public class PanelMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelIP)
-                    .addComponent(jButtonQRcode))
+                    .addComponent(jButtonQRcode)
+                    .addComponent(jButton1))
                 .addGap(4, 4, 4)
                 .addComponent(jScrollPanePlayerQueue1)
                 .addContainerGap())
@@ -1676,8 +1688,8 @@ public class PanelMain extends javax.swing.JFrame {
      */
     public static void editLocation(String location) {
 		//TODO: allow user to select its desired application
-        //	maybe make a default list, based on windows/linux
-        //	maybe detect what is installed on PC against allowed application list
+        //	maybe make a default filesToGet, based on windows/linux
+        //	maybe detect what is installed on PC against allowed application filesToGet
         try {
             Runtime rt = Runtime.getRuntime();
             String cmd = "";  //NOI18N
@@ -2062,6 +2074,7 @@ public class PanelMain extends javax.swing.JFrame {
 //				jListRemoteClients.setEnabled(true);
                 jButtonSendInfo.setEnabled(true);
 				jButtonQRcode.setEnabled(true);
+				jButton1.setEnabled(true);
                 jButtonStart.setText(Inter.get("Button.Pause"));
             }
         }
@@ -2108,6 +2121,37 @@ public class PanelMain extends javax.swing.JFrame {
     private void jSpinnerVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVolumeStateChanged
         MPLAYER.setVolume((float)jSpinnerVolume.getValue());
     }//GEN-LAST:event_jSpinnerVolumeStateChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		
+//FIXME: Continue Sync over socket
+		Jamuz.getLogger().fine(Inter.get("Msg.Process.RetrievingList"));
+        ArrayList<FileInfoInt> fileInfoSourceList = new ArrayList<>();
+		//FIXME: 10 must be selectable of course !
+		Playlist playlist = Jamuz.getMachine().getDevice(10).getPlaylist();
+		
+		//FIXME: remove the following when dev done
+		playlist.setLimit(true);
+		playlist.setLimitValue(3);
+		playlist.setLimitUnit(Playlist.LimitUnit.files);
+		//end suppression
+		
+        playlist.getFiles(fileInfoSourceList);
+		
+		Map jsonAsMap = new HashMap();
+        jsonAsMap.put("type", "FilesToGet");
+		JSONArray filesToGet = new JSONArray();
+		for (FileInfoInt fileInfo : fileInfoSourceList) {
+			Map fileToGet = new HashMap();
+			fileToGet.put("path", fileInfo.getRelativeFullPath());
+			fileToGet.put("size", fileInfo.getSize());
+			fileToGet.put("idFile", fileInfo.getIdFile());
+			filesToGet.add(fileToGet);
+		}
+		jsonAsMap.put("files", filesToGet);
+		Jamuz.getLogger().fine("Sending list ...");
+        PanelMain.sendToClients("JSON_"+JSONValue.toJSONString(jsonAsMap));
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 	/**
 	 *
@@ -2160,9 +2204,13 @@ public class PanelMain extends javax.swing.JFrame {
                 if(msg.startsWith("setPlaylist")) {
                     setPlaylist(msg.substring("setPlaylist".length()));
                 }
-				if(msg.startsWith("sendCover")) {
+				else if(msg.startsWith("sendCover")) {
                     int maxWidth = Integer.parseInt(msg.substring("sendCover".length()));
 					sendCover(maxWidth); 
+                }
+				else if(msg.startsWith("sendFile")) {
+                    int id = Integer.parseInt(msg.substring("sendCover".length()-1));
+					sendFile(id);
                 }
                 else {
                     switch(msg) {
@@ -2212,7 +2260,7 @@ public class PanelMain extends javax.swing.JFrame {
 		@Override
 		public void authenticated(Client login, ServerClient client) {
 			listModelRemoteClients.add(login);
-            sendPlaylistsToClients(jComboBoxPlaylist.getSelectedItem().toString()); //Sends list of playlists
+            sendPlaylistsToClients(jComboBoxPlaylist.getSelectedItem().toString()); //Sends filesToGet of playlists
             sendToClients(displayedFile);
 		}
 	}
@@ -2373,8 +2421,15 @@ public class PanelMain extends javax.swing.JFrame {
 			server.sendCover(displayedFile, maxWidth);
 		}
 	}
+	
+	private static void sendFile(int id) {
+		if(server!=null) {
+			FileInfoInt fileInfoInt = Jamuz.getDb().getFile(id);
+			server.sendFile(fileInfoInt);
+		}
+	}
     
-    private static void sendToClients(String msg) {
+    public static void sendToClients(String msg) {
         if(server!=null) {
             server.send(msg);
         }
@@ -2532,6 +2587,7 @@ public class PanelMain extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonCheckDown;
     private javax.swing.JButton jButtonCheckUp;
