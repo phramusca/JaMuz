@@ -141,11 +141,17 @@ public class Server {
 	/**
 	 *
 	 * @param displayedFile
+	 * @param maxWidth
 	 */
-    
     public void sendCover(FileInfoInt displayedFile, int maxWidth) {
         for(ServerClient client : clients.values()) {
             client.sendCover(displayedFile, maxWidth);
+		}
+	}
+	
+	public void sendFile(FileInfoInt fileInfoInt) {
+        for(ServerClient client : clients.values()) {
+            client.sendFile(fileInfoInt);
 		}
 	}
     

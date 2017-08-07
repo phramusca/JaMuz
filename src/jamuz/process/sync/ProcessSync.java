@@ -116,7 +116,7 @@ public class ProcessSync extends ProcessAbstract {
         Playlist playlist = this.device.getPlaylist();
         playlist.getFiles(fileInfoSourceList);
         this.checkAbort();
-
+		
         //Get files currently on destination
         fileInfoDestinationList = new ArrayList<>();
         this.browseFS(new File(this.device.getDestination()));
