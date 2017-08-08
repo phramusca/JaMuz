@@ -149,6 +149,8 @@ public class ServerClient {
 			try (FileInputStream input = new FileInputStream(file)) {
 				dos.writeLong(file.length());
 				System.out.println("Sending : "+file.getAbsolutePath());
+				System.out.println("Size : "+file.length());
+				
 				int read = 0;
 				while ((read = input.read()) != -1)
 					dos.writeByte(read);

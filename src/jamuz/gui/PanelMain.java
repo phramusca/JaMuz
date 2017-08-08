@@ -2132,7 +2132,7 @@ public class PanelMain extends javax.swing.JFrame {
 		new Thread("Remote.SendFiles") {
 			@Override
 			public void run() {
-				Jamuz.getLogger().fine(Inter.get("Msg.Process.RetrievingList"));
+				Jamuz.getLogger().info(Inter.get("Msg.Process.RetrievingList"));
 				ArrayList<FileInfoInt> fileInfoSourceList = new ArrayList<>();
 				//FIXME: 10 must be selectable of course !
 				Device device = Jamuz.getMachine().getDevice(10);
@@ -2149,7 +2149,7 @@ public class PanelMain extends javax.swing.JFrame {
 					filesToGet.add(fileToGet);
 				}
 				jsonAsMap.put("files", filesToGet);
-				Jamuz.getLogger().fine("Sending list ...");
+				Jamuz.getLogger().info("Sending list ...");
 				sendToClients("JSON_"+JSONValue.toJSONString(jsonAsMap));
 				Jamuz.getDb().deleteDeviceFiles(device.getId());
 			}
