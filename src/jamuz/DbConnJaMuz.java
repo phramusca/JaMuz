@@ -924,6 +924,41 @@ public class DbConnJaMuz extends StatSourceSQL {
     }
  
 	/**
+     * Insert in deviceFile table
+     *
+	 * @param file
+     * @param idDevice
+     * @return
+     */
+    public synchronized boolean insertDeviceFile(int idDevice, FileInfoInt file) {
+        try {
+			int result;
+			PreparedStatement stInsertDeviceFile = 
+					dbConn.connection.prepareStatement(
+							"INSERT OR IGNORE INTO deviceFile "
+									+ "(idFile, idDevice, oriRelativeFullPath) "
+									+ "VALUES (?, ?, ?)");   //NOI18N
+			
+			stInsertDeviceFile.setInt(1, file.idFile);
+			stInsertDeviceFile.setInt(2, idDevice);
+			stInsertDeviceFile.setString(3, file.relativeFullPath);
+				
+			long startTime = System.currentTimeMillis();
+			result = stInsertDeviceFile.executeUpdate();
+			long endTime = System.currentTimeMillis();
+			Jamuz.getLogger().log(Level.FINEST, "insertDeviceFile UPDATE // {0} // Total execution time: {1}ms", new Object[]{result, endTime - startTime});    //NOI18N
+
+			if (result < 0) {
+				Jamuz.getLogger().log(Level.SEVERE, "insertDeviceFile, idFile={0}, idDevice={1}, result={2}", new Object[]{file.getIdFile(), idDevice, result});   //NOI18N
+			}
+            return true;
+        } catch (SQLException ex) {
+            Popup.error("insertDeviceFile(" + idDevice + ", " + file.getIdFile() + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	/**
 	 *
 	 * @param idDevice
 	 * @return
@@ -945,6 +980,34 @@ public class DbConnJaMuz extends StatSourceSQL {
 
         } catch (SQLException ex) {
             Popup.error("deleteDeviceFiles()", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	/**
+	 * Delete deviceFile table
+	 * @param idDevice
+	 * @param idFile
+	 * @return
+	 */
+	public synchronized boolean deleteDeviceFile(int idDevice, int idFile) {
+        try {
+            PreparedStatement stDeleteDeviceFile = 
+					dbConn.connection.prepareStatement(
+							"DELETE FROM deviceFile WHERE idDevice=?"
+									+ "AND idFile=?");  //NOI18N
+            stDeleteDeviceFile.setInt(1, idDevice);
+			stDeleteDeviceFile.setInt(2, idFile);
+            long startTime = System.currentTimeMillis();
+            int result = stDeleteDeviceFile.executeUpdate();
+            long endTime = System.currentTimeMillis();
+            Jamuz.getLogger().log(Level.FINEST, "stDeleteDeviceFile DELETE // Total execution time: {0}ms", new Object[]{endTime - startTime});    //NOI18N
+            if (result < 0) {
+                Jamuz.getLogger().log(Level.SEVERE, "stDeleteDeviceFile, idDevice={0}, idFile={2}, result={1}", new Object[]{idDevice, result, idFile});   //NOI18N
+            }
+            return true;
+        } catch (SQLException ex) {
+            Popup.error("deleteDeviceFile()", ex);   //NOI18N
             return false;
         }
     }
