@@ -92,6 +92,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import jamuz.player.MPlaybackListener;
+import jamuz.process.sync.Device;
 import jamuz.remote.Client;
 import java.util.Random;
 import javax.swing.JTabbedPane;
@@ -1068,30 +1069,34 @@ public class PanelMain extends javax.swing.JFrame {
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRemoteLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jButtonSendInfo))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRemoteLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                                .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jButtonSendInfo))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonStart))
-                            .addComponent(jCheckBoxServerStartOnStartup, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPanePlayerQueue1)
+                                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                                        .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButtonStart))
+                                    .addComponent(jCheckBoxServerStartOnStartup, javax.swing.GroupLayout.Alignment.TRAILING)))
                             .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                                .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)
-                                .addGap(12, 12, 12)
-                                .addComponent(jButtonQRcode)))
-                        .addContainerGap())))
+                                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPanePlayerQueue1)
+                                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                                        .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(90, 90, 90)
+                                        .addComponent(jButtonQRcode)))
+                                .addContainerGap())))
+                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1107,9 +1112,10 @@ public class PanelMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelIP)
-                    .addComponent(jButtonQRcode)
-                    .addComponent(jButton1))
-                .addGap(4, 4, 4)
+                    .addComponent(jButtonQRcode))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPanePlayerQueue1)
                 .addContainerGap())
         );
@@ -2123,34 +2129,31 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jSpinnerVolumeStateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-		
-//FIXME: Continue Sync over socket
-		Jamuz.getLogger().fine(Inter.get("Msg.Process.RetrievingList"));
-        ArrayList<FileInfoInt> fileInfoSourceList = new ArrayList<>();
-		//FIXME: 10 must be selectable of course !
-		Playlist playlist = Jamuz.getMachine().getDevice(10).getPlaylist();
-		
-		//FIXME: remove the following when dev done
-		playlist.setLimit(true);
-		playlist.setLimitValue(3);
-		playlist.setLimitUnit(Playlist.LimitUnit.files);
-		//end suppression
-		
-        playlist.getFiles(fileInfoSourceList);
-		
-		Map jsonAsMap = new HashMap();
-        jsonAsMap.put("type", "FilesToGet");
-		JSONArray filesToGet = new JSONArray();
-		for (FileInfoInt fileInfo : fileInfoSourceList) {
-			Map fileToGet = new HashMap();
-			fileToGet.put("path", fileInfo.getRelativeFullPath());
-			fileToGet.put("size", fileInfo.getSize());
-			fileToGet.put("idFile", fileInfo.getIdFile());
-			filesToGet.add(fileToGet);
-		}
-		jsonAsMap.put("files", filesToGet);
-		Jamuz.getLogger().fine("Sending list ...");
-        PanelMain.sendToClients("JSON_"+JSONValue.toJSONString(jsonAsMap));
+		new Thread("Remote.SendFiles") {
+			@Override
+			public void run() {
+				Jamuz.getLogger().fine(Inter.get("Msg.Process.RetrievingList"));
+				ArrayList<FileInfoInt> fileInfoSourceList = new ArrayList<>();
+				//FIXME: 10 must be selectable of course !
+				Device device = Jamuz.getMachine().getDevice(10);
+				Playlist playlist = device.getPlaylist();
+				playlist.getFiles(fileInfoSourceList);
+				Map jsonAsMap = new HashMap();
+				jsonAsMap.put("type", "FilesToGet");
+				JSONArray filesToGet = new JSONArray();
+				for (FileInfoInt fileInfo : fileInfoSourceList) {
+					Map fileToGet = new HashMap();
+					fileToGet.put("path", fileInfo.getRelativeFullPath());
+					fileToGet.put("size", fileInfo.getSize());
+					fileToGet.put("idFile", fileInfo.getIdFile());
+					filesToGet.add(fileToGet);
+				}
+				jsonAsMap.put("files", filesToGet);
+				Jamuz.getLogger().fine("Sending list ...");
+				sendToClients("JSON_"+JSONValue.toJSONString(jsonAsMap));
+				Jamuz.getDb().deleteDeviceFiles(device.getId());
+			}
+		}.start();
     }//GEN-LAST:event_jButton1ActionPerformed
 
 	/**
@@ -2209,8 +2212,14 @@ public class PanelMain extends javax.swing.JFrame {
 					sendCover(maxWidth); 
                 }
 				else if(msg.startsWith("sendFile")) {
-                    int id = Integer.parseInt(msg.substring("sendCover".length()-1));
+                    int id = Integer.parseInt(msg.substring("sendFile".length()));
 					sendFile(id);
+                }
+				else if(msg.startsWith("insertDeviceFile")) {
+                    int id = Integer.parseInt(msg.substring("insertDeviceFile".length()));
+					FileInfoInt file = Jamuz.getDb().getFile(id);
+					//FIXME: Make 10 a parameter
+					Jamuz.getDb().insertDeviceFile(10, file);
                 }
                 else {
                     switch(msg) {
@@ -2220,15 +2229,29 @@ public class PanelMain extends javax.swing.JFrame {
                         case "setRating3": setRating(3, false); break;
                         case "setRating4": setRating(4, false); break;
                         case "setRating5": setRating(5, false); break;
-                        case "previousTrack": pressButton(jButtonPlayerPrevious);; break;
-                        case "nextTrack": pressButton(jButtonPlayerNext); break;
-                        case "playTrack": pressButton(jButtonPlayerPlay); break;
-                        case "clearTracks": pressButton(jButtonPlayerClear); break;
+                        case "previousTrack": 
+							pressButton(jButtonPlayerPrevious); 
+							break;
+                        case "nextTrack": 
+							pressButton(jButtonPlayerNext); 
+							break;
+                        case "playTrack": 
+							pressButton(jButtonPlayerPlay); 
+							break;
+                        case "clearTracks": 
+							pressButton(jButtonPlayerClear); 
+							break;
                         case "forward": forward(); break;
                         case "rewind": rewind(); break;
                         case "pullup": moveCursor(0); break;
-						case "volUp": jSpinnerVolume.setValue((float)jSpinnerVolume.getValue()+5.0f); break;
-						case "volDown": jSpinnerVolume.setValue((float)jSpinnerVolume.getValue()-5.0f); break;
+						case "volUp": 
+							jSpinnerVolume.setValue(
+									(float)jSpinnerVolume.getValue()+5.0f); 
+							break;
+						case "volDown": 
+							jSpinnerVolume.setValue(
+									(float)jSpinnerVolume.getValue()-5.0f); 
+							break;
                         case "sayRating": displayedFile.sayRating(true); break;
                         case "MSG_NULL":
 							listModelRemoteClients.removeClient(login);
