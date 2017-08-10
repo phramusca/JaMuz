@@ -2151,7 +2151,9 @@ public class PanelMain extends javax.swing.JFrame {
 				jsonAsMap.put("files", filesToGet);
 				Jamuz.getLogger().info("Sending list ...");
 				sendToClients("JSON_"+JSONValue.toJSONString(jsonAsMap));
+				Jamuz.getLogger().info("List sent. delete in deviceFile table ...");
 				Jamuz.getDb().deleteDeviceFiles(device.getId());
+				Jamuz.getLogger().info("End deleting.");
 			}
 		}.start();
     }//GEN-LAST:event_jButton1ActionPerformed
