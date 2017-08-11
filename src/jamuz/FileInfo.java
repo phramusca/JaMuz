@@ -495,5 +495,4 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public String toString() {
 		return relativeFullPath + "\nrating=" + rating + "\nratingModifDate=" + DateTime.formatUTCtoSqlUTC(ratingModifDate) + "\nlastPlayed=" + getFormattedLastPlayed() + "\naddedDate=" + getFormattedAddedDate() + "\nplayCounter=" + playCounter + "\npreviousPlayCounter=" + this.previousPlayCounter + "\n";  //NOI18N //NOI18N //NOI18N
 	}
-	
 }

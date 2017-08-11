@@ -2142,11 +2142,7 @@ public class PanelMain extends javax.swing.JFrame {
 				jsonAsMap.put("type", "FilesToGet");
 				JSONArray filesToGet = new JSONArray();
 				for (FileInfoInt fileInfo : fileInfoSourceList) {
-					Map fileToGet = new HashMap();
-					fileToGet.put("path", fileInfo.getRelativeFullPath());
-					fileToGet.put("size", fileInfo.getSize());
-					fileToGet.put("idFile", fileInfo.getIdFile());
-					filesToGet.add(fileToGet);
+					filesToGet.add(fileInfo.toMap());
 				}
 				jsonAsMap.put("files", filesToGet);
 				Jamuz.getLogger().info("Sending list ...");

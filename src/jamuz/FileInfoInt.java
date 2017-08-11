@@ -63,14 +63,11 @@ import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.logging.Logger;
-import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
-import org.jaudiotagger.tag.id3.ID3v24Tag;
-import org.jaudiotagger.tag.id3.framebody.FrameBodyRVAD;
-import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
+import java.util.HashMap;
+import java.util.Map;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
+import org.json.simple.JSONValue;
 
 /**
  *
@@ -1488,4 +1485,16 @@ public class FileInfoInt extends FileInfo {
             tags.add(value);
         }
     }
+	
+	public String toJson() {
+		return JSONValue.toJSONString(toMap());
+	}
+	
+	public Map toMap() {
+		Map jsonAsMap = new HashMap();
+		jsonAsMap.put("path", relativeFullPath);
+		jsonAsMap.put("size", size);
+		jsonAsMap.put("idFile", idFile);
+		return jsonAsMap;
+	}
 }
