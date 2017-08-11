@@ -414,7 +414,7 @@ public class ProcessMerge extends ProcessAbstract {
                 this.statsListDbJaMuz.remove(idSecond);
             }
             else {
-                Jamuz.getLogger().severe(MessageFormat.format(Inter.get("Error.Merge.RetrieveInfo"), new Object[] {fileDbSelected.getRelativeFullPath(), this.dBJaMuz.getName()}));  //NOI18N
+                Jamuz.getLogger().warning(MessageFormat.format(Inter.get("Error.Merge.RetrieveInfo"), new Object[] {fileDbSelected.getRelativeFullPath(), this.dBJaMuz.getName()}));  //NOI18N
                 //Add to ErrorList
 //				myFileInfoDbSelected.sourceName=MessageFormat.format(Inter.get("Error.Merge.NotFound"), new Object[] {this.dBJaMuz.name, this.selectedStatSource.source.name});  //NOI18N
                 fileDbSelected.setSourceName(run+"-"+this.dBJaMuz.getName()+":\t"+Inter.get("Label.NotFound"));

@@ -130,9 +130,8 @@ public class ServerClient {
     }
 	
 	public boolean sendFile(FileInfoInt fileInfoInt) {
-        send("SENDING_FILE"+fileInfoInt.getIdFile());
+        send("SENDING_FILE"+fileInfoInt.toJson());
         try {
-			File source = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
 			DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(outputStream));			
 			sendFile(fileInfoInt, dos);
 			return true;
@@ -150,7 +149,6 @@ public class ServerClient {
 				dos.writeLong(file.length());
 				System.out.println("Sending : "+fileInfoInt.getIdFile()+" "+file.getAbsolutePath());
 				System.out.println("Size : "+file.length());
-				
 				int read = 0;
 				while ((read = input.read()) != -1)
 					dos.writeByte(read);
