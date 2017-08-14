@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,12 +26,14 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
+import java.security.MessageDigest;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -130,15 +133,28 @@ public class ServerClient {
     }
 	
 	public boolean sendFile(FileInfoInt fileInfoInt) {
-        send("SENDING_FILE"+fileInfoInt.toJson());
-        try {
-			DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(outputStream));			
-			sendFile(fileInfoInt, dos);
-			return true;
-        } catch (IOException ex) {
-			Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
-			return false;
-        }
+		
+		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
+		if(file.exists()&&file.isFile())
+		{
+			try {
+				//Readd file MD5 hash
+//				byte[] data = IOUtils.toByteArray(new FileInputStream(file));
+//				MessageDigest md = MessageDigest.getInstance("MD5"); //NOI18N
+//				md.update(data);
+//				byte[] hash = md.digest();
+//				String fileHash = returnHex(hash);
+				
+				send("SENDING_FILE"+fileInfoInt.toJson());
+				DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(outputStream));			
+				sendFile(fileInfoInt, dos);
+				return true;
+			} catch (IOException ex) {
+				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+				return false;
+			}
+		}
+		return false;
     }
 	
 	public void sendFile(FileInfoInt fileInfoInt, DataOutputStream dos) throws IOException {
@@ -146,7 +162,7 @@ public class ServerClient {
 		if(dos!=null&&file.exists()&&file.isFile())
 		{
 			try (FileInputStream input = new FileInputStream(file)) {
-				dos.writeLong(file.length());
+				//dos.writeLong(file.length());
 				System.out.println("Sending : "+fileInfoInt.getIdFile()+" "+file.getAbsolutePath());
 				System.out.println("Size : "+file.length());
 				int read = 0;
