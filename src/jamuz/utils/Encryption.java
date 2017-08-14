@@ -61,7 +61,9 @@ public class Encryption {
 			Base64 encoder = new Base64();
 			String encryptedValue = encoder.encodeToString(encVal);
 			return encryptedValue;
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | 
+				InvalidKeyException | IllegalBlockSizeException | 
+				BadPaddingException ex) {
 			return "";
 		}
     }
@@ -82,11 +84,15 @@ public class Encryption {
 			byte[] decValue = c.doFinal(decordedValue);
 			String decryptedValue = new String(decValue);
 			return decryptedValue;
-		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException ex) {
+		} catch (InvalidKeyException | NoSuchAlgorithmException | 
+				NoSuchPaddingException | IllegalBlockSizeException | 
+				BadPaddingException ex) {
 			return "";
 		}
     }
-    private static Key generateKey(String secret) throws NoSuchAlgorithmException {
+    private static Key generateKey(String secret) 
+			throws NoSuchAlgorithmException {
+		
 		byte[] key = secret.getBytes(StandardCharsets.UTF_8);
 		MessageDigest sha = MessageDigest.getInstance("SHA-1");
 		key = sha.digest(key);

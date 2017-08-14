@@ -62,21 +62,14 @@ public class Emission extends ProcessAbstract {
 	public void sendFile(String file) {
         try {
             BufferedInputStream bis;
-            
             File myFile = new File (file);
-          
-//            byte[] mybytearray = new byte[(int) myFile.length()];
             bis = new BufferedInputStream(new FileInputStream(myFile));
-//            bis.read(mybytearray, 0, mybytearray.length);
-//            os.write(mybytearray, 0, mybytearray.length);
-            
             byte[] mybytearray = new byte[1024];
             int count;
             while ((count = bis.read(mybytearray)) > 0)
             {
               os.write(mybytearray, 0, count);
             }
-            
             os.flush();
         }
         catch (FileNotFoundException ex) {
@@ -84,9 +77,6 @@ public class Emission extends ProcessAbstract {
         } catch (IOException ex) {
             Logger.getLogger(Emission.class.getName()).log(Level.SEVERE, null, ex);
         }        finally {
-//          if (bis != null) bis.close();
-//          if (os != null) os.close();
-//          if (sock!=null) sock.close();
         }
     }
 	
