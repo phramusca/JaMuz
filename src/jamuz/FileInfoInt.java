@@ -1495,6 +1495,7 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("path", relativeFullPath);
 		jsonAsMap.put("size", size);
 		jsonAsMap.put("idFile", idFile);
+		jsonAsMap.put("rating", rating);
 		return jsonAsMap;
 	}
 }

@@ -132,7 +132,7 @@ public class ServerClient {
         }
     }
 	
-	public boolean sendFile(FileInfoInt fileInfoInt) {
+	public boolean sendFile(String login, FileInfoInt fileInfoInt) {
 		
 		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
 		if(file.exists()&&file.isFile())
@@ -157,7 +157,7 @@ public class ServerClient {
 		return false;
     }
 	
-	public void sendFile(FileInfoInt fileInfoInt, DataOutputStream dos) throws IOException {
+	private void sendFile(FileInfoInt fileInfoInt, DataOutputStream dos) throws IOException {
 		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
 		if(dos!=null&&file.exists()&&file.isFile())
 		{
@@ -255,5 +255,9 @@ public class ServerClient {
 			//=> Not authorized then
 			return "";
 		}
+	}
+
+	public String getLogin() {
+		return login;
 	}
 }
