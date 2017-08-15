@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -138,21 +139,30 @@ public class Server {
 		}
 	}
 
+	private Map<String, ServerClient> getRemoteClients() {
+		return clients.entrySet().stream()
+			.filter((client) -> !client.getValue().getLogin().endsWith("-data"))
+			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
+	}
+	
+	private Map<String, ServerClient> getDataClients() {
+		return clients.entrySet().stream()
+			.filter((client) -> client.getValue().getLogin().endsWith("-data"))
+			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
+	}
+	
 	/**
 	 *
+	 * @param login
 	 * @param displayedFile
 	 * @param maxWidth
 	 */
-    public void sendCover(FileInfoInt displayedFile, int maxWidth) {
-        for(ServerClient client : clients.values()) {
-            client.sendCover(displayedFile, maxWidth);
-		}
+    public void sendCover(String login, FileInfoInt displayedFile, int maxWidth) {
+		clients.get(login).sendCover(displayedFile, maxWidth);
 	}
 	
-	public void sendFile(FileInfoInt fileInfoInt) {
-        for(ServerClient client : clients.values()) {
-            client.sendFile(fileInfoInt);
-		}
+	public void sendFile(String login, FileInfoInt fileInfoInt) {
+		clients.get(login).sendFile(login, fileInfoInt);
 	}
     
 	/**
@@ -167,9 +177,13 @@ public class Server {
     /**
      * Sends a message to all clients
      * @param msg
+	 * @param isRemote
      */
-    public void send(String msg) {
-        for(ServerClient client : clients.values()) {
+    public void send(String msg, boolean isRemote) {
+		
+		Map<String, ServerClient> clientsToSend = isRemote?
+				getRemoteClients():getDataClients();
+        for(ServerClient client : clientsToSend.values()) {
             client.send(msg);
         }
 	}

@@ -2145,11 +2145,14 @@ public class PanelMain extends javax.swing.JFrame {
 					filesToGet.add(fileInfo.toMap());
 				}
 				jsonAsMap.put("files", filesToGet);
-				Jamuz.getLogger().info("Sending list ...");
-				sendToClients("JSON_"+JSONValue.toJSONString(jsonAsMap));
-				Jamuz.getLogger().info("List sent. delete in deviceFile table ...");
+				Jamuz.getLogger().info("Delete in deviceFile table ...");
 				Jamuz.getDb().deleteDeviceFiles(device.getId());
-				Jamuz.getLogger().info("End deleting.");
+				Jamuz.getLogger().info("Sending list ...");
+				
+				//FIXME: Only send to selected device
+				sendToClients("JSON_"+JSONValue.toJSONString(jsonAsMap), false);
+				Jamuz.getLogger().info("List sent.");
+				
 			}
 		}.start();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -2207,11 +2210,11 @@ public class PanelMain extends javax.swing.JFrame {
                 }
 				else if(msg.startsWith("sendCover")) {
                     int maxWidth = Integer.parseInt(msg.substring("sendCover".length()));
-					sendCover(maxWidth); 
+					sendCover(login, maxWidth); 
                 }
 				else if(msg.startsWith("sendFile")) {
                     int id = Integer.parseInt(msg.substring("sendFile".length()));
-					sendFile(id);
+					sendFile(login, id);
                 }
 				else if(msg.startsWith("insertDeviceFile")) {
                     int id = Integer.parseInt(msg.substring("insertDeviceFile".length()));
@@ -2391,7 +2394,7 @@ public class PanelMain extends javax.swing.JFrame {
             map.put("type", "currentPosition");
             map.put("currentPosition", currentPosition);
             map.put("total", displayedFile.getLength());
-            sendToClients("JSON_"+JSONValue.toJSONString(map));
+            sendToClients("JSON_"+JSONValue.toJSONString(map), true);
             startTime=System.currentTimeMillis();
         }
     }
@@ -2405,7 +2408,7 @@ public class PanelMain extends javax.swing.JFrame {
             obj.put("type", "playlists");
             obj.put("playlists", list);
             obj.put("selectedPlaylist", selectedPlaylist);
-            sendToClients("JSON_"+obj.toJSONString());
+            sendToClients("JSON_"+obj.toJSONString(), true);
     }
     
 	/**
@@ -2434,25 +2437,25 @@ public class PanelMain extends javax.swing.JFrame {
         map.put("album", fileInfo.getAlbum());
         map.put("artist", fileInfo.getArtist());
 		map.put("genre", fileInfo.getGenre());
-        sendToClients("JSON_"+JSONValue.toJSONString(map));
+        sendToClients("JSON_"+JSONValue.toJSONString(map), true);
     }
 	
-	private static void sendCover(int maxWidth) {
+	private static void sendCover(String login, int maxWidth) {
 		if(server!=null) {
-			server.sendCover(displayedFile, maxWidth);
+			server.sendCover(login, displayedFile, maxWidth);
 		}
 	}
 	
-	private static void sendFile(int id) {
+	private static void sendFile(String login, int id) {
 		if(server!=null) {
 			FileInfoInt fileInfoInt = Jamuz.getDb().getFile(id);
-			server.sendFile(fileInfoInt);
+			server.sendFile(login, fileInfoInt);
 		}
 	}
     
-    public static void sendToClients(String msg) {
+    public static void sendToClients(String msg, boolean isRemote) {
         if(server!=null) {
-            server.send(msg);
+            server.send(msg, isRemote);
         }
     }
     
