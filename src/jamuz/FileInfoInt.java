@@ -1496,6 +1496,10 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("size", size);
 		jsonAsMap.put("idFile", idFile);
 		jsonAsMap.put("rating", rating);
+		
+		jsonAsMap.put("addedDate", getFormattedAddedDate());
+		jsonAsMap.put("lastPlayed", getFormattedLastPlayed());
+		jsonAsMap.put("playCounter", playCounter);
 		return jsonAsMap;
 	}
 }
