@@ -17,4 +17,13 @@ public interface ICallBackReception {
 	 * @param msg
 	 */
 	public void received(String login, String msg);
+	
+	public void disconnected(String login);
+	
+	/**
+	 *
+	 * @param login
+	 * @param client
+	 */
+	public void authenticated(Client login, ServerClient client);
 }

@@ -13,7 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,14 +25,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
-import java.security.MessageDigest;
+import java.net.SocketException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -42,10 +40,8 @@ import org.apache.commons.io.IOUtils;
 public class ServerClient {
 	private final Socket socket;
 	private BufferedReader bufferedReader;
-//	private Emission emission;
 	private Reception reception;
 	private final ICallBackReception callback;
-	private final ICallBackAuthentication callBackAuth;
 	private String login = "UNKNOWN";
     private String address;
     private PrintWriter printWriter;
@@ -55,14 +51,12 @@ public class ServerClient {
 	 *
 	 * @param socket
 	 * @param callback
-	 * @param callBackAuth
 	 */
-	public ServerClient(Socket socket, ICallBackReception callback, ICallBackAuthentication callBackAuth) {
+	public ServerClient(Socket socket, ICallBackReception callback) {
 		this.socket = socket;
         this.address = socket.getRemoteSocketAddress().toString();
         address = address.split(":")[0].substring(1);
 		this.callback = callback;
-		this.callBackAuth = callBackAuth;
 	}
 	
 	/**
@@ -74,8 +68,6 @@ public class ServerClient {
 			//Starting emission thread
 			this.printWriter = new PrintWriter(socket.getOutputStream());
             this.outputStream = socket.getOutputStream();
-//			emission = new Emission(socket.getOutputStream());
-//			emission.start();
 			
 			//Authenticate
 			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -94,8 +86,7 @@ public class ServerClient {
 	 */
 	public void close() {
 		try {
-//            emission.abort();
-            reception.abort();
+			reception.abort();
 			socket.close();
 		} catch (IOException ex) {
 //			Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -132,32 +123,18 @@ public class ServerClient {
         }
     }
 	
-	public boolean sendFile(String login, FileInfoInt fileInfoInt) {
-		
+	public void sendFile(String login, FileInfoInt fileInfoInt) {
 		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
 		if(file.exists()&&file.isFile())
 		{
-			try {
-				//Readd file MD5 hash
-//				byte[] data = IOUtils.toByteArray(new FileInputStream(file));
-//				MessageDigest md = MessageDigest.getInstance("MD5"); //NOI18N
-//				md.update(data);
-//				byte[] hash = md.digest();
-//				String fileHash = returnHex(hash);
-				
-				send("SENDING_FILE"+fileInfoInt.toJson());
-				DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(outputStream));			
-				sendFile(fileInfoInt, dos);
-				return true;
-			} catch (IOException ex) {
-				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
-				return false;
-			}
+			send("SENDING_FILE"+fileInfoInt.toJson());
+			DataOutputStream dos = new DataOutputStream(
+					new BufferedOutputStream(outputStream));			
+			sendFile(fileInfoInt, dos);
 		}
-		return false;
     }
 	
-	private void sendFile(FileInfoInt fileInfoInt, DataOutputStream dos) throws IOException {
+	private void sendFile(FileInfoInt fileInfoInt, DataOutputStream dos) {
 		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
 		if(dos!=null&&file.exists()&&file.isFile())
 		{
@@ -170,6 +147,12 @@ public class ServerClient {
 					dos.writeByte(read);
 				dos.flush();
 				System.out.println("File successfully sent!");
+			} catch (SocketException ex) {
+				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+				close();
+				callback.disconnected(login);
+			} catch (IOException ex) {
+				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 	}
@@ -210,13 +193,11 @@ public class ServerClient {
 				String name = isValid(login, pass);
                 if(!name.equals("")){
                     send("MSG_CONNECTED");
-
                     //Starting reception thread
                     reception = new Reception(bufferedReader, callback, login);
                     reception.start();
-
                     //Notify client is authenticated
-                    callBackAuth.authenticated(new Client(login, name), ServerClient.this);
+                    callback.authenticated(new Client(login, name), ServerClient.this);
                 }
                 else {
                     send("MSG_ERROR_CONNECTION");

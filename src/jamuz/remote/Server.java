@@ -6,6 +6,7 @@
 package jamuz.remote;
 
 import jamuz.FileInfoInt;
+import jamuz.Jamuz;
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
@@ -28,19 +29,16 @@ public class Server {
 	private HandleLogin handleLogin;
 	private final Map<String, ServerClient> clients;
 	private final ICallBackReception callback;
-	private final ICallBackAuthentication callBackAuth;
 
 	/**
 	 *
 	 * @param port
 	 * @param callback
-	 * @param callBackAuth
 	 */
-	public Server(int port, ICallBackReception callback, ICallBackAuthentication callBackAuth) {
+	public Server(int port, ICallBackReception callback) {
 		this.port = port;
 		clients = new HashMap();
 		this.callback = callback;
-		this.callBackAuth = callBackAuth;
 	}
 	
 	/**
@@ -94,8 +92,7 @@ public class Server {
 					Socket socket = serverSocket.accept(); //Blocks until connection made
 					checkAbort();
                     CallBackReception callBackReceptionLocal = new CallBackReception();
-					CallBackAuthentication callBackAuthLocal = new CallBackAuthentication();
-					ServerClient client = new ServerClient(socket, callBackReceptionLocal, callBackAuthLocal);
+					ServerClient client = new ServerClient(socket, callBackReceptionLocal);
 					checkAbort();
 					client.login();
 				}
@@ -109,26 +106,15 @@ public class Server {
         @Override
         public void received(String login, String msg) {
             if(clients.containsKey(login)) {
-                switch(msg) {
-                    case "MSG_NULL" :
-                        callback.received(login, "MSG_NULL");
-                        clients.get(login).close();
-                        clients.remove(login);
-                        break;
-                    default:
-                        callback.received(login, msg);
-                        break;
-                }
+				callback.received(login, msg);
             }
         }
-    }
-    
-	class CallBackAuthentication implements ICallBackAuthentication {
+		
 		@Override
 		public void authenticated(Client login, ServerClient client) {
 			if(!clients.containsKey(login.getId())) {
                 clients.put(login.getId(), client);
-                callBackAuth.authenticated(login, null);
+                callback.authenticated(login, null);
             }
 //            else {
 //				//TODO: This can happen. why ?
@@ -137,7 +123,16 @@ public class Server {
 //                closeClient(login);
 //            }
 		}
-	}
+
+		@Override
+		public void disconnected(String login) {
+			if(clients.containsKey(login)) {
+				clients.get(login).close();
+				clients.remove(login);
+			}
+			callback.disconnected(login);
+		}
+    }
 
 	private Map<String, ServerClient> getRemoteClients() {
 		return clients.entrySet().stream()
