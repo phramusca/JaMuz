@@ -43,7 +43,8 @@ public class Reception  extends ProcessAbstract {
                     callback.received(login, msg);
                 }
                 else {
-                    callback.received(login, "MSG_NULL");
+                    callback.disconnected(login);
+					return;
                 }
 			}
 		} catch (InterruptedException ex) {

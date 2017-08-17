@@ -72,8 +72,10 @@ public class ListModelRemoteClients extends AbstractListModel {
 	}
 	
 	public void removeClient(String id) {
-		clients.remove(id);
-		this.fireIntervalRemoved(this, 0, clients.size());
+		if(clients.containsKey(id)) {
+			clients.remove(id);
+			this.fireIntervalRemoved(this, 0, clients.size());
+		}
 	}
 	
 	public boolean contains(String id) {

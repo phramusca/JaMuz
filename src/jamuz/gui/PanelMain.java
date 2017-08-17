@@ -67,7 +67,6 @@ import jamuz.gui.swing.ButtonBrowseURL;
 import jamuz.gui.swing.TableCellListener;
 import jamuz.player.Mplayer;
 import jamuz.process.check.FolderInfo;
-import jamuz.remote.ICallBackAuthentication;
 import jamuz.remote.ICallBackReception;
 import jamuz.remote.Server;
 import jamuz.remote.ServerClient;
@@ -94,8 +93,6 @@ import org.json.simple.JSONValue;
 import jamuz.player.MPlaybackListener;
 import jamuz.process.sync.Device;
 import jamuz.remote.Client;
-import java.util.Random;
-import javax.swing.JTabbedPane;
 
 /**
  * Main JaMuz GUI class
@@ -2073,8 +2070,7 @@ public class PanelMain extends javax.swing.JFrame {
 
         if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
             CallBackReception callBackReception = new CallBackReception();
-            CallBackAuthentication callBackAuthentication = new CallBackAuthentication();
-            server = new Server((Integer) jSpinnerPort.getValue(), callBackReception, callBackAuthentication);
+            server = new Server((Integer) jSpinnerPort.getValue(), callBackReception);
             if(server.connect()) {
                 Swing.enableComponents(jPanelRemote, false);
 //				jListRemoteClients.setEnabled(true);
@@ -2254,15 +2250,24 @@ public class PanelMain extends javax.swing.JFrame {
 									(float)jSpinnerVolume.getValue()-5.0f); 
 							break;
                         case "sayRating": displayedFile.sayRating(true); break;
-                        case "MSG_NULL":
-							listModelRemoteClients.removeClient(login);
-                            break;
                         default:
 							Jamuz.getLogger().warning(login.concat(": ").concat(msg).concat("\n"));
                             break;
                     }
                 }
 			}
+		}
+		
+		@Override
+		public void authenticated(Client login, ServerClient client) {
+			listModelRemoteClients.add(login);
+            sendPlaylistsToClients(jComboBoxPlaylist.getSelectedItem().toString()); //Sends filesToGet of playlists
+            sendToClients(displayedFile);
+		}
+
+		@Override
+		public void disconnected(String login) {
+			listModelRemoteClients.removeClient(login);
 		}
 	}
 
@@ -2279,15 +2284,6 @@ public class PanelMain extends javax.swing.JFrame {
 	public void rewind() {
         moveCursor(jSliderPlayerLength.getValue() - (jSliderPlayerLength.getMaximum()/10));
     }
-    
-	class CallBackAuthentication implements ICallBackAuthentication {
-		@Override
-		public void authenticated(Client login, ServerClient client) {
-			listModelRemoteClients.add(login);
-            sendPlaylistsToClients(jComboBoxPlaylist.getSelectedItem().toString()); //Sends filesToGet of playlists
-            sendToClients(displayedFile);
-		}
-	}
     
     private void resetCheckedFlag(FolderInfo.CheckedFlag checkedFlag) {
         
