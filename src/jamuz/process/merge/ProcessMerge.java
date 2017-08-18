@@ -748,7 +748,9 @@ public class ProcessMerge extends ProcessAbstract {
 		nbFiles = this.mergeListDbSelected.size();
 		if(nbFiles>0) {
 			this.checkAbort();
-			int[] results = selectedStatSource.getSource().updateStatistics(mergeListDbSelected);
+			int[] results = selectedStatSource
+					.getSource()
+					.updateStatistics(mergeListDbSelected);
 			if(results.length<nbFiles) {
 				return false;
 			}

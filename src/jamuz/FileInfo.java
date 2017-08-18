@@ -386,7 +386,8 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	}
     
 	/**
-	 *
+	 * Returns last played date in "yyyy-MM-dd HH:mm:ss" format,
+	 * translated to local time.
 	 * @return
 	 */
 	public String getLastPlayedLocalTime() {
@@ -400,6 +401,15 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public String getFormattedAddedDate() {
 		return DateTime.formatUTCtoSqlUTC(this.addedDate);
 	}
+	
+	/**
+	 * Returns added date date in "yyyy-MM-dd HH:mm:ss" format,
+	 * translated to local time.
+	 * @return
+	 */
+	public String getAddedDateLocalTime() {
+        return DateTime.formatUTCtoSqlLocal(this.addedDate);
+    }
     
 	/**
 	 *
@@ -407,14 +417,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	public String getFormattedRatingModifDate() {
         return DateTime.formatUTCtoSqlUTC(ratingModifDate);
-    }
-    
-	/**
-	 *
-	 * @return
-	 */
-	public String getAddedDateLocalTime() {
-        return DateTime.formatUTCtoSqlLocal(this.addedDate);
     }
 
 	/**

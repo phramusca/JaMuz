@@ -758,7 +758,8 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public boolean updateLastPlayedAndCounter(FileInfoInt file) {
         try {
-            PreparedStatement stUpdateFileLastPlayedAndCounter = dbConn.connection.prepareStatement("UPDATE file "
+            PreparedStatement stUpdateFileLastPlayedAndCounter = 
+					dbConn.connection.prepareStatement("UPDATE file "
                     + "SET lastplayed=?, playCounter=? "
                     + "WHERE idFile=?");
             
