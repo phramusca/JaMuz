@@ -52,7 +52,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	/**
 	 * path ID in database
 	 */
-	private int idPath;
+	protected int idPath;
 
 	/**
 	 *

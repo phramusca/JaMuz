@@ -56,24 +56,6 @@ public class PanelCover extends JPanel {
 		return this.image;
 	}
 	
-	/**
-	 * Sets a text image ("Select" or "None")
-	 * @param text
-	 */
-	public void setText(String text) {
-		this.isCover=false;
-		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 18);
-		this.image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-		Graphics2D g = this.image.createGraphics();
-		FontMetrics fm = g.getFontMetrics(f);
-		g.setBackground(Color.WHITE);
-		g.clearRect(0, 0, this.image.getWidth(), this.image.getHeight());
-		g.setFont(f);
-		g.setColor(Color.RED);
-		g.drawString(text, 10, fm.getAscent() + this.getHeight()/2);
-		this.repaint();
-	}
-	
 	@Override
     public void paintComponent(Graphics g) {
 		super.paintComponent(g);
