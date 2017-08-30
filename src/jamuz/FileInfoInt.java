@@ -414,12 +414,12 @@ public class FileInfoInt extends FileInfo {
 		super("file");  //NOI18N
         this.fromLibrary=true;
 		this.idFile=idFile;
-		this.setIdPath(idPath);
+		this.idPath = idPath;
 		this.relativePath=FilenameUtils.separatorsToSystem(relativePath);
-		this.setFilename(filename);
-		this.relativeFullPath=this.relativePath+this.getFilename();
+		this.filename = filename;
+		this.relativeFullPath=this.relativePath+this.filename;
 		this.rootPath = rootPath;  //NOI18N
-        this.ext=FilenameUtils.getExtension(this.getFilename()).toLowerCase(Locale.ENGLISH);
+        this.ext=FilenameUtils.getExtension(this.filename).toLowerCase(Locale.ENGLISH);
 		
 		//Set File (tags) Info
 		this.length=length;
@@ -429,7 +429,7 @@ public class FileInfoInt extends FileInfo {
 		this.size=size;
 		this.sizeDisplay=String.valueOf(this.size);
 		//Set tags
-		this.setBPM(BPM);
+		this.BPM = BPM;
 		this.album=album;
 		this.albumArtist=albumArtist;
 		this.artist=artist;
@@ -692,12 +692,6 @@ public class FileInfoInt extends FileInfo {
 	}
 	
 	private void setEmptyCover() {
-		//FIXME: Looks like ugly RED N/A cover is either embedded in tags or in db or in cache or a mix of those
-		//as this is never called apart for empty FileInfo at startup
-		//Ex: /home/raph/Musique/Archive/Gulli - Dance Kids 2016 CD2
-		// => get coverHash and clean all tags with this this coverHash
-		// !!! Make sure it is not written again !!!
-
 		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 40);
 		this.coverImage = new BufferedImage(500, 500, BufferedImage.TYPE_3BYTE_BGR);
 		Graphics2D g = this.coverImage.createGraphics();
@@ -1189,7 +1183,6 @@ public class FileInfoInt extends FileInfo {
 			//First, try reading from file
 			this.readCoverFromTag();
 			if(coverImage==null) {
-				//If cannot read set empty cover (red N/A image)
 				this.setEmptyCover();
 			}
 		}
