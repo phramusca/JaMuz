@@ -152,6 +152,9 @@ public class DbInfo {
 					return true;
 				} 
 				else if (this.locationOri.startsWith("remote://")) {  //NOI18N
+					//FIXME: make it work with -data !
+					
+					
 					String login = this.locationOri.substring("remote://".length());
 					if(receive) {
 						if (!(PanelMain.getDatabase(login, 
