@@ -17,6 +17,7 @@
 
 package jamuz;
 
+import jamuz.gui.PanelMain;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -30,6 +31,7 @@ import jamuz.utils.FileSystem;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -86,7 +88,10 @@ public class DbInfo {
                 if (locationOri.startsWith("ftp://")) {  //NOI18N
                     //TODO: Check FTP connect (and file ?)
                     return true;
-                }
+                } else if (this.locationOri.startsWith("remote://")) {  //NOI18N
+					//FIXME: Check Android connection
+                    return true;
+				}
                 else {
                     //If not FTP, should be a "usual" path to file
                     //Checking if file exists
@@ -115,7 +120,6 @@ public class DbInfo {
 	 * @return
 	 */
 	public boolean copyDB(boolean receive, String locationWork) {
-
 		switch (this.libType) {
 			case Sqlite:  //NOI18N
 				String fileName;  //NOI18N
@@ -135,6 +139,25 @@ public class DbInfo {
 							Popup.error(MessageFormat.format(Inter.get("Error.DataBaseFileSend"), new Object[] {this.locationOri}));  //NOI18N
 							return false;
 						}
+					}
+					return true;
+				} 
+				else if (this.locationOri.startsWith("remote://")) {  //NOI18N
+					String login = this.locationOri.substring("remote://".length());
+					if(receive) {
+						if (!(PanelMain.getDatabase(login, FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
+							Popup.error(MessageFormat.format(Inter.get("Error.DatabaseFileRetrieve"), new Object[] {this.locationOri}));  //NOI18N
+							return false;
+						}
+						//Change the working location
+						this.locationWork=FilenameUtils.concat(locationWork, "JaMuzRemote.db");
+					}
+					else {
+						if (!(PanelMain.sendDatabase(login, FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
+							Popup.error(MessageFormat.format(Inter.get("Error.DataBaseFileSend"), new Object[] {this.locationOri}));  //NOI18N
+							return false;
+						}
+						return false;
 					}
 					return true;
 				} 

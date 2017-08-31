@@ -1432,6 +1432,8 @@ public class DialogCheck extends javax.swing.JDialog {
         if(doSave) {
             folder.action = ProcessCheck.Action.SAVE;
 			int i=0;
+			//FIXME: Issue here when a file is missing compared to match
+			//
 			for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {
 				folder.getFilesAudio().get(file.index).index=i;
 				i++;

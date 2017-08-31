@@ -6,7 +6,6 @@
 package jamuz.remote;
 
 import jamuz.FileInfoInt;
-import jamuz.Jamuz;
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
@@ -29,6 +28,7 @@ public class Server {
 	private HandleLogin handleLogin;
 	private final Map<String, ServerClient> clients;
 	private final ICallBackReception callback;
+	private static final Object LOCK_REMOTE = new Object();
 
 	/**
 	 *
@@ -106,7 +106,15 @@ public class Server {
         @Override
         public void received(String login, String msg) {
             if(clients.containsKey(login)) {
-				callback.received(login, msg);
+				if(msg.equals("SENDING_DB")) {
+					clients.get(login).getDatabase();
+					synchronized(LOCK_REMOTE) {
+						Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.notify()");
+						LOCK_REMOTE.notify();
+					}
+				} else {
+					callback.received(login, msg);
+				}
             }
         }
 		
@@ -119,7 +127,7 @@ public class Server {
 //            else {
 //				//TODO: This can happen. why ?
 //				//Until this is solved, considering not a problem
-//                client.send("MSG_ERROR_ALREADY_CONNECTED");
+//                client.getDatabase("MSG_ERROR_ALREADY_CONNECTED");
 //                closeClient(login);
 //            }
 		}
@@ -157,16 +165,39 @@ public class Server {
 	}
 	
 	public void sendFile(String login, FileInfoInt fileInfoInt) {
-		clients.get(login).sendFile(login, fileInfoInt);
+		clients.get(login).sendFile(fileInfoInt);
 	}
     
 	/**
 	 *
 	 * @param login
-	 * @param msg
+	 * @param path
+	 * @return 
 	 */
-	public void send(String login, String msg) {
-		clients.get(login).send(msg);
+	public boolean getDatabase(String login, String path) {
+		clients.get(login).setPath(path);
+		clients.get(login).send("MSG_SEND_DB");
+		synchronized(LOCK_REMOTE) {
+			try {
+				Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.wait()");
+				LOCK_REMOTE.wait(10000);
+			} catch (InterruptedException ex) {
+				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+				return false;
+			}
+		}
+		Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote released");
+		return true;
+	}
+	
+	/**
+	 *
+	 * @param login
+	 * @param path
+	 * @return 
+	 */
+	public boolean sendDatabase(String login, String path) {
+		return clients.get(login).sendDatabase(path);
 	}
     
     /**
@@ -175,7 +206,6 @@ public class Server {
 	 * @param isRemote
      */
     public void send(String msg, boolean isRemote) {
-		
 		Map<String, ServerClient> clientsToSend = isRemote?
 				getRemoteClients():getDataClients();
         for(ServerClient client : clientsToSend.values()) {
