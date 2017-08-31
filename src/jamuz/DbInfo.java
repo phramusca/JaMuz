@@ -75,7 +75,8 @@ public class DbInfo {
 	 * @return
 	 */
 	public Ftp getFtp(String localFolder) {
-		return new Ftp(this.ftpServer, this.ftpUser, this.ftpPwd, localFolder, this.ftpRemoteFolder, this.ftpFileName);
+		return new Ftp(this.ftpServer, this.ftpUser, this.ftpPwd, localFolder, 
+				this.ftpRemoteFolder, this.ftpFileName);
 	}
 
 	/**
@@ -100,7 +101,9 @@ public class DbInfo {
                         return true;
                     }
                     else {
-                        Popup.error(java.text.MessageFormat.format(Inter.get("Error.PathNotFound"), new Object[] {locationOri})); //NOI18N
+                        Popup.error(java.text.MessageFormat.format(
+								Inter.get("Error.PathNotFound"), 
+								new Object[] {locationOri})); //NOI18N
                         return false;
                     }
                 }
@@ -108,7 +111,9 @@ public class DbInfo {
                 //TODO: Check database connect
                 return true;
             default:
-                Popup.error(java.text.MessageFormat.format(Inter.get("Error.DbTypeNotSupported"), new Object[] {this.libType})); //NOI18N
+                Popup.error(java.text.MessageFormat.format(
+						Inter.get("Error.DbTypeNotSupported"), 
+						new Object[] {this.libType})); //NOI18N
                 return false;
         }
 	}
@@ -128,7 +133,9 @@ public class DbInfo {
 					if(receive) {
 						fileName = this.ftpFileName;
 						if (!(myFTP.getFile())) {
-							Popup.error(MessageFormat.format(Inter.get("Error.DatabaseFileRetrieve"), new Object[] {this.locationOri}));  //NOI18N
+							Popup.error(MessageFormat.format(
+									Inter.get("Error.DatabaseFileRetrieve"), 
+									new Object[] {this.locationOri}));  //NOI18N
 							return false;
 						}
 						//Change the working location
@@ -136,25 +143,37 @@ public class DbInfo {
 					}
 					else {
 						if (!(myFTP.sendFile())) {
-							Popup.error(MessageFormat.format(Inter.get("Error.DataBaseFileSend"), new Object[] {this.locationOri}));  //NOI18N
+							Popup.error(MessageFormat.format(
+									Inter.get("Error.DataBaseFileSend"), 
+									new Object[] {this.locationOri}));  //NOI18N
 							return false;
 						}
 					}
 					return true;
 				} 
 				else if (this.locationOri.startsWith("remote://")) {  //NOI18N
+					//FIXME: make it work with -data !
+					
+					
 					String login = this.locationOri.substring("remote://".length());
 					if(receive) {
-						if (!(PanelMain.getDatabase(login, FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
-							Popup.error(MessageFormat.format(Inter.get("Error.DatabaseFileRetrieve"), new Object[] {this.locationOri}));  //NOI18N
+						if (!(PanelMain.getDatabase(login, 
+								FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
+							Popup.error(MessageFormat.format(
+									Inter.get("Error.DatabaseFileRetrieve"), 
+									new Object[] {this.locationOri}));  //NOI18N
 							return false;
 						}
 						//Change the working location
-						this.locationWork=FilenameUtils.concat(locationWork, "JaMuzRemote.db");
+						this.locationWork=
+								FilenameUtils.concat(locationWork, "JaMuzRemote.db");
 					}
 					else {
-						if (!(PanelMain.sendDatabase(login, FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
-							Popup.error(MessageFormat.format(Inter.get("Error.DataBaseFileSend"), new Object[] {this.locationOri}));  //NOI18N
+						if (!(PanelMain.sendDatabase(login, 
+								FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
+							Popup.error(MessageFormat.format(
+									Inter.get("Error.DataBaseFileSend"), 
+									new Object[] {this.locationOri}));  //NOI18N
 							return false;
 						}
 						return false;
@@ -182,7 +201,8 @@ public class DbInfo {
 						//Source and destination are the same (destination actually) . Why ??                        
                         //Seen on windows/mediamonkey
                         //Seen twice on linux (diferent db sources), though was fine all before...and after! Why was that ??
-						Popup.error("sourceFile="+sourceFile+", destinationFile="+destinationFile, ex);
+						Popup.error("sourceFile="+sourceFile+", destinationFile="
+								+destinationFile, ex);
                         return false;
                     }
 				}			
@@ -191,7 +211,9 @@ public class DbInfo {
 				//No need to retrieve a mysql database ...
 				return true;
 			default:
-				Popup.error(MessageFormat.format(Inter.get("Error.DbTypeNotSupported"), new Object[] {this.libType}));  //NOI18N
+				Popup.error(MessageFormat.format(
+						Inter.get("Error.DbTypeNotSupported"), 
+						new Object[] {this.libType}));  //NOI18N
 				return false;
 		}
 	}
@@ -215,8 +237,11 @@ public class DbInfo {
                 }
                 return true;
 			case MySQL:  //NOI18N
-				String mysqlBackupFile = destinationPath + this.locationOri.replace("/", "-") + "--" + DateTime.getCurrentLocal(DateTime.DateTimeFormat.FILE) + ".sql";  //NOI18N
-				String myCmdLine = "mysqldump -u "+ this.user +" -p"+this.pwd+" --opt --compatible=mysql40 "+this.locationOri.substring(this.locationOri.indexOf("/")+1);  //NOI18N
+				String mysqlBackupFile = destinationPath + 
+						this.locationOri.replace("/", "-") + "--" + DateTime.getCurrentLocal(DateTime.DateTimeFormat.FILE) + ".sql";  //NOI18N
+				String myCmdLine = "mysqldump -u "+ this.user +" -p"+this.pwd
+						+" --opt --compatible=mysql40 "
+						+this.locationOri.substring(this.locationOri.indexOf("/")+1);  //NOI18N
 				Jamuz.getLogger().finest(myCmdLine);
 				Runtime runtime = Runtime.getRuntime();
 				final Process process;
@@ -233,14 +258,17 @@ public class DbInfo {
 
 					process = runtime.exec(myCmdLine);
 
-					//TODO: Return false if an error is detected (check rc from process and/or ErrorStream)
+					//TODO: Return false if an error is detected 
+					//(check rc from process and/or ErrorStream)
 
 					// Consommation de la sortie standard de l'application externe dans un Thread separe
 					new Thread("Thread.DbInfo.backupDB.mySQL.mysqldump.InputStream") {
 						@Override
 						public void run() {
 							try {
-								BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+								BufferedReader reader = new BufferedReader(
+										new InputStreamReader(
+												process.getInputStream()));
 								String line;
 								try {
 									while((line = reader.readLine()) != null) {
@@ -261,7 +289,9 @@ public class DbInfo {
 						@Override
 						public void run() {
 							try {
-								BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+								BufferedReader reader = new BufferedReader(
+										new InputStreamReader(
+												process.getErrorStream()));
 								String line;
 								try {
 									while((line = reader.readLine()) != null) {
@@ -289,7 +319,9 @@ public class DbInfo {
 						@Override
 						public void run() {
 							try {
-								BufferedReader reader = new BufferedReader(new InputStreamReader(process2.getErrorStream()));
+								BufferedReader reader = new BufferedReader(
+										new InputStreamReader(
+												process2.getErrorStream()));
 								String line;
 								try {
 								while((line = reader.readLine()) != null) {
