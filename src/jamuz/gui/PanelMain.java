@@ -2458,6 +2458,20 @@ public class PanelMain extends javax.swing.JFrame {
             server.send(msg, isRemote);
         }
     }
+	
+	public static boolean getDatabase(String login, String path) {
+        if(server!=null) {
+			return server.getDatabase(login, path);
+        }
+		return false;
+    }
+	
+	public static boolean sendDatabase(String login, String path) {
+        if(server!=null) {
+			return server.sendDatabase(login, path);
+        }
+		return false;
+    }
     
     //TODO: Move to a dedicated class
     /**

@@ -10,13 +10,16 @@ import jamuz.IconBufferCover;
 import jamuz.Jamuz;
 import jamuz.process.check.DialogScanner;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +49,17 @@ public class ServerClient {
     private String address;
     private PrintWriter printWriter;
     private OutputStream outputStream;
+	private InputStream inputStream;
+	private String path;
+
+	/**
+	 * Set the value of locationWork
+	 *
+	 * @param locationWork new value of locationWork
+	 */
+	public void setPath(String locationWork) {
+		this.path = locationWork;
+	}
 	
 	/**
 	 *
@@ -68,9 +82,9 @@ public class ServerClient {
 			//Starting emission thread
 			this.printWriter = new PrintWriter(socket.getOutputStream());
             this.outputStream = socket.getOutputStream();
-			
+			this.inputStream = socket.getInputStream();
 			//Authenticate
-			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 			Authentication authentication = new Authentication();
 			authentication.start();
 			
@@ -102,6 +116,29 @@ public class ServerClient {
         printWriter.flush();
 	}
     
+	public boolean getDatabase() {
+		try {
+			DataInputStream dis = new DataInputStream(new BufferedInputStream(inputStream));
+			double fileSize = dis.readLong();
+			// FIXME: Find best. Make a benchmark (Same on Jamuz Remote)
+			//https://stackoverflow.com/questions/8748960/how-do-you-decide-what-byte-size-to-use-for-inputstream-read
+			try (FileOutputStream fos = new FileOutputStream(path)) {
+				// FIXME: Find best. Make a benchmark (Same on Jamuz Remote)
+				//https://stackoverflow.com/questions/8748960/how-do-you-decide-what-byte-size-to-use-for-inputstream-read
+				byte[] buf = new byte[8192];
+				int bytesRead;
+				while (fileSize > 0 && (bytesRead = dis.read(buf, 0, (int) Math.min(buf.length, fileSize))) != -1) {
+					fos.write(buf, 0, bytesRead);
+					fileSize -= bytesRead;
+				}
+			}
+			return true;
+		} catch (IOException ex) {
+			Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+			return false;
+		}
+	}
+	
 	/**
 	 *
 	 * @param displayedFile
@@ -123,30 +160,50 @@ public class ServerClient {
         }
     }
 	
-	public void sendFile(String login, FileInfoInt fileInfoInt) {
+	public boolean sendFile(FileInfoInt fileInfoInt) {
 		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
 		if(file.exists()&&file.isFile())
 		{
 			send("SENDING_FILE"+fileInfoInt.toJson());
 			DataOutputStream dos = new DataOutputStream(
-					new BufferedOutputStream(outputStream));			
-			sendFile(fileInfoInt, dos);
+					new BufferedOutputStream(outputStream));	
+			System.out.println("Sending : "+fileInfoInt.getIdFile()+" "+file.getAbsolutePath());
+			System.out.println("Size : "+file.length());
+			return sendFile(file, dos);
 		}
+		return false;
     }
 	
-	private void sendFile(FileInfoInt fileInfoInt, DataOutputStream dos) {
-		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
+	public boolean sendDatabase(String path) {
+		File file = new File(path);
+		if(file.exists()&&file.isFile())
+		{
+			send("SENDING_DB");
+			DataOutputStream dos = new DataOutputStream(
+					new BufferedOutputStream(outputStream));	
+			System.out.println("Sending : "+file.getAbsolutePath());
+			System.out.println("Size : "+file.length());
+			try {
+				dos.writeLong(file.length());
+				return sendFile(file, dos);
+			} catch (IOException ex) {
+				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		return false;
+    }
+	
+	private boolean sendFile(File file, DataOutputStream dos) {
 		if(dos!=null&&file.exists()&&file.isFile())
 		{
 			try (FileInputStream input = new FileInputStream(file)) {
-				//dos.writeLong(file.length());
-				System.out.println("Sending : "+fileInfoInt.getIdFile()+" "+file.getAbsolutePath());
-				System.out.println("Size : "+file.length());
 				int read = 0;
-				while ((read = input.read()) != -1)
+				while ((read = input.read()) != -1) {
 					dos.writeByte(read);
+				}
 				dos.flush();
 				System.out.println("File successfully sent!");
+				return true;
 			} catch (SocketException ex) {
 				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
 				close();
@@ -155,6 +212,7 @@ public class ServerClient {
 				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
+		return false;
 	}
 
 	/**
