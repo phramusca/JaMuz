@@ -161,11 +161,17 @@ public class Server {
 	 * @param maxWidth
 	 */
     public void sendCover(String login, FileInfoInt displayedFile, int maxWidth) {
-		clients.get(login).sendCover(displayedFile, maxWidth);
+		if(clients.containsKey(login)) {
+			clients.get(login).sendCover(displayedFile, maxWidth);
+		}
+		
 	}
 	
 	public boolean sendFile(String login, FileInfoInt fileInfoInt) {
-		return clients.get(login).sendFile(fileInfoInt);
+		if(clients.containsKey(login)) {
+			return clients.get(login).sendFile(fileInfoInt);
+		}
+		return true;
 	}
     
 	/**
@@ -175,19 +181,21 @@ public class Server {
 	 * @return 
 	 */
 	public boolean getDatabase(String login, String path) {
-		clients.get(login).setPath(path);
-		clients.get(login).send("MSG_SEND_DB");
-		synchronized(LOCK_REMOTE) {
-			try {
-				Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.wait()");
-				LOCK_REMOTE.wait(10000);
-			} catch (InterruptedException ex) {
-				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-				return false;
+		if(clients.containsKey(login)) {
+			clients.get(login).setPath(path);
+			clients.get(login).send("MSG_SEND_DB");
+			synchronized(LOCK_REMOTE) {
+				try {
+					Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.wait()");
+					LOCK_REMOTE.wait(10000);
+				} catch (InterruptedException ex) {
+					Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+					return false;
+				}
 			}
+			Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote released");
 		}
-		Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote released");
-		return true;
+		return false;
 	}
 	
 	/**
@@ -197,7 +205,10 @@ public class Server {
 	 * @return 
 	 */
 	public boolean sendDatabase(String login, String path) {
-		return clients.get(login).sendDatabase(path);
+		if(clients.containsKey(login)) {
+			return clients.get(login).sendDatabase(path);
+		}
+		return false;
 	}
     
     /**
