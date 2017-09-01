@@ -164,8 +164,8 @@ public class Server {
 		clients.get(login).sendCover(displayedFile, maxWidth);
 	}
 	
-	public void sendFile(String login, FileInfoInt fileInfoInt) {
-		clients.get(login).sendFile(fileInfoInt);
+	public boolean sendFile(String login, FileInfoInt fileInfoInt) {
+		return clients.get(login).sendFile(fileInfoInt);
 	}
     
 	/**

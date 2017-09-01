@@ -176,7 +176,6 @@ public class DbInfo {
 									new Object[] {this.locationOri}));  //NOI18N
 							return false;
 						}
-						return false;
 					}
 					return true;
 				} 
