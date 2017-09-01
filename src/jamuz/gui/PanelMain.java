@@ -93,6 +93,7 @@ import org.json.simple.JSONValue;
 import jamuz.player.MPlaybackListener;
 import jamuz.process.sync.Device;
 import jamuz.remote.Client;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Main JaMuz GUI class
@@ -2214,7 +2215,18 @@ public class PanelMain extends javax.swing.JFrame {
                 }
 				else if(msg.startsWith("sendFile")) {
                     int id = Integer.parseInt(msg.substring("sendFile".length()));
-					sendFile(login, id);
+					if(server!=null) {
+						FileInfoInt fileInfoInt = Jamuz.getDb().getFile(id);
+						if(!server.sendFile(login, fileInfoInt)) {
+							//FIXME: Happens when file not found
+							// Need to mark as deleted in db 
+							// AND somehow remove it from filesToKeep
+							//and filesToGet in remote
+							Popup.error("Cannot send missing file \""
+									+FilenameUtils.concat(fileInfoInt.getRootPath(), 
+											fileInfoInt.getRelativeFullPath())+"\"");
+						}
+					}
                 }
 				else if(msg.startsWith("insertDeviceFile")) {
                     int id = Integer.parseInt(msg.substring("insertDeviceFile".length()));
@@ -2443,13 +2455,6 @@ public class PanelMain extends javax.swing.JFrame {
 	private static void sendCover(String login, int maxWidth) {
 		if(server!=null) {
 			server.sendCover(login, displayedFile, maxWidth);
-		}
-	}
-	
-	private static void sendFile(String login, int id) {
-		if(server!=null) {
-			FileInfoInt fileInfoInt = Jamuz.getDb().getFile(id);
-			server.sendFile(login, fileInfoInt);
 		}
 	}
     

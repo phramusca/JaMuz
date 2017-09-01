@@ -161,15 +161,17 @@ public class ServerClient {
     }
 	
 	public boolean sendFile(FileInfoInt fileInfoInt) {
-		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), fileInfoInt.getRelativeFullPath()));
-		if(file.exists()&&file.isFile())
-		{
+		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), 
+				fileInfoInt.getRelativeFullPath()));
+		if(file.exists()&&file.isFile()) {
 			send("SENDING_FILE"+fileInfoInt.toJson());
 			DataOutputStream dos = new DataOutputStream(
 					new BufferedOutputStream(outputStream));	
-			System.out.println("Sending : "+fileInfoInt.getIdFile()+" "+file.getAbsolutePath());
+			System.out.println("Sending : "+fileInfoInt.getIdFile()
+					+" "+file.getAbsolutePath());
 			System.out.println("Size : "+file.length());
-			return sendFile(file, dos);
+			sendFile(file, dos);
+			return true;
 		}
 		return false;
     }
@@ -194,23 +196,20 @@ public class ServerClient {
     }
 	
 	private boolean sendFile(File file, DataOutputStream dos) {
-		if(dos!=null&&file.exists()&&file.isFile())
-		{
-			try (FileInputStream input = new FileInputStream(file)) {
-				int read = 0;
-				while ((read = input.read()) != -1) {
-					dos.writeByte(read);
-				}
-				dos.flush();
-				System.out.println("File successfully sent!");
-				return true;
-			} catch (SocketException ex) {
-				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
-				close();
-				callback.disconnected(login);
-			} catch (IOException ex) {
-				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+		try (FileInputStream input = new FileInputStream(file)) {
+			int read = 0;
+			while ((read = input.read()) != -1) {
+				dos.writeByte(read);
 			}
+			dos.flush();
+			System.out.println("File successfully sent!");
+			return true;
+		} catch (SocketException ex) {
+			Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+			close();
+			callback.disconnected(login);
+		} catch (IOException ex) {
+			Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return false;
 	}
