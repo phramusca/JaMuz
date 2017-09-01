@@ -138,7 +138,6 @@ public class DbInfo {
 									new Object[] {this.locationOri}));  //NOI18N
 							return false;
 						}
-						//Change the working location
 						this.locationWork=locationWork + fileName;
 					}
 					else {
@@ -152,9 +151,6 @@ public class DbInfo {
 					return true;
 				} 
 				else if (this.locationOri.startsWith("remote://")) {  //NOI18N
-					//FIXME: make it work with -data !
-					
-					
 					String login = this.locationOri.substring("remote://".length());
 					if(receive) {
 						if (!(PanelMain.getDatabase(login, 
@@ -164,7 +160,6 @@ public class DbInfo {
 									new Object[] {this.locationOri}));  //NOI18N
 							return false;
 						}
-						//Change the working location
 						this.locationWork=
 								FilenameUtils.concat(locationWork, "JaMuzRemote.db");
 					}
@@ -186,7 +181,6 @@ public class DbInfo {
 						sourceFile = FileSystem.replaceHome(this.locationOri);
 						fileName = sourceFile.getName();
 						destinationFile = new File(locationWork + fileName);
-						//Change the working location
 						this.locationWork=locationWork + fileName;
 					}
 					else {
@@ -206,7 +200,6 @@ public class DbInfo {
                     }
 				}			
 			case MySQL:  //NOI18N
-				
 				//No need to retrieve a mysql database ...
 				return true;
 			default:
