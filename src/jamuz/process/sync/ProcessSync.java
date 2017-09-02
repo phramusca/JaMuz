@@ -20,6 +20,7 @@ package jamuz.process.sync;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
+import jamuz.gui.PanelRemote;
 import jamuz.utils.ProcessAbstract;
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +33,14 @@ import jamuz.utils.Benchmark;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONValue;
 
 /**
  * Sync process class
@@ -95,6 +102,42 @@ public class ProcessSync extends ProcessAbstract {
 	}
 	
 	private boolean sync() throws InterruptedException {
+		if(this.device.getDestination().startsWith("remote://")) {
+			String login = this.device.getDestination().substring("remote://".length());
+			return syncRemote(login);
+		} else {
+			return syncFS();
+		}
+	}
+	
+	private boolean syncRemote(String login) throws InterruptedException {
+
+        PanelSync.enableSyncStartButton(true);
+        PanelSync.progressBar.reset();
+        PanelSync.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
+		fileInfoSourceList = new ArrayList<>();
+		Playlist playlist = device.getPlaylist();
+		playlist.getFiles(fileInfoSourceList);
+		PanelSync.progressBar.setup(fileInfoSourceList.size());
+		Map jsonAsMap = new HashMap();
+		jsonAsMap.put("type", "FilesToGet");
+		JSONArray filesToGet = new JSONArray();
+		for (FileInfoInt fileInfo : fileInfoSourceList) {
+			filesToGet.add(fileInfo.toMap());
+			PanelSync.addRowSync(fileInfo.getRelativeFullPath(), 1); //NOI18N
+            PanelSync.progressBar.progress(fileInfo.getTitle());
+		}
+		jsonAsMap.put("files", filesToGet);		
+		PanelSync.progressBar.reset();
+		PanelSync.progressBar.setIndeterminate("Delete in deviceFile table ..."); //NOI18N
+		PanelSync.enableSyncStartButton(false);
+		Jamuz.getDb().deleteDeviceFiles(device.getId());
+        PanelSync.progressBar.setIndeterminate("Sending list ..."); //NOI18N
+		PanelRemote.send(login, "JSON_"+JSONValue.toJSONString(jsonAsMap));
+		return true;
+	}
+	
+	private boolean syncFS() throws InterruptedException {
 		//TODO: Use a pattern (separated from the one used for library)
 		//Inspire from file tagger in check
 		

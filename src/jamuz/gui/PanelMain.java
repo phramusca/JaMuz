@@ -81,7 +81,6 @@ import jamuz.player.MPlaybackListener;
 import jamuz.remote.Client;
 import jamuz.remote.ICallBackReception;
 import jamuz.remote.ServerClient;
-import static jamuz.gui.PanelRemote.sendToClients;
 
 /**
  * Main JaMuz GUI class
@@ -427,8 +426,7 @@ public class PanelMain extends javax.swing.JFrame {
 		if(displayedFile.isFromLibrary()) {
             jComboBoxPlayerRating.setSelectedIndex(rating);
             displayedFile.sayRating(sayRated);
-            sendToClients(displayedFile);
-            PanelRemote.sendToClients(displayedFile);
+            PanelRemote.send(displayedFile);
         }
     }
 
@@ -1970,8 +1968,8 @@ public class PanelMain extends javax.swing.JFrame {
 		
 		@Override
 		public void authenticated(Client login, ServerClient client) {
-            sendPlaylistsToClients(jComboBoxPlaylist.getSelectedItem().toString()); //Sends filesToGet of playlists
-            sendToClients(displayedFile);
+            sendPlaylists(jComboBoxPlaylist.getSelectedItem().toString()); //Sends filesToGet of playlists
+            PanelRemote.send(displayedFile);
 		}
 
 		@Override
@@ -2083,7 +2081,7 @@ public class PanelMain extends javax.swing.JFrame {
 
             if (isPlaying) {
                 playerInfo.displayFileInfo(fileInfo);
-                PanelRemote.sendToClients(fileInfo);
+                PanelRemote.send(fileInfo);
             }
         } catch (Exception ex) {
             Popup.error(ex);
@@ -2098,12 +2096,12 @@ public class PanelMain extends javax.swing.JFrame {
             map.put("type", "currentPosition");
             map.put("currentPosition", currentPosition);
             map.put("total", displayedFile.getLength());
-            PanelRemote.sendToClients("JSON_"+JSONValue.toJSONString(map), true);
+            PanelRemote.send("JSON_"+JSONValue.toJSONString(map), true);
             startTime=System.currentTimeMillis();
         }
     }
     
-    private static void sendPlaylistsToClients(String selectedPlaylist) {
+    private static void sendPlaylists(String selectedPlaylist) {
             JSONArray list = new JSONArray();
             for(String playlist : getPlaylists()) {
                 list.add(playlist);
@@ -2112,7 +2110,7 @@ public class PanelMain extends javax.swing.JFrame {
             obj.put("type", "playlists");
             obj.put("playlists", list);
             obj.put("selectedPlaylist", selectedPlaylist);
-            PanelRemote.sendToClients("JSON_"+obj.toJSONString(), true);
+            PanelRemote.send("JSON_"+obj.toJSONString(), true);
     }
     
 	/**

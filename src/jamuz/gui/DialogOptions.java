@@ -1080,13 +1080,13 @@ public class DialogOptions extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonStatSouceDelActionPerformed
 
     private void jButtonDeviceAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeviceAddActionPerformed
-        DialogOptionDevice.main(new Device(machineName));
+        DialogDevice.main(new Device(machineName));
     }//GEN-LAST:event_jButtonDeviceAddActionPerformed
 
     private void jButtonDeviceEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeviceEditActionPerformed
         if(jListDevices.getSelectedIndex()>-1) {
             Device device = (Device) jListDevices.getSelectedValue();
-            DialogOptionDevice.main(device);
+            DialogDevice.main(device);
         }
     }//GEN-LAST:event_jButtonDeviceEditActionPerformed
 

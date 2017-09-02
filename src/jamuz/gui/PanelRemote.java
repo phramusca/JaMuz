@@ -18,8 +18,6 @@ package jamuz.gui;
 
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.Playlist;
-import jamuz.process.sync.Device;
 import jamuz.remote.Client;
 import jamuz.remote.ICallBackReception;
 import jamuz.remote.Server;
@@ -34,13 +32,11 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultListModel;
 import org.apache.commons.io.FilenameUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 
 /**
@@ -103,7 +99,7 @@ public class PanelRemote extends javax.swing.JPanel {
 		}
 	}
 	
-	public static void sendToClients(FileInfoInt fileInfo) {    
+	public static void send(FileInfoInt fileInfo) {    
         Map map = new HashMap();
         map.put("type", "fileInfoInt");
 		map.put("coverHash", fileInfo.getCoverHash());
@@ -112,7 +108,7 @@ public class PanelRemote extends javax.swing.JPanel {
         map.put("album", fileInfo.getAlbum());
         map.put("artist", fileInfo.getArtist());
 		map.put("genre", fileInfo.getGenre());
-        sendToClients("JSON_"+JSONValue.toJSONString(map), true);
+        send("JSON_"+JSONValue.toJSONString(map), true);
     }
 	
 	public static void sendCover(String login, FileInfoInt displayedFile, int maxWidth) {
@@ -136,9 +132,15 @@ public class PanelRemote extends javax.swing.JPanel {
 		}
 	}
     
-    public static void sendToClients(String msg, boolean isRemote) {
+    public static void send(String msg, boolean isRemote) {
         if(server!=null) {
             server.send(msg, isRemote);
+        }
+    }
+	
+	public static void send(String login, String msg) {
+        if(server!=null) {
+            server.send(login, msg);
         }
     }
 	
@@ -239,7 +241,6 @@ public class PanelRemote extends javax.swing.JPanel {
             if(server.connect()) {
                 Swing.enableComponents(jPanelRemote, false);
 				jButtonQRcode.setEnabled(true);
-				jButton1.setEnabled(true);
                 jButtonStart.setText(Inter.get("Button.Pause"));
             }
         }
@@ -269,7 +270,6 @@ public class PanelRemote extends javax.swing.JPanel {
         jButtonQRcode = new javax.swing.JButton();
         jScrollPanePlayerQueue1 = new javax.swing.JScrollPane();
         jListRemoteClients = new javax.swing.JList();
-        jButton1 = new javax.swing.JButton();
 
         jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder("Jamuz Remote Server"));
 
@@ -301,13 +301,6 @@ public class PanelRemote extends javax.swing.JPanel {
         jListRemoteClients.setModel(new DefaultListModel());
         jScrollPanePlayerQueue1.setViewportView(jListRemoteClients);
 
-        jButton1.setText(Inter.get("PanelMain.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
@@ -321,14 +314,12 @@ public class PanelRemote extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jCheckBoxServerStartOnStartup, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButton1)
-                        .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonStart))))
+                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonStart)))
                 .addContainerGap())
         );
         jPanelRemoteLayout.setVerticalGroup(
@@ -345,9 +336,7 @@ public class PanelRemote extends javax.swing.JPanel {
                     .addComponent(jLabelIP)
                     .addComponent(jButtonQRcode))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPanePlayerQueue1, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                .addComponent(jScrollPanePlayerQueue1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -362,35 +351,6 @@ public class PanelRemote extends javax.swing.JPanel {
             .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new Thread("Remote.SendFiles") {
-            @Override
-            public void run() {
-                Jamuz.getLogger().info(Inter.get("Msg.Process.RetrievingList"));
-                ArrayList<FileInfoInt> fileInfoSourceList = new ArrayList<>();
-                //FIXME: 10 must be selectable of course !
-                Device device = Jamuz.getMachine().getDevice(10);
-                Playlist playlist = device.getPlaylist();
-                playlist.getFiles(fileInfoSourceList);
-                Map jsonAsMap = new HashMap();
-                jsonAsMap.put("type", "FilesToGet");
-                JSONArray filesToGet = new JSONArray();
-                for (FileInfoInt fileInfo : fileInfoSourceList) {
-                    filesToGet.add(fileInfo.toMap());
-                }
-                jsonAsMap.put("files", filesToGet);
-                Jamuz.getLogger().info("Delete in deviceFile table ...");
-                Jamuz.getDb().deleteDeviceFiles(device.getId());
-                Jamuz.getLogger().info("Sending list ...");
-
-                //FIXME: Only send to selected device
-                sendToClients("JSON_"+JSONValue.toJSONString(jsonAsMap), false);
-                Jamuz.getLogger().info("List sent.");
-
-            }
-        }.start();
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButtonQRcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQRcodeActionPerformed
         try {
@@ -411,13 +371,12 @@ public class PanelRemote extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonQRcode;
     private javax.swing.JButton jButtonStart;
     private javax.swing.JCheckBox jCheckBoxServerStartOnStartup;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelIP;
-    private javax.swing.JList jListRemoteClients;
+    private static javax.swing.JList jListRemoteClients;
     private javax.swing.JPanel jPanelRemote;
     private javax.swing.JScrollPane jScrollPanePlayerQueue1;
     private javax.swing.JSpinner jSpinnerPort;
