@@ -112,6 +112,13 @@ public class ProcessSync extends ProcessAbstract {
 	
 	private boolean syncRemote(String login) throws InterruptedException {
 
+		if(!PanelRemote.isConnected(login)) {
+			Popup.warning(java.text.MessageFormat.format(
+					"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
+					new Object[] {this.device.getDestination()}));  //NOI18N
+            return false;
+		}
+		
         PanelSync.enableSyncStartButton(true);
         PanelSync.progressBar.reset();
         PanelSync.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
@@ -133,7 +140,12 @@ public class ProcessSync extends ProcessAbstract {
 		PanelSync.enableSyncStartButton(false);
 		Jamuz.getDb().deleteDeviceFiles(device.getId());
         PanelSync.progressBar.setIndeterminate("Sending list ..."); //NOI18N
-		PanelRemote.send(login, "JSON_"+JSONValue.toJSONString(jsonAsMap));
+		if(!PanelRemote.send(login, "JSON_"+JSONValue.toJSONString(jsonAsMap))) {
+			Popup.warning(java.text.MessageFormat.format(
+					"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
+					new Object[] {this.device.getDestination()}));  //NOI18N
+            return false;
+		}
 		return true;
 	}
 	

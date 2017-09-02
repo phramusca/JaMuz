@@ -91,11 +91,16 @@ public class DbInfo {
                     //TODO: Check FTP connect (and file ?)
                     return true;
                 } else if (this.locationOri.startsWith("remote://")) {  //NOI18N
-					//FIXME: Check Android connection
+					String login = this.locationOri.substring("remote://".length());
+					if(!PanelRemote.isConnected(login)) {
+						Popup.warning(java.text.MessageFormat.format(
+								"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
+								new Object[] {this.locationOri}));  //NOI18N
+						return false;
+					}
                     return true;
 				}
                 else {
-                    //If not FTP, should be a "usual" path to file
                     //Checking if file exists
                     File myFile = FileSystem.replaceHome(locationOri);
                     if (myFile.exists()) {

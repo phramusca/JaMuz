@@ -225,6 +225,10 @@ public class Server {
         }
 	}
 	
+	public boolean isConnected(String login) {
+		return clients.containsKey(login);
+	}
+	
 	/**
      * Sends a message to given client
 	 * @param login
