@@ -18,6 +18,7 @@
 package jamuz;
 
 import jamuz.gui.PanelMain;
+import jamuz.gui.PanelRemote;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -153,7 +154,7 @@ public class DbInfo {
 				else if (this.locationOri.startsWith("remote://")) {  //NOI18N
 					String login = this.locationOri.substring("remote://".length());
 					if(receive) {
-						if (!(PanelMain.getDatabase(login, 
+						if (!(PanelRemote.getDatabase(login, 
 								FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
 							Popup.error(MessageFormat.format(
 									Inter.get("Error.DatabaseFileRetrieve"), 
@@ -164,7 +165,7 @@ public class DbInfo {
 								FilenameUtils.concat(locationWork, "JaMuzRemote.db");
 					}
 					else {
-						if (!(PanelMain.sendDatabase(login, 
+						if (!(PanelRemote.sendDatabase(login, 
 								FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
 							Popup.error(MessageFormat.format(
 									Inter.get("Error.DataBaseFileSend"), 
