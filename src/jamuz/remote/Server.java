@@ -226,6 +226,20 @@ public class Server {
 	}
 	
 	/**
+     * Sends a message to given client
+	 * @param login
+     * @param msg
+	 * @return 
+     */
+    public boolean send(String login, String msg) {
+		if(clients.containsKey(login)) {
+			clients.get(login).send(msg);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 *
 	 * @param login
 	 */

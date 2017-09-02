@@ -31,7 +31,7 @@ import jamuz.utils.Swing;
  * JDialog extension to add/modify Stat source
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class DialogOptionDevice extends javax.swing.JDialog {
+public class DialogDevice extends javax.swing.JDialog {
 
 	private final Device device;
 	
@@ -41,7 +41,7 @@ public class DialogOptionDevice extends javax.swing.JDialog {
 	 * @param modal
 	 * @param device  
 	 */
-    public DialogOptionDevice(java.awt.Frame parent, boolean modal, Device device) {
+    public DialogDevice(java.awt.Frame parent, boolean modal, Device device) {
         super(parent, modal);
         initComponents();
 		
@@ -88,7 +88,7 @@ public class DialogOptionDevice extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
-        setTitle(bundle.getString("DialogOptionDevice.title")); // NOI18N
+        setTitle(bundle.getString("DialogDevice.title")); // NOI18N
         setModal(true);
 
         jLabelName.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -117,8 +117,6 @@ public class DialogOptionDevice extends javax.swing.JDialog {
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText(bundle.getString("Label.Destination")); // NOI18N
-
-        jTextFieldDestination.setEditable(false);
 
         jButtonSelectDest.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
         jButtonSelectDest.setText(bundle.getString("Button.Select")); // NOI18N
@@ -159,15 +157,14 @@ public class DialogOptionDevice extends javax.swing.JDialog {
                         .addComponent(jButtonCancel)
                         .addGap(10, 10, 10)
                         .addComponent(jButtonSave))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jTextFieldDestination, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButtonSelectDest))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jTextFieldSource, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButtonSelectSource)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextFieldDestination, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonSelectDest))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextFieldSource, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonSelectSource))
                     .addComponent(jTextName, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jComboBoxPlaylist, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -214,8 +211,12 @@ public class DialogOptionDevice extends javax.swing.JDialog {
 		else {
 			this.device.setName(name);
 			this.device.setSource(FilenameUtils.normalizeNoEndSeparator(source)+File.separator);
-			this.device.setDestination(FilenameUtils.normalizeNoEndSeparator(destination)+File.separator);
 			
+			if(destination.startsWith("remote://")) {
+				this.device.setDestination(destination);
+			} else {
+				this.device.setDestination(FilenameUtils.normalizeNoEndSeparator(destination)+File.separator);
+			}
 			Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
 			this.device.setIdPlaylist(playlist.getId());
 			
@@ -256,7 +257,7 @@ public class DialogOptionDevice extends javax.swing.JDialog {
 			@Override
             public void run() {
 
-                DialogOptionDevice dialog = new DialogOptionDevice(new javax.swing.JFrame(), true, device);
+                DialogDevice dialog = new DialogDevice(new javax.swing.JFrame(), true, device);
 				//Center the dialog
 				dialog.setLocationRelativeTo(dialog.getParent());
                 dialog.setVisible(true);
