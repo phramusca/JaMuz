@@ -1318,7 +1318,7 @@ public class PanelMain extends javax.swing.JFrame {
             isManual = true;
             jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(currentPosition));
             playerInfo.dispMP3progress(currentPosition);
-            sendPositionToClients(currentPosition);
+            sendPosition(currentPosition);
         }
     }
 	
@@ -2089,7 +2089,7 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
     private static long startTime=System.currentTimeMillis();
-    private static void sendPositionToClients(int currentPosition) {
+    private static void sendPosition(int currentPosition) {
         long currentTime=System.currentTimeMillis();
         if(currentTime-startTime>1000) {
             Map map = new HashMap();

@@ -138,11 +138,19 @@ public class PanelRemote extends javax.swing.JPanel {
         }
     }
 	
-	public static void send(String login, String msg) {
+	public static boolean send(String login, String msg) {
         if(server!=null) {
-            server.send(login, msg);
+            return server.send(login, msg);
         }
+		return false;
     }
+	
+	public static boolean isConnected(String login) {
+		if(server!=null) {
+            return server.isConnected(login);
+        }
+		return false;
+	}
 	
 	public static boolean getDatabase(String login, String path) {
         if(server!=null) {
