@@ -77,6 +77,10 @@ public class PanelRemote extends javax.swing.JPanel {
 		
 		startStopRemoteServer();
 	}
+
+	public void setCallback(ICallBackReception callback) {
+		this.callback = callback;
+	}
 	
 	class CallBackReception implements ICallBackReception {
 		@Override
@@ -89,11 +93,13 @@ public class PanelRemote extends javax.swing.JPanel {
 		@Override
 		public void authenticated(Client login, ServerClient client) {
 			listModelRemoteClients.add(login);
+			callback.authenticated(login, client);
 		}
 
 		@Override
 		public void disconnected(String login) {
 			listModelRemoteClients.removeClient(login);
+			callback.disconnected(login);
 		}
 	}
 	
@@ -309,26 +315,21 @@ public class PanelRemote extends javax.swing.JPanel {
             .addGroup(jPanelRemoteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPanePlayerQueue1)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPanePlayerQueue1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                                .addComponent(jButtonQRcode)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addContainerGap())
-                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
-                            .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jCheckBoxServerStartOnStartup)
-                                .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                                    .addComponent(jLabel1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButtonStart))))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(jButtonQRcode)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jCheckBoxServerStartOnStartup, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButton1)
+                        .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonStart))))
+                .addContainerGap())
         );
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

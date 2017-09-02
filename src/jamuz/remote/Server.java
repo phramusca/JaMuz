@@ -107,8 +107,8 @@ public class Server {
         public void received(String login, String msg) {
             if(clients.containsKey(login)) {
 				if(msg.equals("SENDING_DB")) {
-					clients.get(login).getDatabase();
 					synchronized(LOCK_REMOTE) {
+						clients.get(login).getDatabase();
 						Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.notify()");
 						LOCK_REMOTE.notify();
 					}
@@ -182,18 +182,19 @@ public class Server {
 	 */
 	public boolean getDatabase(String login, String path) {
 		if(clients.containsKey(login)) {
-			clients.get(login).setPath(path);
-			clients.get(login).send("MSG_SEND_DB");
 			synchronized(LOCK_REMOTE) {
 				try {
+					clients.get(login).setPath(path);
+					clients.get(login).send("MSG_SEND_DB");
 					Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.wait()");
-					LOCK_REMOTE.wait(10000);
+					LOCK_REMOTE.wait(10 * 1000); // 10s
+					Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote released");
+					return true;
 				} catch (InterruptedException ex) {
 					Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
 					return false;
 				}
 			}
-			Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote released");
 		}
 		return false;
 	}

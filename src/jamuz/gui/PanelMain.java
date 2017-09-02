@@ -25,7 +25,6 @@ import jamuz.Jamuz;
 import jamuz.gui.swing.ListElement;
 import jamuz.Main;
 import jamuz.Playlist;
-import static jamuz.gui.PanelRemote.sendToClients;
 import jamuz.gui.swing.ComboBoxRenderer;
 import jamuz.utils.OS;
 import jamuz.utils.Popup;
@@ -34,7 +33,6 @@ import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.Inter;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.event.ActionEvent;
@@ -53,7 +51,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.io.IOException;
 import java.util.List;
@@ -84,7 +81,7 @@ import jamuz.player.MPlaybackListener;
 import jamuz.remote.Client;
 import jamuz.remote.ICallBackReception;
 import jamuz.remote.ServerClient;
-import org.apache.commons.io.FilenameUtils;
+import static jamuz.gui.PanelRemote.sendToClients;
 
 /**
  * Main JaMuz GUI class
@@ -195,22 +192,6 @@ public class PanelMain extends javax.swing.JFrame {
 		tf.setEditable(false);
 		tf.setBackground(Color.GRAY);
 		
-	//"Options" tab
-        fillMachineList();
-        progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
-
-        panelSync.initExtended();
-        panelMerge.initExtended();
-
-        PanelCheck.setOptions(); //Needs to be static (for now at least)
-        
-        panelStats.initExtended();
-
-        panelSelect.initExtended();
-        panelPlaylists.initExtended();
-        
-        setKeyBindings();
-		
 		MPLAYER = new Mplayer();
 		
 		MPlaybackListener mPlaybackListener = new MPlaybackListener() {
@@ -231,6 +212,23 @@ public class PanelMain extends javax.swing.JFrame {
 		};
 		
 		MPLAYER.addListener(mPlaybackListener);
+		
+	//"Options" tab
+        fillMachineList();
+        progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
+
+        panelSync.initExtended();
+        panelMerge.initExtended();
+
+        PanelCheck.setOptions(); //Needs to be static (for now at least)
+        
+        panelStats.initExtended();
+
+        panelSelect.initExtended();
+        panelPlaylists.initExtended();
+        
+		panelRemote.setCallback(new CallBackReception());
+        setKeyBindings();		
     }
 
 	private static ImageIcon createImageIcon(String path) {
@@ -618,12 +616,8 @@ public class PanelMain extends javax.swing.JFrame {
         column.setMinWidth(50);
         column.setMaxWidth(200);
         button = new JButton("Amazon"); //NOI18N
-        column.setCellRenderer(new TableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                return button;
-            }
-        });
+        column.setCellRenderer((JTable table, Object value, boolean isSelected, 
+				boolean hasFocus, int row, int column1) -> button);
         column.setCellEditor(new ButtonBrowseURL());
         
         Action action = new AbstractAction() {
@@ -713,7 +707,7 @@ public class PanelMain extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
         jButton2 = new javax.swing.JButton();
-        panelRemote1 = new jamuz.gui.PanelRemote();
+        panelRemote = new jamuz.gui.PanelRemote();
         panelVideo = new jamuz.process.video.PanelVideo();
         panelBook = new jamuz.process.book.PanelBook();
         jPanelPlayer = new javax.swing.JPanel();
@@ -971,7 +965,7 @@ public class PanelMain extends javax.swing.JFrame {
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelOptionsLayout.createSequentialGroup()
                         .addGap(0, 132, Short.MAX_VALUE)
-                        .addComponent(panelRemote1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(panelRemote, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanelOptionsLayout.setVerticalGroup(
@@ -984,8 +978,7 @@ public class PanelMain extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(panelRemote1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(panelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -2272,23 +2265,18 @@ public class PanelMain extends javax.swing.JFrame {
 		//</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-				PanelMain panel = new PanelMain();
-				//Center
-				panel.setLocationRelativeTo(null);
-				//Maximize
-				panel.setExtendedState(PanelMain.MAXIMIZED_BOTH);
-
-				//Set titleDisplay with version and JaMuz database location
-				String version = Main.class.getPackage().getImplementationVersion();
-				String title = panel.getTitle() + " " + version; //NOI18N
-				panel.setTitle(title + " [" + Jamuz.getDb().getDbConn().getInfo().getLocationOri() + "]");  //NOI18N
-                panel.setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> {
+			PanelMain panel = new PanelMain();
+			//Center
+			panel.setLocationRelativeTo(null);
+			//Maximize
+			panel.setExtendedState(PanelMain.MAXIMIZED_BOTH);
+			//Set titleDisplay with version and JaMuz database location
+			String version = Main.class.getPackage().getImplementationVersion();
+			String title1 = panel.getTitle() + " " + version; //NOI18N
+			panel.setTitle(title1 + " [" + Jamuz.getDb().getDbConn().getInfo().getLocationOri() + "]"); //NOI18N
+			panel.setVisible(true);
+		});
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
@@ -2345,7 +2333,7 @@ public class PanelMain extends javax.swing.JFrame {
     private jamuz.gui.PanelLyrics panelLyrics;
     private jamuz.process.merge.PanelMerge panelMerge;
     private jamuz.gui.PanelPlaylists panelPlaylists;
-    private jamuz.gui.PanelRemote panelRemote1;
+    private jamuz.gui.PanelRemote panelRemote;
     private jamuz.gui.PanelSelect panelSelect;
     private jamuz.gui.PanelStats panelStats;
     private jamuz.process.sync.PanelSync panelSync;
