@@ -1969,7 +1969,8 @@ public class PanelMain extends javax.swing.JFrame {
 		@Override
 		public void authenticated(Client login, ServerClient client) {
             sendPlaylists(jComboBoxPlaylist.getSelectedItem().toString()); //Sends filesToGet of playlists
-            PanelRemote.send(displayedFile);
+            sendTags();
+			PanelRemote.send(displayedFile);
 		}
 
 		@Override
@@ -2102,15 +2103,26 @@ public class PanelMain extends javax.swing.JFrame {
     }
     
     private static void sendPlaylists(String selectedPlaylist) {
-            JSONArray list = new JSONArray();
-            for(String playlist : getPlaylists()) {
-                list.add(playlist);
-            }
-            JSONObject obj = new JSONObject();
-            obj.put("type", "playlists");
-            obj.put("playlists", list);
-            obj.put("selectedPlaylist", selectedPlaylist);
-            PanelRemote.send("JSON_"+obj.toJSONString(), true);
+		JSONArray list = new JSONArray();
+		for(String playlist : getPlaylists()) {
+			list.add(playlist);
+		}
+		JSONObject obj = new JSONObject();
+		obj.put("type", "playlists");
+		obj.put("playlists", list);
+		obj.put("selectedPlaylist", selectedPlaylist);
+		PanelRemote.send("JSON_"+obj.toJSONString(), true);
+    }
+		
+	private static void sendTags() {
+		JSONArray list = new JSONArray();
+		for(String tag : Jamuz.getTags()) {
+			list.add(tag);
+		}
+		JSONObject obj = new JSONObject();
+		obj.put("type", "tags");
+		obj.put("tags", list);
+		PanelRemote.send("JSON_"+obj.toJSONString(), true);
     }
     
 	/**
