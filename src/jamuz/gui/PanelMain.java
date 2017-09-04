@@ -1968,11 +1968,14 @@ public class PanelMain extends javax.swing.JFrame {
 		
 		@Override
 		public void authenticated(Client login, ServerClient client) {
-            sendPlaylists(jComboBoxPlaylist.getSelectedItem().toString()); //Sends filesToGet of playlists
-            sendTags();
+			if(login.getId().endsWith("-data")) {
+				sendTags(login.getId());
+			} else {
+				sendPlaylists(login.getId(), jComboBoxPlaylist.getSelectedItem().toString());
+			}
 			PanelRemote.send(displayedFile);
 		}
-
+ 
 		@Override
 		public void disconnected(String login) {
 		}
@@ -2102,7 +2105,7 @@ public class PanelMain extends javax.swing.JFrame {
         }
     }
     
-    private static void sendPlaylists(String selectedPlaylist) {
+    private static void sendPlaylists(String login, String selectedPlaylist) {
 		JSONArray list = new JSONArray();
 		for(String playlist : getPlaylists()) {
 			list.add(playlist);
@@ -2111,10 +2114,10 @@ public class PanelMain extends javax.swing.JFrame {
 		obj.put("type", "playlists");
 		obj.put("playlists", list);
 		obj.put("selectedPlaylist", selectedPlaylist);
-		PanelRemote.send("JSON_"+obj.toJSONString(), true);
+		PanelRemote.send(login, "JSON_"+obj.toJSONString());
     }
 		
-	private static void sendTags() {
+	private static void sendTags(String login) {
 		JSONArray list = new JSONArray();
 		for(String tag : Jamuz.getTags()) {
 			list.add(tag);
@@ -2122,7 +2125,7 @@ public class PanelMain extends javax.swing.JFrame {
 		JSONObject obj = new JSONObject();
 		obj.put("type", "tags");
 		obj.put("tags", list);
-		PanelRemote.send("JSON_"+obj.toJSONString(), true);
+		PanelRemote.send(login, "JSON_"+obj.toJSONString());
     }
     
 	/**
