@@ -67,6 +67,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 
 /**
@@ -1493,6 +1494,13 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("addedDate", getFormattedAddedDate());
 		jsonAsMap.put("lastPlayed", getFormattedLastPlayed());
 		jsonAsMap.put("playCounter", playCounter);
+
+		JSONArray tagsAsMap = new JSONArray();
+		getTags().stream().forEach((tag) -> {
+			tagsAsMap.add(tag);
+		});
+		
+		jsonAsMap.put("tags", tagsAsMap);
 		return jsonAsMap;
 	}
 }
