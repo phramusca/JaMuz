@@ -90,7 +90,7 @@ import jamuz.remote.ServerClient;
 public class PanelMain extends javax.swing.JFrame {
 
     /**
-     * Play queue filesToGet model
+     * Play queue list model
      */
     private static ListModelPlayerQueue queueModel;
 
@@ -456,7 +456,7 @@ public class PanelMain extends javax.swing.JFrame {
 	 *
 	 */
 	public static void fillMachineList() {
-        //Display machines filesToGet
+        //Display machines list
         fillMachineList((DefaultListModel) jListMachines.getModel());  //NOI18N
         //Select current machine
         jListMachines.setSelectedValue(new ListElement(Jamuz.getMachine().getName(), ""), true);
@@ -594,7 +594,7 @@ public class PanelMain extends javax.swing.JFrame {
         column.setPreferredWidth(100);
 
         //TODO: Move CopyRight combobox to album folder as it is a path attribute
-        //TODO: Create an Amazon button in album filesToGet too, and change the one in this table 
+        //TODO: Create an Amazon button in album list too, and change the one in this table 
 		//for searching MP3 single
         //For the 2 above, this means, changing album jlist 
 		// (which has a special way of filling) to jtable !!
@@ -1487,8 +1487,8 @@ public class PanelMain extends javax.swing.JFrame {
      */
     public static void editLocation(String location) {
 		//TODO: allow user to select its desired application
-        //	maybe make a default filesToGet, based on windows/linux
-        //	maybe detect what is installed on PC against allowed application filesToGet
+        //	maybe make a default list, based on windows/linux
+        //	maybe detect what is installed on PC against allowed application list
         try {
             Runtime rt = Runtime.getRuntime();
             String cmd = "";  //NOI18N
