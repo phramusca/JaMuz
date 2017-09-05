@@ -6,6 +6,7 @@
 package jamuz.remote;
 
 import jamuz.FileInfoInt;
+import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
@@ -59,7 +60,7 @@ public class Server {
 			
 			return true;
 		} catch (IOException ex) {
-			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+			Popup.error("Cannot start JaMuz Remote Server", ex);
 			return false;
 		}
 	}
