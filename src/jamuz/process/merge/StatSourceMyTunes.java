@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//FIXME Document MyTunes setup
+//TODO Document MyTunes setup
 //"Settings"
 //	"Automatic index update": enable
 //	"Music Folders": 
@@ -31,6 +31,7 @@ import jamuz.FileInfo;
 import jamuz.DbInfo;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
+import java.util.ArrayList;
 
 /**
  *
@@ -45,7 +46,7 @@ public class StatSourceMyTunes extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceMyTunes(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false, true);
+        super(dbInfo, name, rootPath, true, true, false, true, false);
     }
 
     @Override
@@ -82,5 +83,12 @@ public class StatSourceMyTunes extends StatSourceSQL {
         this.stUpdateFileStatistics.setString(5, this.getRootPath()+getPath(file.getRelativeFullPath())); 
         this.stUpdateFileStatistics.addBatch();
     }
+
+	@Override
+	public boolean getTags(ArrayList<String> tags, FileInfo file) {
+		//TODO TAGS get tags from Guayadeque
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
 
 }

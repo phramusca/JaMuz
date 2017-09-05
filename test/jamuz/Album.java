@@ -571,7 +571,7 @@ public final class Album {
                     trackTag.getFormattedLastPlayed(), 
                     trackTag.getFormattedAddedDate(), 
                     trackTag.playCounter, "", -1, 
-                    trackTag.BPM, ""));
+                    trackTag.BPM, "", ""));
             idFile++;
         }
         return files;
@@ -672,18 +672,22 @@ public final class Album {
                 
                 Assert.assertTrue("Search "+fileName+msg, statSourceFile!=null);
 				Assert.assertEquals("rating "+fileName+msg, albumFile.rating, statSourceFile.rating);
-				if(statSource.getSource().updatePlayCounter) {
+				if(statSource.getSource().isUpdatePlayCounter()) {
 					Assert.assertEquals("playCounter "+fileName+msg, albumFile.playCounter, statSourceFile.playCounter);
 				}
-                if(statSource.getSource().updateAddedDate) {
+                if(statSource.getSource().isUpdateAddedDate()) {
                     Assert.assertEquals("addedDate "+fileName+msg, albumFile.getFormattedAddedDate(), statSourceFile.getFormattedAddedDate());
                 }
-                if(statSource.getSource().updateLastPlayed) {
+                if(statSource.getSource().isUpdateLastPlayed()) {
                     Assert.assertEquals("lastPlayed "+fileName+msg, albumFile.getFormattedLastPlayed(), statSourceFile.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
                 }
-                if(statSource.getSource().updateBPM) {
+                if(statSource.getSource().isUpdateBPM()) {
                     Assert.assertEquals("BPM "+fileName+msg, albumFile.BPM, statSourceFile.BPM, 0.0f);
                 }
+				//TODO: Test tags mege
+//				if(statSource.getSource().isUpdateTags()) {
+//                    Assert.assertEquals("Tags "+fileName+msg, albumFile.getTags(), statSourceFile.getTags(), 0.0f);
+//                }
             }
         }
         

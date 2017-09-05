@@ -20,8 +20,13 @@ package jamuz.process.merge;
 import jamuz.StatSourceSQL;
 import jamuz.FileInfo;
 import jamuz.DbInfo;
+import jamuz.Jamuz;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.logging.Level;
 
 /**
  *
@@ -36,7 +41,7 @@ public class StatSourceJaMuzRemote extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceJaMuzRemote(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false, true);
+        super(dbInfo, name, rootPath, true, true, false, true, true);
     }
 
     @Override
@@ -79,5 +84,34 @@ public class StatSourceJaMuzRemote extends StatSourceSQL {
         this.stUpdateFileStatistics.setString(5, this.getRootPath()+getPath(file.getRelativeFullPath()));
         this.stUpdateFileStatistics.addBatch();
     }
+
+	@Override
+	public boolean getTags(ArrayList<String> tags, FileInfo file) {
+		//FIXME TAGS get tags from JaMuz Remote
+        ResultSet rs=null;
+        try {
+            PreparedStatement st = dbConn.getConnnection().prepareStatement(
+				"SELECT value FROM tag T " +
+                "JOIN tagFile F ON T.id=F.idTag " +
+                "WHERE F.idFile=?");
+			st.setInt(1, file.getIdFile());
+			rs = st.executeQuery();
+            while (rs.next()) {
+				tags.add(dbConn.getStringValue(rs, "value"));
+            }
+            return true;
+        } catch (SQLException ex) {
+            Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, "getTags", ex);  //NOI18N
+			return false;
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+        }
+	}
 
 }

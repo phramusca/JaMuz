@@ -328,8 +328,11 @@ public class FileInfoInt extends FileInfo {
      * @param bpm
      */
     public FileInfoInt(FileInfo file, float bpm) {
-        super(file.idFile, file.getIdPath(), file.relativeFullPath, file.rating, file.getFormattedLastPlayed(), file.getFormattedAddedDate(), 
-                file.playCounter, file.sourceName, file.previousPlayCounter, bpm, file.getFormattedRatingModifDate());
+        super(file.idFile, file.getIdPath(), file.relativeFullPath, file.rating, 
+				file.getFormattedLastPlayed(), file.getFormattedAddedDate(), 
+                file.playCounter, file.sourceName, file.previousPlayCounter, 
+				bpm, file.getFormattedRatingModifDate(), 
+				file.getFormattedTagsModifDate());
         copyRight=-1;
         this.rootPath = Jamuz.getMachine().getOptionValue("location.library");  //NOI18N
     }
@@ -341,9 +344,9 @@ public class FileInfoInt extends FileInfo {
 	 * @param rootPath  
 	 */
 	public FileInfoInt(String relativeFullPath, String rootPath) {
-		super(-1, -1, relativeFullPath, -1, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 0, "file", 0, 0, "");  //NOI18N
+		super(-1, -1, relativeFullPath, -1, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 0, "file", 0, 0, "", "");  //NOI18N
 		this.rootPath=rootPath;
-		this.modifDate = new Date(new File(this.rootPath+this.getRelativeFullPath()).lastModified());
+		this.modifDate = new Date(new File(this.rootPath+this.relativeFullPath).lastModified());
         copyRight=-1;
 	}
 
@@ -1437,22 +1440,10 @@ public class FileInfoInt extends FileInfo {
 	 *
 	 * @return
 	 */
-	public String toStringQueue() {
-        return "<html>" + //NOI18N
-                "[" + this.rating + "/5] <b>" + this.title + "</b><BR/>" + //NOI18N
-                "<i>" + this.getAlbum() + "</i><BR/>" + //NOI18N
-                "" + this.getArtist() + "</html>"; //NOI18N
-    }
-
-    ArrayList<String> tags = null;
-    
-	/**
-	 *
-	 * @return
-	 */
+	@Override
 	public ArrayList<String> getTags() {
         if(tags==null) {
-            readTags();
+            tags=readTags();
         }
         return tags;
     }
@@ -1462,11 +1453,13 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public ArrayList<String> readTags() {
-		tags = new ArrayList<>();
-		Jamuz.getDb().getTags(tags, idFile);
-        return tags;
+		ArrayList<String> out = new ArrayList<>();
+		if(idFile>=0) {
+			 Jamuz.getDb().getTags(out, idFile);
+		}
+		return out;
     }
-    
+	
 	/**
 	 *
 	 * @param value
@@ -1480,6 +1473,17 @@ public class FileInfoInt extends FileInfo {
         }
     }
 	
+	/**
+	 *
+	 * @return
+	 */
+	public String toStringQueue() {
+        return "<html>" + //NOI18N
+                "[" + this.rating + "/5] <b>" + this.title + "</b><BR/>" + //NOI18N
+                "<i>" + this.getAlbum() + "</i><BR/>" + //NOI18N
+                "" + this.getArtist() + "</html>"; //NOI18N
+    }
+
 	public String toJson() {
 		return JSONValue.toJSONString(toMap());
 	}

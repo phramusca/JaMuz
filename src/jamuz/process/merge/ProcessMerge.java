@@ -573,7 +573,8 @@ public class ProcessMerge extends ProcessAbstract {
 			else if(fileSelectedDb.getRating()!=fileJaMuz.getRating()) { 
                 //TODO: include this new behavior in junit tests
 
-                if(fileJaMuz.getRatingModifDate().after(this.selectedStatSource.lastMergeDate)) {
+                if(fileJaMuz.getRatingModifDate().after(
+						this.selectedStatSource.lastMergeDate)) {
                     //It has been modified after last merge on JaMuz
                     //Could be the same on selected Db but Preferring JaMuz since we cannot know for sure
                     fileNew.setRating(fileJaMuz.getRating());
@@ -593,6 +594,9 @@ public class ProcessMerge extends ProcessAbstract {
                     fileNew.setRating(fileSelectedDb.getRating());
                 }
 			}
+			
+				//FIXME TAGS Is this needed for tags (and genre) ?
+				//Is this really needed at all ?
             if(fileNew.getRating()!=fileJaMuz.getRating() && fileNew.getRating() > 0) {
                 //This will ensure that we only update ratingModifDate
                 //if changed on JaMuz to a valid value
@@ -630,6 +634,34 @@ public class ProcessMerge extends ProcessAbstract {
                 }
             }
 			
+			//FIXME TAGS Complete and test
+			
+		//Comparing Tags
+            //TODO: display it on jtable and logs
+            if(this.selectedStatSource.getSource().isUpdateTags()) {
+				ArrayList<String> selectedDbTags = new ArrayList<>();
+				this.selectedStatSource
+						.getSource().getTags(selectedDbTags, fileSelectedDb);
+				ArrayList<String> jaMuzTags = ((FileInfoInt) fileJaMuz).getTags();
+				
+				if(!equalLists(selectedDbTags, jaMuzTags)) {
+					if(fileJaMuz.getTagsModifDate().after(
+							this.selectedStatSource.lastMergeDate)) {
+						fileNew.setTags(jaMuzTags);
+					}
+					else {
+						if(this.selectedStatSource.getIdStatement()==6) { 
+							//TODO: JaMuz Remote is Badly hard-coded 
+							//(use an enum instead of int)
+							fileNew.setTags(selectedDbTags);
+						}
+						else {
+							fileNew.setTags(jaMuzTags);
+						}
+					}
+				}
+            }
+			
 			//Comparing new with JaMuz and add it to merge list if different
 			if(!fileJaMuz.equalsStats(fileNew)) {
 				fileNew.setSourceName(run+"-"+fileJaMuz.getSourceName());
@@ -641,7 +673,7 @@ public class ProcessMerge extends ProcessAbstract {
 		
 	//Now comparing new with selected
 		//fileNew is a clone of fileJaMuz at first
-		//In case we do not want to compare lastplayed and/or addedDate
+		//In case we do not want to compare lastplayed and/or addedDate, ...
 		//we need to update myFileInfoNew with their original values
 		if(!this.selectedStatSource.getSource().isUpdateLastPlayed()) {
 			fileNew.setLastPlayed(fileSelectedDb.getLastPlayed());
@@ -651,6 +683,9 @@ public class ProcessMerge extends ProcessAbstract {
 		}
         if(!this.selectedStatSource.getSource().isUpdateBPM()) {
             fileNew.setBPM(fileSelectedDb.getBPM());
+		}
+		if(!this.selectedStatSource.getSource().isUpdateTags()) {
+            fileNew.setTags(fileSelectedDb.getTags());
 		}
 		if(!this.selectedStatSource.getSource().isUpdatePlayCounter()) {
 			fileNew.setPlayCounter(fileSelectedDb.getPlayCounter());
@@ -677,6 +712,27 @@ public class ProcessMerge extends ProcessAbstract {
 		if(doLogText && isOneDbUpdated) {
 			addToLog(fileNew, fileSelectedDb, fileJaMuz);
 		}
+	}
+	
+	private  boolean equalLists(List<String> one, List<String> two){     
+		if (one == null && two == null){
+			return true;
+		}
+
+		if((one == null && two != null) 
+		  || one != null && two == null
+		  || one.size() != two.size()){
+			return false;
+		}
+
+		//to avoid messing the order of the lists we will use a copy
+		//as noted in comments by A. R. S.
+		one = new ArrayList<>(one); 
+		two = new ArrayList<>(two);   
+
+		Collections.sort(one);
+		Collections.sort(two);      
+		return one.equals(two);
 	}
 	
 	private void displayResults() throws InterruptedException {

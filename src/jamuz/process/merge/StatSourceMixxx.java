@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 
 /**
  *
@@ -39,7 +40,7 @@ public class StatSourceMixxx extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceMixxx(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, false, true, true);
+        super(dbInfo, name, rootPath, true, false, true, true, false);
     }
 
     @Override
@@ -87,7 +88,8 @@ public class StatSourceMixxx extends StatSourceSQL {
              //OVERRIDING BECAUSE OF BPM 
             float bpm = rs.getFloat("bpm");
 
-            return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed, addedDate, playCounter, this.getName(), 0, bpm, "");
+            return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed, 
+					addedDate, playCounter, this.getName(), 0, bpm, "", "");
         } catch (SQLException ex) {
             Popup.error("getStats", ex);  //NOI18N
             return null;
@@ -134,4 +136,11 @@ public class StatSourceMixxx extends StatSourceSQL {
             
         }
     }
+
+	@Override
+	public boolean getTags(ArrayList<String> tags, FileInfo file) {
+		//TODO TAGS get tags from Mixxx
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
 }

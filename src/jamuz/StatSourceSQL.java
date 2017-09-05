@@ -65,10 +65,14 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
      * @param updateLastPlayed
      * @param rootPath
      * @param updateBPM
+	 * @param updatePlayCounter
+	 * @param updateTags
      */
     public StatSourceSQL(DbInfo dbInfo, String name, String rootPath, 
-            boolean updateAddedDate, boolean updateLastPlayed, boolean updateBPM, boolean updatePlayCounter) {
-        super(name, rootPath, updateAddedDate, updateLastPlayed, updateBPM, updatePlayCounter, dbInfo.locationOri);
+            boolean updateAddedDate, boolean updateLastPlayed, boolean updateBPM, 
+			boolean updatePlayCounter, boolean updateTags) {
+        super(name, rootPath, dbInfo.locationOri, updateAddedDate, 
+				updateLastPlayed, updateBPM, updatePlayCounter, updateTags);
         dbConn = new DbConn(dbInfo);
     }
 
@@ -112,7 +116,8 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 			String addedDate = dbConn.getStringValue(rs, "addedDate", "1970-01-01 00:00:00");  //NOI18N
 			int playCounter = rs.getInt("playCounter");  //NOI18N
 
-			return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed, addedDate, playCounter, this.getName(), 0, Float.valueOf(0), "");
+			return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed, 
+					addedDate, playCounter, this.getName(), 0, Float.valueOf(0), "", "");
 		} catch (SQLException ex) {
 			Popup.error("getStatistics", ex);  //NOI18N
 			return null;
