@@ -22,6 +22,7 @@ import jamuz.FileInfo;
 import jamuz.DbInfo;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
+import java.util.ArrayList;
 
 /**
  *
@@ -36,7 +37,7 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceMediaMonkey(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false, true); 
+        super(dbInfo, name, rootPath, true, true, false, true, false); 
         //TODO: MediaMonkey support BPM I think. Need to get a Windows machine to test and update the SQL scripts below
     }
     
@@ -81,5 +82,11 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
         this.stUpdateFileStatistics.setString(5, this.getRootPath()+getPath(file.getRelativeFullPath()));
         this.stUpdateFileStatistics.addBatch();
     }
+
+	@Override
+	public boolean getTags(ArrayList<String> tags, FileInfo file) {
+		//TODO TAGS get tags from MediaMonkey
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 
 }

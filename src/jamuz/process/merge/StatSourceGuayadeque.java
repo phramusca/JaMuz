@@ -22,6 +22,7 @@ import jamuz.FileInfo;
 import jamuz.DbInfo;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
+import java.util.ArrayList;
 
 /**
  *
@@ -36,7 +37,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceGuayadeque(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false, true);
+        super(dbInfo, name, rootPath, true, true, false, true, false);
     }
 
     @Override
@@ -83,5 +84,12 @@ public class StatSourceGuayadeque extends StatSourceSQL {
         this.stUpdateFileStatistics.setString(6, file.getFilename());
         this.stUpdateFileStatistics.addBatch();
     }
+
+	@Override
+	public boolean getTags(ArrayList<String> tags, FileInfo file) {
+		//FIXME TAGS get tags from Guayadeque
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
 
 }

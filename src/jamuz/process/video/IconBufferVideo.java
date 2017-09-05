@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 
@@ -95,7 +94,9 @@ public class IconBufferVideo {
     }
     
     private static File getCacheFile(String url) {
-        return Jamuz.getFile(StringManager.removeIllegal(url)+".png", "data", "cache", "video");
+        return Jamuz.getFile(
+				StringManager.removeIllegal(url)+".png", 
+				"data", "cache", "video");
     }
 
     private static ImageIcon readIconFromInternet(String url) {
@@ -103,17 +104,22 @@ public class IconBufferVideo {
         try {
             URL myURL = new URL(url);
             BufferedImage myImage = ImageIO.read(myURL);
-            icon = new ImageIcon(((new ImageIcon(myImage).getImage()).getScaledInstance(-1, IconBufferVideo.iconHeight, java.awt.Image.SCALE_SMOOTH)));
+            icon = new ImageIcon(((new ImageIcon(myImage).getImage())
+					.getScaledInstance(-1, IconBufferVideo.iconHeight, 
+							java.awt.Image.SCALE_SMOOTH)));
             
             //Write to cache
-            BufferedImage bi = new BufferedImage(icon.getImage().getWidth(null),icon.getImage().getHeight(null),BufferedImage.TYPE_3BYTE_BGR);
+            BufferedImage bi = new BufferedImage(
+					icon.getImage().getWidth(null),
+					icon.getImage().getHeight(null),
+					BufferedImage.TYPE_3BYTE_BGR);
             Graphics2D g2 = bi.createGraphics();
             g2.drawImage(icon.getImage(), 0, 0, null);
             g2.dispose();
             ImageIO.write(bi, "png", getCacheFile(url)); //NOI18N
             
 		} catch (IIOException ex) {
-            Jamuz.getLogger().log(Level.SEVERE, "", ex);
+            Jamuz.getLogger().log(Level.WARNING, "", ex);
         }
         catch (IOException ex) {
 			Jamuz.getLogger().log(Level.SEVERE, "", ex);

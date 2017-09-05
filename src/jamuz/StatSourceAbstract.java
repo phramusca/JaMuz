@@ -25,6 +25,8 @@ import java.util.ArrayList;
  */
 public abstract class StatSourceAbstract {
 
+	abstract public boolean getTags(ArrayList<String> tags, FileInfo file);
+	
     /**
      * Root path
      */
@@ -87,12 +89,8 @@ public abstract class StatSourceAbstract {
 	public void setName(String name) {
         this.name = name;
     }
-    
-    
-    /**
-	 * Do we update added date ?
-	 */
-	protected boolean updateAddedDate = false;
+
+	private boolean updateAddedDate = false;
 
 	/**
 	 *
@@ -102,6 +100,8 @@ public abstract class StatSourceAbstract {
         return updateAddedDate;
     }
 
+	private boolean updateLastPlayed = false;
+	
 	/**
 	 *
 	 * @return
@@ -110,6 +110,8 @@ public abstract class StatSourceAbstract {
         return updateLastPlayed;
     }
 
+	private boolean updateBPM = false;
+	
 	/**
 	 *
 	 * @return
@@ -118,6 +120,18 @@ public abstract class StatSourceAbstract {
         return updateBPM;
     }
     
+	private boolean updateTags = false;
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isUpdateTags() {
+		return updateTags;
+    }
+	
+	private boolean updatePlayCounter = false;
+	
 	/**
 	 *
 	 * @return
@@ -125,21 +139,9 @@ public abstract class StatSourceAbstract {
 	public boolean isUpdatePlayCounter() {
 		return updatePlayCounter;
     }
-	
-	/**
-	 * Do we update last played ?
-	 */
-	protected boolean updateLastPlayed = false;
 
-	/**
-	 *
-	 */
-	protected boolean updateBPM = false;
-	
-	protected boolean updatePlayCounter = false;
-    
     /**
-     * Create a new Source for Statistics (rating, last played, ...)
+     * Create a new Source
      * @param name
      * @param updateAddedDate
      * @param updateLastPlayed
@@ -147,10 +149,12 @@ public abstract class StatSourceAbstract {
      * @param updateBPM
 	 * @param updatePlayCounter
      * @param location
+	 * @param updateTags
      */
-    public StatSourceAbstract(String name, String rootPath, 
+    public StatSourceAbstract(String name, String rootPath, String location, 
             boolean updateAddedDate, boolean updateLastPlayed, 
-			boolean updateBPM, boolean updatePlayCounter, String location) {
+			boolean updateBPM, boolean updatePlayCounter,
+			boolean updateTags) {
         this.updateAddedDate = updateAddedDate;
 		this.updateLastPlayed = updateLastPlayed;
         this.name = name;
@@ -158,6 +162,7 @@ public abstract class StatSourceAbstract {
         this.updateBPM = updateBPM;
 		this.updatePlayCounter = updatePlayCounter;
         this.location = location;
+		this.updateTags = updateTags;
     }
  
     /**
@@ -178,7 +183,7 @@ public abstract class StatSourceAbstract {
     public abstract int[] updateStatistics(ArrayList<? extends FileInfo> files);
     
     /**
-     * Connect database, prepare predefined SQL statements, ...
+     * Connect database, ...
      * or whatever is needed to setup before merge
      * @return
      */
@@ -219,4 +224,5 @@ public abstract class StatSourceAbstract {
      * @return
      */
     abstract public boolean backupSource(String locationWork);
+	
 }

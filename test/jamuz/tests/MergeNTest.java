@@ -128,7 +128,7 @@ public class MergeNTest extends TestCase {
                 AlbumBuffer.getAlbum(mbId, "MergeDevice5_"+statSource.getIdStatement()).setAndCheckStatsInStatSource(statSource.getId(), playlist.getId()>0);
             }
             //Change stats in JamuZ
-			//FIXME TEST Update ratingModifDate as done in Jumuz (check that)
+			//FIXME TEST Update ratingModifDate & tagsModifDate as done in Jumuz (check that)
 			//and update ratings in 6cc35892-c44f-4aa7-bfee-5f63eca70821.ods 
 			//accordingly
             AlbumBuffer.getAlbum(mbId, "MergeDevice5_JaMuz").setAndCheckStatsInJamuzDb();

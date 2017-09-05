@@ -49,7 +49,7 @@ public class FileInfoVideo extends FileInfo {
      */
     public FileInfoVideo(int idFile, int idPath, String relativeFullPath, int rating, String lastPlayed, String addedDate, int playCounter, 
             StreamDetails streamDetails, int seasonNumber, int episodeNumber) {
-        super(idFile, idPath, relativeFullPath, rating, lastPlayed, addedDate, playCounter, "", 0, 0, "");
+        super(idFile, idPath, relativeFullPath, rating, lastPlayed, addedDate, playCounter, "", 0, 0, "", "");
         this.seasonNumber = seasonNumber;
         this.episodeNumber = episodeNumber;
 		

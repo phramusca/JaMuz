@@ -73,7 +73,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param dbInfo
      */
     public DbConnJaMuz(DbInfo dbInfo) {
-        super(dbInfo, "JaMuz", "", true, true, true, true);
+        super(dbInfo, "JaMuz", "", true, true, true, true, false);
     }
     
     /**
@@ -87,31 +87,36 @@ public class DbConnJaMuz extends StatSourceSQL {
 
             this.dbConn.connect();
             
-            stSelectFilesStats4SourceAndDevice = dbConn.getConnnection().prepareStatement("SELECT "
+            stSelectFilesStats4SourceAndDevice = dbConn.getConnnection().prepareStatement(
+					"SELECT "
                 + "F.idFile, F.idPath, D.oriRelativeFullPath AS fullPath, "
                 + "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, "  //NOI18N
                 + "C.playcounter AS previousPlayCounter, "  //NOI18N
-                + "F.ratingModifDate "  //NOI18N
+                + "F.ratingModifDate, F.tagsModifDate  "  //NOI18N
                 + "FROM file F "
                 + "JOIN path P ON F.idPath=P.idPath "  //NOI18N
                 + "JOIN devicefile D ON D.idFile=F.idFile "
-                + "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C ON F.idFile=C.idFile "  //NOI18N //NOI18N
+                + "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
+					+ "ON F.idFile=C.idFile "  //NOI18N //NOI18N
                 + "WHERE D.idDevice=?");
-            stSelectFilesStats4Source = dbConn.getConnnection().prepareStatement("SELECT "
+            stSelectFilesStats4Source = dbConn.getConnnection().prepareStatement(
+					"SELECT "
                 + "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
                 + "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, "  //NOI18N
                 + "C.playcounter AS previousPlayCounter, "  //NOI18N
-                + "F.ratingModifDate "  //NOI18N
+                + "F.ratingModifDate, F.tagsModifDate "  //NOI18N
                 + "FROM file F "
                 + "JOIN path P ON F.idPath=P.idPath "  //NOI18N
-                + "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C ON F.idFile=C.idFile "  //NOI18N
+                + "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
+					+ "ON F.idFile=C.idFile "  //NOI18N
                 + "WHERE F.deleted=0 ");
             
             this.stSelectFileStatistics = this.stSelectFilesStats4Source; //by default, but not to be called directly 
             
-            this.stUpdateFileStatistics = dbConn.connection.prepareStatement("UPDATE file "
+            this.stUpdateFileStatistics = dbConn.connection.prepareStatement(
+					"UPDATE file "
                     + "SET rating=?, bpm=?, lastplayed=?, addedDate=?, "
-                    + "playCounter=?, ratingModifDate=? "
+                    + "playCounter=?, ratingModifDate=?, tagsModifDate=? "
                     + "WHERE idFile=?");
 
             return true;
@@ -131,14 +136,17 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean updateGenre(String oldGenre, String newGenre) {
         try {
-            PreparedStatement stUpdateGenre = dbConn.connection.prepareStatement("UPDATE genre SET value=? WHERE value=?");   //NOI18N
+            PreparedStatement stUpdateGenre = dbConn.connection.prepareStatement(
+					"UPDATE genre SET value=? WHERE value=?");   //NOI18N
             stUpdateGenre.setString(1, newGenre);
             stUpdateGenre.setString(2, oldGenre);
             int nbRowsAffected = stUpdateGenre.executeUpdate();
             if (nbRowsAffected == 1) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdateGenre, oldGenre={0}, newGenre={1} # row(s) affected: +{2}", new Object[]{oldGenre, newGenre, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateGenre, oldGenre={0}, "
+						+ "newGenre={1} # row(s) affected: +{2}", 
+						new Object[]{oldGenre, newGenre, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -156,14 +164,17 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean updateMachine(int idMachine, String description) {
         try {
-            PreparedStatement stUpdateMachine = dbConn.connection.prepareStatement("UPDATE machine SET description=? WHERE idMachine=?");   //NOI18N
+            PreparedStatement stUpdateMachine = dbConn.connection.prepareStatement(
+					"UPDATE machine SET description=? WHERE idMachine=?");   //NOI18N
             stUpdateMachine.setString(1, description);
             stUpdateMachine.setInt(2, idMachine);
             int nbRowsAffected = stUpdateMachine.executeUpdate();
             if (nbRowsAffected == 1) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdateMachine, idMachine={0}, description={1} # row(s) affected: +{2}", new Object[]{idMachine, description, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateMachine, idMachine={0}, "
+						+ "description={1} # row(s) affected: +{2}", 
+						new Object[]{idMachine, description, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -180,8 +191,10 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean updatePlaylist(Playlist playlist) {
         try {
-            PreparedStatement stUpdatePlaylist = dbConn.connection.prepareStatement("UPDATE playlist "
-                    + "SET limitDo=?, limitValue=?, limitUnit=?, random=?, type=?, match=?, name=?, hidden=? "    //NOI18N
+            PreparedStatement stUpdatePlaylist = dbConn.connection.prepareStatement(
+					"UPDATE playlist "
+                    + "SET limitDo=?, limitValue=?, limitUnit=?, random=?, "
+							+ "type=?, match=?, name=?, hidden=? "    //NOI18N
                     + "WHERE idPlaylist=?");  //NOI18N
             stUpdatePlaylist.setBoolean(1, playlist.isLimit());
             stUpdatePlaylist.setDouble(2, playlist.getLimitValue());
@@ -194,16 +207,19 @@ public class DbConnJaMuz extends StatSourceSQL {
             stUpdatePlaylist.setInt(9, playlist.getId());
             int nbRowsAffected = stUpdatePlaylist.executeUpdate();
             if (nbRowsAffected == 1) {
-                PreparedStatement stDeletePlaylistFilters = dbConn.connection.prepareStatement("DELETE FROM playlistFilter WHERE idPlaylist=?");  //NOI18N
+                PreparedStatement stDeletePlaylistFilters = dbConn.connection.
+						prepareStatement("DELETE FROM playlistFilter WHERE idPlaylist=?");  //NOI18N
                 //Delete all filters for this playlist (before inserting new ones)
                 stDeletePlaylistFilters.setInt(1, playlist.getId());
                 stDeletePlaylistFilters.executeUpdate(); //Can have no filter, not checking numberOfRowsAffected
                 
-                PreparedStatement stDeletePlaylistOrders = dbConn.connection.prepareStatement("DELETE FROM playlistOrder WHERE idPlaylist=?");  //NOI18N
+                PreparedStatement stDeletePlaylistOrders = dbConn.connection.
+						prepareStatement("DELETE FROM playlistOrder WHERE idPlaylist=?");  //NOI18N
                 stDeletePlaylistOrders.setInt(1, playlist.getId());
                 stDeletePlaylistOrders.executeUpdate(); //Can have no order, not checking numberOfRowsAffected
                 dbConn.connection.setAutoCommit(false);
-                PreparedStatement stInsertPlaylistFilter = dbConn.connection.prepareStatement("INSERT INTO playlistFilter "
+                PreparedStatement stInsertPlaylistFilter = dbConn.connection.
+						prepareStatement("INSERT INTO playlistFilter "
                     + "(field, operator, value, idPlaylist) "    //NOI18N
                     + "VALUES (?, ?, ?, ?)");  //NOI18N
                 for (Filter filter : playlist.getFilters()) {
@@ -217,14 +233,17 @@ public class DbConnJaMuz extends StatSourceSQL {
                 int[] results = stInsertPlaylistFilter.executeBatch();
                 dbConn.connection.commit();
                 long endTime = System.currentTimeMillis();
-                Jamuz.getLogger().log(Level.FINEST, "stInsertPlaylistFilter // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
+                Jamuz.getLogger().log(Level.FINEST, "stInsertPlaylistFilter // {0} "
+						+ "// Total execution time: {1}ms", 
+						new Object[]{results.length, endTime - startTime});    //NOI18N
                 //Check results
                 for (int i = 0; i < results.length; i++) {
                     if (results[i] != 1) {
                         return false;
                     }
                 }
-                PreparedStatement stInsertPlaylistOrder = dbConn.connection.prepareStatement("INSERT INTO playlistOrder "
+                PreparedStatement stInsertPlaylistOrder = dbConn.connection.
+						prepareStatement("INSERT INTO playlistOrder "
                     + "(desc, field, idPlaylist) "    //NOI18N
                     + "VALUES (?, ?, ?)");  //NOI18N
                 for (Order order : playlist.getOrders()) {
@@ -237,18 +256,23 @@ public class DbConnJaMuz extends StatSourceSQL {
                 results = stInsertPlaylistOrder.executeBatch();
                 dbConn.connection.commit();
                 endTime = System.currentTimeMillis();
-                Jamuz.getLogger().log(Level.FINEST, "stInsertPlaylistOrder // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
+                Jamuz.getLogger().log(Level.FINEST, "stInsertPlaylistOrder // {0} "
+						+ "// Total execution time: {1}ms", 
+						new Object[]{results.length, endTime - startTime});    //NOI18N
                 //Check results
                 for (int i = 0; i < results.length; i++) {
                     if (results[i] != 1) {
                         return false;
                     }
                 }
-				//TODO: Remove the line below if rollback and finally tests are successfull
+				//TODO: Remove the line below if rollback and finally tests are 
+				//successfull
 				dbConn.connection.setAutoCommit(true);
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdatePlaylist, playlist={0}, # row(s) affected: +{1}", new Object[]{playlist.toString(), nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdatePlaylist, playlist={0}, "
+						+ "# row(s) affected: +{1}", new Object[]{playlist.toString(), 
+							nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -279,13 +303,16 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean deleteGenre(String genre) {
         try {
-            PreparedStatement stDeleteGenre = dbConn.connection.prepareStatement("DELETE FROM genre WHERE value=?");   //NOI18N
+            PreparedStatement stDeleteGenre = dbConn.connection.prepareStatement(
+					"DELETE FROM genre WHERE value=?");   //NOI18N
             stDeleteGenre.setString(1, genre);
             int nbRowsAffected = stDeleteGenre.executeUpdate();
             if (nbRowsAffected > 0) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stDeleteGenre, genre={0} # row(s) affected: +{1}", new Object[]{genre, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stDeleteGenre, "
+						+ "genre={0} # row(s) affected: +{1}", 
+						new Object[]{genre, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -302,13 +329,15 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean insertGenre(String genre) {
         try {
-            PreparedStatement stInsertGenre = dbConn.connection.prepareStatement("INSERT INTO genre (value) VALUES (?)");   //NOI18N
+            PreparedStatement stInsertGenre = dbConn.connection.prepareStatement(
+					"INSERT INTO genre (value) VALUES (?)");   //NOI18N
             stInsertGenre.setString(1, genre);
             int nbRowsAffected = stInsertGenre.executeUpdate();
             if (nbRowsAffected == 1) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stInsertGenre, genre=\"{0}\" # row(s) affected: +{1}", new Object[]{genre, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stInsertGenre, genre=\"{0}\" "
+						+ "# row(s) affected: +{1}", new Object[]{genre, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -325,7 +354,8 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean insertPlaylist(Playlist playlist) {
         try {
-            PreparedStatement stInsertPlaylist = dbConn.connection.prepareStatement("INSERT INTO playlist "
+            PreparedStatement stInsertPlaylist = dbConn.connection.prepareStatement(
+					"INSERT INTO playlist "
                     + "(name, limitDo, limitValue, limitUnit, type, match, random, hidden) "    //NOI18N
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");   //NOI18N
             stInsertPlaylist.setString(1, playlist.getName());
@@ -341,7 +371,9 @@ public class DbConnJaMuz extends StatSourceSQL {
             if (nbRowsAffected == 1) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stInsertPlaylist, playlist=\"{0}\" # row(s) affected: +{1}", new Object[]{playlist, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stInsertPlaylist, playlist=\"{0}\" "
+						+ "# row(s) affected: +{1}", 
+						new Object[]{playlist, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -361,7 +393,8 @@ public class DbConnJaMuz extends StatSourceSQL {
         try {
             path = FilenameUtils.separatorsToUnix(path);
             
-            PreparedStatement stSelectPath = dbConn.connection.prepareStatement("SELECT idPath FROM path WHERE strPath=?");   //NOI18N
+            PreparedStatement stSelectPath = dbConn.connection.prepareStatement(
+					"SELECT idPath FROM path WHERE strPath=?");   //NOI18N
             stSelectPath.setString(1, path);
             rs = stSelectPath.executeQuery();
             if (rs.next()) { //Check if we have a result, so we can move to this one
@@ -392,7 +425,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean checkGenre(String genre) {
         ResultSet rs=null;
         try {
-            PreparedStatement stCheckGenre = dbConn.connection.prepareStatement("SELECT COUNT(*) FROM genre WHERE value=?");   //NOI18N
+            PreparedStatement stCheckGenre = dbConn.connection.prepareStatement(
+					"SELECT COUNT(*) FROM genre WHERE value=?");   //NOI18N
             stCheckGenre.setString(1, genre);
             rs = stCheckGenre.executeQuery();
             return rs.getInt(1) > 0;
@@ -418,7 +452,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean getGenreList(ArrayList<String> myList) {
         ResultSet rs=null;
         try {
-            PreparedStatement stSelectGenres = dbConn.connection.prepareStatement("SELECT value FROM genre");   //NOI18N
+            PreparedStatement stSelectGenres = dbConn.connection.prepareStatement(
+					"SELECT value FROM genre");   //NOI18N
             rs = stSelectGenres.executeQuery();
             while (rs.next()) {
                 myList.add(dbConn.getStringValue(rs, "value"));   //NOI18N
@@ -448,11 +483,13 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param key
      * @return
      */
-    public synchronized boolean insertPath(String relativePath, Date modifDate, CheckedFlag checkedFlag, String mbId, int[] key) {
+    public synchronized boolean insertPath(String relativePath, Date modifDate, 
+			CheckedFlag checkedFlag, String mbId, int[] key) {
         try {
             //Only inserting in Linux style in database
             relativePath = FilenameUtils.separatorsToUnix(relativePath);
-            PreparedStatement stInsertPath = dbConn.getConnnection().prepareStatement("INSERT INTO path "
+            PreparedStatement stInsertPath = dbConn.getConnnection().prepareStatement(
+					"INSERT INTO path "
                     + "(strPath, modifDate, deleted, checked, mbId) "    //NOI18N
                     + "VALUES (?, ?, 0, ?, ?)");   //NOI18N
            
@@ -467,11 +504,14 @@ public class DbConnJaMuz extends StatSourceSQL {
                 key[0] = keys.getInt(1);
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stInsertPath, relativePath=\"{0}\" # row(s) affected: +{1}", new Object[]{relativePath, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stInsertPath, relativePath=\"{0}\" "
+						+ "# row(s) affected: +{1}", 
+						new Object[]{relativePath, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
-            Popup.error("insertPath(" + relativePath + ", " + modifDate.toString() + ")", ex);   //NOI18N
+            Popup.error("insertPath(" + relativePath + ", " + modifDate.toString() + ")"
+					, ex);   //NOI18N
             return false;
         }
     }
@@ -486,9 +526,11 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @param mbId
      * @return
      */
-    public synchronized boolean updatePath(int idPath, Date modifDate, CheckedFlag checkedFlag, String path, String mbId) {
+    public synchronized boolean updatePath(int idPath, Date modifDate, 
+			CheckedFlag checkedFlag, String path, String mbId) {
         try {
-            PreparedStatement stUpdatePath = dbConn.connection.prepareStatement("UPDATE path "
+            PreparedStatement stUpdatePath = dbConn.connection.prepareStatement(
+					"UPDATE path "
                     + "SET modifDate=?, deleted=0, checked=?, strPath=?, mbId=? "    //NOI18N
                     + "WHERE idPath=?");   //NOI18N
             stUpdatePath.setString(1, DateTime.formatUTCtoSqlUTC(modifDate));
@@ -501,7 +543,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             if (nbRowsAffected == 1) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdatePath, idPath={0} # row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdatePath, idPath={0} "
+						+ "# row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -519,7 +562,8 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean updateCopyRight(int idPath, int copyRight) {
         try {
-            PreparedStatement stUpdateCopyRight = dbConn.connection.prepareStatement("UPDATE path "
+            PreparedStatement stUpdateCopyRight = dbConn.connection.prepareStatement(
+					"UPDATE path "
                     + "SET copyRight=? WHERE idPath=?");     //NOI18N
             stUpdateCopyRight.setInt(1, copyRight);
             stUpdateCopyRight.setInt(2, idPath);
@@ -527,7 +571,9 @@ public class DbConnJaMuz extends StatSourceSQL {
             if (nbRowsAffected == 1) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdateCopyRight, idPath={0}, copyRight={1} # row(s) affected: +{2}", new Object[]{idPath, copyRight, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateCopyRight, idPath={0}, "
+						+ "copyRight={1} # row(s) affected: +{2}", 
+						new Object[]{idPath, copyRight, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -544,9 +590,11 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param name
      * @return
      */
-    public synchronized boolean updateFileModifDate(int idFile, Date modifDate, String name) {
+    public synchronized boolean updateFileModifDate(int idFile, Date modifDate, 
+			String name) {
         try {
-            PreparedStatement stUpdateFileModifDate = dbConn.connection.prepareStatement("UPDATE file "
+            PreparedStatement stUpdateFileModifDate = dbConn.connection.prepareStatement(
+					"UPDATE file "
                     + "SET name=?, modifDate=? "    //NOI18N
                     + "WHERE idFile=?");   //NOI18N
             
@@ -559,7 +607,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             if (nbRowsAffected == 1) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdateFile, idFile={0} # row(s) affected: +{1}", new Object[]{idFile, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateFile, idFile={0} # "
+						+ "row(s) affected: +{1}", new Object[]{idFile, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -576,8 +625,10 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean setPathDeleted(int idPath) {
         try {
-            PreparedStatement stUpdateDeletedPath = dbConn.connection.prepareStatement("UPDATE path SET deleted=1 WHERE idPath=?");   //NOI18N
-            PreparedStatement stUpdateDeletedFiles = dbConn.connection.prepareStatement("UPDATE file SET deleted=1 WHERE idPath=?");   //NOI18N
+            PreparedStatement stUpdateDeletedPath = dbConn.connection.prepareStatement(
+					"UPDATE path SET deleted=1 WHERE idPath=?");   //NOI18N
+            PreparedStatement stUpdateDeletedFiles = dbConn.connection.prepareStatement(
+					"UPDATE file SET deleted=1 WHERE idPath=?");   //NOI18N
             stUpdateDeletedPath.setInt(1, idPath);
             stUpdateDeletedFiles.setInt(1, idPath);
             int nbRowsAffected = stUpdateDeletedPath.executeUpdate();
@@ -586,11 +637,13 @@ public class DbConnJaMuz extends StatSourceSQL {
                 if (nbRowsAffected > 0) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateDeletedFiles, idPath={0} # row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N
+                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateDeletedFiles, "
+							+ "idPath={0} # row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N
                     return false;
                 }
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdateDeletedPath, idPath={0} # row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateDeletedPath, idPath={0} "
+						+ "# row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -607,14 +660,16 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean setFileDeleted(int idFile) {
         try {
-            PreparedStatement stUpdateDeletedFile = dbConn.connection.prepareStatement("UPDATE file SET deleted=1 WHERE idFile=?");   //NOI18N
+            PreparedStatement stUpdateDeletedFile = dbConn.connection.prepareStatement(
+					"UPDATE file SET deleted=1 WHERE idFile=?");   //NOI18N
             
             stUpdateDeletedFile.setInt(1, idFile);
             int nbRowsAffected = stUpdateDeletedFile.executeUpdate();
             if (nbRowsAffected == 1) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "setFileDeleted, idFile={0} # row(s) affected: +{1}", new Object[]{idFile, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "setFileDeleted, idFile={0} "
+						+ "# row(s) affected: +{1}", new Object[]{idFile, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -804,6 +859,10 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
     
+	//FIXME TAGS Add column tagsModifDate in file table
+	//FIXME TAGS Update tagsModifDate when adding/removing tags
+	//FIXME TAGS Update tagsModifDate after a merge (should be done already)
+	
     /**
      * Update rating
      *
@@ -812,7 +871,8 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean updateRating(FileInfoInt fileInfo) {
         try {
-            PreparedStatement stUpdateFileRating = dbConn.connection.prepareStatement("UPDATE file set rating=?, "
+            PreparedStatement stUpdateFileRating = dbConn.connection.prepareStatement(
+					"UPDATE file set rating=?, "
                     + "ratingModifDate=datetime('now') "
                     + "WHERE idFile=?");  //NOI18N
             stUpdateFileRating.setInt(1, fileInfo.rating);
@@ -1808,11 +1868,12 @@ public class DbConnJaMuz extends StatSourceSQL {
     
     /**
      * Get list of tags
-     * @param tags
+	 * @return 
      */
-    public void getTags(ArrayList tags) {
+    public ArrayList<String> getTags() {
         Statement st=null;
         ResultSet rs=null;
+		ArrayList<String> tags = new ArrayList<>();
         try {
             st = dbConn.connection.createStatement();
             rs = st.executeQuery("SELECT id, value FROM tag");
@@ -1835,14 +1896,16 @@ public class DbConnJaMuz extends StatSourceSQL {
                 Jamuz.getLogger().warning("Failed to close Statement");
             }
         }
+		return tags;
     }
     
 	/**
 	 *
 	 * @param tags
 	 * @param idFile
+	 * @return 
 	 */
-	public void getTags(ArrayList tags, int idFile) {
+	public boolean getTags(ArrayList<String> tags, int idFile) {
         try {
             PreparedStatement stSelectPlaylists = dbConn.connection.prepareStatement(
                     "SELECT value FROM tag T JOIN tagFile F ON T.id=F.idTag WHERE F.idFile=?");    //NOI18N
@@ -1851,22 +1914,31 @@ public class DbConnJaMuz extends StatSourceSQL {
             while (rs.next()) {
                 tags.add(dbConn.getStringValue(rs, "value"));
             }
+			return true;
         } catch (SQLException ex) {
             Popup.error("getTags("+idFile+")", ex);   //NOI18N
+			return false;
         }
     }
-    
+	
+	@Override
+	public boolean getTags(ArrayList<String> tags, FileInfo file) {
+		return getTags(tags, file.getIdFile());
+	}
+
     /**
      * Fill option list
      *
      * @param myListModel
      */
     public void getMachineListModel(DefaultListModel myListModel) {
-        getListModel(myListModel, "SELECT name, description FROM machine ORDER BY name", "name");
+        getListModel(myListModel, "SELECT name, description FROM machine "
+				+ "ORDER BY name", "name");
     }
 
     private ListElement makeListElement(Object elementToAdd, ResultSet rs) {
-        FileInfoInt file = new FileInfoInt(dbConn.getStringValue(rs, "strPath", false) + dbConn.getStringValue(rs, "name"),  //NOI18N
+        FileInfoInt file = new FileInfoInt(dbConn.getStringValue(rs, "strPath", false) 
+				+ dbConn.getStringValue(rs, "name"),  //NOI18N
 Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         file.setCoverHash(dbConn.getStringValue(rs, "coverHash", false));  //NOI18N
         file.nbCovers = 1;
@@ -1928,16 +2000,25 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                             if(percentRated>50 && percentRated <100) {
                                 errorLevel=1;
                             }
-                            rating = FolderInfoResult.colorField(rating, errorLevel, false);
+                            rating = FolderInfoResult.colorField(rating, 
+									errorLevel, false);
                         }
-                        artist = "<html>" + artist + rating + "<BR/>" + nbPaths + " " + Inter.get("Tag.Album").toLowerCase(Locale.getDefault())+ "(s), " + nbFiles + " " + Inter.get("Label.File").toLowerCase(Locale.getDefault())+ "(s)</html>";  //NOI18N
+                        artist = "<html>" + artist + rating + 
+								"<BR/>" + nbPaths + " " + 
+								Inter.get("Tag.Album").toLowerCase(Locale.getDefault())+ 
+								"(s), " + nbFiles + " " + 
+								Inter.get("Label.File").toLowerCase(Locale.getDefault())+ 
+								"(s)</html>";  //NOI18N
                         ListElement artistElement = makeListElement(elementToAdd, rs);
                         artistElement.setDisplay(artist);
                         elementToAdd = artistElement;
                         break;
                     case "name": //that is for machine
                         String name = (String) elementToAdd;
-                        elementToAdd = new ListElement(name, "<html><b>" + name + "</b><BR/><i>" + dbConn.getStringValue(rs, "description")+"</i></html>");
+                        elementToAdd = new ListElement(name, "<html>"
+								+ "<b>" + name + "</b><BR/>"
+								+ "<i>" + dbConn.getStringValue(rs, "description")+"</i>"
+								+ "</html>");
                     default:
                         break;
                 }
@@ -2003,8 +2084,10 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         Statement st=null;
         ResultSet rs=null;
         try {
-            String sql = "SELECT COUNT(*), COUNT(DISTINCT P.idPath), SUM(size), SUM(length), avg(rating)," + field + " "
-                    + "FROM file F JOIN path P ON P.idPath=F.idPath WHERE F.deleted=0 AND P.deleted=0 "  //NOI18N
+            String sql = "SELECT COUNT(*), COUNT(DISTINCT P.idPath), SUM(size), "
+					+ "SUM(length), avg(rating)," + field + " "
+                    + "FROM file F JOIN path P ON P.idPath=F.idPath "
+					+ "WHERE F.deleted=0 AND P.deleted=0 "  //NOI18N
                     + "GROUP BY " + field + " ORDER BY " + field;   //NOI18N //NOI18N
             
             st = dbConn.connection.createStatement();
@@ -2012,7 +2095,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             while (rs.next()) {
                 stats.add(new StatItem(dbConn.getStringValue(rs, field), 
 						dbConn.getStringValue(rs, field), 
-                        rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getDouble(5), null));
+                        rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4), 
+						rs.getDouble(5), null));
             }
         } catch (SQLException ex) {
             Popup.error("getSelectionList4Stats(" + field + ")", ex);   //NOI18N
@@ -2065,7 +2149,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             while (rs.next()) {
                 stats.add(new StatItem(dbConn.getStringValue(rs, "percentRated"), 
 						dbConn.getStringValue(rs, "percentRated"), 
-                        rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getDouble(5), null));
+                        rs.getLong(1), rs.getLong(2), rs.getLong(3), 
+						rs.getLong(4), rs.getDouble(5), null));
             }
         } catch (SQLException ex) {
             Popup.error("getPercentRatedForStats()", ex);   //NOI18N
@@ -2095,7 +2180,9 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         ResultSet rs=null;
         try {
             st = dbConn.connection.createStatement();
-            rs = st.executeQuery("SELECT "+maxOrMin+"(year) FROM file WHERE year GLOB '[0-9][0-9][0-9][0-9]'"); //To exclude wrong entries (not YYYY format)
+            rs = st.executeQuery("SELECT "+maxOrMin+"(year) FROM file "
+					+ "WHERE year GLOB '[0-9][0-9][0-9][0-9]'"); 
+						//To exclude wrong entries (not YYYY format)
             return rs.getDouble(1);
 
         } catch (SQLException ex) {
@@ -2140,8 +2227,9 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
          * @param rating
          * @param color
          */
-        public StatItem(String label, String value, long countFile, long countPath,
-				long size, long length, double rating, Color color) {
+        public StatItem(String label, String value, long countFile, 
+				long countPath,	long size, long length, double rating, 
+				Color color) {
             this.value = value;
             this.countFile = countFile;
 			this.countPath = countPath;
@@ -2263,7 +2351,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @param color
      * @return
      */
-    public StatItem getStatItem(String field, String value, String table, String label, Color color) {
+    public StatItem getStatItem(String field, String value, String table, 
+			String label, Color color) {
         String sql;
         Statement st=null;
         ResultSet rs=null;
@@ -2284,7 +2373,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             sql += " AND file.deleted=0 AND path.deleted=0";   //NOI18N
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
-            return new StatItem(label, value, rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getDouble(5), color);
+            return new StatItem(label, value, rs.getLong(1), rs.getLong(2), 
+					rs.getLong(3), rs.getLong(4), rs.getDouble(5), color);
 
         } catch (SQLException ex) {
             Popup.error("getStatItem(" + field + "," + value + ")", ex);   //NOI18N
@@ -2312,9 +2402,11 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @param idPath
      * @return
      */
-    public boolean checkAlbumSimilar(ArrayList<DuplicateInfo> myList, String album, int idPath) {
+    public boolean checkAlbumSimilar(ArrayList<DuplicateInfo> myList, 
+			String album, int idPath) {
         try {
-            PreparedStatement stSelectAlbumSimilar = dbConn.connection.prepareStatement(selectDuplicate
+            PreparedStatement stSelectAlbumSimilar = 
+					dbConn.connection.prepareStatement(selectDuplicate
                     + " WHERE album LIKE ? AND P.idPath!=?"
                     + groupDuplicate);     //NOI18N
             stSelectAlbumSimilar.setString(1, "%" + album + "%");   //NOI18N
@@ -2328,8 +2420,13 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         }
     }
 
-    private static final String selectDuplicate = "SELECT album, artist, checked, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating  FROM path P JOIN file F ON F.idPath=P.idPath ";
-    private static final String groupDuplicate = " AND F.deleted=0 AND P.deleted=0 GROUP BY P.idPath";   //NOI18N
+    private static final String selectDuplicate = 
+			"SELECT album, artist, checked, "
+			+ "ifnull(round(((sum(case when rating > 0 then rating end))"
+			+ "/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating  "
+			+ "FROM path P JOIN file F ON F.idPath=P.idPath ";
+    private static final String groupDuplicate = 
+			" AND F.deleted=0 AND P.deleted=0 GROUP BY P.idPath";   //NOI18N
     
     
     /**
@@ -2340,9 +2437,11 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @param idPath
      * @return
      */
-    public boolean checkAlbumExact(ArrayList<DuplicateInfo> myList, String album, int idPath) {
+    public boolean checkAlbumExact(ArrayList<DuplicateInfo> myList, String album, 
+			int idPath) {
         try {
-            PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(selectDuplicate
+            PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(
+					selectDuplicate
                     + " WHERE album = ? AND P.idPath!=?"
                     + groupDuplicate);     //NOI18N
             
@@ -2368,7 +2467,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
     public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList, String artist, String album, int idPath) {
         if (!artist.equals("") && !album.equals("")) {    //NOI18N
             try {
-                PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(selectDuplicate
+                PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
+						selectDuplicate
                     + " WHERE artist LIKE ? "  //NOI18N
                     + " AND album LIKE ? AND P.idPath!=?"
                     + groupDuplicate);     //NOI18N
@@ -2393,7 +2493,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @param selArtist
      * @param selAlbum
      */
-    private void getDuplicates(ArrayList<DuplicateInfo> myList, PreparedStatement st, int errorlevel)  {
+    private void getDuplicates(ArrayList<DuplicateInfo> myList, PreparedStatement st, 
+			int errorlevel)  {
         ResultSet rs=null;
         try {
             rs = st.executeQuery();
@@ -2406,7 +2507,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                 artist = dbConn.getStringValue(rs, "artist");
                 albumRating = rs.getDouble("albumRating");
                 checkedFlag = CheckedFlag.values()[rs.getInt("checked")];
-                myList.add(new DuplicateInfo(album, artist, albumRating, checkedFlag, errorlevel));
+                myList.add(new DuplicateInfo(album, artist, albumRating, checkedFlag, 
+						errorlevel));
             }
         } catch (SQLException ex) {
             Popup.error("getDuplicates(...)", ex);   //NOI18N
@@ -2433,7 +2535,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         return builder.toString();
     }
 
-    private String getSqlWHERE(String selGenre, String selArtist, String selAlbum, boolean[] selRatings, boolean[] selCheckedFlag, 
+    private String getSqlWHERE(String selGenre, String selArtist, String selAlbum, 
+			boolean[] selRatings, boolean[] selCheckedFlag, 
             int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) {
         String sql = " \nFROM file F " +  //NOI18N
                 " \nINNER JOIN `path` P ON P.idPath=F.idPath " +   //NOI18N
@@ -2447,7 +2550,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             sql += " \nAND genre=\"" + selGenre + "\""; //NOI18N
         }  
         if (!selArtist.equals("%")) {  //NOI18N
-            sql += " \nAND (artist=\"" + escapeDoubleQuote(selArtist) + "\" OR albumArtist=\"" + escapeDoubleQuote(selArtist) + "\")";  //NOI18N
+            sql += " \nAND (artist=\"" + escapeDoubleQuote(selArtist) + "\" "
+					+ "OR albumArtist=\"" + escapeDoubleQuote(selArtist) + "\")";  //NOI18N
         }
         if (!selAlbum.equals("%")) {  //NOI18N
             sql += " \nAND album=\"" + escapeDoubleQuote(selAlbum) + "\""; //NOI18N
@@ -2488,15 +2592,19 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @param copyRight
 	 * @return 
      */
-    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String selGenre, String selArtist, String selAlbum, 
-            boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) {
+    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String selGenre, 
+			String selArtist, String selAlbum, 
+            boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo, 
+			float bpmFrom, float bpmTo, int copyRight) {
 
         selGenre = getSelected(selGenre);
         selArtist = getSelected(selArtist);
         selAlbum = getSelected(selAlbum);
 
-        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "  //NOI18N
-                + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, "
+				+ "0 AS percentRated "  //NOI18N
+                + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, 
+						selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
 
         return getFiles(myFileInfoList, sql);
     }
@@ -2516,14 +2624,18 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 	 * @return
 	 */
 	public String getFilesStats(String selGenre, String selArtist, String selAlbum, 
-            boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) {
+            boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo, 
+			float bpmFrom, float bpmTo, int copyRight) {
 
         selGenre = getSelected(selGenre);
         selArtist = getSelected(selArtist);
         selAlbum = getSelected(selAlbum);
 
-        String sql = "SELECT COUNT(*) AS nbFiles, SUM(F.size) AS totalSize, SUM(F.length) AS totalLength "  //NOI18N
-                + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+        String sql = "SELECT COUNT(*) AS nbFiles, SUM(F.size) AS totalSize, "
+				+ "SUM(F.length) AS totalLength "  //NOI18N
+                + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, 
+						selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, 
+						copyRight);
 
         return getFilesStats(sql);
         
@@ -2616,11 +2728,13 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             float bpm = rs.getFloat("bpm");
             int previousPlayCounter = rs.getInt("previousPlayCounter");  //NOI18N
             String ratingModifDate = dbConn.getStringValue(rs, "ratingModifDate", "1970-01-01 00:00:00");  //NOI18N
+			String tagsModifDate = dbConn.getStringValue(rs, "tagsModifDate", "1970-01-01 00:00:00");  //NOI18N
             int idFile = rs.getInt("idFile");  //NOI18N
             int idPath = rs.getInt("idPath");  //NOI18N
 
             return new FileInfo(idFile, idPath, relativeFullPath, rating,
-                    lastPlayed, addedDate, playCounter, this.getName(), previousPlayCounter, bpm, ratingModifDate);
+                    lastPlayed, addedDate, playCounter, this.getName(), 
+					previousPlayCounter, bpm, ratingModifDate, tagsModifDate);
 		} catch (SQLException ex) {
 			Popup.error("getStats", ex);  //NOI18N
 			return null;
@@ -2636,7 +2750,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
     protected synchronized void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
 //            "UPDATE file "
 //                    + "SET rating=?, bpm=?, lastplayed=?, addedDate=?, "
-//                    + "playCounter=?, ratingModifDate=? "
+//                    + "playCounter=?, ratingModifDate=?, tagsModifDate=? "
 //                    + "WHERE idFile=?"
         this.stUpdateFileStatistics.setInt(1, file.rating);
         this.stUpdateFileStatistics.setFloat(2, file.getBPM());
@@ -2650,7 +2764,10 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         else {
             this.stUpdateFileStatistics.setString(6, file.getFormattedRatingModifDate());
         }
-        this.stUpdateFileStatistics.setInt(7, file.idFile);
+		
+		this.stUpdateFileStatistics.setString(7, file.getFormattedTagsModifDate());
+		
+        this.stUpdateFileStatistics.setInt(8, file.idFile);
 
         this.stUpdateFileStatistics.addBatch();
     }
@@ -2670,8 +2787,10 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @param getDeleted
      * @return
      */
-    public boolean getFiles(ArrayList<FileInfoInt> files, int idPath, boolean getDeleted) {
-        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated FROM file F, path P "
+    public boolean getFiles(ArrayList<FileInfoInt> files, int idPath, 
+			boolean getDeleted) {
+        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
+				+ "0 AS albumRating, 0 AS percentRated FROM file F, path P "
                 + "WHERE F.idPath=P.idPath ";    //NOI18N
         if (!getDeleted) {
             sql += " AND F.deleted=0 ";   //NOI18N
@@ -2684,7 +2803,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 	
 	public FileInfoInt getFile(int idFile) {
 		ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();
-        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
+        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
+				+ "0 AS albumRating, 0 AS percentRated "
 				+ "FROM file F, path P "
                 + "WHERE F.idPath=P.idPath AND F.idFile="+idFile;    //NOI18N
         getFiles(myFileInfoList, sql);
@@ -2699,7 +2819,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @return
      */
     public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql) {
-		return getFiles(myFileInfoList, sql, Jamuz.getMachine().getOptionValue("location.library"));
+		return getFiles(myFileInfoList, sql, Jamuz.getMachine()
+				.getOptionValue("location.library"));
 	}
 
 	/**
@@ -2710,7 +2831,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 	 * @param rootPath
      * @return
      */
-    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql, String rootPath) {
+    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql, 
+			String rootPath) {
 
         int idFile;
         int idPath;
@@ -2790,11 +2912,14 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                 percentRated = rs.getInt("percentRated");
 
                 myFileInfoList.add(
-                        new FileInfoInt(idFile, idPath, relativePath, filename, length, format, bitRate, 
+                        new FileInfoInt(idFile, idPath, relativePath, filename, 
+								length, format, bitRate, 
 								size, BPM, album, albumArtist, artist, comment,
-                                discNo, discTotal, genre, nbCovers, title, trackNo, trackTotal, year, 
+                                discNo, discTotal, genre, nbCovers, title, 
+								trackNo, trackTotal, year, 
 								playCounter, rating,
-                                addedDate, lastPlayed, modifDate, deleted, coverHash, checkedFlag, 
+                                addedDate, lastPlayed, modifDate, deleted, 
+								coverHash, checkedFlag, 
 								copyRight, albumRating, percentRated, rootPath)
                 );
             }
@@ -2826,8 +2951,10 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @param checkedFlag
      * @return
      */
-    public boolean getFolders(ConcurrentHashMap<String,FolderInfo> folders, CheckedFlag checkedFlag) {
-        return this.getFolders(folders, "WHERE deleted=0 AND checked=" + checkedFlag.getValue());//NOI18N
+    public boolean getFolders(ConcurrentHashMap<String,FolderInfo> folders, 
+			CheckedFlag checkedFlag) {
+        return this.getFolders(folders, "WHERE deleted=0 AND checked=" + 
+				checkedFlag.getValue());//NOI18N
     }
 
     /**
@@ -2837,7 +2964,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @param idPath
      * @return
      */
-    public boolean getFolder(ConcurrentHashMap<String,FolderInfo> folders, int idPath) {
+    public boolean getFolder(ConcurrentHashMap<String,FolderInfo> folders, 
+			int idPath) {
         return this.getFolders(folders, "WHERE idPath=" + idPath);   //NOI18N
     }
     
@@ -2847,7 +2975,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @return
      */
     public FolderInfo getFolder(int idPath) {
-        ConcurrentHashMap<String,FolderInfo> folders=new ConcurrentHashMap<>(); //ArrayList<>();
+        ConcurrentHashMap<String,FolderInfo> folders=new ConcurrentHashMap<>();
         if(getFolder(folders, idPath)) { //NOI18N
             return folders.elements().nextElement(); //.get(0);
         }
@@ -2863,7 +2991,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 	 * @param getDeleted
      * @return
      */
-    public boolean getFolders(ConcurrentHashMap<String,FolderInfo> folders, boolean getDeleted) {
+    public boolean getFolders(ConcurrentHashMap<String,FolderInfo> folders, 
+			boolean getDeleted) {
         String SqlWhere = "";
 		if(!getDeleted) {
 			SqlWhere=" WHERE deleted=0";
@@ -2871,9 +3000,11 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 		return this.getFolders(folders, SqlWhere);
     }
 
-    private boolean getFolders(ConcurrentHashMap<String,FolderInfo> folders, String sqlWhere) {
+    private boolean getFolders(ConcurrentHashMap<String,FolderInfo> folders, 
+			String sqlWhere) {
         folders.clear();
-        String sql = "SELECT idPath, strPath, modifDate, deleted, checked FROM path " + sqlWhere;    //NOI18N
+        String sql = "SELECT idPath, strPath, modifDate, deleted, checked "
+				+ "FROM path " + sqlWhere;    //NOI18N
         Statement st=null;
         ResultSet rs=null;
         try {
@@ -2881,10 +3012,14 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             rs = st.executeQuery(sql);
             String path;
             while (rs.next()) {
-                Date dbModifDate = DateTime.parseSqlUtc(dbConn.getStringValue(rs, "modifDate"));   //NOI18N
-                path = FilenameUtils.separatorsToSystem(dbConn.getStringValue(rs, "strPath", false));   //NOI18N
-                folders.put(path, new FolderInfo(rs.getInt("idPath"), path, dbModifDate,  //NOI18N
-                        rs.getBoolean("deleted"), CheckedFlag.values()[rs.getInt("checked")]));   //NOI18N
+                Date dbModifDate = DateTime.parseSqlUtc(
+						dbConn.getStringValue(rs, "modifDate"));   //NOI18N
+                path = FilenameUtils.separatorsToSystem(
+						dbConn.getStringValue(rs, "strPath", false));   //NOI18N
+                folders.put(path, new FolderInfo(rs.getInt("idPath"), 
+						path, dbModifDate,  //NOI18N
+                        rs.getBoolean("deleted"), 
+						CheckedFlag.values()[rs.getInt("checked")]));   //NOI18N
             }
             return true;
         } catch (SQLException ex) {

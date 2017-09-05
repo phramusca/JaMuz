@@ -360,8 +360,7 @@ public class Jamuz {
     
     private static ArrayList<String> tags;
     private static void readTags() {
-        tags = new ArrayList<>();
-        getDb().getTags(tags);
+        tags = getDb().getTags();
     }
 
 	/**

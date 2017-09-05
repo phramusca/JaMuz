@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 /**
  *
@@ -39,7 +40,7 @@ public class StatSourceKodi extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceKodi(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, false, true, false, true);
+        super(dbInfo, name, rootPath, false, true, false, true, false);
     }
     
     @Override
@@ -107,5 +108,12 @@ public class StatSourceKodi extends StatSourceSQL {
             
         }
     }
+
+	@Override
+	public boolean getTags(ArrayList<String> tags, FileInfo file) {
+		//FIXME TAGS get tags from Kodi
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
 	
 }

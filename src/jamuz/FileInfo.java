@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Locale;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.DateTime;
+import java.util.ArrayList;
 
 /**
  * Audio file information
@@ -206,7 +207,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 *
 	 */
 	protected boolean updateRatingModifDate=false;
-
+	
 	/**
 	 *
 	 */
@@ -228,6 +229,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         this.updateRatingModifDate = updateRatingModifDate;
     }
     
+	/**
+	 *
+	 */
+	protected Date tagsModifDate;
+
+	/**
+	 *
+	 * @return
+	 */
+	public Date getTagsModifDate() {
+        return tagsModifDate;
+    }
+	
 	/**
 	 * play counter
 	 */
@@ -282,7 +296,17 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public void setBPM(float BPM) {
         this.BPM = BPM;
     }
-    
+
+	ArrayList<String> tags = null;
+	
+	public ArrayList<String> getTags() {
+        return tags;
+    }
+	
+	public void setTags(ArrayList<String> tags) {
+		this.tags = tags;
+	}
+	
     /**
 	 * Source name for scan and merge (StatSource.name)
 	 */
@@ -318,7 +342,8 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
     }
 
 	/**
-	 * Used for scan statistics purposes (statistics info got from databases to be merged)
+	 * Used for scan statistics purposes 
+	 * (statistics info got from databases to be merged)
 	 * @param idFile 
 	 * @param relativeFullPath
 	 * @param idPath 
@@ -330,16 +355,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 * @param previousPlayCounter  
      * @param bpm  
      * @param ratingModifDate  
+	 * @param tagsModifDate  
 	 */
 	public FileInfo(int idFile, int idPath, String relativeFullPath, int rating, 
             String lastPlayed, String addedDate, int playCounter, 
-			String sourceName, int previousPlayCounter, float bpm, String ratingModifDate) {
+			String sourceName, int previousPlayCounter, float bpm, 
+			String ratingModifDate, String tagsModifDate) {
 		
 		this.idFile=idFile;
 		this.idPath=idPath;
 		this.BPM=bpm;
 		this.rating = rating;
         this.ratingModifDate = DateTime.parseSqlUtc(ratingModifDate);
+		this.tagsModifDate = DateTime.parseSqlUtc(tagsModifDate);
         this.updateRatingModifDate=false;
 		this.lastPlayed = DateTime.parseSqlUtc(lastPlayed);
 		this.addedDate = DateTime.parseSqlUtc(addedDate);
@@ -362,11 +390,13 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	}
 
 	/**
-	 * Used for scan statistics purposes (default values for one-side only file)
+	 * Used for scan statistics purposes 
+	 * (default values for one-side only file)
 	 * @param sourceName 
 	 */
 	public FileInfo(String sourceName) {
-		this(-1, -1, "", 0, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 0, sourceName, 0, 0, "");  //NOI18N
+		this(-1, -1, "", 0, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 
+				0, sourceName, 0, 0, "", "");  //NOI18N
 	}
 
 	/**
@@ -417,6 +447,14 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	public String getFormattedRatingModifDate() {
         return DateTime.formatUTCtoSqlUTC(ratingModifDate);
+    }
+	
+	/**
+	 *
+	 * @return
+	 */
+	public String getFormattedTagsModifDate() {
+        return DateTime.formatUTCtoSqlUTC(tagsModifDate);
     }
 
 	/**
