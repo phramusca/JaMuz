@@ -50,11 +50,12 @@ public class StatSourceJaMuzRemote extends StatSourceSQL {
             this.dbConn.connect();
             
             this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement(
-					"SELECT path AS fullPath, rating, playCounter, lastplayed, addedDate "
+					"SELECT id, path AS fullPath, rating, playCounter, lastplayed, addedDate "
 							+ "FROM tracks ORDER BY path");
             
             this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement(
-					"UPDATE tracks SET rating=?, playCounter=?, lastplayed=?, addedDate=? WHERE path=?");  //NOI18N
+					"UPDATE tracks SET rating=?, playCounter=?, lastplayed=?, addedDate=? "
+							+ "WHERE path=?");  //NOI18N
 
              return true;
         } catch (SQLException ex) {
@@ -84,10 +85,43 @@ public class StatSourceJaMuzRemote extends StatSourceSQL {
         this.stUpdateFileStatistics.setString(5, this.getRootPath()+getPath(file.getRelativeFullPath()));
         this.stUpdateFileStatistics.addBatch();
     }
+	
+	/**
+	 * Update statistics
+	 * @param files
+	 * @return
+	 */
+    @Override
+	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
+		int[] results = super.updateStatistics(files);
+		//Update tags
+		for(FileInfo fileInfo : files) {
+			ArrayList<String> tags = new ArrayList<>();
+			getTags(tags, fileInfo);
+			fileInfo.setTags(tags);
+		}
+		return results;
+	}
+	
+	/**
+	 *
+	 * @param rs
+	 * @return
+	 */
+	@Override
+	protected FileInfo getStatistics(ResultSet rs) {
+		try {
+			FileInfo fileInfo = super.getStatistics(rs);
+			fileInfo.setIdFile(rs.getInt("id"));
+			return fileInfo;
+		} catch (SQLException ex) {
+			Popup.error("getStatistics", ex);  //NOI18N
+			return null;
+		}
+	}
 
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
-		//FIXME TAGS get tags from JaMuz Remote
         ResultSet rs=null;
         try {
             PreparedStatement st = dbConn.getConnnection().prepareStatement(

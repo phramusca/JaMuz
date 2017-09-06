@@ -1908,7 +1908,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 	public boolean getTags(ArrayList<String> tags, int idFile) {
         try {
             PreparedStatement stSelectPlaylists = dbConn.connection.prepareStatement(
-                    "SELECT value FROM tag T JOIN tagFile F ON T.id=F.idTag WHERE F.idFile=?");    //NOI18N
+                    "SELECT value FROM tag T JOIN tagFile F ON T.id=F.idTag "
+							+ "WHERE F.idFile=?");    //NOI18N
             stSelectPlaylists.setInt(1, idFile);
             ResultSet rs = stSelectPlaylists.executeQuery();
             while (rs.next()) {
