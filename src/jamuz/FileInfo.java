@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Locale;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.DateTime;
+import jamuz.utils.Utils;
 import java.util.ArrayList;
 
 /**
@@ -482,6 +483,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         isEqual &= (Math.abs(this.BPM - thatFileInfo.BPM) < 0.000001);
         isEqual &= (this.addedDate == thatFileInfo.addedDate || (this.addedDate != null && this.addedDate.equals(thatFileInfo.addedDate)));
         isEqual &= (this.lastPlayed == thatFileInfo.lastPlayed || (this.lastPlayed != null && this.lastPlayed.equals(thatFileInfo.lastPlayed)));
+		isEqual &= (Utils.equalLists(tags, thatFileInfo.tags));
         return isEqual;
     }
     

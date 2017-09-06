@@ -45,6 +45,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.logging.Level;
 import jamuz.utils.DateTime;
+import jamuz.utils.Utils;
 
 /**
  *
@@ -389,8 +390,8 @@ public class ProcessMerge extends ProcessAbstract {
     }
 	private void compareLists(String run) throws InterruptedException, CloneNotSupportedException {
 
-		this.mergeListDbSelected = new ArrayList<>();
-		this.mergeListDbJaMuz = new ArrayList<>();
+		mergeListDbSelected = new ArrayList<>();
+		mergeListDbJaMuz = new ArrayList<>();
         mergeTagListDbJaMuz=new ArrayList<>();
                 
 		FileInfo fileDbSelected; 
@@ -640,11 +641,12 @@ public class ProcessMerge extends ProcessAbstract {
             //TODO: display it on jtable and logs
             if(this.selectedStatSource.getSource().isUpdateTags()) {
 				ArrayList<String> selectedDbTags = new ArrayList<>();
+				ArrayList<String> jaMuzTags = new ArrayList<>();
 				this.selectedStatSource
 						.getSource().getTags(selectedDbTags, fileSelectedDb);
-				ArrayList<String> jaMuzTags = ((FileInfoInt) fileJaMuz).getTags();
-				
-				if(!equalLists(selectedDbTags, jaMuzTags)) {
+				dBJaMuz.getTags(jaMuzTags, fileJaMuz);
+
+				if(!Utils.equalLists(selectedDbTags, jaMuzTags)) {
 					if(fileJaMuz.getTagsModifDate().after(
 							this.selectedStatSource.lastMergeDate)) {
 						fileNew.setTags(jaMuzTags);
@@ -713,28 +715,7 @@ public class ProcessMerge extends ProcessAbstract {
 			addToLog(fileNew, fileSelectedDb, fileJaMuz);
 		}
 	}
-	
-	private  boolean equalLists(List<String> one, List<String> two){     
-		if (one == null && two == null){
-			return true;
-		}
 
-		if((one == null && two != null) 
-		  || one != null && two == null
-		  || one.size() != two.size()){
-			return false;
-		}
-
-		//to avoid messing the order of the lists we will use a copy
-		//as noted in comments by A. R. S.
-		one = new ArrayList<>(one); 
-		two = new ArrayList<>(two);   
-
-		Collections.sort(one);
-		Collections.sort(two);      
-		return one.equals(two);
-	}
-	
 	private void displayResults() throws InterruptedException {
 		
         PanelMerge.progressBar.setup(this.errorList.size()+this.completedList.size());
@@ -862,8 +843,7 @@ public class ProcessMerge extends ProcessAbstract {
 			this.checkAbort();
 		}
 
-		if(!this.simulate) {
-		
+		if(!this.simulate) {	
 			nbFiles=mergeTagListDbJaMuz.size();
 			PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Updating"), Inter.get("Tag.BPM"))); //NOI18N
 			if(nbFiles>0) {
