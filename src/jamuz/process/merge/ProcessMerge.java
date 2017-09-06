@@ -504,8 +504,10 @@ public class ProcessMerge extends ProcessAbstract {
 		//Compare lastPlayed, only if required (not for Mixxx as an example)         
             if(this.selectedStatSource.getSource().isUpdateLastPlayed()) {
 				if(!fileSelectedDb.getLastPlayed().equals(fileJaMuz.getLastPlayed())) {
-					if(fileSelectedDb.getLastPlayed().before(new Date()) && fileJaMuz.getLastPlayed().before(new Date())) {
-						if(fileSelectedDb.getLastPlayed().after(fileJaMuz.getLastPlayed())) {
+					if(fileSelectedDb.getLastPlayed().before(new Date()) 
+							&& fileJaMuz.getLastPlayed().before(new Date())) {
+						if(fileSelectedDb.getLastPlayed().after(
+								fileJaMuz.getLastPlayed())) {
 							fileNew.setLastPlayed(fileSelectedDb.getLastPlayed());
 						}
 						else {
@@ -532,8 +534,10 @@ public class ProcessMerge extends ProcessAbstract {
 		//Compare addedDate, only if required (not for Kodi as an example)
 			if(this.selectedStatSource.getSource().isUpdateAddedDate()) {
 				if(!fileSelectedDb.getAddedDate().equals(fileJaMuz.getAddedDate())) {
-					if(fileSelectedDb.getAddedDate().after(new Date(0)) && fileJaMuz.getAddedDate().after(new Date(0))) {
-						if(fileSelectedDb.getAddedDate().before(fileJaMuz.getAddedDate())) {
+					if(fileSelectedDb.getAddedDate().after(new Date(0)) 
+							&& fileJaMuz.getAddedDate().after(new Date(0))) {
+						if(fileSelectedDb.getAddedDate().before(
+								fileJaMuz.getAddedDate())) {
 							fileNew.setAddedDate(fileSelectedDb.getAddedDate());
 						}
 						else {
@@ -619,7 +623,8 @@ public class ProcessMerge extends ProcessAbstract {
                     else {
                         fileNew.setBPM(fileSelectedDb.getBPM());
                         //TODO: Better use inheritance !!
-                        mergeTagListDbJaMuz.add(new FileInfoInt(fileJaMuz, fileSelectedDb.getBPM()));
+                        mergeTagListDbJaMuz.add(new FileInfoInt(fileJaMuz, 
+								fileSelectedDb.getBPM()));
                     }
                 }
                 else if(fileSelectedDb.getBPM()!=fileJaMuz.getBPM()){
@@ -627,7 +632,8 @@ public class ProcessMerge extends ProcessAbstract {
                     if(this.selectedStatSource.getIdStatement()==4) { //TODO: Mixxx is Badly hard-coded (use an enum instead of int)
                         fileNew.setBPM(fileSelectedDb.getBPM());
                         //TODO: Better use inheritance !!
-                        mergeTagListDbJaMuz.add(new FileInfoInt(fileJaMuz, fileSelectedDb.getBPM()));
+                        mergeTagListDbJaMuz.add(new FileInfoInt(fileJaMuz, 
+								fileSelectedDb.getBPM()));
                     }
                     else {
                         fileNew.setBPM(fileJaMuz.getBPM());
@@ -644,7 +650,9 @@ public class ProcessMerge extends ProcessAbstract {
 				ArrayList<String> jaMuzTags = new ArrayList<>();
 				this.selectedStatSource
 						.getSource().getTags(selectedDbTags, fileSelectedDb);
+				fileSelectedDb.setTags(selectedDbTags);
 				dBJaMuz.getTags(jaMuzTags, fileJaMuz);
+				fileJaMuz.setTags(jaMuzTags);
 
 				if(!Utils.equalLists(selectedDbTags, jaMuzTags)) {
 					if(fileJaMuz.getTagsModifDate().after(
@@ -652,14 +660,7 @@ public class ProcessMerge extends ProcessAbstract {
 						fileNew.setTags(jaMuzTags);
 					}
 					else {
-						if(this.selectedStatSource.getIdStatement()==6) { 
-							//TODO: JaMuz Remote is Badly hard-coded 
-							//(use an enum instead of int)
-							fileNew.setTags(selectedDbTags);
-						}
-						else {
-							fileNew.setTags(jaMuzTags);
-						}
+						fileNew.setTags(selectedDbTags);
 					}
 				}
             }
@@ -667,8 +668,10 @@ public class ProcessMerge extends ProcessAbstract {
 			//Comparing new with JaMuz and add it to merge list if different
 			if(!fileJaMuz.equalsStats(fileNew)) {
 				fileNew.setSourceName(run+"-"+fileJaMuz.getSourceName());
+				fileNew.setIdFile(fileSelectedDb.getIdFile()); //Mandatory for tags merge
 				this.mergeListDbJaMuz.add((FileInfo) fileNew.clone());
-				Jamuz.getLogger().log(Level.FINEST, "Added to \"{0}\" merge list", fileNew.getSourceName());  //NOI18N
+				Jamuz.getLogger().log(Level.FINEST, "Added to \"{0}\" merge list", 
+						fileNew.getSourceName());  //NOI18N
 				isOneDbUpdated=true;
 			}	
 		}
@@ -700,9 +703,11 @@ public class ProcessMerge extends ProcessAbstract {
 			fileNew.setRelativeFullPath(fileSelectedDb.getRelativeFullPath());
 			fileNew.setRelativePath(fileSelectedDb.getRelativePath());
 			fileNew.setFilename(fileSelectedDb.getFilename()); //This is not really usefull, though
+			fileNew.setIdFile(fileNew.getIdFile()); //Mandatory for tags merge
 			//Adding to merge list
 			this.mergeListDbSelected.add((FileInfo) fileNew.clone());
-			Jamuz.getLogger().log(Level.FINEST, "Added to \"{0}\" merge list", fileNew.getSourceName());  //NOI18N
+			Jamuz.getLogger().log(Level.FINEST, "Added to \"{0}\" merge list", 
+					fileNew.getSourceName());  //NOI18N
 			isOneDbUpdated=true;
 		}
 
@@ -721,24 +726,32 @@ public class ProcessMerge extends ProcessAbstract {
         PanelMerge.progressBar.setup(this.errorList.size()+this.completedList.size());
         //Display errors
 		for(FileInfo myFileInfo : this.errorList) {
-            PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Displaying"), myFileInfo.getRelativePath())); //NOI18N
+            PanelMerge.progressBar.progress(MessageFormat.format(
+					Inter.get("Msg.Merge.Displaying"), 
+					myFileInfo.getRelativePath())); //NOI18N
 			PanelMerge.displayMergeResult(myFileInfo);
             this.checkAbort();
 		}
 		
 		//Display completed
 		for(FileInfo myFileInfo : this.completedList) {
-            PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Displaying"), myFileInfo.getRelativePath())); //NOI18N
+            PanelMerge.progressBar.progress(MessageFormat.format(
+					Inter.get("Msg.Merge.Displaying"), 
+					myFileInfo.getRelativePath())); //NOI18N
 			PanelMerge.displayMergeResult(myFileInfo);
             this.checkAbort();
 		}
 	}
 	
-	private void addToLog(FileInfo myFileInfoNew, FileInfo myFileInfoDbSelected, FileInfo myFileInfoDbJaMuz) {
+	private void addToLog(FileInfo myFileInfoNew, FileInfo myFileInfoDbSelected, 
+			FileInfo myFileInfoDbJaMuz) {
 		this.logDbSelected.add(myFileInfoDbSelected.toString());
-		Jamuz.getLogger().log(Level.FINEST, "{0}:<BR/>{1}", new Object[]{myFileInfoDbSelected.getSourceName(), myFileInfoDbSelected.toString()});  //NOI18N
+		Jamuz.getLogger().log(Level.FINEST, "{0}:<BR/>{1}", 
+				new Object[]{myFileInfoDbSelected.getSourceName(), 
+					myFileInfoDbSelected.toString()});  //NOI18N
 		this.logDbJaMuz.add(myFileInfoDbJaMuz.toString());
-		Jamuz.getLogger().log(Level.FINEST, "{0}:<BR/>{1}", new Object[]{myFileInfoDbJaMuz.getSourceName(), myFileInfoDbJaMuz.toString()});  //NOI18N
+		Jamuz.getLogger().log(Level.FINEST, "{0}:<BR/>{1}", 
+				new Object[]{myFileInfoDbJaMuz.getSourceName(), myFileInfoDbJaMuz.toString()});  //NOI18N
 		this.logDbNew.add(myFileInfoNew.toString());
 		Jamuz.getLogger().log(Level.FINEST, "NEW:<BR/>{0}", myFileInfoNew.toString());  //NOI18N
 	}
@@ -754,11 +767,13 @@ public class ProcessMerge extends ProcessAbstract {
 		this.checkAbort();
 
 		if(receive) {
-            PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Retrieving"), dbStats.getName())); //NOI18N
+            PanelMerge.progressBar.progress(MessageFormat.format(
+					Inter.get("Msg.Merge.Retrieving"), dbStats.getName())); //NOI18N
             return dbStats.getSource(logSubPath);
         }
 		else  {
-            PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.CopyingDBback"), dbStats.getName())); //NOI18N
+            PanelMerge.progressBar.progress(MessageFormat.format(
+					Inter.get("Msg.Merge.CopyingDBback"), dbStats.getName())); //NOI18N
             return dbStats.sendSource(logSubPath);
         }
 	}
@@ -766,7 +781,8 @@ public class ProcessMerge extends ProcessAbstract {
 	private boolean backupDB(StatSourceAbstract dbStats) throws InterruptedException {
 		//Checking if process got interrupted
 		this.checkAbort();
-        PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.DatabaseBackup"), dbStats.getName())); //NOI18N
+        PanelMerge.progressBar.progress(MessageFormat.format(
+				Inter.get("Msg.Merge.DatabaseBackup"), dbStats.getName())); //NOI18N
         return dbStats.backupSource(logSubPath); 
         //TODO: guayadeque db is big as contains blobs in covers table.
         //Would be good to remove before backup as we do not need those for merge stats anyway
@@ -774,14 +790,17 @@ public class ProcessMerge extends ProcessAbstract {
 		//		then need to create a new db and insert from source
 	}
 	
-	private boolean merge(String run) throws InterruptedException, CloneNotSupportedException {
+	private boolean merge(String run) throws InterruptedException, 
+			CloneNotSupportedException {
 
 		FileInfo fileInfo;
 		int nbFiles;
         ArrayList<FileInfo> filesToUpdatePlayCounter = new ArrayList<>();
 
         // Processing selected database
-        PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Updating"), this.selectedStatSource.getSource().getName())); //NOI18N
+        PanelMerge.progressBar.progress(MessageFormat.format(
+				Inter.get("Msg.Merge.Updating"), 
+				this.selectedStatSource.getSource().getName())); //NOI18N
 		nbFiles = this.mergeListDbSelected.size();
 		if(nbFiles>0) {
 			this.checkAbort();
@@ -805,7 +824,8 @@ public class ProcessMerge extends ProcessAbstract {
 				else {
 					//TODO: Insert statistics (AmaroK only for now)
 //					fileInfo.sourceName="!!! ERROR updating "+fileInfo.sourceName;  //NOI18N
-                    fileInfo.setSourceName(run+"-"+fileInfo.getSourceName()+":\t"+"!!! ERROR updating !!!");
+                    fileInfo.setSourceName(run+"-"+fileInfo.getSourceName()+":\t"
+							+"!!! ERROR updating !!!");
 					this.errorList.add((FileInfo) fileInfo.clone());
 					this.nbFilesErrorSelected+=1;
 				}
@@ -815,7 +835,8 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 		
         //Processing jamuz
-		PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Updating"), this.dBJaMuz.getName())); //NOI18N
+		PanelMerge.progressBar.progress(MessageFormat.format(Inter.get(
+				"Msg.Merge.Updating"), this.dBJaMuz.getName())); //NOI18N
         nbFiles = this.mergeListDbJaMuz.size();
 		if(nbFiles>0) {
 			this.checkAbort();
@@ -831,7 +852,8 @@ public class ProcessMerge extends ProcessAbstract {
 				result = results[i];
 				fileInfo = mergeListDbJaMuz.get(i);
 				if(result!=1) {
-                    fileInfo.setSourceName(run+"-"+fileInfo.getSourceName()+":\t"+"!!! ERROR updating !!!");
+                    fileInfo.setSourceName(run+"-"+fileInfo.getSourceName()+":\t"
+							+"!!! ERROR updating !!!");
 					this.errorList.add((FileInfo) fileInfo.clone());
 					this.nbFilesErrorJaMuz+=1;
 				}
@@ -845,7 +867,8 @@ public class ProcessMerge extends ProcessAbstract {
 
 		if(!this.simulate) {	
 			nbFiles=mergeTagListDbJaMuz.size();
-			PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Updating"), Inter.get("Tag.BPM"))); //NOI18N
+			PanelMerge.progressBar.progress(MessageFormat.format(
+					Inter.get("Msg.Merge.Updating"), Inter.get("Tag.BPM"))); //NOI18N
 			if(nbFiles>0) {
 				Iterator<FileInfoInt> i = mergeTagListDbJaMuz.iterator();
 				while (i.hasNext()) {
@@ -864,9 +887,11 @@ public class ProcessMerge extends ProcessAbstract {
 			if(filesToUpdatePlayCounter.size()>0) {
 				//Remove potential duplicates 
 	//	        filesToUpdatePlayCounter = new ArrayList(new HashSet(filesToUpdatePlayCounter)); //no order
-				filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter)); //If you need to preserve the order use 'LinkedHashSet'
+				filesToUpdatePlayCounter = new ArrayList(
+						new LinkedHashSet(filesToUpdatePlayCounter)); //If you need to preserve the order use 'LinkedHashSet'
 				//Changing previous play counter if update was successfull
-				if(!this.dBJaMuz.setPreviousPlayCounter(filesToUpdatePlayCounter, this.selectedStatSource.getId())) {
+				if(!this.dBJaMuz.setPreviousPlayCounter(filesToUpdatePlayCounter, 
+						this.selectedStatSource.getId())) {
 					return false;
 				}
 			}
@@ -885,24 +910,28 @@ public class ProcessMerge extends ProcessAbstract {
 		if(Level.INFO.intValue()<Jamuz.getLogger().getLevel().intValue()) {
             return true;
         }
-        //Create Log for selected database
-        this.logDbSelected = new LogText(logSubPath);
-        String name=this.selectedStatSource.getSource().getName()
-                +" ["+DateTime.formatUTC(this.selectedStatSource.lastMergeDate, DateTime.DateTimeFormat.FILE, false)+"]";
-        if(!this.logDbSelected.createFile(prefix+"1-"+name + ".txt")) {
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[] {prefix+name+".txt"}));  //NOI18N
-            return false;
-        }
         //Create Log for JaMuz database
         this.logDbJaMuz = new LogText(logSubPath);
-        if(!this.logDbJaMuz.createFile(prefix+"2-"+this.dBJaMuz.getName() + ".txt")) {
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[] {prefix+this.dBJaMuz.getName()+".txt"}));  //NOI18N
+        if(!this.logDbJaMuz.createFile(prefix+"1-"+this.dBJaMuz.getName() + ".txt")) {
+            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
+					new Object[] {prefix+this.dBJaMuz.getName()+".txt"}));  //NOI18N
             return false;
         }
         //Create Log for NEW info (after comparison)
         this.logDbNew = new LogText(logSubPath);
-        if(!this.logDbNew.createFile(prefix+"3-"+"NEW" + ".txt")) {  //NOI18N
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[] {prefix+"NEW.txt"}));  //NOI18N
+        if(!this.logDbNew.createFile(prefix+"2-"+"NEW" + ".txt")) {  //NOI18N
+            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
+					new Object[] {prefix+"NEW.txt"}));  //NOI18N
+            return false;
+        }
+		//Create Log for selected database
+        this.logDbSelected = new LogText(logSubPath);
+        String name=this.selectedStatSource.getSource().getName()
+                +" ["+DateTime.formatUTC(this.selectedStatSource.lastMergeDate, 
+						DateTime.DateTimeFormat.FILE, false)+"]";
+        if(!this.logDbSelected.createFile(prefix+"3-"+name + ".txt")) {
+            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
+					new Object[] {prefix+name+".txt"}));  //NOI18N
             return false;
         }
         return true;
@@ -914,7 +943,9 @@ public class ProcessMerge extends ProcessAbstract {
 			FileInfo myFileInfo = this.statsListDbJaMuz.get(i);
             //Searching ignoring case because of windows, but that may not be a good way 
             //TODO: What if it changes to case-sensitive equals() ?
-			if(myFileInfo.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)) { return i; }
+			if(myFileInfo.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)) { 
+				return i; 
+			}
 		}
 		return -1;
 	}

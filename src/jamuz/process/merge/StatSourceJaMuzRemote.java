@@ -17,7 +17,6 @@
 
 package jamuz.process.merge;
 
-import jamuz.StatSourceSQL;
 import jamuz.FileInfo;
 import jamuz.DbInfo;
 import jamuz.Jamuz;
@@ -32,7 +31,7 @@ import java.util.logging.Level;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class StatSourceJaMuzRemote extends StatSourceSQL {
+public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
 
 	/**
 	 *
@@ -85,23 +84,6 @@ public class StatSourceJaMuzRemote extends StatSourceSQL {
         this.stUpdateFileStatistics.setString(5, this.getRootPath()+getPath(file.getRelativeFullPath()));
         this.stUpdateFileStatistics.addBatch();
     }
-	
-	/**
-	 * Update statistics
-	 * @param files
-	 * @return
-	 */
-    @Override
-	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
-		int[] results = super.updateStatistics(files);
-		//Update tags
-		for(FileInfo fileInfo : files) {
-			ArrayList<String> tags = new ArrayList<>();
-			getTags(tags, fileInfo);
-			fileInfo.setTags(tags);
-		}
-		return results;
-	}
 	
 	/**
 	 *
