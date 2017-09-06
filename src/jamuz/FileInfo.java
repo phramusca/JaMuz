@@ -304,6 +304,20 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return tags;
     }
 	
+	public String getTagsToString() {
+		StringBuilder sb = new StringBuilder();
+		if(tags!=null) {
+			for(String tag : tags)
+			{
+				sb.append(tag);
+				sb.append("; ");
+			}
+		} else {
+			sb.append("Empty");
+		}
+		return(sb.toString());
+	}
+	
 	public void setTags(ArrayList<String> tags) {
 		this.tags = tags;
 	}
@@ -481,8 +495,12 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         boolean isEqual = (this.rating == thatFileInfo.rating);
         isEqual &= (this.playCounter == thatFileInfo.playCounter);
         isEqual &= (Math.abs(this.BPM - thatFileInfo.BPM) < 0.000001);
-        isEqual &= (this.addedDate == thatFileInfo.addedDate || (this.addedDate != null && this.addedDate.equals(thatFileInfo.addedDate)));
-        isEqual &= (this.lastPlayed == thatFileInfo.lastPlayed || (this.lastPlayed != null && this.lastPlayed.equals(thatFileInfo.lastPlayed)));
+        isEqual &= (this.addedDate == thatFileInfo.addedDate 
+				|| (this.addedDate != null 
+					&& this.addedDate.equals(thatFileInfo.addedDate)));
+        isEqual &= (this.lastPlayed == thatFileInfo.lastPlayed 
+				|| (this.lastPlayed != null 
+					&& this.lastPlayed.equals(thatFileInfo.lastPlayed)));
 		isEqual &= (Utils.equalLists(tags, thatFileInfo.tags));
         return isEqual;
     }
@@ -514,7 +532,9 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	@Override
 	public int hashCode() {
 		  int hash = 7;
-		  hash = 31 * hash + (null == this.relativeFullPath ? 0 : this.relativeFullPath.hashCode());
+		  hash = 31 * hash + 
+				  (null == this.relativeFullPath ? 0 
+				  : this.relativeFullPath.hashCode());
 		  return hash;
 	}
 
@@ -535,6 +555,14 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	@Override
 	public String toString() {
-		return relativeFullPath + "\nrating=" + rating + "\nratingModifDate=" + DateTime.formatUTCtoSqlUTC(ratingModifDate) + "\nlastPlayed=" + getFormattedLastPlayed() + "\naddedDate=" + getFormattedAddedDate() + "\nplayCounter=" + playCounter + "\npreviousPlayCounter=" + this.previousPlayCounter + "\n";  //NOI18N //NOI18N //NOI18N
+		return relativeFullPath + "\n"
+				+ "rating=" + rating + "\n"
+				+ "ratingModifDate=" + DateTime.formatUTCtoSqlUTC(ratingModifDate) + "\n"
+				+ "lastPlayed=" + getFormattedLastPlayed() + "\n"
+				+ "addedDate=" + getFormattedAddedDate() + "\n"
+				+ "playCounter=" + playCounter + "\n"
+				+ "previousPlayCounter=" + this.previousPlayCounter + "\n"
+				+ "BPM=" + BPM + "\ntags=" + getTagsToString() + "\n"
+				+ "tagsModifDate=" + DateTime.formatUTCtoSqlUTC(tagsModifDate)+"\n";
 	}
 }

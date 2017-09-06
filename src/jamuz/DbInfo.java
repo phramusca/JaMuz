@@ -17,7 +17,6 @@
 
 package jamuz;
 
-import jamuz.gui.PanelMain;
 import jamuz.gui.PanelRemote;
 import java.io.BufferedReader;
 import java.io.File;

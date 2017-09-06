@@ -27,6 +27,7 @@ import jamuz.Playlist.Filter;
 import jamuz.Playlist.Operator;
 import jamuz.Playlist.Order;
 import jamuz.process.check.DuplicateInfo;
+import jamuz.process.merge.StatSourceJaMuzTags;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,7 +54,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class DbConnJaMuz extends StatSourceSQL {
+public class DbConnJaMuz extends StatSourceJaMuzTags {
 
     //TODO: How to log SQL generated queries ?
     //http://code.google.com/p/log4jdbc/
@@ -952,7 +953,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             if (files.size() > 0) {
                 dbConn.connection.setAutoCommit(false);
                 int[] results;
-                PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement("INSERT OR IGNORE INTO deviceFile "
+                PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
+						"INSERT OR IGNORE INTO deviceFile "
                     + "(idFile, idDevice, oriRelativeFullPath) "    //NOI18N
                     + "VALUES (?, ?, ?)");   //NOI18N
                 for (FileInfoInt file : files) {
@@ -1044,105 +1046,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             return false;
         }
     }
-	
-	/**
-	 * Delete deviceFile table
-	 * @param idDevice
-	 * @param idFile
-	 * @return
-	 */
-	public synchronized boolean deleteDeviceFile(int idDevice, int idFile) {
-        try {
-            PreparedStatement stDeleteDeviceFile = 
-					dbConn.connection.prepareStatement(
-							"DELETE FROM deviceFile WHERE idDevice=?"
-									+ "AND idFile=?");  //NOI18N
-            stDeleteDeviceFile.setInt(1, idDevice);
-			stDeleteDeviceFile.setInt(2, idFile);
-            long startTime = System.currentTimeMillis();
-            int result = stDeleteDeviceFile.executeUpdate();
-            long endTime = System.currentTimeMillis();
-            Jamuz.getLogger().log(Level.FINEST, "stDeleteDeviceFile DELETE // Total execution time: {0}ms", new Object[]{endTime - startTime});    //NOI18N
-            if (result < 0) {
-                Jamuz.getLogger().log(Level.SEVERE, "stDeleteDeviceFile, idDevice={0}, idFile={2}, result={1}", new Object[]{idDevice, result, idFile});   //NOI18N
-            }
-            return true;
-        } catch (SQLException ex) {
-            Popup.error("deleteDeviceFile()", ex);   //NOI18N
-            return false;
-        }
-    }
 
-	/**
-	 *
-	 * @param idFile
-	 * @return
-	 */
-	public boolean deleteTagFiles(int idFile) {
-        try {
-            PreparedStatement stDeleteTagFiles = dbConn.connection.prepareStatement(
-					"DELETE FROM tagFile WHERE idFile=?");  //NOI18N
-            stDeleteTagFiles.setInt(1, idFile);
-            long startTime = System.currentTimeMillis();
-            int result = stDeleteTagFiles.executeUpdate();
-            long endTime = System.currentTimeMillis();
-            Jamuz.getLogger().log(Level.FINEST, "stDeleteTagFiles DELETE // Total execution time: {0}ms", new Object[]{endTime - startTime});    //NOI18N
-
-            if (result < 0) {
-                Jamuz.getLogger().log(Level.SEVERE, "stDeleteTagFiles, idFile={0}, result={1}", new Object[]{idFile, result});   //NOI18N
-            }
-            
-            return true;
-
-        } catch (SQLException ex) {
-            Popup.error("deleteTagFiles()", ex);   //NOI18N
-            return false;
-        }
-    }
-	
-	/**
-	 *
-	 * @param tags
-	 * @param idFile
-	 * @return
-	 */
-	public boolean insertTagFiles(ArrayList<String> tags, int idFile) {
-        try {
-            if (tags.size() > 0) {
-                dbConn.connection.setAutoCommit(false);
-                int[] results;
-                PreparedStatement stInsertTagFile = dbConn.connection.prepareStatement(
-					"INSERT OR IGNORE INTO tagFile "
-                    + "(idFile, idTag) "    //NOI18N
-                    + "VALUES (?, (SELECT id FROM tag WHERE value=?))");   //NOI18N
-                for (String tag : tags) {
-                    stInsertTagFile.setInt(1, idFile);
-                    stInsertTagFile.setString(2, tag);
-                    stInsertTagFile.addBatch();
-                }
-                long startTime = System.currentTimeMillis();
-                results = stInsertTagFile.executeBatch();
-                dbConn.connection.commit();
-                long endTime = System.currentTimeMillis();
-                Jamuz.getLogger().log(Level.FINEST, "insertTagFiles UPDATE // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
-
-                //Analyse results
-                int result;
-                for (int i = 0; i < results.length; i++) {
-                    result = results[i];
-                    if (result < 0) {
-                        Jamuz.getLogger().log(Level.SEVERE, "insertTagFiles, idFile={0} result={2}", new Object[]{idFile, result});   //NOI18N
-                    }
-                }
-                dbConn.connection.setAutoCommit(true);
-            }
-            return true;
-        } catch (SQLException ex) {
-            Popup.error("insertTagFiles(" + idFile + ")", ex);   //NOI18N
-            return false;
-        }
-    }
-    
     /**
      * Sets previous playCounter in file table
      *
@@ -1153,7 +1057,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     public synchronized boolean setPreviousPlayCounter(ArrayList<FileInfo> files, int idStatSource) {
         try {
             int[] results;
-            PreparedStatement stUpdatePlayCounter = dbConn.connection.prepareStatement("UPDATE playcounter SET playCounter=? "
+            PreparedStatement stUpdatePlayCounter = dbConn.connection.prepareStatement(
+					"UPDATE playcounter SET playCounter=? "
                     + "WHERE idFile=? AND idStatSource=?");     //NOI18N
             //First try to update values
             dbConn.connection.setAutoCommit(false);
@@ -1675,7 +1580,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @param selOptions
 	 * @return
 	 */
-	public synchronized int[] setOptions(Machine selOptions) {
+	public boolean setOptions(Machine selOptions) {
 		try {
 			dbConn.connection.setAutoCommit(false);
 			
@@ -1703,11 +1608,19 @@ public class DbConnJaMuz extends StatSourceSQL {
 			long endTime = System.currentTimeMillis();
 			Jamuz.getLogger().log(Level.FINEST, "setOptions // {0} // Total execution time: {1}ms", 
 					new Object[]{results.length, endTime-startTime});   //NOI18N
+			//Check results
+			int result;
+			for (int i = 0; i < results.length; i++) {
+				result = results[i];
+				if (result != 1) {
+					return false;
+				}
+			}
 			dbConn.connection.setAutoCommit(true);
-			return results;
+			return true;
 		} catch (SQLException ex) {
 			Popup.error(ex);
-            return new int[0];
+            return false;
 		}
 	}
 	
@@ -2772,7 +2685,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 
         this.stUpdateFileStatistics.addBatch();
     }
-
+	
     @Override
     public boolean tearDown() {
 //        this.dbConn.disconnect();
