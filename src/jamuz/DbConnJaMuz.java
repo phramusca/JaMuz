@@ -1839,6 +1839,20 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		return getTags(tags, file.getIdFile());
 	}
+	
+	@Override
+	public int[] setTags(ArrayList<? extends FileInfo> files, int[] results) {
+		int i=0;
+		for(FileInfo fileInfo : files) {
+			if(fileInfo.getTags()!=null) {
+				if(!setTags(fileInfo.getTags(), fileInfo.getIdFile())) {
+					results[i]=0;
+				}
+			}
+			i++;
+		}
+		return results;
+	}
 
     /**
      * Fill option list

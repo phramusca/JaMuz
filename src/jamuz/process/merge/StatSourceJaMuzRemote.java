@@ -94,7 +94,7 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
 	protected FileInfo getStatistics(ResultSet rs) {
 		try {
 			FileInfo fileInfo = super.getStatistics(rs);
-			fileInfo.setIdFile(rs.getInt("id"));
+			fileInfo.setIdFileRemote(rs.getInt("id"));
 			return fileInfo;
 		} catch (SQLException ex) {
 			Popup.error("getStatistics", ex);  //NOI18N
@@ -103,6 +103,20 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
 	}
 
 	@Override
+	public int[] setTags(ArrayList<? extends FileInfo> files, int[] results) {
+		int i=0;
+		for(FileInfo fileInfo : files) {
+			if(fileInfo.getTags()!=null) {
+				if(!setTags(fileInfo.getTags(), fileInfo.getIdFileRemote())) {
+					results[i]=0;
+				}
+			}
+			i++;
+		}
+		return results;
+	}
+	
+	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
         ResultSet rs=null;
         try {
@@ -110,7 +124,7 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
 				"SELECT value FROM tag T " +
                 "JOIN tagFile F ON T.id=F.idTag " +
                 "WHERE F.idFile=?");
-			st.setInt(1, file.getIdFile());
+			st.setInt(1, file.getIdFileRemote());
 			rs = st.executeQuery();
             while (rs.next()) {
 				tags.add(dbConn.getStringValue(rs, "value"));
