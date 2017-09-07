@@ -22,6 +22,8 @@ import jamuz.process.merge.StatSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Options class
@@ -152,6 +154,22 @@ public final class Machine {
 		}
 	}
 
+	/**
+	 * Return requested remote device id
+	 * @param login
+	 * @return
+	 */
+	public int getDeviceId(String login) {
+		List<Device> candidates = 
+				devices.values().stream()
+				.filter(device -> device.getDestination().equals("remote://"+login))
+				.collect(Collectors.toList());
+		if(candidates.size()==1) {
+			return candidates.get(0).getId();
+		}
+		return -1;
+	}
+	
 	/**
 	 *
 	 * @return

@@ -653,6 +653,7 @@ public class ProcessMerge extends ProcessAbstract {
 				fileSelectedDb.setTags(selectedDbTags);
 				dBJaMuz.getTags(jaMuzTags, fileJaMuz);
 				fileJaMuz.setTags(jaMuzTags);
+				fileNew.setTags(jaMuzTags); //fileNew is initially a copy of fileJaMuz
 
 				if(!Utils.equalLists(selectedDbTags, jaMuzTags)) {
 					if(fileJaMuz.getTagsModifDate().after(
@@ -668,7 +669,6 @@ public class ProcessMerge extends ProcessAbstract {
 			//Comparing new with JaMuz and add it to merge list if different
 			if(!fileJaMuz.equalsStats(fileNew)) {
 				fileNew.setSourceName(run+"-"+fileJaMuz.getSourceName());
-				fileNew.setIdFile(fileSelectedDb.getIdFile()); //Mandatory for tags merge
 				this.mergeListDbJaMuz.add((FileInfo) fileNew.clone());
 				Jamuz.getLogger().log(Level.FINEST, "Added to \"{0}\" merge list", 
 						fileNew.getSourceName());  //NOI18N
@@ -703,8 +703,7 @@ public class ProcessMerge extends ProcessAbstract {
 			fileNew.setRelativeFullPath(fileSelectedDb.getRelativeFullPath());
 			fileNew.setRelativePath(fileSelectedDb.getRelativePath());
 			fileNew.setFilename(fileSelectedDb.getFilename()); //This is not really usefull, though
-			fileNew.setIdFile(fileNew.getIdFile()); //Mandatory for tags merge
-			//Adding to merge list
+			fileNew.setIdFileRemote(fileSelectedDb.getIdFile());
 			this.mergeListDbSelected.add((FileInfo) fileNew.clone());
 			Jamuz.getLogger().log(Level.FINEST, "Added to \"{0}\" merge list", 
 					fileNew.getSourceName());  //NOI18N
@@ -717,6 +716,33 @@ public class ProcessMerge extends ProcessAbstract {
 		//"File"	"ProcessStep"	"RatingDB1"	"RatingDB2"	"RatingNew"	...
 		//"Alain Souchon\(Collection) 1984-2001\04 Portbail.mp3"	"TBD"	"0"	"1"	"1"	...
 		if(doLogText && isOneDbUpdated) {
+			//Those are N/A on fileNew & fileSelectedDb
+			fileNew.setRatingModifDate(fileJaMuz.getRatingModifDate());
+			fileSelectedDb.setRatingModifDate(fileJaMuz.getRatingModifDate());
+			fileNew.setTagsModifDate(fileJaMuz.getTagsModifDate());
+			fileSelectedDb.setTagsModifDate(fileJaMuz.getTagsModifDate());
+			fileSelectedDb.setPreviousPlayCounter(fileJaMuz.getPreviousPlayCounter());
+			//Those also if not compared
+			if(!this.selectedStatSource.getSource().isUpdateLastPlayed()) {
+				fileNew.setLastPlayed(fileJaMuz.getLastPlayed());
+				fileSelectedDb.setLastPlayed(fileJaMuz.getLastPlayed());
+			}
+			if(!this.selectedStatSource.getSource().isUpdateAddedDate()) {
+				fileNew.setAddedDate(fileJaMuz.getAddedDate());
+				fileSelectedDb.setAddedDate(fileJaMuz.getAddedDate());
+			}
+			if(!this.selectedStatSource.getSource().isUpdateBPM()) {
+				fileNew.setBPM(fileJaMuz.getBPM());
+				fileSelectedDb.setBPM(fileJaMuz.getBPM());
+			}
+			if(!this.selectedStatSource.getSource().isUpdateTags()) {
+				fileNew.setTags(fileJaMuz.getTags());
+				fileSelectedDb.setTags(fileJaMuz.getTags());
+			}
+			if(!this.selectedStatSource.getSource().isUpdatePlayCounter()) {
+				fileNew.setPlayCounter(fileJaMuz.getPlayCounter());
+				fileSelectedDb.setPlayCounter(fileJaMuz.getPlayCounter());
+			}
 			addToLog(fileNew, fileSelectedDb, fileJaMuz);
 		}
 	}
@@ -840,7 +866,8 @@ public class ProcessMerge extends ProcessAbstract {
         nbFiles = this.mergeListDbJaMuz.size();
 		if(nbFiles>0) {
 			this.checkAbort();
-			int[] results = this.dBJaMuz.updateStatistics(mergeListDbJaMuz);
+			int[] results = this.dBJaMuz
+					.updateStatistics(mergeListDbJaMuz);
 			if(results.length<nbFiles) {
 				return false;
 			}

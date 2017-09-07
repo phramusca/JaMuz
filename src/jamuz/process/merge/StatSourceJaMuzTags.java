@@ -59,23 +59,10 @@ public abstract class StatSourceJaMuzTags extends StatSourceSQL {
     @Override
 	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
 		int[] results = super.updateStatistics(files);
-		//FIXME TAG : PROBLEM WITH fileInfo.getIdFile() !!!!!!
-		
-		//Update tags
-		int i=0;
-		for(FileInfo fileInfo : files) {
-			if(fileInfo.getTags()!=null) {
-				if(!deleteTagFiles(fileInfo.getIdFile())) {
-					results[i]=0;
-				}
-				if(!insertTagFiles(fileInfo.getTags(), fileInfo.getIdFile())) {
-					results[i]=0;
-				}
-			}
-			i++;
-		}
-		return results;
+		return setTags(files, results);
 	}
+
+	abstract public int[] setTags(ArrayList<? extends FileInfo> files, int[] results);
 	
 	public boolean setTags(ArrayList<String> tags, int idFile) {
 		if(!deleteTagFiles(idFile)) {
@@ -84,7 +71,7 @@ public abstract class StatSourceJaMuzTags extends StatSourceSQL {
 		if(!insertTagFiles(tags, idFile)) {
 			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	/**

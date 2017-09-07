@@ -395,7 +395,10 @@ public class Jamuz {
 	 * @return
 	 */
 	public static List<Playlist> getPlaylistsVisible() {
-		return playlists.values().stream().filter(playlist -> !playlist.isHidden()).sorted().collect(Collectors.toList());
+		return playlists.values().stream()
+				.filter(playlist -> !playlist.isHidden())
+				.sorted()
+				.collect(Collectors.toList());
 	}
 	
 	/**

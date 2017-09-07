@@ -50,6 +50,27 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public void setIdFile(int idFile) {
         this.idFile = idFile;
     }
+	
+	/**
+	 * file ID in remote database
+	 */
+	protected int idFileRemote=-1;
+
+	/**
+	 *
+	 * @return
+	 */
+	public int getIdFileRemote() {
+        return idFileRemote;
+    }
+
+	/**
+	 *
+	 * @param idFileRemote
+	 */
+	public void setIdFileRemote(int idFileRemote) {
+        this.idFileRemote = idFileRemote;
+    }
     
 	/**
 	 * path ID in database
@@ -222,6 +243,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return ratingModifDate;
     }
 
+	public void setRatingModifDate(Date ratingModifDate) {
+		this.ratingModifDate = ratingModifDate;
+	}
+
 	/**
 	 *
 	 * @param updateRatingModifDate
@@ -242,6 +267,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public Date getTagsModifDate() {
         return tagsModifDate;
     }
+
+	public void setTagsModifDate(Date tagsModifDate) {
+		this.tagsModifDate = tagsModifDate;
+	}
 	
 	/**
 	 * play counter
@@ -276,6 +305,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public int getPreviousPlayCounter() {
         return previousPlayCounter;
     }
+
+	public void setPreviousPlayCounter(int previousPlayCounter) {
+		this.previousPlayCounter = previousPlayCounter;
+	}
   
     /**
 	 * Song BPM
@@ -310,7 +343,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 			for(String tag : tags)
 			{
 				sb.append(tag);
-				sb.append("; ");
+				sb.append(" ");
 			}
 		} else {
 			sb.append("Empty");
@@ -562,7 +595,8 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 				+ "addedDate=" + getFormattedAddedDate() + "\n"
 				+ "playCounter=" + playCounter + "\n"
 				+ "previousPlayCounter=" + this.previousPlayCounter + "\n"
-				+ "BPM=" + BPM + "\ntags=" + getTagsToString() + "\n"
+				+ "BPM=" + BPM + "\n"
+				+ "tags=" + getTagsToString() + "\n"
 				+ "tagsModifDate=" + DateTime.formatUTCtoSqlUTC(tagsModifDate)+"\n";
 	}
 }

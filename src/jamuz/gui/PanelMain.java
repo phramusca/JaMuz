@@ -1922,10 +1922,15 @@ public class PanelMain extends javax.swing.JFrame {
 				PanelRemote.sendFile(login, id);
 			}
 			else if(msg.startsWith("insertDeviceFile")) {
-				int id = Integer.parseInt(msg.substring("insertDeviceFile".length()));
-				FileInfoInt file = Jamuz.getDb().getFile(id);
-				//FIXME: Make 10 a parameter
-				Jamuz.getDb().insertDeviceFile(10, file);
+				int idFile = Integer.parseInt(msg.substring("insertDeviceFile".length()));
+				FileInfoInt file = Jamuz.getDb().getFile(idFile);
+				int idDevice = Jamuz.getMachine().getDeviceId(login);
+				if(idDevice>=0) {
+					Jamuz.getDb().insertDeviceFile(idDevice, file);
+//					JaMuz.getLogger().
+					//TODO: Warn about the issue
+					//knowing that this is called many many times !!
+				}
 			}
 			else {
 				switch(msg) { 
