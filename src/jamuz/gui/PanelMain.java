@@ -2066,6 +2066,7 @@ public class PanelMain extends javax.swing.JFrame {
                 jSliderPlayerLength.setEnabled(false);
             }
             StringBuilder builder = new StringBuilder();
+			displayedFile.readTags(); //In case of merge change
             for(String tag : displayedFile.getTags()) {
                 builder.append(tag).append(" ");
             }
