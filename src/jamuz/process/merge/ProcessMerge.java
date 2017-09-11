@@ -599,15 +599,21 @@ public class ProcessMerge extends ProcessAbstract {
                     fileNew.setRating(fileSelectedDb.getRating());
                 }
 			}
-			
-				//FIXME TAGS Is this needed for tags (and genre) ?
-				//Is this really needed at all ?
-            if(fileNew.getRating()!=fileJaMuz.getRating() && fileNew.getRating() > 0) {
+            if(fileNew.getRating()!=fileJaMuz.getRating() 
+					&& fileNew.getRating() > 0) {
                 //This will ensure that we only update ratingModifDate
                 //if changed on JaMuz to a valid value
                 fileNew.setUpdateRatingModifDate(true);
             }
-		
+
+			//FIXME: Compare and merge genre
+//			if(fileNew.getGenre()!=fileJaMuz.getGenre() 
+//					&& fileNew.getRating() > 0) {
+//                //This will ensure that we only update genreModifDate
+//                //if changed on JaMuz to a valid value
+//                fileNew.setUpdateGenreModifDate(true);
+//            }
+			
         //Comparing BPM
             //TODO: Now that merging BPM (and that works), display it on jtable and logs
             if(this.selectedStatSource.getSource().isUpdateBPM()) {
@@ -663,6 +669,12 @@ public class ProcessMerge extends ProcessAbstract {
 					else {
 						fileNew.setTags(selectedDbTags);
 					}
+				} else {
+					//=> Compares equal still
+					// + do not save tags (nor tagsModifDate) if not changed
+					fileNew.setTags(null);
+					fileJaMuz.setTags(null);
+					fileSelectedDb.setTags(null);
 				}
             }
 			

@@ -20,6 +20,7 @@ package jamuz.process.merge;
 import jamuz.StatSourceSQL;
 import jamuz.FileInfo;
 import jamuz.DbInfo;
+import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
@@ -68,12 +69,9 @@ public abstract class StatSourceJaMuzTags extends StatSourceSQL {
 		if(!deleteTagFiles(idFile)) {
 			return false;
 		}
-		if(!insertTagFiles(tags, idFile)) {
-			return false;
-		}
-		return true;
+		return insertTagFiles(tags, idFile);
 	}
-	
+
 	/**
 	 *
 	 * @param idFile

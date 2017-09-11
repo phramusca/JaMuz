@@ -117,7 +117,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             this.stUpdateFileStatistics = dbConn.connection.prepareStatement(
 					"UPDATE file "
                     + "SET rating=?, bpm=?, lastplayed=?, addedDate=?, "
-                    + "playCounter=?, ratingModifDate=?, tagsModifDate=? "
+                    + "playCounter=?, ratingModifDate=? " //FIXME , genreModifDate=?
                     + "WHERE idFile=?");
 
             return true;
@@ -763,10 +763,13 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      */
     public synchronized boolean updateTags(FileInfoInt fileInfo) {
         try {
-            PreparedStatement stUpdateFileTag = dbConn.connection.prepareStatement("UPDATE file "
-                    + "SET format=?, title=?, artist=?, album=?, albumArtist=?, genre=?, discNo=?, "    //NOI18N
+            PreparedStatement stUpdateFileTag = dbConn.connection.prepareStatement(
+					"UPDATE file "
+                    + "SET format=?, title=?, artist=?, album=?, albumArtist=?, "
+					+ "genre=?, discNo=?, "    //NOI18N
                     + "trackNo=?, year=?, comment=?, "  //NOI18N
-                    + "length=?, bitRate=?, size=?, modifDate=?, trackTotal=?, discTotal=?, BPM=?, "
+                    + "length=?, bitRate=?, size=?, modifDate=?, trackTotal=?, "
+					+ "discTotal=?, BPM=?, "
                     + "nbCovers=?, deleted=0, coverHash=? "    //NOI18N
                     + "WHERE idPath=? AND idFile=?");   //NOI18N
             
@@ -1846,13 +1849,48 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
 		for(FileInfo fileInfo : files) {
 			if(fileInfo.getTags()!=null) {
 				if(!setTags(fileInfo.getTags(), fileInfo.getIdFile())) {
-					results[i]=0;
+					if(results!=null) {
+						results[i]=0;
+					}
+					break;
+				}
+				if(!updateTagsModifDate(fileInfo)) {
+					if(results!=null) {
+						results[i]=0;
+					}
 				}
 			}
 			i++;
 		}
 		return results;
 	}
+	
+	/**
+     * Update updateGenreModifDate
+     *
+     * @param fileInfo
+     * @return
+     */
+    private synchronized boolean updateTagsModifDate(FileInfo fileInfo) {
+        try {
+            PreparedStatement stUpdateTagsModifDate = dbConn.getConnnection().prepareStatement(
+					"UPDATE file SET updateTagsModifDate=datetime('now') "
+                    + "WHERE idFile=?");  //NOI18N
+            stUpdateTagsModifDate.setInt(1, fileInfo.getIdFile());
+            int nbRowsAffected = stUpdateTagsModifDate.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateTagsModifDate, "
+						+ "fileInfo={0} # row(s) affected: +{1}", 
+						new Object[]{fileInfo.toString(), nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("updateTagsModifDate(" + fileInfo.toString() + ")", ex);   //NOI18N
+            return false;
+        }
+    }
 
     /**
      * Fill option list
@@ -2693,9 +2731,15 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             this.stUpdateFileStatistics.setString(6, file.getFormattedRatingModifDate());
         }
 		
-		this.stUpdateFileStatistics.setString(7, file.getFormattedTagsModifDate());
+		//FIXME: UPDATE updateGenreModifDate
+//		if(file.updateGenreModifDate) {
+//            this.stUpdateFileStatistics.setString(7, DateTime.getCurrentUtcSql());
+//        }
+//        else {
+//            this.stUpdateFileStatistics.setString(7, file.getFormattedGenreModifDate());
+//        }
 		
-        this.stUpdateFileStatistics.setInt(8, file.idFile);
+        this.stUpdateFileStatistics.setInt(7, file.idFile);
 
         this.stUpdateFileStatistics.addBatch();
     }

@@ -227,6 +227,15 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
     
 	/**
 	 *
+	 * @return
+	 */
+	public String getFormattedRatingModifDate() {
+        return DateTime.formatUTCtoSqlUTC(ratingModifDate);
+    }
+
+	
+	/**
+	 *
 	 */
 	protected boolean updateRatingModifDate=false;
 	
@@ -254,11 +263,12 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public void setUpdateRatingModifDate(boolean updateRatingModifDate) {
         this.updateRatingModifDate = updateRatingModifDate;
     }
-    
+	
 	/**
 	 *
 	 */
 	protected Date tagsModifDate;
+
 
 	/**
 	 *
@@ -271,6 +281,31 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public void setTagsModifDate(Date tagsModifDate) {
 		this.tagsModifDate = tagsModifDate;
 	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public String getFormattedTagsModifDate() {
+        return DateTime.formatUTCtoSqlUTC(tagsModifDate);
+    }
+	
+	//FIXME: Set and use this
+	protected Date genreModifDate=new Date();
+	
+	public String getFormattedGenreModifDate() {
+        return DateTime.formatUTCtoSqlUTC(genreModifDate);
+    }
+	
+	protected boolean updateGenreModifDate=false;
+	
+	/**
+	 *
+	 * @param updateGenreModifDate
+	 */
+	public void setUpdateGenreModifDate(boolean updateGenreModifDate) {
+        this.updateGenreModifDate = updateGenreModifDate;
+    }
 	
 	/**
 	 * play counter
@@ -417,6 +452,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         this.ratingModifDate = DateTime.parseSqlUtc(ratingModifDate);
 		this.tagsModifDate = DateTime.parseSqlUtc(tagsModifDate);
         this.updateRatingModifDate=false;
+		this.updateGenreModifDate=false;
 		this.lastPlayed = DateTime.parseSqlUtc(lastPlayed);
 		this.addedDate = DateTime.parseSqlUtc(addedDate);
 		this.playCounter = playCounter;
@@ -487,22 +523,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	public String getAddedDateLocalTime() {
         return DateTime.formatUTCtoSqlLocal(this.addedDate);
-    }
-    
-	/**
-	 *
-	 * @return
-	 */
-	public String getFormattedRatingModifDate() {
-        return DateTime.formatUTCtoSqlUTC(ratingModifDate);
-    }
-	
-	/**
-	 *
-	 * @return
-	 */
-	public String getFormattedTagsModifDate() {
-        return DateTime.formatUTCtoSqlUTC(tagsModifDate);
     }
 
 	/**

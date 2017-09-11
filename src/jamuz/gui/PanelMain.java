@@ -1927,6 +1927,7 @@ public class PanelMain extends javax.swing.JFrame {
 				int idDevice = Jamuz.getMachine().getDeviceId(login);
 				if(idDevice>=0) {
 					Jamuz.getDb().insertDeviceFile(idDevice, file);
+					Jamuz.getLogger().log(Level.INFO, msg);
 //					JaMuz.getLogger().
 					//TODO: Warn about the issue
 					//knowing that this is called many many times !!

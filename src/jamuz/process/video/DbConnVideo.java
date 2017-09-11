@@ -527,7 +527,8 @@ public class DbConnVideo extends DbConn {
     public boolean updateFile(int idFile, int newIdPath, String newFilename) {
 		try {
 			PreparedStatement stUpdateFile = 
-					connection.prepareStatement("UPDATE files SET strFilename=?, idPath=? WHERE idFile=?"); //NOI18N
+					connection.prepareStatement("UPDATE files SET strFilename=?, "
+							+ "idPath=? WHERE idFile=?"); //NOI18N
 			stUpdateFile.setString(1, newFilename);
             stUpdateFile.setInt(2, newIdPath);
 			stUpdateFile.setInt(3, idFile);
@@ -536,7 +537,9 @@ public class DbConnVideo extends DbConn {
 				return true;
 			}
 			else {
-				Jamuz.getLogger().log(Level.SEVERE, "stUpdateFile, idFile={0}, newFilename={1} # row(s) affected: +{2}", new Object[]{idFile, newFilename, nbRowsAffected});  //NOI18N
+				Jamuz.getLogger().log(Level.SEVERE, "stUpdateFile, idFile={0}, "
+						+ "newFilename={1} # row(s) affected: +{2}", 
+						new Object[]{idFile, newFilename, nbRowsAffected});  //NOI18N
 				return false;
 			}
 		} catch (SQLException ex) {
