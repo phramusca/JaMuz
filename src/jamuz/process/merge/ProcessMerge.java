@@ -652,13 +652,8 @@ public class ProcessMerge extends ProcessAbstract {
 		//Comparing Tags
             //TODO: display it on jtable and logs
             if(this.selectedStatSource.getSource().isUpdateTags()) {
-				ArrayList<String> selectedDbTags = new ArrayList<>();
-				ArrayList<String> jaMuzTags = new ArrayList<>();
-				this.selectedStatSource
-						.getSource().getTags(selectedDbTags, fileSelectedDb);
-				fileSelectedDb.setTags(selectedDbTags);
-				dBJaMuz.getTags(jaMuzTags, fileJaMuz);
-				fileJaMuz.setTags(jaMuzTags);
+				ArrayList<String> selectedDbTags = getTagsSelected(fileSelectedDb);
+				ArrayList<String> jaMuzTags = getTagsJaMuz(fileJaMuz);
 				fileNew.setTags(jaMuzTags); //fileNew is initially a copy of fileJaMuz
 
 				if(!Utils.equalLists(selectedDbTags, jaMuzTags)) {
@@ -686,6 +681,13 @@ public class ProcessMerge extends ProcessAbstract {
 						fileNew.getSourceName());  //NOI18N
 				isOneDbUpdated=true;
 			}	
+		} else {
+			if(this.selectedStatSource.getSource().isUpdateTags()) {
+				//Cannot be compared if not read ...
+				getTagsSelected(fileSelectedDb);
+				ArrayList<String> jaMuzTags = getTagsJaMuz(fileJaMuz);
+				fileNew.setTags(jaMuzTags); //fileNew is initially a copy of fileJaMuz
+			}
 		}
 		
 	//Now comparing new with selected
@@ -715,7 +717,7 @@ public class ProcessMerge extends ProcessAbstract {
 			fileNew.setRelativeFullPath(fileSelectedDb.getRelativeFullPath());
 			fileNew.setRelativePath(fileSelectedDb.getRelativePath());
 			fileNew.setFilename(fileSelectedDb.getFilename()); //This is not really usefull, though
-			fileNew.setIdFileRemote(fileSelectedDb.getIdFile());
+			fileNew.setIdFileRemote(fileSelectedDb.getIdFileRemote());
 			this.mergeListDbSelected.add((FileInfo) fileNew.clone());
 			Jamuz.getLogger().log(Level.FINEST, "Added to \"{0}\" merge list", 
 					fileNew.getSourceName());  //NOI18N
@@ -759,6 +761,21 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 	}
 
+	private ArrayList<String> getTagsSelected(FileInfo fileSelectedDb) {
+		ArrayList<String> selectedDbTags = new ArrayList<>();
+		this.selectedStatSource
+				.getSource().getTags(selectedDbTags, fileSelectedDb);
+		fileSelectedDb.setTags(selectedDbTags);
+		return selectedDbTags;
+	}
+	
+	private ArrayList<String> getTagsJaMuz(FileInfo fileJaMuz) {
+		ArrayList<String> jaMuzTags = new ArrayList<>();
+		dBJaMuz.getTags(jaMuzTags, fileJaMuz);
+		fileJaMuz.setTags(jaMuzTags);
+		return jaMuzTags;
+	}
+	
 	private void displayResults() throws InterruptedException {
 		
         PanelMerge.progressBar.setup(this.errorList.size()+this.completedList.size());

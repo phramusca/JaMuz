@@ -1874,7 +1874,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
     private synchronized boolean updateTagsModifDate(FileInfo fileInfo) {
         try {
             PreparedStatement stUpdateTagsModifDate = dbConn.getConnnection().prepareStatement(
-					"UPDATE file SET updateTagsModifDate=datetime('now') "
+					"UPDATE file SET tagsModifDate=datetime('now') "
                     + "WHERE idFile=?");  //NOI18N
             stUpdateTagsModifDate.setInt(1, fileInfo.getIdFile());
             int nbRowsAffected = stUpdateTagsModifDate.executeUpdate();
