@@ -269,7 +269,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected Date tagsModifDate;
 
-
 	/**
 	 *
 	 * @return
@@ -290,12 +289,19 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return DateTime.formatUTCtoSqlUTC(tagsModifDate);
     }
 	
-	//FIXME MERGE GENRE Set and use this
 	protected Date genreModifDate=new Date();
 	
 	public String getFormattedGenreModifDate() {
         return DateTime.formatUTCtoSqlUTC(genreModifDate);
     }
+
+	public Date getGenreModifDate() {
+		return genreModifDate;
+	}
+
+	public void setGenreModifDate(Date genreModifDate) {
+		this.genreModifDate = genreModifDate;
+	}
 	
 	protected boolean updateGenreModifDate=false;
 	
@@ -437,20 +443,24 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 * @param sourceName
 	 * @param previousPlayCounter  
      * @param bpm  
+	 * @param genre  
      * @param ratingModifDate  
 	 * @param tagsModifDate  
+	 * @param genreModifDate  
 	 */
 	public FileInfo(int idFile, int idPath, String relativeFullPath, int rating, 
             String lastPlayed, String addedDate, int playCounter, 
-			String sourceName, int previousPlayCounter, float bpm, 
-			String ratingModifDate, String tagsModifDate) {
+			String sourceName, int previousPlayCounter, float bpm, String genre, 
+			String ratingModifDate, String tagsModifDate, String genreModifDate) {
 		
 		this.idFile=idFile;
 		this.idPath=idPath;
 		this.BPM=bpm;
 		this.rating = rating;
+		this.genre = genre;
         this.ratingModifDate = DateTime.parseSqlUtc(ratingModifDate);
 		this.tagsModifDate = DateTime.parseSqlUtc(tagsModifDate);
+		this.genreModifDate = DateTime.parseSqlUtc(genreModifDate);
         this.updateRatingModifDate=false;
 		this.updateGenreModifDate=false;
 		this.lastPlayed = DateTime.parseSqlUtc(lastPlayed);
@@ -480,7 +490,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	public FileInfo(String sourceName) {
 		this(-1, -1, "", 0, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 
-				0, sourceName, 0, 0, "", "");  //NOI18N
+				0, sourceName, 0, 0, "", "", "", "");  //NOI18N
 	}
 
 	/**
@@ -526,6 +536,29 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
     }
 
 	/**
+	 * Song genre
+	 */
+	protected String genre="";  //NOI18N
+	
+	/**
+	 * Set genre
+	 * @param genre
+	 */
+	public void setGenre(String genre) {
+        this.genre = genre;
+    }
+	
+	/**
+	 * Called dynamically by group function in FolderInfo
+	 * WARNING: It may exists no usage of that function (dynamic call)
+	 * DO NOT REMOVE before having done a "Find in Projects..." !    
+	 * @return
+	 */
+	public String getGenre() {
+		return this.genre;
+	}
+	
+	/**
 	 * Overring method for sorting by relativeFullPath, for comparison during scan
 	 * @param o
 	 * @return
@@ -555,6 +588,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 				|| (this.lastPlayed != null 
 					&& this.lastPlayed.equals(thatFileInfo.lastPlayed)));
 		isEqual &= (Utils.equalLists(tags, thatFileInfo.tags));
+		isEqual &= this.genre.equals(thatFileInfo.genre);
         return isEqual;
     }
     
@@ -611,6 +645,8 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		return relativeFullPath + "\n"
 				+ "rating=" + rating + "\n"
 				+ "ratingModifDate=" + DateTime.formatUTCtoSqlUTC(ratingModifDate) + "\n"
+				+ "genre=" + genre + "\n"
+				+ "genreModifDate=" + DateTime.formatUTCtoSqlUTC(genreModifDate) + "\n"
 				+ "lastPlayed=" + getFormattedLastPlayed() + "\n"
 				+ "addedDate=" + getFormattedAddedDate() + "\n"
 				+ "playCounter=" + playCounter + "\n"

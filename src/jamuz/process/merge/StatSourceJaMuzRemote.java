@@ -40,7 +40,7 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
 	 * @param rootPath
 	 */
 	public StatSourceJaMuzRemote(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false, true, true);
+        super(dbInfo, name, rootPath, true, true, false, true, true, true);
     }
 
     @Override
@@ -49,11 +49,13 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
             this.dbConn.connect();
             
             this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement(
-					"SELECT id, path AS fullPath, rating, playCounter, lastplayed, addedDate "
+					"SELECT id, path AS fullPath, rating, playCounter, "
+							+ "lastplayed, addedDate, genre "
 							+ "FROM tracks ORDER BY path");
             
             this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement(
-					"UPDATE tracks SET rating=?, playCounter=?, lastplayed=?, addedDate=? "
+					"UPDATE tracks SET rating=?, playCounter=?, lastplayed=?, "
+							+ "addedDate=?, genre=? "
 							+ "WHERE path=?");  //NOI18N
 
              return true;
@@ -81,7 +83,8 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
 		this.stUpdateFileStatistics.setInt(2, file.getPlayCounter());
         this.stUpdateFileStatistics.setString(3, file.getFormattedLastPlayed());
         this.stUpdateFileStatistics.setString(4, file.getFormattedAddedDate());
-        this.stUpdateFileStatistics.setString(5, this.getRootPath()+getPath(file.getRelativeFullPath()));
+		this.stUpdateFileStatistics.setString(5, file.getGenre());
+        this.stUpdateFileStatistics.setString(6, this.getRootPath()+getPath(file.getRelativeFullPath()));
         this.stUpdateFileStatistics.addBatch();
     }
 	
@@ -93,7 +96,19 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
 	@Override
 	protected FileInfo getStatistics(ResultSet rs) {
 		try {
-			FileInfo fileInfo = super.getStatistics(rs);
+			String strfullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N
+            String relativeFullPath = strfullPath.substring(getRootPath().length());
+			int rating = rs.getInt("rating");  //NOI18N
+			String lastPlayed = dbConn
+					.getStringValue(rs, "lastplayed", "1970-01-01 00:00:00");  //NOI18N
+			String addedDate = dbConn
+					.getStringValue(rs, "addedDate", "1970-01-01 00:00:00");  //NOI18N
+			int playCounter = rs.getInt("playCounter");  //NOI18N
+			String genre = dbConn.getStringValue(rs, "genre");  //NOI18N
+			FileInfo fileInfo = new FileInfo(-1, -1, relativeFullPath, 
+					rating, lastPlayed, addedDate, playCounter, this.getName(), 
+					0, Float.valueOf(0), genre, "", "", "");
+			
 			fileInfo.setIdFileRemote(rs.getInt("id"));
 			return fileInfo;
 		} catch (SQLException ex) {
@@ -101,7 +116,7 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
 			return null;
 		}
 	}
-
+	
 	@Override
 	public int[] setTags(ArrayList<? extends FileInfo> files, int[] results) {
 		int i=0;

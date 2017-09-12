@@ -37,7 +37,7 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceMediaMonkey(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false, true, false); 
+        super(dbInfo, name, rootPath, true, true, false, true, false, false); 
         //TODO: MediaMonkey support BPM I think. Need to get a Windows machine to test and update the SQL scripts below
     }
     
@@ -48,7 +48,7 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
             //http://www.mediamonkey.com/forum/viewtopic.php?f=2&t=25687&sid=34fcd9835844e407f703630b8b4cc7ab&start=15
             this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement("SELECT SongPath AS fullPath, rating/20 AS rating, playCounter, "
                     + "datetime(LastTimePlayed+2415018.5) AS lastplayed, "
-                    + "datetime(DateAdded+2415018.5) AS addedDate "
+                    + "datetime(DateAdded+2415018.5) AS addedDate, '' AS genre "
                     + "FROM Songs "
                     + "ORDER BY SongPath COLLATE NOCASE"); 
 			//FIXME WINDOWS: Should not we remove  COLLATE NOCASE as now sync is case sensitive ?	

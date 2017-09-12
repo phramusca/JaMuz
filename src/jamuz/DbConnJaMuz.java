@@ -74,7 +74,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param dbInfo
      */
     public DbConnJaMuz(DbInfo dbInfo) {
-        super(dbInfo, "JaMuz", "", true, true, true, true, false);
+        super(dbInfo, "JaMuz", "", true, true, true, true, false, true);
     }
     
     /**
@@ -93,7 +93,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                 + "F.idFile, F.idPath, D.oriRelativeFullPath AS fullPath, "
                 + "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, "  //NOI18N
                 + "C.playcounter AS previousPlayCounter, "  //NOI18N
-                + "F.ratingModifDate, F.tagsModifDate  "  //NOI18N
+                + "F.ratingModifDate, F.tagsModifDate, F.genre  "  //NOI18N
                 + "FROM file F "
                 + "JOIN path P ON F.idPath=P.idPath "  //NOI18N
                 + "JOIN devicefile D ON D.idFile=F.idFile "
@@ -105,7 +105,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                 + "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
                 + "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, "  //NOI18N
                 + "C.playcounter AS previousPlayCounter, "  //NOI18N
-                + "F.ratingModifDate, F.tagsModifDate "  //NOI18N
+                + "F.ratingModifDate, F.tagsModifDate, F.genre "  //NOI18N
                 + "FROM file F "
                 + "JOIN path P ON F.idPath=P.idPath "  //NOI18N
                 + "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
@@ -117,7 +117,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             this.stUpdateFileStatistics = dbConn.connection.prepareStatement(
 					"UPDATE file "
                     + "SET rating=?, bpm=?, lastplayed=?, addedDate=?, "
-                    + "playCounter=?, ratingModifDate=? " //FIXME MERGE GENRE genreModifDate=?
+                    + "playCounter=?, ratingModifDate=?, genreModifDate=?, genre=? "
                     + "WHERE idFile=?");
 
             return true;
@@ -862,10 +862,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             return false;
         }
     }
-    
-	//FIXME MERGE TAGS Add column tagsModifDate in file table SCHEMA
-	//(refer to MAXTOR)
-	
+
     /**
      * Update rating
      *
@@ -2694,12 +2691,15 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             int previousPlayCounter = rs.getInt("previousPlayCounter");  //NOI18N
             String ratingModifDate = dbConn.getStringValue(rs, "ratingModifDate", "1970-01-01 00:00:00");  //NOI18N
 			String tagsModifDate = dbConn.getStringValue(rs, "tagsModifDate", "1970-01-01 00:00:00");  //NOI18N
+			String genreModifDate = dbConn.getStringValue(rs, "genreModifDate", "1970-01-01 00:00:00");  //NOI18N
             int idFile = rs.getInt("idFile");  //NOI18N
             int idPath = rs.getInt("idPath");  //NOI18N
+			String genre = dbConn.getStringValue(rs, "genre");  //NOI18N
 
             return new FileInfo(idFile, idPath, relativeFullPath, rating,
                     lastPlayed, addedDate, playCounter, this.getName(), 
-					previousPlayCounter, bpm, ratingModifDate, tagsModifDate);
+					previousPlayCounter, bpm, genre, ratingModifDate, tagsModifDate, 
+					genreModifDate);
 		} catch (SQLException ex) {
 			Popup.error("getStats", ex);  //NOI18N
 			return null;
@@ -2713,33 +2713,25 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      */
     @Override
     protected synchronized void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
-//            "UPDATE file "
-//                    + "SET rating=?, bpm=?, lastplayed=?, addedDate=?, "
-//                    + "playCounter=?, ratingModifDate=?, tagsModifDate=? "
-//                    + "WHERE idFile=?"
         this.stUpdateFileStatistics.setInt(1, file.rating);
         this.stUpdateFileStatistics.setFloat(2, file.getBPM());
         this.stUpdateFileStatistics.setString(3, file.getFormattedLastPlayed());
         this.stUpdateFileStatistics.setString(4, file.getFormattedAddedDate());
         this.stUpdateFileStatistics.setInt(5, file.playCounter);
-
         if(file.updateRatingModifDate) {
             this.stUpdateFileStatistics.setString(6, DateTime.getCurrentUtcSql());
         }
         else {
             this.stUpdateFileStatistics.setString(6, file.getFormattedRatingModifDate());
         }
-		
-		//FIXME MERGE GENRE UPDATE updateGenreModifDate
-//		if(file.updateGenreModifDate) {
-//            this.stUpdateFileStatistics.setString(7, DateTime.getCurrentUtcSql());
-//        }
-//        else {
-//            this.stUpdateFileStatistics.setString(7, file.getFormattedGenreModifDate());
-//        }
-		
-        this.stUpdateFileStatistics.setInt(7, file.idFile);
-
+		if(file.updateGenreModifDate) {
+            this.stUpdateFileStatistics.setString(7, DateTime.getCurrentUtcSql());
+        }
+        else {
+            this.stUpdateFileStatistics.setString(7, file.getFormattedGenreModifDate());
+        }
+		this.stUpdateFileStatistics.setString(8, file.getGenre());
+        this.stUpdateFileStatistics.setInt(9, file.idFile);
         this.stUpdateFileStatistics.addBatch();
     }
 	
