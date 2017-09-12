@@ -67,12 +67,15 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
      * @param updateBPM
 	 * @param updatePlayCounter
 	 * @param updateTags
+	 * @param updateGenre
      */
     public StatSourceSQL(DbInfo dbInfo, String name, String rootPath, 
-            boolean updateAddedDate, boolean updateLastPlayed, boolean updateBPM, 
-			boolean updatePlayCounter, boolean updateTags) {
+            boolean updateAddedDate, boolean updateLastPlayed, 
+			boolean updateBPM, boolean updatePlayCounter, 
+			boolean updateTags, boolean updateGenre) {
         super(name, rootPath, dbInfo.locationOri, updateAddedDate, 
-				updateLastPlayed, updateBPM, updatePlayCounter, updateTags);
+				updateLastPlayed, updateBPM, updatePlayCounter, 
+				updateTags, updateGenre);
         dbConn = new DbConn(dbInfo);
     }
 
@@ -112,12 +115,15 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
             String strfullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N
             String relativeFullPath = strfullPath.substring(getRootPath().length());
 			int rating = rs.getInt("rating");  //NOI18N
-			String lastPlayed = dbConn.getStringValue(rs, "lastplayed", "1970-01-01 00:00:00");  //NOI18N
-			String addedDate = dbConn.getStringValue(rs, "addedDate", "1970-01-01 00:00:00");  //NOI18N
+			String lastPlayed = dbConn
+					.getStringValue(rs, "lastplayed", "1970-01-01 00:00:00");  //NOI18N
+			String addedDate = dbConn
+					.getStringValue(rs, "addedDate", "1970-01-01 00:00:00");  //NOI18N
 			int playCounter = rs.getInt("playCounter");  //NOI18N
 
 			return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed, 
-					addedDate, playCounter, this.getName(), 0, Float.valueOf(0), "", "");
+					addedDate, playCounter, this.getName(), 0, Float.valueOf(0), 
+					"", "", "", "");
 		} catch (SQLException ex) {
 			Popup.error("getStatistics", ex);  //NOI18N
 			return null;

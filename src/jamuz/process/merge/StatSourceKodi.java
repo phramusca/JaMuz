@@ -40,7 +40,7 @@ public class StatSourceKodi extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceKodi(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, false, true, false, true, false);
+        super(dbInfo, name, rootPath, false, true, false, true, false, false);
     }
     
     @Override
@@ -49,7 +49,8 @@ public class StatSourceKodi extends StatSourceSQL {
             this.dbConn.connect();
 
             this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement("SELECT (P.strPath || S.strFileName) AS fullPath, "
-                    + "S.rating, S.lastplayed, S.iTimesPlayed AS playCounter, '1970-01-01 00:00:00' AS addedDate "
+                    + "S.rating, S.lastplayed, S.iTimesPlayed AS playCounter, "
+					+ "'1970-01-01 00:00:00' AS addedDate, '' AS genre "
                     + "FROM song S, path P WHERE S.idPath=P.idPath "
                     + "ORDER BY P.strPath, S.strFileName");
   

@@ -134,17 +134,11 @@ public class FileInfoInt extends FileInfo {
         return discNo;
     }
 
-    
-    
 	/**
 	 * Album disc total
 	 */
 	protected int discTotal=-1;
     
-	/**
-	 * Song genre
-	 */
-	protected String genre="";  //NOI18N
 	/**
 	 * Song year
 	 */
@@ -331,8 +325,9 @@ public class FileInfoInt extends FileInfo {
         super(file.idFile, file.getIdPath(), file.relativeFullPath, file.rating, 
 				file.getFormattedLastPlayed(), file.getFormattedAddedDate(), 
                 file.playCounter, file.sourceName, file.previousPlayCounter, 
-				bpm, file.getFormattedRatingModifDate(), 
-				file.getFormattedTagsModifDate());
+				bpm, file.getGenre(), file.getFormattedRatingModifDate(), 
+				file.getFormattedTagsModifDate(),
+				file.getFormattedGenreModifDate());
         copyRight=-1;
         this.rootPath = Jamuz.getMachine().getOptionValue("location.library");  //NOI18N
     }
@@ -344,7 +339,8 @@ public class FileInfoInt extends FileInfo {
 	 * @param rootPath  
 	 */
 	public FileInfoInt(String relativeFullPath, String rootPath) {
-		super(-1, -1, relativeFullPath, -1, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 0, "file", 0, 0, "", "");  //NOI18N
+		super(-1, -1, relativeFullPath, -1, "1970-01-01 00:00:00", 
+				"1970-01-01 00:00:00", 0, "file", 0, 0, "", "", "", "");  //NOI18N
 		this.rootPath=rootPath;
 		this.modifDate = new Date(new File(this.rootPath+this.relativeFullPath).lastModified());
         copyRight=-1;
@@ -1245,16 +1241,6 @@ public class FileInfoInt extends FileInfo {
 	 */
 	public String getYear() {
 		return this.year;
-	}
-	
-	/**
-	 * Called dynamically by group function in FolderInfo
-	 * WARNING: It may exists no usage of that function (dynamic call)
-	 * DO NOT REMOVE before having done a "Find in Projects..." !    
-	 * @return
-	 */
-	public String getGenre() {
-		return this.genre;
 	}
 	
 	/**

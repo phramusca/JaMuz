@@ -37,7 +37,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceGuayadeque(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false, true, false);
+        super(dbInfo, name, rootPath, true, true, false, true, false, false);
     }
 
     @Override
@@ -46,10 +46,12 @@ public class StatSourceGuayadeque extends StatSourceSQL {
             this.dbConn.connect();
             
             this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement(
-					"SELECT (song_path || song_filename) AS fullPath, song_rating AS rating, "
+					"SELECT (song_path || song_filename) AS fullPath, "
+							+ "song_rating AS rating, "
                     + "song_playcount AS playCounter,  "
 					+ "datetime(song_lastplay, 'unixepoch') AS lastplayed, "
-                    + "datetime(song_addedtime, 'unixepoch') AS addedDate  "
+                    + "datetime(song_addedtime, 'unixepoch') AS addedDate,"
+							+ "'' AS genre  "
                     + "FROM songs ORDER BY song_path, song_filename");
             
             this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement("UPDATE songs SET song_rating=?, song_lastplay=strftime('%s',?), "

@@ -130,6 +130,21 @@ public abstract class StatSourceAbstract {
 		return updateTags;
     }
 	
+	//TODO: Make this true by default as
+	//present in all databases.
+	//Problem is that it is in file tags too
+	//so would be overwritten everytime selectedDb rescan
+	//its library (because of genreModifDate and lastMergeDate)
+	private boolean updateGenre = false;
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isUpdateGenre() {
+		return updateGenre;
+    }
+	
 	private boolean updatePlayCounter = false;
 	
 	/**
@@ -150,11 +165,13 @@ public abstract class StatSourceAbstract {
 	 * @param updatePlayCounter
      * @param location
 	 * @param updateTags
+	 * @param updateGenre
      */
     public StatSourceAbstract(String name, String rootPath, String location, 
             boolean updateAddedDate, boolean updateLastPlayed, 
 			boolean updateBPM, boolean updatePlayCounter,
-			boolean updateTags) {
+			boolean updateTags,
+			boolean updateGenre) {
         this.updateAddedDate = updateAddedDate;
 		this.updateLastPlayed = updateLastPlayed;
         this.name = name;
@@ -163,6 +180,7 @@ public abstract class StatSourceAbstract {
 		this.updatePlayCounter = updatePlayCounter;
         this.location = location;
 		this.updateTags = updateTags;
+		this.updateGenre = updateGenre;
     }
  
     /**

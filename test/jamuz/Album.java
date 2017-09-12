@@ -571,7 +571,7 @@ public final class Album {
                     trackTag.getFormattedLastPlayed(), 
                     trackTag.getFormattedAddedDate(), 
                     trackTag.playCounter, "", -1, 
-                    trackTag.BPM, "", ""));
+                    trackTag.BPM, "", "", "", ""));
             idFile++;
         }
         return files;

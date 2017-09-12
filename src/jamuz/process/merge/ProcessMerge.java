@@ -190,7 +190,7 @@ public class ProcessMerge extends ProcessAbstract {
 
             }
             //Read options again (only to read lastMergeDate !!)
-            //FIXME MERGE Use listeners !!
+            //TODO MERGE Use listeners !!
             PanelMain.readOptions(); //TODO: This should enable merge too, but does not as we still are in process merge ...
             //enabling back buttons
             PanelMerge.enableMerge(true);
@@ -606,13 +606,36 @@ public class ProcessMerge extends ProcessAbstract {
                 fileNew.setUpdateRatingModifDate(true);
             }
 
-			//FIXME MERGE GENRE Compare and merge genre
-//			if(fileNew.getGenre()!=fileJaMuz.getGenre() 
-//					&& fileNew.getRating() > 0) {
-//                //This will ensure that we only update genreModifDate
-//                //if changed on JaMuz to a valid value
-//                fileNew.setUpdateGenreModifDate(true);
-//            }
+		//Comparing genre
+			if(!fileSelectedDb.getGenre().equals(fileJaMuz.getGenre())) { 
+                //TODO: include this new behavior in junit tests
+                if(fileJaMuz.getGenreModifDate().after(
+						this.selectedStatSource.lastMergeDate)) {
+                    //It has been modified after last merge on JaMuz
+                    //Could be the same on selected Db but Preferring JaMuz 
+					//since we cannot know for sure
+                    fileNew.setGenre(fileJaMuz.getGenre());
+                    
+                    //*** TIP ***: To force JaMuz for genre only, run this on JaMuz dB:
+                    //update file set genreModifDate=datetime('now');
+                    //=> Rating from Jamuz will then be replicated to all sources, 
+					//then back to normal :)
+                }
+                else {  
+                    //May have been updated on other sources as well
+                    //But taking the first one
+                    //Then, since ratingModifDate will be updated on JaMuz, 
+					//this value will be replicated to all other sources.
+                    
+                    //TODO: Add sources priority as an option to decide which 
+					//source is first
+                    
+                    fileNew.setGenre(fileSelectedDb.getGenre());
+                }
+				//This will ensure that we only update genreModifDate
+                //if changed on JaMuz
+                fileNew.setUpdateGenreModifDate(true);
+			}
 			
         //Comparing BPM
             //TODO: Now that merging BPM (and that works), display it on jtable and logs
@@ -646,9 +669,7 @@ public class ProcessMerge extends ProcessAbstract {
                     }
                 }
             }
-			
-			//FIXME MERGE TAGS Complete and test
-			
+
 		//Comparing Tags
             //TODO: display it on jtable and logs
             if(this.selectedStatSource.getSource().isUpdateTags()) {
@@ -735,6 +756,8 @@ public class ProcessMerge extends ProcessAbstract {
 			fileSelectedDb.setRatingModifDate(fileJaMuz.getRatingModifDate());
 			fileNew.setTagsModifDate(fileJaMuz.getTagsModifDate());
 			fileSelectedDb.setTagsModifDate(fileJaMuz.getTagsModifDate());
+			fileNew.setGenreModifDate(fileJaMuz.getGenreModifDate());
+			fileSelectedDb.setGenreModifDate(fileJaMuz.getGenreModifDate());
 			fileSelectedDb.setPreviousPlayCounter(fileJaMuz.getPreviousPlayCounter());
 			//Those also if not compared
 			if(!this.selectedStatSource.getSource().isUpdateLastPlayed()) {

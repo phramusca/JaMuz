@@ -40,19 +40,20 @@ public class StatSourceMixxx extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceMixxx(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, false, true, true, false);
+        super(dbInfo, name, rootPath, true, false, true, true, false, false);
     }
 
     @Override
     public boolean setUp() {
         try {
             this.dbConn.connect();
-			//FIXME MERGE mixxx does not update well if folder modification date is not changed
+			//FIXME MERGE mixxx does not update well if folder modification 
+			//date is not changed
 			//So need to make some tests and check that we are always updating date 
 			//when modifying files (tags)
             this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement("SELECT L.location AS fullPath, F.rating, "
                     + "F.timesPlayed AS playCounter, '1970-01-01 00:00:00' AS lastplayed, "
-                    + "F.datetime_added AS addedDate, F.bpm "
+                    + "F.datetime_added AS addedDate, F.bpm, '' AS genre "
                     + "FROM library F, track_locations L "
                     + "WHERE F.id=L.id AND mixxx_deleted=0 "
                     + "AND fs_deleted=0 "
@@ -89,7 +90,7 @@ public class StatSourceMixxx extends StatSourceSQL {
             float bpm = rs.getFloat("bpm");
 
             return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed, 
-					addedDate, playCounter, this.getName(), 0, bpm, "", "");
+					addedDate, playCounter, this.getName(), 0, bpm, "", "", "", "");
         } catch (SQLException ex) {
             Popup.error("getStats", ex);  //NOI18N
             return null;

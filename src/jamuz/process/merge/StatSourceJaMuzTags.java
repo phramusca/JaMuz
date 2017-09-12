@@ -47,9 +47,9 @@ public abstract class StatSourceJaMuzTags extends StatSourceSQL {
 	 */
 	public StatSourceJaMuzTags(DbInfo dbInfo, String name, String rootPath, 
             boolean updateAddedDate, boolean updateLastPlayed, boolean updateBPM, 
-			boolean updatePlayCounter, boolean updateTags) {
+			boolean updatePlayCounter, boolean updateTags, boolean updateGenre) {
         super(dbInfo, name, rootPath, updateAddedDate, updateLastPlayed, 
-				updateBPM, updatePlayCounter, updateTags);
+				updateBPM, updatePlayCounter, updateTags, updateGenre);
     }
 
 	/**

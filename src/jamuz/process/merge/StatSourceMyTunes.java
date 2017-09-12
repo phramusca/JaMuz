@@ -46,16 +46,20 @@ public class StatSourceMyTunes extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceMyTunes(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false, true, false);
+        super(dbInfo, name, rootPath, true, true, false, true, false, false);
     }
 
     @Override
     public boolean setUp() {
         try {
             this.dbConn.connect();
-            this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement("SELECT path AS fullPath, rating/10 AS rating, local_play_count AS playCounter, "
-                    + "datetime(last_play_time, 'unixepoch') AS lastPlayed, datetime(date_added, 'unixepoch') AS addedDate "
-                    + "FROM song ORDER BY path"); 
+            this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement(
+					"SELECT path AS fullPath, rating/10 AS rating, "
+						+ "local_play_count AS playCounter, "
+						+ "datetime(last_play_time, 'unixepoch') AS lastPlayed, "
+						+ "datetime(date_added, 'unixepoch') AS addedDate,"
+						+ "'' AS genre "
+						+ "FROM song ORDER BY path"); 
             
             this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement("UPDATE song SET rating=10*?, local_play_count=?, "
                     + "last_play_time=strftime('%s',?), date_added=strftime('%s',?) "
