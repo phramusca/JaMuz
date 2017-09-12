@@ -117,7 +117,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             this.stUpdateFileStatistics = dbConn.connection.prepareStatement(
 					"UPDATE file "
                     + "SET rating=?, bpm=?, lastplayed=?, addedDate=?, "
-                    + "playCounter=?, ratingModifDate=? " //FIXME , genreModifDate=?
+                    + "playCounter=?, ratingModifDate=? " //FIXME MERGE GENRE genreModifDate=?
                     + "WHERE idFile=?");
 
             return true;
@@ -863,9 +863,8 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
         }
     }
     
-	//FIXME TAGS Add column tagsModifDate in file table
-	//FIXME TAGS Update tagsModifDate when adding/removing tags
-	//FIXME TAGS Update tagsModifDate after a merge (should be done already)
+	//FIXME MERGE TAGS Add column tagsModifDate in file table SCHEMA
+	//(refer to MAXTOR)
 	
     /**
      * Update rating
@@ -2731,7 +2730,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             this.stUpdateFileStatistics.setString(6, file.getFormattedRatingModifDate());
         }
 		
-		//FIXME: UPDATE updateGenreModifDate
+		//FIXME MERGE GENRE UPDATE updateGenreModifDate
 //		if(file.updateGenreModifDate) {
 //            this.stUpdateFileStatistics.setString(7, DateTime.getCurrentUtcSql());
 //        }

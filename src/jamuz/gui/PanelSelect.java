@@ -67,7 +67,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenu;
 import org.apache.commons.io.FilenameUtils;
 
-//FIXME Bug "Kid Creole and the Coconuts"
+//FIXME PLAYER Bug "Kid Creole and the Coconuts"
 //idPath IN (784, 785)
 //=> Album "Best Of" ne s'affiche pas !!!???
 
@@ -88,7 +88,7 @@ public class PanelSelect extends javax.swing.JPanel {
     private static String selGenre; //TODO: Deriver ListElement et l'appliquer a selGenre (pour affichage icone de la même façon)
 	private static ListElement selArtist;
 	private static ListElement selAlbum; 
-//FIXME ex: Album "Charango" is either from Morcheeba or Yannick Noah
+	//FIXME PLAYER ex: Album "Charango" is either from Morcheeba or Yannick Noah
     //BUT seen as only one album in Select tab
 
 	/**

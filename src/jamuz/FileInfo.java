@@ -290,7 +290,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return DateTime.formatUTCtoSqlUTC(tagsModifDate);
     }
 	
-	//FIXME: Set and use this
+	//FIXME MERGE GENRE Set and use this
 	protected Date genreModifDate=new Date();
 	
 	public String getFormattedGenreModifDate() {

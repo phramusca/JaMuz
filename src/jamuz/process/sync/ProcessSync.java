@@ -223,7 +223,7 @@ public class ProcessSync extends ProcessAbstract {
 		//FileSystem.copyFile preserves datetime
 		//Unfortunatly on some devices it does not work
 		//ex: Android (https://stackoverflow.com/questions/18677438/android-set-last-modified-time-for-the-file)
-		//=> FIXME: Make options of these, must be one or the other
+		//=> FIXME SYNC Make options of these, must be one or the other
 		//to detect if file is different
 		boolean doCheckLastModified = false; // Faster but does not work for android 
 		boolean doCheckContent = false;		// Way Slower (especially over wifi) but more reliable

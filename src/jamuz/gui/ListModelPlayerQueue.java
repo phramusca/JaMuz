@@ -115,7 +115,7 @@ public class ListModelPlayerQueue extends AbstractListModel {
             playingIndex += 1;
             PanelMain.play(false);
         } else {
-			//FIXME: Make the refresing optional
+			//FIXME PLAYER Make the refreshing optional
 			boolean refreshQueue=true;
 			if(refreshQueue) {
 				PanelMain.refreshHiddenQueue(true);

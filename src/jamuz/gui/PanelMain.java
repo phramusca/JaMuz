@@ -246,11 +246,22 @@ public class PanelMain extends javax.swing.JFrame {
         //update lastPlayed (now) and playCounter (+1)
 		FileInfoInt file = queueModel.getPlayingSong().getFile();
 		if(file.isFromLibrary()) {
-			//FIXME: Do not increase playCounter
-			// when moved back on queue and moved forward
+			Jamuz.getDb().updateLastPlayedAndCounter(file);
+			//FIXME PLAYER Do not increase playCounter when moved back on queue and moved forward
 			// especially if many back and forward
 			//If not, increase playCounter too much
-			Jamuz.getDb().updateLastPlayedAndCounter(file);
+			// => Refer to JaMuzRemote:
+//			if(queueHistoryIndex>=0 && (queueHistoryIndex+1)<queueHistory.size()) {
+//				queueHistoryIndex++;
+//				playHistory();
+//			}
+//			else {
+//				//Update lastPlayed and playCounter
+//				displayedTrack.setPlayCounter(displayedTrack.getPlayCounter()+1);
+//				displayedTrack.setLastPlayed(new Date());
+//				musicLibrary.updateTrack(displayedTrack);
+//				playNextOrRandom();
+//			}
 		}
         //Moving next
         queueModel.next();
@@ -653,7 +664,7 @@ public class PanelMain extends javax.swing.JFrame {
         if (!Jamuz.getMachine().read()) {
             return false;
         }
-        //FIXME Use listeners to address the following (and more)
+        //FIXME OPTIONS Use listeners to address the following (and more)
 		//Rationalize to avoid potential errors
         //(especially when called from a process, this would not do the trick, 
 		//need a way to bypass process check)

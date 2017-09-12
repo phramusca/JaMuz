@@ -40,7 +40,7 @@ import org.musicbrainz.model.entity.ReleaseWs2;
 import org.musicbrainz.model.searchresult.ReleaseResultWs2;
 import org.musicbrainz.webservice.impl.HttpClientWebServiceWs2;
 
-//FIXME Check if below error searching MB still occurs
+//FIXME CHECK Check if below error searching MB still occurs
 //GRAVE: eeding the allowable rate limit. Please see http://wiki.musicbrainz.org/XMLWebService for more information.
 //https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
 //https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting#How_can_I_be_a_good_citizen_and_be_smart_about_using_the_Web_Service.3F

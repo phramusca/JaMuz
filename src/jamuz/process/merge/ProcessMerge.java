@@ -190,7 +190,7 @@ public class ProcessMerge extends ProcessAbstract {
 
             }
             //Read options again (only to read lastMergeDate !!)
-            //FIXME Use listeners !!
+            //FIXME MERGE Use listeners !!
             PanelMain.readOptions(); //TODO: This should enable merge too, but does not as we still are in process merge ...
             //enabling back buttons
             PanelMerge.enableMerge(true);
@@ -606,7 +606,7 @@ public class ProcessMerge extends ProcessAbstract {
                 fileNew.setUpdateRatingModifDate(true);
             }
 
-			//FIXME: Compare and merge genre
+			//FIXME MERGE GENRE Compare and merge genre
 //			if(fileNew.getGenre()!=fileJaMuz.getGenre() 
 //					&& fileNew.getRating() > 0) {
 //                //This will ensure that we only update genreModifDate
@@ -647,7 +647,7 @@ public class ProcessMerge extends ProcessAbstract {
                 }
             }
 			
-			//FIXME TAGS Complete and test
+			//FIXME MERGE TAGS Complete and test
 			
 		//Comparing Tags
             //TODO: display it on jtable and logs
@@ -930,10 +930,10 @@ public class ProcessMerge extends ProcessAbstract {
 				while (i.hasNext()) {
 					FileInfoInt fileInfoInt = i.next();
 					this.checkAbort();
-					//FIXME If aborted, tag will no more be written to file. 
+					//FIXME MERGE If aborted, tag will no more be written to file. 
 					//Need to have a file BPM and a dB BPM to be able to sync both
 					fileInfoInt.saveTagBPM(); //Save retrieved BPM to file tags
-					//FIXME Are we updating modifiedDate (path and file) 
+					//FIXME MERGE Are we updating modifiedDate (path and file) 
 					//and other stats when saving tags (always) ?
 					this.checkAbort();
 					i.remove();

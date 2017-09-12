@@ -48,7 +48,6 @@ public class PanelRemote extends javax.swing.JPanel {
 	private static Server server;
 	private static ListModelRemoteClients listModelRemoteClients;
 		
-	//FIXME: Get callback from PanelMain @ creation
 	//TODO: use a callback for all usages of PanelMain
 	private ICallBackReception callback;
 
@@ -121,7 +120,7 @@ public class PanelRemote extends javax.swing.JPanel {
 		if(server!=null) {
 			FileInfoInt fileInfoInt = Jamuz.getDb().getFile(id);
 			if(!server.sendFile(login, fileInfoInt)) {
-				//FIXME: Happens when file not found
+				//FIXME SYNC Happens when file not found
 				// Need to mark as deleted in db 
 				// AND somehow remove it from filesToKeep
 				//and filesToGet in remote
