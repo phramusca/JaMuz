@@ -87,7 +87,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
-		//FIXME TAGS get tags from Guayadeque
+		//FIXME MERGE TAGS get tags from Guayadeque
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
