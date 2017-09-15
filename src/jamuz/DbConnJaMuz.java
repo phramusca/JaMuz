@@ -93,7 +93,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                 + "F.idFile, F.idPath, D.oriRelativeFullPath AS fullPath, "
                 + "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, "  //NOI18N
                 + "C.playcounter AS previousPlayCounter, "  //NOI18N
-                + "F.ratingModifDate, F.tagsModifDate, F.genre  "  //NOI18N
+                + "F.ratingModifDate, F.tagsModifDate, F.genre, F.genreModifDate  "  //NOI18N
                 + "FROM file F "
                 + "JOIN path P ON F.idPath=P.idPath "  //NOI18N
                 + "JOIN devicefile D ON D.idFile=F.idFile "
@@ -105,7 +105,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                 + "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
                 + "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, "  //NOI18N
                 + "C.playcounter AS previousPlayCounter, "  //NOI18N
-                + "F.ratingModifDate, F.tagsModifDate, F.genre "  //NOI18N
+                + "F.ratingModifDate, F.tagsModifDate, F.genre, F.genreModifDate "  //NOI18N
                 + "FROM file F "
                 + "JOIN path P ON F.idPath=P.idPath "  //NOI18N
                 + "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
@@ -423,7 +423,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param genre
      * @return
      */
-    public boolean checkGenre(String genre) {
+    public synchronized boolean checkGenre(String genre) {
         ResultSet rs=null;
         try {
             PreparedStatement stCheckGenre = dbConn.connection.prepareStatement(
