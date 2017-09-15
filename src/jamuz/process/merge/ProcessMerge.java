@@ -607,7 +607,13 @@ public class ProcessMerge extends ProcessAbstract {
             }
 
 		//Comparing genre
-			if(!fileSelectedDb.getGenre().equals(fileJaMuz.getGenre())) { 
+			if(isGenreValid(fileSelectedDb.getGenre()) && !isGenreValid(fileJaMuz.getGenre())) {
+				fileNew.setGenre(fileSelectedDb.getGenre());
+			}
+			else if(!isGenreValid(fileSelectedDb.getGenre()) && isGenreValid(fileJaMuz.getGenre())) {
+				fileNew.setGenre(fileJaMuz.getGenre());
+			}
+			else if(!fileSelectedDb.getGenre().equals(fileJaMuz.getGenre())) { 
                 //TODO: include this new behavior in junit tests
                 if(fileJaMuz.getGenreModifDate().after(
 						this.selectedStatSource.lastMergeDate)) {
@@ -632,10 +638,16 @@ public class ProcessMerge extends ProcessAbstract {
                     
                     fileNew.setGenre(fileSelectedDb.getGenre());
                 }
-				//This will ensure that we only update genreModifDate
-                //if changed on JaMuz
-                fileNew.setUpdateGenreModifDate(true);
+				
 			}
+			if(!fileNew.getGenre().equals(fileJaMuz.getGenre()) 
+					&& isGenreValid(fileNew.getGenre())) {
+                //This will ensure that we only update genreModifDate
+                //if changed on JaMuz to a valid value
+                fileNew.setUpdateGenreModifDate(true);
+				
+				//FIXME MERGE TAGS In this case, update Genre in file (method exists :) 
+            }
 			
         //Comparing BPM
             //TODO: Now that merging BPM (and that works), display it on jtable and logs
@@ -724,6 +736,9 @@ public class ProcessMerge extends ProcessAbstract {
         if(!this.selectedStatSource.getSource().isUpdateBPM()) {
             fileNew.setBPM(fileSelectedDb.getBPM());
 		}
+		if(!this.selectedStatSource.getSource().isUpdateGenre()) {
+            fileNew.setGenre(fileSelectedDb.getGenre());
+		}
 		if(!this.selectedStatSource.getSource().isUpdateTags()) {
             fileNew.setTags(fileSelectedDb.getTags());
 		}
@@ -771,6 +786,10 @@ public class ProcessMerge extends ProcessAbstract {
 			if(!this.selectedStatSource.getSource().isUpdateBPM()) {
 				fileNew.setBPM(fileJaMuz.getBPM());
 				fileSelectedDb.setBPM(fileJaMuz.getBPM());
+			}
+			if(!this.selectedStatSource.getSource().isUpdateGenre()) {
+				fileNew.setGenre(fileJaMuz.getGenre());
+				fileSelectedDb.setGenre(fileJaMuz.getGenre());
 			}
 			if(!this.selectedStatSource.getSource().isUpdateTags()) {
 				fileNew.setTags(fileJaMuz.getTags());
@@ -1066,5 +1085,10 @@ public class ProcessMerge extends ProcessAbstract {
 			}
 		}
 		this.checkAbort();
+	}
+
+	private boolean isGenreValid(String genre) {
+		return !genre.startsWith("{") 
+				&& Jamuz.getGenres().contains(genre);
 	}
 }

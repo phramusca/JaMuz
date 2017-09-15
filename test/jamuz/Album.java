@@ -685,9 +685,10 @@ public final class Album {
                     Assert.assertEquals("BPM "+fileName+msg, albumFile.BPM, statSourceFile.BPM, 0.0f);
                 }
 				//TODO: Test tags mege
-//				if(statSource.getSource().isUpdateTags()) {
-//                    Assert.assertEquals("Tags "+fileName+msg, albumFile.getTags(), statSourceFile.getTags(), 0.0f);
-//                }
+			//				if(statSource.getSource().isUpdateTags()) {
+			//                    Assert.assertEquals("Tags "+fileName+msg, albumFile.getTags(), statSourceFile.getTags(), 0.0f);
+			//                }
+			//TODO: Test genre mege
             }
         }
         

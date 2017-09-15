@@ -1480,16 +1480,15 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("size", size);
 		jsonAsMap.put("idFile", idFile);
 		jsonAsMap.put("rating", rating);
-		
 		jsonAsMap.put("addedDate", getFormattedAddedDate());
 		jsonAsMap.put("lastPlayed", getFormattedLastPlayed());
 		jsonAsMap.put("playCounter", playCounter);
+		jsonAsMap.put("genre", genre);
 
 		JSONArray tagsAsMap = new JSONArray();
 		getTags().stream().forEach((tag) -> {
 			tagsAsMap.add(tag);
 		});
-		
 		jsonAsMap.put("tags", tagsAsMap);
 		return jsonAsMap;
 	}
