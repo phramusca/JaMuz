@@ -423,7 +423,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param genre
      * @return
      */
-    public synchronized boolean checkGenre(String genre) {
+    public boolean checkGenre(String genre) {
         ResultSet rs=null;
         try {
             PreparedStatement stCheckGenre = dbConn.connection.prepareStatement(
@@ -815,7 +815,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param file
      * @return
      */
-    public boolean updateLastPlayedAndCounter(FileInfoInt file) {
+    public synchronized boolean updateLastPlayedAndCounter(FileInfoInt file) {
         try {
             PreparedStatement stUpdateFileLastPlayedAndCounter = 
 					dbConn.connection.prepareStatement("UPDATE file "
@@ -1579,7 +1579,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
 	 * @param selOptions
 	 * @return
 	 */
-	public boolean setOptions(Machine selOptions) {
+	public synchronized boolean setOptions(Machine selOptions) {
 		try {
 			dbConn.connection.setAutoCommit(false);
 			
@@ -1840,7 +1840,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
 	}
 	
 	@Override
-	public int[] setTags(ArrayList<? extends FileInfo> files, int[] results) {
+	public synchronized int[] setTags(ArrayList<? extends FileInfo> files, int[] results) {
 		int i=0;
 		for(FileInfo fileInfo : files) {
 			if(fileInfo.getTags()!=null) {
