@@ -1987,6 +1987,7 @@ public class PanelMain extends javax.swing.JFrame {
 		public void authenticated(Client login, ServerClient client) {
 			if(login.getId().endsWith("-data")) {
 				sendTags(login.getId());
+				sendGenres(login.getId());
 			} else {
 				sendPlaylists(login.getId(), jComboBoxPlaylist.getSelectedItem().toString());
 			}
@@ -2132,6 +2133,17 @@ public class PanelMain extends javax.swing.JFrame {
 		obj.put("type", "playlists");
 		obj.put("playlists", list);
 		obj.put("selectedPlaylist", selectedPlaylist);
+		PanelRemote.send(login, "JSON_"+obj.toJSONString());
+    }
+	
+	private static void sendGenres(String login) {
+		JSONArray list = new JSONArray();
+		for(String genre : Jamuz.getGenres()) {
+			list.add(genre);
+		}
+		JSONObject obj = new JSONObject();
+		obj.put("type", "genres");
+		obj.put("genres", list);
 		PanelRemote.send(login, "JSON_"+obj.toJSONString());
     }
 		
