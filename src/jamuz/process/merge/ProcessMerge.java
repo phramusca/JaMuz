@@ -100,7 +100,7 @@ public class ProcessMerge extends ProcessAbstract {
 	//JaMuz DB information
 	private ArrayList<FileInfo> statsListDbJaMuz;
 	private ArrayList<FileInfo> mergeListDbJaMuz;
-    private ArrayList<FileInfoInt> mergeTagListDbJaMuz;
+    private ArrayList<FileInfoInt> mergeListDbJaMuzTags;
 	
 	/**
 	 * Creates a new merge process instance
@@ -392,7 +392,7 @@ public class ProcessMerge extends ProcessAbstract {
 
 		mergeListDbSelected = new ArrayList<>();
 		mergeListDbJaMuz = new ArrayList<>();
-        mergeTagListDbJaMuz=new ArrayList<>();
+        mergeListDbJaMuzTags=new ArrayList<>();
                 
 		FileInfo fileDbSelected; 
 		FileInfo fileInfoDbJaMuz;
@@ -606,6 +606,9 @@ public class ProcessMerge extends ProcessAbstract {
                 fileNew.setUpdateRatingModifDate(true);
             }
 
+			String genre="";
+			float BPM=-1;
+			
 		//Comparing genre
 			if(isGenreValid(fileSelectedDb.getGenre()) && !isGenreValid(fileJaMuz.getGenre())) {
 				fileNew.setGenre(fileSelectedDb.getGenre());
@@ -645,8 +648,7 @@ public class ProcessMerge extends ProcessAbstract {
                 //This will ensure that we only update genreModifDate
                 //if changed on JaMuz to a valid value
                 fileNew.setUpdateGenreModifDate(true);
-				
-				//FIXME MERGE TAGS In this case, update Genre in file (method exists :) 
+				genre=fileNew.getGenre();
             }
 			
         //Comparing BPM
@@ -663,24 +665,26 @@ public class ProcessMerge extends ProcessAbstract {
                     }
                     else {
                         fileNew.setBPM(fileSelectedDb.getBPM());
-                        //TODO: Better use inheritance !!
-                        mergeTagListDbJaMuz.add(new FileInfoInt(fileJaMuz, 
-								fileSelectedDb.getBPM()));
+						BPM = fileSelectedDb.getBPM();
                     }
                 }
                 else if(fileSelectedDb.getBPM()!=fileJaMuz.getBPM()){
                     //If both are >0 but different then taking the one from Mixxx
                     if(this.selectedStatSource.getIdStatement()==4) { //TODO: Mixxx is Badly hard-coded (use an enum instead of int)
                         fileNew.setBPM(fileSelectedDb.getBPM());
-                        //TODO: Better use inheritance !!
-                        mergeTagListDbJaMuz.add(new FileInfoInt(fileJaMuz, 
-								fileSelectedDb.getBPM()));
+						BPM = fileSelectedDb.getBPM();
                     }
                     else {
                         fileNew.setBPM(fileJaMuz.getBPM());
                     }
                 }
             }
+			
+			if(!genre.equals("") || BPM>=0) {
+				//TODO: Better use inheritance !!
+				mergeListDbJaMuzTags.add(new FileInfoInt(fileJaMuz, 
+						BPM, genre));
+			}
 
 		//Comparing Tags
             //TODO: display it on jtable and logs
@@ -964,19 +968,23 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 
 		if(!this.simulate) {	
-			nbFiles=mergeTagListDbJaMuz.size();
-			PanelMerge.progressBar.progress(MessageFormat.format(
-					Inter.get("Msg.Merge.Updating"), Inter.get("Tag.BPM"))); //NOI18N
+			nbFiles=mergeListDbJaMuzTags.size();
+			PanelMerge.progressBar.progress(Inter.get("Msg.Check.SavingTags")); //NOI18N
 			if(nbFiles>0) {
-				Iterator<FileInfoInt> i = mergeTagListDbJaMuz.iterator();
+				Iterator<FileInfoInt> i = mergeListDbJaMuzTags.iterator();
 				while (i.hasNext()) {
 					FileInfoInt fileInfoInt = i.next();
 					this.checkAbort();
-					//FIXME MERGE If aborted, tag will no more be written to file. 
-					//Need to have a file BPM and a dB BPM to be able to sync both
-					fileInfoInt.saveTagBPM(); //Save retrieved BPM to file tags
+					//TODO MERGE If aborted, tags will no more be written to file. 
+					if(!fileInfoInt.getGenre().equals("") ) {
+						fileInfoInt.saveTagGenre();
+					} 
+					else if(fileInfoInt.getBPM()>=0) {
+						fileInfoInt.saveTagBPM();
+					}
 					//FIXME MERGE Are we updating modifiedDate (path and file) 
 					//and other stats when saving tags (always) ?
+					//+ile.setLastModified() too
 					this.checkAbort();
 					i.remove();
 				}
