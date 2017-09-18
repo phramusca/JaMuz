@@ -320,12 +320,13 @@ public class FileInfoInt extends FileInfo {
      * Used to merge BPM
      * @param file
      * @param bpm
+	 * @param genre
      */
-    public FileInfoInt(FileInfo file, float bpm) {
+    public FileInfoInt(FileInfo file, float bpm, String genre) {
         super(file.idFile, file.getIdPath(), file.relativeFullPath, file.rating, 
 				file.getFormattedLastPlayed(), file.getFormattedAddedDate(), 
                 file.playCounter, file.sourceName, file.previousPlayCounter, 
-				bpm, file.getGenre(), file.getFormattedRatingModifDate(), 
+				bpm, genre, file.getFormattedRatingModifDate(), 
 				file.getFormattedTagsModifDate(),
 				file.getFormattedGenreModifDate());
         copyRight=-1;
@@ -909,6 +910,10 @@ public class FileInfoInt extends FileInfo {
 		return this.saveTag(FieldKey.BPM, String.valueOf(getBPM()));
     }
     
+	public boolean saveTagGenre() {
+		return this.saveTag(FieldKey.GENRE, genre);
+    }
+	
 	/**
 	 *
 	 * @param lyrics
