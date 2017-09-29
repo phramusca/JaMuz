@@ -16,6 +16,7 @@
  */
 package jamuz.tests;
 
+import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.FileInfoDisplay;
@@ -32,29 +33,6 @@ public class TESTreplaygain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		try {
-//			FileInfoInt fileInfo = new FileInfoInt(-1, -1, 
-//					"/ReplayGain/Musique-copy/Miss Kittin/I Com/", 
-//					"01 Professional Distortion.mp3", 
-//					120, "format", "bitRate", 0, 0, "My Album", "My Album Artist", 
-//					"My Artist", "My Comment", 1, 1,
-//					"Pop", 0, "My Title", 1, 1, "1979", 9, 5, 
-//					"1970-01-01 00:00:00", "1970-01-01 00:00:00", "1970-01-01 00:00:00", 
-//					true, "", FolderInfo.CheckedFlag.OK, 0, 0, 0, 
-//					"/home/raph/Bureau/");
-//			File sourceFile = new File(Settings.getRessourcesPath()+"audioFiles"
-//					+File.separator+"1min.mp3");
-//			File testFile = new File(fileInfo.getRootPath()+File.separator
-//					+fileInfo.getRelativeFullPath());
-////			FileSystem.copyFile(sourceFile, testFile);
-//			fileInfo.saveTags(false);
-//			fileInfo.saveReplayGain();
-//			fileInfo.readReplayGainFromID3();
-//		} catch (IOException ex) {
-//			Logger.getLogger(TESTreplaygain.class.getName()).log(Level.SEVERE, null, ex);
-//		}
-
-
 
 		//Configure application
 		if(!Jamuz.configure("/home/raph/Bureau/ReplayGain/")) {
@@ -68,34 +46,26 @@ public class TESTreplaygain {
 		
 		// This recomputes ReplayGain (rg in APE tags)
 		System.out.println("Recomputing Replaygain. Please wait ...");
-		folderInfo.browse(false, true, progressBar);
+		folderInfo.browse(true, true, progressBar);
 
 		try {
 			for(FileInfoDisplay file : folderInfo.getFilesAudio()) {
 				System.out.println("-------------------------------------------");  //NOI18N
 				System.out.println(file.getRelativeFullPath());
-				System.out.println("-------------------------------------------");  //NOI18N
 				//Save tags
 //				file.isAudioFile=true;
 //				file.saveTags(null, true);
-				
-				//Read Replaygain tags in APE tags
-				System.out.println(file.readReplayGainFromAPE());
-				
-				//Read replaygain from ID3v2 tags
-				System.out.println(file.readReplayGainFromID3());
-
-				//Try saving replaygain to ID3v2 tags
-				//FIXME: IndexOutOfBounds
-//				file.saveReplayGain();
-				//IF cannot, how to convert ID3V24 to ID3v23
+				System.out.println("-------------------------------------------");  //NOI18N
+				System.out.println("readReplayGainFromID3: "+file.readReplayGainFromID3());
+				FileInfoInt.GainValues gv = file.readReplayGainFromAPE();
+				System.out.println("readReplayGainFromAPE: "+gv);
+				System.out.println("Save replaygain to ID3v2 tags");
+				file.saveReplayGainToID3(gv);
+				System.out.println("readReplayGainFromID3: "+file.readReplayGainFromID3());
+				System.out.println("-------------------------------------------");  //NOI18N
 			}
 		} catch (Exception ex) {
 			Popup.error(ex);
 		}
-		
-		//This save tags
-//		folderInfo.save(true, progressBar);
-
     } 
 }
