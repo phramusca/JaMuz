@@ -72,7 +72,10 @@ import java.util.Map;
 import java.util.logging.Logger;
 import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
+import org.jaudiotagger.tag.id3.ID3v22Tag;
 import org.jaudiotagger.tag.id3.ID3v23Frame;
+import org.jaudiotagger.tag.id3.ID3v24Frame;
+import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyRVAD;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 import org.jaudiotagger.tag.images.Artwork;
@@ -106,7 +109,7 @@ public class FileInfoInt extends FileInfo {
 	protected String title="";  //NOI18N
     
 	/**
-	 * Song track #
+	 * Song trackGain #
 	 */
 	protected int trackNo=-1;
 
@@ -119,7 +122,7 @@ public class FileInfoInt extends FileInfo {
     }
     
 	/**
-	 * Album track total
+	 * Album trackGain total
 	 */
 	protected int trackTotal=-1;
 
@@ -1047,7 +1050,7 @@ public class FileInfoInt extends FileInfo {
 	}
 
     /**
-    * Return track number in "xx/yy" format
+    * Return trackGain number in "xx/yy" format
     * @return
     */
     public String getTrackNoFull() {
@@ -1087,7 +1090,7 @@ public class FileInfoInt extends FileInfo {
 	}
 	
 	/**
-	 * Replaces %artist%, %album%, ... by their actual values
+	 * Replaces %artist%, %albumGain%, ... by their actual values
 	 * @param mask
 	 * @return
 	 */
@@ -1308,12 +1311,14 @@ public class FileInfoInt extends FileInfo {
 	}
 	
 	public class GainValues {
-		public float album;
-		public float track;
+		public float albumGain;
+		public float trackGain;
+		public float trackPeak;
+		public float albumPeak; 
 
 		@Override
 		public String toString() {
-			return "GainValues{" + "album=" + album + ", track=" + track + '}';
+			return "GainValues{" + "albumGain=" + albumGain + ", trackGain=" + trackGain + ", trackPeak=" + trackPeak + ", albumPeak=" + albumPeak + '}';
 		}
 	}
 	
@@ -1335,11 +1340,17 @@ public class FileInfoInt extends FileInfo {
 //				System.out.println(apeTag);
 				apeTag.getItems().stream().filter((item) -> (item.isValueText())).forEach((item) -> {
 					//System.out.println(item.getKey() + " : " + item.getTextValue());
-					if(item.getKey().equals("REPLAYGAIN_TRACK_GAIN")) {
-						gv.track = getFloatFromString(item.getTextValue());
+					if(item.getKey().toUpperCase().equals("REPLAYGAIN_TRACK_GAIN")) {
+						gv.trackGain = getFloatFromString(item.getTextValue());
 					}
-					else if(item.getKey().equals("REPLAYGAIN_ALBUM_GAIN")) {
-						gv.album = getFloatFromString(item.getTextValue());
+					else if(item.getKey().toUpperCase().equals("REPLAYGAIN_ALBUM_GAIN")) {
+						gv.albumGain = getFloatFromString(item.getTextValue());
+					}
+					else if(item.getKey().toUpperCase().equals("REPLAYGAIN_ALBUM_PEAK")) {
+						gv.albumPeak = getFloatFromString(item.getTextValue());
+					}
+					else if(item.getKey().toUpperCase().equals("REPLAYGAIN_TRACK_PEAK")) {
+						gv.trackPeak = getFloatFromString(item.getTextValue());
 					}
 				});
 //					else {
@@ -1365,7 +1376,7 @@ public class FileInfoInt extends FileInfo {
 		} catch(Exception e) {}
 		return rg_float;
 	}
-	
+
 	public GainValues readReplayGainFromID3() {
 		GainValues gv = new GainValues();
 		try {
@@ -1382,10 +1393,16 @@ public class FileInfoInt extends FileInfo {
 						FrameBodyTXXX fb = (FrameBodyTXXX) af;
 //						System.out.println(fb.getDescription() + " : " + fb.getTextWithoutTrailingNulls());
 						if(fb.getDescription().toUpperCase().equals("REPLAYGAIN_TRACK_GAIN")) {
-							gv.track = getFloatFromString(fb.getTextWithoutTrailingNulls());
+							gv.trackGain = getFloatFromString(fb.getTextWithoutTrailingNulls());
 						}
 						else if(fb.getDescription().toUpperCase().equals("REPLAYGAIN_ALBUM_GAIN")) {
-							gv.album = getFloatFromString(fb.getTextWithoutTrailingNulls());
+							gv.albumGain = getFloatFromString(fb.getTextWithoutTrailingNulls());
+						}
+						else if(fb.getDescription().toUpperCase().equals("REPLAYGAIN_ALBUM_PEAK")) {
+							gv.albumPeak = Float.parseFloat(fb.getTextWithoutTrailingNulls());
+						}
+						else if(fb.getDescription().toUpperCase().equals("REPLAYGAIN_TRACK_PEAK")) {
+							gv.trackPeak = Float.parseFloat(fb.getTextWithoutTrailingNulls());
 						}
 					}
 				}
@@ -1415,58 +1432,47 @@ public class FileInfoInt extends FileInfo {
 	//https://bitbucket.org/ijabz/jaudiotagger/issues/37/add-generic-support-for-reading-writing
 	
 // TODO: Some unsuccessfull attempts to write replaygain tags
-	public void saveReplayGain() {
-		
+	public void saveReplayGainToID3(GainValues gv) {
+		File currentFile = getFullPath();
 		try {
-			File currentFile = getFullPath();
-			MP3File myMP3File = (MP3File)AudioFileIO.read(currentFile);
-			
-//			ID3v23Tag v2tag = (ID3v23Tag)myMP3File.getID3v2Tag();
-			AbstractID3v2Tag v2tag = myMP3File.getID3v2Tag();
-
-			AbstractID3v2Frame frame = new ID3v23Frame();
-			byte b = 1; //If ISO-8859-1 is used this byte should be $00,
-			//if Unicode is used it should be $01.
-			FrameBodyTXXX fb;
-			fb = new FrameBodyTXXX(b, "replaygain_track_gain", "-99 dB");
-			frame.setBody(fb);
-			v2tag.setFrame(frame);
-
-			myMP3File.commit();
-
-//			fb = new FrameBodyTXXX(b, "REPLAYGAIN_TRACK_PEAK", "0.123456");
-//			//Create frame and add body
-//			frame.setBody(fb);
-//			frames.add((AbstractID3v2Frame)frame);
-//			v2tag.setFrame(frame);
-			
-//			fb = new FrameBodyTXXX(b, "REPLAYGAIN_ALBUM_GAIN", "-98.76 dB");
-//			//Create frame and add body
-//			frame.setBody(fb);
-//			frames.add((AbstractID3v2Frame)frame);
-////			v2tag.setFrame(frame);
-//			
-//			fb = new FrameBodyTXXX(b, "REPLAYGAIN_ALBUM_PEAK", "1.654321");
-//			//Create frame and add body
-//			frame.setBody(fb);
-//			frames.add((AbstractID3v2Frame)frame);
-////			v2tag.setFrame(frame);
-			
-//			v2tag.setFrame("TXXX", frames);
-		} catch (CannotReadException | IOException | TagException 
-				| ReadOnlyFileException | InvalidAudioFrameException 
-				| CannotWriteException ex) {
+			MP3File mp3file = (MP3File)AudioFileIO.read(currentFile);
+			AbstractID3v2Tag tag = mp3file.getID3v2Tag();
+			tag.removeFrame("TXXX");
+			setCustomTag(mp3file, "REPLAYGAIN_TRACK_GAIN", String.format(Locale.ROOT, "%.2f", gv.trackGain)+" dB");
+			setCustomTag(mp3file, "REPLAYGAIN_TRACK_PEAK", String.format(Locale.ROOT, "%.6f", gv.trackPeak));
+			setCustomTag(mp3file, "REPLAYGAIN_ALBUM_GAIN", String.format(Locale.ROOT, "%.2f", gv.albumGain)+" dB");
+			setCustomTag(mp3file, "REPLAYGAIN_ALBUM_PEAK", String.format(Locale.ROOT, "%.6f", gv.albumPeak));
+		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
 			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
+	private boolean setCustomTag(MP3File mp3file, String description, String text){
+		try {
+			AbstractID3v2Frame frame = new ID3v23Frame("TXXX");
+			FrameBodyTXXX txxxBody = new FrameBodyTXXX();
+			txxxBody.setDescription(description);
+			txxxBody.setText(text);
+			frame.setBody(txxxBody);
+			AbstractID3v2Tag tag = mp3file.getID3v2Tag();
+			tag.addField(frame);
+			mp3file.commit();
+		} catch (CannotWriteException ex) {
+			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
+			return false;
+		} catch (FieldDataInvalidException ex) {
+			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return true;
+	}
+	
 	/**
 	 *
 	 * @param sayRated
 	 */
 	
     public void sayRating (boolean sayRated) {
-        //TODO: Play a reminder at 1/3 and 2/3 of the track
+        //TODO: Play a reminder at 1/3 and 2/3 of the trackGain
         
         //TODO: Do this as an option (and review calls before enabling back)
 //        if(this.idFile>-1) {
