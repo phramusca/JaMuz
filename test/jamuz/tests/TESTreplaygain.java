@@ -21,7 +21,6 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.FileInfoDisplay;
 import jamuz.process.check.FolderInfo;
 import jamuz.utils.Popup;
-import java.io.Console;
 
 /**
  *
@@ -50,7 +49,7 @@ public class TESTreplaygain {
 ////			FileSystem.copyFile(sourceFile, testFile);
 //			fileInfo.saveTags(false);
 //			fileInfo.saveReplayGain();
-//			fileInfo.readReplayGain();
+//			fileInfo.readReplayGainFromID3();
 //		} catch (IOException ex) {
 //			Logger.getLogger(TESTreplaygain.class.getName()).log(Level.SEVERE, null, ex);
 //		}
@@ -69,19 +68,22 @@ public class TESTreplaygain {
 		
 		// This recomputes ReplayGain (rg in APE tags)
 		System.out.println("Recomputing Replaygain. Please wait ...");
-		folderInfo.browse(true, true, progressBar);
+		folderInfo.browse(false, true, progressBar);
 
 		try {
 			for(FileInfoDisplay file : folderInfo.getFilesAudio()) {
+				System.out.println("-------------------------------------------");  //NOI18N
+				System.out.println(file.getRelativeFullPath());
+				System.out.println("-------------------------------------------");  //NOI18N
 				//Save tags
 //				file.isAudioFile=true;
 //				file.saveTags(null, true);
 				
 				//Read Replaygain tags in APE tags
-				System.out.println(file.getReplayGainValues());
+				System.out.println(file.readReplayGainFromAPE());
 				
-				//Try reading replaygain from ID3v2 tags
-				file.readReplayGain();
+				//Read replaygain from ID3v2 tags
+				System.out.println(file.readReplayGainFromID3());
 
 				//Try saving replaygain to ID3v2 tags
 				//FIXME: IndexOutOfBounds

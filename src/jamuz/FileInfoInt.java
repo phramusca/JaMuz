@@ -71,6 +71,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
+import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import org.jaudiotagger.tag.id3.ID3v23Frame;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyRVAD;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
@@ -485,7 +486,7 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public String getLyrics() {
-        readReplayGain();
+        readReplayGainFromID3();
 		
 		if(lyrics.equals("")) {
             try {
@@ -1316,7 +1317,7 @@ public class FileInfoInt extends FileInfo {
 		}
 	}
 	
-	public GainValues getReplayGainValues() {
+	public GainValues readReplayGainFromAPE() {
 		GainValues gv = new GainValues();
 		try {
 			MP3 mp3 = new MP3(getFullPath());
@@ -1334,10 +1335,10 @@ public class FileInfoInt extends FileInfo {
 //				System.out.println(apeTag);
 				apeTag.getItems().stream().filter((item) -> (item.isValueText())).forEach((item) -> {
 					//System.out.println(item.getKey() + " : " + item.getTextValue());
-					if(item.getTextValue().equals("REPLAYGAIN_TRACK_GAIN")) {
+					if(item.getKey().equals("REPLAYGAIN_TRACK_GAIN")) {
 						gv.track = getFloatFromString(item.getTextValue());
 					}
-					else if(item.getTextValue().equals("REPLAYGAIN_ALBUM_GAIN")) {
+					else if(item.getKey().equals("REPLAYGAIN_ALBUM_GAIN")) {
 						gv.album = getFloatFromString(item.getTextValue());
 					}
 				});
@@ -1346,11 +1347,10 @@ public class FileInfoInt extends FileInfo {
 //								+ item.getBinaryValue().length + " bytes.");
 //					}
 			}
-       }
-       catch (IOException ex)
-       {
-          System.out.println("An error occurred while reading the mp3 file.");
-       }
+		}
+		catch (IOException ex) {
+			System.out.println("An error occurred while reading the mp3 file.");
+		}
 		return gv;
     }
 	
@@ -1366,51 +1366,48 @@ public class FileInfoInt extends FileInfo {
 		return rg_float;
 	}
 	
-	//TODDO: Try again reading replaygain since JAUDIOTAGGER has been updated recently to 2.2.6
-	//Cannot find files with replaygain (does id3v2 command line supports this frame ?)
-	// => Check if mp3gain is really performed !!!
-	// TODO: Some unsuccessfull attempts to read replaygain tags
-	public void readReplayGain() {
+	public GainValues readReplayGainFromID3() {
+		GainValues gv = new GainValues();
 		try {
-			//TODO: Fix below. Does not seem to work though documented here:
-			//http://java.net/jira/browse/JAUDIOTAGGER-446?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
 			File currentFile = getFullPath();
 			MP3File myMP3File = (MP3File)AudioFileIO.read(currentFile);
-			
-//			ID3v24Tag v2tag = myMP3File.getID3v2TagAsv24();
-//			ID3v23Tag v2tag = (ID3v23Tag)myMP3File.getID3v2Tag();
 			AbstractID3v2Tag v2tag = myMP3File.getID3v2Tag();
 			
-			System.out.println("-------------------------------------------");  //NOI18N
-			System.out.println(this.relativeFullPath);
-			//					System.out.println("TXXX");
-			System.out.println("-------------------------------------------");  //NOI18N
-			Iterator<ArrayList> i = v2tag.getFrameOfType("TXXX");  //NOI18N
-			while(i.hasNext()) {
-				ArrayList<AbstractID3v2Frame> frames = i.next();
-				for(AbstractID3v2Frame abstractID3v2Frame : frames) {
-					FrameBodyTXXX fb = (FrameBodyTXXX)abstractID3v2Frame.getBody();
-					System.out.println(fb.getDescription()+" ::: "+fb.getText());  //NOI18N
-
-					System.out.println("Content: "+abstractID3v2Frame.getContent());  //NOI18N
-					System.out.println("Encoding: "+abstractID3v2Frame.getEncoding());  //NOI18N
-
-					byte encoding = fb.getTextEncoding();
-					System.out.println(encoding);
+			Iterator i = v2tag.getFrameOfType("TXXX");
+			while (i.hasNext()) {
+				Object obj = i.next();
+				if (obj instanceof AbstractID3v2Frame) {
+					AbstractTagFrameBody af = ((AbstractID3v2Frame) obj).getBody();
+					if (af instanceof FrameBodyTXXX) {
+						FrameBodyTXXX fb = (FrameBodyTXXX) af;
+//						System.out.println(fb.getDescription() + " : " + fb.getTextWithoutTrailingNulls());
+						if(fb.getDescription().toUpperCase().equals("REPLAYGAIN_TRACK_GAIN")) {
+							gv.track = getFloatFromString(fb.getTextWithoutTrailingNulls());
+						}
+						else if(fb.getDescription().toUpperCase().equals("REPLAYGAIN_ALBUM_GAIN")) {
+							gv.album = getFloatFromString(fb.getTextWithoutTrailingNulls());
+						}
+					}
 				}
 			}
+
+//			i = v2tag.getFrameOfType("RVAD");
+//			while (i.hasNext()) {
+//				Object obj = i.next();
+//				if (obj instanceof AbstractID3v2Frame) {
+//					AbstractTagFrameBody af = ((AbstractID3v2Frame) obj)
+//							.getBody();
+//					if (af instanceof FrameBodyRVAD) {
+//						FrameBodyRVAD fb = (FrameBodyRVAD) af;
+//						System.out.println(fb.getIdentifier()+" ::: "+fb.getUserFriendlyValue());
+//					}
+//				}
+//			}
 			
-			i = v2tag.getFrameOfType("RVA2");
-			while(i.hasNext()) {
-				ArrayList<AbstractID3v2Frame> frames = i.next();
-				for(AbstractID3v2Frame abstractID3v2Frame : frames) {
-					FrameBodyRVAD fb = (FrameBodyRVAD)abstractID3v2Frame.getBody();
-					System.out.println(fb.getIdentifier()+" ::: "+fb.getUserFriendlyValue());
-				}
-			}
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
 			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		return gv;
 	}
 	
 	//FIXME: Write ReplayGain tag values:
