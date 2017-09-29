@@ -349,7 +349,7 @@ public final class FileInfoDisplay extends FileInfoInt {
         }
         return true;
 	}
-    
+
 	/**
 	 * Clone object instance
 	 * @return

@@ -17,6 +17,9 @@
 
 package jamuz;
 
+import com.beaglebuddy.ape.APEItem;
+import com.beaglebuddy.ape.APETag;
+import com.beaglebuddy.mp3.MP3;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.utils.Popup;
@@ -64,7 +67,13 @@ import jamuz.utils.StringManager;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
+import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
+import org.jaudiotagger.tag.id3.ID3v23Frame;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyRVAD;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 import org.json.simple.JSONArray;
@@ -278,14 +287,6 @@ public class FileInfoInt extends FileInfo {
 	 * Used for play queue as can be filled up from library or Add tab
 	 */
 	protected String rootPath="";  //NOI18N
-
-	/**
-	 *
-	 * @return
-	 */
-	public String getRootPath() {
-        return rootPath;
-    }
     
 
 	/**
@@ -343,7 +344,7 @@ public class FileInfoInt extends FileInfo {
 		super(-1, -1, relativeFullPath, -1, "1970-01-01 00:00:00", 
 				"1970-01-01 00:00:00", 0, "file", 0, 0, "", "", "", "");  //NOI18N
 		this.rootPath=rootPath;
-		this.modifDate = new Date(new File(this.rootPath+this.relativeFullPath).lastModified());
+		this.modifDate = new Date(getFullPath().lastModified());
         copyRight=-1;
 	}
 
@@ -405,12 +406,15 @@ public class FileInfoInt extends FileInfo {
      * @param percentRated  
 	 * @param rootPath  
 	 */
-	public FileInfoInt(int idFile, int idPath, String relativePath, String filename, int length, String format, 
-            String bitRate, int size, float BPM, String album, String albumArtist, String artist, String comment, 
-            int discNo, int discTotal, String genre, int nbCovers, String title, int trackNo, int trackTotal, 
-			String year, int playCounter, int rating, String addedDate, String lastPlayed, String modifDate, 
-			boolean deleted, String coverHash, CheckedFlag checkedFlag, int copyRight, double albumRating, 
-			int percentRated, String rootPath) {
+	public FileInfoInt(int idFile, int idPath, String relativePath, 
+			String filename, int length, String format, String bitRate, 
+			int size, float BPM, String album, String albumArtist, 
+			String artist, String comment, int discNo, int discTotal, 
+			String genre, int nbCovers, String title, int trackNo, 
+			int trackTotal, String year, int playCounter, int rating, 
+			String addedDate, String lastPlayed, String modifDate, 
+			boolean deleted, String coverHash, CheckedFlag checkedFlag, 
+			int copyRight, double albumRating, int percentRated, String rootPath) {
 		
 		super("file");  //NOI18N
         this.fromLibrary=true;
@@ -472,6 +476,10 @@ public class FileInfoInt extends FileInfo {
 		this.rootPath = rootPath;
 	}
 	
+	public final File getFullPath() {
+		return new File(FilenameUtils.concat(this.rootPath, this.relativeFullPath));
+	}
+	
 	/**
 	 *
 	 * @return
@@ -481,7 +489,7 @@ public class FileInfoInt extends FileInfo {
 		
 		if(lyrics.equals("")) {
             try {
-                AudioFile myAudioFile = AudioFileIO.read(new File(rootPath + relativeFullPath));
+                AudioFile myAudioFile = AudioFileIO.read(getFullPath());
 				Tag tag = myAudioFile.getTag();
 				if(tag!=null) {
 					if(tag.getFirst(FieldKey.LYRICS)!=null) {
@@ -502,7 +510,7 @@ public class FileInfoInt extends FileInfo {
 	private void readCoverFromTag() {
 		try {
 			if(this.nbCovers>0) {
-				File currentFile = new File(rootPath+this.relativeFullPath);
+				File currentFile = getFullPath();
                 if(currentFile.exists()) {
                     Tag tag;
                     switch (this.ext) {
@@ -564,7 +572,7 @@ public class FileInfoInt extends FileInfo {
 	 */
 	public boolean readTags(boolean readCover) {
 		try {
-			File currentFile = new File(rootPath+this.relativeFullPath);
+			File currentFile = getFullPath();
 			
 			//Getting file information
 			this.modifDate = new Date(currentFile.lastModified());
@@ -613,6 +621,7 @@ public class FileInfoInt extends FileInfo {
 								this.genre=v1Tag.getFirst(FieldKey.GENRE);
 								//TODO: Translate v1 genres into String
 								//http://fr.wikipedia.org/wiki/ID3
+								//https://github.com/drogatkin/tiny-codec/blob/master/codecs/APE/src/java/davaguine/jmac/info/ID3Genre.java
 							}
 							//Reading this in case user do not want to remove comments
 							if(this.comment.equals("")) {  //NOI18N
@@ -797,7 +806,7 @@ public class FileInfoInt extends FileInfo {
 			String genre, String year, BufferedImage image, boolean deleteComment, String comment, String title, float bpm, String lyrics) {
 		try {           
             
-			File file = new File(this.rootPath+File.separator+this.relativeFullPath);
+			File file = getFullPath();
 			if(file.length()<=0) {
 				return false;
 			}
@@ -828,7 +837,7 @@ public class FileInfoInt extends FileInfo {
             }
 			return true;
 		} catch (CannotWriteException | CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
-			Popup.error("Error writing tags to \""+this.rootPath+File.separator+this.relativeFullPath+"\"", ex);  //NOI18N
+			Popup.error("Error writing tags to \""+getFullPath()+"\"", ex);  //NOI18N
 			return false;
 		} 
 	}
@@ -926,7 +935,7 @@ public class FileInfoInt extends FileInfo {
     
 	private boolean saveTag(FieldKey key, String value) {
 		try {
-			File testFile = new File(this.rootPath+File.separator+this.relativeFullPath);
+			File testFile = getFullPath();
 			switch (this.ext) {
 				case "mp3": //NOI18N
 					//Get current tags
@@ -949,7 +958,7 @@ public class FileInfoInt extends FileInfo {
 			}
 			return true;
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException | CannotWriteException ex) {
-			Popup.error("Error writing \""+key.toString()+"\" to \""+this.rootPath+File.separator+this.relativeFullPath+"\"", ex);  //NOI18N
+			Popup.error("Error writing \""+key.toString()+"\" to \""+getFullPath()+"\"", ex);  //NOI18N
 			return false;
 		}
 
@@ -992,9 +1001,7 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public boolean updateInDb() {
-		File file = new File(FilenameUtils.concat(this.rootPath, this.relativeFullPath));
-		this.modifDate = new Date(file.lastModified());
-		
+		this.modifDate = new Date(getFullPath().lastModified());
 		return Jamuz.getDb().updateFileModifDate(this.idFile, this.modifDate, this.getFilename());
 	}
 	
@@ -1003,7 +1010,7 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public boolean scanDeleted() {
-		File currentFile = new File(this.rootPath+this.relativeFullPath);
+		File currentFile = getFullPath();
 		if(!currentFile.exists()) {
 			if(!Jamuz.getDb().setFileDeleted(this.idFile)) {
 				return false;
@@ -1299,87 +1306,162 @@ public class FileInfoInt extends FileInfo {
 		return this.artist + separator + this.album + separator + this.year + separator + this.trackTotal;
 	}
 	
+	public class GainValues {
+		public float album;
+		public float track;
+
+		@Override
+		public String toString() {
+			return "GainValues{" + "album=" + album + ", track=" + track + '}';
+		}
+	}
+	
+	public GainValues getReplayGainValues() {
+		GainValues gv = new GainValues();
+		try {
+			MP3 mp3 = new MP3(getFullPath());
+			if (mp3.hasAPETag()) {
+//				mp3 contains an APEv2 tag
+//				MP3GAIN_MINMAX : 052,209
+//				MP3GAIN_ALBUM_MINMAX : 052,209
+//				MP3GAIN_UNDO : +001,+001,N
+//				REPLAYGAIN_TRACK_GAIN : +0.920000 dB
+//				REPLAYGAIN_TRACK_PEAK : 0.860053
+//				REPLAYGAIN_ALBUM_GAIN : +0.400000 dB
+//				REPLAYGAIN_ALBUM_PEAK : 0.899413
+				APETag apeTag = mp3.getAPETag();
+//				System.out.println("mp3 contains an " + apeTag.getVersionString() + " tag");
+//				System.out.println(apeTag);
+				apeTag.getItems().stream().filter((item) -> (item.isValueText())).forEach((item) -> {
+					//System.out.println(item.getKey() + " : " + item.getTextValue());
+					if(item.getTextValue().equals("REPLAYGAIN_TRACK_GAIN")) {
+						gv.track = getFloatFromString(item.getTextValue());
+					}
+					else if(item.getTextValue().equals("REPLAYGAIN_ALBUM_GAIN")) {
+						gv.album = getFloatFromString(item.getTextValue());
+					}
+				});
+//					else {
+//						System.out.println(item.getKey() + " (binary data): " 
+//								+ item.getBinaryValue().length + " bytes.");
+//					}
+			}
+       }
+       catch (IOException ex)
+       {
+          System.out.println("An error occurred while reading the mp3 file.");
+       }
+		return gv;
+    }
+	
+	/**
+	 * Parses common replayGain string values
+	 */
+	private float getFloatFromString(String dbFloat) {
+		float rg_float = 0f;
+		try {
+			String nums = dbFloat.replaceAll("[^0-9.-]","");
+			rg_float = Float.parseFloat(nums);
+		} catch(Exception e) {}
+		return rg_float;
+	}
+	
 	//TODDO: Try again reading replaygain since JAUDIOTAGGER has been updated recently to 2.2.6
 	//Cannot find files with replaygain (does id3v2 command line supports this frame ?)
 	// => Check if mp3gain is really performed !!!
 	// TODO: Some unsuccessfull attempts to read replaygain tags
-	private void readReplayGain() {
-//		try {
-//			//TODO: Fix below. Does not seem to work though documented here:
-//			//http://java.net/jira/browse/JAUDIOTAGGER-446?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
-//			File currentFile = new File(rootPath+this.relativeFullPath);
-//			MP3File myMP3File = (MP3File)AudioFileIO.read(currentFile);
-//			
-////			ID3v24Tag v2tag = myMP3File.getID3v2TagAsv24();
-////			ID3v23Tag v2tag = (ID3v23Tag)myMP3File.getID3v2Tag();
-//			AbstractID3v2Tag v2tag = myMP3File.getID3v2Tag();
-//			
-//			System.out.println("-------------------------------------------");  //NOI18N
-//			System.out.println(this.relativeFullPath);
-//			//					System.out.println("TXXX");
-//			System.out.println("-------------------------------------------");  //NOI18N
-//			Iterator<ArrayList> i = v2tag.getFrameOfType("TXXX");  //NOI18N
-//			while(i.hasNext()) {
-//				ArrayList<AbstractID3v2Frame> frames = i.next();
-//				for(AbstractID3v2Frame abstractID3v2Frame : frames) {
-//					FrameBodyTXXX fb = (FrameBodyTXXX)abstractID3v2Frame.getBody();
-//					System.out.println(fb.getDescription()+" ::: "+fb.getText());  //NOI18N
-//
-//					System.out.println("Content: "+abstractID3v2Frame.getContent());  //NOI18N
-//					System.out.println("Encoding: "+abstractID3v2Frame.getEncoding());  //NOI18N
-//
-//
-//
-//					byte encoding = fb.getTextEncoding();
-//					System.out.println(encoding);
-//				}
-//			}
-//			
-//			i = v2tag.getFrameOfType("RVA2");
-//			while(i.hasNext()) {
-//				ArrayList<AbstractID3v2Frame> frames = i.next();
-//				for(AbstractID3v2Frame abstractID3v2Frame : frames) {
-//					FrameBodyRVAD fb = (FrameBodyRVAD)abstractID3v2Frame.getBody();
-//					System.out.println(fb.getIdentifier()+" ::: "+fb.getUserFriendlyValue());
-//				}
-//			}
-//		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
-//			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
-//		}
+	public void readReplayGain() {
+		try {
+			//TODO: Fix below. Does not seem to work though documented here:
+			//http://java.net/jira/browse/JAUDIOTAGGER-446?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
+			File currentFile = getFullPath();
+			MP3File myMP3File = (MP3File)AudioFileIO.read(currentFile);
+			
+//			ID3v24Tag v2tag = myMP3File.getID3v2TagAsv24();
+//			ID3v23Tag v2tag = (ID3v23Tag)myMP3File.getID3v2Tag();
+			AbstractID3v2Tag v2tag = myMP3File.getID3v2Tag();
+			
+			System.out.println("-------------------------------------------");  //NOI18N
+			System.out.println(this.relativeFullPath);
+			//					System.out.println("TXXX");
+			System.out.println("-------------------------------------------");  //NOI18N
+			Iterator<ArrayList> i = v2tag.getFrameOfType("TXXX");  //NOI18N
+			while(i.hasNext()) {
+				ArrayList<AbstractID3v2Frame> frames = i.next();
+				for(AbstractID3v2Frame abstractID3v2Frame : frames) {
+					FrameBodyTXXX fb = (FrameBodyTXXX)abstractID3v2Frame.getBody();
+					System.out.println(fb.getDescription()+" ::: "+fb.getText());  //NOI18N
+
+					System.out.println("Content: "+abstractID3v2Frame.getContent());  //NOI18N
+					System.out.println("Encoding: "+abstractID3v2Frame.getEncoding());  //NOI18N
+
+					byte encoding = fb.getTextEncoding();
+					System.out.println(encoding);
+				}
+			}
+			
+			i = v2tag.getFrameOfType("RVA2");
+			while(i.hasNext()) {
+				ArrayList<AbstractID3v2Frame> frames = i.next();
+				for(AbstractID3v2Frame abstractID3v2Frame : frames) {
+					FrameBodyRVAD fb = (FrameBodyRVAD)abstractID3v2Frame.getBody();
+					System.out.println(fb.getIdentifier()+" ::: "+fb.getUserFriendlyValue());
+				}
+			}
+		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
+			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 	
+	//FIXME: Write ReplayGain tag values:
+	
+	//https://bitbucket.org/ijabz/jaudiotagger/issues/37/add-generic-support-for-reading-writing
+	
 // TODO: Some unsuccessfull attempts to write replaygain tags
-//	private void saveReaplayGain() {
-//		//			ID3v23Tag v2tag = (ID3v23Tag)myMP3File.getID3v2Tag();
-////			AbstractID3v2Tag v2tag = myMP3File.getID3v2Tag();
-//			
-////			AbstractID3v2Frame frame = new ID3v23Frame();
-////			byte b = 1; //If ISO-8859-1 is used this byte should be $00, if Unicode is used it should be $01.
-////			FrameBodyTXXX fb;
-////			fb = new FrameBodyTXXX(b, "REPLAYGAIN_TRACK_GAIN", "+67.89 dB");
-////			frame.setBody(fb);
+	public void saveReplayGain() {
+		
+		try {
+			File currentFile = getFullPath();
+			MP3File myMP3File = (MP3File)AudioFileIO.read(currentFile);
+			
+//			ID3v23Tag v2tag = (ID3v23Tag)myMP3File.getID3v2Tag();
+			AbstractID3v2Tag v2tag = myMP3File.getID3v2Tag();
+
+			AbstractID3v2Frame frame = new ID3v23Frame();
+			byte b = 1; //If ISO-8859-1 is used this byte should be $00,
+			//if Unicode is used it should be $01.
+			FrameBodyTXXX fb;
+			fb = new FrameBodyTXXX(b, "replaygain_track_gain", "-99 dB");
+			frame.setBody(fb);
+			v2tag.setFrame(frame);
+
+			myMP3File.commit();
+
+//			fb = new FrameBodyTXXX(b, "REPLAYGAIN_TRACK_PEAK", "0.123456");
+//			//Create frame and add body
+//			frame.setBody(fb);
+//			frames.add((AbstractID3v2Frame)frame);
+//			v2tag.setFrame(frame);
+			
+//			fb = new FrameBodyTXXX(b, "REPLAYGAIN_ALBUM_GAIN", "-98.76 dB");
+//			//Create frame and add body
+//			frame.setBody(fb);
+//			frames.add((AbstractID3v2Frame)frame);
 ////			v2tag.setFrame(frame);
 //			
-////			fb = new FrameBodyTXXX(b, "REPLAYGAIN_TRACK_PEAK", "0.123456");
-////			//Create frame and add body
-////			frame.setBody(fb);
-////			frames.add((AbstractID3v2Frame)frame);
+//			fb = new FrameBodyTXXX(b, "REPLAYGAIN_ALBUM_PEAK", "1.654321");
+//			//Create frame and add body
+//			frame.setBody(fb);
+//			frames.add((AbstractID3v2Frame)frame);
 ////			v2tag.setFrame(frame);
-//			
-////			fb = new FrameBodyTXXX(b, "REPLAYGAIN_ALBUM_GAIN", "-98.76 dB");
-////			//Create frame and add body
-////			frame.setBody(fb);
-////			frames.add((AbstractID3v2Frame)frame);
-//////			v2tag.setFrame(frame);
-////			
-////			fb = new FrameBodyTXXX(b, "REPLAYGAIN_ALBUM_PEAK", "1.654321");
-////			//Create frame and add body
-////			frame.setBody(fb);
-////			frames.add((AbstractID3v2Frame)frame);
-//////			v2tag.setFrame(frame);
-//			
-////			v2tag.setFrame("TXXX", frames);
-//	}
+			
+//			v2tag.setFrame("TXXX", frames);
+		} catch (CannotReadException | IOException | TagException 
+				| ReadOnlyFileException | InvalidAudioFrameException 
+				| CannotWriteException ex) {
+			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
 	/**
 	 *

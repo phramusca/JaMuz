@@ -966,11 +966,10 @@ public class PanelSelect extends javax.swing.JPanel {
 		if(selectedRow>=0) { 	
 			//convert to model index (as sortable model) 		
 			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			FileInfoInt myFileInfo = fileInfoList.get(selectedRow); 	 
-
+			FileInfoInt fileInfoInt = fileInfoList.get(selectedRow); 	
 			mplayer.setAudioCard((AudioCard)jComboBoxSoundCard.getSelectedItem());
-			jLabelPreviewDisplay.setText(myFileInfo.getTrackNo()+" "+myFileInfo.getTitle());
-			mplayer.play(FilenameUtils.concat(myFileInfo.getRootPath(), myFileInfo.getRelativeFullPath()), false);
+			jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
+			mplayer.play(fileInfoInt.getFullPath().getAbsolutePath(), false);
 		}
 	}
 	
