@@ -676,7 +676,7 @@ public class ProcessCheck {
                         break;
                     case CHECK_NEW:
                         Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folderInfo.browse({0})", folder.getRelativePath());
-                        folder.browse(true, progressBar);
+                        folder.browse(true, true, progressBar);
                         break;
                 }
 //                displayScanSpeed();
@@ -724,7 +724,7 @@ public class ProcessCheck {
             //Scan and update folder's files
             if(scanFiles) {
                 //Get list of files from filesystem, reading tags as will be displayed
-                if(folderFS.browse(true, progressBar)) {
+                if(folderFS.browse(true, true, progressBar)) {
                     if(!folderFS.scan(true, progressBar)) {
                         return false;
                     }

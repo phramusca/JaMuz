@@ -1419,7 +1419,7 @@ public class PanelMain extends javax.swing.JFrame {
         isManual = true;
         jLabelPlayerTimeTotal.setText(StringManager.secondsToMMSS(myFileInfo.getLength()));
         playerInfo.setMax(myFileInfo.getLength());
-        String audioFileName = myFileInfo.getRootPath() + myFileInfo.getRelativeFullPath();
+        String audioFileName = myFileInfo.getFullPath().getAbsolutePath();
         myFileInfo.sayRating(false);
         boolean enablejSliderPlayerLength=true;
 		

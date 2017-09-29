@@ -190,7 +190,7 @@ public class ProcessSync extends ProcessAbstract {
             }
             else {
                 //Not a file to be copied, removing it on destination
-                File file = new File(fileInfo.getRootPath()+fileInfo.getRelativeFullPath());
+                File file = fileInfo.getFullPath();
                 file.delete();
                 PanelSync.addRowSync(fileInfo.getRelativeFullPath(), 0); //NOI18N
             }
