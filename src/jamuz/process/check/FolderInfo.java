@@ -255,7 +255,7 @@ public class FolderInfo implements java.lang.Comparable {
 		Thread t = new Thread("Thread.FolderInfo.reCheck") {
 			@Override
 			public void run() {
-                browse(true, DialogCheck.progressBar, true);
+                browse(false, true, DialogCheck.progressBar, true);
                 if(isCheckingMasterLibrary()) {
                     scan(true, DialogCheck.progressBar);
                 }
@@ -429,8 +429,8 @@ public class FolderInfo implements java.lang.Comparable {
      * @param progressBar
      * @return
      */
-    public boolean browse(boolean readTags, ProgressBar progressBar) {
-        return browse(readTags, progressBar, true);
+    public boolean browse(boolean recalculateGain, boolean readTags, ProgressBar progressBar) {
+        return browse(recalculateGain, readTags, progressBar, true);
     }
     
 	/**
@@ -439,14 +439,21 @@ public class FolderInfo implements java.lang.Comparable {
      * @param progressBar 
 	 * @return
 	 */
-	private boolean browse(boolean readTags, ProgressBar progressBar, boolean transcode) {
+	private boolean browse(boolean recalculateGain, boolean readTags, ProgressBar progressBar, boolean transcode) {
 
 		//TODO: Manage potential parsing errors when options are not valid csv
-		List <String> filesAudioExtensions = new ArrayList(Arrays.asList(Jamuz.getMachine().getOptionValue("files.audio").split(","))); //NOI18N
-        List <String> filesImageExtensions = new ArrayList(Arrays.asList(Jamuz.getMachine().getOptionValue("files.image").split(","))); //NOI18N
-        List <String> filesDeletableExtensions = new ArrayList(Arrays.asList(Jamuz.getMachine().getOptionValue("files.delete").split(","))); //NOI18N
+		List <String> filesAudioExtensions = new ArrayList(
+				Arrays.asList(Jamuz.getMachine().getOptionValue("files.audio")
+						.split(","))); //NOI18N
+        List <String> filesImageExtensions = new ArrayList(
+				Arrays.asList(Jamuz.getMachine().getOptionValue("files.image")
+						.split(","))); //NOI18N
+        List <String> filesDeletableExtensions = new ArrayList(
+				Arrays.asList(Jamuz.getMachine().getOptionValue("files.delete")
+						.split(","))); //NOI18N
 		this.filesConvertibleExtensions = new HashMap<>();
-		for(String string : Jamuz.getMachine().getOptionValue("files.convert").split(",")) { //NOI18N
+		for(String string : Jamuz.getMachine().getOptionValue("files.convert")
+				.split(",")) { //NOI18N
             String[] strings = string.split(":"); //NOI18N
 			filesConvertibleExtensions.put(strings[0], strings[1]);
         }
@@ -515,8 +522,16 @@ public class FolderInfo implements java.lang.Comparable {
 			}
 
 			if(!isReplayGainDone) {
-				//TODO: Support more formats than MP3 !
-                MP3gain mP3gain = new MP3gain(this.rootPath, this.relativePath, progressBar);
+				//FIXME: REPLAyGAIN Support more formats than MP3 ! (FLAC especially !!)
+				//https://zuttobenkyou.wordpress.com/2009/03/26/adding-replay-gain-in-linux-automatically/
+				//http://id3.org/id3v2.3.0#User_defined_text_information_frame
+				//http://www.bobulous.org.uk/misc/Replay-Gain-in-Linux.html
+				//https://bitbucket.org/ijabz/jaudiotagger/issues/37/add-generic-support-for-reading-writing
+				
+				//http://wiki.hydrogenaud.io/index.php?title=ReplayGain_1.0_specification#Metadata_format
+				//http://normalize.nongnu.org/README.html
+				//=>FIRST CHECK WHAT TAG USED by JaMuz Remote (and other players)
+                MP3gain mP3gain = new MP3gain(recalculateGain, this.rootPath, this.relativePath, progressBar);
 				if(mP3gain.process()) {
 					isReplayGainDone=true;
 				}
@@ -544,7 +559,7 @@ public class FolderInfo implements java.lang.Comparable {
 				String destExt=this.filesConvertibleExtensions.get(file.getExt());
 				progressBar.progress(MessageFormat.format(Inter.get("Msg.Check.Transcoding"), destExt));  //NOI18N
 				
-				basePath=file.getRootPath()+file.getRelativePath();
+				basePath=file.getFullPath().getAbsolutePath();
 				source = new File(FilenameUtils.concat(basePath, file.getFilename()));
 				
 				AudioAttributes audio = new AudioAttributes();
@@ -581,7 +596,7 @@ public class FolderInfo implements java.lang.Comparable {
 			}
 		}
 		progressBar.reset();
-		browse(true, progressBar, false); //last false as we do not want to transcode in loop in case of an error
+		browse(false, true, progressBar, false); //last false as we do not want to transcode in loop in case of an error
 	}
 	
     /**
@@ -639,7 +654,7 @@ public class FolderInfo implements java.lang.Comparable {
                 progressBar.progress(Inter.get("Msg.Check.SavingTags"));  //NOI18N
 			}
 
-			browse(true, progressBar);
+			browse(false, true, progressBar);
 			return true;
 
 		} catch (Exception ex) {
@@ -682,7 +697,7 @@ public class FolderInfo implements java.lang.Comparable {
      */
     private void delete(ProgressBar progressBar) {
         deleteAllFiles(progressBar);
-        browse(false, progressBar);
+        browse(false, false, progressBar);
         if(isCheckingMasterLibrary()) {
             scanDeleted(progressBar);
         }
@@ -1587,7 +1602,7 @@ public class FolderInfo implements java.lang.Comparable {
 		ArrayList<Cover> coversList=new ArrayList<>();
 		//List non-audio files
 		for (FileInfoInt myFileInfo : this.filesImage) {
-			coversList.add(new Cover(CoverType.FILE, myFileInfo.getRootPath()+File.separator+myFileInfo.getRelativeFullPath(), myFileInfo.getFilename()));  //NOI18N
+			coversList.add(new Cover(CoverType.FILE, myFileInfo.getFullPath().getAbsolutePath(), myFileInfo.getFilename()));  //NOI18N
 		}
 		coversList.addAll(this.coversTag);
 		if(this.searchKey!=null) { //can be null if search not performed, if artist and album are empty
