@@ -95,9 +95,11 @@ public class TrackTag extends FileInfoInt {
 	 * @throws ReadOnlyFileException
 	 * @throws InvalidAudioFrameException
 	 */
-	public void create(String option) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	public void create(String option) throws CannotReadException, IOException, 
+			TagException, ReadOnlyFileException, InvalidAudioFrameException {
         setRootPath(Jamuz.getMachine().getOptionValue(option));
-        FileSystem.copyFile(TrackSourceRepo.get(sourceFile).getFile(), new File(rootPath+relativeFullPath));
+        FileSystem.copyFile(TrackSourceRepo.get(sourceFile).getFile(), 
+				getFullPath());
 		saveTags(false);
     }
     

@@ -125,8 +125,7 @@ public class PanelRemote extends javax.swing.JPanel {
 				// AND somehow remove it from filesToKeep
 				//and filesToGet in remote
 				Popup.error("Cannot send missing file \""
-						+FilenameUtils.concat(fileInfoInt.getRootPath(), 
-								fileInfoInt.getRelativeFullPath())+"\"");
+						+fileInfoInt.getFullPath().getAbsolutePath()+"\"");
 			}
 		}
 	}

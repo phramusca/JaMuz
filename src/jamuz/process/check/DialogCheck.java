@@ -1703,7 +1703,7 @@ public class DialogCheck extends javax.swing.JDialog {
             for(int i=selectedRows.length-1; i>=0; i--) {
                 int indexSelected = selectedRows[i];
                 FileInfoDisplay file = folder.getFilesAudioTableModel().getFiles().get(indexSelected);
-                File myFile = new File(file.getRootPath() + File.separator + file.getRelativeFullPath()); 
+                File myFile = file.getFullPath(); 
                 myFile.delete();
                 if(progressBar!=null) {
                     progressBar.progress(Inter.get("Msg.Check.DeletingFiles"));  //NOI18N

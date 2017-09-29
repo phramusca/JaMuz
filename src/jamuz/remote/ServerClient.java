@@ -159,8 +159,7 @@ public class ServerClient {
     }
 	
 	public boolean sendFile(FileInfoInt fileInfoInt) {
-		File file = new File(FilenameUtils.concat(fileInfoInt.getRootPath(), 
-				fileInfoInt.getRelativeFullPath()));
+		File file = fileInfoInt.getFullPath();
 		if(file.exists()&&file.isFile()) {
 			send("SENDING_FILE"+fileInfoInt.toJson());
 			DataOutputStream dos = new DataOutputStream(

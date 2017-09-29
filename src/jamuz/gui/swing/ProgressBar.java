@@ -17,9 +17,7 @@
 
 package jamuz.gui.swing;
 
-import jamuz.Jamuz;
 import jamuz.utils.StringManager;
-import java.util.logging.Level;
 import javax.swing.JProgressBar;
 
 //TODO: Transformer toutes les progress bar pour utiliser cette classe !
@@ -38,7 +36,6 @@ public class ProgressBar extends JProgressBar {
 	 * Create a new progress bar
 	 */
 	public ProgressBar() {
-		this.setMaximum(0);
 	}
    
     
