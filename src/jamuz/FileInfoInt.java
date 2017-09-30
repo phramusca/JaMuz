@@ -64,12 +64,17 @@ import org.jaudiotagger.tag.id3.ID3v23Tag;
 import jamuz.utils.DateTime;
 import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
+import java.io.RandomAccessFile;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import org.jaudiotagger.audio.generic.GenericAudioHeader;
+import org.jaudiotagger.audio.ogg.util.OggInfoReader;
+import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import org.jaudiotagger.tag.id3.ID3v22Tag;
@@ -80,6 +85,8 @@ import org.jaudiotagger.tag.id3.framebody.FrameBodyRVAD;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
+import org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey;
+import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 
@@ -489,8 +496,6 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public String getLyrics() {
-        readReplayGainFromID3();
-		
 		if(lyrics.equals("")) {
             try {
                 AudioFile myAudioFile = AudioFileIO.read(getFullPath());
@@ -655,7 +660,7 @@ public class FileInfoInt extends FileInfo {
 			return false;
 		}
 	}
-	
+
 	private void readTags(Tag tag, boolean readCover) throws IOException {
 		//Get number of covers and read first one as required
 		this.nbCovers=tag.getArtworkList().size();
@@ -1322,6 +1327,27 @@ public class FileInfoInt extends FileInfo {
 		}
 	}
 	
+	public GainValues readReplayGainFromFlac() {
+		GainValues gv = new GainValues();
+		try {
+			org.jaudiotagger.audio.AudioFile f = AudioFileIO.read(getFullPath());
+			FlacTag tag = (FlacTag) f.getTag();
+			VorbisCommentTag vcTag = tag.getVorbisCommentTag();
+
+//			String REPLAYGAIN_REFERENCE_LOUDNESS = vcTag.getFirst("REPLAYGAIN_REFERENCE_LOUDNESS");
+			//REPLAYGAIN_REFERENCE_LOUDNESS=89.0 dB
+			
+			gv.trackGain = getFloatFromString(vcTag.getFirst("REPLAYGAIN_TRACK_GAIN"));
+			gv.albumGain = getFloatFromString(vcTag.getFirst("REPLAYGAIN_ALBUM_GAIN"));
+			gv.albumPeak = getFloatFromString(vcTag.getFirst("REPLAYGAIN_ALBUM_PEAK"));
+			gv.trackPeak = getFloatFromString(vcTag.getFirst("REPLAYGAIN_TRACK_PEAK"));
+		} catch (CannotReadException | IOException | TagException | 
+				ReadOnlyFileException | InvalidAudioFrameException ex) {
+			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return gv;
+	}
+	
 	public GainValues readReplayGainFromAPE() {
 		GainValues gv = new GainValues();
 		try {
@@ -1399,10 +1425,10 @@ public class FileInfoInt extends FileInfo {
 							gv.albumGain = getFloatFromString(fb.getTextWithoutTrailingNulls());
 						}
 						else if(fb.getDescription().toUpperCase().equals("REPLAYGAIN_ALBUM_PEAK")) {
-							gv.albumPeak = Float.parseFloat(fb.getTextWithoutTrailingNulls());
+							gv.albumPeak = getFloatFromString(fb.getTextWithoutTrailingNulls());
 						}
 						else if(fb.getDescription().toUpperCase().equals("REPLAYGAIN_TRACK_PEAK")) {
-							gv.trackPeak = Float.parseFloat(fb.getTextWithoutTrailingNulls());
+							gv.trackPeak = getFloatFromString(fb.getTextWithoutTrailingNulls());
 						}
 					}
 				}
