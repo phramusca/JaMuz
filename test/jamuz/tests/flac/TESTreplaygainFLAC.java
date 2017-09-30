@@ -17,14 +17,7 @@
 package jamuz.tests.flac;
 
 import jamuz.FileInfoInt;
-import jamuz.process.check.FileInfoDisplay;
-import jamuz.tests.flac.dk.stigc.javatunes.audioplayer.other.Track;
-import jamuz.tests.flac.dk.stigc.javatunes.audioplayer.tagreader.TagReaderManager;
-import java.io.Console;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -43,25 +36,11 @@ public class TESTreplaygainFLAC {
 				for (File file : files) {
 					if (!file.isDirectory()) {
 						if(file.getAbsolutePath().toLowerCase().endsWith("flac")) {
-//							Track track = new TagReaderManager().read(file);
-//							System.out.println(track.toString());
-//							System.out.println("Replaygain: "+track.replaygain+" // "+track.replaygainAlbumMode);
-//							System.out.println("------------------------------------------------");
 							FileInfoInt fileInfoInt = new FileInfoInt(file.getAbsolutePath(), "");
 							System.out.println("readReplayGainFromFlac: "+fileInfoInt.readReplayGainFromFlac());
 						}
 					}
 				}
 			}
-//			File file = new File("/home/raph/Bureau/ReplayGain/FLAC/Jacky Galou - Chansons de France/01 - Mes vieilles chansons.flac");
-//			Track track = new TagReaderManager().read(file);
-//			System.out.println("Replaygain: "+track.replaygain+" // "+track.replaygainAlbumMode);
-//			file = new File("/home/raph/Bureau/ReplayGain/Musique-copy/King Yellowman/01 Jamaica Nice_Take Me Home Country Roads.mp3");
-//			track = new TagReaderManager().read(file);
-//			System.out.println("Replaygain: "+track.replaygain+" // "+track.replaygainAlbumMode);
-//			FileInfoInt fileInfo = new FileInfoInt("ReplayGain/Musique-copy/King Yellowman/01 Jamaica Nice_Take Me Home Country Roads.mp3", "/home/raph/Bureau/");
-//			System.out.println(fileInfo.readReplayGainFromID3());
-		
-		
     } 
 }
