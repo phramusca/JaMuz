@@ -51,7 +51,9 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
             this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement(
 					"SELECT id, path AS fullPath, rating, playCounter, "
 							+ "lastplayed, addedDate, genre "
-							+ "FROM tracks ORDER BY path");
+							+ "FROM tracks "
+							+ "WHERE path LIKE ? "
+							+ "ORDER BY path");
             
             this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement(
 					"UPDATE tracks SET rating=?, playCounter=?, lastplayed=?, "
@@ -66,6 +68,33 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
         }
     }
 
+	@Override
+    public boolean getStatistics(ArrayList<FileInfo> files) {
+        ResultSet rs=null;
+        try {
+            FileInfo myFileInfo;
+			this.stSelectFileStatistics.setString(1, getRootPath()+"%");
+            rs = this.stSelectFileStatistics.executeQuery();
+            while (rs.next()) {
+				myFileInfo = getStatistics(rs);
+				files.add(myFileInfo);
+            }
+            return true;
+        } catch (SQLException ex) {
+            Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, "getStatistics", ex);  //NOI18N
+			return false;
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            
+        }
+    }
+	
     /**
      * Set update statistics parameters
      * @param file
@@ -84,7 +113,7 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
         this.stUpdateFileStatistics.setString(3, file.getFormattedLastPlayed());
         this.stUpdateFileStatistics.setString(4, file.getFormattedAddedDate());
 		this.stUpdateFileStatistics.setString(5, file.getGenre());
-        this.stUpdateFileStatistics.setString(6, this.getRootPath()+getPath(file.getRelativeFullPath()));
+        this.stUpdateFileStatistics.setString(6, getRootPath()+getPath(file.getRelativeFullPath()));
         this.stUpdateFileStatistics.addBatch();
     }
 	
