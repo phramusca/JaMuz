@@ -34,7 +34,7 @@ import java.text.MessageFormat;
 import java.util.logging.Logger;
 
 /**
- * MP3gain class launches mp3gain executable to compute MP3gain
+ * MP3gain class launches mp3gain executable to compute ReplayGain on MP3 files
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class MP3gain {
@@ -52,8 +52,7 @@ public class MP3gain {
      * @param rootPath
      * @param relativePath
      * @param progressBar
-     */
-    
+     */  
     public MP3gain(boolean recalculate, String rootPath, String relativePath, ProgressBar progressBar) {
         this.relativePath = relativePath;
         this.path = rootPath + relativePath;
@@ -62,7 +61,18 @@ public class MP3gain {
     }
 
 	/**
-	 * Compute MP3gain
+	 * Compute MP3gain with options:
+	 * <p>
+	 * -k - automatically lower Track/Album gain to not clip audio <p>
+	 * -a - apply Album gain automatically<p>
+	 * If recalculate: -s r - force re-calculation (do not read tag info)<p>
+	 * 
+	 * Note that even if album gain is applied, only the remaining is set in tag.<p>
+	 * (http://forums.slimdevices.com/archive/index.php/t-27036.html)<p>
+	 * total gain = [(mp3gain undo)*1.5 => applied] + gain in tag (remaining)<p>
+	 * 
+	 * https://sourceforge.net/projects/mp3gain/<p>
+	 * http://wiki.hydrogenaud.io/index.php?title=Replaygain#MP3Gain<p>
 	 * @return  
 	 */
 	public boolean process() {
@@ -119,6 +129,11 @@ public class MP3gain {
                     progressTotal+=1;
                 }
             }
+			
+			if(progressTotal<=0) {
+				//No MP3 files to be processed. Exiting
+				return false;
+			}
 			
 			Runtime runtime = Runtime.getRuntime();
 			final Process process;
@@ -241,6 +256,103 @@ public class MP3gain {
 				readErrorThread.join();
 				
 //				Jamuz.getLogger().finest("COMPLETE");  //NOI18N
+				return true;
+
+			} catch (IOException | InterruptedException ex) {
+				Popup.error(ex);
+				return false;
+			}
+		}
+		else {
+			Popup.error("No files found for mp3gain in \""+path+"\"");  //NOI18N
+			return false;
+		}
+	}
+	
+	public boolean undo() {
+		File pathFile = new File(path);
+		File[] files = pathFile.listFiles();
+		if (files != null) {
+			//Build mp3gain command array
+			List<String> cmdArray = new ArrayList<>();
+			if(OS.isWindows()) {
+				cmdArray.add("data\\mp3gain.exe");
+			}
+            else {
+                //TODO: Test if it works in MacOS for instance
+				cmdArray.add("mp3gain");
+			}
+			
+			cmdArray.add("-u");  //-u - undo changes made (based on stored tag info)
+
+			//Add the files in path to command array
+            for (File myFile : files) {
+                String absolutePath=myFile.getAbsolutePath();
+                String fileExtension=FilenameUtils.getExtension(absolutePath);
+                //TODO: Find a way to get mime type instead of file extension
+                if(fileExtension.toLowerCase().equals("mp3")) {  //NOI18N
+                    cmdArray.add(absolutePath);
+                }
+            }
+			
+			Runtime runtime = Runtime.getRuntime();
+			final Process process;
+
+			try {
+				String[] stockArr = new String[cmdArray.size()];
+				stockArr = cmdArray.toArray(stockArr);
+				process = runtime.exec(stockArr);
+				process.waitFor();
+				return true;
+
+			} catch (IOException | InterruptedException ex) {
+				Popup.error(ex);
+				return false;
+			}
+		}
+		else {
+			// This should never happen as this function
+			// will be called only if folder contains MP3 files
+			Popup.error("No MP3 files found for mp3gain in \""+path+"\"");  //NOI18N
+			return false;
+		}
+	}
+	
+	public boolean clearTags() {
+		File pathFile = new File(path);
+		File[] files = pathFile.listFiles();
+		if (files != null) {
+			//Build mp3gain command array
+			List<String> cmdArray = new ArrayList<>();
+			if(OS.isWindows()) {
+				cmdArray.add("data\\mp3gain.exe");
+			}
+            else {
+                //TODO: Test if it works in MacOS for instance
+				cmdArray.add("mp3gain");
+			}
+			
+			cmdArray.add("-s");  //-s d - delete stored tag info (no other processing)
+			cmdArray.add("d");
+			
+			//Add the files in path to command array
+            for (File myFile : files) {
+                String absolutePath=myFile.getAbsolutePath();
+                String fileExtension=FilenameUtils.getExtension(absolutePath);
+                //TODO: Find a way to get mime type instead of file extension
+                if(fileExtension.toLowerCase().equals("mp3")) {  //NOI18N
+                    cmdArray.add(absolutePath);
+                }
+            }
+			
+			Runtime runtime = Runtime.getRuntime();
+			final Process process;
+
+			try {
+				String[] stockArr = new String[cmdArray.size()];
+				stockArr = cmdArray.toArray(stockArr);
+				process = runtime.exec(stockArr);
+				process.waitFor();
 				return true;
 
 			} catch (IOException | InterruptedException ex) {
