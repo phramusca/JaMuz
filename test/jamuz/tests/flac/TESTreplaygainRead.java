@@ -32,8 +32,8 @@ public class TESTreplaygainRead {
 	public static void main(String[] args) {
 
 		
-		String pathStr = "/home/raph/Bureau/ReplayGain/Musique-copy/King Yellowman/";
-//		String pathStr = "/home/raph/Bureau/ReplayGain/FLAC-not set/";
+//		String pathStr = "/home/raph/Bureau/ReplayGain/Musique-copy/King Yellowman/";
+		String pathStr = "/home/raph/Bureau/ReplayGain/FLAC-not set/";
 		
 		
 		/////////////////////////////////////////////////////
