@@ -18,7 +18,6 @@ package jamuz.process.check;
 
 import com.beaglebuddy.ape.APETag;
 import com.beaglebuddy.mp3.MP3;
-import jamuz.FileInfoInt;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -111,7 +110,7 @@ public class ReplayGain {
 			gv.trackPeak = getFloatFromString(vcTag.getFirst("REPLAYGAIN_TRACK_PEAK"));
 		} catch (CannotReadException | IOException | TagException | 
 				ReadOnlyFileException | InvalidAudioFrameException ex) {
-			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return gv;
 	}
@@ -163,7 +162,7 @@ public class ReplayGain {
 			}
 		}
 		catch (IOException ex) {
-			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return gv;
     }
@@ -223,7 +222,7 @@ public class ReplayGain {
 				}
 			}
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
-			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return gv;
 	}
