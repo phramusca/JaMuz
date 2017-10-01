@@ -14,33 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz.tests.flac;
+package jamuz.tests;
 
 import jamuz.FileInfoInt;
+import jamuz.process.check.ReplayGain;
 import java.io.File;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class TESTreplaygainFLAC {
+public class TESTreplaygainRead {
     /**
 	 * Main program.
 	 * @param args
 	 */
 	public static void main(String[] args) {
 
-			File path = new File("/home/raph/Bureau/ReplayGain/FLAC-not set/");
-			File[] files = path.listFiles();
-			if (files != null) {
-				for (File file : files) {
-					if (!file.isDirectory()) {
-						if(file.getAbsolutePath().toLowerCase().endsWith("flac")) {
-							FileInfoInt fileInfoInt = new FileInfoInt(file.getAbsolutePath(), "");
-							System.out.println("readReplayGainFromFlac: "+fileInfoInt.readReplayGainFromFlac());
-						}
-					}
+		
+//		String pathStr = "/home/raph/Bureau/ReplayGain/Musique-copy/King Yellowman/";
+		String pathStr = "/home/raph/Bureau/ReplayGain/FLAC-not set/";
+		
+		
+		/////////////////////////////////////////////////////
+		File path = new File(pathStr);
+		File[] files = path.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				if (!file.isDirectory()) {
+					FileInfoInt fileInfoInt = new FileInfoInt(file.getAbsolutePath(), "");
+					ReplayGain.GainValues gv = fileInfoInt.getReplayGain(true);
+					System.out.println("ReplayGain: "+gv+" // "+gv.isValid()+" // " + fileInfoInt.getFullPath());
+					
 				}
 			}
+		}
     } 
 }

@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Logger;
 
 /**
  * Check process class
@@ -58,7 +57,7 @@ public class ProcessCheck {
 	 *
 	 */
 	public BlockingQueue<FolderInfo> actionQueue = new LinkedBlockingQueue<>();
-    private static final FolderInfo lastFolder = new FolderInfo(); //TODO: Do not display in queues (internal use only)
+    private static final FolderInfo LAST_FOLDER = new FolderInfo(); //TODO: Do not display in queues (internal use only)
     private ConcurrentHashMap<String,FolderInfo> foldersDb;
     
     private volatile int nbProcesses=0;
@@ -259,7 +258,6 @@ public class ProcessCheck {
         if(scanQueue.size()>PanelCheck.progressBarScanSize.getMaximum()) {
             PanelCheck.progressBarScanSize.setMaximum(scanQueue.size());
         }
-//        String msg="";
         if(ellapsedTime>0) {
             this.partialTimesScan.add(ellapsedTime);
             int nbScanned = partialTimesScan.size();
@@ -270,11 +268,7 @@ public class ProcessCheck {
             //Voir stats dans DoScan-Stats-Threading.ods => appliquer nouveau calcul: utiliser un Benchmark global to replace all but mean in below display
             benchScan.setSize(nbScanned+scanQueue.size());
             msgScan="("+nbScanned+ " x " + mean + "). " + benchScan.get();
-//            PanelCheck.progressBarScanSize.progress(msgScan, scanQueue.size());
         }
-//        else {
-//            PanelCheck.progressBarScanSize.setValue(scanQueue.size());
-//        }
         PanelCheck.progressBarScanSize.progress(msgScan, scanQueue.size());
     }
     
@@ -321,8 +315,8 @@ public class ProcessCheck {
             }
         }
         //Removing potential terminator signals
-        while(actionQueue.contains(lastFolder)) {
-            actionQueue.remove(lastFolder);
+        while(actionQueue.contains(LAST_FOLDER)) {
+            actionQueue.remove(LAST_FOLDER);
         }
         //Displaying the queue
         displayActionQueue();
@@ -345,7 +339,7 @@ public class ProcessCheck {
 		if(doActions!=null) { //Happens when starting check process for the first time
             try {
                 //Add a "terminate" signal at queue end
-                actionQueue.put(lastFolder);
+                actionQueue.put(LAST_FOLDER);
             } catch (InterruptedException ex) {
                 Jamuz.getLogger().log(Level.SEVERE, null, ex);
             }
@@ -475,7 +469,7 @@ public class ProcessCheck {
                 for (Iterator<DoScan> it = doScanList.iterator(); it.hasNext();) {
                     it.next();
                     try {
-                        scanQueue.put(lastFolder);
+                        scanQueue.put(LAST_FOLDER);
                     } catch (InterruptedException ex) {
                     }
                 }
@@ -521,8 +515,7 @@ public class ProcessCheck {
                             if (myFile.isDirectory()) {
                                 sendFoldersFSToScanQueue(myFile, scanType);
                             }
-    //                        PanelCheck.progressBarFolders.progress(": "+FilenameUtils.getBaseName(FilenameUtils.getPathNoEndSeparator(path.getAbsolutePath())));  //NOI18N
-                            PanelCheck.progressBarFolders.progress("");
+							PanelCheck.progressBarFolders.progress("");
                         }
                         FolderInfo folder = new FolderInfo(path.getAbsolutePath()+File.separator, rootLocation.value);
                         int nbFiles = folder.nbFiles;
@@ -638,7 +631,7 @@ public class ProcessCheck {
                             it.next();
                             try {
                                 Jamuz.getLogger().log(Level.FINEST, "DoScan({0}): analysisQueue.put(lastFolder)", progressBarId);
-                                analysisQueue.put(lastFolder);
+                                analysisQueue.put(LAST_FOLDER);
                             } catch (InterruptedException ex) {
                             }
                         }
@@ -655,9 +648,6 @@ public class ProcessCheck {
             FolderInfo folder;
             ProgressBar progressBar=PanelCheck.progressBarListScanDequeue.get(progressBarId);
             while (!(folder = scanQueue.take()).isLast) {
-                
-//                waitActionQueue(progressBar);
-                
                 Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+").dequeue(): {0}", folder.getRelativePath());
                 checkAbort();
                 long startTime=System.currentTimeMillis();
@@ -679,7 +669,6 @@ public class ProcessCheck {
                         folder.browse(true, true, progressBar);
                         break;
                 }
-//                displayScanSpeed();
                 waitActionQueue(progressBar);
                 if(analyze) {
 					Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): analysisQueue.put({0})", folder.getRelativePath());
@@ -707,7 +696,6 @@ public class ProcessCheck {
                     if(!folderFS.updateInDb(checkedFlagDb)) {
                         return false;
                     }
-//                    waitActionQueue(progressBar);
                 }
                 else {
                     //We will not scan inside path IF not a full scan OR folder has not been modified (quick scan mode)
@@ -719,21 +707,18 @@ public class ProcessCheck {
                 if(!folderFS.insertInDb(CheckedFlag.UNCHECKED)) {
                     return false;
                 }
-//                waitActionQueue(progressBar);
             }
             //Scan and update folder's files
             if(scanFiles) {
                 //Get list of files from filesystem, reading tags as will be displayed
-                if(folderFS.browse(true, true, progressBar)) {
+                if(folderFS.browse(false, true, progressBar)) {
                     if(!folderFS.scan(true, progressBar)) {
                         return false;
                     }
-//                    waitActionQueue(progressBar);
                 }
                 else {
                     return false;
                 }
-//                waitActionQueue(progressBar);
             }
             progressBar.reset();
             return true;
@@ -775,13 +760,10 @@ public class ProcessCheck {
         private void dequeue() throws InterruptedException {
             FolderInfo folderInfo;
             while (!(folderInfo = analysisQueue.take()).isLast) { 
-//                waitActionQueue(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
-                
 				Jamuz.getLogger().log(Level.FINEST, "DoAnalyze("+progressBarId+").dequeue(): {0}", folderInfo.getRelativePath());
                 checkAbort();
 				long startTime=System.currentTimeMillis();
                 analyse(folderInfo);
-//				displyAnalysisSpeed(System.currentTimeMillis()-startTime);
                 displayAnalysisQueue(System.currentTimeMillis()-startTime);
            }
         }
@@ -791,7 +773,6 @@ public class ProcessCheck {
             this.checkAbort();
             try {
                 folder.analyse(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
-//                waitActionQueue(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
             } catch (CloneNotSupportedException ex) {
                 Popup.error(ex);
             }
@@ -799,12 +780,10 @@ public class ProcessCheck {
             try {
                 this.checkAbort();
                 folder.analyseMatch(0, PanelCheck.progressBarListAnalysisDequeue.get(progressBarId)); //Analyse first match
-//                waitActionQueue(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
-                //Analyse match tracks
+				
+				//Analyse match tracks
                 this.checkAbort();
-
                 folder.analyseMatchTracks();
-//                waitActionQueue(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
 
                 //Select appropriate action
                 if(folder.isValid()) { //ie: no KO result
@@ -910,16 +889,6 @@ public class ProcessCheck {
     
     private boolean isActionQueueFull() {
         synchronized(lockScan) {
-//            int nbAnalysisRunning=0;
-//            for(ProcessCheck.DoAnalyze doAnalyze : doAnalyzeList) {
-//                if(doAnalyze!=null) {
-//                    if(doAnalyze.isAlive() && !doAnalyze.getState().equals(Thread.State.WAITING)) {
-//                        nbAnalysisRunning++;
-//                    }
-//                }
-//            }
-//            return (maxActionQueueSize-nbScanRunning);
-            //+nbAnalysisRunning
             return((PanelCheck.tableModelActionQueue.getRowCount()) >= maxActionQueueSize);
         }
     }
