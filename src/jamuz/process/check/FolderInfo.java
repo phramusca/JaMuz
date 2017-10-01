@@ -36,7 +36,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,6 +52,7 @@ import java.util.LinkedHashMap;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModelCheckTracks;
+import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import java.awt.Color;
@@ -425,6 +425,7 @@ public class FolderInfo implements java.lang.Comparable {
 
     /**
      *
+	 * @param recalculateGain
      * @param readTags
      * @param progressBar
      * @return
@@ -521,21 +522,42 @@ public class FolderInfo implements java.lang.Comparable {
 				this.transcode(progressBar);
 			}
 
-			if(!isReplayGainDone) {
-				//FIXME: REPLAyGAIN Support more formats than MP3 ! (FLAC especially !!)
-				//https://zuttobenkyou.wordpress.com/2009/03/26/adding-replay-gain-in-linux-automatically/
+			//FIXME: ReplayGain. Complete and test, then use (and on remote too)
+			if(!isReplayGainDone || recalculateGain) {
+				//http://www.bobulous.org.uk/misc/Replay-Gain-in-Linux.html				
 				//http://id3.org/id3v2.3.0#User_defined_text_information_frame
-				//http://www.bobulous.org.uk/misc/Replay-Gain-in-Linux.html
-				//https://bitbucket.org/ijabz/jaudiotagger/issues/37/add-generic-support-for-reading-writing
 				
-				//http://wiki.hydrogenaud.io/index.php?title=ReplayGain_1.0_specification#Metadata_format
-				//http://normalize.nongnu.org/README.html
-				//=>FIRST CHECK WHAT TAG USED by JaMuz Remote (and other players)
-                MP3gain mP3gain = new MP3gain(recalculateGain, this.rootPath, this.relativePath, progressBar);
-				if(mP3gain.process()) {
-					isReplayGainDone=true;
+				//Get ReplayGain values from files
+				boolean isValid=true;
+				for(FileInfoDisplay fileInfoDisplay : filesAudio) {
+					GainValues gv = fileInfoDisplay.getReplayGain(false);
+					System.out.println("ReplayGain: "+gv+" // "+gv.isValid()+" // " + fileInfoDisplay.getFullPath());
+					if(!gv.isValid()) {
+						isValid=false;
+						break; //No need to read others
+					}
+				}
+				if(!isValid || recalculateGain) {
+					//Compute replaygain for MP3 files (if any)
+					MP3gain mP3gain = new MP3gain(recalculateGain, this.rootPath, 
+							this.relativePath, progressBar);
+					if(mP3gain.process()) {
+						filesAudio.stream().forEach((fileInfoDisplay) -> {
+							GainValues gv = fileInfoDisplay.getReplayGain(true);
+							System.out.println("ReplayGain: "+gv+" // "+gv.isValid()+" // " + fileInfoDisplay.getFullPath());
+							fileInfoDisplay.saveReplayGainToID3(gv);
+						});
+					}
+					//Compute Replaygain for FLAC files (if any)
+					progressBar.setIndeterminate("Computing ReplayGain for FLAC ...");
+					MetaFlac metaFlac = new MetaFlac(getFullPath());
+					if(metaFlac.process()) {
+						//Youpi :)
+					}
+					//TODO: Compute ReplayGain for OGG
 				}
 				progressBar.reset();
+				isReplayGainDone=true;
 			}
 
 			return true;
@@ -653,7 +675,6 @@ public class FolderInfo implements java.lang.Comparable {
                 }
                 progressBar.progress(Inter.get("Msg.Check.SavingTags"));  //NOI18N
 			}
-
 			browse(false, true, progressBar);
 			return true;
 
