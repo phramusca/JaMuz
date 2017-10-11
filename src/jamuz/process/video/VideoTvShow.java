@@ -95,13 +95,17 @@ public class VideoTvShow extends VideoAbstract {
             }
         }
         this.thumbnails = new ArrayList<>();
-        this.thumbnails.add("https://image.tmdb.org/t/p/w396"+serie.getPosterPath());
-        this.fanarts = new ArrayList<>();
-        this.fanarts.add("https://image.tmdb.org/t/p/w396"+serie.getBackdropPath());
+		this.fanarts = new ArrayList<>();
+        setThumbnails(myTvShow);
 //        this.ratingVotes = Math.round(serie.getVoteAverage());
         serie.getPopularity(); //TODO: Use this
         serie.getVoteCount(); //TODO: Use thos
         
+	}
+	
+	private void setThumbnails(MyTvShow myTvShow) {
+		this.thumbnails.add("https://image.tmdb.org/t/p/w396"+myTvShow.getSerie().getPosterPath()); 
+        this.fanarts.add("https://image.tmdb.org/t/p/w396"+myTvShow.getSerie().getBackdropPath()); 
 	}
     
     private List<String> parseURLTvShows(String string) {
@@ -146,7 +150,7 @@ public class VideoTvShow extends VideoAbstract {
                 int limit = missing.size();
                 if(limit>10) limit=10;
                 for(int i=0; i<limit; i++) {
-                    display += " "+missing.get(i);
+                    display += " "+missing.get(missing.size()-i-1);
                 }
                 if(missing.size()>10) {
                     display += " ...";
@@ -298,6 +302,7 @@ public class VideoTvShow extends VideoAbstract {
 	 */
 	@Override
     public boolean isLocal() {
+		//FIXME: VIDEO isLocal is wrong, can't be the same as isWatched
         List<String> missing = getMissing();
         return missing==null?false:missing.size()<=0;
     }
@@ -311,6 +316,7 @@ public class VideoTvShow extends VideoAbstract {
         MyTvShow myTvShow = ProcessVideo.themovieDb.getTv(getTitle(), getYearInt(), search);
         if(myTvShow!=null) {
             setMyVideo(myTvShow);
+			setThumbnails(myTvShow);
         }
         else if(search) {
             myTvShow = ProcessVideo.themovieDb.searchFirstTv(getTitle(), getYearInt());
@@ -319,6 +325,7 @@ public class VideoTvShow extends VideoAbstract {
 			myTvShow = new MyTvShow(new TvSeries());
 		}
 		setMyVideo(myTvShow);
+		setThumbnails(myTvShow);
     }
     
     /**
@@ -375,5 +382,4 @@ public class VideoTvShow extends VideoAbstract {
     public boolean isMovie() {
         return false;
     }
-
 }

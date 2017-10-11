@@ -16,8 +16,6 @@
  */
 package jamuz.process.video;
 
-import static jamuz.process.video.ProcessVideo.themovieDb;
-
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
