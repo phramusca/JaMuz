@@ -121,7 +121,7 @@ public class IconBufferVideo {
 		} catch (IIOException ex) {
             Jamuz.getLogger().log(Level.WARNING, "", ex);
         }
-        catch (IOException ex) {
+        catch (IOException | NullPointerException ex) {
 			Jamuz.getLogger().log(Level.SEVERE, "", ex);
 		}
         return icon;

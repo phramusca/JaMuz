@@ -285,7 +285,7 @@ public class Jamuz {
         String file=appPath;
         for (String subFolder : args) {
             file = FilenameUtils.concat(file, subFolder); //NOI18N
-			//TODO: Create the folders if missing
+			//FIXME: Create the folders if missing
         } 
         file = FilenameUtils.concat(file, filename); //NOI18N
         return new File(file); //NOI18N
