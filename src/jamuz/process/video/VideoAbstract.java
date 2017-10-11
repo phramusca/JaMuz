@@ -586,7 +586,7 @@ public abstract class VideoAbstract implements Comparable {
 	 * @return
 	 */
 	abstract public boolean isMovie();
-
+	
     /**
      *
      * @param myMovieDb

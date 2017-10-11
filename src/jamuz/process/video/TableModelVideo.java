@@ -290,7 +290,7 @@ public class TableModelVideo extends TableModelGeneric {
         for(VideoAbstract fileInfoVideo : this.files) {
             tLoadIcons.checkAbort();
             fileInfoVideo.getThumbnail(true);
-            this.fireTableDataChanged();
+            //this.fireTableDataChanged();
         }
     }
     

@@ -126,7 +126,9 @@ public class DbConnVideo extends DbConn {
 					+ "FROM ( movie M "
                     + "INNER JOIN path P ON M.idFile=F.idFile) " //NOI18N
 					+ "INNER JOIN files F ON F.idPath=P.idPath "
+					+ "WHERE strPath LIKE ?"
                     + "ORDER BY M.c00");    //NOI18N 
+			stSelectAllMovies.setString(1, rootPath+"%");
 			//Execute query
 			rs = stSelectAllMovies.executeQuery();
 			while(rs.next()){
@@ -481,7 +483,8 @@ public class DbConnVideo extends DbConn {
 		try {
 			connection.setAutoCommit(false);
 			int[] results;
-			PreparedStatement stInsertInCache = connection.prepareStatement("INSERT OR REPLACE INTO "+table+" ("+idName+", obj) VALUES (?, ?)"); //NOI18N 
+			PreparedStatement stInsertInCache = connection.prepareStatement(
+					"INSERT OR REPLACE INTO "+table+" ("+idName+", obj) VALUES (?, ?)"); //NOI18N 
 			for (Entry<Integer, byte[]> entry : objects.entrySet()) {
 				stInsertInCache.setInt(1, entry.getKey());
 				stInsertInCache.setBytes(2, entry.getValue());
@@ -491,7 +494,9 @@ public class DbConnVideo extends DbConn {
 			results = stInsertInCache.executeBatch();
 			connection.commit();
 			long endTime = System.currentTimeMillis();
-			Jamuz.getLogger().log(Level.FINEST, "setObjectInCache UPDATE done in {0}ms. Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
+			Jamuz.getLogger().log(Level.FINEST, 
+					"setObjectInCache UPDATE done in {0}ms. Total execution time: {1}ms", 
+					new Object[]{results.length, endTime - startTime});    //NOI18N
 
 			//Analyse results
 			//TODO: Get more info to display => add a Map<Integer, EntrySet>. Do that for other similar cases

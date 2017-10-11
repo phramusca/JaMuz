@@ -485,20 +485,17 @@ public class TheMovieDb {
 	 */
 	public MyMovieDb searchFirst(String name, int year) {
         List<MovieDb> movies = search(name, year);
-        
-        if(movies.size()>0) {
-            //TODO: Manage if >1 (offer user a choice)
-            MovieDb movieDb = movies.get(0);
-            int movieId = movieDb.getId();
-                    
-            if(myMovies.containsKey(movieId)) {
-                MyMovieDb myMovieDb = myMovies.get(movieId);
-                myMovies.remove(movieId);
-                return myMovieDb;
-            }
-            
-            return new MyMovieDb(movieDb);
-        }
+		for(MovieDb movieDb : movies) {
+			if(movieDb.getTitle().toLowerCase().equals(name.toLowerCase())) {
+				int movieId = movieDb.getId();
+				if(myMovies.containsKey(movieId)) {
+					MyMovieDb myMovieDb = myMovies.get(movieId);
+					myMovies.remove(movieId);
+					return myMovieDb;
+				}
+				return new MyMovieDb(movieDb);
+			}
+		}
         return null;
     }
     
@@ -510,21 +507,19 @@ public class TheMovieDb {
 	 */
 	public MyTvShow searchFirstTv(String name, int year) {
         List<TvSeries> series = searchTv(name, year);
-        
-        if(series.size()>0) {
-            //TODO: Manage if >1 (offer user a choice)
-            TvSeries serie = series.get(0);
-            int serieId = serie.getId();
-                    
-            if(myTvShows.containsKey(serieId)) {
-                MyTvShow myTvShow = myTvShows.get(serieId);
-                myTvShow.setSerie(getTV(serie.getId()));
-                myTvShows.remove(serieId);
-                return myTvShow;
-            }
-            serie=getTV(serie.getId());
-            return new MyTvShow(serie);
-        }
+        for(TvSeries serie : series) {
+			if(serie.getName().toLowerCase().equals(name.toLowerCase())) {
+				int serieId = serie.getId();       
+				if(myTvShows.containsKey(serieId)) {
+					MyTvShow myTvShow = myTvShows.get(serieId);
+					myTvShow.setSerie(getTV(serie.getId()));
+					myTvShows.remove(serieId);
+					return myTvShow;
+				}
+				serie=getTV(serie.getId());
+				return new MyTvShow(serie);
+			}
+		}
         return null;
     }
 
@@ -552,8 +547,8 @@ public class TheMovieDb {
 	 */
 	public MyMovieDb get(String name, int year) {
         for(MyMovieDb myMovieDb : myMovies.values()) {
-            String title=myMovieDb.getMovieDb().getTitle()==null?"":myMovieDb.getMovieDb().getTitle();	
-            if(title.equals(name)) {
+            String title=myMovieDb.getMovieDb().getOriginalTitle()==null?"":myMovieDb.getMovieDb().getOriginalTitle();	
+            if(title.toLowerCase().equals(name.toLowerCase())) {
                 if(year<=0 || myMovieDb.getYear()==year) {
                     myMovies.remove(myMovieDb.getMovieDb().getId());
                     return myMovieDb;
@@ -572,8 +567,8 @@ public class TheMovieDb {
 	 */
 	public MyTvShow getTv(String name, int year, boolean search) {
         for(MyTvShow myTvShow : myTvShows.values()) {
-            
-            if(myTvShow.getSerie().getName().equals(name)) {
+            String title=myTvShow.getSerie().getName()==null?"":myTvShow.getSerie().getName();	
+            if(title.toLowerCase().equals(name.toLowerCase())) {
                 if(year<=0 || myTvShow.getYear()==year) {
                     if(search) { myTvShow.setSerie(getTV(myTvShow.getSerie().getId())); }
                     myTvShows.remove(myTvShow.getSerie().getId());
