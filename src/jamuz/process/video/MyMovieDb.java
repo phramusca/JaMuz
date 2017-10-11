@@ -27,74 +27,70 @@ import java.io.Serializable;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class MyMovieDb extends MyVideoAbstract implements Serializable {
-        private MovieDb movieDb;
+	private MovieDb movieDb;
 
 	/**
 	 *
 	 * @param movieDb
 	 */
 	public MyMovieDb(MovieDb movieDb) {
-            super();
-            int rating = Math.round(movieDb.getUserRating());
-            this.userRating = rating<=0?new VideoRating(0, "0 - Not Rated"):comboRating[rating-1];
-            this.movieDb = movieDb;
-            
-            if(movieDb.getReleaseDate()!=null) {
-                this.year = getYear(movieDb.getReleaseDate());
-//                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  //NOI18N
-//                try {
-//                    Date releaseDate = dateFormat.parse(movieDb.getReleaseDate());
-//                    Calendar cal = Calendar.getInstance();
-//                    cal.setTime(releaseDate);
-//                    this.year = cal.get(Calendar.YEAR);
-//                } catch (ParseException ex) {
-////                    Popup.error(ex);
-//                }
-            }
-        }
+		super();
+		int rating = Math.round(movieDb.getUserRating());
+		this.userRating = rating<=0?new VideoRating(0, "0 - Not Rated"):comboRating[rating-1];
+		this.movieDb = movieDb;
+
+		if(movieDb.getReleaseDate()!=null) {
+			this.year = getYear(movieDb.getReleaseDate());
+		}
+	}
 
 	/**
 	 *
 	 * @return
 	 */
 	public MovieDb getMovieDb() {
-            return movieDb;
-        }
+		return movieDb;
+	}
 
 	/**
 	 *
 	 * @param movieDb
 	 */
 	public void setMovieDb(MovieDb movieDb) {
-            this.movieDb = movieDb;
-        }
+		this.movieDb = movieDb;
+	}
 
 	/**
 	 *
 	 * @return
 	 */
 	@Override
-        public int getId() {
-            return this.movieDb.getId();
-        }
+	public int getId() {
+		return this.movieDb.getId();
+	}
 
 	/**
 	 *
 	 * @return
 	 */
 	@Override
-        public String getHomepage() {
-            return this.movieDb.getHomepage(); //TODO: Lookup if not already done to get the homepage
-        }
+	public String getHomepage() {
+		return this.movieDb.getHomepage(); //TODO: Lookup if not already done to get the homepage
+	}
 		
 	/**
 	 *
 	 */
 	@Override
-		public void setMyVideoInCache() {
-			DbConnVideo conn = new DbConnVideo(new DbInfo(LibType.Sqlite, "myMovieDb.db", ".", "."), "");
-			conn.connect();
-			conn.setMovieInCache(this);
-			conn.disconnect();
-		}
-    }   
+	public void setMyVideoInCache() {
+		DbConnVideo conn = new DbConnVideo(new DbInfo(LibType.Sqlite, "myMovieDb.db", ".", "."), "");
+		conn.connect();
+		conn.setMovieInCache(this);
+		conn.disconnect();
+	}
+	
+	@Override
+	public String toString() {
+		return this.movieDb.getTitle()+" ("+this.movieDb.getUserRating()+")";
+	}
+}   

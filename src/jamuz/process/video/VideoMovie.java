@@ -102,15 +102,12 @@ public class VideoMovie extends VideoAbstract {
         
         this.status = new Status();
         this.status.set("No local file. From theMovieDb.org");
-        
-        MovieDb movieDb = myMovieDb.getMovieDb();
 
         this.thumbnails = new ArrayList<>();
-        this.thumbnails.add("https://image.tmdb.org/t/p/w396"+movieDb.getPosterPath());
-        
         this.fanarts = new ArrayList<>();
-        this.fanarts.add("https://image.tmdb.org/t/p/w396"+movieDb.getBackdropPath());
-
+		MovieDb movieDb = myMovieDb.getMovieDb();
+		setThumbnails(myMovieDb);
+		
 		this.genres = new ArrayList<>();
         this.genreStr = "";
         if(movieDb.getGenres()!=null) {
@@ -124,6 +121,18 @@ public class VideoMovie extends VideoAbstract {
         movieDb.getVoteCount(); //TODO: Use thos
 	}
     
+	/**
+	 *
+	 * @param myMovieDb
+	 */
+	private void setThumbnails(MyMovieDb myMovieDb) {
+		MovieDb movieDb = myMovieDb.getMovieDb();
+		if(movieDb!=null) {
+			this.thumbnails.add("https://image.tmdb.org/t/p/w396"+movieDb.getPosterPath());
+			this.fanarts.add("https://image.tmdb.org/t/p/w396"+movieDb.getBackdropPath());
+		}
+	}
+	
 	/**
 	 *
 	 * @return
@@ -185,9 +194,10 @@ public class VideoMovie extends VideoAbstract {
 	 */
 	@Override
     public void setMyVideo(boolean search) {
-        MyMovieDb myMovieDb = ProcessVideo.themovieDb.get(getTitle(), getYearInt());
+        MyMovieDb myMovieDb = ProcessVideo.themovieDb.get(getTitleOri(), getYearInt());
         if(myMovieDb!=null) {
-            setMyVideo(myMovieDb);  
+            setMyVideo(myMovieDb);
+			setThumbnails(myMovieDb);
         }
         else if(search) {
             myMovieDb = ProcessVideo.themovieDb.searchFirst(getTitle(), getYearInt());
@@ -195,7 +205,8 @@ public class VideoMovie extends VideoAbstract {
 		if(myMovieDb==null) {
 			myMovieDb = new MyMovieDb(new MovieDb());
 		}
-		setMyVideo(myMovieDb); 
+		setMyVideo(myMovieDb);
+		setThumbnails(myMovieDb);
     }
     
     /**
