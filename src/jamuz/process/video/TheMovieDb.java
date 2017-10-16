@@ -43,6 +43,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import jamuz.utils.Popup;
 
+//http://jcenter.bintray.com/info/movito/themoviedbapi/1.6/
+
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
@@ -203,7 +205,6 @@ public class TheMovieDb {
 	 * @param rating
 	 */
 	public void setRating(int movieId, int rating) {
-        doWait();
         account.postMovieRating(sessionToken, movieId, rating);
     }
     
@@ -213,7 +214,6 @@ public class TheMovieDb {
 	 * @param rating
 	 */
 	public void setRatingTV(int serieId, int rating) {
-        doWait();
         account.postTvSeriesRating(sessionToken, serieId, rating);
     }
     
@@ -222,7 +222,6 @@ public class TheMovieDb {
 	 * @param movieId
 	 */
 	public void addFavorite(int movieId) {
-        doWait();
         account.addFavorite(sessionToken, accountId, movieId, TmdbAccount.MediaType.MOVIE);
     }
     
@@ -231,7 +230,6 @@ public class TheMovieDb {
 	 * @param serieId
 	 */
 	public void addFavoriteTV(int serieId) {
-        doWait();
         account.addFavorite(sessionToken, accountId, serieId, TmdbAccount.MediaType.TV);
     }
     
@@ -240,7 +238,6 @@ public class TheMovieDb {
 	 * @param movieId
 	 */
 	public void removeFavorite(int movieId) {
-        doWait();
         account.removeFavorite(sessionToken, accountId, movieId, TmdbAccount.MediaType.MOVIE);
     }
     
@@ -249,7 +246,6 @@ public class TheMovieDb {
 	 * @param movieId
 	 */
 	public void removeFavoriteTV(int movieId) {
-        doWait();
         account.removeFavorite(sessionToken, accountId, movieId, TmdbAccount.MediaType.TV);
     }
     
@@ -258,7 +254,6 @@ public class TheMovieDb {
 	 * @param movieId
 	 */
 	public void addToWatchList(int movieId) {
-        doWait();
         account.addToWatchList(sessionToken, accountId, movieId, TmdbAccount.MediaType.MOVIE);
     }
     
@@ -267,7 +262,6 @@ public class TheMovieDb {
 	 * @param movieId
 	 */
 	public void addToWatchListTV(int movieId) {
-        doWait();
         account.addToWatchList(sessionToken, accountId, movieId, TmdbAccount.MediaType.TV);
     }
     
@@ -276,7 +270,6 @@ public class TheMovieDb {
 	 * @param movieId
 	 */
 	public void removeFromWatchList(int movieId) {
-        doWait();
         account.removeFromWatchList(sessionToken, accountId, movieId, TmdbAccount.MediaType.MOVIE);
     }
     
@@ -285,65 +278,32 @@ public class TheMovieDb {
 	 * @param movieId
 	 */
 	public void removeFromWatchListTV(int movieId) {
-        doWait();
         account.removeFromWatchList(sessionToken, accountId, movieId, TmdbAccount.MediaType.TV);
     }
     
     private MovieDb getMovie(int id) {
-        doWait();
         TmdbMovies movies = tmdbApi.getMovies();
-        doWait();
         return movies.getMovie(id, language);
     }
     
     private TvSeries getTV(int id) {
-        doWait();
         TmdbTV series = tmdbApi.getTvSeries();
-        doWait();
         TvSeries tvSeries = series.getSeries(id, language, TmdbTV.TvMethod.external_ids);
-        doWait();
         TmdbTvSeasons tmdbTVSeasons = tmdbApi.getTvSeasons();
         List<TvSeason> seasons = new ArrayList<>();
         for(int seasonNumber=1; seasonNumber<=tvSeries.getNumberOfSeasons(); seasonNumber++) {
-            doWait();
             TvSeason tvSeason=tmdbTVSeasons.getSeason(id, seasonNumber, language, TmdbTvSeasons.SeasonMethod.external_ids);
             seasons.add(tvSeason);
         }
         tvSeries.setSeasons(seasons);
         return tvSeries;
     }
-    
-    private int requestCount = 41;
-    private long lastQuery = System.currentTimeMillis();
-            
-    private void doWait() {
-        
-        long timeSinceLastQuery = System.currentTimeMillis() - this.lastQuery;
-        lastQuery=System.currentTimeMillis();
-        if(timeSinceLastQuery>10000) {
-            requestCount=0;
-            return;
-        }
-        requestCount++;
-        if(requestCount>38) {
-            try {
-                PanelVideo.progressBarTimer.setIndeterminate("TheMovieDb ...");
-                Thread.sleep(10000-timeSinceLastQuery);
-                PanelVideo.progressBarTimer.reset();
-            } catch (InterruptedException ex) {
-                Jamuz.getLogger().log(Level.SEVERE, null, ex);
-            }
-            requestCount = 0;
-        }
-    }
-    
+     
     private Map<Integer, MovieDb> getWatchList() {
         Map<Integer, MovieDb> watchList = new HashMap<>();
-        doWait();
         try {
             MovieResultsPage page = account.getWatchListMovies(sessionToken, accountId, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                doWait();
                 page = account.getWatchListMovies(sessionToken, accountId, i);
                 for(MovieDb movie : page.getResults()) {
                     watchList.put(movie.getId(), movie);
@@ -370,11 +330,9 @@ public class TheMovieDb {
 	
     private Map<Integer, TvSeries> getWatchListTv() {
         Map<Integer, TvSeries> watchList = new HashMap<>();
-        doWait();
         try {
             TvResultsPage page = account.getWatchListSeries(sessionToken, accountId, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                doWait();
                 page = account.getWatchListSeries(sessionToken, accountId, i);
                 for(TvSeries serie : page.getResults()) {
                     watchList.put(serie.getId(), serie);
@@ -389,11 +347,9 @@ public class TheMovieDb {
    
     private Map<Integer, TvSeries> getFavoritesTv() {
         Map<Integer, TvSeries> favorites = new HashMap<>();
-        doWait();
         try {
             TvResultsPage page = account.getFavoriteSeries(sessionToken, accountId, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                doWait();
                 page = account.getFavoriteSeries(sessionToken, accountId, i);
                 for(TvSeries serie : page.getResults()) {
                     favorites.put(serie.getId(), serie);
@@ -408,7 +364,6 @@ public class TheMovieDb {
     
     private Map<Integer, MovieDb> getFavorites() {
         Map<Integer, MovieDb> favorites = new HashMap<>();
-        doWait();
         try {
             MovieResultsPage page = account.getFavoriteMovies(sessionToken, accountId);
             for(MovieDb movie : page.getResults()) {
@@ -423,11 +378,9 @@ public class TheMovieDb {
     
     private Map<Integer, TvSeries> getUserRatingsTv() {
         Map<Integer, TvSeries> userRatings = new HashMap<>();
-        doWait();
         try {
             TvResultsPage page = account.getRatedTvSeries(sessionToken, accountId, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                doWait();
                 page = account.getRatedTvSeries(sessionToken, accountId, i);
                 for(TvSeries serie : page.getResults()) {
                     userRatings.put(serie.getId(), serie);
@@ -443,11 +396,9 @@ public class TheMovieDb {
     
     private Map<Integer, MovieDb> getUserRatings() {
         Map<Integer, MovieDb> userRatings = new HashMap<>();
-        doWait();
         try {
             MovieResultsPage page = account.getRatedMovies(sessionToken, accountId, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                doWait();
                 page = account.getRatedMovies(sessionToken, accountId, i);
                 for(MovieDb movie : page.getResults()) {
                     userRatings.put(movie.getId(), movie);
@@ -462,17 +413,13 @@ public class TheMovieDb {
 	
     //TODO: Do we need to try/catch ResponseStatusException in search functions below ?
     private List<MovieDb> search(String name, int year) {
-        doWait();
         TmdbSearch search = new TmdbSearch(tmdbApi);
-        doWait();
         MovieResultsPage page = search.searchMovie(name, year, language, false, 1);
         return page.getResults();
     }
     
     private List<TvSeries> searchTv(String name, int year) {
-        doWait();
         TmdbSearch search = new TmdbSearch(tmdbApi);
-        doWait();
         TvResultsPage page = search.searchTv(name, language, 1);
         return page.getResults();
     }
