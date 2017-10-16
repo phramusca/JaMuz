@@ -17,7 +17,6 @@
 
 package jamuz.process.video;
 
-import jamuz.DbInfo;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.Jamuz;
 import java.awt.Component;
@@ -66,8 +65,6 @@ import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -82,11 +79,6 @@ public class PanelVideo extends javax.swing.JPanel {
 	 *
 	 */
 	protected static ProgressBar progressBar;
-
-	/**
-	 *
-	 */
-	protected static ProgressBar progressBarTimer;
 
     /**
      * Creates new form PanelVideo
@@ -163,7 +155,6 @@ public class PanelVideo extends javax.swing.JPanel {
         jTableVideo.getColumnModel().getColumn(2).setCellRenderer(renderer);        
         
 		progressBar = (ProgressBar)jProgressBarVideo;
-        progressBarTimer = (ProgressBar)jProgressBarVideoTimer;
         
         //Add a list renderer to display genre icons
         //TODO: Make a class for video genre (or make this one or the album one or both more generic)
@@ -174,6 +165,9 @@ public class PanelVideo extends javax.swing.JPanel {
         
         //Menu listener
         addMenuItem("IMDb"); //NOI18N
+		//TODO: How can a (theMovieDb.org) Refresh be done as 
+		//
+		//addMenuItem("Refresh"); //NOI18N
         addMenuItem(Inter.get("Button.Open"));  //NOI18N
         addMenuItem(Inter.get("Label.Trailer")); //NOI18N
         addMenuItem(Inter.get("Label.Delete")); //NOI18N
@@ -465,7 +459,7 @@ public class PanelVideo extends javax.swing.JPanel {
             Desktop.openBrowser(fileInfoVideo.getHomepage());
         }
     }
-    
+	
     private void menuVideoDelete() {
         VideoAbstract video = getSelected();
         if(video!=null) {
@@ -522,7 +516,6 @@ public class PanelVideo extends javax.swing.JPanel {
         jProgressBarVideo = new jamuz.gui.swing.ProgressBar();
         jScrollPaneCheckTags1 = new javax.swing.JScrollPane();
         jTableVideo = new jamuz.gui.swing.TableHorizontal();
-        jProgressBarVideoTimer = new jamuz.gui.swing.ProgressBar();
         jLabel5 = new javax.swing.JLabel();
         triStateSelected = new jamuz.gui.swing.TriStateCheckBox();
         jLabel6 = new javax.swing.JLabel();
@@ -641,9 +634,6 @@ public class PanelVideo extends javax.swing.JPanel {
             }
         });
         jScrollPaneCheckTags1.setViewportView(jTableVideo);
-
-        jProgressBarVideoTimer.setString("");
-        jProgressBarVideoTimer.setStringPainted(true);
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/selected.png"))); // NOI18N
@@ -843,11 +833,8 @@ public class PanelVideo extends javax.swing.JPanel {
                         .addComponent(jButtonVideoExport)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonVideoOptions))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jProgressBarVideo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jProgressBarVideoTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jProgressBarVideo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -862,9 +849,7 @@ public class PanelVideo extends javax.swing.JPanel {
                         .addComponent(jCheckBoxVideoTheMovieDb))
                     .addComponent(jButtonVideoExport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jProgressBarVideoTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jProgressBarVideo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jProgressBarVideo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1229,7 +1214,6 @@ public class PanelVideo extends javax.swing.JPanel {
     private javax.swing.JPanel jPanelVideo;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JProgressBar jProgressBarVideo;
-    private javax.swing.JProgressBar jProgressBarVideoTimer;
     private static javax.swing.JScrollPane jScrollPaneCheckTags1;
     private javax.swing.JScrollPane jScrollPaneSelectGenre1;
     private javax.swing.JScrollPane jScrollPaneSelectGenre2;
