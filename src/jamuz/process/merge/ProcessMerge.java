@@ -452,7 +452,8 @@ public class ProcessMerge extends ProcessAbstract {
 		//New is by default the one from JaMuz
 		FileInfo fileNew=(FileInfo) fileJaMuz.clone();
 		fileNew.setSourceName("new"); //This will be overwritten anyway  //NOI18N
-
+		ArrayList<String> jaMuzTags = getTagsJaMuz(fileJaMuz);
+		fileNew.setTags(jaMuzTags); //fileNew is initially a copy of fileJaMuz 
 		boolean isOneDbUpdated=false;
 		
         //TODO: Remove "force Jamuz" option ? Or leave it as-is ?
@@ -690,9 +691,6 @@ public class ProcessMerge extends ProcessAbstract {
             //TODO: display it on jtable and logs
             if(this.selectedStatSource.getSource().isUpdateTags()) {
 				ArrayList<String> selectedDbTags = getTagsSelected(fileSelectedDb);
-				ArrayList<String> jaMuzTags = getTagsJaMuz(fileJaMuz);
-				fileNew.setTags(jaMuzTags); //fileNew is initially a copy of fileJaMuz
-
 				if(!Utils.equalLists(selectedDbTags, jaMuzTags)) {
 					if(fileJaMuz.getTagsModifDate().after(
 							this.selectedStatSource.lastMergeDate)) {
@@ -722,7 +720,6 @@ public class ProcessMerge extends ProcessAbstract {
 			if(this.selectedStatSource.getSource().isUpdateTags()) {
 				//Cannot be compared if not read ...
 				getTagsSelected(fileSelectedDb);
-				ArrayList<String> jaMuzTags = getTagsJaMuz(fileJaMuz);
 				fileNew.setTags(jaMuzTags); //fileNew is initially a copy of fileJaMuz
 			}
 		}
