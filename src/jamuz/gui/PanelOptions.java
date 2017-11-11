@@ -57,6 +57,7 @@ public class PanelOptions extends javax.swing.JPanel {
 		fillMachineList();
 		progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 		jListGenres.setModel(Jamuz.getGenreListModel());
+		jListTags.setModel(Jamuz.getTagsModel());
 	}
 	
 	public static void fillMachineList() {
@@ -166,6 +167,12 @@ public class PanelOptions extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
         jButton2 = new javax.swing.JButton();
+        jPanelOptionsTags = new javax.swing.JPanel();
+        jScrollPaneOptionsMachines2 = new javax.swing.JScrollPane();
+        jListTags = new javax.swing.JList();
+        jButtonOptionsGenresEdit1 = new javax.swing.JButton();
+        jButtonOptionsGenresDel1 = new javax.swing.JButton();
+        jButtonOptionsGenresAdd1 = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
         jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
@@ -362,6 +369,64 @@ public class PanelOptions extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        jPanelOptionsTags.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("Label.Tags")))); // NOI18N
+
+        jListTags.setModel(new DefaultListModel());
+        jScrollPaneOptionsMachines2.setViewportView(jListTags);
+
+        jButtonOptionsGenresEdit1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_form_edit.png"))); // NOI18N
+        jButtonOptionsGenresEdit1.setText(bundle.getString("Button.Edit")); // NOI18N
+        jButtonOptionsGenresEdit1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptionsGenresEdit1ActionPerformed(evt);
+            }
+        });
+
+        jButtonOptionsGenresDel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/bin.png"))); // NOI18N
+        jButtonOptionsGenresDel1.setText(bundle.getString("Button.Delete")); // NOI18N
+        jButtonOptionsGenresDel1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptionsGenresDel1ActionPerformed(evt);
+            }
+        });
+
+        jButtonOptionsGenresAdd1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/add.png"))); // NOI18N
+        jButtonOptionsGenresAdd1.setText(bundle.getString("Button.Add")); // NOI18N
+        jButtonOptionsGenresAdd1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptionsGenresAdd1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelOptionsTagsLayout = new javax.swing.GroupLayout(jPanelOptionsTags);
+        jPanelOptionsTags.setLayout(jPanelOptionsTagsLayout);
+        jPanelOptionsTagsLayout.setHorizontalGroup(
+            jPanelOptionsTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelOptionsTagsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPaneOptionsMachines2, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelOptionsTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonOptionsGenresDel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonOptionsGenresEdit1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonOptionsGenresAdd1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanelOptionsTagsLayout.setVerticalGroup(
+            jPanelOptionsTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelOptionsTagsLayout.createSequentialGroup()
+                .addGroup(jPanelOptionsTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneOptionsMachines2, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                    .addGroup(jPanelOptionsTagsLayout.createSequentialGroup()
+                        .addComponent(jButtonOptionsGenresAdd1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonOptionsGenresEdit1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonOptionsGenresDel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jPanelOptionsLayout = new javax.swing.GroupLayout(jPanelOptions);
         jPanelOptions.setLayout(jPanelOptionsLayout);
         jPanelOptionsLayout.setHorizontalGroup(
@@ -369,9 +434,12 @@ public class PanelOptions extends javax.swing.JPanel {
             .addGroup(jPanelOptionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelOptionsLayout.createSequentialGroup()
+                        .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanelOptionsTags, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -380,16 +448,20 @@ public class PanelOptions extends javax.swing.JPanel {
         jPanelOptionsLayout.setVerticalGroup(
             jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelOptionsLayout.createSequentialGroup()
+                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelOptionsLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanelOptionsTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanelOptionsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -401,7 +473,9 @@ public class PanelOptions extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanelOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -433,7 +507,7 @@ public class PanelOptions extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonOptionsMachinesDelActionPerformed
 
     private void jButtonOptionsGenresAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsGenresAddActionPerformed
-         String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.EnterGenre"), "");  //NOI18N 
+		String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.EnterGenre"), "");  //NOI18N 
         DefaultListModel model = (DefaultListModel) jListGenres.getModel(); 
         if (model.contains(input)) { 
             Popup.warning(MessageFormat.format(Inter.get("Msg.Options.GenreExists"), input));  //NOI18N 
@@ -445,7 +519,7 @@ public class PanelOptions extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonOptionsGenresAddActionPerformed
 
     private void jButtonOptionsGenresEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsGenresEditActionPerformed
-         if (jListGenres.getSelectedIndex() > -1) { 
+		if (jListGenres.getSelectedIndex() > -1) { 
             String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.NewGenre"), jListGenres.getSelectedValue());  //NOI18N 
             if (input != null) { 
                 int n = JOptionPane.showConfirmDialog( 
@@ -492,11 +566,57 @@ public class PanelOptions extends javax.swing.JPanel {
         resetCheckedFlag(FolderInfo.CheckedFlag.OK); 
     }//GEN-LAST:event_jButtonResetCheckedFlagOKActionPerformed
 
+    private void jButtonOptionsGenresEdit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsGenresEdit1ActionPerformed
+        if (jListTags.getSelectedIndex() > -1) { 
+            String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.Tag.New"), jListTags.getSelectedValue());  //NOI18N 
+            if (input != null) { 
+                int n = JOptionPane.showConfirmDialog( 
+                        this, MessageFormat.format(Inter.get("Msg.Options.Tag.Update"), jListTags.getSelectedValue(), input), //NOI18N 
+                        Inter.get("Label.Confirm"), //NOI18N 
+                        JOptionPane.YES_NO_OPTION); 
+                if (n == JOptionPane.YES_OPTION) { 
+                    Jamuz.getDb().updateTag((String) jListTags.getSelectedValue(), input); 
+                    Jamuz.readTags(); 
+					jListTags.setModel(Jamuz.getTagsModel());
+                } 
+            } 
+        } 
+    }//GEN-LAST:event_jButtonOptionsGenresEdit1ActionPerformed
+
+    private void jButtonOptionsGenresDel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsGenresDel1ActionPerformed
+        if (jListTags.getSelectedIndex() > -1) { 
+            int n = JOptionPane.showConfirmDialog( 
+                    this, MessageFormat.format(Inter.get("Msg.Options.Tag.Delete"), jListTags.getSelectedValue()), //NOI18N 
+                    Inter.get("Label.Confirm"), //NOI18N 
+                    JOptionPane.YES_NO_OPTION); 
+            if (n == JOptionPane.YES_OPTION) {
+                Jamuz.getDb().deleteTag((String) jListTags.getSelectedValue()); 
+                Jamuz.readTags(); 
+				jListTags.setModel(Jamuz.getTagsModel());
+            } 
+        } 
+    }//GEN-LAST:event_jButtonOptionsGenresDel1ActionPerformed
+
+    private void jButtonOptionsGenresAdd1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsGenresAdd1ActionPerformed
+        String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.Tag.Enter"), "");  //NOI18N 
+        DefaultListModel model = (DefaultListModel) jListTags.getModel(); 
+        if (model.contains(input)) { 
+            Popup.warning(MessageFormat.format(Inter.get("Msg.Options.Tag.Exists"), input));  //NOI18N 
+        } else if (!input.equals("")) {  //NOI18N 
+            Jamuz.getDb().insertTag(input); 
+            Jamuz.readTags(); 
+			jListTags.setModel(Jamuz.getTagsModel());
+        }
+    }//GEN-LAST:event_jButtonOptionsGenresAdd1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonOptionsGenresAdd;
+    private javax.swing.JButton jButtonOptionsGenresAdd1;
     private javax.swing.JButton jButtonOptionsGenresDel;
+    private javax.swing.JButton jButtonOptionsGenresDel1;
     private javax.swing.JButton jButtonOptionsGenresEdit;
+    private javax.swing.JButton jButtonOptionsGenresEdit1;
     private javax.swing.JButton jButtonOptionsMachinesDel;
     private javax.swing.JButton jButtonOptionsMachinesEdit;
     private javax.swing.JButton jButtonResetCheckedFlagKO;
@@ -504,13 +624,16 @@ public class PanelOptions extends javax.swing.JPanel {
     private javax.swing.JButton jButtonResetCheckedFlagWarning;
     private javax.swing.JList jListGenres;
     private static javax.swing.JList jListMachines;
+    private javax.swing.JList jListTags;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelOptionsGenres;
     private javax.swing.JPanel jPanelOptionsMachines;
+    private javax.swing.JPanel jPanelOptionsTags;
     private static javax.swing.JProgressBar jProgressBarResetChecked;
     private static javax.swing.JProgressBar jProgressBarSaveTags;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines1;
+    private javax.swing.JScrollPane jScrollPaneOptionsMachines2;
     // End of variables declaration//GEN-END:variables
 }
