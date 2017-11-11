@@ -36,7 +36,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultListModel;
-import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONValue;
 
 /**
@@ -314,7 +313,9 @@ public class PanelRemote extends javax.swing.JPanel {
             .addGroup(jPanelRemoteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPanePlayerQueue1)
+                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addComponent(jScrollPanePlayerQueue1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addComponent(jButtonQRcode)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -325,8 +326,7 @@ public class PanelRemote extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonStart)))
-                .addContainerGap())
+                        .addComponent(jButtonStart))))
         );
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -342,7 +342,7 @@ public class PanelRemote extends javax.swing.JPanel {
                     .addComponent(jLabelIP)
                     .addComponent(jButtonQRcode))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPanePlayerQueue1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                .addComponent(jScrollPanePlayerQueue1, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -350,11 +350,17 @@ public class PanelRemote extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
