@@ -359,8 +359,13 @@ public class Jamuz {
     }
     
     private static ArrayList<String> tags;
-    private static void readTags() {
+	private static DefaultListModel tagsModel;
+    public static void readTags() {
         tags = getDb().getTags();
+		tagsModel = new DefaultListModel();
+		for(String tag : tags) {
+			tagsModel.addElement(tag);
+		}
     }
 
 	/**
@@ -370,6 +375,10 @@ public class Jamuz {
 	public static ArrayList<String> getTags() {
         return tags;
     }
+	
+	public static DefaultListModel getTagsModel() {
+		return tagsModel;
+	}
 
     /**
 	 * Reads playlists from database

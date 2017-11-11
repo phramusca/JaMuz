@@ -155,6 +155,34 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             return false;
         }
     }
+	
+	/**
+     * Updates tag in tag table
+     *
+     * @param oldTag
+     * @param newTag
+     * @return
+     */
+    public synchronized boolean updateTag(String oldTag, String newTag) {
+        try {
+            PreparedStatement stUpdateTag = dbConn.connection.prepareStatement(
+					"UPDATE tag SET value=? WHERE value=?");   //NOI18N
+            stUpdateTag.setString(1, newTag);
+            stUpdateTag.setString(2, oldTag);
+            int nbRowsAffected = stUpdateTag.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateTag, oldTag={0}, "
+						+ "newTag={1} # row(s) affected: +{2}", 
+						new Object[]{oldTag, newTag, nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("updateTag(" + oldTag + ", " + newTag + ")", ex);   //NOI18N
+            return false;
+        }
+    }
 
     /**
      * Updates genre in genre table
@@ -343,6 +371,61 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             }
         } catch (SQLException ex) {
             Popup.error("insertGenre(" + genre + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	/**
+     * Inserts a tag
+     *
+	 * @param tag
+     * @return
+     */
+    public synchronized boolean insertTag(String tag) {
+        try {
+            PreparedStatement stInsertTag = dbConn.connection.prepareStatement(
+					"INSERT INTO tag (value) VALUES (?)");   //NOI18N
+            stInsertTag.setString(1, tag);
+            int nbRowsAffected = stInsertTag.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stInsertTag, tag=\"{0}\" "
+						+ "# row(s) affected: +{1}", new Object[]{tag, nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("insertTag(" + tag + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	/**
+     * Deletes tag from tag table
+     *
+     * @param tag
+     * @return
+     */
+    public synchronized boolean deleteTag(String tag) {
+        try {
+            PreparedStatement stDeleteTag = dbConn.connection.prepareStatement(
+					"DELETE FROM tag \n" +
+						"WHERE id=(\n" +
+						"SELECT id FROM tag \n" +
+						"LEFT JOIN tagfile ON tag.id=tagfile.idTag \n" +
+						"WHERE value=? AND idFile IS NULL\n" +
+						")");  
+			
+			stDeleteTag.setString(1, tag);
+            int nbRowsAffected = stDeleteTag.executeUpdate();
+            if (nbRowsAffected > 0) {
+                return true;
+            } else {
+                Popup.warning("Tag is applied to at least a track, so cannot delete it.");  //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("deleteTag(" + tag + ")", ex);   //NOI18N
             return false;
         }
     }
