@@ -754,7 +754,7 @@ public class PanelMain extends javax.swing.JFrame {
     private void initComponents() {
 
         jSplitPaneMain = new javax.swing.JSplitPane();
-        panelTabs = new javax.swing.JTabbedPane();
+        jTabbedPane = new javax.swing.JTabbedPane();
         panelSelect = new jamuz.gui.PanelSelect();
         panelMerge = new jamuz.process.merge.PanelMerge();
         panelSync = new jamuz.process.sync.PanelSync();
@@ -799,21 +799,21 @@ public class PanelMain extends javax.swing.JFrame {
 
         jSplitPaneMain.setOneTouchExpandable(true);
 
-        panelTabs.setMinimumSize(new java.awt.Dimension(0, 0));
+        jTabbedPane.setMinimumSize(new java.awt.Dimension(0, 0));
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
-        panelTabs.addTab(bundle.getString("PanelMain.panelSelect.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/music.png")), panelSelect); // NOI18N
-        panelTabs.addTab(bundle.getString("Label.Merge"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_refresh.png")), panelMerge); // NOI18N
-        panelTabs.addTab(bundle.getString("PanelMain.panelSync.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_turn_right.png")), panelSync); // NOI18N
-        panelTabs.addTab(bundle.getString("Label.Check"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/search_plus.png")), panelCheck); // NOI18N
-        panelTabs.addTab(Inter.get("PanelMain.panelPlaylists.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_view_list.png")), panelPlaylists); // NOI18N
-        panelTabs.addTab(bundle.getString("Label.Lyrics"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/text.png")), panelLyrics); // NOI18N
-        panelTabs.addTab(bundle.getString("PanelMain.panelStats.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/statistics.png")), panelStats); // NOI18N
-        panelTabs.addTab(Inter.get("PanelMain.panelRemote.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/android.png")), panelRemote); // NOI18N
-        panelTabs.addTab(Inter.get("Label.Options"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/selected.png")), panelOptions); // NOI18N
-        panelTabs.addTab(Inter.get("PanelMain.panelVideo.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/movies.png")), panelVideo); // NOI18N
-        panelTabs.addTab(Inter.get("PanelMain.panelBook.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/book_open.png")), panelBook); // NOI18N
+        jTabbedPane.addTab(bundle.getString("PanelMain.panelSelect.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/music.png")), panelSelect); // NOI18N
+        jTabbedPane.addTab(bundle.getString("Label.Merge"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_refresh.png")), panelMerge); // NOI18N
+        jTabbedPane.addTab(bundle.getString("PanelMain.panelSync.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_turn_right.png")), panelSync); // NOI18N
+        jTabbedPane.addTab(bundle.getString("Label.Check"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/search_plus.png")), panelCheck); // NOI18N
+        jTabbedPane.addTab(Inter.get("PanelMain.panelPlaylists.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_view_list.png")), panelPlaylists); // NOI18N
+        jTabbedPane.addTab(bundle.getString("Label.Lyrics"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/text.png")), panelLyrics); // NOI18N
+        jTabbedPane.addTab(bundle.getString("PanelMain.panelStats.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/statistics.png")), panelStats); // NOI18N
+        jTabbedPane.addTab(Inter.get("PanelMain.panelRemote.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/android.png")), panelRemote); // NOI18N
+        jTabbedPane.addTab(Inter.get("Label.Options"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/selected.png")), panelOptions); // NOI18N
+        jTabbedPane.addTab(Inter.get("PanelMain.panelVideo.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/movies.png")), panelVideo); // NOI18N
+        jTabbedPane.addTab(Inter.get("PanelMain.panelBook.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/book_open.png")), panelBook); // NOI18N
 
-        jSplitPaneMain.setRightComponent(panelTabs);
+        jSplitPaneMain.setRightComponent(jTabbedPane);
 
         jLabelPlayerTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 15)); // NOI18N
         jLabelPlayerTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1251,7 +1251,7 @@ public class PanelMain extends javax.swing.JFrame {
 	 * @param title
 	 */
 	public static void selectTab(String title) {
-		Swing.selectTab(panelTabs, title);
+		Swing.selectTab(jTabbedPane, title);
 	}
 	
     private static void setTab(String title, String iconName) {
@@ -1259,7 +1259,7 @@ public class PanelMain extends javax.swing.JFrame {
     }
     
     private static void setTab(String title, String iconName, Color textColor) {
-        int index = panelTabs.indexOfTab(Inter.get(title)); //NOI18N
+        int index = jTabbedPane.indexOfTab(Inter.get(title)); //NOI18N
         JLabel label = new JLabel(Inter.get(title));
         Icon icon = new ImageIcon(PanelMain.class.getResource("/jamuz/ressources/"+iconName+".png"));
         label.setIcon(icon);
@@ -1268,7 +1268,7 @@ public class PanelMain extends javax.swing.JFrame {
         }
         label.setIconTextGap(5);
         label.setHorizontalTextPosition(SwingConstants.RIGHT);
-        panelTabs.setTabComponentAt(index, label);
+        jTabbedPane.setTabComponentAt(index, label);
     }
 
 	/**
@@ -1931,6 +1931,7 @@ public class PanelMain extends javax.swing.JFrame {
     private static javax.swing.JSlider jSliderPlayerLength;
     private static javax.swing.JSpinner jSpinnerVolume;
     private javax.swing.JSplitPane jSplitPaneMain;
+    private static javax.swing.JTabbedPane jTabbedPane;
     private static javax.swing.JToggleButton jToggleButtonPlayerInfo;
     private jamuz.process.book.PanelBook panelBook;
     protected final jamuz.process.check.PanelCheck panelCheck = new jamuz.process.check.PanelCheck();
@@ -1942,7 +1943,6 @@ public class PanelMain extends javax.swing.JFrame {
     private jamuz.gui.PanelSelect panelSelect;
     private jamuz.gui.PanelStats panelStats;
     private jamuz.process.sync.PanelSync panelSync;
-    private static javax.swing.JTabbedPane panelTabs;
     private jamuz.process.video.PanelVideo panelVideo;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,15 +1,4 @@
-#JaMuz specifics
-data/cache/*
-data/Patterns.txt
-data/VideoLinks.txt
-logs/*
-database/*_for_comparison.sql
-dist_Wish/*
-nbproject/private/*
-manifest.mf
-JaMuz.xml
-keys.properties
-build/*
+
 
 # Java ignore from https://github.com/github/gitignore
 *.class
@@ -25,25 +14,33 @@ build/*
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# Added by Netbeans 8.1
+#JaMuz specifics
 /dist/
-/myMovieDb.db
-/yGuard.log
 /build/
-/data/AudioLinks.txt
-/JaMuz.properties
-testenv/AppFolder/data/cache/
+nbproject/private/*
+manifest.mf
 
-testenv/AppFolder/logs/
+build/*
+logs/*
 
-testenv/AppFolder/JaMuz\.db
-
-testenv/Musique/Archive/
-
-testenv/Musique/TestDevice/
-
-testenv/Ressources/albumFiles_MergeNTest/
-
-testenv/StatSources/
-
+data/cache/*
+data/Patterns.txt
+data/VideoLinks.txt
+data/AudioLinks.txt
 data/RemoteClients\.txt
+
+database/*_for_comparison.sql
+
+JaMuz.xml
+keys.properties
+JaMuz.properties
+myMovieDb.db
+yGuard.log
+
+testenv/AppFolder/data/cache/
+testenv/AppFolder/logs/
+testenv/AppFolder/JaMuz\.db
+testenv/Musique/Archive/
+testenv/Musique/TestDevice/
+testenv/Ressources/albumFiles_MergeNTest/
+testenv/StatSources/
