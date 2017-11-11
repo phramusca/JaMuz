@@ -212,23 +212,100 @@ public class PanelMain extends javax.swing.JFrame {
 		
 		MPLAYER.addListener(mPlaybackListener);
 		
-	//"Options" tab
-        fillMachineList();
-        progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
-
+		//Init tabs
+		panelOptions.initExtended();
         panelSync.initExtended();
         panelMerge.initExtended();
-
         PanelCheck.setOptions(); //Needs to be static (for now at least)
-        
         panelStats.initExtended();
-
         panelSelect.initExtended();
         panelPlaylists.initExtended();
-        
+       
 		panelRemote.setCallback(new CallBackReception());
+		
         setKeyBindings();		
     }
+	
+	class CallBackReception implements ICallBackReception {
+		@Override
+		public void received(String login, String msg) {
+			if(msg.startsWith("setPlaylist")) {
+				setPlaylist(msg.substring("setPlaylist".length()));
+			}
+			else if(msg.startsWith("sendCover")) {
+				int maxWidth = Integer.parseInt(msg.substring("sendCover".length()));
+				PanelRemote.sendCover(login, displayedFile, maxWidth);
+			}
+			else if(msg.startsWith("sendFile")) {
+				int id = Integer.parseInt(msg.substring("sendFile".length()));
+				PanelRemote.sendFile(login, id);
+			}
+			else if(msg.startsWith("insertDeviceFile")) {
+				int idFile = Integer.parseInt(msg.substring("insertDeviceFile".length()));
+				FileInfoInt file = Jamuz.getDb().getFile(idFile);
+				int idDevice = Jamuz.getMachine().getDeviceId(login);
+				if(idDevice>=0) {
+					Jamuz.getDb().insertDeviceFile(idDevice, file);
+					Jamuz.getLogger().log(Level.INFO, msg);
+//					JaMuz.getLogger().
+					//TODO: Warn about the issue
+					//knowing that this is called many many times !!
+				}
+			}
+			else {
+				switch(msg) { 
+				//TODO: Say rating as an option 
+				case "setRating1": setRating(1, false); break; 
+				case "setRating2": setRating(2, false); break; 
+				case "setRating3": setRating(3, false); break; 
+				case "setRating4": setRating(4, false); break; 
+				case "setRating5": setRating(5, false); break; 
+				case "previousTrack": 
+					pressButton(jButtonPlayerPrevious);  
+					break; 
+				case "nextTrack":  
+					pressButton(jButtonPlayerNext);  
+					break; 
+				case "playTrack":  
+					pressButton(jButtonPlayerPlay);  
+					break; 
+				case "clearTracks":  
+					pressButton(jButtonPlayerClear);  
+					break; 
+				case "forward": forward(); break; 
+				case "rewind": rewind(); break; 
+				case "pullup": moveCursor(0); break; 
+				case "volUp":  
+				  jSpinnerVolume.setValue( 
+					  (float)jSpinnerVolume.getValue()+5.0f);  
+				  break; 
+				case "volDown":  
+				  jSpinnerVolume.setValue( 
+					  (float)jSpinnerVolume.getValue()-5.0f);  
+				  break; 
+				case "sayRating": displayedFile.sayRating(true); break; 
+				default: 
+					Jamuz.getLogger().warning(msg); 
+					break; 
+			}
+			}
+		}
+		
+		@Override
+		public void authenticated(Client login, ServerClient client) {
+			if(login.getId().endsWith("-data")) {
+				sendTags(login.getId());
+				sendGenres(login.getId());
+			} else {
+				sendPlaylists(login.getId(), jComboBoxPlaylist.getSelectedItem().toString());
+			}
+			PanelRemote.send(displayedFile);
+		}
+ 
+		@Override
+		public void disconnected(String login) {
+		}
+	}
 
 	private static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = PanelMain.class.getResource(path);
@@ -441,9 +518,9 @@ public class PanelMain extends javax.swing.JFrame {
         }
     }
 
-    private void fillGenreLists() {
+    public static void fillGenreLists() {
 		Jamuz.readGenres();
-		jListGenres.setModel(Jamuz.getGenreListModel());
+		
         //Fill genreDisplay combo boxes
 		List<String> genreList = Jamuz.getGenres();
         comboGenre = new String[genreList.size() + 1];
@@ -463,15 +540,6 @@ public class PanelMain extends javax.swing.JFrame {
 		displayFileInfo();
     }
 
-	/**
-	 *
-	 */
-	public static void fillMachineList() {
-        //Display machines list
-        fillMachineList((DefaultListModel) jListMachines.getModel());  //NOI18N
-        //Select current machine
-        jListMachines.setSelectedValue(new ListElement(Jamuz.getMachine().getName(), ""), true);
-    }
 
     /**
      * initialize a "select style" table (select and playlist tabs)
@@ -674,10 +742,7 @@ public class PanelMain extends javax.swing.JFrame {
         return true;
     }
 
-    private static void fillMachineList(DefaultListModel listModel) {
-        listModel.clear();
-        Jamuz.getDb().getMachineListModel(listModel);
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -689,34 +754,15 @@ public class PanelMain extends javax.swing.JFrame {
     private void initComponents() {
 
         jSplitPaneMain = new javax.swing.JSplitPane();
-        jTabbedPaneMain = new javax.swing.JTabbedPane();
+        panelTabs = new javax.swing.JTabbedPane();
         panelSelect = new jamuz.gui.PanelSelect();
         panelMerge = new jamuz.process.merge.PanelMerge();
         panelSync = new jamuz.process.sync.PanelSync();
         panelPlaylists = new jamuz.gui.PanelPlaylists();
         panelLyrics = new jamuz.gui.PanelLyrics();
         panelStats = new jamuz.gui.PanelStats();
-        javax.swing.JPanel jPanelOptions = new javax.swing.JPanel();
-        jPanelOptionsMachines = new javax.swing.JPanel();
-        jScrollPaneOptionsMachines = new javax.swing.JScrollPane();
-        jListMachines = new javax.swing.JList();
-        jButtonOptionsMachinesEdit = new javax.swing.JButton();
-        jButtonOptionsMachinesDel = new javax.swing.JButton();
-        jPanelOptionsGenres = new javax.swing.JPanel();
-        jScrollPaneOptionsMachines1 = new javax.swing.JScrollPane();
-        jListGenres = new javax.swing.JList();
-        jButtonOptionsGenresEdit = new javax.swing.JButton();
-        jButtonOptionsGenresDel = new javax.swing.JButton();
-        jButtonOptionsGenresAdd = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jButtonResetCheckedFlagKO = new javax.swing.JButton();
-        jButtonResetCheckedFlagWarning = new javax.swing.JButton();
-        jButtonResetCheckedFlagOK = new javax.swing.JButton();
-        jProgressBarResetChecked = new jamuz.gui.swing.ProgressBar();
-        jPanel4 = new javax.swing.JPanel();
-        jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
-        jButton2 = new javax.swing.JButton();
         panelRemote = new jamuz.gui.PanelRemote();
+        panelOptions = new jamuz.gui.PanelOptions();
         panelVideo = new jamuz.process.video.PanelVideo();
         panelBook = new jamuz.process.book.PanelBook();
         jPanelPlayer = new javax.swing.JPanel();
@@ -753,253 +799,21 @@ public class PanelMain extends javax.swing.JFrame {
 
         jSplitPaneMain.setOneTouchExpandable(true);
 
-        jTabbedPaneMain.setMinimumSize(new java.awt.Dimension(0, 0));
+        panelTabs.setMinimumSize(new java.awt.Dimension(0, 0));
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
-        jTabbedPaneMain.addTab(bundle.getString("PanelMain.panelSelect.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/music.png")), panelSelect); // NOI18N
-        jTabbedPaneMain.addTab(bundle.getString("Label.Merge"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_refresh.png")), panelMerge); // NOI18N
-        jTabbedPaneMain.addTab(bundle.getString("PanelMain.panelSync.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_turn_right.png")), panelSync); // NOI18N
-        jTabbedPaneMain.addTab(bundle.getString("Label.Check"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/search_plus.png")), panelCheck); // NOI18N
-        jTabbedPaneMain.addTab(Inter.get("PanelMain.panelPlaylists.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_view_list.png")), panelPlaylists); // NOI18N
-        jTabbedPaneMain.addTab(bundle.getString("Label.Lyrics"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/text.png")), panelLyrics); // NOI18N
-        jTabbedPaneMain.addTab(bundle.getString("PanelMain.panelStats.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/statistics.png")), panelStats); // NOI18N
+        panelTabs.addTab(bundle.getString("PanelMain.panelSelect.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/music.png")), panelSelect); // NOI18N
+        panelTabs.addTab(bundle.getString("Label.Merge"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_refresh.png")), panelMerge); // NOI18N
+        panelTabs.addTab(bundle.getString("PanelMain.panelSync.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_turn_right.png")), panelSync); // NOI18N
+        panelTabs.addTab(bundle.getString("Label.Check"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/search_plus.png")), panelCheck); // NOI18N
+        panelTabs.addTab(Inter.get("PanelMain.panelPlaylists.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_view_list.png")), panelPlaylists); // NOI18N
+        panelTabs.addTab(bundle.getString("Label.Lyrics"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/text.png")), panelLyrics); // NOI18N
+        panelTabs.addTab(bundle.getString("PanelMain.panelStats.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/statistics.png")), panelStats); // NOI18N
+        panelTabs.addTab(Inter.get("PanelMain.panelRemote.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/android.png")), panelRemote); // NOI18N
+        panelTabs.addTab(Inter.get("Label.Options"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/selected.png")), panelOptions); // NOI18N
+        panelTabs.addTab(Inter.get("PanelMain.panelVideo.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/movies.png")), panelVideo); // NOI18N
+        panelTabs.addTab(Inter.get("PanelMain.panelBook.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/book_open.png")), panelBook); // NOI18N
 
-        jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
-
-        jListMachines.setModel(new DefaultListModel());
-        jListMachines.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPaneOptionsMachines.setViewportView(jListMachines);
-
-        jButtonOptionsMachinesEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_form_edit.png"))); // NOI18N
-        jButtonOptionsMachinesEdit.setText(bundle.getString("Button.Edit")); // NOI18N
-        jButtonOptionsMachinesEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonOptionsMachinesEditActionPerformed(evt);
-            }
-        });
-
-        jButtonOptionsMachinesDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/bin.png"))); // NOI18N
-        jButtonOptionsMachinesDel.setText(bundle.getString("Button.Delete")); // NOI18N
-        jButtonOptionsMachinesDel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonOptionsMachinesDelActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanelOptionsMachinesLayout = new javax.swing.GroupLayout(jPanelOptionsMachines);
-        jPanelOptionsMachines.setLayout(jPanelOptionsMachinesLayout);
-        jPanelOptionsMachinesLayout.setHorizontalGroup(
-            jPanelOptionsMachinesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelOptionsMachinesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPaneOptionsMachines, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelOptionsMachinesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonOptionsMachinesEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonOptionsMachinesDel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanelOptionsMachinesLayout.setVerticalGroup(
-            jPanelOptionsMachinesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelOptionsMachinesLayout.createSequentialGroup()
-                .addComponent(jButtonOptionsMachinesEdit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonOptionsMachinesDel))
-            .addComponent(jScrollPaneOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        jPanelOptionsGenres.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), bundle.getString("PanelMain.jPanelOptionsGenres.border.title"))); // NOI18N
-
-        jListGenres.setModel(new DefaultListModel());
-        jScrollPaneOptionsMachines1.setViewportView(jListGenres);
-
-        jButtonOptionsGenresEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/application_form_edit.png"))); // NOI18N
-        jButtonOptionsGenresEdit.setText(bundle.getString("Button.Edit")); // NOI18N
-        jButtonOptionsGenresEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonOptionsGenresEditActionPerformed(evt);
-            }
-        });
-
-        jButtonOptionsGenresDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/bin.png"))); // NOI18N
-        jButtonOptionsGenresDel.setText(bundle.getString("Button.Delete")); // NOI18N
-        jButtonOptionsGenresDel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonOptionsGenresDelActionPerformed(evt);
-            }
-        });
-
-        jButtonOptionsGenresAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/add.png"))); // NOI18N
-        jButtonOptionsGenresAdd.setText(bundle.getString("Button.Add")); // NOI18N
-        jButtonOptionsGenresAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonOptionsGenresAddActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanelOptionsGenresLayout = new javax.swing.GroupLayout(jPanelOptionsGenres);
-        jPanelOptionsGenres.setLayout(jPanelOptionsGenresLayout);
-        jPanelOptionsGenresLayout.setHorizontalGroup(
-            jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelOptionsGenresLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPaneOptionsMachines1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonOptionsGenresDel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonOptionsGenresEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonOptionsGenresAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanelOptionsGenresLayout.setVerticalGroup(
-            jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelOptionsGenresLayout.createSequentialGroup()
-                .addGroup(jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneOptionsMachines1)
-                    .addGroup(jPanelOptionsGenresLayout.createSequentialGroup()
-                        .addComponent(jButtonOptionsGenresAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonOptionsGenresEdit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonOptionsGenresDel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("Label.Scan.ResetCheckFlag"))); // NOI18N
-
-        jButtonResetCheckedFlagKO.setText(Inter.get("Check.KO")); // NOI18N
-        jButtonResetCheckedFlagKO.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonResetCheckedFlagKOActionPerformed(evt);
-            }
-        });
-
-        jButtonResetCheckedFlagWarning.setText(Inter.get("Check.OK.Warning")); // NOI18N
-        jButtonResetCheckedFlagWarning.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonResetCheckedFlagWarningActionPerformed(evt);
-            }
-        });
-
-        jButtonResetCheckedFlagOK.setText(Inter.get("Check.OK")); // NOI18N
-        jButtonResetCheckedFlagOK.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonResetCheckedFlagOKActionPerformed(evt);
-            }
-        });
-
-        jProgressBarResetChecked.setMinimumSize(new java.awt.Dimension(1, 23));
-        jProgressBarResetChecked.setString(" "); // NOI18N
-        jProgressBarResetChecked.setStringPainted(true);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jProgressBarResetChecked, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(3, 3, 3))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButtonResetCheckedFlagKO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonResetCheckedFlagWarning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonResetCheckedFlagOK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonResetCheckedFlagKO)
-                    .addComponent(jButtonResetCheckedFlagWarning)
-                    .addComponent(jButtonResetCheckedFlagOK))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBarResetChecked, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("PanelMain.jPanel4.border.title"))); // NOI18N
-
-        jProgressBarSaveTags.setMinimumSize(new java.awt.Dimension(1, 23));
-        jProgressBarSaveTags.setString(" "); // NOI18N
-        jProgressBarSaveTags.setStringPainted(true);
-
-        jButton2.setText(Inter.get("PanelMain.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jProgressBarSaveTags, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBarSaveTags, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout jPanelOptionsLayout = new javax.swing.GroupLayout(jPanelOptions);
-        jPanelOptions.setLayout(jPanelOptionsLayout);
-        jPanelOptionsLayout.setHorizontalGroup(
-            jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelOptionsLayout.createSequentialGroup()
-                        .addGap(0, 132, Short.MAX_VALUE)
-                        .addComponent(panelRemote, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanelOptionsLayout.setVerticalGroup(
-            jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                        .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                        .addComponent(panelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-
-        jTabbedPaneMain.addTab(bundle.getString("Label.Options"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/selected.png")), jPanelOptions); // NOI18N
-        jTabbedPaneMain.addTab(Inter.get("PanelMain.panelVideo.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/movies.png")), panelVideo); // NOI18N
-        jTabbedPaneMain.addTab(Inter.get("PanelMain.panelBook.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/book_open.png")), panelBook); // NOI18N
-
-        jSplitPaneMain.setRightComponent(jTabbedPaneMain);
+        jSplitPaneMain.setRightComponent(panelTabs);
 
         jLabelPlayerTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 15)); // NOI18N
         jLabelPlayerTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1344,10 +1158,6 @@ public class PanelMain extends javax.swing.JFrame {
         jButtonPlayerNext.setEnabled(next || (fileInfoHiddenQueue.size()>0 && jButtonPlayerPlay.getText().equals(Inter.get("Button.Pause"))));
     }
 
-	private void jButtonOptionsMachinesEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsMachinesEditActionPerformed
-        DialogOptions.main(((ListElement) jListMachines.getSelectedValue()).getValue());
-	}//GEN-LAST:event_jButtonOptionsMachinesEditActionPerformed
-
     /**
      * fill queue (clear played leaving a given number of those and add some new
      * until a given size is reached)
@@ -1441,7 +1251,7 @@ public class PanelMain extends javax.swing.JFrame {
 	 * @param title
 	 */
 	public static void selectTab(String title) {
-		Swing.selectTab(jTabbedPaneMain, title);
+		Swing.selectTab(panelTabs, title);
 	}
 	
     private static void setTab(String title, String iconName) {
@@ -1449,7 +1259,7 @@ public class PanelMain extends javax.swing.JFrame {
     }
     
     private static void setTab(String title, String iconName, Color textColor) {
-        int index = jTabbedPaneMain.indexOfTab(Inter.get(title)); //NOI18N
+        int index = panelTabs.indexOfTab(Inter.get(title)); //NOI18N
         JLabel label = new JLabel(Inter.get(title));
         Icon icon = new ImageIcon(PanelMain.class.getResource("/jamuz/ressources/"+iconName+".png"));
         label.setIcon(icon);
@@ -1458,7 +1268,7 @@ public class PanelMain extends javax.swing.JFrame {
         }
         label.setIconTextGap(5);
         label.setHorizontalTextPosition(SwingConstants.RIGHT);
-        jTabbedPaneMain.setTabComponentAt(index, label);
+        panelTabs.setTabComponentAt(index, label);
     }
 
 	/**
@@ -1579,66 +1389,6 @@ public class PanelMain extends javax.swing.JFrame {
 //			mp3Player.positionLock = true;
         }
     }//GEN-LAST:event_jSliderPlayerLengthStateChanged
-
-    private void jButtonOptionsGenresEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsGenresEditActionPerformed
-        if (jListGenres.getSelectedIndex() > -1) {
-            String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.NewGenre"), jListGenres.getSelectedValue());  //NOI18N
-            if (input != null) {
-                int n = JOptionPane.showConfirmDialog(
-                        this, MessageFormat.format(Inter.get("Msg.Options.UpdateGenre"), jListGenres.getSelectedValue(), input), //NOI18N
-                        Inter.get("Label.Confirm"), //NOI18N
-                        JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.YES_OPTION) {
-                    Jamuz.getDb().updateGenre((String) jListGenres.getSelectedValue(), input);
-                    fillGenreLists();
-                }
-            }
-        }
-    }//GEN-LAST:event_jButtonOptionsGenresEditActionPerformed
-
-    private void jButtonOptionsGenresAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsGenresAddActionPerformed
-
-        String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.EnterGenre"), "");  //NOI18N
-        DefaultListModel model = (DefaultListModel) jListGenres.getModel();
-        if (model.contains(input)) {
-            Popup.warning(MessageFormat.format(Inter.get("Msg.Options.GenreExists"), input));  //NOI18N
-        } else if (!input.equals("")) {  //NOI18N
-            Jamuz.getDb().insertGenre(input);
-            fillGenreLists();
-        }
-    }//GEN-LAST:event_jButtonOptionsGenresAddActionPerformed
-
-    private void jButtonOptionsGenresDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsGenresDelActionPerformed
-        if (jListGenres.getSelectedIndex() > -1) {
-            int n = JOptionPane.showConfirmDialog(
-                    this, MessageFormat.format(Inter.get("Msg.Options.DeleteGenre"), jListGenres.getSelectedValue()), //NOI18N
-                    Inter.get("Label.Confirm"), //NOI18N
-                    JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
-                Jamuz.getDb().deleteGenre((String) jListGenres.getSelectedValue());
-                fillGenreLists();
-            }
-        }
-    }//GEN-LAST:event_jButtonOptionsGenresDelActionPerformed
-
-    private void jButtonOptionsMachinesDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsMachinesDelActionPerformed
-        if (jListMachines.getSelectedIndex() > -1) {
-			String machineToDelete = (((ListElement) jListMachines.getSelectedValue()).getValue());
-//            String machineToDelete = jListMachines.getSelectedValue().toString();
-            if (!machineToDelete.equals(Jamuz.getMachine().getName())) {
-                int n = JOptionPane.showConfirmDialog(
-                        this, Inter.get("Question.DeleteMachineConfirm"), //NOI18N
-                        Inter.get("Label.Confirm"), //NOI18N
-                        JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.YES_OPTION) {
-                    Jamuz.getDb().deleteMachine(machineToDelete);
-                    fillMachineList();
-                }
-            } else {
-                Popup.warning(Inter.get("Error.CannotDeleteCurrentMachine")); //NOI18N
-            }
-        }
-    }//GEN-LAST:event_jButtonOptionsMachinesDelActionPerformed
 
 
 
@@ -1839,20 +1589,8 @@ public class PanelMain extends javax.swing.JFrame {
 	/**
 	 *
 	 */
-	protected static ProgressBar progressBarCheckedFlag;
+	
     
-    private void jButtonResetCheckedFlagKOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetCheckedFlagKOActionPerformed
-        resetCheckedFlag(FolderInfo.CheckedFlag.KO);
-    }//GEN-LAST:event_jButtonResetCheckedFlagKOActionPerformed
-
-    private void jButtonResetCheckedFlagWarningActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetCheckedFlagWarningActionPerformed
-        resetCheckedFlag(FolderInfo.CheckedFlag.OK_WARNING);
-    }//GEN-LAST:event_jButtonResetCheckedFlagWarningActionPerformed
-
-    private void jButtonResetCheckedFlagOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetCheckedFlagOKActionPerformed
-        resetCheckedFlag(FolderInfo.CheckedFlag.OK);
-    }//GEN-LAST:event_jButtonResetCheckedFlagOKActionPerformed
-
     private void jButtonRefreshHiddenQueueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshHiddenQueueActionPerformed
         refreshHiddenQueue(false);
     }//GEN-LAST:event_jButtonRefreshHiddenQueueActionPerformed
@@ -1861,144 +1599,10 @@ public class PanelMain extends javax.swing.JFrame {
         DialogTag.main(displayedFile);
     }//GEN-LAST:event_jButtonTagsActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
- 		//To re-save all files and remove all remaining unwanted tags, especially ID3v1 and POPM (popularity meter) that Guayadeque can use and 
-		//messes up with the syncing if not used with extra care
-		//TODO: Add a reset "saved" field in file table, as done for CheckedFlag
-		
-		SaveTags saveTags = new SaveTags();
-        saveTags.start();
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jSpinnerVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVolumeStateChanged
         MPLAYER.setVolume((float)jSpinnerVolume.getValue());
     }//GEN-LAST:event_jSpinnerVolumeStateChanged
 
-	/**
-	 *
-	 */
-	public class SaveTags extends ProcessAbstract {
-
-		/**
-		 *
-		 */
-		public SaveTags() {
-            super("Thread.PanelMain.SaveTags");
-        }
-                
-        @Override
-        public void run() {
-            try {
-                ArrayList<FileInfoInt> filesToSave = new ArrayList<>();
-				String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
-						+ " FROM file F JOIN path P ON F.idPath=P.idPath WHERE F.deleted=0 AND P.deleted=0 AND saved=0";
-				ProgressBar progressBar = (ProgressBar)jProgressBarSaveTags;
-				
-				progressBar.setIndeterminate("Retrieving list");
-				Jamuz.getDb().getFiles(filesToSave, sql);
-				
-				progressBar.setup(filesToSave.size());
-				for (Iterator<FileInfoInt> iterator = filesToSave.iterator(); iterator.hasNext();) {
-					FileInfoInt file = iterator.next();
-					//TODO: Maybe offer not to read tags. 
-					//This would be speed up the process but needs a scan library first
-					//Can also be useful (why is that?) so we can modify tags in dB and save that to tags.
-					file.readTags(true);
-//					file.getCoverImage(); //NOTE: This is needed if above not done
-					file.getLyrics();
-					file.saveTags(true);
-					progressBar.progress(file.getFilename());
-					iterator.remove();
-					checkAbort();
-				}
-				progressBar.reset();
-            } catch (InterruptedException ex) {
-				Popup.info("Aborted by user");
-            } 
-        }
-    }
-
-	class CallBackReception implements ICallBackReception {
-		@Override
-		public void received(String login, String msg) {
-			if(msg.startsWith("setPlaylist")) {
-				setPlaylist(msg.substring("setPlaylist".length()));
-			}
-			else if(msg.startsWith("sendCover")) {
-				int maxWidth = Integer.parseInt(msg.substring("sendCover".length()));
-				PanelRemote.sendCover(login, displayedFile, maxWidth);
-			}
-			else if(msg.startsWith("sendFile")) {
-				int id = Integer.parseInt(msg.substring("sendFile".length()));
-				PanelRemote.sendFile(login, id);
-			}
-			else if(msg.startsWith("insertDeviceFile")) {
-				int idFile = Integer.parseInt(msg.substring("insertDeviceFile".length()));
-				FileInfoInt file = Jamuz.getDb().getFile(idFile);
-				int idDevice = Jamuz.getMachine().getDeviceId(login);
-				if(idDevice>=0) {
-					Jamuz.getDb().insertDeviceFile(idDevice, file);
-					Jamuz.getLogger().log(Level.INFO, msg);
-//					JaMuz.getLogger().
-					//TODO: Warn about the issue
-					//knowing that this is called many many times !!
-				}
-			}
-			else {
-				switch(msg) { 
-				//TODO: Say rating as an option 
-				case "setRating1": setRating(1, false); break; 
-				case "setRating2": setRating(2, false); break; 
-				case "setRating3": setRating(3, false); break; 
-				case "setRating4": setRating(4, false); break; 
-				case "setRating5": setRating(5, false); break; 
-				case "previousTrack": 
-					pressButton(jButtonPlayerPrevious);  
-					break; 
-				case "nextTrack":  
-					pressButton(jButtonPlayerNext);  
-					break; 
-				case "playTrack":  
-					pressButton(jButtonPlayerPlay);  
-					break; 
-				case "clearTracks":  
-					pressButton(jButtonPlayerClear);  
-					break; 
-				case "forward": forward(); break; 
-				case "rewind": rewind(); break; 
-				case "pullup": moveCursor(0); break; 
-				case "volUp":  
-				  jSpinnerVolume.setValue( 
-					  (float)jSpinnerVolume.getValue()+5.0f);  
-				  break; 
-				case "volDown":  
-				  jSpinnerVolume.setValue( 
-					  (float)jSpinnerVolume.getValue()-5.0f);  
-				  break; 
-				case "sayRating": displayedFile.sayRating(true); break; 
-				default: 
-					Jamuz.getLogger().warning(msg); 
-					break; 
-			}
-			}
-		}
-		
-		@Override
-		public void authenticated(Client login, ServerClient client) {
-			if(login.getId().endsWith("-data")) {
-				sendTags(login.getId());
-				sendGenres(login.getId());
-			} else {
-				sendPlaylists(login.getId(), jComboBoxPlaylist.getSelectedItem().toString());
-			}
-			PanelRemote.send(displayedFile);
-		}
- 
-		@Override
-		public void disconnected(String login) {
-		}
-	}
-	
 	/**
 	 *
 	 */
@@ -2012,31 +1616,8 @@ public class PanelMain extends javax.swing.JFrame {
 	public void rewind() {
         moveCursor(jSliderPlayerLength.getValue() - (jSliderPlayerLength.getMaximum()/10));
     }
-    
-    private void resetCheckedFlag(FolderInfo.CheckedFlag checkedFlag) {
-        
-        //TODO: Update message to display checkedFlag
-        int n = JOptionPane.showConfirmDialog(null, 
-                Inter.get("Question.Scan.ResetCheckFlag"), //NOI18N
-                Inter.get("Question.Scan.ResetCheckFlag.Title"), //NOI18N
-                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if (n == JOptionPane.YES_OPTION) {
-            enableResetCheckedFlagButtons(false);
-            progressBarCheckedFlag.setIndeterminate(Inter.get("Msg.Check.Scan.ResetCheckedFlag")); //NOI18N
-            Jamuz.getDb().setCheckedFlagReset(checkedFlag);
-            progressBarCheckedFlag.reset();
-            enableResetCheckedFlagButtons(true);
-        }
-    }
-    
-    private void enableResetCheckedFlagButtons(boolean enable) {
-        jButtonResetCheckedFlagKO.setEnabled(enable);
-        jButtonResetCheckedFlagOK.setEnabled(enable);
-        jButtonResetCheckedFlagWarning.setEnabled(enable);
-    }
-    
+
     private static ArrayList<FileInfoInt> fileInfoHiddenQueue = new ArrayList<>();
-    
     
     /**
      * Unset external player info (fullscreen) when leaving it
@@ -2322,22 +1903,13 @@ public class PanelMain extends javax.swing.JFrame {
 		});
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonCheckDown;
     private javax.swing.JButton jButtonCheckUp;
-    private javax.swing.JButton jButtonOptionsGenresAdd;
-    private javax.swing.JButton jButtonOptionsGenresDel;
-    private javax.swing.JButton jButtonOptionsGenresEdit;
-    private javax.swing.JButton jButtonOptionsMachinesDel;
-    private javax.swing.JButton jButtonOptionsMachinesEdit;
     private javax.swing.JButton jButtonPlayerClear;
     private static javax.swing.JButton jButtonPlayerNext;
     protected static javax.swing.JButton jButtonPlayerPlay;
     private static javax.swing.JButton jButtonPlayerPrevious;
     private javax.swing.JButton jButtonRefreshHiddenQueue;
-    private javax.swing.JButton jButtonResetCheckedFlagKO;
-    private javax.swing.JButton jButtonResetCheckedFlagOK;
-    private javax.swing.JButton jButtonResetCheckedFlagWarning;
     private static javax.swing.JButton jButtonTags;
     private static javax.swing.JComboBox jComboBoxPlayerGenre;
     private static javax.swing.JComboBox jComboBoxPlayerRating;
@@ -2349,37 +1921,28 @@ public class PanelMain extends javax.swing.JFrame {
     private static javax.swing.JLabel jLabelPlayerTitle;
     private static javax.swing.JLabel jLabelPlayerYear;
     private static javax.swing.JLabel jLabelTags;
-    private javax.swing.JList jListGenres;
-    private static javax.swing.JList jListMachines;
     private static javax.swing.JList jListPlayerQueue;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanelOptionsGenres;
-    private javax.swing.JPanel jPanelOptionsMachines;
     private javax.swing.JPanel jPanelPlayer;
     public static javax.swing.JPanel jPanelPlayerCover;
     private javax.swing.JPanel jPanelPlayerCoverContainer;
-    private static javax.swing.JProgressBar jProgressBarResetChecked;
-    private static javax.swing.JProgressBar jProgressBarSaveTags;
-    private javax.swing.JScrollPane jScrollPaneOptionsMachines;
-    private javax.swing.JScrollPane jScrollPaneOptionsMachines1;
     private javax.swing.JScrollPane jScrollPanePlayerQueue;
     private static javax.swing.JSlider jSliderPlayerLength;
     private static javax.swing.JSpinner jSpinnerVolume;
     private javax.swing.JSplitPane jSplitPaneMain;
-    private static javax.swing.JTabbedPane jTabbedPaneMain;
     private static javax.swing.JToggleButton jToggleButtonPlayerInfo;
     private jamuz.process.book.PanelBook panelBook;
     protected final jamuz.process.check.PanelCheck panelCheck = new jamuz.process.check.PanelCheck();
     private jamuz.gui.PanelLyrics panelLyrics;
     private jamuz.process.merge.PanelMerge panelMerge;
+    private jamuz.gui.PanelOptions panelOptions;
     private jamuz.gui.PanelPlaylists panelPlaylists;
     private jamuz.gui.PanelRemote panelRemote;
     private jamuz.gui.PanelSelect panelSelect;
     private jamuz.gui.PanelStats panelStats;
     private jamuz.process.sync.PanelSync panelSync;
+    private static javax.swing.JTabbedPane panelTabs;
     private jamuz.process.video.PanelVideo panelVideo;
     // End of variables declaration//GEN-END:variables
 }
