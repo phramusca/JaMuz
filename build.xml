@@ -72,6 +72,47 @@
             <arg value="${sqlitedb.myMovieDb}"/>
             <arg value=".read ${script.creation.myMovieDb}"/>
         </exec>
+		
+		<echo message="Copy dist-data/*"/>
+        <copy todir="${dist.dir}/">
+			<fileset file="dist-data/*"/>
+		</copy>
+
+		<echo message="Copy dist-data/doc"/>
+        <copy todir="${dist.dir}/doc">
+			<fileset dir="dist-data/doc"/>
+		</copy>
+
+		<echo message="Copy dist-data/data"/>
+        <copy todir="${dist.dir}/data">
+			<fileset dir="dist-data/data"/>
+		</copy>
+		
+		<echo message="Copy data/icon"/>
+        <copy todir="${dist.dir}/data/icon">
+			<fileset dir="data/icon"/>
+		</copy>
+		
+		<echo message="Copy data/BookLinks.txt"/>
+        <copy todir="${dist.dir}/data">
+			<fileset file="data/BookLinks.txt"/>
+		</copy>
+		
+		<echo message="Copy data/metaflac.exe"/>
+        <copy todir="${dist.dir}/data">
+			<fileset file="data/metaflac.exe"/>
+		</copy>
+		<echo message="Copy data/mp3gain.exe"/>
+        <copy todir="${dist.dir}/data">
+			<fileset file="data/mp3gain.exe"/>
+		</copy>
+		<echo message="Copy data/mplayer.exe"/>
+        <copy todir="${dist.dir}/data">
+			<fileset file="data/mplayer.exe"/>
+		</copy>
+		
+		<echo message="Delete README.TXT (Netbeans build README)"/>
+		<delete file="${dist.dir}/README.TXT"></delete>
 
 <!--		 yGuard Ant task.   
 		<taskdef name="yguard"   
