@@ -1033,7 +1033,7 @@ public class FolderInfo implements java.lang.Comparable {
 				//FIXME SCAN We should delete files with (audioFile.getSize() <= 0) as:
 				//makes writing tags crashing
 				//kodi does not include those in library so they end up not found during merge
-				//nto valid anyway and cause other problems
+				//not valid anyway and cause other problems
 				//=> BETTER to do this at scan level
 				// Mean time, use :
 				//	find . -size 0 -print0 | xargs -0 rm

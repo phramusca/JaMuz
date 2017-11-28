@@ -65,7 +65,6 @@ import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenu;
-import org.apache.commons.io.FilenameUtils;
 
 //FIXME PLAYER Bug "Kid Creole and the Coconuts"
 //idPath IN (784, 785)
