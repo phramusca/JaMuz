@@ -257,37 +257,34 @@ public class PanelVideo extends javax.swing.JPanel {
         jPopupMenu1.add(menuItem);
     }
     
-    ActionListener menuListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JMenuItem source = (JMenuItem)(e.getSource());
-            String sourceTxt=source.getText();
-//                String s = "Action event detected."
-//                           + "\n"
-//                           + "    Event source: " + source.getText()
-//                           + " (an instance of " + getClassName(source) + ")";
-//                Popup.info(s);
+    ActionListener menuListener = (ActionEvent e) -> {
+		JMenuItem source = (JMenuItem)(e.getSource());
+		String sourceTxt=source.getText();
+		//                String s = "Action event detected."
+		//                           + "\n"
+		//                           + "    Event source: " + source.getText()
+		//                           + " (an instance of " + getClassName(source) + ")";
+		//                Popup.info(s);
 
-            if(sourceTxt.equals("IMDb")) { //NOI18N
-                menuVideoIMDb();
-            }
-            else if(sourceTxt.equals(Inter.get("Button.Open"))) { //NOI18N
-                menuVideoOpen();
-            }
-            else if(sourceTxt.equals(Inter.get("Label.Trailer"))) { //NOI18N
-                menuVideoTrailer();
-            }
-            else if(sourceTxt.equals(Inter.get("Label.Delete"))) { //NOI18N
-                menuVideoDelete();
-            }
-            else if(sourceTxt.equals(Inter.get("Label.Homepage"))) {
-                menuVideoHomepage();
-            }
-            else {
-                Popup.error("Unknown menu item: " + sourceTxt); //NOI18N
-            }
-        }
-    };
+		if(sourceTxt.equals("IMDb")) { //NOI18N
+			menuVideoIMDb();
+		}
+		else if(sourceTxt.equals(Inter.get("Button.Open"))) { //NOI18N
+			menuVideoOpen();
+		}
+		else if(sourceTxt.equals(Inter.get("Label.Trailer"))) { //NOI18N
+			menuVideoTrailer();
+		}
+		else if(sourceTxt.equals(Inter.get("Label.Delete"))) { //NOI18N
+			menuVideoDelete();
+		}
+		else if(sourceTxt.equals(Inter.get("Label.Homepage"))) {
+			menuVideoHomepage();
+		}
+		else {
+			Popup.error("Unknown menu item: " + sourceTxt); //NOI18N
+		}
+	};
 
     private static TableRowSorter<TableModelVideo> tableSorter;
     private static final TableRowFilterVideo filterVideo= new TableRowFilterVideo();

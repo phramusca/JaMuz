@@ -30,6 +30,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
+import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 //TODO: Display lastMergeDate in jListMerge: <Source name> (<lastMergeDate or BETTER formatted interval ex: a week ago, 3 hours ago, ...)>)
 /**
@@ -130,6 +131,7 @@ public class PanelMerge extends javax.swing.JPanel {
         jCheckBoxMergeForce = new javax.swing.JCheckBox();
         jCheckBoxMergeSimulate = new javax.swing.JCheckBox();
         jButtonMergeSources = new javax.swing.JButton();
+        jButtonMergeLog = new javax.swing.JButton();
 
         jPanelMergeProcess.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), "Merge Statistics"));
 
@@ -157,7 +159,7 @@ public class PanelMerge extends javax.swing.JPanel {
             .addGroup(jPanelMergeProcessLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(jPanelMergeProcessLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jProgressBarMerge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jProgressBarMerge, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
                     .addGroup(jPanelMergeProcessLayout.createSequentialGroup()
                         .addComponent(jButtonMergeStart, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -213,27 +215,39 @@ public class PanelMerge extends javax.swing.JPanel {
                 .addComponent(jCheckBoxMergeSimulate))
         );
 
+        jButtonMergeLog.setText("Open log folder");
+        jButtonMergeLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonMergeLogActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMergeLayout = new javax.swing.GroupLayout(jPanelMerge);
         jPanelMerge.setLayout(jPanelMergeLayout);
         jPanelMergeLayout.setHorizontalGroup(
             jPanelMergeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPaneMergeResults, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMergeLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanelMergeProcess, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelMergeOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelMergeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanelMergeOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonMergeLog, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
+            .addComponent(jScrollPaneMergeResults)
         );
         jPanelMergeLayout.setVerticalGroup(
             jPanelMergeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMergeLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelMergeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelMergeOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelMergeLayout.createSequentialGroup()
+                        .addComponent(jPanelMergeOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonMergeLog))
                     .addComponent(jPanelMergeProcess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneMergeResults, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
+                .addComponent(jScrollPaneMergeResults, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -370,8 +384,13 @@ public class PanelMerge extends javax.swing.JPanel {
         DialogOptions.main(Jamuz.getMachine().getName());
     }//GEN-LAST:event_jButtonMergeSourcesActionPerformed
 
+    private void jButtonMergeLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeLogActionPerformed
+        Desktop.openFolder(Jamuz.getLogPath());
+    }//GEN-LAST:event_jButtonMergeLogActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonMergeLog;
     private javax.swing.JButton jButtonMergeSources;
     private static javax.swing.JButton jButtonMergeStart;
     private static javax.swing.JCheckBox jCheckBoxMergeForce;

@@ -245,6 +245,7 @@ public class PanelMain extends javax.swing.JFrame {
 				FileInfoInt file = Jamuz.getDb().getFile(idFile);
 				int idDevice = Jamuz.getMachine().getDeviceId(login);
 				if(idDevice>=0) {
+					//FIXME: insertDeviceFile preventing merge to start quickly
 					//FIXME: Do this in a queue to quickly free up connection
 					//AND to be able to insert in db as batches (not 1 by 1)
 					// Would also be nice that remote does not send that much info
