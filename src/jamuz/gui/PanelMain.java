@@ -241,20 +241,14 @@ public class PanelMain extends javax.swing.JFrame {
 				PanelRemote.sendFile(login, id);
 			}
 			else if(msg.startsWith("insertDeviceFile")) {
+				Jamuz.getLogger().log(Level.INFO, msg);
 				int idFile = Integer.parseInt(msg.substring("insertDeviceFile".length()));
 				FileInfoInt file = Jamuz.getDb().getFile(idFile);
 				int idDevice = Jamuz.getMachine().getDeviceId(login);
-				if(idDevice>=0) {
-					//FIXME: insertDeviceFile preventing merge to start quickly
-					//FIXME: Do this in a queue to quickly free up connection
-					//AND to be able to insert in db as batches (not 1 by 1)
-					// Would also be nice that remote does not send that much info
-					//each time it connects
-					Jamuz.getDb().insertDeviceFile(idDevice, file);
-					Jamuz.getLogger().log(Level.INFO, msg);
-//					JaMuz.getLogger().
-					//TODO: Warn about the issue
-					//knowing that this is called many many times !!
+				if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
+					PanelRemote.send(login, "insertedDeviceFileOK"+idFile);
+				} else {
+					PanelRemote.send(login, "insertedDeviceFileKO"+idFile);
 				}
 			}
 			else {

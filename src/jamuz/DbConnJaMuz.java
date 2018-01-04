@@ -1095,6 +1095,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
 
 			if (result < 0) {
 				Jamuz.getLogger().log(Level.SEVERE, "insertDeviceFile, idFile={0}, idDevice={1}, result={2}", new Object[]{file.getIdFile(), idDevice, result});   //NOI18N
+				return false;
 			}
             return true;
         } catch (SQLException ex) {
