@@ -138,7 +138,7 @@ public class ProcessSync extends ProcessAbstract {
 		PanelSync.enableSyncStartButton(false);
 		Jamuz.getDb().deleteDeviceFiles(device.getId());
         PanelSync.progressBar.setIndeterminate("Sending list ..."); //NOI18N
-		if(!PanelRemote.send(login, "JSON_"+JSONValue.toJSONString(jsonAsMap))) {
+		if(!PanelRemote.send(login, jsonAsMap)) {
 			Popup.warning(java.text.MessageFormat.format(
 					"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
 					new Object[] {this.device.getDestination()}));  //NOI18N

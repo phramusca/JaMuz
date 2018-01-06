@@ -1695,11 +1695,11 @@ public class PanelMain extends javax.swing.JFrame {
     private static void sendPosition(int currentPosition) {
         long currentTime=System.currentTimeMillis();
         if(currentTime-startTime>1000) {
-            Map map = new HashMap();
-            map.put("type", "currentPosition");
-            map.put("currentPosition", currentPosition);
-            map.put("total", displayedFile.getLength());
-            PanelRemote.send("JSON_"+JSONValue.toJSONString(map), true);
+            Map jsonAsMap = new HashMap();
+            jsonAsMap.put("type", "currentPosition");
+            jsonAsMap.put("currentPosition", currentPosition);
+            jsonAsMap.put("total", displayedFile.getLength());
+            PanelRemote.send(jsonAsMap, true);
             startTime=System.currentTimeMillis();
         }
     }
@@ -1713,7 +1713,7 @@ public class PanelMain extends javax.swing.JFrame {
 		obj.put("type", "playlists");
 		obj.put("playlists", list);
 		obj.put("selectedPlaylist", selectedPlaylist);
-		PanelRemote.send(login, "JSON_"+obj.toJSONString());
+		PanelRemote.send(login, obj);
     }
 	
 	private static void sendGenres(String login) {
@@ -1724,7 +1724,7 @@ public class PanelMain extends javax.swing.JFrame {
 		JSONObject obj = new JSONObject();
 		obj.put("type", "genres");
 		obj.put("genres", list);
-		PanelRemote.send(login, "JSON_"+obj.toJSONString());
+		PanelRemote.send(login, obj);
     }
 		
 	private static void sendTags(String login) {
@@ -1735,7 +1735,7 @@ public class PanelMain extends javax.swing.JFrame {
 		JSONObject obj = new JSONObject();
 		obj.put("type", "tags");
 		obj.put("tags", list);
-		PanelRemote.send(login, "JSON_"+obj.toJSONString());
+		PanelRemote.send(login, obj);
     }
     
 	/**
