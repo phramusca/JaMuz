@@ -29,12 +29,15 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FilenameUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  *
@@ -114,6 +117,14 @@ public class ServerClient {
 	public void send(String msg) {
         printWriter.println(msg+"\n");
         printWriter.flush();
+	}
+	
+	public void send(Map jsonAsMap) {
+		send("JSON_"+JSONValue.toJSONString(jsonAsMap));
+	}
+	
+	public void send(JSONObject obj) {
+		send("JSON_"+obj.toJSONString());
 	}
     
 	public boolean getDatabase() {

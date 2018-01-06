@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  *
@@ -213,16 +215,16 @@ public class Server {
 		return false;
 	}
     
-    /**
+	/**
      * Sends a message to all clients
-     * @param msg
+	 * @param jsonAsMap
 	 * @param isRemote
      */
-    public void send(String msg, boolean isRemote) {
+    public void send(Map jsonAsMap, boolean isRemote) {
 		Map<String, ServerClient> clientsToSend = isRemote?
 				getRemoteClients():getDataClients();
         for(ServerClient client : clientsToSend.values()) {
-            client.send(msg);
+            client.send(jsonAsMap);
         }
 	}
 	
@@ -239,6 +241,22 @@ public class Server {
     public boolean send(String login, String msg) {
 		if(clients.containsKey(login)) {
 			clients.get(login).send(msg);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean send(String login, JSONObject obj) {
+		if(clients.containsKey(login)) {
+			clients.get(login).send(obj);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean send(String login, Map jsonAsMap) {
+		if(clients.containsKey(login)) {
+			clients.get(login).send(jsonAsMap);
 			return true;
 		}
 		return false;

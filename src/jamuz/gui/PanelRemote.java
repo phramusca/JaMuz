@@ -36,6 +36,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultListModel;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 /**
@@ -98,15 +99,15 @@ public class PanelRemote extends javax.swing.JPanel {
 	}
 	
 	public static void send(FileInfoInt fileInfo) {    
-        Map map = new HashMap();
-        map.put("type", "fileInfoInt");
-		map.put("coverHash", fileInfo.getCoverHash());
-        map.put("rating", fileInfo.getRating());
-        map.put("title", fileInfo.getTitle());
-        map.put("album", fileInfo.getAlbum());
-        map.put("artist", fileInfo.getArtist());
-		map.put("genre", fileInfo.getGenre());
-        send("JSON_"+JSONValue.toJSONString(map), true);
+        Map jsonAsMap = new HashMap();
+        jsonAsMap.put("type", "fileInfoInt");
+		jsonAsMap.put("coverHash", fileInfo.getCoverHash());
+        jsonAsMap.put("rating", fileInfo.getRating());
+        jsonAsMap.put("title", fileInfo.getTitle());
+        jsonAsMap.put("album", fileInfo.getAlbum());
+        jsonAsMap.put("artist", fileInfo.getArtist());
+		jsonAsMap.put("genre", fileInfo.getGenre());
+        send(jsonAsMap, true);
     }
 	
 	public static void sendCover(String login, FileInfoInt displayedFile, int maxWidth) {
@@ -128,16 +129,30 @@ public class PanelRemote extends javax.swing.JPanel {
 			}
 		}
 	}
-    
-    public static void send(String msg, boolean isRemote) {
+	
+	public static void send(Map jsonAsMap, boolean isRemote) {
         if(server!=null) {
-            server.send(msg, isRemote);
+            server.send(jsonAsMap, isRemote);
         }
     }
 	
 	public static boolean send(String login, String msg) {
         if(server!=null) {
             return server.send(login, msg);
+        }
+		return false;
+    }
+	
+	public static boolean send(String login, JSONObject obj) {
+        if(server!=null) {
+            return server.send(login, obj);
+        }
+		return false;
+    }
+	
+	public static boolean send(String login, Map jsonAsMap) {
+        if(server!=null) {
+            return server.send(login, jsonAsMap);
         }
 		return false;
     }
