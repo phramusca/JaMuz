@@ -6,6 +6,7 @@
 package jamuz.remote;
 
 import jamuz.FileInfoInt;
+import jamuz.gui.PanelRemote;
 import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
@@ -188,7 +189,9 @@ public class Server {
 			synchronized(LOCK_REMOTE) {
 				try {
 					clients.get(login).setPath(path);
-					clients.get(login).send("MSG_SEND_DB");
+					JSONObject obj = new JSONObject();
+					obj.put("type", "SEND_DB");
+					clients.get(login).send( obj);
 					Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.wait()");
 					LOCK_REMOTE.wait(10 * 1000); // 10s
 					Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote released");
@@ -230,20 +233,6 @@ public class Server {
 	
 	public boolean isConnected(String login) {
 		return clients.containsKey(login);
-	}
-	
-	/**
-     * Sends a message to given client
-	 * @param login
-     * @param msg
-	 * @return 
-     */
-    public boolean send(String login, String msg) {
-		if(clients.containsKey(login)) {
-			clients.get(login).send(msg);
-			return true;
-		}
-		return false;
 	}
 	
 	public boolean send(String login, JSONObject obj) {
