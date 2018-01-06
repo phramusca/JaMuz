@@ -81,6 +81,9 @@ import jamuz.player.MPlaybackListener;
 import jamuz.remote.Client;
 import jamuz.remote.ICallBackReception;
 import jamuz.remote.ServerClient;
+import java.util.logging.Logger;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Main JaMuz GUI class
@@ -240,16 +243,37 @@ public class PanelMain extends javax.swing.JFrame {
 				int id = Integer.parseInt(msg.substring("sendFile".length()));
 				PanelRemote.sendFile(login, id);
 			}
-			else if(msg.startsWith("insertDeviceFile")) {
-				Jamuz.getLogger().log(Level.INFO, msg);
-				int idFile = Integer.parseInt(msg.substring("insertDeviceFile".length()));
-				FileInfoInt file = Jamuz.getDb().getFile(idFile);
-				int idDevice = Jamuz.getMachine().getDeviceId(login);
-				if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
-					PanelRemote.send(login, "insertedDeviceFileOK"+idFile);
-				} else {
-					PanelRemote.send(login, "insertedDeviceFileKO"+idFile);
-				}
+			else if(msg.startsWith("JSON_")) {
+				String json = msg.substring(5);
+				JSONObject jsonObject;
+				try {
+					jsonObject = (JSONObject) new JSONParser().parse(json);
+					String type = (String) jsonObject.get("type");
+					switch(type) {
+						case "ackFileReception":
+							boolean requestNextFile = (boolean) jsonObject.get("requestNextFile");
+							int idFile = (int) (long) jsonObject.get("idFile");
+							
+							//Send back ack to client
+							if(requestNextFile) { //Not needed for now in this case
+								FileInfoInt file = Jamuz.getDb().getFile(idFile);
+								int idDevice = Jamuz.getMachine().getDeviceId(login);
+								JSONObject obj = new JSONObject();
+								obj.put("type", "insertDeviceFileAck");
+								obj.put("idFile", idFile);
+								obj.put("requestNextFile", requestNextFile);
+								if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
+									obj.put("status", "OK");
+								} else {
+									obj.put("status", "KO");
+								}
+								PanelRemote.send(login, obj);
+							}
+							break;
+					}
+				} catch (ParseException ex) {
+					Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
+				}				
 			}
 			else {
 				switch(msg) { 

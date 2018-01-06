@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultListModel;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 /**
  *
@@ -134,13 +133,6 @@ public class PanelRemote extends javax.swing.JPanel {
         if(server!=null) {
             server.send(jsonAsMap, isRemote);
         }
-    }
-	
-	public static boolean send(String login, String msg) {
-        if(server!=null) {
-            return server.send(login, msg);
-        }
-		return false;
     }
 	
 	public static boolean send(String login, JSONObject obj) {

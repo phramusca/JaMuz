@@ -35,7 +35,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -115,6 +114,8 @@ public class ServerClient {
 	 * @param msg
 	 */
 	public void send(String msg) {
+		Logger.getLogger(ServerClient.class.getName()).log(Level.FINE, 
+				"SEND to {0} : {1}", new Object[]{login, msg});
         printWriter.println(msg+"\n");
         printWriter.flush();
 	}
@@ -205,7 +206,7 @@ public class ServerClient {
 	
 	private boolean sendFile(File file, DataOutputStream dos) {
 		try (FileInputStream input = new FileInputStream(file)) {
-			int read = 0;
+			int read;
 			while ((read = input.read()) != -1) {
 				dos.writeByte(read);
 			}
