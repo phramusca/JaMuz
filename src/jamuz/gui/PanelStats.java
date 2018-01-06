@@ -167,8 +167,21 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatDecade = new javax.swing.JRadioButton();
         jRadioStatAlbum = new javax.swing.JRadioButton();
         jRadioStatArtist = new javax.swing.JRadioButton();
-        jButton1 = new javax.swing.JButton();
+        jButtonRefresh = new javax.swing.JButton();
         jRadioStatPercentRated = new javax.swing.JRadioButton();
+        jPanelSelectFilters = new javax.swing.JPanel();
+        jPanelSelectStatus = new javax.swing.JPanel();
+        jCheckBoxSelectCheckedFlag0 = new javax.swing.JCheckBox();
+        jCheckBoxSelectCheckedFlag3 = new javax.swing.JCheckBox();
+        jCheckBoxSelectCheckedFlag2 = new javax.swing.JCheckBox();
+        jCheckBoxSelectCheckedFlag1 = new javax.swing.JCheckBox();
+        jPanelSelectRating = new javax.swing.JPanel();
+        jCheckBoxSelectRating0 = new javax.swing.JCheckBox();
+        jCheckBoxSelectRating1 = new javax.swing.JCheckBox();
+        jCheckBoxSelectRating2 = new javax.swing.JCheckBox();
+        jCheckBoxSelectRating3 = new javax.swing.JCheckBox();
+        jCheckBoxSelectRating4 = new javax.swing.JCheckBox();
+        jCheckBoxSelectRating5 = new javax.swing.JCheckBox();
 
         jSliderStatsNbCategories.setMajorTickSpacing(10);
         jSliderStatsNbCategories.setMaximum(20);
@@ -205,7 +218,7 @@ public class PanelStats extends javax.swing.JPanel {
         jPanelStatsChartBorder.setLayout(jPanelStatsChartBorderLayout);
         jPanelStatsChartBorderLayout.setHorizontalGroup(
             jPanelStatsChartBorderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelStatsChartBorderLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelStatsChartBorderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanelStatsChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -230,7 +243,7 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatRatedOnly.setText(Inter.get("Stat.RatingRated")); // NOI18N
         jRadioStatRatedOnly.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioStatRatedOnlyItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
 
@@ -238,7 +251,7 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatRating.setText(Inter.get("Stat.Rating")); // NOI18N
         jRadioStatRating.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioStatRatingItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
 
@@ -246,7 +259,7 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatCheckedOnly.setText(Inter.get("Stat.CheckedChecked")); // NOI18N
         jRadioStatCheckedOnly.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioStatCheckedOnlyItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
 
@@ -254,7 +267,7 @@ public class PanelStats extends javax.swing.JPanel {
         jRadiotatStatus.setText(Inter.get("Stat.Checked")); // NOI18N
         jRadiotatStatus.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadiotatStatusItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
 
@@ -262,7 +275,7 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatGenre.setText(Inter.get("Tag.Genre")); // NOI18N
         jRadioStatGenre.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioStatGenreItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
 
@@ -270,7 +283,7 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatYear.setText(Inter.get("Tag.Year")); // NOI18N
         jRadioStatYear.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioStatYearItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
 
@@ -278,7 +291,7 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatDecade.setText(Inter.get("Stat.Decade")); // NOI18N
         jRadioStatDecade.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioStatDecadeItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
 
@@ -286,7 +299,7 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatAlbum.setText(Inter.get("Tag.Album")); // NOI18N
         jRadioStatAlbum.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioStatAlbumItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
 
@@ -294,14 +307,14 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatArtist.setText(Inter.get("Tag.Artist")); // NOI18N
         jRadioStatArtist.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioStatArtistItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/update.png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/update.png"))); // NOI18N
+        jButtonRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonRefreshActionPerformed(evt);
             }
         });
 
@@ -309,9 +322,172 @@ public class PanelStats extends javax.swing.JPanel {
         jRadioStatPercentRated.setText(Inter.get("Stat.PercentRated")); // NOI18N
         jRadioStatPercentRated.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioStatPercentRatedItemStateChanged(evt);
+                radioItemChanged(evt);
             }
         });
+
+        jPanelSelectStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jCheckBoxSelectCheckedFlag0.setText("?"); // NOI18N
+        jCheckBoxSelectCheckedFlag0.setEnabled(false);
+        jCheckBoxSelectCheckedFlag0.setOpaque(true);
+
+        jCheckBoxSelectCheckedFlag3.setSelected(true);
+        jCheckBoxSelectCheckedFlag3.setText(Inter.get("Check.OK")); // NOI18N
+        jCheckBoxSelectCheckedFlag3.setEnabled(false);
+        jCheckBoxSelectCheckedFlag3.setOpaque(true);
+
+        jCheckBoxSelectCheckedFlag2.setSelected(true);
+        jCheckBoxSelectCheckedFlag2.setText(Inter.get("Check.OK")); // NOI18N
+        jCheckBoxSelectCheckedFlag2.setEnabled(false);
+        jCheckBoxSelectCheckedFlag2.setOpaque(true);
+
+        jCheckBoxSelectCheckedFlag1.setText(Inter.get("Check.KO")); // NOI18N
+        jCheckBoxSelectCheckedFlag1.setEnabled(false);
+        jCheckBoxSelectCheckedFlag1.setOpaque(true);
+
+        javax.swing.GroupLayout jPanelSelectStatusLayout = new javax.swing.GroupLayout(jPanelSelectStatus);
+        jPanelSelectStatus.setLayout(jPanelSelectStatusLayout);
+        jPanelSelectStatusLayout.setHorizontalGroup(
+            jPanelSelectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSelectStatusLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelSelectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelSelectStatusLayout.createSequentialGroup()
+                        .addComponent(jCheckBoxSelectCheckedFlag0, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jCheckBoxSelectCheckedFlag3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSelectStatusLayout.createSequentialGroup()
+                        .addComponent(jCheckBoxSelectCheckedFlag1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jCheckBoxSelectCheckedFlag2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelSelectStatusLayout.setVerticalGroup(
+            jPanelSelectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSelectStatusLayout.createSequentialGroup()
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addGroup(jPanelSelectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxSelectCheckedFlag0)
+                    .addComponent(jCheckBoxSelectCheckedFlag3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGroup(jPanelSelectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxSelectCheckedFlag2)
+                    .addComponent(jCheckBoxSelectCheckedFlag1))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        jPanelSelectRating.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jCheckBoxSelectRating0.setSelected(true);
+        jCheckBoxSelectRating0.setText("?"); // NOI18N
+        jCheckBoxSelectRating0.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                filterItemStateChanged(evt);
+            }
+        });
+
+        jCheckBoxSelectRating1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/1starU.png"))); // NOI18N
+        jCheckBoxSelectRating1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/1starC.png"))); // NOI18N
+        jCheckBoxSelectRating1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                filterItemStateChanged(evt);
+            }
+        });
+
+        jCheckBoxSelectRating2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/2starU.png"))); // NOI18N
+        jCheckBoxSelectRating2.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/2starC.png"))); // NOI18N
+        jCheckBoxSelectRating2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                filterItemStateChanged(evt);
+            }
+        });
+
+        jCheckBoxSelectRating3.setSelected(true);
+        jCheckBoxSelectRating3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/3starU.png"))); // NOI18N
+        jCheckBoxSelectRating3.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/3starC.png"))); // NOI18N
+        jCheckBoxSelectRating3.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                filterItemStateChanged(evt);
+            }
+        });
+
+        jCheckBoxSelectRating4.setSelected(true);
+        jCheckBoxSelectRating4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/4starU.png"))); // NOI18N
+        jCheckBoxSelectRating4.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/4starC.png"))); // NOI18N
+        jCheckBoxSelectRating4.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                filterItemStateChanged(evt);
+            }
+        });
+
+        jCheckBoxSelectRating5.setSelected(true);
+        jCheckBoxSelectRating5.setToolTipText("");
+        jCheckBoxSelectRating5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/5starU.png"))); // NOI18N
+        jCheckBoxSelectRating5.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/5star.png"))); // NOI18N
+        jCheckBoxSelectRating5.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                filterItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelSelectRatingLayout = new javax.swing.GroupLayout(jPanelSelectRating);
+        jPanelSelectRating.setLayout(jPanelSelectRatingLayout);
+        jPanelSelectRatingLayout.setHorizontalGroup(
+            jPanelSelectRatingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSelectRatingLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelSelectRatingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxSelectRating2)
+                    .addComponent(jCheckBoxSelectRating0)
+                    .addComponent(jCheckBoxSelectRating1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelSelectRatingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxSelectRating3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jCheckBoxSelectRating4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jCheckBoxSelectRating5, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+        jPanelSelectRatingLayout.setVerticalGroup(
+            jPanelSelectRatingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSelectRatingLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelSelectRatingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelSelectRatingLayout.createSequentialGroup()
+                        .addComponent(jCheckBoxSelectRating0)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxSelectRating1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxSelectRating2))
+                    .addGroup(jPanelSelectRatingLayout.createSequentialGroup()
+                        .addComponent(jCheckBoxSelectRating5)
+                        .addGap(10, 10, 10)
+                        .addComponent(jCheckBoxSelectRating4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxSelectRating3)))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanelSelectFiltersLayout = new javax.swing.GroupLayout(jPanelSelectFilters);
+        jPanelSelectFilters.setLayout(jPanelSelectFiltersLayout);
+        jPanelSelectFiltersLayout.setHorizontalGroup(
+            jPanelSelectFiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSelectFiltersLayout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(jPanelSelectFiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanelSelectRating, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelSelectStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
+        );
+        jPanelSelectFiltersLayout.setVerticalGroup(
+            jPanelSelectFiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSelectFiltersLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jPanelSelectRating, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelSelectStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -321,7 +497,7 @@ public class PanelStats extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -340,12 +516,15 @@ public class PanelStats extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jRadioStatYear))
                             .addComponent(jRadioStatGenre))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 414, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jRadioStatAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jRadioStatArtist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jPanelStatsChartBorder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPaneStats, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE))
+                    .addComponent(jScrollPaneStats)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanelStatsChartBorder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanelSelectFilters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jSliderStatsNbCategories, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -370,18 +549,21 @@ public class PanelStats extends javax.swing.JPanel {
                             .addComponent(jRadioStatDecade)
                             .addComponent(jRadioStatYear)
                             .addComponent(jRadioStatAlbum)))
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButtonRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jSliderStatsNbCategories, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                        .addComponent(jSliderStatsNbCategories, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonStatsSelect))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanelStatsChartBorder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(5, 5, 5)))
+                        .addGap(5, 5, 5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanelSelectFilters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(1, 1, 1)
-                .addComponent(jScrollPaneStats, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+                .addComponent(jScrollPaneStats, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -418,61 +600,6 @@ public class PanelStats extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtonStatsSelectActionPerformed
 
-    //TODO: USe a common event handler for buttonGroup as all the same code
-    private void jRadioStatRatingItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioStatRatingItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED) {
-            showStatsChartPie();
-        }
-    }//GEN-LAST:event_jRadioStatRatingItemStateChanged
-
-    private void jRadioStatRatedOnlyItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioStatRatedOnlyItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED) {	
-            showStatsChartPie();
-        }
-    }//GEN-LAST:event_jRadioStatRatedOnlyItemStateChanged
-
-    private void jRadiotatStatusItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadiotatStatusItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED) {	
-            showStatsChartPie();
-        }
-    }//GEN-LAST:event_jRadiotatStatusItemStateChanged
-
-    private void jRadioStatCheckedOnlyItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioStatCheckedOnlyItemStateChanged
-       if(evt.getStateChange() == ItemEvent.SELECTED) {	
-            showStatsChartPie();
-        }
-    }//GEN-LAST:event_jRadioStatCheckedOnlyItemStateChanged
-
-    private void jRadioStatDecadeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioStatDecadeItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED) {	
-            showStatsChartPie();
-        }
-    }//GEN-LAST:event_jRadioStatDecadeItemStateChanged
-
-    private void jRadioStatYearItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioStatYearItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED) {	
-            showStatsChartPie();
-        }
-    }//GEN-LAST:event_jRadioStatYearItemStateChanged
-
-    private void jRadioStatArtistItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioStatArtistItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED) {	
-            showStatsChartPie();
-        }
-    }//GEN-LAST:event_jRadioStatArtistItemStateChanged
-
-    private void jRadioStatAlbumItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioStatAlbumItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED) {	
-            showStatsChartPie();
-        }
-    }//GEN-LAST:event_jRadioStatAlbumItemStateChanged
-
-    private void jRadioStatGenreItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioStatGenreItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED) {	
-            showStatsChartPie();
-        }
-    }//GEN-LAST:event_jRadioStatGenreItemStateChanged
-
     //False by default as jSliderStatsNbCategories is set to 0 within 
     //GUI auto-generated code, and it is an internal hange
     private static boolean isManual = false;
@@ -487,17 +614,22 @@ public class PanelStats extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jSliderStatsNbCategoriesStateChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
         showStatsChartPie();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonRefreshActionPerformed
 
-    private void jRadioStatPercentRatedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioStatPercentRatedItemStateChanged
+    private void filterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_filterItemStateChanged
+        showStatsChartPie();
+    }//GEN-LAST:event_filterItemStateChanged
+
+    private void radioItemChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_radioItemChanged
         if(evt.getStateChange() == ItemEvent.SELECTED) {	
             showStatsChartPie();
         }
-    }//GEN-LAST:event_jRadioStatPercentRatedItemStateChanged
+    }//GEN-LAST:event_radioItemChanged
 
-    private void fillStatTable(String field, String title, ArrayList<StatItem> stats, boolean showChart) {
+    private void fillStatTable(String field, String title, ArrayList<StatItem> stats, 
+			boolean showChart, boolean[] selRatings) {
 		jTableStats.setRowSorter(null);
 		tableModel.clear();
 		String totalSelector;
@@ -517,7 +649,8 @@ public class PanelStats extends javax.swing.JPanel {
                 break;
         }
 
-        StatItem total=Jamuz.getDb().getStatItem(field, totalSelector, table, "", Color.YELLOW);
+        StatItem total=Jamuz.getDb().getStatItem(field, totalSelector, 
+				table, "", Color.YELLOW, selRatings);
         long totalCount = total.getCountFile();
 
         float percentage;
@@ -539,6 +672,7 @@ public class PanelStats extends javax.swing.JPanel {
         }
         jPanelStatsChartBorder.setVisible(showChart);
         jSliderStatsNbCategories.setVisible(showChart);
+		jPanelSelectFilters.setVisible(showChart);
 
 		//Enable row tableSorter (cannot be done if model is empty)
 		if(tableModel.getRowCount()>0) {
@@ -611,12 +745,13 @@ public class PanelStats extends javax.swing.JPanel {
 		myTableModel.addRow(donnee);
     }
     
-	private void addToStats(String field, String value, String label, Color color) {
+	private void addToStats(String field, String value, String label, 
+			Color color) {
 		String table="file";  //NOI18N
 		if(field.equals("checked")) {  //NOI18N
 			table="path";  //NOI18N
 		}
-		stats.add(Jamuz.getDb().getStatItem(field, value, table, label, color));
+		stats.add(Jamuz.getDb().getStatItem(field, value, table, label, color, null));
 	}
 	
     private String getSelectedButtonText(ButtonGroup buttonGroup) {
@@ -649,9 +784,24 @@ public class PanelStats extends javax.swing.JPanel {
     
 	private void showStatsChartPie(boolean setSlider) {
        
+		boolean[] selRatingsToUse = null;
+		boolean[] selRatings = new boolean[6]; 
+        selRatings[0]=jCheckBoxSelectRating0.isSelected();
+        selRatings[1]=jCheckBoxSelectRating1.isSelected();
+        selRatings[2]=jCheckBoxSelectRating2.isSelected();
+        selRatings[3]=jCheckBoxSelectRating3.isSelected();
+        selRatings[4]=jCheckBoxSelectRating4.isSelected();
+        selRatings[5]=jCheckBoxSelectRating5.isSelected();
+		
+		//FIXME: Use status filter too
+		//+ at least disable filters when not used
+		//OR event better, use them when applicable
+		
         String stat = getSelectedButtonText(buttonGroupStat);
         
-		if(stat.equals(Inter.get("Tag.Genre")) || stat.equals(Inter.get("Tag.Artist")) || stat.equals(Inter.get("Tag.Album"))) {  //NOI18N
+		if(stat.equals(Inter.get("Tag.Genre")) 
+				|| stat.equals(Inter.get("Tag.Artist")) 
+				|| stat.equals(Inter.get("Tag.Album"))) {  //NOI18N
 			jButtonStatsSelect.setVisible(true);
 		}
 		else {
@@ -711,23 +861,27 @@ public class PanelStats extends javax.swing.JPanel {
         }
 		else if(stat.equals(Inter.get("Tag.Genre"))) { //NOI18N
 			field="genre";  //NOI18N
-			Jamuz.getDb().getSelectionList4Stats(stats, field);
+			selRatingsToUse=selRatings;
+			Jamuz.getDb().getSelectionList4Stats(stats, field, selRatings);
             showChart=true;
             setDefaultNbCategories(10, setSlider);
 		}
 		else if(stat.equals(Inter.get("Tag.Year"))) { //NOI18N
 			field="year";  //NOI18N
-			Jamuz.getDb().getSelectionList4Stats(stats, field);
+			selRatingsToUse=selRatings;
+			Jamuz.getDb().getSelectionList4Stats(stats, field, selRatings);
             showChart=true;
             setDefaultNbCategories(10, setSlider);
 		}
 		else if(stat.equals(Inter.get("Tag.Artist"))) { //NOI18N
 			field="artist";  //NOI18N
-			Jamuz.getDb().getSelectionList4Stats(stats, field);
+			selRatingsToUse=selRatings;
+			Jamuz.getDb().getSelectionList4Stats(stats, field, selRatings);
 		}
 		else if(stat.equals(Inter.get("Tag.Album"))) { //NOI18N
 			field="album";  //NOI18N
-            Jamuz.getDb().getSelectionList4Stats(stats, field);
+			selRatingsToUse=selRatings;
+            Jamuz.getDb().getSelectionList4Stats(stats, field, selRatings);
 		}
 		else if(stat.equals(Inter.get("Stat.Decade"))) { //NOI18N
 			field="year";  //NOI18N
@@ -743,14 +897,27 @@ public class PanelStats extends javax.swing.JPanel {
 			Popup.warning("Unknown required stat \""+stat+"\""); //NOI18N
 		}
         
-		fillStatTable(field, stat, stats, showChart);
+		fillStatTable(field, stat, stats, showChart, selRatingsToUse);
 	}
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupStat;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonRefresh;
     private javax.swing.JButton jButtonStatsSelect;
+    private static javax.swing.JCheckBox jCheckBoxSelectCheckedFlag0;
+    private static javax.swing.JCheckBox jCheckBoxSelectCheckedFlag1;
+    private static javax.swing.JCheckBox jCheckBoxSelectCheckedFlag2;
+    private static javax.swing.JCheckBox jCheckBoxSelectCheckedFlag3;
+    private static javax.swing.JCheckBox jCheckBoxSelectRating0;
+    private static javax.swing.JCheckBox jCheckBoxSelectRating1;
+    private static javax.swing.JCheckBox jCheckBoxSelectRating2;
+    private static javax.swing.JCheckBox jCheckBoxSelectRating3;
+    private static javax.swing.JCheckBox jCheckBoxSelectRating4;
+    private static javax.swing.JCheckBox jCheckBoxSelectRating5;
+    private javax.swing.JPanel jPanelSelectFilters;
+    private static javax.swing.JPanel jPanelSelectRating;
+    private static javax.swing.JPanel jPanelSelectStatus;
     private javax.swing.JPanel jPanelStatsChart;
     private javax.swing.JPanel jPanelStatsChartBorder;
     private javax.swing.JRadioButton jRadioStatAlbum;

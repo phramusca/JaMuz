@@ -1797,8 +1797,10 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param copyRight
      * @param sqlOrder
      */
-    public void fillSelectorList(DefaultListModel myListModel, String field, String selGenre, String selArtist, String selAlbum, boolean[] selRatings, 
-            boolean[] selCheckedFlag, int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight, String sqlOrder) {
+    public void fillSelectorList(DefaultListModel myListModel, String field, 
+			String selGenre, String selArtist, String selAlbum, boolean[] selRatings, 
+            boolean[] selCheckedFlag, int yearFrom, int yearTo, float bpmFrom, 
+			float bpmTo, int copyRight, String sqlOrder) {
 
         selGenre = getSelected(selGenre);
         selArtist = getSelected(selArtist);
@@ -2125,16 +2127,18 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      *
      * @param stats
      * @param field
+	 * @param selRatings
      */
-    public void getSelectionList4Stats(ArrayList<StatItem> stats, String field) {
+    public void getSelectionList4Stats(ArrayList<StatItem> stats, String field, boolean[] selRatings) {
         Statement st=null;
         ResultSet rs=null;
         try {
             String sql = "SELECT COUNT(*), COUNT(DISTINCT P.idPath), SUM(size), "
-					+ "SUM(length), avg(rating)," + field + " "
-                    + "FROM file F JOIN path P ON P.idPath=F.idPath "
-					+ "WHERE F.deleted=0 AND P.deleted=0 "  //NOI18N
-                    + "GROUP BY " + field + " ORDER BY " + field;   //NOI18N //NOI18N
+					+ " \nSUM(length), avg(rating)," + field + " "
+                    + " \nFROM file F JOIN path P ON P.idPath=F.idPath "
+					+ " \nWHERE F.deleted=0 AND P.deleted=0 "  //NOI18N
+					+ " \nAND F.rating IN " + getCSVlist(selRatings) 
+                    + " \nGROUP BY " + field + " ORDER BY " + field;   //NOI18N //NOI18N
             
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
@@ -2395,28 +2399,32 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @param table
      * @param label
      * @param color
+	 * @param selRatings
      * @return
      */
     public StatItem getStatItem(String field, String value, String table, 
-			String label, Color color) {
+			String label, Color color, boolean[] selRatings) {
         String sql;
         Statement st=null;
         ResultSet rs=null;
         try {
             value = value.replaceAll("\"", "%");   //NOI18N
             sql = "SELECT COUNT(*), COUNT(DISTINCT path.idPath), SUM(size), "
-				+ "SUM(length), avg(rating) "
-				+ "FROM file JOIN path ON path.idPath=file.idPath ";
+				+ "\nSUM(length), avg(rating) "
+				+ "\nFROM file JOIN path ON path.idPath=file.idPath ";
             if (value.contains("IN (")) {  //NOI18N
-                sql += " WHERE " + table+"."+field + " " + value;   //NOI18N
+                sql += " \nWHERE " + table+"."+field + " " + value;   //NOI18N
             } else if (value.startsWith(">")) {   //NOI18N
-                sql += " WHERE " + table+"."+field + value + "";   //NOI18N
+                sql += " \nWHERE " + table+"."+field + value + "";   //NOI18N
             } else if (value.contains("%")) {   //NOI18N
-                sql += " WHERE " + table+"."+field + " LIKE \"" + value + "\"";   //NOI18N
+                sql += " \nWHERE " + table+"."+field + " LIKE \"" + value + "\"";   //NOI18N
             } else {
-                sql += " WHERE " + table+"."+field + "='" + value + "'";   //NOI18N
+                sql += " \nWHERE " + table+"."+field + "='" + value + "'";   //NOI18N
             }
-            sql += " AND file.deleted=0 AND path.deleted=0";   //NOI18N
+            sql += " \nAND file.deleted=0 AND path.deleted=0";   //NOI18N
+			if(selRatings!=null) {
+				sql += " \nAND file.rating IN " + getCSVlist(selRatings);
+			}
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
             return new StatItem(label, value, rs.getLong(1), rs.getLong(2), 
