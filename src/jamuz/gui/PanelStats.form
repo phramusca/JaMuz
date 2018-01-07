@@ -48,17 +48,19 @@
                           </Group>
                           <Component id="jRadioStatGenre" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="414" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jRadioStatAlbum" max="32767" attributes="0"/>
                           <Component id="jRadioStatArtist" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="jScrollPaneStats" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jPanelStatsChartBorder" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jPanelSelectFilters" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jScrollPaneStats" alignment="1" pref="797" max="32767" attributes="0"/>
+                          <Component id="jPanelStatsChartBorder" alignment="1" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
