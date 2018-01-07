@@ -516,15 +516,16 @@ public class PanelStats extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jRadioStatYear))
                             .addComponent(jRadioStatGenre))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 414, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jRadioStatAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jRadioStatArtist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jScrollPaneStats)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanelStatsChartBorder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanelSelectFilters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelSelectFilters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPaneStats, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 797, Short.MAX_VALUE)
+                            .addComponent(jPanelStatsChartBorder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jSliderStatsNbCategories, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -670,9 +671,6 @@ public class PanelStats extends javax.swing.JPanel {
         if(showChart) {
             createChart(title, totalCount, slices);
         }
-        jPanelStatsChartBorder.setVisible(showChart);
-        jSliderStatsNbCategories.setVisible(showChart);
-		jPanelSelectFilters.setVisible(showChart);
 
 		//Enable row tableSorter (cannot be done if model is empty)
 		if(tableModel.getRowCount()>0) {
@@ -810,6 +808,7 @@ public class PanelStats extends javax.swing.JPanel {
 		stats = new ArrayList<>();
         
         boolean showChart=false;
+		boolean showFilters=true;
         jSliderStatsNbCategories.setEnabled(true);
         
         String field="";  //NOI18N
@@ -823,6 +822,7 @@ public class PanelStats extends javax.swing.JPanel {
 			addToStats(field, "4", new Color(0,92,49));  //NOI18N
 			addToStats(field, "5", new Color(43,206,72));  //NOI18N
             showChart=true;
+			showFilters=false;
             setDefaultNbCategories();
 		}
 		else if(stat.equals(Inter.get("Stat.RatingRated"))) { //NOI18N
@@ -833,6 +833,7 @@ public class PanelStats extends javax.swing.JPanel {
 			addToStats(field, "4", new Color(0,92,49));  //NOI18N
 			addToStats(field, "5", new Color(43,206,72));  //NOI18N
             showChart=true;
+			showFilters=false;
             setDefaultNbCategories();
 		}
 		else if(stat.equals(Inter.get("Stat.Checked"))) { //NOI18N
@@ -841,6 +842,7 @@ public class PanelStats extends javax.swing.JPanel {
 				addToStats(field, String.valueOf(checkedFlag.getValue()), checkedFlag.toString(), checkedFlag.getColor());
 			}
             showChart=true;
+			showFilters=false;
             setDefaultNbCategories();
 		}
         else if(stat.equals(Inter.get("Stat.CheckedChecked"))) { //NOI18N
@@ -851,12 +853,14 @@ public class PanelStats extends javax.swing.JPanel {
                 }
 			}
             showChart=true;
+			showFilters=false;
             setDefaultNbCategories();
 		}
         else if(stat.equals(Inter.get("Stat.PercentRated"))) {
             field="idPath"; //Any field from path will do as =%
             Jamuz.getDb().getPercentRatedForStats(stats);
             showChart=true;
+			showFilters=false;
             setDefaultNbCategories();
         }
 		else if(stat.equals(Inter.get("Tag.Genre"))) { //NOI18N
@@ -890,13 +894,18 @@ public class PanelStats extends javax.swing.JPanel {
 				addToStats(field, Integer.toString(i)+"%", null);  //NOI18N
 			}
             showChart=true;
+			showFilters=false;
             setDefaultNbCategories();
 		}
 		else {
 			//This should never happen (at least in prod) as we have a fixed list
 			Popup.warning("Unknown required stat \""+stat+"\""); //NOI18N
 		}
-        
+		
+		jPanelSelectFilters.setVisible(showFilters); 
+		jPanelStatsChartBorder.setVisible(showChart); 
+        jSliderStatsNbCategories.setVisible(showChart); 
+		
 		fillStatTable(field, stat, stats, showChart, selRatingsToUse);
 	}
     
