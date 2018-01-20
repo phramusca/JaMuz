@@ -362,20 +362,18 @@ public class PanelMerge extends javax.swing.JPanel {
             processMerge.abort();
         } else {
             enableMerge(false);
-            
             DefaultListModel myModel = (DefaultListModel) jListMerge.getModel();
-            List dbIndexes = new ArrayList();
-
+            List<Integer> dbIndexes = new ArrayList();
             StatSource statSource;
-
             for (int i = 0; i < myModel.size(); ++i) {
                 CheckBoxListItem checkListItem = (CheckBoxListItem) myModel.get(i);
                 statSource = (StatSource) checkListItem.getObject();
                 if (checkListItem.isSelected()) {
-                    dbIndexes.add(new Integer(statSource.getId()));
+                    dbIndexes.add(statSource.getId());
                 }
             }
-            processMerge = new ProcessMerge("Thread.PanelMerge.ProcessMerge", dbIndexes, jCheckBoxMergeSimulate.isSelected(), jCheckBoxMergeForce.isSelected());
+            processMerge = new ProcessMerge("Thread.PanelMerge.ProcessMerge", dbIndexes, 
+					jCheckBoxMergeSimulate.isSelected(), jCheckBoxMergeForce.isSelected());
             processMerge.start();
         }
     }//GEN-LAST:event_jButtonMergeStartActionPerformed
