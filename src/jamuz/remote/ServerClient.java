@@ -8,7 +8,11 @@ package jamuz.remote;
 import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
 import jamuz.Jamuz;
+import static jamuz.gui.PanelMain.getPlaylists;
+import jamuz.gui.PanelRemote;
 import jamuz.process.check.DialogScanner;
+import jamuz.process.sync.ProcessSync;
+import jamuz.utils.LogText;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -29,12 +33,17 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.file.Files;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -258,12 +267,20 @@ public class ServerClient {
                 String pass = bufferedReader.readLine();
 				String name = isValid(login, pass);
                 if(!name.equals("")){
-                    send("MSG_CONNECTED");
-                    //Starting reception thread
+					send("MSG_CONNECTED");
+					//Starting reception thread
                     reception = new Reception(bufferedReader, callback, login);
                     reception.start();
                     //Notify client is authenticated
                     callback.authenticated(new Client(login, name), ServerClient.this);
+					
+					//Sending sync data
+					if(login.endsWith("-data")) {
+						//TODO: Do this in a request/answer manner
+						sendTags();
+						sendGenres();
+						sendFilesToGet();
+					}
                 }
                 else {
                     send("MSG_ERROR_CONNECTION");
@@ -271,6 +288,45 @@ public class ServerClient {
 			} catch (IOException ex) {
 				Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
 			}
+		}
+		
+		private void sendFilesToGet() {
+			File file = Jamuz.getFile(login, "data", "devices");
+			if(file.exists()) {
+				try {
+					String json = new String(Files.readAllBytes(file.toPath()));
+					send("JSON_"+json);
+					file.delete();
+				} catch (IOException ex) {
+					Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			} else {
+				JSONObject obj = new JSONObject();
+				obj.put("type", "StartSync");
+				send(obj);
+			}
+		}
+		
+		private void sendGenres() {
+			JSONArray list = new JSONArray();
+			for(String genre : Jamuz.getGenres()) {
+				list.add(genre);
+			}
+			JSONObject obj = new JSONObject();
+			obj.put("type", "genres");
+			obj.put("genres", list);
+			send(obj);
+		}
+
+		private void sendTags() {
+			JSONArray list = new JSONArray();
+			for(String tag : Jamuz.getTags()) {
+				list.add(tag);
+			}
+			JSONObject obj = new JSONObject();
+			obj.put("type", "tags");
+			obj.put("tags", list);
+			PanelRemote.send(login, obj);
 		}
 
 		private String isValid(String login, String pass) {

@@ -131,7 +131,6 @@ public class ProcessSync extends ProcessAbstract {
 		PanelSync.enableSyncStartButton(false);
 		Jamuz.getDb().deleteDeviceFiles(device.getId());
 		
-		//FIXME: Store json to send it later
 		PanelSync.progressBar.setIndeterminate("Saving list ..."); //NOI18N
 		String json = JSONValue.toJSONString(jsonAsMap);
 		File file = Jamuz.getFile(login, "data", "devices");

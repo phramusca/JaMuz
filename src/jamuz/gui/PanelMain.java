@@ -316,10 +316,7 @@ public class PanelMain extends javax.swing.JFrame {
 		
 		@Override
 		public void authenticated(Client login, ServerClient client) {
-			if(login.getId().endsWith("-data")) {
-				sendTags(login.getId());
-				sendGenres(login.getId());
-			} else {
+			if(!login.getId().endsWith("-data"))  {
 				sendPlaylists(login.getId(), jComboBoxPlaylist.getSelectedItem().toString());
 			}
 			PanelRemote.send(displayedFile);
@@ -1740,28 +1737,6 @@ public class PanelMain extends javax.swing.JFrame {
 		PanelRemote.send(login, obj);
     }
 	
-	private static void sendGenres(String login) {
-		JSONArray list = new JSONArray();
-		for(String genre : Jamuz.getGenres()) {
-			list.add(genre);
-		}
-		JSONObject obj = new JSONObject();
-		obj.put("type", "genres");
-		obj.put("genres", list);
-		PanelRemote.send(login, obj);
-    }
-		
-	private static void sendTags(String login) {
-		JSONArray list = new JSONArray();
-		for(String tag : Jamuz.getTags()) {
-			list.add(tag);
-		}
-		JSONObject obj = new JSONObject();
-		obj.put("type", "tags");
-		obj.put("tags", list);
-		PanelRemote.send(login, obj);
-    }
-    
 	/**
 	 *
 	 * @return
