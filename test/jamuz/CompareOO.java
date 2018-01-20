@@ -18,7 +18,7 @@ package jamuz;
 
 import jamuz.process.check.FolderInfoResult;
 import jamuz.utils.*;
-import jamuz.process.merge.LogText;
+import jamuz.utils.LogText;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;

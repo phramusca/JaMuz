@@ -25,6 +25,7 @@
 
 package jamuz.process.merge;
 
+import jamuz.utils.LogText;
 import jamuz.StatSourceAbstract;
 import jamuz.DbConnJaMuz;
 import jamuz.DbInfo;
