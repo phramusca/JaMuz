@@ -19,7 +19,6 @@ package jamuz.utils;
 import jamuz.DbConnJaMuz;
 import jamuz.DbInfo;
 import jamuz.FileInfoInt;
-import jamuz.process.merge.LogText;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;

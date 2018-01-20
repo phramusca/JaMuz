@@ -15,14 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jamuz.process.merge;
+package jamuz.utils;
 
-import jamuz.utils.Popup;
-import jamuz.utils.Inter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Text log class
@@ -49,7 +48,7 @@ public class LogText {
 	public boolean createFile(String LogFileName) {
 		try {
 			//Create LOG file
-			String logFilePath = this.logPath + LogFileName;  //NOI18N
+			String logFilePath = FilenameUtils.concat(logPath, LogFileName);  //NOI18N
 			File f = new File(logFilePath);
 			f.createNewFile(); //Creates if not exist
 			//Open file for writing

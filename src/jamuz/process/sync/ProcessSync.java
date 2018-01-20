@@ -20,7 +20,6 @@ package jamuz.process.sync;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
-import jamuz.gui.PanelRemote;
 import jamuz.utils.ProcessAbstract;
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +31,7 @@ import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Benchmark;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
+import jamuz.utils.LogText;
 import jamuz.utils.StringManager;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,13 +110,6 @@ public class ProcessSync extends ProcessAbstract {
 	
 	private boolean syncRemote(String login) throws InterruptedException {
 
-		if(!PanelRemote.isConnected(login)) {
-			Popup.warning(java.text.MessageFormat.format(
-					"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
-					new Object[] {this.device.getDestination()}));  //NOI18N
-            return false;
-		}
-		
         PanelSync.enableSyncStartButton(true);
         PanelSync.progressBar.reset();
         PanelSync.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
@@ -137,14 +130,26 @@ public class ProcessSync extends ProcessAbstract {
 		PanelSync.progressBar.setIndeterminate("Delete in deviceFile table ..."); //NOI18N
 		PanelSync.enableSyncStartButton(false);
 		Jamuz.getDb().deleteDeviceFiles(device.getId());
-        PanelSync.progressBar.setIndeterminate("Sending list ..."); //NOI18N
-		if(!PanelRemote.send(login, jsonAsMap)) {
-			Popup.warning(java.text.MessageFormat.format(
-					"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
-					new Object[] {this.device.getDestination()}));  //NOI18N
-            return false;
+		
+		//FIXME: Store json to send it later
+		PanelSync.progressBar.setIndeterminate("Saving list ..."); //NOI18N
+		String json = JSONValue.toJSONString(jsonAsMap);
+		File file = Jamuz.getFile(login, "data", "devices");
+		try {
+			File folder = new File(FilenameUtils.getFullPath(file.getAbsolutePath()));
+			if(!folder.exists()) {
+				FileUtils.forceMkdir(folder);
+			}
+			LogText logText = new LogText(folder.getAbsolutePath());
+			if(logText.createFile(login)) {
+				logText.add(json);
+				logText.close();
+				return true;
+			}
+		} catch (IOException ex) {
+			Logger.getLogger(ProcessSync.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		return true;
+		return false;
 	}
 	
 	private boolean syncFS() throws InterruptedException {
