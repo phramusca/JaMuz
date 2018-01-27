@@ -260,13 +260,13 @@ public class PanelMain extends javax.swing.JFrame {
 								int idDevice = Jamuz.getMachine().getDeviceId(login);
 								JSONObject obj = new JSONObject();
 								obj.put("type", "insertDeviceFileAck");
-								obj.put("idFile", idFile);
 								obj.put("requestNextFile", requestNextFile);
 								if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
 									obj.put("status", "OK");
 								} else {
 									obj.put("status", "KO");
 								}
+								obj.put("file", file.toMap());								
 								PanelRemote.send(login, obj);
 							}
 							break;
