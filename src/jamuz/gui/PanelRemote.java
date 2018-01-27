@@ -142,13 +142,6 @@ public class PanelRemote extends javax.swing.JPanel {
 		return false;
     }
 	
-	public static boolean send(String login, Map jsonAsMap) {
-        if(server!=null) {
-            return server.send(login, jsonAsMap);
-        }
-		return false;
-    }
-	
 	public static boolean isConnected(String login) {
 		if(server!=null) {
             return server.isConnected(login);
