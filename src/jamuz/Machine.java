@@ -21,7 +21,7 @@ import jamuz.process.sync.Device;
 import jamuz.process.merge.StatSource;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 public final class Machine {
 
 	private ArrayList<Option> options; //TODO: Use an HashMap instead
-	private HashMap <Integer, StatSource> statSources;
-	private HashMap <Integer, Device> devices;
+	private LinkedHashMap <Integer, StatSource> statSources;
+	private LinkedHashMap <Integer, Device> devices;
     private final String name;
     private String description;
     
@@ -52,8 +52,8 @@ public final class Machine {
 	 */
 	public boolean read() {
 		options= new ArrayList<>();
-		statSources = new HashMap<>();
-		devices = new HashMap<>();
+		statSources = new LinkedHashMap<>();
+		devices = new LinkedHashMap<>();
         StringBuilder zText = new StringBuilder ();
 		if(Jamuz.getDb().isMachine(this.name, zText)) {
             this.description=zText.toString();

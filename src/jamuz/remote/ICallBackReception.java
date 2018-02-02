@@ -18,6 +18,10 @@ public interface ICallBackReception {
 	 */
 	public void received(String login, String msg);
 	
+	/**
+	 *
+	 * @param login
+	 */
 	public void disconnected(String login);
 	
 	/**

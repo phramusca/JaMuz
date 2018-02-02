@@ -17,7 +17,6 @@
 
 package jamuz;
 
-import de.umass.lastfm.Caller;
 import jamuz.DbInfo.LibType;
 import java.io.File;
 import java.io.IOException;
@@ -27,13 +26,6 @@ import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
