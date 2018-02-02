@@ -47,6 +47,7 @@ import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -1275,15 +1276,18 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param hostname
      * @return
      */
-    public boolean getStatSources(HashMap<Integer, StatSource> statSources, String hostname) {
+    public boolean getStatSources(LinkedHashMap<Integer, StatSource> statSources, String hostname) {
         ResultSet rs=null;
         try {
-            PreparedStatement stSelectStatSources = dbConn.connection.prepareStatement("SELECT S.idStatSource, S.name AS name, "
-                    + "S.idStatement, S.location, S.rootPath, S.idDevice, S.selected, M.name AS machineName \n" 
-                    + ", S.lastMergeDate " //NOI18N
+            PreparedStatement stSelectStatSources = dbConn.connection.prepareStatement(
+					"SELECT S.idStatSource, S.name AS name, "
+						+ "S.idStatement, S.location, S.rootPath, "
+						+ "S.idDevice, S.selected, M.name AS machineName \n" 
+						+ ", S.lastMergeDate " //NOI18N
                     + "FROM  statsource S \n"
                     + "JOIN machine M ON M.idMachine=S.idMachine \n"   //NOI18N
-                    + "WHERE  M.name=?");  //NOI18N
+                    + "WHERE  M.name=? "
+					+ "ORDER BY S.name");  //NOI18N
             stSelectStatSources.setString(1, hostname);
             rs = stSelectStatSources.executeQuery();
             while (rs.next()) {
@@ -1329,18 +1333,25 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param hostname
      * @return
      */
-    public boolean getDevices(HashMap<Integer, Device> devices, String hostname) {
+    public boolean getDevices(LinkedHashMap<Integer, Device> devices, String hostname) {
         ResultSet rs=null;
         try {
-            PreparedStatement stSelectDevices = dbConn.connection.prepareStatement("SELECT idDevice, source, destination, idPlaylist, "
-                    + "D.name FROM device D JOIN machine M ON M.idMachine=D.idMachine "    //NOI18N
-                    + "WHERE M.name=?");  //NOI18N
+            PreparedStatement stSelectDevices = dbConn.connection.prepareStatement(
+					"SELECT idDevice, source, destination, idPlaylist, D.name "
+					+ "FROM device D "
+					+ "JOIN machine M "
+					+ "ON M.idMachine=D.idMachine "    //NOI18N
+                    + "WHERE M.name=? "
+					+ "ORDER BY D.name");  //NOI18N
             stSelectDevices.setString(1, hostname);
             rs = stSelectDevices.executeQuery();
             while (rs.next()) {
                 int idDevice = rs.getInt("idDevice");  //NOI18N
-                devices.put(idDevice, new Device(idDevice, dbConn.getStringValue(rs, "name"),  //NOI18N
-                        dbConn.getStringValue(rs, "source"), dbConn.getStringValue(rs, "destination"), rs.getInt("idPlaylist"), hostname));   //NOI18N
+                devices.put(idDevice, new Device(idDevice, 
+						dbConn.getStringValue(rs, "name"),  //NOI18N
+                        dbConn.getStringValue(rs, "source"), 
+						dbConn.getStringValue(rs, "destination"), 
+						rs.getInt("idPlaylist"), hostname));   //NOI18N
             }
             return true;
         } catch (SQLException ex) {
@@ -1353,7 +1364,6 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }
-            
         }
     }
 
@@ -2460,9 +2470,9 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 			String album, int idPath) {
         try {
             PreparedStatement stSelectAlbumSimilar = 
-					dbConn.connection.prepareStatement(selectDuplicate
+					dbConn.connection.prepareStatement(SELECT_DUPLICATE
                     + " WHERE album LIKE ? AND P.idPath!=?"
-                    + groupDuplicate);     //NOI18N
+                    + GROUP_DUPLICATE);     //NOI18N
             stSelectAlbumSimilar.setString(1, "%" + album + "%");   //NOI18N
             stSelectAlbumSimilar.setInt(2, idPath);
             
@@ -2474,12 +2484,12 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         }
     }
 
-    private static final String selectDuplicate = 
+    private static final String SELECT_DUPLICATE = 
 			"SELECT album, artist, checked, "
 			+ "ifnull(round(((sum(case when rating > 0 then rating end))"
 			+ "/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating  "
 			+ "FROM path P JOIN file F ON F.idPath=P.idPath ";
-    private static final String groupDuplicate = 
+    private static final String GROUP_DUPLICATE = 
 			" AND F.deleted=0 AND P.deleted=0 GROUP BY P.idPath";   //NOI18N
     
     
@@ -2494,10 +2504,9 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
     public boolean checkAlbumExact(ArrayList<DuplicateInfo> myList, String album, 
 			int idPath) {
         try {
-            PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(
-					selectDuplicate
+            PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(SELECT_DUPLICATE
                     + " WHERE album = ? AND P.idPath!=?"
-                    + groupDuplicate);     //NOI18N
+                    + GROUP_DUPLICATE);     //NOI18N
             
             stSelectAlbumExact.setString(1, album);
             stSelectAlbumExact.setInt(2, idPath);
@@ -2521,11 +2530,10 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
     public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList, String artist, String album, int idPath) {
         if (!artist.equals("") && !album.equals("")) {    //NOI18N
             try {
-                PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
-						selectDuplicate
+                PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(SELECT_DUPLICATE
                     + " WHERE artist LIKE ? "  //NOI18N
                     + " AND album LIKE ? AND P.idPath!=?"
-                    + groupDuplicate);     //NOI18N
+                    + GROUP_DUPLICATE);     //NOI18N
                 
                 stSelectDuplicates.setString(1, artist);
                 stSelectDuplicates.setString(2, album);
@@ -2705,7 +2713,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 
         Statement st = null;
         ResultSet rs=null;
-        int nbFiles=0;
+        int nbFiles;
         long totalSize;
         long totalLength;
         try {

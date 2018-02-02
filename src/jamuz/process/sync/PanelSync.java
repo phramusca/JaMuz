@@ -204,7 +204,7 @@ public class PanelSync extends javax.swing.JPanel {
 
 		PanelSync.progressBar = (ProgressBar)jProgressBarSync;
 		
-		jComboBoxDevice.setModel(new DefaultComboBoxModel(Jamuz.getMachine().getDevices().toArray()));
+		setCombo();
 	}
     
     /**
@@ -218,8 +218,12 @@ public class PanelSync extends javax.swing.JPanel {
             }
         }
         //processSync is not running, so we can set these up
-        jComboBoxDevice.setModel(new DefaultComboBoxModel(Jamuz.getMachine().getDevices().toArray()));
+        setCombo();
     }
+	
+	private static void setCombo() {
+		jComboBoxDevice.setModel(new DefaultComboBoxModel(Jamuz.getMachine().getDevices().toArray()));
+	}
     
     /**
 	 * Add a row to the sync table
