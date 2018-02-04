@@ -8,7 +8,6 @@ package jamuz.remote;
 import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
 import jamuz.Jamuz;
-import jamuz.gui.PanelRemote;
 import jamuz.process.check.DialogScanner;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;

@@ -57,4 +57,8 @@ public class Client {
 	public String toString() {
 		return name;
 	}
+
+	public String getState() {
+		return "TODO";
+	}
 }

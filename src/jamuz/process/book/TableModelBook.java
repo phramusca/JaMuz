@@ -16,7 +16,6 @@
  */
 package jamuz.process.book;
 
-import jamuz.process.video.*;
 import jamuz.gui.swing.TableModelGeneric;
 import java.util.ArrayList;
 import java.util.List;
