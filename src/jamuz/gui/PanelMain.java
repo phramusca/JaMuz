@@ -74,9 +74,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import jamuz.player.MPlaybackListener;
 import jamuz.remote.ICallBackServer;
-import java.util.logging.Logger;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * Main JaMuz GUI class
@@ -226,48 +223,12 @@ public class PanelMain extends javax.swing.JFrame {
 		
 		@Override
 		public void received(String login, String msg) {
-			if(msg.startsWith("setPlaylist")) {
-				setPlaylist(msg.substring("setPlaylist".length()));
-			}
-			else if(msg.startsWith("sendCover")) {
+			if(msg.startsWith("sendCover")) {
 				int maxWidth = Integer.parseInt(msg.substring("sendCover".length()));
 				PanelRemote.sendCover(login, displayedFile, maxWidth);
 			}
-			else if(msg.startsWith("sendFile")) {
-				int id = Integer.parseInt(msg.substring("sendFile".length()));
-				PanelRemote.sendFile(login, id);
-			}
-			else if(msg.startsWith("JSON_")) {
-				String json = msg.substring(5);
-				JSONObject jsonObject;
-				try {
-					jsonObject = (JSONObject) new JSONParser().parse(json);
-					String type = (String) jsonObject.get("type");
-					switch(type) {
-						case "ackFileReception":
-							boolean requestNextFile = (boolean) jsonObject.get("requestNextFile");
-							int idFile = (int) (long) jsonObject.get("idFile");
-							
-							//Send back ack to client
-							if(requestNextFile) { //Not needed for now in this case
-								FileInfoInt file = Jamuz.getDb().getFile(idFile);
-								int idDevice = Jamuz.getMachine().getDeviceId(login);
-								JSONObject obj = new JSONObject();
-								obj.put("type", "insertDeviceFileAck");
-								obj.put("requestNextFile", requestNextFile);
-								if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
-									obj.put("status", "OK");
-								} else {
-									obj.put("status", "KO");
-								}
-								obj.put("file", file.toMap());								
-								PanelRemote.send(login, obj);
-							}
-							break;
-					}
-				} catch (ParseException ex) {
-					Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
-				}				
+			else if(msg.startsWith("setPlaylist")) {
+				setPlaylist(msg.substring("setPlaylist".length()));
 			}
 			else {
 				switch(msg) { 

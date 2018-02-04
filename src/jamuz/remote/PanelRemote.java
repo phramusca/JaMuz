@@ -19,7 +19,9 @@ package jamuz.remote;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.DialogQRcode;
+import jamuz.gui.PanelMain;
 import jamuz.utils.CrunchifyQRCode;
+import jamuz.utils.DateTime;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -40,6 +42,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -116,7 +120,47 @@ public class PanelRemote extends javax.swing.JPanel {
 	class CallBackServer implements ICallBackServer {
 		@Override
 		public void received(String login, String msg) {
-			callback.received(login, msg);
+			if(msg.startsWith("sendFile")) {
+				int id = Integer.parseInt(msg.substring("sendFile".length()));
+				setStatus(login, "Sending file "+id);
+				sendFile(login, id);
+			}
+			else if(msg.startsWith("JSON_")) {
+				String json = msg.substring(5);
+				JSONObject jsonObject;
+				try {
+					jsonObject = (JSONObject) new JSONParser().parse(json);
+					String type = (String) jsonObject.get("type");
+					switch(type) {
+						case "ackFileReception":
+							boolean requestNextFile = (boolean) jsonObject.get("requestNextFile");
+							int idFile = (int) (long) jsonObject.get("idFile");
+							setStatus(login, "Client received "+idFile);
+							//Send back ack to client
+							if(requestNextFile) { //Not needed for now in this case
+								FileInfoInt file = Jamuz.getDb().getFile(idFile);
+								int idDevice = Jamuz.getMachine().getDeviceId(login);
+								JSONObject obj = new JSONObject();
+								obj.put("type", "insertDeviceFileAck");
+								obj.put("requestNextFile", requestNextFile);
+								setStatus(login, "Inserting "+idFile+" "+file.getRelativeFullPath());
+								if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
+									obj.put("status", "OK");
+								} else {
+									obj.put("status", "KO");
+								}
+								obj.put("file", file.toMap());
+								setStatus(login, "Sending "+obj.toJSONString());
+								send(login, obj);
+							}
+							break;
+					}
+				} catch (ParseException ex) {
+					Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
+				}				
+			} else {
+				callback.received(login, msg);
+			}
 		}
 
 		@Override
@@ -124,10 +168,10 @@ public class PanelRemote extends javax.swing.JPanel {
 			if(tableModel.contains(login)) {
 				ClientInfo clientInfo = tableModel.getClient(login);
 				clientInfo.setRemoteConnected(true);
+				tableModel.fireTableDataChanged();
 			} else {
 				//FIXME: Add new client
 			}
-			tableModel.fireTableDataChanged();
 		}
 
 		@Override
@@ -135,8 +179,8 @@ public class PanelRemote extends javax.swing.JPanel {
 			if(tableModel.contains(login)) {
 				ClientInfo clientInfo = tableModel.getClient(login);
 				clientInfo.setRemoteConnected(false);
+				tableModel.fireTableDataChanged();
 			}
-			tableModel.fireTableDataChanged();
 		}
 
 		@Override
@@ -144,10 +188,10 @@ public class PanelRemote extends javax.swing.JPanel {
 			if(tableModel.contains(login)) {
 				ClientInfo clientInfo = tableModel.getClient(login);
 				clientInfo.setSyncConnected(true);
+				tableModel.fireTableDataChanged();
 			} else {
 				//FIXME: Add new client
 			}
-			tableModel.fireTableDataChanged();
 		}
 
 		@Override
@@ -155,7 +199,16 @@ public class PanelRemote extends javax.swing.JPanel {
 			if(tableModel.contains(login)) {
 				ClientInfo clientInfo = tableModel.getClient(login);
 				clientInfo.setSyncConnected(false);
+				tableModel.fireTableDataChanged();
 			}
+		}
+	}
+	
+	//FIXME: Log all steps of sync process in a nice format
+	private void setStatus(String login, String status) {
+		if(tableModel.contains(login)) {
+			ClientInfo clientInfo = tableModel.getClient(login);
+			clientInfo.setStatus(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" "+ status);
 			tableModel.fireTableDataChanged();
 		}
 	}
