@@ -192,10 +192,12 @@ public class Server {
 				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getId());
 				if(client.getInfo().isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(true);
+					callback.connectedRemote(client.getInfo().getId());
 				} 
 				if(client.getInfo().isSyncConnected()) {
 					clientInfoModel.setSyncConnected(true);
 					clientInfoModel.setStatus("Connected");
+					callback.connectedSync(client.getInfo().getId());
 				}
 			} else {
 				tableModel.add(client.getInfo());
@@ -213,10 +215,12 @@ public class Server {
 				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getId());
 				if(clientInfo.isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(false);
+					callback.disconnectedRemote(clientInfo.getId());
 				} 
 				if(clientInfo.isSyncConnected()) {
 					clientInfoModel.setSyncConnected(false);
 					clientInfoModel.setStatus("Disconnected");
+					callback.disconnectedSync(clientInfo.getId());
 				}
 				tableModel.fireTableDataChanged();
 			} 
@@ -234,7 +238,7 @@ public class Server {
 	
 	private Map<String, Client> getRemoteClients() {
 		return clientMap.entrySet().stream()
-			.filter((client) -> !client.getValue().getInfo().isRemoteConnected())
+			.filter((client) -> client.getValue().getInfo().isRemoteConnected())
 			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 	}
 	
