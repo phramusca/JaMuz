@@ -1496,7 +1496,8 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      */
     public synchronized boolean deleteStatSource(int id) {
         try {
-            PreparedStatement stDeleteStatSource = dbConn.connection.prepareStatement("DELETE FROM statsource WHERE idStatSource=?");   //NOI18N
+            PreparedStatement stDeleteStatSource = dbConn.connection.prepareStatement(
+					"DELETE FROM statsource WHERE idStatSource=?");   //NOI18N
             stDeleteStatSource.setInt(1, id);
             int nbRowsAffected = stDeleteStatSource.executeUpdate();
             if (nbRowsAffected > 0) {
@@ -1534,6 +1535,10 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
         }
     }
 
+	//FIXME: List is not refreshed after deletion
+	//Same for stat sources
+	
+	
     /**
      * Deletes a device
      *
@@ -1542,7 +1547,8 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      */
     public synchronized boolean deleteDevice(int id) {
         try {
-            PreparedStatement stDeleteDevice = dbConn.connection.prepareStatement("DELETE FROM device WHERE idDevice=?");  //NOI18N
+            PreparedStatement stDeleteDevice = dbConn.connection.prepareStatement(
+					"DELETE FROM device WHERE idDevice=?");  //NOI18N
             stDeleteDevice.setInt(1, id);
             int nbRowsAffected = stDeleteDevice.executeUpdate();
             if (nbRowsAffected > 0) {
@@ -1552,6 +1558,10 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                 return false;
             }
         } catch (SQLException ex) {
+			//FIXME: Happens when the device is linked to a stat source => 
+			// => Popup this nicely to user !
+			//instead of:
+			//java.sql.SQLException: [SQLITE_CONSTRAINT]  Abort due to constraint violation (foreign key constraint failed)
             Popup.error("deleteDevice(" + id + ")", ex);   //NOI18N
             return false;
         }

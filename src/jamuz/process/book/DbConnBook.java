@@ -45,7 +45,6 @@ public class DbConnBook extends DbConn {
 	/**
 	 * Gets movies list
 	 * @param books
-     * @param rootPath
 	 * @return
 	 */
 	public boolean getBooks(List<Book> books) {

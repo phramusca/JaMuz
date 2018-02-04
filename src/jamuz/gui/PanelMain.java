@@ -16,6 +16,7 @@
  */
 package jamuz.gui;
 
+import jamuz.remote.PanelRemote;
 import jamuz.process.check.PanelCheck;
 import jamuz.process.merge.PanelMerge;
 import jamuz.process.sync.PanelSync;
@@ -781,7 +782,7 @@ public class PanelMain extends javax.swing.JFrame {
         panelPlaylists = new jamuz.gui.PanelPlaylists();
         panelLyrics = new jamuz.gui.PanelLyrics();
         panelStats = new jamuz.gui.PanelStats();
-        panelRemote = new jamuz.gui.PanelRemote();
+        panelRemote = new jamuz.remote.PanelRemote();
         panelOptions = new jamuz.gui.PanelOptions();
         panelVideo = new jamuz.process.video.PanelVideo();
         panelBook = new jamuz.process.book.PanelBook();
@@ -1937,7 +1938,7 @@ public class PanelMain extends javax.swing.JFrame {
     private jamuz.process.merge.PanelMerge panelMerge;
     private jamuz.gui.PanelOptions panelOptions;
     private jamuz.gui.PanelPlaylists panelPlaylists;
-    private jamuz.gui.PanelRemote panelRemote;
+    private jamuz.remote.PanelRemote panelRemote;
     private jamuz.gui.PanelSelect panelSelect;
     private jamuz.gui.PanelStats panelStats;
     private jamuz.process.sync.PanelSync panelSync;

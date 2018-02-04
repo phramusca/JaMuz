@@ -6,7 +6,6 @@
 package jamuz.remote;
 
 import jamuz.FileInfoInt;
-import jamuz.gui.PanelRemote;
 import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;

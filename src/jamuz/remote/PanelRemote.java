@@ -14,19 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz.gui;
+package jamuz.remote;
 
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.remote.Client;
-import jamuz.remote.ICallBackReception;
-import jamuz.remote.Server;
-import jamuz.remote.ServerClient;
+import jamuz.gui.DialogQRcode;
 import jamuz.utils.CrunchifyQRCode;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
-import jamuz.utils.Swing;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -35,7 +32,9 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.DefaultListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.table.TableColumn;
 import org.json.simple.JSONObject;
 
 /**
@@ -45,8 +44,7 @@ import org.json.simple.JSONObject;
 public class PanelRemote extends javax.swing.JPanel {
 
 	private static Server server;
-	private static ListModelRemoteClients listModelRemoteClients;
-		
+	private final TableModelRemote tableModel;
 	//TODO: use a callback for all usages of PanelMain
 	private ICallBackReception callback;
 
@@ -55,8 +53,14 @@ public class PanelRemote extends javax.swing.JPanel {
 	 */
 	public PanelRemote() {
 		initComponents();
-		listModelRemoteClients = new ListModelRemoteClients();
-		jListRemoteClients.setModel(listModelRemoteClients);
+		tableModel = new TableModelRemote();
+		tableModel.init();
+		jTableRemote.setModel(tableModel);
+		jTableRemote.setRowSorter(null);
+		//Adding columns from model. Cannot be done automatically on properties
+		// as done, in initComponents, before setColumnModel which removes the columns ...
+		jTableRemote.createDefaultColumnsFromModel();
+		setColumn(0, 100);
 		
 		//TODO: Update when changing port;
 		StringBuilder IP = new StringBuilder();
@@ -72,6 +76,13 @@ public class PanelRemote extends javax.swing.JPanel {
 		startStopRemoteServer();
 	}
 
+	private void setColumn(int index, int width) {
+        TableColumn column = jTableRemote.getColumnModel().getColumn(index);
+		column.setMinWidth(width);
+        column.setPreferredWidth(width);
+        column.setMaxWidth(width*3);
+    }
+	
 	public void setCallback(ICallBackReception callback) {
 		this.callback = callback;
 	}
@@ -79,20 +90,20 @@ public class PanelRemote extends javax.swing.JPanel {
 	class CallBackReception implements ICallBackReception {
 		@Override
 		public void received(String login, String msg) {
-			if(listModelRemoteClients.getClients().contains(login)) {
+			if(tableModel.getClients().contains(login)) {
 				callback.received(login, msg);
 			}
 		}
 		
 		@Override
 		public void authenticated(Client login, ServerClient client) {
-			listModelRemoteClients.add(login);
+			tableModel.add(login);
 			callback.authenticated(login, client);
 		}
 
 		@Override
 		public void disconnected(String login) {
-			listModelRemoteClients.removeClient(login);
+			tableModel.removeClient(login);
 			callback.disconnected(login);
 		}
 	}
@@ -232,26 +243,31 @@ public class PanelRemote extends javax.swing.JPanel {
 	   }
    }
 
+   private void enableConfig(boolean enable) {
+//	   Swing.enableComponents(jPanelRemote, enable);
+		jSpinnerPort.setEnabled(enable);
+   }
+   
    private void startStopRemoteServer() {
-		Swing.enableComponents(jPanelRemote, false);
+		enableConfig(false);
 
-        for(String client : listModelRemoteClients.getClients()) {
+        for(String client : tableModel.getClients()) {
             server.closeClient(client);
         }
-		listModelRemoteClients.clear();
+		tableModel.clear();
 
         if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
             CallBackReception callBackReception = new CallBackReception();
             server = new Server((Integer) jSpinnerPort.getValue(), callBackReception);
             if(server.connect()) {
-                Swing.enableComponents(jPanelRemote, false);
+                enableConfig(false);
 				jButtonQRcode.setEnabled(true);
                 jButtonStart.setText(Inter.get("Button.Pause"));
             }
         }
         else {
             server.close();
-            Swing.enableComponents(jPanelRemote, true);
+            enableConfig(true);
             jButtonStart.setText(Inter.get("Button.Start"));
         }
         jButtonStart.setEnabled(true);
@@ -273,8 +289,8 @@ public class PanelRemote extends javax.swing.JPanel {
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
         jLabelIP = new javax.swing.JLabel();
         jButtonQRcode = new javax.swing.JButton();
-        jScrollPanePlayerQueue1 = new javax.swing.JScrollPane();
-        jListRemoteClients = new javax.swing.JList();
+        jScrollPaneCheckTags1 = new javax.swing.JScrollPane();
+        jTableRemote = new javax.swing.JTable();
 
         jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder("Jamuz Remote Server"));
 
@@ -303,8 +319,17 @@ public class PanelRemote extends javax.swing.JPanel {
             }
         });
 
-        jListRemoteClients.setModel(new DefaultListModel());
-        jScrollPanePlayerQueue1.setViewportView(jListRemoteClients);
+        jTableRemote.setAutoCreateColumnsFromModel(false);
+        jTableRemote.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jTableRemote.setModel(new jamuz.remote.TableModelRemote());
+        jTableRemote.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jTableRemote.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTableRemote.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTableRemoteMousePressed(evt);
+            }
+        });
+        jScrollPaneCheckTags1.setViewportView(jTableRemote);
 
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
@@ -314,19 +339,22 @@ public class PanelRemote extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addComponent(jScrollPanePlayerQueue1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addContainerGap())
-                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addComponent(jButtonQRcode)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jCheckBoxServerStartOnStartup, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonStart))))
+                        .addComponent(jButtonStart))
+                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                                .addComponent(jButtonQRcode)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelIP))
+                            .addComponent(jCheckBoxServerStartOnStartup))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -342,7 +370,7 @@ public class PanelRemote extends javax.swing.JPanel {
                     .addComponent(jLabelIP)
                     .addComponent(jButtonQRcode))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPanePlayerQueue1, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -381,6 +409,17 @@ public class PanelRemote extends javax.swing.JPanel {
         startStopRemoteServer();
     }//GEN-LAST:event_jButtonStartActionPerformed
 
+    private void jTableRemoteMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRemoteMousePressed
+        // If Right mouse click, select the line under mouse
+        if (SwingUtilities.isRightMouseButton( evt ) )
+        {
+            Point p = evt.getPoint();
+            int rowNumber = jTableRemote.rowAtPoint( p );
+            ListSelectionModel model = jTableRemote.getSelectionModel();
+            model.setSelectionInterval( rowNumber, rowNumber );
+        }
+    }//GEN-LAST:event_jTableRemoteMousePressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonQRcode;
@@ -388,9 +427,9 @@ public class PanelRemote extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBoxServerStartOnStartup;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelIP;
-    private static javax.swing.JList jListRemoteClients;
     private javax.swing.JPanel jPanelRemote;
-    private javax.swing.JScrollPane jScrollPanePlayerQueue1;
+    private static javax.swing.JScrollPane jScrollPaneCheckTags1;
     private javax.swing.JSpinner jSpinnerPort;
+    private static javax.swing.JTable jTableRemote;
     // End of variables declaration//GEN-END:variables
 }
