@@ -25,7 +25,7 @@ public class ClientInfo {
 	private String name;
 	private boolean remoteConnected;
 	private boolean syncConnected;
-	private String status="TODO"; //FIXME
+	private String status="";
 	
 	//TODO: Manage rights
 //	private boolean allowRating;
@@ -79,5 +79,9 @@ public class ClientInfo {
 
 	public String getStatus() {
 		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }
