@@ -142,13 +142,12 @@ public class Server {
 							switch(type) {
 								case "requestFile":
 									idFile = (int) (long) jsonObject.get("idFile");
-									setStatus(login, "Client received file request: "+idFile);
+									setStatus(login, "Sending file: "+idFile);
 									sendFile(login, idFile);
 									break;
 								case "ackFileReception":
 									boolean requestNextFile = (boolean) jsonObject.get("requestNextFile");
 									idFile = (int) (long) jsonObject.get("idFile");
-									setStatus(login, "Client received "+idFile);
 									//Send back ack to client
 									if(requestNextFile) { //Not needed for now in this case
 										FileInfoInt file = Jamuz.getDb().getFile(idFile);
@@ -156,14 +155,14 @@ public class Server {
 										JSONObject obj = new JSONObject();
 										obj.put("type", "insertDeviceFileAck");
 										obj.put("requestNextFile", requestNextFile);
-										setStatus(login, "Inserting "+idFile+" "+file.getRelativeFullPath());
+										setStatus(login, "Inserting file "+idFile+" "+file.getRelativeFullPath());
 										if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
 											obj.put("status", "OK");
 										} else {
 											obj.put("status", "KO");
 										}
 										obj.put("file", file.toMap());
-										setStatus(login, "Sending "+obj.toJSONString());
+										setStatus(login, "Sending ack for file "+idFile+" "+file.getRelativeFullPath());
 										send(login, obj);
 									}
 									break;
@@ -189,24 +188,19 @@ public class Server {
 //                client.getDatabase("MSG_ERROR_ALREADY_CONNECTED");
 //                closeClient(login);
 //            }
-			if(client.getInfo().isRemoteConnected()) {
-				if(tableModel.contains(client.getInfo().getId())) {
-					ClientInfo clientInfo = tableModel.getClient(client.getInfo().getId());
-					clientInfo.setRemoteConnected(true);
-					tableModel.fireTableDataChanged();
-				} else {
-					//FIXME: Add new client
+			if(tableModel.contains(client.getInfo().getId())) {
+				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getId());
+				if(client.getInfo().isRemoteConnected()) {
+					clientInfoModel.setRemoteConnected(true);
+				} 
+				if(client.getInfo().isSyncConnected()) {
+					clientInfoModel.setSyncConnected(true);
+					clientInfoModel.setStatus("Connected");
 				}
-			} 
-			if(client.getInfo().isSyncConnected()) {
-				if(tableModel.contains(client.getInfo().getId())) {
-					ClientInfo clientInfo = tableModel.getClient(client.getInfo().getId());
-					clientInfo.setSyncConnected(true);
-					tableModel.fireTableDataChanged();
-				} else {
-					//FIXME: Add new client
-				}
+			} else {
+				tableModel.add(client.getInfo());
 			}
+			tableModel.fireTableDataChanged();
 		}
 
 		@Override
@@ -215,20 +209,17 @@ public class Server {
 				clientMap.get(clientInfo.getId()).close();
 				clientMap.remove(clientInfo.getId());
 			}
-			if(clientInfo.isRemoteConnected()) {
-				if(tableModel.contains(clientInfo.getId())) {
-					ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getId());
+			if(tableModel.contains(clientInfo.getId())) {
+				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getId());
+				if(clientInfo.isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(false);
-					tableModel.fireTableDataChanged();
+				} 
+				if(clientInfo.isSyncConnected()) {
+					clientInfoModel.setSyncConnected(false);
+					clientInfoModel.setStatus("Disconnected");
 				}
-			}
-			if(clientInfo.isSyncConnected()) {
-				if(tableModel.contains(clientInfo.getId())) {
-					ClientInfo clientInfoModelSync = tableModel.getClient(clientInfo.getId());
-					clientInfoModelSync.setSyncConnected(false);
-					tableModel.fireTableDataChanged();
-				}
-			}
+				tableModel.fireTableDataChanged();
+			} 
 		}
     }
 
@@ -236,7 +227,7 @@ public class Server {
 	private void setStatus(String login, String status) {
 		if(tableModel.contains(login)) {
 			ClientInfo clientInfo = tableModel.getClient(login);
-			clientInfo.setStatus(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" "+ status);
+			clientInfo.setStatus(status);
 			tableModel.fireTableDataChanged();
 		}
 	}
@@ -278,7 +269,7 @@ public class Server {
 		}
 	}
 	
-	public boolean sendFile(String login, FileInfoInt fileInfoInt) {
+	private boolean sendFile(String login, FileInfoInt fileInfoInt) {
 		if(clientMap.containsKey(login)) {
 			return clientMap.get(login).sendFile(fileInfoInt);
 		}
@@ -296,6 +287,7 @@ public class Server {
 			synchronized(LOCK_REMOTE) {
 				try {
 					clientMap.get(login).setPath(path);
+					setStatus(login, "Request database");
 					JSONObject obj = new JSONObject();
 					obj.put("type", "SEND_DB");
 					clientMap.get(login).send( obj);
@@ -320,6 +312,7 @@ public class Server {
 	 */
 	public boolean sendDatabase(String login, String path) {
 		if(clientMap.containsKey(login)) {
+			setStatus(login, "Sending database");
 			return clientMap.get(login).sendDatabase(path);
 		}
 		return false;

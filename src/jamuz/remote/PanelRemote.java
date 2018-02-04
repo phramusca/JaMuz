@@ -62,13 +62,6 @@ public class PanelRemote extends javax.swing.JPanel {
 		jLabelIP.setText(IP.toString());
 	}
 	
-	private void setColumn(int index, int width) {
-        TableColumn column = jTableRemote.getColumnModel().getColumn(index);
-		column.setMinWidth(width);
-        column.setPreferredWidth(width);
-        column.setMaxWidth(width*3);
-    }
-	
 	public void setCallback(ICallBackServer callback) {
 		this.callBackServer = callback;
 		server = new Server((Integer) jSpinnerPort.getValue(), callBackServer);
@@ -78,16 +71,23 @@ public class PanelRemote extends javax.swing.JPanel {
 		//Adding columns from model. Cannot be done automatically on properties
 		// as done, in initComponents, before setColumnModel which removes the columns ...
 		jTableRemote.createDefaultColumnsFromModel();
-		setColumn(0, 50);
-		setColumn(1, 50);
-		setColumn(2, 250);
+		setColumn(0, 60);
+		setColumn(1, 60);
+		setColumn(2, 200);
 		//setColumn(3, 20);
-		setColumn(4, 150);
+		setColumn(4, 50);
 		
 		server.fillClients();
 		
 		startStopRemoteServer();
 	}
+	
+	private void setColumn(int index, int width) {
+        TableColumn column = jTableRemote.getColumnModel().getColumn(index);
+		column.setMinWidth(width);
+        column.setPreferredWidth(width);
+        column.setMaxWidth(width*3);
+    }
 		
 	public static void send(FileInfoInt fileInfo) {    
         Map jsonAsMap = new HashMap();
@@ -311,13 +311,12 @@ public class PanelRemote extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonStart))
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                                .addComponent(jButtonQRcode)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelIP))
-                            .addComponent(jCheckBoxServerStartOnStartup))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(jCheckBoxServerStartOnStartup)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addComponent(jButtonQRcode)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -16,6 +16,8 @@
  */
 package jamuz.remote;
 
+import jamuz.utils.DateTime;
+
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
@@ -82,6 +84,6 @@ public class ClientInfo {
 	}
 
 	public void setStatus(String status) {
-		this.status = status;
+		this.status = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | "+status;
 	}
 }

@@ -268,18 +268,16 @@ public class Client {
 				String name = isValid(login, pass);
                 if(!name.equals("")){
 					send("MSG_CONNECTED");
-					//Starting reception thread
                     reception = new Reception(bufferedReader, callback, Client.this);
                     reception.start();
 					info = new ClientInfo(login, name);
 					info.setRemoteConnected(isRemote);
 					info.setSyncConnected(!isRemote);	
-                    //Notify info is authenticated
                     callback.authenticated(Client.this);
-					
-					//Sending sync data
 					if(info.isSyncConnected()) {
 						//FIXME: Do this in a request/answer manner
+						//So we can set status in Server
+						//setStatus(login, "Request database");
 						sendTags();
 						sendGenres();
 						sendFilesToGet();
