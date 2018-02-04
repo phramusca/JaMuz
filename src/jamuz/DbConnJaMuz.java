@@ -1535,9 +1535,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
         }
     }
 
-	//FIXME: List is not refreshed after deletion
-	//Same for stat sources
-	
+	//FIXME DB: devices and stat sources are not refreshed after deletion
 	
     /**
      * Deletes a device
@@ -1558,7 +1556,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                 return false;
             }
         } catch (SQLException ex) {
-			//FIXME: Happens when the device is linked to a stat source => 
+			//FIXME DB: Happens when the device is linked to a stat source => 
 			// => Popup this nicely to user !
 			//instead of:
 			//java.sql.SQLException: [SQLITE_CONSTRAINT]  Abort due to constraint violation (foreign key constraint failed)

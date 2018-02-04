@@ -227,7 +227,6 @@ public class Server {
 		}
     }
 
-	//FIXME: Log all steps of sync process in a nice format
 	private void setStatus(String login, String status) {
 		if(tableModel.contains(login)) {
 			ClientInfo clientInfo = tableModel.getClient(login);

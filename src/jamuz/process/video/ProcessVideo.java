@@ -269,7 +269,7 @@ public class ProcessVideo extends ProcessAbstract {
             //Check if files exist, and get size if so
             long length = 0;
             for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
-				//FIXME: Make it more clear that "video.source" is used 
+				//FIXME VIDEO: Make it more clear that "video.source" is used 
                 File file = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), fileInfoVideo.getRelativeFullPath()));
                 if(file.exists()) {
                     length += file.length();
