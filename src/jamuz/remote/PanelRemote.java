@@ -17,17 +17,12 @@
 package jamuz.remote;
 
 import jamuz.FileInfoInt;
-import jamuz.Jamuz;
 import jamuz.gui.DialogQRcode;
-import jamuz.gui.PanelMain;
 import jamuz.utils.CrunchifyQRCode;
-import jamuz.utils.DateTime;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -35,15 +30,10 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -52,18 +42,16 @@ import org.json.simple.parser.ParseException;
 public class PanelRemote extends javax.swing.JPanel {
 
 	private static Server server;
-	private final TableModelRemote tableModel;
-	//TODO: use a callback for all usages of PanelMain
-	private ICallBackServer callback;
+	//TODO: use a callBackServer for all usages of PanelMain
+	private ICallBackServer callBackServer;
 
 	/**
 	 * Creates new form PanelRemote
 	 */
 	public PanelRemote() {
 		initComponents();
-		tableModel = new TableModelRemote();
-		tableModel.setColumnNames();
-		jTableRemote.setModel(tableModel);
+		server = new Server((Integer) jSpinnerPort.getValue(), callBackServer);
+		jTableRemote.setModel(server.getTableModel());
 		jTableRemote.setRowSorter(null);
 		//Adding columns from model. Cannot be done automatically on properties
 		// as done, in initComponents, before setColumnModel which removes the columns ...
@@ -74,7 +62,7 @@ public class PanelRemote extends javax.swing.JPanel {
 		//setColumn(3, 20);
 		setColumn(4, 150);
 		
-		fillClients();
+		server.fillClients();
 		
 		//TODO: Update when changing port;
 		StringBuilder IP = new StringBuilder();
@@ -90,21 +78,7 @@ public class PanelRemote extends javax.swing.JPanel {
 		startStopRemoteServer();
 	}
 
-	private void fillClients() {
-		try {
-			tableModel.clear();
-			Scanner sc = new Scanner(Jamuz.getFile("RemoteClients.txt", "data"));
-			while(sc.hasNext()){
-				String line = sc.nextLine().trim();
-				String items[] = line.split("\t");
-				String login = items[0].trim();
-				String name = items[1].trim();
-				tableModel.add(new ClientInfo(login, name));
-			}
-		} catch (FileNotFoundException ex) {
-			Logger.getLogger(PanelRemote.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+	
 	
 	private void setColumn(int index, int width) {
         TableColumn column = jTableRemote.getColumnModel().getColumn(index);
@@ -114,105 +88,9 @@ public class PanelRemote extends javax.swing.JPanel {
     }
 	
 	public void setCallback(ICallBackServer callback) {
-		this.callback = callback;
+		this.callBackServer = callback;
 	}
-	
-	class CallBackServer implements ICallBackServer {
-		@Override
-		public void received(String login, String msg) {
-			if(msg.startsWith("sendFile")) {
-				int id = Integer.parseInt(msg.substring("sendFile".length()));
-				setStatus(login, "Sending file "+id);
-				sendFile(login, id);
-			}
-			else if(msg.startsWith("JSON_")) {
-				String json = msg.substring(5);
-				JSONObject jsonObject;
-				try {
-					jsonObject = (JSONObject) new JSONParser().parse(json);
-					String type = (String) jsonObject.get("type");
-					switch(type) {
-						case "ackFileReception":
-							boolean requestNextFile = (boolean) jsonObject.get("requestNextFile");
-							int idFile = (int) (long) jsonObject.get("idFile");
-							setStatus(login, "Client received "+idFile);
-							//Send back ack to client
-							if(requestNextFile) { //Not needed for now in this case
-								FileInfoInt file = Jamuz.getDb().getFile(idFile);
-								int idDevice = Jamuz.getMachine().getDeviceId(login);
-								JSONObject obj = new JSONObject();
-								obj.put("type", "insertDeviceFileAck");
-								obj.put("requestNextFile", requestNextFile);
-								setStatus(login, "Inserting "+idFile+" "+file.getRelativeFullPath());
-								if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
-									obj.put("status", "OK");
-								} else {
-									obj.put("status", "KO");
-								}
-								obj.put("file", file.toMap());
-								setStatus(login, "Sending "+obj.toJSONString());
-								send(login, obj);
-							}
-							break;
-					}
-				} catch (ParseException ex) {
-					Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
-				}				
-			} else {
-				callback.received(login, msg);
-			}
-		}
-
-		@Override
-		public void connectedRemote(String login) {
-			if(tableModel.contains(login)) {
-				ClientInfo clientInfo = tableModel.getClient(login);
-				clientInfo.setRemoteConnected(true);
-				tableModel.fireTableDataChanged();
-			} else {
-				//FIXME: Add new client
-			}
-		}
-
-		@Override
-		public void disconnectedRemote(String login) {
-			if(tableModel.contains(login)) {
-				ClientInfo clientInfo = tableModel.getClient(login);
-				clientInfo.setRemoteConnected(false);
-				tableModel.fireTableDataChanged();
-			}
-		}
-
-		@Override
-		public void connectedSync(String login) {
-			if(tableModel.contains(login)) {
-				ClientInfo clientInfo = tableModel.getClient(login);
-				clientInfo.setSyncConnected(true);
-				tableModel.fireTableDataChanged();
-			} else {
-				//FIXME: Add new client
-			}
-		}
-
-		@Override
-		public void disconnectedSync(String login) {
-			if(tableModel.contains(login)) {
-				ClientInfo clientInfo = tableModel.getClient(login);
-				clientInfo.setSyncConnected(false);
-				tableModel.fireTableDataChanged();
-			}
-		}
-	}
-	
-	//FIXME: Log all steps of sync process in a nice format
-	private void setStatus(String login, String status) {
-		if(tableModel.contains(login)) {
-			ClientInfo clientInfo = tableModel.getClient(login);
-			clientInfo.setStatus(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" "+ status);
-			tableModel.fireTableDataChanged();
-		}
-	}
-	
+		
 	public static void send(FileInfoInt fileInfo) {    
         Map jsonAsMap = new HashMap();
         jsonAsMap.put("type", "fileInfoInt");
@@ -228,20 +106,6 @@ public class PanelRemote extends javax.swing.JPanel {
 	public static void sendCover(String login, FileInfoInt displayedFile, int maxWidth) {
 		if(server!=null) {
 			server.sendCover(login, displayedFile, maxWidth);
-		}
-	}
-	
-	public static void sendFile(String login, int id) {
-		if(server!=null) {
-			FileInfoInt fileInfoInt = Jamuz.getDb().getFile(id);
-			if(!server.sendFile(login, fileInfoInt)) {
-				//FIXME SYNC Happens when file not found
-				// Need to mark as deleted in db 
-				// AND somehow remove it from filesToKeep
-				//and filesToGet in remote
-				Popup.error("Cannot send missing file \""
-						+fileInfoInt.getFullPath().getAbsolutePath()+"\"");
-			}
 		}
 	}
 	
@@ -359,7 +223,6 @@ public class PanelRemote extends javax.swing.JPanel {
 			server.closeClients();
 		}
         if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
-            CallBackServer callBackServer = new CallBackServer();
             server = new Server((Integer) jSpinnerPort.getValue(), callBackServer);
             if(server.connect()) {
                 enableConfig(false);
