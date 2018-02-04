@@ -9,13 +9,13 @@ import jamuz.FileInfoInt;
 import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 /**
  *
@@ -29,8 +29,8 @@ public class Server {
 	public static ServerSocket serverSocket = null;
 	private final int port;
 	private HandleLogin handleLogin;
-	private final Map<String, ServerClient> clients;
-	private final ICallBackReception callback;
+	private final Map<String, Client> clientMap;
+	private final ICallBackServer callback;
 	private static final Object LOCK_REMOTE = new Object();
 
 	/**
@@ -38,9 +38,9 @@ public class Server {
 	 * @param port
 	 * @param callback
 	 */
-	public Server(int port, ICallBackReception callback) {
+	public Server(int port, ICallBackServer callback) {
 		this.port = port;
-		clients = new HashMap();
+		clientMap = new HashMap();
 		this.callback = callback;
 	}
 	
@@ -80,6 +80,12 @@ public class Server {
 		}
 	}
 
+	void closeClients() {
+		for(Client client : clientMap.values()) {
+            closeClient(client.getInfo().getId());
+        }
+	}
+
 	class HandleLogin extends ProcessAbstract {
 
 		public HandleLogin(ServerSocket ss){
@@ -95,7 +101,7 @@ public class Server {
 					Socket socket = serverSocket.accept(); //Blocks until connection made
 					checkAbort();
                     CallBackReception callBackReceptionLocal = new CallBackReception();
-					ServerClient client = new ServerClient(socket, callBackReceptionLocal);
+					Client client = new Client(socket, callBackReceptionLocal);
 					checkAbort();
 					client.login();
 				}
@@ -108,10 +114,10 @@ public class Server {
     class CallBackReception implements ICallBackReception {
         @Override
         public void received(String login, String msg) {
-            if(clients.containsKey(login)) {
+            if(clientMap.containsKey(login)) {
 				if(msg.equals("SENDING_DB")) {
 					synchronized(LOCK_REMOTE) {
-						clients.get(login).getDatabase();
+						clientMap.get(login).getDatabase();
 						Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.notify()");
 						LOCK_REMOTE.notify();
 					}
@@ -122,10 +128,9 @@ public class Server {
         }
 		
 		@Override
-		public void authenticated(Client login, ServerClient client) {
-			if(!clients.containsKey(login.getId())) {
-                clients.put(login.getId(), client);
-                callback.authenticated(login, null);
+		public void authenticated(Client client) {
+			if(!clientMap.containsKey(client.getInfo().getId())) {
+                clientMap.put(client.getInfo().getId(), client);				
             }
 //            else {
 //				//TODO: This can happen. why ?
@@ -133,27 +138,38 @@ public class Server {
 //                client.getDatabase("MSG_ERROR_ALREADY_CONNECTED");
 //                closeClient(login);
 //            }
+			if(client.getInfo().isRemoteConnected()) {
+				callback.connectedRemote(client.getInfo().getId());
+			} 
+			if(client.getInfo().isSyncConnected()) {
+				callback.connectedSync(client.getInfo().getId());
+			}
 		}
 
 		@Override
-		public void disconnected(String login) {
-			if(clients.containsKey(login)) {
-				clients.get(login).close();
-				clients.remove(login);
+		public void disconnected(ClientInfo clientInfo) {
+			if(clientMap.containsKey(clientInfo.getId())) {
+				clientMap.get(clientInfo.getId()).close();
+				clientMap.remove(clientInfo.getId());
 			}
-			callback.disconnected(login);
+			if(clientInfo.isRemoteConnected()) {
+					callback.disconnectedRemote(clientInfo.getId());
+				}
+				if(clientInfo.isSyncConnected()) {
+					callback.disconnectedSync(clientInfo.getId());
+				}
 		}
     }
 
-	private Map<String, ServerClient> getRemoteClients() {
-		return clients.entrySet().stream()
-			.filter((client) -> !client.getValue().getLogin().endsWith("-data"))
+	private Map<String, Client> getRemoteClients() {
+		return clientMap.entrySet().stream()
+			.filter((client) -> !client.getValue().getInfo().isRemoteConnected())
 			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 	}
 	
-	private Map<String, ServerClient> getDataClients() {
-		return clients.entrySet().stream()
-			.filter((client) -> client.getValue().getLogin().endsWith("-data"))
+	private Map<String, Client> getDataClients() {
+		return clientMap.entrySet().stream()
+			.filter((client) -> client.getValue().getInfo().isSyncConnected())
 			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 	}
 	
@@ -164,15 +180,15 @@ public class Server {
 	 * @param maxWidth
 	 */
     public void sendCover(String login, FileInfoInt displayedFile, int maxWidth) {
-		if(clients.containsKey(login)) {
-			clients.get(login).sendCover(displayedFile, maxWidth);
+		if(clientMap.containsKey(login)) {
+			clientMap.get(login).sendCover(displayedFile, maxWidth);
 		}
 		
 	}
 	
 	public boolean sendFile(String login, FileInfoInt fileInfoInt) {
-		if(clients.containsKey(login)) {
-			return clients.get(login).sendFile(fileInfoInt);
+		if(clientMap.containsKey(login)) {
+			return clientMap.get(login).sendFile(fileInfoInt);
 		}
 		return true;
 	}
@@ -184,13 +200,13 @@ public class Server {
 	 * @return 
 	 */
 	public boolean getDatabase(String login, String path) {
-		if(clients.containsKey(login)) {
+		if(clientMap.containsKey(login)) {
 			synchronized(LOCK_REMOTE) {
 				try {
-					clients.get(login).setPath(path);
+					clientMap.get(login).setPath(path);
 					JSONObject obj = new JSONObject();
 					obj.put("type", "SEND_DB");
-					clients.get(login).send( obj);
+					clientMap.get(login).send( obj);
 					Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.wait()");
 					LOCK_REMOTE.wait(10 * 1000); // 10s
 					Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote released");
@@ -211,8 +227,8 @@ public class Server {
 	 * @return 
 	 */
 	public boolean sendDatabase(String login, String path) {
-		if(clients.containsKey(login)) {
-			return clients.get(login).sendDatabase(path);
+		if(clientMap.containsKey(login)) {
+			return clientMap.get(login).sendDatabase(path);
 		}
 		return false;
 	}
@@ -223,28 +239,28 @@ public class Server {
 	 * @param isRemote
      */
     public void send(Map jsonAsMap, boolean isRemote) {
-		Map<String, ServerClient> clientsToSend = isRemote?
+		Map<String, Client> clientsToSend = isRemote?
 				getRemoteClients():getDataClients();
-        for(ServerClient client : clientsToSend.values()) {
+        for(Client client : clientsToSend.values()) {
             client.send(jsonAsMap);
         }
 	}
 	
 	public boolean isConnected(String login) {
-		return clients.containsKey(login);
+		return clientMap.containsKey(login);
 	}
 	
 	public boolean send(String login, JSONObject obj) {
-		if(clients.containsKey(login)) {
-			clients.get(login).send(obj);
+		if(clientMap.containsKey(login)) {
+			clientMap.get(login).send(obj);
 			return true;
 		}
 		return false;
 	}
 	
 	public boolean send(String login, Map jsonAsMap) {
-		if(clients.containsKey(login)) {
-			clients.get(login).send(jsonAsMap);
+		if(clientMap.containsKey(login)) {
+			clientMap.get(login).send(jsonAsMap);
 			return true;
 		}
 		return false;
@@ -255,14 +271,22 @@ public class Server {
 	 * @param login
 	 */
 	public void closeClient(String login) {
-        if(clients.containsKey(login)) {
-            clients.get(login).close();
-            clients.remove(login);
+        if(clientMap.containsKey(login)) {
+            clientMap.get(login).close();
+            clientMap.remove(login);
         }
         else {
             callback.received(login, " has been disconnected.");
         }
 	}
+	
+	/**
+	 *
+	 * @return
+	 */
+	public Collection<String> getClients() {
+        return clientMap.keySet();
+    }
 }
 
 

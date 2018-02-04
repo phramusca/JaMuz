@@ -38,7 +38,6 @@ import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.AbstractAction;
@@ -49,7 +48,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
@@ -65,23 +63,17 @@ import javax.swing.SwingConstants;
 import jamuz.gui.swing.ButtonBrowseURL;
 import jamuz.gui.swing.TableCellListener;
 import jamuz.player.Mplayer;
-import jamuz.process.check.FolderInfo;
-import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import javax.swing.JFormattedTextField;
 import javax.swing.JSpinner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import jamuz.player.MPlaybackListener;
-import jamuz.remote.Client;
-import jamuz.remote.ICallBackReception;
-import jamuz.remote.ServerClient;
+import jamuz.remote.ICallBackServer;
 import java.util.logging.Logger;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -225,12 +217,13 @@ public class PanelMain extends javax.swing.JFrame {
         panelSelect.initExtended();
         panelPlaylists.initExtended();
        
-		panelRemote.setCallback(new CallBackReception());
+		panelRemote.setCallback(new CallBackServer());
 		
         setKeyBindings();		
     }
 	
-	class CallBackReception implements ICallBackReception {
+	class CallBackServer implements ICallBackServer {
+		
 		@Override
 		public void received(String login, String msg) {
 			if(msg.startsWith("setPlaylist")) {
@@ -278,54 +271,55 @@ public class PanelMain extends javax.swing.JFrame {
 			}
 			else {
 				switch(msg) { 
-				//TODO: Say rating as an option 
-				case "setRating1": setRating(1, false); break; 
-				case "setRating2": setRating(2, false); break; 
-				case "setRating3": setRating(3, false); break; 
-				case "setRating4": setRating(4, false); break; 
-				case "setRating5": setRating(5, false); break; 
-				case "previousTrack": 
-					pressButton(jButtonPlayerPrevious);  
-					break; 
-				case "nextTrack":  
-					pressButton(jButtonPlayerNext);  
-					break; 
-				case "playTrack":  
-					pressButton(jButtonPlayerPlay);  
-					break; 
-				case "clearTracks":  
-					pressButton(jButtonPlayerClear);  
-					break; 
-				case "forward": forward(); break; 
-				case "rewind": rewind(); break; 
-				case "pullup": moveCursor(0); break; 
-				case "volUp":  
-				  jSpinnerVolume.setValue( 
-					  (float)jSpinnerVolume.getValue()+5.0f);  
-				  break; 
-				case "volDown":  
-				  jSpinnerVolume.setValue( 
-					  (float)jSpinnerVolume.getValue()-5.0f);  
-				  break; 
-				case "sayRating": displayedFile.sayRating(true); break; 
-				default: 
-					Jamuz.getLogger().warning(msg); 
-					break; 
-			}
+					//TODO: Say rating as an option 
+					case "setRating1": setRating(1, false); break; 
+					case "setRating2": setRating(2, false); break; 
+					case "setRating3": setRating(3, false); break; 
+					case "setRating4": setRating(4, false); break; 
+					case "setRating5": setRating(5, false); break; 
+					case "previousTrack": 
+						pressButton(jButtonPlayerPrevious);  
+						break; 
+					case "nextTrack":  
+						pressButton(jButtonPlayerNext);  
+						break; 
+					case "playTrack":  
+						pressButton(jButtonPlayerPlay);  
+						break; 
+					case "clearTracks":  
+						pressButton(jButtonPlayerClear);  
+						break; 
+					case "forward": forward(); break; 
+					case "rewind": rewind(); break; 
+					case "pullup": moveCursor(0); break; 
+					case "volUp":  
+					  jSpinnerVolume.setValue( 
+						  (float)jSpinnerVolume.getValue()+5.0f);  
+					  break; 
+					case "volDown":  
+					  jSpinnerVolume.setValue( 
+						  (float)jSpinnerVolume.getValue()-5.0f);  
+					  break; 
+					case "sayRating": displayedFile.sayRating(true); break; 
+					default: 
+						Jamuz.getLogger().warning(msg); 
+						break; 
+				}
 			}
 		}
-		
+
 		@Override
-		public void authenticated(Client login, ServerClient client) {
-			if(!login.getId().endsWith("-data"))  {
-				sendPlaylists(login.getId(), jComboBoxPlaylist.getSelectedItem().toString());
-			}
+		public void connectedRemote(String login) {
+			sendPlaylists(login, jComboBoxPlaylist.getSelectedItem().toString());
 			PanelRemote.send(displayedFile);
 		}
- 
+
 		@Override
-		public void disconnected(String login) {
-		}
+		public void disconnectedRemote(String login) {}
+		@Override
+		public void connectedSync(String login) {}
+		@Override
+		public void disconnectedSync(String login) {}
 	}
 
 	private static ImageIcon createImageIcon(String path) {

@@ -9,7 +9,7 @@ package jamuz.remote;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public interface ICallBackReception {
+public interface ICallBackServer {
 
 	/**
 	 *
@@ -18,15 +18,9 @@ public interface ICallBackReception {
 	 */
 	public void received(String login, String msg);
 	
-	/**
-	 *
-	 * @param client
-	 */
-	public void disconnected(ClientInfo client);
+	public void connectedRemote(String login);
+	public void disconnectedRemote(String login);
+	public void connectedSync(String login);
+	public void disconnectedSync(String login);
 	
-	/**
-	 *
-	 * @param client
-	 */
-	public void authenticated(Client client);
 }
