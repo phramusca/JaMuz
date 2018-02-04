@@ -50,7 +50,29 @@ public class PanelRemote extends javax.swing.JPanel {
 	 */
 	public PanelRemote() {
 		initComponents();
+		//TODO: Update when changing port;
+		StringBuilder IP = new StringBuilder();
+		IP.append("<html>Set this in remote: <BR/>");
+		try {
+			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append((Integer) jSpinnerPort.getValue()); 
+		} catch (UnknownHostException ex) {
+			IP.append("Undetermined !");
+		}
+		IP.append("</html>");
+		jLabelIP.setText(IP.toString());
+	}
+	
+	private void setColumn(int index, int width) {
+        TableColumn column = jTableRemote.getColumnModel().getColumn(index);
+		column.setMinWidth(width);
+        column.setPreferredWidth(width);
+        column.setMaxWidth(width*3);
+    }
+	
+	public void setCallback(ICallBackServer callback) {
+		this.callBackServer = callback;
 		server = new Server((Integer) jSpinnerPort.getValue(), callBackServer);
+		
 		jTableRemote.setModel(server.getTableModel());
 		jTableRemote.setRowSorter(null);
 		//Adding columns from model. Cannot be done automatically on properties
@@ -64,31 +86,7 @@ public class PanelRemote extends javax.swing.JPanel {
 		
 		server.fillClients();
 		
-		//TODO: Update when changing port;
-		StringBuilder IP = new StringBuilder();
-		IP.append("<html>Set this in remote: <BR/>");
-		try {
-			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append((Integer) jSpinnerPort.getValue()); 
-		} catch (UnknownHostException ex) {
-			IP.append("Undetermined !");
-		}
-		IP.append("</html>");
-		jLabelIP.setText(IP.toString());
-		
 		startStopRemoteServer();
-	}
-
-	
-	
-	private void setColumn(int index, int width) {
-        TableColumn column = jTableRemote.getColumnModel().getColumn(index);
-		column.setMinWidth(width);
-        column.setPreferredWidth(width);
-        column.setMaxWidth(width*3);
-    }
-	
-	public void setCallback(ICallBackServer callback) {
-		this.callBackServer = callback;
 	}
 		
 	public static void send(FileInfoInt fileInfo) {    
@@ -223,12 +221,13 @@ public class PanelRemote extends javax.swing.JPanel {
 			server.closeClients();
 		}
         if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
-            server = new Server((Integer) jSpinnerPort.getValue(), callBackServer);
-            if(server.connect()) {
-                enableConfig(false);
-				jButtonQRcode.setEnabled(true);
-                jButtonStart.setText(Inter.get("Button.Pause"));
-            }
+			if(callBackServer!=null) {
+				if(server.connect()) {
+					enableConfig(false);
+					jButtonQRcode.setEnabled(true);
+					jButtonStart.setText(Inter.get("Button.Pause"));
+				}
+			}
         }
         else {
             server.close();
