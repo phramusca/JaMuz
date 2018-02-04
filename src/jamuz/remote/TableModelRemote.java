@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class TableModelRemote extends TableModelGeneric {
 
-    private final Map<String, Client> clients;
+    private final Map<String, ClientInfo> clients;
     
     /**
 	 * Create the table model
@@ -38,22 +38,26 @@ public class TableModelRemote extends TableModelGeneric {
         clients = new LinkedHashMap<>();
 	}
 	
-	public void init() {
+	public void setColumnNames() {
         this.setColumnNames(new String [] {
-            "ID", //NOI18N
-            "Name", //NOI18N
-            "State", 
+            "Remote",
+			"Sync",
+			"Name",
+			"Status",
+			"ID"
         });
 		this.fireTableStructureChanged();
 	}
 
 	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-		Client client = (new ArrayList<>(clients.values())).get(rowIndex);
+		ClientInfo clientInfo = (new ArrayList<>(clients.values())).get(rowIndex);
         switch (columnIndex) {
-			case 0: return client.getId();
-            case 1: return client.getName();
-			case 2: return client.getState();
+            case 0: return clientInfo.isRemoteConnected();
+			case 1: return clientInfo.isSyncConnected();
+			case 2: return clientInfo.getName();
+			case 3: return clientInfo.getStatus();
+			case 4: return clientInfo.getId();
 		}
         return null;
     }
@@ -81,7 +85,7 @@ public class TableModelRemote extends TableModelGeneric {
         return clients.keySet();
     }
 
-    public Client getClient(String id) {
+    public ClientInfo getClient(String id) {
 		return clients.get(id);
 	}
 
@@ -118,7 +122,7 @@ public class TableModelRemote extends TableModelGeneric {
      *
      * @param client
      */
-    public void add(Client client) {
+    public void add(ClientInfo client) {
         clients.put(client.getId(), client);
 		this.fireTableDataChanged();
 //		this.fireIntervalAdded(this, clients.size()-1, clients.size()-1);

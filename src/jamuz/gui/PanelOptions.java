@@ -18,20 +18,15 @@ package jamuz.gui;
 
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import static jamuz.gui.PanelMain.jButtonPlayerPlay;
 import jamuz.gui.swing.ListElement;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.FolderInfo;
-import jamuz.remote.Client;
-import jamuz.remote.ICallBackReception;
-import jamuz.remote.ServerClient;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 

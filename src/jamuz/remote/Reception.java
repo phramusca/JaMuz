@@ -18,19 +18,19 @@ public class Reception  extends ProcessAbstract {
 
 	private final BufferedReader bufferedReader;
 	private final ICallBackReception callback;
-	private final String login;
+	private final Client client;
 	
 	/**
 	 *
 	 * @param bufferedReader
 	 * @param callback
-	 * @param login
+	 * @param client
 	 */
-	public Reception(BufferedReader bufferedReader, ICallBackReception callback, String login){
+	public Reception(BufferedReader bufferedReader, ICallBackReception callback, Client client){
 		super("Thread.Common.Reception");
 		this.callback = callback; 
 		this.bufferedReader = bufferedReader;
-		this.login = login;
+		this.client = client;
 	}
 	
 	@Override
@@ -40,16 +40,16 @@ public class Reception  extends ProcessAbstract {
 				checkAbort();
 				String msg = bufferedReader.readLine();
                 if(msg!=null) {
-                    callback.received(login, msg);
+                    callback.received(client.getInfo().getId(), msg);
                 }
                 else {
-                    callback.disconnected(login);
+                    callback.disconnected(client.getInfo());
 					return;
                 }
 			}
 		} catch (InterruptedException ex) {
         } catch(IOException ex) {
-            callback.received(login, "MSG_ERROR: ".concat(ex.toString()));
+            callback.received(client.getInfo().getId(), "MSG_ERROR: ".concat(ex.toString()));
 		} finally {
             try {
                 bufferedReader.close();

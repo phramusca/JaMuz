@@ -25,6 +25,7 @@ import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -32,6 +33,9 @@ import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
@@ -46,7 +50,7 @@ public class PanelRemote extends javax.swing.JPanel {
 	private static Server server;
 	private final TableModelRemote tableModel;
 	//TODO: use a callback for all usages of PanelMain
-	private ICallBackReception callback;
+	private ICallBackServer callback;
 
 	/**
 	 * Creates new form PanelRemote
@@ -54,13 +58,19 @@ public class PanelRemote extends javax.swing.JPanel {
 	public PanelRemote() {
 		initComponents();
 		tableModel = new TableModelRemote();
-		tableModel.init();
+		tableModel.setColumnNames();
 		jTableRemote.setModel(tableModel);
 		jTableRemote.setRowSorter(null);
 		//Adding columns from model. Cannot be done automatically on properties
 		// as done, in initComponents, before setColumnModel which removes the columns ...
 		jTableRemote.createDefaultColumnsFromModel();
-		setColumn(0, 100);
+		setColumn(0, 50);
+		setColumn(1, 50);
+		setColumn(2, 250);
+		//setColumn(3, 20);
+		setColumn(4, 150);
+		
+		fillClients();
 		
 		//TODO: Update when changing port;
 		StringBuilder IP = new StringBuilder();
@@ -76,6 +86,22 @@ public class PanelRemote extends javax.swing.JPanel {
 		startStopRemoteServer();
 	}
 
+	private void fillClients() {
+		try {
+			tableModel.clear();
+			Scanner sc = new Scanner(Jamuz.getFile("RemoteClients.txt", "data"));
+			while(sc.hasNext()){
+				String line = sc.nextLine().trim();
+				String items[] = line.split("\t");
+				String login = items[0].trim();
+				String name = items[1].trim();
+				tableModel.add(new ClientInfo(login, name));
+			}
+		} catch (FileNotFoundException ex) {
+			Logger.getLogger(PanelRemote.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
 	private void setColumn(int index, int width) {
         TableColumn column = jTableRemote.getColumnModel().getColumn(index);
 		column.setMinWidth(width);
@@ -83,28 +109,54 @@ public class PanelRemote extends javax.swing.JPanel {
         column.setMaxWidth(width*3);
     }
 	
-	public void setCallback(ICallBackReception callback) {
+	public void setCallback(ICallBackServer callback) {
 		this.callback = callback;
 	}
 	
-	class CallBackReception implements ICallBackReception {
+	class CallBackServer implements ICallBackServer {
 		@Override
 		public void received(String login, String msg) {
-			if(tableModel.getClients().contains(login)) {
-				callback.received(login, msg);
-			}
-		}
-		
-		@Override
-		public void authenticated(Client login, ServerClient client) {
-			tableModel.add(login);
-			callback.authenticated(login, client);
+			callback.received(login, msg);
 		}
 
 		@Override
-		public void disconnected(String login) {
-			tableModel.removeClient(login);
-			callback.disconnected(login);
+		public void connectedRemote(String login) {
+			if(tableModel.contains(login)) {
+				ClientInfo clientInfo = tableModel.getClient(login);
+				clientInfo.setRemoteConnected(true);
+			} else {
+				//FIXME: Add new client
+			}
+			tableModel.fireTableDataChanged();
+		}
+
+		@Override
+		public void disconnectedRemote(String login) {
+			if(tableModel.contains(login)) {
+				ClientInfo clientInfo = tableModel.getClient(login);
+				clientInfo.setRemoteConnected(false);
+			}
+			tableModel.fireTableDataChanged();
+		}
+
+		@Override
+		public void connectedSync(String login) {
+			if(tableModel.contains(login)) {
+				ClientInfo clientInfo = tableModel.getClient(login);
+				clientInfo.setSyncConnected(true);
+			} else {
+				//FIXME: Add new client
+			}
+			tableModel.fireTableDataChanged();
+		}
+
+		@Override
+		public void disconnectedSync(String login) {
+			if(tableModel.contains(login)) {
+				ClientInfo clientInfo = tableModel.getClient(login);
+				clientInfo.setSyncConnected(false);
+			}
+			tableModel.fireTableDataChanged();
 		}
 	}
 	
@@ -250,15 +302,12 @@ public class PanelRemote extends javax.swing.JPanel {
    
    private void startStopRemoteServer() {
 		enableConfig(false);
-
-        for(String client : tableModel.getClients()) {
-            server.closeClient(client);
-        }
-		tableModel.clear();
-
+		if(server!=null) {
+			server.closeClients();
+		}
         if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
-            CallBackReception callBackReception = new CallBackReception();
-            server = new Server((Integer) jSpinnerPort.getValue(), callBackReception);
+            CallBackServer callBackServer = new CallBackServer();
+            server = new Server((Integer) jSpinnerPort.getValue(), callBackServer);
             if(server.connect()) {
                 enableConfig(false);
 				jButtonQRcode.setEnabled(true);
@@ -320,7 +369,6 @@ public class PanelRemote extends javax.swing.JPanel {
         });
 
         jTableRemote.setAutoCreateColumnsFromModel(false);
-        jTableRemote.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jTableRemote.setModel(new jamuz.remote.TableModelRemote());
         jTableRemote.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTableRemote.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
