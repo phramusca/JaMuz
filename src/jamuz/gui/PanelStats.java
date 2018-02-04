@@ -791,7 +791,7 @@ public class PanelStats extends javax.swing.JPanel {
         selRatings[4]=jCheckBoxSelectRating4.isSelected();
         selRatings[5]=jCheckBoxSelectRating5.isSelected();
 		
-		//FIXME: Use status filter too
+		//FIXME STATS: Use status filter too
 		//+ at least disable filters when not used
 		//OR event better, use them when applicable
 		

@@ -522,7 +522,7 @@ public class FolderInfo implements java.lang.Comparable {
 				this.transcode(progressBar);
 			}
 
-			//FIXME: ReplayGain. Complete and test, then use (and on remote too)
+			//FIXME PLAYER ReplayGain. Complete and test, then use (and on remote too)
 			if(!isReplayGainDone || recalculateGain) {
 				//http://www.bobulous.org.uk/misc/Replay-Gain-in-Linux.html				
 				//http://id3.org/id3v2.3.0#User_defined_text_information_frame

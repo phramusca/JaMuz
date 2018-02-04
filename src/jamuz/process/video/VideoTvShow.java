@@ -302,7 +302,7 @@ public class VideoTvShow extends VideoAbstract {
 	 */
 	@Override
     public boolean isLocal() {
-		//FIXME: VIDEO isLocal is wrong, can't be the same as isWatched
+		//FIXME VIDEO: isLocal is wrong, can't be the same as isWatched
         List<String> missing = getMissing();
         return missing==null?false:missing.size()<=0;
     }
