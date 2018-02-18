@@ -333,11 +333,9 @@ public class PanelMerge extends javax.swing.JPanel {
      */
     public static void setOptions() {
         //Exit if processMerge is running
-        if(processMerge!=null) {
-            if(processMerge.isAlive()) {
-                return;
-            }
-        }
+        if(processMerge!=null && processMerge.isAlive()) {
+			return;
+		}
         //processMerge is not running, so we can set these up
 		if(Jamuz.getMachine().getStatSources().size()>0) {
 			DefaultListModel myModel = (DefaultListModel) jListMerge.getModel();
@@ -373,11 +371,34 @@ public class PanelMerge extends javax.swing.JPanel {
                 }
             }
             processMerge = new ProcessMerge("Thread.PanelMerge.ProcessMerge", dbIndexes, 
-					jCheckBoxMergeSimulate.isSelected(), jCheckBoxMergeForce.isSelected());
+					jCheckBoxMergeSimulate.isSelected(), jCheckBoxMergeForce.isSelected(), null);
             processMerge.start();
         }
     }//GEN-LAST:event_jButtonMergeStartActionPerformed
 
+	//FIXME: Do not use PanelMerge and display in jTable in a progressBar
+	public static void merge(String login, ArrayList<FileInfo> files) {
+		//Exit if processMerge is running
+        if(processMerge!=null && processMerge.isAlive()) {
+			return;
+		}
+		enableMerge(false);
+		List<Integer> dbIndexes = new ArrayList();
+		for(StatSource source : Jamuz.getMachine().getStatSources()) {
+			if(source.getDevice().getDestination().startsWith("remote://")) {
+				String loginSource = source.getDevice().getDestination().substring("remote://".length());
+				if(loginSource.equals(login)) {
+					dbIndexes.add(source.getId());
+				}
+			}
+		}
+		if(dbIndexes.size()>0) {
+			processMerge = new ProcessMerge("Thread.PanelMerge.ProcessMerge", dbIndexes, 
+				false, false, files);
+			processMerge.start();
+		}
+	}
+	
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed
         DialogOptions.main(Jamuz.getMachine().getName());
     }//GEN-LAST:event_jButtonMergeSourcesActionPerformed

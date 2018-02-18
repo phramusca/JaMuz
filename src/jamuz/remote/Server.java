@@ -5,13 +5,15 @@
  */
 package jamuz.remote;
 
+import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
-import jamuz.utils.DateTime;
+import jamuz.process.merge.PanelMerge;
 import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -36,8 +39,6 @@ public class Server {
 	private final int port;
 	private HandleLogin handleLogin;
 	private final ICallBackServer callback;
-	private static final Object LOCK_REMOTE = new Object();
-
 	private final TableModelRemote tableModel;
 	private final Map<String, Client> clientMap;
 	
@@ -125,54 +126,56 @@ public class Server {
         @Override
         public void received(String login, String msg) {
             if(clientMap.containsKey(login)) {
-				if(msg.equals("SENDING_DB")) {
-					synchronized(LOCK_REMOTE) {
-						clientMap.get(login).getDatabase();
-						Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.notify()");
-						LOCK_REMOTE.notify();
-					}
-				} else {
-					if(msg.startsWith("JSON_")) {
-						String json = msg.substring(5);
-						JSONObject jsonObject;
-						try {
-							jsonObject = (JSONObject) new JSONParser().parse(json);
-							String type = (String) jsonObject.get("type");
-							int idFile;
-							switch(type) {
-								case "requestFile":
-									idFile = (int) (long) jsonObject.get("idFile");
-									setStatus(login, "Sending file: "+idFile);
-									sendFile(login, idFile);
-									break;
-								case "ackFileReception":
-									boolean requestNextFile = (boolean) jsonObject.get("requestNextFile");
-									idFile = (int) (long) jsonObject.get("idFile");
-									//Send back ack to client
-									if(requestNextFile) { //Not needed for now in this case
-										FileInfoInt file = Jamuz.getDb().getFile(idFile);
-										int idDevice = Jamuz.getMachine().getDeviceId(login);
-										JSONObject obj = new JSONObject();
-										obj.put("type", "insertDeviceFileAck");
-										obj.put("requestNextFile", requestNextFile);
-										setStatus(login, "Inserting file "+idFile+" "+file.getRelativeFullPath());
-										if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
-											obj.put("status", "OK");
-										} else {
-											obj.put("status", "KO");
-										}
-										obj.put("file", file.toMap());
-										setStatus(login, "Sending ack for file "+idFile+" "+file.getRelativeFullPath());
-										send(login, obj);
+				if(msg.startsWith("JSON_")) {
+					String json = msg.substring(5);
+					JSONObject jsonObject;
+					try {
+						jsonObject = (JSONObject) new JSONParser().parse(json);
+						String type = (String) jsonObject.get("type");
+						int idFile;
+						switch(type) {
+							case "requestFile":
+								idFile = (int) (long) jsonObject.get("idFile");
+								setStatus(login, "Sending file: "+idFile);
+								sendFile(login, idFile);
+								break;
+							case "ackFileReception":
+								boolean requestNextFile = (boolean) jsonObject.get("requestNextFile");
+								idFile = (int) (long) jsonObject.get("idFile");
+								//Send back ack to client
+								if(requestNextFile) { //Not needed for now in this case
+									FileInfoInt file = Jamuz.getDb().getFile(idFile);
+									int idDevice = Jamuz.getMachine().getDeviceId(login);
+									JSONObject obj = new JSONObject();
+									obj.put("type", "insertDeviceFileAck");
+									obj.put("requestNextFile", requestNextFile);
+									setStatus(login, "Inserting file "+idFile+" "+file.getRelativeFullPath());
+									if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
+										obj.put("status", "OK");
+									} else {
+										obj.put("status", "KO");
 									}
-									break;
-							}
-						} catch (ParseException ex) {
-							Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
-						}				
-					} else {
-						callback.received(login, msg);
-					}
+									obj.put("file", file.toMap());
+									setStatus(login, "Sending ack for file "+idFile+" "+file.getRelativeFullPath());
+									send(login, obj);
+								}
+								break;
+							case "FilesToMerge":
+								ArrayList<FileInfo> newTracks = new ArrayList<>();
+								JSONArray files = (JSONArray) jsonObject.get("files");
+								for(int i=0; i<files.size(); i++) {
+									JSONObject obj = (JSONObject) files.get(i);
+									FileInfo file = new FileInfo(login, obj);
+									newTracks.add(file);
+								}
+								PanelMerge.merge(login, newTracks);
+								break;
+						}
+					} catch (ParseException ex) {
+						Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
+					}				
+				} else {
+					callback.received(login, msg);
 				}
             }
         }
@@ -277,48 +280,6 @@ public class Server {
 			return clientMap.get(login).sendFile(fileInfoInt);
 		}
 		return true;
-	}
-    
-	/**
-	 *
-	 * @param login
-	 * @param path
-	 * @return 
-	 */
-	public boolean getDatabase(String login, String path) {
-		if(clientMap.containsKey(login)) {
-			synchronized(LOCK_REMOTE) {
-				try {
-					clientMap.get(login).setPath(path);
-					setStatus(login, "Request database");
-					JSONObject obj = new JSONObject();
-					obj.put("type", "SEND_DB");
-					clientMap.get(login).send( obj);
-					Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote.wait()");
-					LOCK_REMOTE.wait(10 * 1000); // 10s
-					Logger.getLogger(Server.class.getName()).log(Level.INFO, "lockRemote released");
-					return true;
-				} catch (InterruptedException ex) {
-					Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-					return false;
-				}
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 *
-	 * @param login
-	 * @param path
-	 * @return 
-	 */
-	public boolean sendDatabase(String login, String path) {
-		if(clientMap.containsKey(login)) {
-			setStatus(login, "Sending database");
-			return clientMap.get(login).sendDatabase(path);
-		}
-		return false;
 	}
     
 	/**

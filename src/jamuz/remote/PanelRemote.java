@@ -16,6 +16,7 @@
  */
 package jamuz.remote;
 
+import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.gui.DialogQRcode;
 import jamuz.utils.CrunchifyQRCode;
@@ -27,12 +28,14 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
@@ -42,6 +45,7 @@ import org.json.simple.JSONObject;
 public class PanelRemote extends javax.swing.JPanel {
 
 	private static Server server;
+
 	//TODO: use a callBackServer for all usages of PanelMain
 	private ICallBackServer callBackServer;
 
@@ -120,26 +124,23 @@ public class PanelRemote extends javax.swing.JPanel {
 		return false;
     }
 	
+	public static void send(String login, ArrayList<FileInfo> mergeListDbSelected) {
+		JSONObject obj = new JSONObject();
+		obj.put("type", "mergeListDbSelected");
+		JSONArray jsonArray = new JSONArray();
+		for (int i=0; i < mergeListDbSelected.size(); i++) {
+				jsonArray.add(mergeListDbSelected.get(i).toMap());
+		}
+		obj.put("files", jsonArray);
+		send(login, obj);
+	}
+	
 	public static boolean isConnected(String login) {
 		if(server!=null) {
             return server.isConnected(login);
         }
 		return false;
 	}
-	
-	public static boolean getDatabase(String login, String path) {
-        if(server!=null) {
-			return server.getDatabase(login, path);
-        }
-		return false;
-    }
-	
-	public static boolean sendDatabase(String login, String path) {
-        if(server!=null) {
-			return server.sendDatabase(login, path);
-        }
-		return false;
-    }
 	
 	/**
 	* Returns an <code>InetAddress</code> object encapsulating what is most likely the machine's LAN IP address.

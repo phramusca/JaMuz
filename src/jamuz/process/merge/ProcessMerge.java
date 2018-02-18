@@ -33,6 +33,7 @@ import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
+import jamuz.remote.PanelRemote;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.Popup;
 import jamuz.utils.Inter;
@@ -96,6 +97,7 @@ public class ProcessMerge extends ProcessAbstract {
 	private StatSource selectedStatSource; 
 	private DbConnJaMuz dBJaMuz; //Can be a copy if simulation mode
 	private ArrayList<FileInfo> statsListDbSelected;
+	private final boolean isRemote;
 	private ArrayList<FileInfo> mergeListDbSelected;
 	
 	//JaMuz DB information
@@ -109,8 +111,10 @@ public class ProcessMerge extends ProcessAbstract {
 	 * @param dbIndexes 
 	 * @param forceJaMuz
 	 * @param simulate  
+	 * @param files  
 	 */
-	public ProcessMerge(String name, List<Integer> dbIndexes, boolean simulate, boolean forceJaMuz) {
+	public ProcessMerge(String name, List<Integer> dbIndexes, 
+			boolean simulate, boolean forceJaMuz, ArrayList<FileInfo> files) {
         super(name);
 		this.dbIndexes = dbIndexes;
 		this.simulate = simulate;
@@ -120,6 +124,8 @@ public class ProcessMerge extends ProcessAbstract {
 		if(Jamuz.getLogger().getLevel().intValue()<=Level.FINE.intValue()) {
 			doLogText=true;
 		}
+		statsListDbSelected = files;
+		isRemote=files!=null;
 	}
 	
 	/**
@@ -222,17 +228,19 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 		
 		//Get and backup all selected databases
-		for (int idStatSource : this.dbIndexes) {
-			this.checkAbort();
-			//Retrieve database
-			if(!copyDB(Jamuz.getMachine().getStatSource(idStatSource).getSource(), true)) {
-				return false;
-			}
-			this.checkAbort();
-			//Backup database
-			if(!this.simulate) {
-				if(!backupDB(Jamuz.getMachine().getStatSource(idStatSource).getSource())) {
+		if(!isRemote) {
+			for (int idStatSource : this.dbIndexes) {
+				this.checkAbort();
+				//Retrieve database
+				if(!copyDB(Jamuz.getMachine().getStatSource(idStatSource).getSource(), true)) {
 					return false;
+				}
+				this.checkAbort();
+				//Backup database
+				if(!this.simulate) {
+					if(!backupDB(Jamuz.getMachine().getStatSource(idStatSource).getSource())) {
+						return false;
+					}
 				}
 			}
 		}
@@ -291,10 +299,16 @@ public class ProcessMerge extends ProcessAbstract {
 		//TODO: offer the choice to user: "Apply changes ?"
 		//Copy back databases back 
 		if(!this.simulate) {
-			for (int idStatSource : this.dbIndexes) {
-				this.checkAbort();
-				if(!copyDB(Jamuz.getMachine().getStatSource(idStatSource).getSource(), false)) {
-					return false;
+			if(isRemote) {
+				PanelRemote.send(selectedStatSource.getDevice()
+						.getDestination().substring("remote://".length()),
+						mergeListDbSelected);
+			} else {
+				for (int idStatSource : this.dbIndexes) {
+					this.checkAbort();
+					if(!copyDB(Jamuz.getMachine().getStatSource(idStatSource).getSource(), false)) {
+						return false;
+					}
 				}
 			}
 		}
@@ -324,20 +338,26 @@ public class ProcessMerge extends ProcessAbstract {
 		else {
 			this.nbSteps-=1;
 		}
+        
+		if(!isRemote) {
+			//Connect selected database
+			PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.ConnectingDB"), this.selectedStatSource.getSource().getName())); //NOI18N
+			if(!selectedStatSource.getSource().setUp()) {
+				return false;
+			}
+			this.checkAbort();
 
-		//Connect selected database
-		PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.ConnectingDB"), this.selectedStatSource.getSource().getName())); //NOI18N
-		if(!selectedStatSource.getSource().setUp()) {
-			return false;
+			//Get statistics selected from database
+			PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.GettingStats"), this.selectedStatSource.getSource().getName())); //NOI18N
+			
+			this.statsListDbSelected = new ArrayList<>();
+			if(!this.selectedStatSource.getSource().getStatistics(this.statsListDbSelected)) {
+				return false;
+			}
+		} else {
+			this.nbSteps-=2;
 		}
-		this.checkAbort();
-
-		//Get statistics selected from database
-		PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.GettingStats"), this.selectedStatSource.getSource().getName())); //NOI18N
-        this.statsListDbSelected = new ArrayList<>();
-		if(!this.selectedStatSource.getSource().getStatistics(this.statsListDbSelected)) {
-			return false;
-		}
+		
 		this.checkAbort();
 		
 		//Get statistics from JaMuz database
@@ -349,6 +369,9 @@ public class ProcessMerge extends ProcessAbstract {
 		this.checkAbort();
 		
 		//Compare both statistics lists
+		
+		//FIXME: COMPARE !!!! Pb with path (absolute vs relative) probably 
+		
 		compareLists(run); //Several checkAbort() inside
 		
 		//Merge
@@ -358,8 +381,10 @@ public class ProcessMerge extends ProcessAbstract {
 		this.checkAbort();
 
 		PanelMerge.progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.ClosingConnectionDB"), selectedStatSource.getSource().getName())); //NOI18N
-        selectedStatSource.getSource().tearDown();
-		checkAbort();
+        if(!isRemote) {
+			selectedStatSource.getSource().tearDown();
+			checkAbort();
+		}
 
 		mergeReport+= "<tr>"
             + "<td>"+selectedStatSource.getSource().getName()+"</td>"
@@ -446,7 +471,9 @@ public class ProcessMerge extends ProcessAbstract {
         }
 	}
 	
-	private void compareStats(String run, FileInfo fileSelectedDb, FileInfo fileJaMuz) throws InterruptedException, CloneNotSupportedException {
+	private void compareStats(String run, FileInfo fileSelectedDb, 
+			FileInfo fileJaMuz) 
+			throws InterruptedException, CloneNotSupportedException {
 		//Checking if process got interrupted
 		this.checkAbort();
 
@@ -691,7 +718,12 @@ public class ProcessMerge extends ProcessAbstract {
 		//Comparing Tags
             //TODO: display it on jtable and logs
             if(this.selectedStatSource.getSource().isUpdateTags()) {
-				ArrayList<String> selectedDbTags = getTagsSelected(fileSelectedDb);
+				ArrayList<String> selectedDbTags;
+				if(isRemote) {
+					selectedDbTags = fileSelectedDb.getTags();
+				} else {
+					selectedDbTags = getTagsSelected(fileSelectedDb);
+				}
 				if(!Utils.equalLists(selectedDbTags, jaMuzTags)) {
 					if(fileJaMuz.getTagsModifDate().after(
 							this.selectedStatSource.lastMergeDate)) {
@@ -891,11 +923,8 @@ public class ProcessMerge extends ProcessAbstract {
 	
 	private boolean merge(String run) throws InterruptedException, 
 			CloneNotSupportedException {
-
-		FileInfo fileInfo;
 		int nbFiles;
         ArrayList<FileInfo> filesToUpdatePlayCounter = new ArrayList<>();
-
         // Processing selected database
         PanelMerge.progressBar.progress(MessageFormat.format(
 				Inter.get("Msg.Merge.Updating"), 
@@ -903,34 +932,41 @@ public class ProcessMerge extends ProcessAbstract {
 		nbFiles = this.mergeListDbSelected.size();
 		if(nbFiles>0) {
 			this.checkAbort();
-			int[] results = selectedStatSource
-					.getSource()
-					.updateStatistics(mergeListDbSelected);
-			if(results.length<nbFiles) {
-				return false;
-			}
-			this.checkAbort();
-			//Analyzing results
-			int result;
-			for(int i = 0; i < nbFiles; i++) {
-				this.checkAbort();
-				result = results[i];
-				fileInfo = mergeListDbSelected.get(i);
-				if(result==1) {
+			if(isRemote) {
+				for(FileInfo fileInfo : mergeListDbSelected) {
 					filesToUpdatePlayCounter.add(fileInfo);
 					this.completedList.add((FileInfo) fileInfo.clone());
 				}
-				else {
-					//TODO: Insert statistics (AmaroK only for now)
-//					fileInfo.sourceName="!!! ERROR updating "+fileInfo.sourceName;  //NOI18N
-                    fileInfo.setSourceName(run+"-"+fileInfo.getSourceName()+":\t"
-							+"!!! ERROR updating !!!");
-					this.errorList.add((FileInfo) fileInfo.clone());
-					this.nbFilesErrorSelected+=1;
+			} else {
+				int[] results = selectedStatSource
+						.getSource()
+						.updateStatistics(mergeListDbSelected);
+				if(results.length<nbFiles) {
+					return false;
 				}
+				this.checkAbort();
+				//Analyzing results
+				int result;
+				FileInfo fileInfo;
+				for(int i = 0; i < nbFiles; i++) {
+					this.checkAbort();
+					result = results[i];
+					fileInfo = mergeListDbSelected.get(i);
+					if(result==1) {
+						filesToUpdatePlayCounter.add(fileInfo);
+						this.completedList.add((FileInfo) fileInfo.clone());
+					}
+					else {
+						//TODO: Insert statistics (AmaroK only for now)
+						//					fileInfo.sourceName="!!! ERROR updating "+fileInfo.sourceName;  //NOI18N
+						fileInfo.setSourceName(run+"-"+fileInfo.getSourceName()+":\t"
+								+"!!! ERROR updating !!!");
+						this.errorList.add((FileInfo) fileInfo.clone());
+						this.nbFilesErrorSelected+=1;
+					}
+				}
+				this.checkAbort();
 			}
-			this.checkAbort();
-			
 		}
 		
         //Processing jamuz
@@ -947,6 +983,7 @@ public class ProcessMerge extends ProcessAbstract {
 			this.checkAbort();
 			//Analyzing results
 			int result;
+			FileInfo fileInfo;
 			for(int i = 0; i < nbFiles; i++) {
 				this.checkAbort();
 				result = results[i];

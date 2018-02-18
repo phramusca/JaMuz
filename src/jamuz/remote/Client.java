@@ -187,25 +187,6 @@ public class Client {
 		return false;
     }
 	
-	public boolean sendDatabase(String path) {
-		File file = new File(path);
-		if(file.exists()&&file.isFile())
-		{
-			send("SENDING_DB");
-			DataOutputStream dos = new DataOutputStream(
-					new BufferedOutputStream(outputStream));	
-			System.out.println("Sending : "+file.getAbsolutePath());
-			System.out.println("Size : "+file.length());
-			try {
-				dos.writeLong(file.length());
-				return sendFile(file, dos);
-			} catch (IOException ex) {
-				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-		return false;
-    }
-	
 	private boolean sendFile(File file, DataOutputStream dos) {
 		try (FileInputStream input = new FileInputStream(file)) {
 			int read;
@@ -327,7 +308,7 @@ public class Client {
 			JSONObject obj = new JSONObject();
 			obj.put("type", "tags");
 			obj.put("tags", list);
-			PanelRemote.send(info.getId(), obj);
+			send(obj);
 		}
 
 		private String isValid(String login, String pass) {

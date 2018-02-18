@@ -23,6 +23,10 @@ import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.DateTime;
 import jamuz.utils.Utils;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * Audio file information
@@ -34,6 +38,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 * file ID in database
 	 */
 	protected int idFile;
+
 
 	/**
 	 *
@@ -378,6 +383,18 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return tags;
     }
 	
+	/**
+	 *
+	 * @return
+	 */
+	public ArrayList<String> readTags() {
+		ArrayList<String> out = new ArrayList<>();
+		if(idFile>=0) {
+			 Jamuz.getDb().getTags(out, idFile);
+		}
+		return out;
+    }
+	
 	public String getTagsToString() {
 		StringBuilder sb = new StringBuilder();
 		if(tags!=null) {
@@ -471,7 +488,50 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		
 		setPath(relativeFullPath);
 	}
+	
+	/**
+	 * Used for scan statistics purposes 
+	 * (default values for one-side only file)
+	 * @param sourceName 
+	 */
+	public FileInfo(String sourceName) {
+		this(-1, -1, "", 0, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 
+				0, sourceName, 0, 0, "", "", "", "");  //NOI18N
+	}
+	
+	/**
+	 *
+	 * @param sourceName
+	 * @param file
+	 */
+	public FileInfo(String sourceName, JSONObject file) {
+		this(sourceName);
+		relativeFullPath = (String) file.get("path");
+		idFileRemote = (int) (long) file.get("idFileRemote");
+		rating = (int) (long) file.get("rating");
+		addedDate = getDate(file, "addedDate");
+		lastPlayed = getDate(file, "lastPlayed");
+		playCounter = (int) (long) file.get("playCounter");
+		genre = (String) file.get("genre");
 
+		JSONArray jsonTags = (JSONArray) file.get("tags");
+		tags = new ArrayList<>();
+		for(int i=0; i<jsonTags.size(); i++) {
+			String tag = (String) jsonTags.get(i);
+			tags.add(tag);
+		}
+	}
+
+	/**
+     * @param jsonObject the one including date to get
+     * @param id id where to get date from file
+     * @return Date from jsonObject
+     */
+    private Date getDate(JSONObject jsonObject, String id) {
+        String dateStr = (String) jsonObject.get(id);
+        return DateTime.parseSqlUtc(dateStr);
+    }
+	
 	/**
 	 * Sets the path and filename
 	 * @param relativeFullPath
@@ -481,16 +541,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		this.relativePath=FilenameUtils.getFullPath(this.relativeFullPath);
 		this.filename=FilenameUtils.getName(this.relativeFullPath);
 		this.ext=FilenameUtils.getExtension(this.filename).toLowerCase(Locale.ENGLISH);
-	}
-
-	/**
-	 * Used for scan statistics purposes 
-	 * (default values for one-side only file)
-	 * @param sourceName 
-	 */
-	public FileInfo(String sourceName) {
-		this(-1, -1, "", 0, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 
-				0, sourceName, 0, 0, "", "", "", "");  //NOI18N
 	}
 
 	/**
@@ -655,4 +705,25 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 				+ "tags=" + getTagsToString() + "\n"
 				+ "tagsModifDate=" + DateTime.formatUTCtoSqlUTC(tagsModifDate)+"\n";
 	}
+	
+	public Map toMap() {
+		Map jsonAsMap = new HashMap();
+		jsonAsMap.put("path", relativeFullPath);
+		jsonAsMap.put("idFile", idFile);
+		jsonAsMap.put("rating", rating);
+		jsonAsMap.put("addedDate", getFormattedAddedDate());
+		jsonAsMap.put("lastPlayed", getFormattedLastPlayed());
+		jsonAsMap.put("playCounter", playCounter);
+		jsonAsMap.put("genre", genre);
+
+		JSONArray tagsAsMap = new JSONArray();
+		readTags().stream().forEach((tag) -> {
+			tagsAsMap.add(tag);
+		});
+		jsonAsMap.put("tags", tagsAsMap);
+		jsonAsMap.put("size", -1);
+		return jsonAsMap;
+	}
+	
+	
 }
