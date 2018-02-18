@@ -570,6 +570,9 @@ public class PanelOptions extends javax.swing.JPanel {
                         Inter.get("Label.Confirm"), //NOI18N 
                         JOptionPane.YES_NO_OPTION); 
                 if (n == JOptionPane.YES_OPTION) { 
+					//FIXME: Renaming a tag issues merge :
+					// - The tag is added back
+					// - If you then merge forcing Jauz, all files loose this tag
                     Jamuz.getDb().updateTag((String) jListTags.getSelectedValue(), input); 
                     Jamuz.readTags(); 
 					jListTags.setModel(Jamuz.getTagsModel());
