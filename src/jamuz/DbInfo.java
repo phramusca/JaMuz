@@ -31,7 +31,6 @@ import jamuz.utils.FileSystem;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -147,30 +146,6 @@ public class DbInfo {
 					}
 					else {
 						if (!(myFTP.sendFile())) {
-							Popup.error(MessageFormat.format(
-									Inter.get("Error.DataBaseFileSend"), 
-									new Object[] {this.locationOri}));  //NOI18N
-							return false;
-						}
-					}
-					return true;
-				} 
-				else if (this.locationOri.startsWith("remote://")) {  //NOI18N
-					String login = this.locationOri.substring("remote://".length());
-					if(receive) {
-						if (!(PanelRemote.getDatabase(login, 
-								FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
-							Popup.error(MessageFormat.format(
-									Inter.get("Error.DatabaseFileRetrieve"), 
-									new Object[] {this.locationOri}));  //NOI18N
-							return false;
-						}
-						this.locationWork=
-								FilenameUtils.concat(locationWork, "JaMuzRemote.db");
-					}
-					else {
-						if (!(PanelRemote.sendDatabase(login, 
-								FilenameUtils.concat(locationWork, "JaMuzRemote.db")))) {
 							Popup.error(MessageFormat.format(
 									Inter.get("Error.DataBaseFileSend"), 
 									new Object[] {this.locationOri}));  //NOI18N

@@ -142,8 +142,10 @@ public class ProcessHelper {
 	 *
 	 */
 	public static ProcessMerge processMerge;
-    private static void startProcessMerge(List<Integer> dbIndexes, boolean simulate, boolean forceJaMuz) throws InterruptedException {
-        processMerge = new ProcessMerge("Thread.ProcessHelper.startProcessMerge", dbIndexes, simulate, forceJaMuz);
+    private static void startProcessMerge(List<Integer> dbIndexes, 
+			boolean simulate, boolean forceJaMuz) throws InterruptedException {
+        processMerge = new ProcessMerge("Thread.ProcessHelper.startProcessMerge", 
+				dbIndexes, simulate, forceJaMuz, null);
         PanelMerge.enableMerge(false);
         processMerge.start();
         processMerge.join();

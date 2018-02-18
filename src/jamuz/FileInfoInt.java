@@ -314,6 +314,7 @@ public class FileInfoInt extends FileInfo {
 	 */
 	protected String lyrics="";
     
+	
     /**
      * Used to merge BPM
      * @param file
@@ -344,7 +345,7 @@ public class FileInfoInt extends FileInfo {
 		this.modifDate = new Date(getFullPath().lastModified());
         copyRight=-1;
 	}
-
+	
     private double albumRating = 0.0;
     private int percentRated = 0;
 
@@ -1362,18 +1363,6 @@ public class FileInfoInt extends FileInfo {
 	
 	/**
 	 *
-	 * @return
-	 */
-	public ArrayList<String> readTags() {
-		ArrayList<String> out = new ArrayList<>();
-		if(idFile>=0) {
-			 Jamuz.getDb().getTags(out, idFile);
-		}
-		return out;
-    }
-	
-	/**
-	 *
 	 * @param value
 	 */
 	public void toggleTag(String value) {
@@ -1400,22 +1389,10 @@ public class FileInfoInt extends FileInfo {
 		return JSONValue.toJSONString(toMap());
 	}
 	
+	@Override
 	public Map toMap() {
-		Map jsonAsMap = new HashMap();
-		jsonAsMap.put("path", relativeFullPath);
+		Map jsonAsMap = super.toMap();
 		jsonAsMap.put("size", size);
-		jsonAsMap.put("idFile", idFile);
-		jsonAsMap.put("rating", rating);
-		jsonAsMap.put("addedDate", getFormattedAddedDate());
-		jsonAsMap.put("lastPlayed", getFormattedLastPlayed());
-		jsonAsMap.put("playCounter", playCounter);
-		jsonAsMap.put("genre", genre);
-
-		JSONArray tagsAsMap = new JSONArray();
-		getTags().stream().forEach((tag) -> {
-			tagsAsMap.add(tag);
-		});
-		jsonAsMap.put("tags", tagsAsMap);
 		return jsonAsMap;
 	}
 	
