@@ -1,6 +1,4 @@
 **JaMuz** is a **Music management** tool written in Java
-
-### <img src="https://github.com/phramusca/JaMuz/blob/master/data/icon/tag/Problème.jpg" width="48"> Code is in BETA stage.
 _________________________________________________________________________________
 * **Features**:
   * ***Merge your statistics between your favorite players:***
