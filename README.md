@@ -2,12 +2,12 @@
 _________________________________________________________________________________
 * **Features**:
   * ***Merge your data between your favorite players:***
-    * [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote) (Android)
     * Guayadeque (Linux)
     * Kodi (Linux / Windows)
     * Media Monkey (Windows)
     * Mixxx (Linux / Windows)
-    * MyTunes (Android)
+    * JaMuz Remote (Android)
+    * MyTunes (Android) [app discontinued apparently]
     * Please [contribute](CONTRIBUTING.md) to add some more.
     * Data being user custom tags, rating, BPM, genre and statistics: last played, play counter and added date.
   * ***Check, tag and organize your files:***
@@ -18,7 +18,9 @@ ________________________________________________________________________________
     * Create a device: select a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
     * Sync your files: process deletes unwanted files on destination then copy new files.
   * ***[JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)***
-    * Your 
+    * Your new Android music player
+    * Easily sync a playlist over WiFi from JaMuz to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
+    * Easily merge your ratings, tags, genre and play statistics
   * Create complex playlists in a simple way
   * Audio Player (using mplayer)
   * Runs on Windows and Linux (as written in Java), maybe Mac OS (not tested).
