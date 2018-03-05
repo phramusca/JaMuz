@@ -2,7 +2,7 @@
 _________________________________________________________________________________
 * **Features**:
   * ***Merge your data between your favorite players:***
-    * ***[Android JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)***
+    * [Android JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
     * Guayadeque (Linux)
     * Kodi (Linux / Windows)
     * Media Monkey (Windows)
