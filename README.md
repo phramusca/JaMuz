@@ -9,13 +9,14 @@ ________________________________________________________________________________
     * Mixxx (Linux / Windows)
     * MyTunes (Android)
     * Please [contribute](CONTRIBUTING.md) to add some more.
-    * Data being user rating and tags, BPM, genre and statistics: last played, play counter and added date.
+    * Data being user custom tags, rating, BPM, genre and statistics: last played, play counter and added date.
   * ***Check, tag and organize your files:***
     * Get tags and covers from Musicbrainz, last.fm and coverartarchive.org
     * Detect duplicates
     * Compute MP3 gain
   * ***Sync your files to devices:***
-    * Device being a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
+    * Create a device: select a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
+    * Sync your files: process deletes unwanted files on destination then copy new files.
   * Create complex playlists in a simple way
   * Audio Player (using mplayer)
   * ***[Android JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)***
