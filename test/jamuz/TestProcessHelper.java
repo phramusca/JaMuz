@@ -33,7 +33,7 @@ import java.util.List;
  */
 //TODO: This class should be in ProcessCheck & others (or as is in code package ?)
 // (which should not BE a process but include a process ...)
-public class ProcessHelper {
+public class TestProcessHelper {
 
 	/**
 	 *

@@ -369,9 +369,7 @@ public class ProcessMerge extends ProcessAbstract {
 		this.checkAbort();
 		
 		//Compare both statistics lists
-		
-		//FIXME: COMPARE !!!! Pb with path (absolute vs relative) probably 
-		
+
 		compareLists(run); //Several checkAbort() inside
 		
 		//Merge

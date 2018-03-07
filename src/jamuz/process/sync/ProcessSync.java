@@ -180,6 +180,7 @@ public class ProcessSync extends ProcessAbstract {
         this.checkAbort();
         PanelSync.progressBar.setup(fileInfoSourceList.size() + fileInfoDestinationList.size());
 
+		//FIXME: Offer deletion as an option now that process is labeled "export" and not "sync" anymore !!!!
         this.toInsertInDeviceFiles = new ArrayList<>();
         //Remove files on destination
         for (FileInfoInt fileInfo : fileInfoDestinationList) {
