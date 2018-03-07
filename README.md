@@ -1,23 +1,32 @@
 **JaMuz** is a **Music management** tool written in Java
 _________________________________________________________________________________
 * **Features**:
-  * ***Merge your statistics between your favorite players:***
+  * ***Merge your data between your favorite players:***
     * Guayadeque (Linux)
     * Kodi (Linux / Windows)
     * Media Monkey (Windows)
     * Mixxx (Linux / Windows)
-    * MyTunes (Android)
+    * JaMuz Remote (Android)
+    * MyTunes (Android) [app discontinued apparently]
     * Please [contribute](CONTRIBUTING.md) to add some more.
+    * Data being user custom tags, rating, BPM, genre and statistics: last played, play counter and added date.
   * ***Check, tag and organize your files:***
     * Get tags and covers from Musicbrainz, last.fm and coverartarchive.org
-    * Detect duplicates
-    * Compute MP3 gain
-  * ***Sync your files to devices (Phone, USB Key/HDD, MP3 player, ...).***
-  * Create complex playlists.
-  * Player (basic, not the main feature though).
-  * [Android Remote Control](https://github.com/phramusca/JaMuz-Remote)
+    * Detect duplicates.
+    * Compute MP3 gain.
+  * ***Sync your files to devices:***
+    * Create a device: select a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
+    * Sync your files: process deletes unwanted files on destination then copy new files.
+  * ***[JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)***
+    * Your new Android music player
+    * Easily sync a playlist over WiFi from JaMuz to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
+    * Easily merge your ratings, tags, genre and play statistics
+  * Create complex playlists in a simple way
+  * Audio Player (using mplayer)
   * Runs on Windows and Linux (as written in Java), maybe Mac OS (not tested).
-  * Bonus: Kodi helper to manage your video files.
+  * Bonus: 
+    * Kodi helper to manage your videos.
+    * Calibre helper to manage your ebooks.
   * Translated using [WebLate](https://hosted.weblate.org/engage/jamuz/):
 <a href="https://hosted.weblate.org/engage/jamuz/?utm_source=widget">
     <img src="https://hosted.weblate.org/widgets/jamuz/-/multi-auto.svg" alt="État de la traduction" />
