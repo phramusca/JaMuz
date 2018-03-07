@@ -17,12 +17,12 @@
 
 package jamuz;
 
+import jamuz.gui.swing.ProgressBar;
 import jamuz.process.sync.Device;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.sync.ProcessSync;
 import jamuz.process.check.ProcessCheck;
 import jamuz.process.merge.StatSource;
-import jamuz.process.merge.PanelMerge;
 import jamuz.process.check.PanelCheck;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,18 +138,15 @@ public class TestProcessHelper {
 //		}
     }
     
-	/**
-	 *
-	 */
+	//TODO: Now that using callbacks here, can we not launch gui ?
 	public static ProcessMerge processMerge;
     private static void startProcessMerge(List<Integer> dbIndexes, 
 			boolean simulate, boolean forceJaMuz) throws InterruptedException {
         processMerge = new ProcessMerge("Thread.ProcessHelper.startProcessMerge", 
-				dbIndexes, simulate, forceJaMuz, null);
-        PanelMerge.enableMerge(false);
+				dbIndexes, simulate, forceJaMuz, null, 
+				new ProgressBar(), null);
         processMerge.start();
         processMerge.join();
-        PanelMerge.enableMerge(true);
     }
 
     private static void startProcessSync(Device device) throws InterruptedException {

@@ -9,13 +9,18 @@ import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
+import jamuz.gui.swing.ProgressBar;
+import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.PanelMerge;
+import jamuz.process.merge.ProcessMerge;
+import jamuz.process.merge.StatSource;
 import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -168,7 +173,27 @@ public class Server {
 									FileInfo file = new FileInfo(login, obj);
 									newTracks.add(file);
 								}
-								PanelMerge.merge(login, newTracks);
+								List<Integer> dbIndexes = new ArrayList();
+								for(StatSource source : Jamuz.getMachine().getStatSources()) {
+									if(source.getDevice().getDestination().startsWith("remote://")) {
+										String loginSource = source.getDevice().getDestination().substring("remote://".length());
+										if(loginSource.equals(login)) {
+											dbIndexes.add(source.getId());
+										}
+									}
+								}
+								if(dbIndexes.size()>0) {
+									//FIXME MERGE REMOTE: Display progress in JList
+									ProgressBar progressBar = new ProgressBar();
+									
+									new ProcessMerge(
+										"Thread.Server.ProcessMerge."+login, 
+										dbIndexes, false, false, newTracks, 
+										progressBar, new CallBackMerge())
+									.start();
+								}
+								//FIXME MERGE REMOTE Need to send back stgh to end process
+								//or any other way
 								break;
 						}
 					} catch (ParseException ex) {
@@ -230,6 +255,42 @@ public class Server {
 		}
     }
 
+	class CallBackMerge implements ICallBackMerge {
+
+		//FIXME MERGE REMOTE: How does remote know merge is done ? yet it does 
+		
+		//FIXME MERGE REMOTE: DO not display popup
+		
+		@Override
+		public void completed(ArrayList<FileInfo> errorList, 
+				ArrayList<FileInfo> completedList, String popupMsg, 
+				String mergeReport) {
+			
+            if(!popupMsg.equals("")) {  //NOI18N
+                popupMsg="<html>"
+                    + "<h3>"+popupMsg+"</h3>";    //NOI18N //NOI18N
+                if(!mergeReport.equals("")) {  //NOI18N
+                    popupMsg+="<table cellpadding=\"2\" cellspacing=\"0\">"
+                    + "<tr>"   //NOI18N //NOI18N
+                    + "<td></td>"  //NOI18N
+                    + "<td style=\"border-bottom:1px solid black\"></td>"  //NOI18N
+                    + "<td style=\"border-bottom:1px solid black\" align=center>"
+							+Jamuz.getDb().getName()+"</td>"  //NOI18N
+                    + "</tr>"
+                    + mergeReport  //NOI18N //NOI18N
+                    + "</table>";  //NOI18N
+                }
+                popupMsg+="</html>";  //NOI18N
+                Jamuz.getLogger().info(popupMsg);
+                Popup.info(popupMsg);
+
+            }
+            //Read options again (only to read lastMergeDate !!)
+            //TODO MERGE Use listeners !!
+            PanelMain.readOptions(); 
+		}
+	}
+	
 	private void setStatus(String login, String status) {
 		if(tableModel.contains(login)) {
 			ClientInfo clientInfo = tableModel.getClient(login);
