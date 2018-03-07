@@ -18,7 +18,7 @@ package jamuz.tests;
 import jamuz.AlbumBuffer;
 import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
-import jamuz.ProcessHelper;
+import jamuz.TestProcessHelper;
 import jamuz.Settings;
 import java.io.File;
 import junit.framework.TestCase;
@@ -51,14 +51,14 @@ public class Merge1Test extends TestCase {
         /***********************************************************
 		 * Scan library quick
 		***********************************************************/
-        ProcessHelper.scanLibraryQuick();
+        TestProcessHelper.scanLibraryQuick();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest2_DB").checkDbAndFS(false);
         
 		/***********************************************************
 		 * Merge
 		***********************************************************/
         PanelMain.selectTab(Inter.get("Label.Merge"));
-        ProcessHelper.merge();
+        TestProcessHelper.merge();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkJaMuz();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkStatSource(1, false, false);
 
@@ -71,7 +71,7 @@ public class Merge1Test extends TestCase {
 		/***********************************************************
 		 * Merge again and check merge ok
 		***********************************************************/
-        ProcessHelper.merge();
+        TestProcessHelper.merge();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_New").checkJaMuz();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_New").checkStatSource(1, false, false);
         
@@ -84,7 +84,7 @@ public class Merge1Test extends TestCase {
 		/***********************************************************
 		 * Merge again and check merge ok
 		***********************************************************/
-        ProcessHelper.merge();
+        TestProcessHelper.merge();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest5_New").checkJaMuz();
         AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest5_New").checkStatSource(1, false, false);
 

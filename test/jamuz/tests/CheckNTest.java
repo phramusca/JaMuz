@@ -19,7 +19,7 @@ import jamuz.AlbumBuffer;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.PanelCheck;
 import jamuz.process.check.ProcessCheck.Action;
-import jamuz.ProcessHelper;
+import jamuz.TestProcessHelper;
 import jamuz.Settings;
 import java.util.ArrayList;
 import junit.framework.TestCase;
@@ -56,7 +56,7 @@ public class CheckNTest extends TestCase {
         }
         
         //Scan
-        ProcessHelper.scanNewFolder();
+        TestProcessHelper.scanNewFolder();
         checkNumberScanned(mbIds.size());
         for(String mbId : mbIds) {
             AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").checkActionsTableModel();
@@ -68,11 +68,11 @@ public class CheckNTest extends TestCase {
             folder.setNewImage(Settings.getTestCover());
             folder.action=Action.SAVE;
             PanelCheck.addToActionQueue(folder);
-            ProcessHelper.applyChanges();
+            TestProcessHelper.applyChanges();
         }
 
         //Scan again 
-        ProcessHelper.scanNewFolder();
+        TestProcessHelper.scanNewFolder();
         checkNumberScanned(mbIds.size());
         
         for(String mbId : mbIds) {
@@ -80,9 +80,9 @@ public class CheckNTest extends TestCase {
         }
 
         //OK should have been selected. Apply changes
-        ProcessHelper.applyChanges();
+        TestProcessHelper.applyChanges();
         //Verifying there is nothing left in new folder
-        ProcessHelper.scanNewFolder();
+        TestProcessHelper.scanNewFolder();
         checkNumberScanned(0);
         
         for(String mbId : mbIds) {
