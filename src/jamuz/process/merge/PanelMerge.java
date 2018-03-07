@@ -21,6 +21,7 @@ import jamuz.gui.swing.CheckBoxListItem;
 import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
+import jamuz.gui.PanelMain;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -32,6 +33,8 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
+import java.text.MessageFormat;
 //TODO: Display lastMergeDate in jListMerge: <Source name> (<lastMergeDate or BETTER formatted interval ex: a week ago, 3 hours ago, ...)>)
 /**
  *
@@ -41,22 +44,12 @@ public class PanelMerge extends javax.swing.JPanel {
 
     private static ProcessMerge processMerge;
     private static TableModel tableModel;
-
-    /**
-     * merge process progress bar
-     */
-    protected static ProgressBar progressBar;
+    private static ProgressBar progressBar;
     
-    /**
-     * Creates new form PanelMerge
-     */
     public PanelMerge() {
         initComponents();
     }
 
-    /**
-     * GUI extended init
-     */
     public void initExtended() {
 		//Get jTableMerge model
 		tableModel = (TableModel) jTableMerge.getModel();
@@ -105,7 +98,7 @@ public class PanelMerge extends javax.swing.JPanel {
 		column.setMaxWidth(200);
 		column.setPreferredWidth(150);
         
-        PanelMerge.progressBar = (ProgressBar)jProgressBarMerge;
+        progressBar = (ProgressBar)jProgressBarMerge;
 
 		setOptions();
 	}
@@ -268,7 +261,7 @@ public class PanelMerge extends javax.swing.JPanel {
 	 * Display merge result
 	 * @param myFileInfo
 	 */
-	public static void displayMergeResult(FileInfo myFileInfo) {
+	private static void displayMergeResult(FileInfo myFileInfo) {
 		//columnNames = {"File", "Comment", "Play counter", "Rating", "Added", "Last Played"};
 		
 		Object[] donnee = new Object[]{myFileInfo.getRelativeFullPath(), 
@@ -281,9 +274,9 @@ public class PanelMerge extends javax.swing.JPanel {
 	 * Enable merge
 	 * @param enable
 	 */
-	public static void enableMerge(boolean enable) {
+	private static void enableMerge(boolean enable) {
 		//TODO: Though jListMerge is disabled, the included checkboxes are not !!
-		enableMergeStartButton(enable);
+		jButtonMergeStart.setEnabled(enable);
 		jListMerge.setEnabled(enable);
 		jCheckBoxMergeSimulate.setEnabled(enable);
 		jCheckBoxMergeForce.setEnabled(enable);
@@ -321,22 +314,13 @@ public class PanelMerge extends javax.swing.JPanel {
 	}
     
     /**
-	 * Enable merge start button
-	 * @param enabled
-	 */
-	public static void enableMergeStartButton(boolean enabled) {
-		jButtonMergeStart.setEnabled(enabled);
-	}
-    
-    /**
-     * fill merge sources list
+     * fill stat sources list
      */
     public static void setOptions() {
-        //Exit if processMerge is running
-        if(processMerge!=null && processMerge.isAlive()) {
+        if(isRunning()) {
 			return;
 		}
-        //processMerge is not running, so we can set these up
+        //FIXME MERGE REMOTE DO NOT display remotes in here !!
 		if(Jamuz.getMachine().getStatSources().size()>0) {
 			DefaultListModel myModel = (DefaultListModel) jListMerge.getModel();
 			myModel.clear();
@@ -354,8 +338,8 @@ public class PanelMerge extends javax.swing.JPanel {
     
     private void jButtonMergeStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeStartActionPerformed
 
-        if (jButtonMergeStart.getText().equals(Inter.get("Button.Abort"))) { 			  //NOI18N
-            enableMergeStartButton(false);
+        if (jButtonMergeStart.getText().equals(Inter.get("Button.Abort"))) { 
+			jButtonMergeStart.setEnabled(false);
             jButtonMergeStart.setText(Inter.get("Button.Aborting")); 			  //NOI18N
             processMerge.abort();
         } else {
@@ -371,32 +355,68 @@ public class PanelMerge extends javax.swing.JPanel {
                 }
             }
             processMerge = new ProcessMerge("Thread.PanelMerge.ProcessMerge", dbIndexes, 
-					jCheckBoxMergeSimulate.isSelected(), jCheckBoxMergeForce.isSelected(), null);
+					jCheckBoxMergeSimulate.isSelected(), jCheckBoxMergeForce.isSelected(), 
+					null, progressBar, new CallBackMerge());
             processMerge.start();
+			jButtonMergeStart.setEnabled(true);
         }
     }//GEN-LAST:event_jButtonMergeStartActionPerformed
 
-	//FIXME: Do not use PanelMerge and display in jTable in a progressBar
-	public static void merge(String login, ArrayList<FileInfo> files) {
-		//Exit if processMerge is running
-        if(processMerge!=null && processMerge.isAlive()) {
-			return;
-		}
-		enableMerge(false);
-		List<Integer> dbIndexes = new ArrayList();
-		for(StatSource source : Jamuz.getMachine().getStatSources()) {
-			if(source.getDevice().getDestination().startsWith("remote://")) {
-				String loginSource = source.getDevice().getDestination().substring("remote://".length());
-				if(loginSource.equals(login)) {
-					dbIndexes.add(source.getId());
-				}
+	class CallBackMerge implements ICallBackMerge {
+		
+		@Override
+		public void completed(ArrayList<FileInfo> errorList, 
+				ArrayList<FileInfo> completedList, String popupMsg, 
+				String mergeReport) {
+			//Display Results
+			progressBar.setup(errorList.size()+completedList.size());
+			//Display errors
+			for(FileInfo myFileInfo : errorList) {
+				progressBar.progress(MessageFormat.format(
+						Inter.get("Msg.Merge.Displaying"), 
+						myFileInfo.getRelativePath())); //NOI18N
+				displayMergeResult(myFileInfo);
 			}
+
+			//Display completed
+			for(FileInfo myFileInfo : completedList) {
+				progressBar.progress(MessageFormat.format(
+						Inter.get("Msg.Merge.Displaying"), 
+						myFileInfo.getRelativePath())); //NOI18N
+				displayMergeResult(myFileInfo);
+			}
+		
+            if(!popupMsg.equals("")) {  //NOI18N
+                popupMsg="<html>"
+                    + "<h3>"+popupMsg+"</h3>";    //NOI18N //NOI18N
+
+                if(!mergeReport.equals("")) {  //NOI18N
+                    popupMsg+="<table cellpadding=\"2\" cellspacing=\"0\">"
+                    + "<tr>"   //NOI18N //NOI18N
+                    + "<td></td>"  //NOI18N
+                    + "<td style=\"border-bottom:1px solid black\"></td>"  //NOI18N
+                    + "<td style=\"border-bottom:1px solid black\" align=center>"
+							+Jamuz.getDb().getName()+"</td>"  //NOI18N
+                    + "</tr>"
+                    + mergeReport  //NOI18N //NOI18N
+                    + "</table>";  //NOI18N
+                }
+
+                popupMsg+="</html>";  //NOI18N
+                Jamuz.getLogger().info(popupMsg);
+                Popup.info(popupMsg);
+
+            }
+            //Read options again (only to read lastMergeDate !!)
+            //TODO MERGE Use listeners !!
+            PanelMain.readOptions(); //TODO: This should enable merge too, 
+			//but does not as we still are in process merge ...
+            enableMerge(true);
 		}
-		if(dbIndexes.size()>0) {
-			processMerge = new ProcessMerge("Thread.PanelMerge.ProcessMerge", dbIndexes, 
-				false, false, files);
-			processMerge.start();
-		}
+	}
+	
+	private static boolean isRunning() {
+		return (processMerge!=null && processMerge.isAlive());
 	}
 	
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed
@@ -406,7 +426,6 @@ public class PanelMerge extends javax.swing.JPanel {
     private void jButtonMergeLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeLogActionPerformed
         Desktop.openFolder(Jamuz.getLogPath());
     }//GEN-LAST:event_jButtonMergeLogActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonMergeLog;
