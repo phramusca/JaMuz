@@ -5,6 +5,7 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+0.2.1   Beta    Move merge with JaMuz Remote to Remote panel
 0.2.0	Beta	Lot of changes. Compatible with JaMuz Remote v0.2.0
 0.1.0	Beta	2nd release, first beta version
 0.0.24	Alpha - 1st released version
