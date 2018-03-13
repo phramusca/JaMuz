@@ -28,9 +28,6 @@
           <attribute name="Implementation-URL" value="${project.url}" />
        </manifest>
     </target>
-<!--
-       FIXME: copy/create default configuration files, make 7z package 
--->
 
 	<condition property="sqlite3.path" value="${basedir}\sqlite3.exe" else="sqlite3">
         <os family="windows" />

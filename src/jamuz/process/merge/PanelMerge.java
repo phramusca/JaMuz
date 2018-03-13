@@ -320,14 +320,15 @@ public class PanelMerge extends javax.swing.JPanel {
         if(isRunning()) {
 			return;
 		}
-        //FIXME MERGE REMOTE DO NOT display remotes in here !!
 		if(Jamuz.getMachine().getStatSources().size()>0) {
 			DefaultListModel myModel = (DefaultListModel) jListMerge.getModel();
 			myModel.clear();
 			for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
 				CheckBoxListItem checkBoxListItem = new CheckBoxListItem(statSource);
 				checkBoxListItem.setSelected(statSource.isIsSelected());
-				myModel.addElement(checkBoxListItem);
+				if(!statSource.getDevice().getDestination().startsWith("remote://")) {
+					myModel.addElement(checkBoxListItem);
+				}
 			}
 			enableMerge(true);
 		}

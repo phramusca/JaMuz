@@ -32,7 +32,6 @@ import jamuz.DbInfo;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.gui.PanelMain;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.remote.PanelRemote;
 import jamuz.utils.ProcessAbstract;
@@ -368,7 +367,10 @@ public class ProcessMerge extends ProcessAbstract {
 		FileInfo fileDbSelected; 
 		FileInfo fileInfoDbJaMuz;
 
-		progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.ComparingStats"), this.selectedStatSource.getSource().getName(), this.dBJaMuz.getName())); //NOI18N
+		progressBar.progress(
+				MessageFormat.format(Inter.get("Msg.Merge.ComparingStats"), 
+				this.selectedStatSource.getSource().getName(), 
+				this.dBJaMuz.getName())); 
         for (FileInfo file : this.statsListDbSelected) {
             //Checking if process got interrupted
             this.checkAbort();
@@ -386,14 +388,22 @@ public class ProcessMerge extends ProcessAbstract {
                 this.statsListDbJaMuz.remove(idSecond);
             }
             else {
-                Jamuz.getLogger().warning(MessageFormat.format(Inter.get("Error.Merge.RetrieveInfo"), new Object[] {fileDbSelected.getRelativeFullPath(), this.dBJaMuz.getName()}));  //NOI18N
+                Jamuz.getLogger().warning(MessageFormat.format(
+						Inter.get("Error.Merge.RetrieveInfo"), 
+						new Object[] {fileDbSelected.getRelativeFullPath(), 
+							this.dBJaMuz.getName()
+						})); 
                 //Add to ErrorList
-//				myFileInfoDbSelected.sourceName=MessageFormat.format(Inter.get("Error.Merge.NotFound"), new Object[] {this.dBJaMuz.name, this.selectedStatSource.source.name});  //NOI18N
-                fileDbSelected.setSourceName(run+"-"+this.dBJaMuz.getName()+":\t"+Inter.get("Label.NotFound"));
+//				myFileInfoDbSelected.sourceName=MessageFormat.format(Inter.get("Error.Merge.NotFound"), 
+//new Object[] {this.dBJaMuz.name, this.selectedStatSource.source.name});  //NOI18N
+                fileDbSelected.setSourceName(run+"-"+this.dBJaMuz.getName()
+						+":\t"+Inter.get("Label.NotFound"));
                 this.errorList.add((FileInfo) fileDbSelected.clone());
                 if(fileDbSelected.getRating()>0) {
                     if(doLogText) {
-                        this.addToLog(fileDbSelected.getRating()+","+fileDbSelected.getFormattedLastPlayed()+","+fileDbSelected.getRelativeFullPath(), ""); //NOI18N
+                        this.addToLog(fileDbSelected.getRating()+","
+								+fileDbSelected.getFormattedLastPlayed()+","
+								+fileDbSelected.getRelativeFullPath(), ""); //NOI18N
                     }
                 }
 				this.nbFilesNotFoundSelected+=1;
@@ -401,15 +411,21 @@ public class ProcessMerge extends ProcessAbstract {
         }
 		
 		//Add remaining from Merge.statsListDbJaMuz to ErrorList
-		progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.SetRemainingNotFound"), this.dBJaMuz.getName())); //NOI18N
+		progressBar.progress(MessageFormat.format(
+				Inter.get("Msg.Merge.SetRemainingNotFound"), 
+				this.dBJaMuz.getName())); //NOI18N
         for (FileInfo file : this.statsListDbJaMuz) {
             fileInfoDbJaMuz = file;
             //Add to ErrorList
-            fileInfoDbJaMuz.setSourceName(run+"-"+this.selectedStatSource.getSource().getName()+":\t"+Inter.get("Label.NotFound"));
+            fileInfoDbJaMuz.setSourceName(run+"-"
+					+this.selectedStatSource.getSource().getName()
+					+":\t"+Inter.get("Label.NotFound"));
             this.errorList.add((FileInfo) fileInfoDbJaMuz.clone());
             if(fileInfoDbJaMuz.getRating()>0) {
                 if(doLogText) {
-                    this.addToLog("", fileInfoDbJaMuz.getRating()+","+fileInfoDbJaMuz.getFormattedLastPlayed()+","+fileInfoDbJaMuz.getRelativeFullPath()); //NOI18N
+                    this.addToLog("", fileInfoDbJaMuz.getRating()+","
+							+fileInfoDbJaMuz.getFormattedLastPlayed()+","
+							+fileInfoDbJaMuz.getRelativeFullPath()); 
                 }
             }
             this.nbFilesNotFoundJaMuz+=1;
