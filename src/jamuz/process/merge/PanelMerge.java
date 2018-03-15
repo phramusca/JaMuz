@@ -414,6 +414,10 @@ public class PanelMerge extends javax.swing.JPanel {
 			//but does not as we still are in process merge ...
             enableMerge(true);
 		}
+
+		@Override
+		public void refresh() {
+		}
 	}
 	
 	private static boolean isRunning() {
