@@ -166,8 +166,9 @@ public abstract class VideoAbstract implements Comparable {
 	 */
 	protected VideoAbstract(String title, String synopsis,
             int ratingVotes, String writers, String year, 
-            String imdbId, int runtime, String mppaRating, int imdbIdTop250Ranking, String genre, String director, 
-            String titleOri, String studio, String trailerURL, String fanartURLs, String country) {
+            String imdbId, int runtime, String mppaRating, int imdbIdTop250Ranking, 
+			String genre, String director, String titleOri, String studio, 
+			String trailerURL, String fanartURLs, String country) {
         
 		this.title = title;
 		this.writers = StringManager.parseSlashList(writers);

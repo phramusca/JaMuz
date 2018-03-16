@@ -311,21 +311,13 @@ public class TheMovieDb {
             }
         }
         catch(ResponseStatusException ex) {
-            popupOrLog(ex);
+            popup(ex);
         }
         return watchList;
     }
     
-	private void popupOrLog(ResponseStatusException ex) {
-		//FIXME VIDEO We should retry if a requestCount issue (and other similar cases).
-		//We should not have such errors as calls are delayed
-		
-		if(ex.getResponseStatus().getStatusCode()!=25) {
-			Popup.error("Code "+ex.getResponseStatus().getStatusCode()+": "+ex.getResponseStatus().getStatusMessage());
-		}
-		else {
-			Jamuz.getLogger().log(Level.WARNING, "Code {0}: {1}", new Object[]{ex.getResponseStatus().getStatusCode(), ex.getResponseStatus().getStatusMessage()});
-		}
+	private void popup(ResponseStatusException ex) {
+		Popup.error("Code "+ex.getResponseStatus().getStatusCode()+": "+ex.getResponseStatus().getStatusMessage());
 	}
 	
     private Map<Integer, TvSeries> getWatchListTv() {
@@ -340,7 +332,7 @@ public class TheMovieDb {
             }
         }
         catch(ResponseStatusException ex) {
-            popupOrLog(ex);
+            popup(ex);
         }
         return watchList;
     }
@@ -357,7 +349,7 @@ public class TheMovieDb {
             }
         }
         catch(ResponseStatusException ex) {
-            popupOrLog(ex);
+            popup(ex);
         }
         return favorites;
     }
@@ -371,7 +363,7 @@ public class TheMovieDb {
             }
         }
         catch(ResponseStatusException ex) {
-            popupOrLog(ex);
+            popup(ex);
         }
         return favorites;
     }
@@ -388,7 +380,7 @@ public class TheMovieDb {
             }
         }
         catch(ResponseStatusException ex) {
-            popupOrLog(ex);
+            popup(ex);
         }
         
         return userRatings;
@@ -406,7 +398,7 @@ public class TheMovieDb {
             }
         }
         catch(ResponseStatusException ex) {
-            popupOrLog(ex);
+            popup(ex);
         }
         return userRatings;
     }
