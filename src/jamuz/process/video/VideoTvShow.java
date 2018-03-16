@@ -264,7 +264,7 @@ public class VideoTvShow extends VideoAbstract {
     public void moveFilesAndSrt(PathBuffer buffer, DbConnVideo conn, SSH myConn) {
 
         String serieName = getTitle();
-        if(!getTitleOri().startsWith("{") && !getTitle().equals(getTitleOri())) {
+        if(!getTitleOri().equals("") && !getTitle().equals(getTitleOri())) {
             serieName+=" ["+getTitleOri()+"]"; //NOI18N
         }
 

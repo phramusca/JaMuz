@@ -150,10 +150,10 @@ public class DbConnVideo extends DbConn {
 				imdbId=getStringValue(rs, "imdbId");  //NOI18N
 				title=getStringValue(rs, "title");  //NOI18N
 				writers=getStringValue(rs, "writers");  //NOI18N
-				year=getStringValue(rs, "year");  //NOI18N
+				year=getStringValue(rs, "year", "");  //NOI18N
 				thumbnails=getStringValue(rs, "thumbnails");  //NOI18N
 				director=getStringValue(rs, "director");  //NOI18N
-				titleOri=getStringValue(rs, "titleOri");  //NOI18N
+				titleOri=getStringValue(rs, "titleOri", "");  //NOI18N
 				trailerURL=getStringValue(rs, "trailerURL");  //NOI18N
                 genre=getStringValue(rs, "genre"); //NOI18N
                 studio=getStringValue(rs, "studio"); //NOI18N
@@ -162,10 +162,11 @@ public class DbConnVideo extends DbConn {
                 country=getStringValue(rs, "country"); //NOI18N
                 addedDate=getStringValue(rs, "dateAdded"); //NOI18N
 				
-                VideoMovie video = new VideoMovie(title, synopsis, synopsis2, synopsis3, 
-                        ratingVotes, rating, writers, year,
-                        thumbnails, imdbId, runtime, mppaRating, imdbIdTop250Ranking, genre, director, titleOri, 
-                        studio, trailerURL, fanartURLs, country, idFile, idPath, relativeFullPath, 
+                VideoMovie video = new VideoMovie(title, synopsis, synopsis2, 
+						synopsis3, ratingVotes, rating, writers, year,
+                        thumbnails, imdbId, runtime, mppaRating, imdbIdTop250Ranking, 
+						genre, director, titleOri, studio, trailerURL, fanartURLs, 
+						country, idFile, idPath, relativeFullPath, 
                         playCounter, lastPlayed, addedDate, getStreamDetails(idFile));
 
 				myFileInfoList.add(video);
@@ -191,10 +192,11 @@ public class DbConnVideo extends DbConn {
         ResultSet rsStream = null;
         //Get stream details
         try {
-			PreparedStatement stSelectStreamdetails = connection.prepareStatement("SELECT iStreamType, "
-                    + "strVideoCodec, fVideoAspect, iVideoWidth, iVideoHeight, iVideoDuration, " 
-                    + "strAudioCodec, iAudioChannels, strAudioLanguage, " 
-                    + "strSubtitleLanguage " 
+			PreparedStatement stSelectStreamdetails = connection.prepareStatement(
+					"SELECT iStreamType, strVideoCodec, fVideoAspect, "
+							+ "iVideoWidth, iVideoHeight, iVideoDuration, "
+							+ "strAudioCodec, iAudioChannels, strAudioLanguage, "
+							+ "strSubtitleLanguage " 
                     + "FROM streamdetails WHERE idFile=?");
             stSelectStreamdetails.setInt(1, idFile);
             rsStream = stSelectStreamdetails.executeQuery();
@@ -285,12 +287,12 @@ public class DbConnVideo extends DbConn {
                 ratingVotes=rs.getInt("ratingVotes");  //NOI18N
 				path=getStringValue(rs, "strPath");  //NOI18N
 				title=getStringValue(rs, "title");  //NOI18N
-                year=getStringValue(rs, "year");
+                year=getStringValue(rs, "year", "");
                 if(year.length()>4) {
                     year=StringManager.Left(year, 4); ;  //NOI18N
                 }
 				thumbnails=getStringValue(rs, "thumbnails");  //NOI18N
-				titleOri=getStringValue(rs, "titleOri");  //NOI18N
+				titleOri=getStringValue(rs, "titleOri", "");  //NOI18N
 				trailerURL=getStringValue(rs, "episodeguideURL");  //NOI18N
                 genre=getStringValue(rs, "genre"); //NOI18N
                 studio=getStringValue(rs, "studio"); //NOI18N

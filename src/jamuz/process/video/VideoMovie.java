@@ -159,10 +159,12 @@ public class VideoMovie extends VideoAbstract {
         //There should be only one file in files, list is for tv shows only
         for(FileInfoVideo file : files.values()) { 
             String newName = getTitle();
-            if(!getTitle().equals(getTitleOri())) {
+            if(!getTitleOri().equals("") && !getTitle().equals(getTitleOri())) {
                 newName+=" ["+getTitleOri()+"]"; //NOI18N
             }
-            newName+=" [" + getYear() + "]"; //NOI18N
+			if(!getYear().equals("")) {
+                newName+=" [" + getYear() + "]"; //NOI18N
+            }
             newName += getStreamDetails4Filename(file);
         
             moveFileAndSrt(buffer, conn, myConn, file, newName);
