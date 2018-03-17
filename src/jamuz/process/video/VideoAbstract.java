@@ -80,14 +80,15 @@ public abstract class VideoAbstract implements Comparable {
 	 * @return
 	 */
 	abstract public String getRelativeFullPath();
-
+	
 	/**
 	 *
 	 * @param buffer
 	 * @param conn
 	 * @param myConn
 	 */
-	abstract public void moveFilesAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn);
+	abstract public void moveFilesAndSrt(ProcessVideo.PathBuffer buffer, 
+			DbConnVideo conn, SSH myConn);
 
 	/**
 	 *
@@ -97,9 +98,13 @@ public abstract class VideoAbstract implements Comparable {
 
 	/**
 	 *
+	 * @param nbSeasonToKeep
+	 * @param nbEpisodeToKeep
+	 * @param keepCanceled
 	 * @return
 	 */
-	abstract protected ArrayList<FileInfoVideo> getFilesToCleanup();
+	abstract protected ArrayList<FileInfoVideo> getFilesToCleanup(
+			int nbSeasonToKeep, int nbEpisodeToKeep, boolean keepCanceled);
 
 	/**
 	 *
@@ -166,8 +171,9 @@ public abstract class VideoAbstract implements Comparable {
 	 */
 	protected VideoAbstract(String title, String synopsis,
             int ratingVotes, String writers, String year, 
-            String imdbId, int runtime, String mppaRating, int imdbIdTop250Ranking, String genre, String director, 
-            String titleOri, String studio, String trailerURL, String fanartURLs, String country) {
+            String imdbId, int runtime, String mppaRating, int imdbIdTop250Ranking, 
+			String genre, String director, String titleOri, String studio, 
+			String trailerURL, String fanartURLs, String country) {
         
 		this.title = title;
 		this.writers = StringManager.parseSlashList(writers);
@@ -214,8 +220,6 @@ public abstract class VideoAbstract implements Comparable {
 	 */
 	protected String moveFileAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn, FileInfo fileInfo, String newName) {
         
-        //Build new filename
-          
         String newFileName = StringManager.removeIllegal(newName) + "." + fileInfo.getExt(); //NOI18N
         
         //TODO: Better Handle files with no info. Ex:
@@ -251,8 +255,10 @@ public abstract class VideoAbstract implements Comparable {
         String source = FilenameUtils.concat(conn.rootPath, fileInfo.getRelativeFullPath());
 
         //SRT source and destination
-        String sourceSrt=FilenameUtils.concat(FilenameUtils.getFullPath(source), FilenameUtils.getBaseName(source)+".srt");  //NOI18N
-        String destinationSrt=FilenameUtils.concat(FilenameUtils.getFullPath(destination), FilenameUtils.getBaseName(destination)+".srt");  //NOI18N
+        String sourceSrt=FilenameUtils.concat(FilenameUtils.getFullPath(source), 
+				FilenameUtils.getBaseName(source)+".srt");  //NOI18N
+        String destinationSrt=FilenameUtils.concat(FilenameUtils.getFullPath(destination), 
+				FilenameUtils.getBaseName(destination)+".srt");  //NOI18N
         
         //Only moving if it needs a change
         if(!source.equals(destination)) {
@@ -277,15 +283,17 @@ public abstract class VideoAbstract implements Comparable {
 	 * @return
 	 */
 	protected String getStreamDetails4Filename(FileInfoVideo file) {
-        String newName=" ["+file.getVideoStreamDetails()+"]";
-        newName+=""+file.getAudioStreamDetails()+"";
-        newName+=""+file.getSubtitlesStreamDetails()+"";
-        return newName;
+		String streamDetails=file.getVideoStreamDetails();
+        streamDetails=streamDetails.equals("")?"":" ["+file.getVideoStreamDetails()+"]";
+        streamDetails+=""+file.getAudioStreamDetails()+"";
+        streamDetails+=""+file.getSubtitlesStreamDetails()+"";
+        return streamDetails;
     }
     
     private boolean moveFile(SSH myConn, String source, String destination, String sourceSrt, String destinationSrt) {
         //Move (and rename) the file over SSH or locally 
-        if(Jamuz.getOptions().get("video.SSH.enabled").equals("true")) {
+        if(Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))
+				&& Boolean.parseBoolean(Jamuz.getOptions().get("video.SSH.enabled"))) {
             //TODO: Check source and destination (H2 over SSH ?)      
 
             //Try to reConnect if somehow disconnected

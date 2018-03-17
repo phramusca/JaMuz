@@ -63,16 +63,20 @@ public class VideoMovie extends VideoAbstract {
      * @param idPath
      * @param streamDetails
 	 */
-	public VideoMovie(String title, String synopsis, String synopsis2, String synopsis3, 
-            int ratingVotes, int rating, String writers, String year, String thumbnails,
-            String imdbId, int runtime, String mppaRating, int imdbIdTop250Ranking, String genre, String director, 
-            String titleOri, String studio, String trailerURL, String fanartURLs, String country,  
-            int idFile, int idPath, String relativeFullPath, int playCounter, String lastPlayed, String addedDate, StreamDetails streamDetails) {
+	public VideoMovie(String title, String synopsis, String synopsis2, 
+			String synopsis3, int ratingVotes, int rating, String writers, 
+			String year, String thumbnails, String imdbId, int runtime, 
+			String mppaRating, int imdbIdTop250Ranking, String genre, 
+			String director, String titleOri, String studio, String trailerURL,
+			String fanartURLs, String country, int idFile, int idPath, 
+			String relativeFullPath, int playCounter, String lastPlayed, 
+			String addedDate, StreamDetails streamDetails) {
         super(title, synopsis,
             ratingVotes, writers, year, 
             imdbId, runtime, mppaRating, imdbIdTop250Ranking, genre, director, 
             titleOri, studio, trailerURL, fanartURLs, country);
-        this.files.put("", new FileInfoVideo(idFile, idPath, relativeFullPath, rating, lastPlayed, addedDate, playCounter, streamDetails, 1, 1));
+        this.files.put("", new FileInfoVideo(idFile, idPath, relativeFullPath, 
+				rating, lastPlayed, addedDate, playCounter, streamDetails, 1, 1, title));
         this.thumbnails = parseURLStringList(thumbnails);
         myVideo = new MyMovieDb(new MovieDb());
 	}
@@ -159,10 +163,12 @@ public class VideoMovie extends VideoAbstract {
         //There should be only one file in files, list is for tv shows only
         for(FileInfoVideo file : files.values()) { 
             String newName = getTitle();
-            if(!getTitle().equals(getTitleOri())) {
+            if(!getTitleOri().equals("") && !getTitle().equals(getTitleOri())) {
                 newName+=" ["+getTitleOri()+"]"; //NOI18N
             }
-            newName+=" [" + getYear() + "]"; //NOI18N
+			if(!getYear().equals("")) {
+                newName+=" [" + getYear() + "]"; //NOI18N
+            }
             newName += getStreamDetails4Filename(file);
         
             moveFileAndSrt(buffer, conn, myConn, file, newName);
@@ -275,14 +281,16 @@ public class VideoMovie extends VideoAbstract {
 
 	/**
 	 *
+	 * @param keepCanceled
 	 * @return
 	 */
 	@Override
-	protected ArrayList<FileInfoVideo> getFilesToCleanup() {
+	protected ArrayList<FileInfoVideo> getFilesToCleanup(int nbSeasonToKeep, int nbEpisodeToKeep,
+			boolean keepCanceled) {
 		ArrayList<FileInfoVideo> videos = new ArrayList<>();
-		if(files.size()>0) {
-			videos.add(files.firstEntry().getValue());
-		}
+//		if(files.size()>0) {
+//			videos.add(files.firstEntry().getValue());
+//		}
 		return videos;
 	}
 } 
