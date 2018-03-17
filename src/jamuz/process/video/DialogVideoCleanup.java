@@ -99,7 +99,6 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         jCheckBoxCleanupAllMovies1.setText("Keep all unwatched episodes");
         jCheckBoxCleanupAllMovies1.setEnabled(false);
 
-        jCheckBoxCleanupKeepCanceled.setSelected(true);
         jCheckBoxCleanupKeepCanceled.setText("Keep canceled series");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -232,6 +231,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 					jCheckBoxCleanupKeepCanceled.isSelected());
 			
 		}
+		//FIXME VIDEO Cleanup: ended series all watched (revert some of commit 3c17017159b53313788b712c505cef3dc11414ad)
     }//GEN-LAST:event_jButtonVidecoConfirmCleanupActionPerformed
 
     private void jCheckBoxCleanupAllTvShowsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCleanupAllTvShowsItemStateChanged

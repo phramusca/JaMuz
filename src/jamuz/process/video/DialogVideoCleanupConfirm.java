@@ -42,13 +42,13 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 	 * Creates new form DialogCleanup
 	 * @param parent
 	 * @param modal
-	 * @param filesToanalyze
+	 * @param filesToAnalyze
 	 * @param nbSeasonToKeep
 	 * @param nbEpisodeToKeep
 	 * @param keepCanceled
 	 */
 	public DialogVideoCleanupConfirm(java.awt.Frame parent, boolean modal, 
-			List<VideoAbstract> filesToanalyze, int nbSeasonToKeep, 
+			List<VideoAbstract> filesToAnalyze, int nbSeasonToKeep, 
 			int nbEpisodeToKeep, boolean keepCanceled) {
 		super(parent, modal);
 		initComponents();
@@ -57,9 +57,9 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 		
 		tableModel = (TableModel) jTableVideoCleanupConfirm.getModel();
 		//Set table model
-		String[] columnNames = {"Open", "Reason", "S", "E", "Title", "Filename"};  //NOI18N
+		String[] columnNames = {"Title", "Reason", "Open"};  //NOI18N
 		Object[][] data = {
-			{"Default", "Default", "Default", "Default", "Default", "Default"}  //NOI18N
+			{"Default", "Default", "Default"}  //NOI18N
 		};
 		tableModel.setModel(columnNames, data);
 		//clear the table
@@ -69,8 +69,9 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 		//Adding columns from model. Cannot be done automatically on properties
 		// as done, in initComponents, before setColumnModel which removes the columns ...
 		jTableVideoCleanupConfirm.createDefaultColumnsFromModel();
+		setColumn(1, 200, 300);
 		// Open folder Button
-        TableColumn columnButton = jTableVideoCleanupConfirm.getColumnModel().getColumn(0);
+        TableColumn columnButton = jTableVideoCleanupConfirm.getColumnModel().getColumn(2);
         columnButton.setMinWidth(50);
         columnButton.setMaxWidth(60);
         JButton button = new JButton(""); //NOI18N
@@ -78,20 +79,20 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
         columnButton.setCellRenderer((JTable table, Object value, boolean isSelected, 
 				boolean hasFocus, int row, int column1) -> button);
         columnButton.setCellEditor(new ButtonOpenVideo());
-        tableModel.setEditable(new Integer[] {0});
-		setColumn(1, 200, 250);
-		int maxWidth=30;
-        setColumn(2, maxWidth, maxWidth);
-        setColumn(3, maxWidth, maxWidth);
-		setColumn(4, 200);
-//		setColumn(5, 300);
+        tableModel.setEditable(new Integer[] {2});
+
+		displayFiles(filesToAnalyze, nbSeasonToKeep, 
+			nbEpisodeToKeep, keepCanceled);
+	}
 	
+	private void displayFiles(List<VideoAbstract> filesToAnalyze, int nbSeasonToKeep, 
+			int nbEpisodeToKeep, boolean keepCanceled) {
 		new Thread() {
 			@Override
 			public void run() {
-				progressBar.setup(filesToanalyze.size());
+				progressBar.setup(filesToAnalyze.size());
 				ArrayList<FileInfoVideo> filesAnalyzed = new ArrayList<>();
-				for(VideoAbstract video : filesToanalyze) {
+				for(VideoAbstract video : filesToAnalyze) {
 					progressBar.progress(video.getTitle());
 					if(!video.isMovie()) {
 						filesAnalyzed.addAll(video.getFilesToCleanup(nbSeasonToKeep, 
@@ -121,18 +122,15 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 	}
 	
 	private static void addRow(FileInfoVideo fileInfoVideo) {
-		//"Open", "Reason", "S", "E", "Title", "Filename"
+		//"Title", "Reason", "Open"
 		Object[] donnee = new Object[]{
+			fileInfoVideo.getTitle()+" "+fileInfoVideo.getFormattedEpisodeNumber(),
+			fileInfoVideo.getSourceName(),
 			"//"+FilenameUtils.concat(
 			Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
 					Jamuz.getOptions().get("video.location.library")
 					:Jamuz.getOptions().get("video.rootPath"), 
 			fileInfoVideo.getRelativePath()),
-			fileInfoVideo.getSourceName(),
-			fileInfoVideo.getSeasonNumber(), 
-			fileInfoVideo.getEpisodeNumber(), 
-			fileInfoVideo.getTitle(),
-			fileInfoVideo.getFilename(),
 			};
 		tableModel.addRow(donnee);
 	}
@@ -202,7 +200,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonVideoDoCleanup))
-                    .addComponent(jScrollPaneVideoConfirmCleanup, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE))
+                    .addComponent(jScrollPaneVideoConfirmCleanup, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -295,4 +293,6 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPaneVideoConfirmCleanup;
     private static javax.swing.JTable jTableVideoCleanupConfirm;
     // End of variables declaration//GEN-END:variables
+
+	
 }

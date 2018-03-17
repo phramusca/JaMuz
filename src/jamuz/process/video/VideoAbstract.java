@@ -100,7 +100,6 @@ public abstract class VideoAbstract implements Comparable {
 	 *
 	 * @param nbSeasonToKeep
 	 * @param nbEpisodeToKeep
-	 * @param keepEnded
 	 * @param keepCanceled
 	 * @return
 	 */

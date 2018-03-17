@@ -960,7 +960,7 @@ public class PanelVideo extends javax.swing.JPanel {
 	public static void enableProcess(boolean enable) {
         jButtonVideoList.setEnabled(enable);
         jCheckBoxVideoGet.setEnabled(enable);
-//        jCheckBoxVideoMove.setEnabled(enable);
+        jButtonVideoCleanup.setEnabled(enable);
 		jCheckBoxVideoTheMovieDb.setEnabled(enable);
         jButtonVideoExport.setEnabled(enable);
         jButtonVideoOptions.setEnabled(enable);
@@ -1090,6 +1090,7 @@ public class PanelVideo extends javax.swing.JPanel {
                     filterVideo(State.UNSELECTED, State.ALL, State.UNSELECTED, State.ALL, State.SELECTED, State.ALL);
                     break;
                 case TOBEDELETED:
+					//FIXME VIDEO Filters: exclude "Returning Series" in TOBEDELETED
                     filterVideo(State.SELECTED, State.ALL, State.ALL, State.UNSELECTED, State.SELECTED, State.ALL);
                     break;
                 case TORETRIEVE:
@@ -1099,7 +1100,8 @@ public class PanelVideo extends javax.swing.JPanel {
                     filterVideo(State.UNSELECTED, State.ALL, State.SELECTED, State.ALL, State.SELECTED, State.UNSELECTED);
                     break;
                 case TOWATCH:
-                    filterVideo(State.UNSELECTED, State.ALL, State.SELECTED, State.ALL, State.SELECTED, State.SELECTED);
+                    filterVideo(State.UNSELECTED, State.ALL, State.SELECTED, State.ALL, State.SELECTED, State.ALL);
+					triStateMovies.setState(State.ALL);
                     break;
             }
         }
@@ -1207,7 +1209,7 @@ public class PanelVideo extends javax.swing.JPanel {
     private javax.swing.ButtonGroup btnGroupSelected;
     private javax.swing.ButtonGroup btnGroupWatched;
     private static javax.swing.JButton jButtonRefresh;
-    private javax.swing.JButton jButtonVideoCleanup;
+    private static javax.swing.JButton jButtonVideoCleanup;
     private static javax.swing.JButton jButtonVideoExport;
     private static javax.swing.JButton jButtonVideoList;
     private static javax.swing.JButton jButtonVideoOptions;
