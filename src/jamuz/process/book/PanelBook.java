@@ -124,7 +124,7 @@ public class PanelBook extends javax.swing.JPanel {
         //	4:  PubDate
         setColumn(4, 80);
 		
-        jTableBook.setRowHeight(IconBufferVideo.iconHeight);
+        jTableBook.setRowHeight(IconBufferVideo.ICON_HEIGHT);
         
 		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setVerticalAlignment(SwingConstants.TOP);

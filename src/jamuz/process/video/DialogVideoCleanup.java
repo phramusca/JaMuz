@@ -68,6 +68,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cleanup");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("TV Shows"));
 
@@ -99,7 +100,6 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         jCheckBoxCleanupAllMovies1.setText("Keep all unwatched episodes");
         jCheckBoxCleanupAllMovies1.setEnabled(false);
 
-        jCheckBoxCleanupKeepEnded.setSelected(true);
         jCheckBoxCleanupKeepEnded.setText("Keep ended series");
 
         jCheckBoxCleanupKeepCanceled.setText("Keep canceled series");

@@ -45,13 +45,13 @@ public class IconBufferVideo {
      * Icon height.
      * Height set to this value
      */
-    public static final int iconHeight = 140;
+    public static final int ICON_HEIGHT = 140;
 
     /**
      * Icon width.
      * Width is set auto based on image ratio, this value is to set column width
      */
-    public static final int iconWidth = 105;
+    public static final int ICON_WIDTH = 105;
     
     /**
      * Get cover icon from cache if exists, from internet if not
@@ -105,7 +105,7 @@ public class IconBufferVideo {
             URL myURL = new URL(url);
             BufferedImage myImage = ImageIO.read(myURL);
             icon = new ImageIcon(((new ImageIcon(myImage).getImage())
-					.getScaledInstance(-1, IconBufferVideo.iconHeight, 
+					.getScaledInstance(-1, IconBufferVideo.ICON_HEIGHT, 
 							java.awt.Image.SCALE_SMOOTH)));
             
             //Write to cache

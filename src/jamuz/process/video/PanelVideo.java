@@ -115,7 +115,7 @@ public class PanelVideo extends javax.swing.JPanel {
 		setColumn(0, 20);
         setColumnIcon(0, "selected.png");
 		//	1:  "getThumbnails"
-        setColumn(1, IconBufferVideo.iconWidth);
+        setColumn(1, IconBufferVideo.ICON_WIDTH);
 		//	2:  "getTitle"
 		//	3:  "getYear"
 		setColumn(3, 55);
@@ -147,7 +147,7 @@ public class PanelVideo extends javax.swing.JPanel {
 //        column.setCellRenderer(new GrayableCheckboxCellRenderer());
         
         //TODO: Set default height when browsing FS
-        jTableVideo.setRowHeight(IconBufferVideo.iconHeight);
+        jTableVideo.setRowHeight(IconBufferVideo.ICON_HEIGHT);
         
 //        DefaultTableCellRenderer renderer = new TableCellRendererTooltip();
          DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();

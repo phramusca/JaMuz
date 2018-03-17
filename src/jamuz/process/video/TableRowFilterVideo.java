@@ -18,7 +18,6 @@
 package jamuz.process.video;
 
 import jamuz.gui.swing.TriStateCheckBox;
-import jamuz.process.video.VideoAbstract;
 import java.util.List;
 import javax.swing.RowFilter;
 import jamuz.gui.swing.TriStateCheckBox.State;

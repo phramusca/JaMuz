@@ -27,7 +27,6 @@ import java.util.logging.Level;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -206,10 +205,11 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jScrollPaneVideoConfirmCleanup, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonVideoDoCleanup)
-                    .addComponent(cancelButton)
-                    .addComponent(jProgressBarVideoCleanup, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jProgressBarVideoCleanup, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonVideoDoCleanup)
+                        .addComponent(cancelButton)))
                 .addContainerGap())
         );
 
