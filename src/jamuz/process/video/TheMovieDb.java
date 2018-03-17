@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import jamuz.utils.Popup;
 
 //http://jcenter.bintray.com/info/movito/themoviedbapi/1.6/
@@ -53,13 +52,13 @@ public class TheMovieDb {
 
     private String language = ""; 
     
-    private TmdbApi tmdbApi;
-    private AccountID accountId;
-    private SessionToken sessionToken;
-    private TmdbAccount account;
+    private final TmdbApi tmdbApi;
+    private final AccountID accountId;
+    private final SessionToken sessionToken;
+    private final TmdbAccount account;
     
-    private Map<Integer, MyMovieDb> myMovies;
-    private Map<Integer, MyTvShow> myTvShows;
+    private final Map<Integer, MyMovieDb> myMovies;
+    private final Map<Integer, MyTvShow> myTvShows;
     
 	/**
 	 *
