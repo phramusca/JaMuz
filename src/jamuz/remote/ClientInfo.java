@@ -16,6 +16,7 @@
  */
 package jamuz.remote;
 
+import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.DateTime;
 
 /**
@@ -28,6 +29,7 @@ public class ClientInfo {
 	private boolean remoteConnected;
 	private boolean syncConnected;
 	private String status="";
+	private ProgressBar progressBar = new ProgressBar();
 	
 	//TODO: Manage rights
 //	private boolean allowRating;
@@ -85,5 +87,9 @@ public class ClientInfo {
 
 	public void setStatus(String status) {
 		this.status = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | "+status;
+	}
+	
+	public ProgressBar getProgressBar() {
+		return progressBar;
 	}
 }

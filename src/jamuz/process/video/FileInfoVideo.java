@@ -17,9 +17,12 @@
 package jamuz.process.video;
 
 import jamuz.FileInfo;
+import jamuz.Jamuz;
 import java.util.ArrayList;
 import java.util.List;
 import jamuz.utils.StringManager;
+import java.io.File;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -33,6 +36,7 @@ public class FileInfoVideo extends FileInfo {
 	private String duration;
 	private String subtitlesStreamDetails="";
 	private String audioStreamDetails="";
+	private String title;
 
     /**
      *
@@ -46,10 +50,12 @@ public class FileInfoVideo extends FileInfo {
      * @param streamDetails
      * @param seasonNumber
      * @param episodeNumber
+	 * @param title
      */
     public FileInfoVideo(int idFile, int idPath, String relativeFullPath, 
 			int rating, String lastPlayed, String addedDate, int playCounter, 
-            StreamDetails streamDetails, int seasonNumber, int episodeNumber) {
+            StreamDetails streamDetails, int seasonNumber, int episodeNumber,
+			String title) {
         super(idFile, idPath, relativeFullPath, rating, lastPlayed, addedDate, 
 				playCounter, "", 0, 0, "genre", "", "", "");
         this.seasonNumber = seasonNumber;
@@ -87,6 +93,7 @@ public class FileInfoVideo extends FileInfo {
 //                newName += "]"; //NOI18N
             }
         }
+		this.title = title;
     }
 
 	/**
@@ -113,7 +120,16 @@ public class FileInfoVideo extends FileInfo {
 	public String getVideoStreamDetails() {
 		//TODO: Offer as an option
 //		display += " [" + videoStream.codec + " " + videoStream.width + "x" + videoStream.height + "] "; //NOI18N
-        return quality + " - " + duration;
+
+		if(!quality.equals(Quality.UNKNOWN) && duration!=null) {
+			return quality + " - " + duration;
+		} else if(quality.equals(Quality.UNKNOWN) && duration!=null) {
+			return duration;
+		} else if(!quality.equals(Quality.UNKNOWN) && duration==null) {
+			return quality.toString();
+		} else {
+			return "";
+		}
     }
 
 	/**
@@ -131,6 +147,18 @@ public class FileInfoVideo extends FileInfo {
 	public String getSubtitlesStreamDetails() {
         return subtitlesStreamDetails;
     }
+
+	public File getVideoFile() {
+		return new File(FilenameUtils.concat(
+					Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
+							Jamuz.getOptions().get("video.location.library")
+							:Jamuz.getOptions().get("video.rootPath"), 
+					relativeFullPath));
+	}
+
+	public String getTitle() {
+		return title;
+	}
     
 	public enum Quality {
 		HD1080("HD 1080"), //NOI18N
@@ -320,16 +348,7 @@ public class FileInfoVideo extends FileInfo {
 	 *
 	 * @return
 	 */
-	public int getSeasonNumber() {
-        return seasonNumber;
-    }
-
-	/**
-	 *
-	 * @return
-	 */
-	public int getEpisodeNumber() {
-        return episodeNumber;
-    }
-    
+	public String getFormattedEpisodeNumber() {
+		return "S"+String.format("%02d", seasonNumber)+"E"+String.format("%02d", episodeNumber);
+	}
 }

@@ -98,9 +98,8 @@ public class ProcessVideo extends ProcessAbstract {
         
 		List<VideoAbstract> filestoExport = tableModel.getFiles().stream().filter(video -> video.isSelected()).collect(Collectors.toList());
 		
-		//The following should never happen as it is checked in PanelVideo already
-		if(filestoExport.size()<=0) {
-			Popup.warning("You should select some files to export first");
+		if(Jamuz.getOptions().get("video.destination").startsWith("{")) {
+			Popup.warning("Invalid destination folder.");
 			return false;
 		}
 		
@@ -110,7 +109,7 @@ public class ProcessVideo extends ProcessAbstract {
 
 			for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
 
-				sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), fileInfoVideo.getRelativeFullPath()));
+				sourceFile = fileInfoVideo.getVideoFile();
 				destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.destination"), fileInfoVideo.getRelativeFullPath()));
 
 				//TODO: Allow export over SSH: merge with move option on list process
@@ -194,7 +193,8 @@ public class ProcessVideo extends ProcessAbstract {
         PanelVideo.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
         
         //Connect to SSH for moving/renaming files
-        if(move && Jamuz.getOptions().get("video.SSH.enabled").equals("true")) {
+        if(move && Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))
+				&& Boolean.parseBoolean(Jamuz.getOptions().get("video.SSH.enabled"))) {
             myConn = new SSH(Jamuz.getOptions().get("video.SSH.IP"), Jamuz.getOptions().get("video.SSH.user"), Jamuz.getOptions().get("video.SSH.pwd")); //NOI18N
             if(!myConn.connect()) {
                 return false;
@@ -260,17 +260,15 @@ public class ProcessVideo extends ProcessAbstract {
             if(move) {
                 //TODO: Tell user (doc, options, ?) that stream info is not 
                 //always available. Kodi needs to read it first
-                // and that happens only when you open files in a liste
+                // and that happens only when you open files in a list
                 //So for tv shows, you have to go through all or create an "All" playlist and open it
                 //Then wait a while before processing again
-                //TODO: Warn that kodi needs cleanup/update when at least a file has been moved
                 video.moveFilesAndSrt(buffer, connKodi, myConn); 
             }
             //Check if files exist, and get size if so
             long length = 0;
             for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
-				//FIXME VIDEO: Make it more clear that "video.source" is used 
-                File file = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), fileInfoVideo.getRelativeFullPath()));
+                File file = fileInfoVideo.getVideoFile();
                 if(file.exists()) {
                     length += file.length();
                 }
@@ -331,7 +329,7 @@ public class ProcessVideo extends ProcessAbstract {
 		connKodi.disconnect();
 		return true;
 	}
-
+	
 	/**
 	 *
 	 */

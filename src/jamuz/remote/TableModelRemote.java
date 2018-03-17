@@ -43,8 +43,8 @@ public class TableModelRemote extends TableModelGeneric {
             "Remote",
 			"Sync",
 			"Name",
-			"Status",
-			"ID"
+			"Sync Status",
+			"Merge Status"
         });
 		this.fireTableStructureChanged();
 	}
@@ -57,7 +57,7 @@ public class TableModelRemote extends TableModelGeneric {
 			case 1: return clientInfo.isSyncConnected();
 			case 2: return clientInfo.getName();
 			case 3: return clientInfo.getStatus();
-			case 4: return clientInfo.getId();
+			case 4: return clientInfo.getProgressBar();
 		}
         return null;
     }

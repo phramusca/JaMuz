@@ -66,6 +66,7 @@ import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -445,7 +446,11 @@ public class PanelVideo extends javax.swing.JPanel {
     private void menuVideoOpen() {
         VideoAbstract fileInfoVideo = getSelected();
         if(fileInfoVideo!=null) {
-			Desktop.openFolder("//"+Jamuz.getOptions().get("video.source")+fileInfoVideo.getRelativeFullPath());
+			Desktop.openFolder("//"+FilenameUtils.concat(
+			Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
+					Jamuz.getOptions().get("video.location.library")
+					:Jamuz.getOptions().get("video.rootPath"), 
+			fileInfoVideo.getRelativeFullPath()));
         }
     }
 
@@ -466,7 +471,7 @@ public class PanelVideo extends javax.swing.JPanel {
 					JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
-                    File videoFile = new File(Jamuz.getOptions().get("video.source")+fileInfoVideo.getRelativeFullPath());
+                    File videoFile = fileInfoVideo.getVideoFile();
                     boolean isDeleted = videoFile.delete();
                     //TODO: Remove from db (and send db back at some point)
                 }
@@ -532,6 +537,7 @@ public class PanelVideo extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         triStateMovies = new jamuz.gui.swing.TriStateCheckBox();
         jCheckBoxVideoTheMovieDb = new javax.swing.JCheckBox();
+        jButtonVideoCleanup = new javax.swing.JButton();
 
         jSplitPane1.setDividerLocation(150);
 
@@ -608,8 +614,14 @@ public class PanelVideo extends javax.swing.JPanel {
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
         jCheckBoxVideoGet.setText(bundle.getString("MainGUI.jCheckBoxVideoGet.text")); // NOI18N
+        jCheckBoxVideoGet.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxVideoGetItemStateChanged(evt);
+            }
+        });
 
         jCheckBoxVideoMove.setText(bundle.getString("MainGUI.jCheckBoxVideoMove.text")); // NOI18N
+        jCheckBoxVideoMove.setEnabled(false);
 
         jButtonVideoOptions.setText("Options");
         jButtonVideoOptions.addActionListener(new java.awt.event.ActionListener() {
@@ -774,6 +786,14 @@ public class PanelVideo extends javax.swing.JPanel {
 
         jCheckBoxVideoTheMovieDb.setText("TheMovieDb");
 
+        jButtonVideoCleanup.setText("Cleanup ...");
+        jButtonVideoCleanup.setToolTipText("");
+        jButtonVideoCleanup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVideoCleanupActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -827,6 +847,8 @@ public class PanelVideo extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBoxVideoTheMovieDb)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonVideoCleanup)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonVideoExport)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonVideoOptions))
@@ -838,13 +860,15 @@ public class PanelVideo extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonVideoOptions, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonVideoList)
                         .addComponent(jCheckBoxVideoGet)
                         .addComponent(jCheckBoxVideoMove)
                         .addComponent(jCheckBoxVideoTheMovieDb))
-                    .addComponent(jButtonVideoExport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonVideoExport, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonVideoCleanup)
+                        .addComponent(jButtonVideoOptions)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarVideo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -936,7 +960,7 @@ public class PanelVideo extends javax.swing.JPanel {
 	public static void enableProcess(boolean enable) {
         jButtonVideoList.setEnabled(enable);
         jCheckBoxVideoGet.setEnabled(enable);
-        jCheckBoxVideoMove.setEnabled(enable);
+        jButtonVideoCleanup.setEnabled(enable);
 		jCheckBoxVideoTheMovieDb.setEnabled(enable);
         jButtonVideoExport.setEnabled(enable);
         jButtonVideoOptions.setEnabled(enable);
@@ -985,20 +1009,7 @@ public class PanelVideo extends javax.swing.JPanel {
         jTableVideo.setRowSorter(null);
         processVideo.listDb(jCheckBoxVideoMove.isSelected(), jCheckBoxVideoGet.isSelected(), jCheckBoxVideoTheMovieDb.isSelected());
 	}
-	
-	/**
-	 *
-	 */
-	public static void prepareCleanupTvShows() {
-		ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
-		for(VideoAbstract video : processVideo.getTableModel().getFiles()) {
-			if(!video.isMovie()) {
-				filesToCleanup.addAll(video.getFilesToCleanup()) ;
-			}
-        }
-		DialogVideoCleanupConfirm.main(filesToCleanup);
-	}
-	
+
     private void jTableVideoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableVideoMousePressed
         // If Right mouse click, select the line under mouse
         if ( SwingUtilities.isRightMouseButton( evt ) )
@@ -1079,6 +1090,7 @@ public class PanelVideo extends javax.swing.JPanel {
                     filterVideo(State.UNSELECTED, State.ALL, State.UNSELECTED, State.ALL, State.SELECTED, State.ALL);
                     break;
                 case TOBEDELETED:
+					//TODO VIDEO Filters: exclude "Returning Series" in TOBEDELETED
                     filterVideo(State.SELECTED, State.ALL, State.ALL, State.UNSELECTED, State.SELECTED, State.ALL);
                     break;
                 case TORETRIEVE:
@@ -1088,7 +1100,8 @@ public class PanelVideo extends javax.swing.JPanel {
                     filterVideo(State.UNSELECTED, State.ALL, State.SELECTED, State.ALL, State.SELECTED, State.UNSELECTED);
                     break;
                 case TOWATCH:
-                    filterVideo(State.UNSELECTED, State.ALL, State.SELECTED, State.ALL, State.SELECTED, State.SELECTED);
+                    filterVideo(State.UNSELECTED, State.ALL, State.SELECTED, State.ALL, State.SELECTED, State.ALL);
+					triStateMovies.setState(State.ALL);
                     break;
             }
         }
@@ -1158,21 +1171,30 @@ public class PanelVideo extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jListVideoRatingValueChanged
 
-    
+    private void jCheckBoxVideoGetItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxVideoGetItemStateChanged
+        //Not allowing move if not getting db first
+		//to avoid bad data (even if we can not be sure that retrieved kodi db is up-to-date)
+		//+if we move without getting db, it won't be sent back
+		jCheckBoxVideoMove.setEnabled(jCheckBoxVideoGet.isSelected());
+    }//GEN-LAST:event_jCheckBoxVideoGetItemStateChanged
+
+    private void jButtonVideoCleanupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoCleanupActionPerformed
+        DialogVideoCleanup.main(processVideo.getTableModel().getFiles());
+    }//GEN-LAST:event_jButtonVideoCleanupActionPerformed
+
     private static long getSpaceLeft(String pathOrFile) {
 		if(!new File(pathOrFile).exists()) {
 			return 0;
 		}
-        Path p = Paths.get(pathOrFile); // where you want to write
+        Path p = Paths.get(pathOrFile); 
         FileSystem fileSystem = FileSystems.getDefault();
         Iterable<FileStore> iterable = fileSystem.getFileStores();
-
-        Iterator<FileStore> it = iterable.iterator(); // iterate the FileStore instances
+        Iterator<FileStore> it = iterable.iterator();
         while(it.hasNext()) {
             try {
                 FileStore fileStore = it.next();
-                if (Files.getFileStore(p).equals(fileStore)) { // your Path belongs to this FileStore
-                    return fileStore.getUsableSpace(); // or maybe getUnallocatedSpace()
+                if (Files.getFileStore(p).equals(fileStore)) { 
+                    return fileStore.getUsableSpace();
                 }
             } catch (IOException ex) {
                 Popup.error(ex);
@@ -1187,6 +1209,7 @@ public class PanelVideo extends javax.swing.JPanel {
     private javax.swing.ButtonGroup btnGroupSelected;
     private javax.swing.ButtonGroup btnGroupWatched;
     private static javax.swing.JButton jButtonRefresh;
+    private static javax.swing.JButton jButtonVideoCleanup;
     private static javax.swing.JButton jButtonVideoExport;
     private static javax.swing.JButton jButtonVideoList;
     private static javax.swing.JButton jButtonVideoOptions;
