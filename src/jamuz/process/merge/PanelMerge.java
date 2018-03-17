@@ -410,8 +410,7 @@ public class PanelMerge extends javax.swing.JPanel {
             }
             //Read options again (only to read lastMergeDate !!)
             //TODO MERGE Use listeners !!
-            PanelMain.readOptions(); //TODO: This should enable merge too, 
-			//but does not as we still are in process merge ...
+            PanelMain.setOptions(); 
             enableMerge(true);
 		}
 
