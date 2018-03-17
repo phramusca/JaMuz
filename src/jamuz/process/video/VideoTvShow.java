@@ -195,18 +195,13 @@ public class VideoTvShow extends VideoAbstract {
 		if(tvShowStatus==null) {
 			return filesToCleanup;
 		}
-		
-		if((!keepEnded && tvShowStatus.equals("Ended"))
-				|| (!keepCanceled && tvShowStatus.equals("Canceled")) ){
-			
-			//FIXME VIDEO Cleanup: Check that all episodes/seasons have been watched (optional)
-			
-//			List<TvSeason> seasons = myTvShow.getSerie().getSeasons();
-//			if(seasons != null && files.size()>0) {
-//
-//			}
-			
-			
+		String ended="Ended";
+		if((!keepEnded && tvShowStatus.equals(ended)
+				&& getMissing().size()==0)
+			|| !keepCanceled && tvShowStatus.equals("Canceled"))
+		{
+			int nbSeasons=myTvShow.getSerie().getNumberOfSeasons(); 
+			int nbEpisodesInLastSeason = myTvShow.getSerie().getSeasons().get(nbSeasons-1).getEpisodes().size(); 
 			for(FileInfoVideo fileInfoVideo : files.values()) {
 				if(fileInfoVideo.getPlayCounter()>0) {
 					File file = new File(FilenameUtils.concat(
@@ -215,7 +210,11 @@ public class VideoTvShow extends VideoAbstract {
 							:Jamuz.getOptions().get("video.rootPath"), 
 					fileInfoVideo.getRelativeFullPath()));
 					if(file.exists()) {
-						fileInfoVideo.setSourceName(tvShowStatus);
+						fileInfoVideo.setSourceName(tvShowStatus 
+						+" [missed "+getMissing().size() 
+						+" -> S"+nbSeasons 
+						+"E"+nbEpisodesInLastSeason 
+						+"]"); 
 						filesToCleanup.add(fileInfoVideo);
 					}
 				}
@@ -250,7 +249,8 @@ public class VideoTvShow extends VideoAbstract {
 							if(file.exists()) {
 								if(seasonumber<(currentSeason-nbSeasonToKeep)) {
 									fileInfoVideo.setSourceName(
-											"< S"+(currentSeason-nbSeasonToKeep));
+											"< S"+(currentSeason-nbSeasonToKeep) 
+											+" (last:S"+currentSeason+")"); 
 									
 									filesToCleanup.add(fileInfoVideo);
 								} else if(
@@ -258,7 +258,8 @@ public class VideoTvShow extends VideoAbstract {
 										&& seasonumber==currentSeason
 										&& episodeNumber<=(lastEpisode-nbEpisodeToKeep)) {
 									fileInfoVideo.setSourceName(
-											"<= S"+currentSeason+"E"+(lastEpisode-nbEpisodeToKeep));
+											"<= S"+currentSeason+"E"+(lastEpisode-nbEpisodeToKeep) 
+											+" (last:S"+currentSeason+"E"+lastEpisode+")"); 
 									filesToCleanup.add(fileInfoVideo);
 								}
 							}
