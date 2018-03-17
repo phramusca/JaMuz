@@ -324,15 +324,20 @@ public class DbConnVideo extends DbConn {
                 
                     int idFile = rsEpisodes.getInt("idFile");  //NOI18N
             
-                    fileInfoVideo.getFiles().put("S"+seasonNumber+"E"+episodeNumber,
+                    fileInfoVideo.getFiles().put(
+							"S"+seasonNumber+"E"+episodeNumber,
                         new FileInfoVideo(
-                            idFile, 
-                            idPath, 
-                            relativeFullPath, 
-                            rating, 
-                            lastPlayed, 
-                            addedDate, 
-                            playCounter, getStreamDetails(idFile), seasonNumber, episodeNumber
+								idFile, 
+								idPath, 
+								relativeFullPath, 
+								rating, 
+								lastPlayed, 
+								addedDate, 
+								playCounter, 
+								getStreamDetails(idFile), 
+								seasonNumber, 
+								episodeNumber,
+								title
                         )
                     );
                 }

@@ -537,6 +537,7 @@ public class PanelVideo extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         triStateMovies = new jamuz.gui.swing.TriStateCheckBox();
         jCheckBoxVideoTheMovieDb = new javax.swing.JCheckBox();
+        jButtonVideoCleanup = new javax.swing.JButton();
 
         jSplitPane1.setDividerLocation(150);
 
@@ -785,6 +786,14 @@ public class PanelVideo extends javax.swing.JPanel {
 
         jCheckBoxVideoTheMovieDb.setText("TheMovieDb");
 
+        jButtonVideoCleanup.setText("Cleanup ...");
+        jButtonVideoCleanup.setToolTipText("");
+        jButtonVideoCleanup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVideoCleanupActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -838,6 +847,8 @@ public class PanelVideo extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBoxVideoTheMovieDb)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonVideoCleanup)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonVideoExport)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonVideoOptions))
@@ -849,13 +860,15 @@ public class PanelVideo extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonVideoOptions, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonVideoList)
                         .addComponent(jCheckBoxVideoGet)
                         .addComponent(jCheckBoxVideoMove)
                         .addComponent(jCheckBoxVideoTheMovieDb))
-                    .addComponent(jButtonVideoExport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonVideoExport, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonVideoCleanup)
+                        .addComponent(jButtonVideoOptions)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarVideo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1176,21 +1189,23 @@ public class PanelVideo extends javax.swing.JPanel {
 		jCheckBoxVideoMove.setEnabled(jCheckBoxVideoGet.isSelected());
     }//GEN-LAST:event_jCheckBoxVideoGetItemStateChanged
 
-    
+    private void jButtonVideoCleanupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoCleanupActionPerformed
+        DialogVideoCleanup.main();
+    }//GEN-LAST:event_jButtonVideoCleanupActionPerformed
+
     private static long getSpaceLeft(String pathOrFile) {
 		if(!new File(pathOrFile).exists()) {
 			return 0;
 		}
-        Path p = Paths.get(pathOrFile); // where you want to write
+        Path p = Paths.get(pathOrFile); 
         FileSystem fileSystem = FileSystems.getDefault();
         Iterable<FileStore> iterable = fileSystem.getFileStores();
-
-        Iterator<FileStore> it = iterable.iterator(); // iterate the FileStore instances
+        Iterator<FileStore> it = iterable.iterator();
         while(it.hasNext()) {
             try {
                 FileStore fileStore = it.next();
-                if (Files.getFileStore(p).equals(fileStore)) { // your Path belongs to this FileStore
-                    return fileStore.getUsableSpace(); // or maybe getUnallocatedSpace()
+                if (Files.getFileStore(p).equals(fileStore)) { 
+                    return fileStore.getUsableSpace();
                 }
             } catch (IOException ex) {
                 Popup.error(ex);
@@ -1205,6 +1220,7 @@ public class PanelVideo extends javax.swing.JPanel {
     private javax.swing.ButtonGroup btnGroupSelected;
     private javax.swing.ButtonGroup btnGroupWatched;
     private static javax.swing.JButton jButtonRefresh;
+    private javax.swing.JButton jButtonVideoCleanup;
     private static javax.swing.JButton jButtonVideoExport;
     private static javax.swing.JButton jButtonVideoList;
     private static javax.swing.JButton jButtonVideoOptions;

@@ -49,7 +49,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jCheckBoxCleanupAllMovies = new javax.swing.JCheckBox();
-        jButton1 = new javax.swing.JButton();
+        jButtonVidecoConfirmCleanup = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -126,10 +126,10 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
                 .addGap(0, 78, Short.MAX_VALUE))
         );
 
-        jButton1.setText("Cleanup");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonVidecoConfirmCleanup.setText("Cleanup");
+        jButtonVidecoConfirmCleanup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonVidecoConfirmCleanupActionPerformed(evt);
             }
         });
 
@@ -152,7 +152,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
+                        .addComponent(jButtonVidecoConfirmCleanup))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -165,7 +165,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(jButtonVidecoConfirmCleanup)
                     .addComponent(cancelButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -177,10 +177,9 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-//        this.dispose();
+    private void jButtonVidecoConfirmCleanupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVidecoConfirmCleanupActionPerformed
 		PanelVideo.prepareCleanupTvShows();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonVidecoConfirmCleanupActionPerformed
 
 	/**
 	 */
@@ -213,7 +212,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonVidecoConfirmCleanup;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;

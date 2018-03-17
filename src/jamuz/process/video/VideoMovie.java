@@ -63,16 +63,20 @@ public class VideoMovie extends VideoAbstract {
      * @param idPath
      * @param streamDetails
 	 */
-	public VideoMovie(String title, String synopsis, String synopsis2, String synopsis3, 
-            int ratingVotes, int rating, String writers, String year, String thumbnails,
-            String imdbId, int runtime, String mppaRating, int imdbIdTop250Ranking, String genre, String director, 
-            String titleOri, String studio, String trailerURL, String fanartURLs, String country,  
-            int idFile, int idPath, String relativeFullPath, int playCounter, String lastPlayed, String addedDate, StreamDetails streamDetails) {
+	public VideoMovie(String title, String synopsis, String synopsis2, 
+			String synopsis3, int ratingVotes, int rating, String writers, 
+			String year, String thumbnails, String imdbId, int runtime, 
+			String mppaRating, int imdbIdTop250Ranking, String genre, 
+			String director, String titleOri, String studio, String trailerURL,
+			String fanartURLs, String country, int idFile, int idPath, 
+			String relativeFullPath, int playCounter, String lastPlayed, 
+			String addedDate, StreamDetails streamDetails) {
         super(title, synopsis,
             ratingVotes, writers, year, 
             imdbId, runtime, mppaRating, imdbIdTop250Ranking, genre, director, 
             titleOri, studio, trailerURL, fanartURLs, country);
-        this.files.put("", new FileInfoVideo(idFile, idPath, relativeFullPath, rating, lastPlayed, addedDate, playCounter, streamDetails, 1, 1));
+        this.files.put("", new FileInfoVideo(idFile, idPath, relativeFullPath, 
+				rating, lastPlayed, addedDate, playCounter, streamDetails, 1, 1, title));
         this.thumbnails = parseURLStringList(thumbnails);
         myVideo = new MyMovieDb(new MovieDb());
 	}

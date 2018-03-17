@@ -663,16 +663,7 @@ public class PanelMain extends javax.swing.JFrame {
         column.setMaxWidth(200);
         column.setPreferredWidth(130);
 
-        // 22: Button
-        column = jTable.getColumnModel().getColumn(22);
-        column.setMinWidth(50);
-        column.setMaxWidth(200);
-        button = new JButton("Amazon"); //NOI18N
-        column.setCellRenderer((JTable table, Object value, boolean isSelected, 
-				boolean hasFocus, int row, int column1) -> button);
-        column.setCellEditor(new ButtonBrowseURL());
-        
-        Action action = new AbstractAction() {
+		Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableCellListener tcl = (TableCellListener) e.getSource();
@@ -685,7 +676,17 @@ public class PanelMain extends javax.swing.JFrame {
             }
         };
         TableCellListener tcl = new TableCellListener(jTable, action);
+		
+        // 22: Button
+        column = jTable.getColumnModel().getColumn(22);
+        column.setMinWidth(50);
+        column.setMaxWidth(200);
+        JButton button = new JButton("Amazon"); //NOI18N
+        column.setCellRenderer((JTable table, Object value, boolean isSelected, 
+				boolean hasFocus, int row, int column1) -> button);
+        column.setCellEditor(new ButtonBrowseURL());
         
+        //Combobox and button needs to be editable to work
         tableModel.setEditable(new Integer[] {21, 22});
         
         //Display defaults columns (only basic by default)
@@ -696,7 +697,7 @@ public class PanelMain extends javax.swing.JFrame {
 		setRightsVisible(tableColumnModel, false);
     }
 
-    private static JButton button;
+//    private static JButton button;
 
     /**
      * Read options
