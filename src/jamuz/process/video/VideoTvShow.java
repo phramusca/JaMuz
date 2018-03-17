@@ -177,12 +177,18 @@ public class VideoTvShow extends VideoAbstract {
 	 * @return
 	 */
 	@Override
-	public ArrayList<FileInfoVideo> getFilesToCleanup(int nbSeasonToKeep) {
+	public ArrayList<FileInfoVideo> getFilesToCleanup(
+			int nbSeasonToKeep, 
+			int nbEpisodeToKeep) {
+		
+		nbEpisodeToKeep=nbSeasonToKeep>0?-1:nbEpisodeToKeep;
+		
 		MyTvShow myTvShow = (MyTvShow) myVideo;
         List<TvSeason> seasons = myTvShow.getSerie().getSeasons();
         ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
-        if(seasons != null) {
+        if(seasons != null && files.size()>0) {
 			int currentSeason=-1;
+			int lastEpisode=-1;
 			int seasonumber;
 			int episodeNumber;
             for(TvSeason season : Lists.reverse(seasons)) {
@@ -194,17 +200,21 @@ public class VideoTvShow extends VideoAbstract {
 						FileInfoVideo fileInfoVideo = files.get(key);
                         if(fileInfoVideo.getPlayCounter()>0) {
 							if(currentSeason<0) {
-								//This is the last seen episode, and so the current season being watched or watched
 								currentSeason=seasonumber;
+								lastEpisode=episodeNumber;
 							}
 							if(seasonumber<(currentSeason-nbSeasonToKeep)) {
+								filesToCleanup.add(fileInfoVideo);
+							} else if(
+									nbEpisodeToKeep>-1
+									&& seasonumber==currentSeason
+									&& episodeNumber<=(lastEpisode-nbEpisodeToKeep)) {
 								filesToCleanup.add(fileInfoVideo);
 							}
                         }
                     }
                 }
             }
-			
 			//FIXME VIDEO cleanup:  Use status AND lastSeason 
 			String status = ((MyTvShow) myVideo).getSerie().getStatus();
 			//Ended

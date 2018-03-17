@@ -87,7 +87,8 @@ public abstract class VideoAbstract implements Comparable {
 	 * @param conn
 	 * @param myConn
 	 */
-	abstract public void moveFilesAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn);
+	abstract public void moveFilesAndSrt(ProcessVideo.PathBuffer buffer, 
+			DbConnVideo conn, SSH myConn);
 
 	/**
 	 *
@@ -98,9 +99,11 @@ public abstract class VideoAbstract implements Comparable {
 	/**
 	 *
 	 * @param nbSeasonToKeep
+	 * @param nbEpisodeToKeep
 	 * @return
 	 */
-	abstract protected ArrayList<FileInfoVideo> getFilesToCleanup(int nbSeasonToKeep);
+	abstract protected ArrayList<FileInfoVideo> getFilesToCleanup(
+			int nbSeasonToKeep, int nbEpisodeToKeep);
 
 	/**
 	 *

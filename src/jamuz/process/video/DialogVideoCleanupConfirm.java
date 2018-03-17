@@ -58,8 +58,8 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 		jTableVideoCleanupConfirm.createDefaultColumnsFromModel();
 		// Open folder Button
         TableColumn columnButton = jTableVideoCleanupConfirm.getColumnModel().getColumn(0);
-        columnButton.setMinWidth(50);
-        columnButton.setMaxWidth(200);
+        columnButton.setMinWidth(70);
+        columnButton.setMaxWidth(100);
         JButton button = new JButton("Open"); //NOI18N
         columnButton.setCellRenderer((JTable table, Object value, boolean isSelected, 
 				boolean hasFocus, int row, int column1) -> button);
