@@ -36,6 +36,7 @@ public class FileInfoVideo extends FileInfo {
 	private String duration;
 	private String subtitlesStreamDetails="";
 	private String audioStreamDetails="";
+	private String title;
 
     /**
      *
@@ -49,10 +50,12 @@ public class FileInfoVideo extends FileInfo {
      * @param streamDetails
      * @param seasonNumber
      * @param episodeNumber
+	 * @param title
      */
     public FileInfoVideo(int idFile, int idPath, String relativeFullPath, 
 			int rating, String lastPlayed, String addedDate, int playCounter, 
-            StreamDetails streamDetails, int seasonNumber, int episodeNumber) {
+            StreamDetails streamDetails, int seasonNumber, int episodeNumber,
+			String title) {
         super(idFile, idPath, relativeFullPath, rating, lastPlayed, addedDate, 
 				playCounter, "", 0, 0, "genre", "", "", "");
         this.seasonNumber = seasonNumber;
@@ -90,6 +93,7 @@ public class FileInfoVideo extends FileInfo {
 //                newName += "]"; //NOI18N
             }
         }
+		this.title = title;
     }
 
 	/**
@@ -144,12 +148,16 @@ public class FileInfoVideo extends FileInfo {
         return subtitlesStreamDetails;
     }
 
-	File getVideoFile() {
+	public File getVideoFile() {
 		return new File(FilenameUtils.concat(
 					Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
 							Jamuz.getOptions().get("video.location.library")
 							:Jamuz.getOptions().get("video.rootPath"), 
 					relativeFullPath));
+	}
+
+	public String getTitle() {
+		return title;
 	}
     
 	public enum Quality {

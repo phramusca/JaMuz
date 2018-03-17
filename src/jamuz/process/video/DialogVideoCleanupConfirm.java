@@ -16,13 +16,13 @@
  */
 package jamuz.process.video;
 
-import jamuz.Machine;
-import jamuz.Option;
+import jamuz.Jamuz;
 import jamuz.gui.swing.TableModel;
-import jamuz.utils.Inter;
 import java.util.ArrayList;
-import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JTable;
 import javax.swing.table.TableColumn;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -30,7 +30,7 @@ import javax.swing.table.TableColumn;
  */
 public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 
-	private static TableModel tableModelOptions;
+	private static TableModel tableModel;
 	private static ArrayList<FileInfoVideo> filesToCleanup;
 	/**
 	 * Creates new form DialogCleanup
@@ -42,58 +42,85 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 		super(parent, modal);
 		initComponents();
 		
-		tableModelOptions = (TableModel) jTableOptions.getModel();
+		tableModel = (TableModel) jTableVideoCleanupConfirm.getModel();
 		//Set table model
-		String[] columnNames = {"S", "E", ""};  //NOI18N
+		String[] columnNames = {"Open", "S", "E", "Title", "Filename"};  //NOI18N
 		Object[][] data = {
-			{"Default", "Default", "Default"}  //NOI18N
+			{"Default", "Default", "Default", "Default", "Default"}  //NOI18N
 		};
-		tableModelOptions.setModel(columnNames, data);
+		tableModel.setModel(columnNames, data);
 		//clear the table
-        tableModelOptions.clear();
-		jTableOptions.setEnabled(true);
+        tableModel.clear();
+		jTableVideoCleanupConfirm.setEnabled(true);
 		
 		//Adding columns from model. Cannot be done automatically on properties
 		// as done, in initComponents, before setColumnModel which removes the columns ...
-		jTableOptions.createDefaultColumnsFromModel();
-		TableColumn column;
-		int width = 20;
-        //Set "S" column width
-        column = jTableOptions.getColumnModel().getColumn(0);
-		column.setMinWidth(width);
-        column.setPreferredWidth(width);
-		//Set "E" column width
-        column = jTableOptions.getColumnModel().getColumn(1);
-		column.setMinWidth(width);
-        column.setPreferredWidth(width);
+		jTableVideoCleanupConfirm.createDefaultColumnsFromModel();
+		// Open folder Button
+        TableColumn columnButton = jTableVideoCleanupConfirm.getColumnModel().getColumn(0);
+        columnButton.setMinWidth(50);
+        columnButton.setMaxWidth(200);
+        JButton button = new JButton("Open"); //NOI18N
+        columnButton.setCellRenderer((JTable table, Object value, boolean isSelected, 
+				boolean hasFocus, int row, int column1) -> button);
+        columnButton.setCellEditor(new ButtonOpenVideo());
+        tableModel.setEditable(new Integer[] {0});
+		int maxWidth=30;
+        setColumn(1, maxWidth, maxWidth);
+        setColumn(2, maxWidth, maxWidth);
+		setColumn(3, 150);
+		setColumn(4, 500);
+		
 		DialogVideoCleanupConfirm.filesToCleanup = filesToCleanup;
 		display();
 		
+	}
+	
+	private static void addRow(FileInfoVideo fileInfoVideo) {
+		//"Open", "S", "E", "Title", "Filename"
+		Object[] donnee = new Object[]{
+			"//"+FilenameUtils.concat(
+			Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
+					Jamuz.getOptions().get("video.location.library")
+					:Jamuz.getOptions().get("video.rootPath"), 
+			fileInfoVideo.getRelativePath()),
+			fileInfoVideo.getSeasonNumber(), 
+			fileInfoVideo.getEpisodeNumber(), 
+			fileInfoVideo.getTitle(),
+			fileInfoVideo.getFilename(),
+			};
+		tableModel.addRow(donnee);
+	}
+	
+	private void setColumn(int index, int width) {
+		setColumn(index, width, -1);
+	}
+	
+	private void setColumn(int index, int width, int maxWidth) {
+		TableColumn column = jTableVideoCleanupConfirm.getColumnModel().getColumn(index);
+		column.setMinWidth(width);
+        column.setPreferredWidth(width);
+		column.setWidth(width);
+		if(maxWidth>=0)	column.setMaxWidth(maxWidth);
 	}
 	
 	/**
 	 *
 	 */
 	public static void display() {
-		jTableOptions.setRowSorter(null);
-		tableModelOptions.clear();
+		jTableVideoCleanupConfirm.setRowSorter(null);
+		tableModel.clear();
 		for(FileInfoVideo fileInfoVideo : filesToCleanup) {
 			addRow(fileInfoVideo);
 		}
-		
 		//Enable row tableSorter (cannot be done if model is empty)
-		if(tableModelOptions.getRowCount()>0) {
-			jTableOptions.setAutoCreateRowSorter(true);
+		if(tableModel.getRowCount()>0) {
+			jTableVideoCleanupConfirm.setAutoCreateRowSorter(true);
 		}
 		else {
-			jTableOptions.setAutoCreateRowSorter(false);
+			jTableVideoCleanupConfirm.setAutoCreateRowSorter(false);
 		}
-		jTableOptions.setEnabled(true);
-	}
-	
-	private static void addRow(FileInfoVideo fileInfoVideo) {
-		Object[] donnee = new Object[]{fileInfoVideo.getSeasonNumber(), fileInfoVideo.getEpisodeNumber(), fileInfoVideo.getFilename() };
-		tableModelOptions.addRow(donnee);
+		jTableVideoCleanupConfirm.setEnabled(true);
 	}
 	
 	/**
@@ -105,17 +132,17 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        jButtonVideoDoCleanup = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        jScrollPaneOptions = new javax.swing.JScrollPane();
-        jTableOptions = new javax.swing.JTable();
+        jScrollPaneVideoConfirmCleanup = new javax.swing.JScrollPane();
+        jTableVideoCleanupConfirm = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jButton1.setText("Cleanup");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonVideoDoCleanup.setText("Cleanup");
+        jButtonVideoDoCleanup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonVideoDoCleanupActionPerformed(evt);
             }
         });
 
@@ -126,10 +153,10 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
             }
         });
 
-        jTableOptions.setAutoCreateColumnsFromModel(false);
-        jTableOptions.setModel(new jamuz.gui.swing.TableModel());
-        jTableOptions.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jScrollPaneOptions.setViewportView(jTableOptions);
+        jTableVideoCleanupConfirm.setAutoCreateColumnsFromModel(false);
+        jTableVideoCleanupConfirm.setModel(new jamuz.gui.swing.TableModel());
+        jTableVideoCleanupConfirm.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jScrollPaneVideoConfirmCleanup.setViewportView(jTableVideoCleanupConfirm);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,21 +166,21 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 668, Short.MAX_VALUE)
+                        .addGap(0, 583, Short.MAX_VALUE)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addComponent(jScrollPaneOptions))
+                        .addComponent(jButtonVideoDoCleanup))
+                    .addComponent(jScrollPaneVideoConfirmCleanup))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPaneOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPaneVideoConfirmCleanup, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(jButtonVideoDoCleanup)
                     .addComponent(cancelButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -162,12 +189,12 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        //FIXME VIDEO cleanup: add your handling code here:
+        dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //FIXME VIDEO cleanup: add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonVideoDoCleanupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoDoCleanupActionPerformed
+        //FIXME VIDEO cleanup: ADD CODE TO DO ACTUAL CLEANUP
+    }//GEN-LAST:event_jButtonVideoDoCleanupActionPerformed
 
 	/**
 	 * @param filesToCleanup
@@ -202,8 +229,8 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JScrollPane jScrollPaneOptions;
-    private static javax.swing.JTable jTableOptions;
+    private javax.swing.JButton jButtonVideoDoCleanup;
+    private javax.swing.JScrollPane jScrollPaneVideoConfirmCleanup;
+    private static javax.swing.JTable jTableVideoCleanupConfirm;
     // End of variables declaration//GEN-END:variables
 }
