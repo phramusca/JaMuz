@@ -21,6 +21,7 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -40,9 +41,15 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 	 * Creates new form DialogCleanup
 	 * @param parent
 	 * @param modal
-	 * @param filesToCleanup
+	 * @param filesToanalyze
+	 * @param nbSeasonToKeep
+	 * @param nbEpisodeToKeep
+	 * @param keepEnded
+	 * @param keepCanceled
 	 */
-	public DialogVideoCleanupConfirm(java.awt.Frame parent, boolean modal, ArrayList<FileInfoVideo> filesToCleanup) {
+	public DialogVideoCleanupConfirm(java.awt.Frame parent, boolean modal, 
+			List<VideoAbstract> filesToanalyze, int nbSeasonToKeep, 
+			int nbEpisodeToKeep, boolean keepEnded, boolean keepCanceled) {
 		super(parent, modal);
 		initComponents();
 		
@@ -76,10 +83,39 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
         setColumn(2, maxWidth, maxWidth);
 		setColumn(3, 150);
 		setColumn(4, 500);
-		
-		DialogVideoCleanupConfirm.filesToCleanup = filesToCleanup;
-		display();
-		
+	
+		new Thread() {
+			@Override
+			public void run() {
+				progressBar.setup(filesToanalyze.size());
+				ArrayList<FileInfoVideo> filesAnalyzed = new ArrayList<>();
+				for(VideoAbstract video : filesToanalyze) {
+					progressBar.progress(video.getTitle());
+					if(!video.isMovie()) {
+						filesAnalyzed.addAll(video.getFilesToCleanup(nbSeasonToKeep, 
+								nbEpisodeToKeep, keepEnded, keepCanceled)) ;
+					}
+				}
+				progressBar.reset();
+				filesToCleanup = filesAnalyzed;
+				jTableVideoCleanupConfirm.setRowSorter(null);
+				tableModel.clear();
+				progressBar.setup(filesToCleanup.size());
+				for(FileInfoVideo fileInfoVideo : filesToCleanup) {
+					progressBar.progress(fileInfoVideo.getTitle());
+					addRow(fileInfoVideo);
+				}
+				progressBar.reset();
+				//Enable row tableSorter (cannot be done if model is empty)
+				if(tableModel.getRowCount()>0) {
+					jTableVideoCleanupConfirm.setAutoCreateRowSorter(true);
+				}
+				else {
+					jTableVideoCleanupConfirm.setAutoCreateRowSorter(false);
+				}
+				jTableVideoCleanupConfirm.setEnabled(true);
+			}
+		}.start();
 	}
 	
 	private static void addRow(FileInfoVideo fileInfoVideo) {
@@ -108,25 +144,6 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
         column.setPreferredWidth(width);
 		column.setWidth(width);
 		if(maxWidth>=0)	column.setMaxWidth(maxWidth);
-	}
-	
-	/**
-	 *
-	 */
-	public static void display() {
-		jTableVideoCleanupConfirm.setRowSorter(null);
-		tableModel.clear();
-		for(FileInfoVideo fileInfoVideo : filesToCleanup) {
-			addRow(fileInfoVideo);
-		}
-		//Enable row tableSorter (cannot be done if model is empty)
-		if(tableModel.getRowCount()>0) {
-			jTableVideoCleanupConfirm.setAutoCreateRowSorter(true);
-		}
-		else {
-			jTableVideoCleanupConfirm.setAutoCreateRowSorter(false);
-		}
-		jTableVideoCleanupConfirm.setEnabled(true);
 	}
 	
 	/**
@@ -231,9 +248,14 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonVideoDoCleanupActionPerformed
 
 	/**
-	 * @param filesToCleanup
+	 * @param filesToanalyze
+	 * @param nbSeasonToKeep
+	 * @param nbEpisodeToKeep
+	 * @param keepEnded
+	 * @param keepCanceled
 	 */
-	public static void main(ArrayList<FileInfoVideo> filesToCleanup) {
+	public static void main(List<VideoAbstract> filesToanalyze, int nbSeasonToKeep, int nbEpisodeToKeep,
+			boolean keepEnded, boolean keepCanceled) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -254,7 +276,9 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 
 		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(() -> {
-			DialogVideoCleanupConfirm dialog = new DialogVideoCleanupConfirm(new javax.swing.JFrame(), true, filesToCleanup);
+			DialogVideoCleanupConfirm dialog = new DialogVideoCleanupConfirm(
+					new javax.swing.JFrame(), true, filesToanalyze, 
+					nbSeasonToKeep, nbEpisodeToKeep, keepEnded, keepCanceled);
 			//Center the dialog
 			dialog.setLocationRelativeTo(dialog.getParent());
 			dialog.setVisible(true);
