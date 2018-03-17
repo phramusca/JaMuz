@@ -290,7 +290,7 @@ public abstract class VideoAbstract implements Comparable {
         streamDetails+=""+file.getSubtitlesStreamDetails()+"";
         return streamDetails;
     }
-    
+	
     private boolean moveFile(SSH myConn, String source, String destination, String sourceSrt, String destinationSrt) {
         //Move (and rename) the file over SSH or locally 
         if(Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))

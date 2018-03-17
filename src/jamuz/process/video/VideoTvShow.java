@@ -204,11 +204,7 @@ public class VideoTvShow extends VideoAbstract {
 			int nbEpisodesInLastSeason = myTvShow.getSerie().getSeasons().get(nbSeasons-1).getEpisodes().size(); 
 			for(FileInfoVideo fileInfoVideo : files.values()) {
 				if(fileInfoVideo.getPlayCounter()>0) {
-					File file = new File(FilenameUtils.concat(
-					Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
-							Jamuz.getOptions().get("video.location.library")
-							:Jamuz.getOptions().get("video.rootPath"), 
-					fileInfoVideo.getRelativeFullPath()));
+					File file = fileInfoVideo.getVideoFile();
 					if(file.exists()) {
 						fileInfoVideo.setSourceName(tvShowStatus 
 						+" [missed "+getMissing().size() 
@@ -240,11 +236,7 @@ public class VideoTvShow extends VideoAbstract {
 								currentSeason=seasonumber;
 								lastEpisode=episodeNumber;
 							}
-							File file = new File(FilenameUtils.concat(
-							Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
-									Jamuz.getOptions().get("video.location.library")
-									:Jamuz.getOptions().get("video.rootPath"), 
-							fileInfoVideo.getRelativeFullPath()));
+							File file = fileInfoVideo.getVideoFile();
 							
 							if(file.exists()) {
 								if(seasonumber<(currentSeason-nbSeasonToKeep)) {

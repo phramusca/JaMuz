@@ -149,11 +149,17 @@ public class FileInfoVideo extends FileInfo {
     }
 
 	public File getVideoFile() {
-		return new File(FilenameUtils.concat(
-					Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
-							Jamuz.getOptions().get("video.location.library")
-							:Jamuz.getOptions().get("video.rootPath"), 
-					relativeFullPath));
+		return new File(FilenameUtils.concat(getLibraryPath(), relativeFullPath));
+	}
+	
+	public String getVideoPath() {
+		return FilenameUtils.concat(getLibraryPath(), relativePath);
+	}
+	
+	public String getLibraryPath() {
+		return Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
+					Jamuz.getOptions().get("video.location.library")
+					:Jamuz.getOptions().get("video.rootPath");
 	}
 
 	public String getTitle() {
