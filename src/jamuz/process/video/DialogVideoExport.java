@@ -199,16 +199,13 @@ public class DialogVideoExport extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                DialogVideoExport dialog = new DialogVideoExport(new javax.swing.JFrame(), true);
-                //Center the dialog on screen
-                dialog.setLocationRelativeTo(dialog.getParent());
-                //Display
-                dialog.setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> {
+			DialogVideoExport dialog = new DialogVideoExport(new javax.swing.JFrame(), true);
+			//Center the dialog on screen
+			dialog.setLocationRelativeTo(dialog.getParent());
+			//Display
+			dialog.setVisible(true);
+		});
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -215,8 +215,6 @@ public abstract class VideoAbstract implements Comparable {
 	 */
 	protected String moveFileAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn, FileInfo fileInfo, String newName) {
         
-        //Build new filename
-          
         String newFileName = StringManager.removeIllegal(newName) + "." + fileInfo.getExt(); //NOI18N
         
         //TODO: Better Handle files with no info. Ex:
@@ -252,15 +250,15 @@ public abstract class VideoAbstract implements Comparable {
         String source = FilenameUtils.concat(conn.rootPath, fileInfo.getRelativeFullPath());
 
         //SRT source and destination
-        String sourceSrt=FilenameUtils.concat(FilenameUtils.getFullPath(source), FilenameUtils.getBaseName(source)+".srt");  //NOI18N
-        String destinationSrt=FilenameUtils.concat(FilenameUtils.getFullPath(destination), FilenameUtils.getBaseName(destination)+".srt");  //NOI18N
+        String sourceSrt=FilenameUtils.concat(FilenameUtils.getFullPath(source), 
+				FilenameUtils.getBaseName(source)+".srt");  //NOI18N
+        String destinationSrt=FilenameUtils.concat(FilenameUtils.getFullPath(destination), 
+				FilenameUtils.getBaseName(destination)+".srt");  //NOI18N
         
         //Only moving if it needs a change
         if(!source.equals(destination)) {
             if(moveFile(myConn, source, destination, sourceSrt, destinationSrt)) {
                 //Update database with new file path and name
-				//FIXME VIDEO Does not seem that db is updated or not sent back
-				//as needs a refresh ...
                 if(!conn.updateFile(fileInfo.getIdFile(), newIdPath, newFileName)) {
 //                    fileInfo.setStatus(Inter.get("Msg.Video.ErrorUpdatingDb"));
                     //Rename back
@@ -280,10 +278,11 @@ public abstract class VideoAbstract implements Comparable {
 	 * @return
 	 */
 	protected String getStreamDetails4Filename(FileInfoVideo file) {
-        String newName=" ["+file.getVideoStreamDetails()+"]";
-        newName+=""+file.getAudioStreamDetails()+"";
-        newName+=""+file.getSubtitlesStreamDetails()+"";
-        return newName;
+		String streamDetails=file.getVideoStreamDetails();
+        streamDetails=streamDetails.equals("")?"":" ["+file.getVideoStreamDetails()+"]";
+        streamDetails+=""+file.getAudioStreamDetails()+"";
+        streamDetails+=""+file.getSubtitlesStreamDetails()+"";
+        return streamDetails;
     }
     
     private boolean moveFile(SSH myConn, String source, String destination, String sourceSrt, String destinationSrt) {

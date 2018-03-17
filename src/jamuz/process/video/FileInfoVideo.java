@@ -116,7 +116,16 @@ public class FileInfoVideo extends FileInfo {
 	public String getVideoStreamDetails() {
 		//TODO: Offer as an option
 //		display += " [" + videoStream.codec + " " + videoStream.width + "x" + videoStream.height + "] "; //NOI18N
-        return quality + " - " + duration;
+
+		if(!quality.equals(Quality.UNKNOWN) && duration!=null) {
+			return quality + " - " + duration;
+		} else if(quality.equals(Quality.UNKNOWN) && duration!=null) {
+			return duration;
+		} else if(!quality.equals(Quality.UNKNOWN) && duration==null) {
+			return quality.toString();
+		} else {
+			return "";
+		}
     }
 
 	/**
@@ -342,5 +351,4 @@ public class FileInfoVideo extends FileInfo {
 	public int getEpisodeNumber() {
         return episodeNumber;
     }
-    
 }

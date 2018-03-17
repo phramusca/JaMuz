@@ -211,7 +211,7 @@ public class VideoTvShow extends VideoAbstract {
             }
         }
 		
-		//FIXME VIDEO Use status AND lastSeason 
+		//FIXME VIDEO cleanup:  Use status AND lastSeason 
 		String status = ((MyTvShow) myVideo).getSerie().getStatus();
 		//Ended
 		//Returning Series
@@ -267,7 +267,7 @@ public class VideoTvShow extends VideoAbstract {
         if(!getTitleOri().equals("") && !getTitle().equals(getTitleOri())) {
             serieName+=" ["+getTitleOri()+"]"; //NOI18N
         }
-
+		
         for(FileInfoVideo file : files.values()) {
             
             String newName = serieName + " S"+String.format("%02d", file.getSeasonNumber()) 
@@ -292,6 +292,7 @@ public class VideoTvShow extends VideoAbstract {
      */
     @Override
     public boolean isWatched() {
+		//Note: same as isLocal but on purpose
         List<String> missing = getMissing();
         return missing==null?false:missing.size()<=0;
     }
@@ -302,7 +303,6 @@ public class VideoTvShow extends VideoAbstract {
 	 */
 	@Override
     public boolean isLocal() {
-		//FIXME VIDEO: isLocal is wrong, can't be the same as isWatched
         List<String> missing = getMissing();
         return missing==null?false:missing.size()<=0;
     }
