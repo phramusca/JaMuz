@@ -17,9 +17,12 @@
 package jamuz.process.video;
 
 import jamuz.FileInfo;
+import jamuz.Jamuz;
 import java.util.ArrayList;
 import java.util.List;
 import jamuz.utils.StringManager;
+import java.io.File;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -131,6 +134,14 @@ public class FileInfoVideo extends FileInfo {
 	public String getSubtitlesStreamDetails() {
         return subtitlesStreamDetails;
     }
+
+	File getVideoFile() {
+		return new File(FilenameUtils.concat(
+					Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
+							Jamuz.getOptions().get("video.location.library")
+							:Jamuz.getOptions().get("video.rootPath"), 
+					relativeFullPath));
+	}
     
 	public enum Quality {
 		HD1080("HD 1080"), //NOI18N

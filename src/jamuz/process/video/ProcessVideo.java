@@ -110,7 +110,7 @@ public class ProcessVideo extends ProcessAbstract {
 
 			for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
 
-				sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), fileInfoVideo.getRelativeFullPath()));
+				sourceFile = fileInfoVideo.getVideoFile();
 				destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.destination"), fileInfoVideo.getRelativeFullPath()));
 
 				//TODO: Allow export over SSH: merge with move option on list process
@@ -194,7 +194,8 @@ public class ProcessVideo extends ProcessAbstract {
         PanelVideo.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
         
         //Connect to SSH for moving/renaming files
-        if(move && Jamuz.getOptions().get("video.SSH.enabled").equals("true")) {
+        if(move && Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))
+				&& Boolean.parseBoolean(Jamuz.getOptions().get("video.SSH.enabled"))) {
             myConn = new SSH(Jamuz.getOptions().get("video.SSH.IP"), Jamuz.getOptions().get("video.SSH.user"), Jamuz.getOptions().get("video.SSH.pwd")); //NOI18N
             if(!myConn.connect()) {
                 return false;
@@ -272,9 +273,7 @@ public class ProcessVideo extends ProcessAbstract {
             //Check if files exist, and get size if so
             long length = 0;
             for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
-				//FIXME VIDEO export: Use a new option video.library.location
-                File file = new File(FilenameUtils.concat(Jamuz.getOptions().get("video.source"), 
-						fileInfoVideo.getRelativeFullPath()));
+                File file = fileInfoVideo.getVideoFile();
                 if(file.exists()) {
                     length += file.length();
                 }
@@ -335,7 +334,7 @@ public class ProcessVideo extends ProcessAbstract {
 		connKodi.disconnect();
 		return true;
 	}
-
+	
 	/**
 	 *
 	 */

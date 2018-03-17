@@ -43,16 +43,10 @@ public class DialogVideoExport extends javax.swing.JDialog {
     }
 
     private void displayOptions() {
-		String source = Jamuz.getOptions().get("video.source");
-		if(source.equals("")) {
-			source = Jamuz.getOptions().get("video.rootPath");
-		}
-        jTextSource.setText(source);
         jTextDestination.setText(Jamuz.getOptions().get("video.destination"));
     }
     
     private void setOptions() {
-        Jamuz.getOptions().set("video.source", jTextSource.getText());
         Jamuz.getOptions().set("video.destination", jTextDestination.getText());
     }
     
@@ -66,11 +60,8 @@ public class DialogVideoExport extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        jLabelVideoRootPath1 = new javax.swing.JLabel();
         jLabelDestination = new javax.swing.JLabel();
-        jButtonSelectSouce = new javax.swing.JButton();
         jButtonSelectDestination = new javax.swing.JButton();
-        jTextSource = new javax.swing.JTextField();
         jTextDestination = new javax.swing.JTextField();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
@@ -79,20 +70,10 @@ public class DialogVideoExport extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Export"));
 
-        jLabelVideoRootPath1.setText(Inter.get("Label.Source")); // NOI18N
-
         jLabelDestination.setText(Inter.get("Label.Destination")); // NOI18N
 
-        jButtonSelectSouce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
-        jButtonSelectSouce.setText(bundle.getString("Button.Select")); // NOI18N
-        jButtonSelectSouce.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSelectSouceActionPerformed(evt);
-            }
-        });
-
         jButtonSelectDestination.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
         jButtonSelectDestination.setText(bundle.getString("Button.Select")); // NOI18N
         jButtonSelectDestination.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -106,28 +87,17 @@ public class DialogVideoExport extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelVideoRootPath1)
-                    .addComponent(jLabelDestination))
+                .addComponent(jLabelDestination)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextSource, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
-                    .addComponent(jTextDestination))
+                .addComponent(jTextDestination, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonSelectSouce, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButtonSelectDestination, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addComponent(jButtonSelectDestination)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonSelectSouce)
-                    .addComponent(jTextSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelVideoRootPath1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonSelectDestination)
                     .addComponent(jTextDestination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -180,10 +150,6 @@ public class DialogVideoExport extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonSelectSouceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectSouceActionPerformed
-        getFolder(jTextSource, Inter.get("Label.Source"));
-    }//GEN-LAST:event_jButtonSelectSouceActionPerformed
-
     private void getFolder(JTextField textField, String title) {
         String selectedFolder=Swing.selectFolder(textField.getText(), title);
         if(!selectedFolder.equals("")) {  //NOI18N
@@ -197,17 +163,13 @@ public class DialogVideoExport extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSelectDestinationActionPerformed
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        this.dispose();
+        setOptions();
+        Jamuz.getOptions().save();
+		this.dispose();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-
-//FIXME VIDEO export: Use a new option video.library.location that points to video repository
-//By default, set it to root path as should be the same if kodi runs in local
-//In export, use this as source by default, but allow to change that source temporary
-//Use it for deletion and cleanup
-
-//TODO: Check options validity
+		//TODO: Check options validity
         setOptions();
         if(Jamuz.getOptions().save()) {
             PanelVideo.export();
@@ -253,11 +215,8 @@ public class DialogVideoExport extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JButton jButtonSelectDestination;
-    private javax.swing.JButton jButtonSelectSouce;
     private javax.swing.JLabel jLabelDestination;
-    private javax.swing.JLabel jLabelVideoRootPath1;
     private javax.swing.JPanel jPanel2;
     private static javax.swing.JTextField jTextDestination;
-    private javax.swing.JTextField jTextSource;
     // End of variables declaration//GEN-END:variables
 }
