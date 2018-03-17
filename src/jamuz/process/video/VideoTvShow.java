@@ -186,7 +186,7 @@ public class VideoTvShow extends VideoAbstract {
 	public ArrayList<FileInfoVideo> getFilesToCleanup(
 			int nbSeasonToKeep, 
 			int nbEpisodeToKeep,
-			boolean keepCanceled) {
+			boolean keepEnded, boolean keepCanceled) {
 		nbEpisodeToKeep=nbSeasonToKeep>0?-1:nbEpisodeToKeep;
 		MyTvShow myTvShow = (MyTvShow) myVideo;
 		
@@ -196,11 +196,17 @@ public class VideoTvShow extends VideoAbstract {
 			return filesToCleanup;
 		}
 		
-		if(!keepCanceled && tvShowStatus.equals("Canceled")){
-			//TODO VIDEO Cleanup: Check that all episodes/seasons have been watched (optional)
+		if((!keepEnded && tvShowStatus.equals("Ended"))
+				|| (!keepCanceled && tvShowStatus.equals("Canceled")) ){
 			
-			int nbSeasons=myTvShow.getSerie().getNumberOfSeasons();
-			int nbEpisodesInLastSeason = myTvShow.getSerie().getSeasons().get(nbSeasons-1).getEpisodes().size();
+			//FIXME VIDEO Cleanup: Check that all episodes/seasons have been watched (optional)
+			
+//			List<TvSeason> seasons = myTvShow.getSerie().getSeasons();
+//			if(seasons != null && files.size()>0) {
+//
+//			}
+			
+			
 			for(FileInfoVideo fileInfoVideo : files.values()) {
 				if(fileInfoVideo.getPlayCounter()>0) {
 					File file = new File(FilenameUtils.concat(
@@ -209,11 +215,7 @@ public class VideoTvShow extends VideoAbstract {
 							:Jamuz.getOptions().get("video.rootPath"), 
 					fileInfoVideo.getRelativeFullPath()));
 					if(file.exists()) {
-						fileInfoVideo.setSourceName(tvShowStatus
-								+" [missed "+getMissing().size()
-								+" -> S"+nbSeasons
-								+"E"+nbEpisodesInLastSeason
-								+"]");
+						fileInfoVideo.setSourceName(tvShowStatus);
 						filesToCleanup.add(fileInfoVideo);
 					}
 				}
@@ -248,8 +250,7 @@ public class VideoTvShow extends VideoAbstract {
 							if(file.exists()) {
 								if(seasonumber<(currentSeason-nbSeasonToKeep)) {
 									fileInfoVideo.setSourceName(
-											"< S"+(currentSeason-nbSeasonToKeep)
-											+" (last:S"+currentSeason+")");
+											"< S"+(currentSeason-nbSeasonToKeep));
 									
 									filesToCleanup.add(fileInfoVideo);
 								} else if(
@@ -257,8 +258,7 @@ public class VideoTvShow extends VideoAbstract {
 										&& seasonumber==currentSeason
 										&& episodeNumber<=(lastEpisode-nbEpisodeToKeep)) {
 									fileInfoVideo.setSourceName(
-											"<= S"+currentSeason+"E"+(lastEpisode-nbEpisodeToKeep)
-											+" (last:S"+currentSeason+"E"+lastEpisode+")");
+											"<= S"+currentSeason+"E"+(lastEpisode-nbEpisodeToKeep));
 									filesToCleanup.add(fileInfoVideo);
 								}
 							}

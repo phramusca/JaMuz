@@ -60,6 +60,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         jSpinnerVideoCleanupNbEpisodeToKeep = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
         jCheckBoxCleanupAllMovies1 = new javax.swing.JCheckBox();
+        jCheckBoxCleanupKeepEnded = new javax.swing.JCheckBox();
         jCheckBoxCleanupKeepCanceled = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jCheckBoxCleanupAllMovies = new javax.swing.JCheckBox();
@@ -67,7 +68,6 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Cleanup");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("TV Shows"));
 
@@ -123,6 +123,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
                             .addComponent(jLabel1)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addComponent(jCheckBoxCleanupAllMovies1)
+                    .addComponent(jCheckBoxCleanupKeepEnded)
                     .addComponent(jCheckBoxCleanupKeepCanceled))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -141,6 +142,8 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(jSpinnerVideoCleanupNbEpisodeToKeep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxCleanupKeepEnded)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxCleanupKeepCanceled)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -211,7 +214,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonVidecoConfirmCleanup)
                     .addComponent(cancelButton))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -228,7 +231,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 			DialogVideoCleanupConfirm.main(files, 
 					(Integer)jSpinnerVideoCleanupNbSeasonToKeep.getValue(),
 					(Integer)jSpinnerVideoCleanupNbEpisodeToKeep.getValue(),
-					jCheckBoxCleanupKeepCanceled.isSelected());
+					jCheckBoxCleanupKeepEnded.isSelected(), jCheckBoxCleanupKeepCanceled.isSelected());
 			
 		}
 		//FIXME VIDEO Cleanup: ended series all watched (revert some of commit 3c17017159b53313788b712c505cef3dc11414ad)
@@ -236,6 +239,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 
     private void jCheckBoxCleanupAllTvShowsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCleanupAllTvShowsItemStateChanged
         jSpinnerVideoCleanupNbSeasonToKeep.setEnabled(!jCheckBoxCleanupAllTvShows.isSelected());
+		jCheckBoxCleanupKeepEnded.setEnabled(!jCheckBoxCleanupAllTvShows.isSelected());
 		jCheckBoxCleanupKeepCanceled.setEnabled(!jCheckBoxCleanupAllTvShows.isSelected());
 		
 		if(!jCheckBoxCleanupAllTvShows.isSelected() 
@@ -289,6 +293,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBoxCleanupAllMovies1;
     private javax.swing.JCheckBox jCheckBoxCleanupAllTvShows;
     private javax.swing.JCheckBox jCheckBoxCleanupKeepCanceled;
+    private javax.swing.JCheckBox jCheckBoxCleanupKeepEnded;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
