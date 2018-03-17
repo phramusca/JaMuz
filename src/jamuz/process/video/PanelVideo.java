@@ -66,6 +66,7 @@ import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -445,7 +446,11 @@ public class PanelVideo extends javax.swing.JPanel {
     private void menuVideoOpen() {
         VideoAbstract fileInfoVideo = getSelected();
         if(fileInfoVideo!=null) {
-			Desktop.openFolder("//"+Jamuz.getOptions().get("video.source")+fileInfoVideo.getRelativeFullPath());
+			Desktop.openFolder("//"+FilenameUtils.concat(
+			Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
+					Jamuz.getOptions().get("video.location.library")
+					:Jamuz.getOptions().get("video.rootPath"), 
+			fileInfoVideo.getRelativeFullPath()));
         }
     }
 
@@ -466,7 +471,7 @@ public class PanelVideo extends javax.swing.JPanel {
 					JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 for(FileInfoVideo fileInfoVideo : video.getFiles().values()) {
-                    File videoFile = new File(Jamuz.getOptions().get("video.source")+fileInfoVideo.getRelativeFullPath());
+                    File videoFile = fileInfoVideo.getVideoFile();
                     boolean isDeleted = videoFile.delete();
                     //TODO: Remove from db (and send db back at some point)
                 }

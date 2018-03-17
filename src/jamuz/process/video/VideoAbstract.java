@@ -80,7 +80,7 @@ public abstract class VideoAbstract implements Comparable {
 	 * @return
 	 */
 	abstract public String getRelativeFullPath();
-
+	
 	/**
 	 *
 	 * @param buffer
@@ -259,6 +259,8 @@ public abstract class VideoAbstract implements Comparable {
         if(!source.equals(destination)) {
             if(moveFile(myConn, source, destination, sourceSrt, destinationSrt)) {
                 //Update database with new file path and name
+				//FIXME VIDEO Does not seem that db is updated or not sent back
+				//as needs a refresh ...
                 if(!conn.updateFile(fileInfo.getIdFile(), newIdPath, newFileName)) {
 //                    fileInfo.setStatus(Inter.get("Msg.Video.ErrorUpdatingDb"));
                     //Rename back
@@ -286,7 +288,8 @@ public abstract class VideoAbstract implements Comparable {
     
     private boolean moveFile(SSH myConn, String source, String destination, String sourceSrt, String destinationSrt) {
         //Move (and rename) the file over SSH or locally 
-        if(Jamuz.getOptions().get("video.SSH.enabled").equals("true")) {
+        if(Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))
+				&& Boolean.parseBoolean(Jamuz.getOptions().get("video.SSH.enabled"))) {
             //TODO: Check source and destination (H2 over SSH ?)      
 
             //Try to reConnect if somehow disconnected
