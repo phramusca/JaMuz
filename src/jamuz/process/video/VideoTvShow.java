@@ -177,18 +177,44 @@ public class VideoTvShow extends VideoAbstract {
         
 	/**
 	 *
+	 * @param nbSeasonToKeep
+	 * @param nbEpisodeToKeep
+	 * @param keepEnded
+	 * @param keepCanceled
 	 * @return
 	 */
 	@Override
 	public ArrayList<FileInfoVideo> getFilesToCleanup(
 			int nbSeasonToKeep, 
-			int nbEpisodeToKeep) {
-		
+			int nbEpisodeToKeep,
+			boolean keepEnded, boolean keepCanceled) {
 		nbEpisodeToKeep=nbSeasonToKeep>0?-1:nbEpisodeToKeep;
-		
 		MyTvShow myTvShow = (MyTvShow) myVideo;
+		
+		String serieStatus = ((MyTvShow) myVideo).getSerie().getStatus();
+		ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
+		if(serieStatus==null) {
+			return filesToCleanup;
+		}
+		
+		if((!keepEnded && serieStatus.equals("Ended"))
+				|| (!keepCanceled && serieStatus.equals("Canceled")) ){
+			for(FileInfoVideo fileInfoVideo : files.values()) {
+				if(fileInfoVideo.getPlayCounter()>0) {
+					File file = new File(FilenameUtils.concat(
+					Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
+							Jamuz.getOptions().get("video.location.library")
+							:Jamuz.getOptions().get("video.rootPath"), 
+					fileInfoVideo.getRelativeFullPath()));
+					if(file.exists()) {
+						filesToCleanup.add(fileInfoVideo);
+					}
+				}
+			}
+			return filesToCleanup;
+		}
+		
         List<TvSeason> seasons = myTvShow.getSerie().getSeasons();
-        ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
         if(seasons != null && files.size()>0) {
 			int currentSeason=-1;
 			int lastEpisode=-1;
@@ -226,11 +252,6 @@ public class VideoTvShow extends VideoAbstract {
                     }
                 }
             }
-			//FIXME VIDEO cleanup:  Use status AND lastSeason 
-			String status = ((MyTvShow) myVideo).getSerie().getStatus();
-			//Ended
-			//Returning Series
-			//Cancelled
         }
         return filesToCleanup;
 	}

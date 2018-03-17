@@ -1014,12 +1014,20 @@ public class PanelVideo extends javax.swing.JPanel {
 	 *
 	 * @param nbSeasonToKeep
 	 * @param nbEpisodeToKeep
+	 * @param keepEnded
+	 * @param keepCanceled
 	 */
-	public static void prepareCleanupTvShows(int nbSeasonToKeep, int nbEpisodeToKeep) {
+	public static void prepareCleanupTvShows(int nbSeasonToKeep, int nbEpisodeToKeep,
+			boolean keepEnded, boolean keepCanceled) {
+		
+		//FIXME VIDEO Cleanup: Move to DialogVideoCleanupConfirm
+		//in order to show progessbar (and in thread) as it checks for File.exists()
+		//and so it taks time and freeze UI a bit
 		ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
 		for(VideoAbstract video : processVideo.getTableModel().getFiles()) {
 			if(!video.isMovie()) {
-				filesToCleanup.addAll(video.getFilesToCleanup(nbSeasonToKeep, nbEpisodeToKeep)) ;
+				filesToCleanup.addAll(video.getFilesToCleanup(nbSeasonToKeep, nbEpisodeToKeep,
+				keepEnded, keepCanceled)) ;
 			}
         }
 		DialogVideoCleanupConfirm.main(filesToCleanup);

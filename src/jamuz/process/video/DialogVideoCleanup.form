@@ -91,6 +91,8 @@
                           </Group>
                       </Group>
                       <Component id="jCheckBoxCleanupAllMovies1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jCheckBoxCleanupKeepEnded" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jCheckBoxCleanupKeepCanceled" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -114,6 +116,10 @@
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jCheckBoxCleanupKeepEnded" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jCheckBoxCleanupKeepCanceled" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jCheckBoxCleanupAllMovies1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -141,7 +147,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="previous SEASON(s)"/>
+            <Property name="text" type="java.lang.String" value="previous watched SEASON(s)"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
@@ -171,6 +177,18 @@
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Keep all unwatched episodes"/>
             <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="jCheckBoxCleanupKeepEnded">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" value="Keep ended series"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="jCheckBoxCleanupKeepCanceled">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" value="Keep canceled series"/>
           </Properties>
         </Component>
       </SubComponents>
