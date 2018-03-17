@@ -179,7 +179,6 @@ public class VideoTvShow extends VideoAbstract {
 	 *
 	 * @param nbSeasonToKeep
 	 * @param nbEpisodeToKeep
-	 * @param keepEnded
 	 * @param keepCanceled
 	 * @return
 	 */
@@ -321,8 +320,7 @@ public class VideoTvShow extends VideoAbstract {
 		
         for(FileInfoVideo file : files.values()) {
             
-            String newName = serieName + " S"+String.format("%02d", file.getSeasonNumber()) 
-                    + "E"+String.format("%02d", file.getEpisodeNumber());
+            String newName = serieName + " "+file.getFormattedEpisodeNumber();
 
             //Not showing year as serie first release year, not episode year
             //TODO: Add episode year to filename

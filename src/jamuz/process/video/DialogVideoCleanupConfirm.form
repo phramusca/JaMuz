@@ -34,7 +34,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonVideoDoCleanup" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPaneVideoConfirmCleanup" pref="697" max="32767" attributes="2"/>
+                  <Component id="jScrollPaneVideoConfirmCleanup" pref="578" max="32767" attributes="2"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>

@@ -348,15 +348,7 @@ public class FileInfoVideo extends FileInfo {
 	 *
 	 * @return
 	 */
-	public int getSeasonNumber() {
-        return seasonNumber;
-    }
-
-	/**
-	 *
-	 * @return
-	 */
-	public int getEpisodeNumber() {
-        return episodeNumber;
-    }
+	public String getFormattedEpisodeNumber() {
+		return "S"+String.format("%02d", seasonNumber)+"E"+String.format("%02d", episodeNumber);
+	}
 }
