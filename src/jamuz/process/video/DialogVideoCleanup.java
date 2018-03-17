@@ -16,6 +16,7 @@
  */
 package jamuz.process.video;
 
+import java.util.List;
 import javax.swing.JSpinner;
 
 /**
@@ -24,17 +25,21 @@ import javax.swing.JSpinner;
  */
 public class DialogVideoCleanup extends javax.swing.JDialog {
 
+	private List<VideoAbstract> files;
+	
 	/**
 	 * Creates new form DialogCleanup
 	 * @param parent
 	 * @param modal
+	 * @param files
 	 */
-	public DialogVideoCleanup(java.awt.Frame parent, boolean modal) {
+	public DialogVideoCleanup(java.awt.Frame parent, boolean modal, List<VideoAbstract> files) {
 		super(parent, modal);
 		initComponents();
 		
 		((JSpinner.DefaultEditor) jSpinnerVideoCleanupNbSeasonToKeep.getEditor()).getTextField().setEditable(false);
 		((JSpinner.DefaultEditor) jSpinnerVideoCleanupNbEpisodeToKeep.getEditor()).getTextField().setEditable(false);
+		this.files = files;
 	}
 
 	/**
@@ -227,9 +232,11 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 		if(jCheckBoxCleanupAllMovies.isSelected() && jCheckBoxCleanupAllTvShows.isSelected()) {
 			dispose();
 		} else if(!jCheckBoxCleanupAllTvShows.isSelected()) {
-			PanelVideo.prepareCleanupTvShows((Integer)jSpinnerVideoCleanupNbSeasonToKeep.getValue(),
+			DialogVideoCleanupConfirm.main(files, 
+					(Integer)jSpinnerVideoCleanupNbSeasonToKeep.getValue(),
 					(Integer)jSpinnerVideoCleanupNbEpisodeToKeep.getValue(),
 					jCheckBoxCleanupKeepEnded.isSelected(), jCheckBoxCleanupKeepCanceled.isSelected());
+			
 		}
     }//GEN-LAST:event_jButtonVidecoConfirmCleanupActionPerformed
 
@@ -252,8 +259,9 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
     }//GEN-LAST:event_jSpinnerVideoCleanupNbSeasonToKeepStateChanged
 
 	/**
+	 * @param files
 	 */
-	public static void main() {
+	public static void main(List<VideoAbstract> files) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -270,10 +278,11 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 			java.util.logging.Logger.getLogger(DialogVideoCleanup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		//</editor-fold>
-
+		
 		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(() -> {
-			DialogVideoCleanup dialog = new DialogVideoCleanup(new javax.swing.JFrame(), true);
+			DialogVideoCleanup dialog = new DialogVideoCleanup(
+					new javax.swing.JFrame(), true, files);
 			//Center the dialog
 			dialog.setLocationRelativeTo(dialog.getParent());
 			dialog.setVisible(true);

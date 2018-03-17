@@ -25,7 +25,7 @@ import javax.swing.table.AbstractTableModel;
 
 
 public abstract class TableModelGeneric extends AbstractTableModel {
-    private String[] columnNames = {"ToBeDefined"};  //NOI18N
+    protected String[] columnNames = {"ToBeDefined"};  //NOI18N
 
 	/**
 	 *

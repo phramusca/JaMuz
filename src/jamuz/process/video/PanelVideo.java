@@ -1009,30 +1009,7 @@ public class PanelVideo extends javax.swing.JPanel {
         jTableVideo.setRowSorter(null);
         processVideo.listDb(jCheckBoxVideoMove.isSelected(), jCheckBoxVideoGet.isSelected(), jCheckBoxVideoTheMovieDb.isSelected());
 	}
-	
-	/**
-	 *
-	 * @param nbSeasonToKeep
-	 * @param nbEpisodeToKeep
-	 * @param keepEnded
-	 * @param keepCanceled
-	 */
-	public static void prepareCleanupTvShows(int nbSeasonToKeep, int nbEpisodeToKeep,
-			boolean keepEnded, boolean keepCanceled) {
-		
-		//FIXME VIDEO Cleanup: Move to DialogVideoCleanupConfirm
-		//in order to show progessbar (and in thread) as it checks for File.exists()
-		//and so it taks time and freeze UI a bit
-		ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
-		for(VideoAbstract video : processVideo.getTableModel().getFiles()) {
-			if(!video.isMovie()) {
-				filesToCleanup.addAll(video.getFilesToCleanup(nbSeasonToKeep, nbEpisodeToKeep,
-				keepEnded, keepCanceled)) ;
-			}
-        }
-		DialogVideoCleanupConfirm.main(filesToCleanup);
-	}
-	
+
     private void jTableVideoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableVideoMousePressed
         // If Right mouse click, select the line under mouse
         if ( SwingUtilities.isRightMouseButton( evt ) )
@@ -1200,7 +1177,7 @@ public class PanelVideo extends javax.swing.JPanel {
     }//GEN-LAST:event_jCheckBoxVideoGetItemStateChanged
 
     private void jButtonVideoCleanupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoCleanupActionPerformed
-        DialogVideoCleanup.main();
+        DialogVideoCleanup.main(processVideo.getTableModel().getFiles());
     }//GEN-LAST:event_jButtonVideoCleanupActionPerformed
 
     private static long getSpaceLeft(String pathOrFile) {
