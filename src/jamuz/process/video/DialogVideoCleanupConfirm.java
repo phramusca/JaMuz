@@ -19,7 +19,6 @@ package jamuz.process.video;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
-import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +44,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 	 * @param filesToAnalyze
 	 * @param nbSeasonToKeep
 	 * @param nbEpisodeToKeep
+	 * @param keepEnded
 	 * @param keepCanceled
 	 */
 	public DialogVideoCleanupConfirm(java.awt.Frame parent, boolean modal, 
@@ -96,7 +96,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 					progressBar.progress(video.getTitle());
 					if(!video.isMovie()) {
 						filesAnalyzed.addAll(video.getFilesToCleanup(nbSeasonToKeep, 
-								nbEpisodeToKeep, keepCanceled)) ;
+								nbEpisodeToKeep, keepEnded, keepCanceled)) ;
 					}
 				}
 				progressBar.reset();
@@ -252,11 +252,11 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 	 * @param filesToanalyze
 	 * @param nbSeasonToKeep
 	 * @param nbEpisodeToKeep
+	 * @param keepEnded
 	 * @param keepCanceled
 	 */
-	public static void main(List<VideoAbstract> filesToanalyze, 
-			int nbSeasonToKeep, int nbEpisodeToKeep,
-			boolean keepCanceled) {
+	public static void main(List<VideoAbstract> filesToanalyze, int nbSeasonToKeep, int nbEpisodeToKeep,
+			boolean keepEnded, boolean keepCanceled) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -279,7 +279,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 		java.awt.EventQueue.invokeLater(() -> {
 			DialogVideoCleanupConfirm dialog = new DialogVideoCleanupConfirm(
 					new javax.swing.JFrame(), true, filesToanalyze, 
-					nbSeasonToKeep, nbEpisodeToKeep, keepCanceled);
+					nbSeasonToKeep, nbEpisodeToKeep, keepEnded, keepCanceled);
 			//Center the dialog
 			dialog.setLocationRelativeTo(dialog.getParent());
 			dialog.setVisible(true);
