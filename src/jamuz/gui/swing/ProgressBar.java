@@ -36,9 +36,10 @@ public class ProgressBar extends JProgressBar {
 	 * Create a new progress bar
 	 */
 	public ProgressBar() {
+		progressString="";
+		paintString=true;
 	}
    
-    
 	/**
 	 * Reset progress bar
 	 */

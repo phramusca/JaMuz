@@ -1,7 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017 phramusca ( https://github.com/phramusca/JaMuz/ )
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package jamuz.remote;
 
@@ -9,9 +20,7 @@ import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
-import jamuz.gui.swing.ProgressBar;
 import jamuz.process.merge.ICallBackMerge;
-import jamuz.process.merge.PanelMerge;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.merge.StatSource;
 import jamuz.utils.Popup;
@@ -166,6 +175,7 @@ public class Server {
 								}
 								break;
 							case "FilesToMerge":
+								setStatus(login, "Received files to merge");
 								ArrayList<FileInfo> newTracks = new ArrayList<>();
 								JSONArray files = (JSONArray) jsonObject.get("files");
 								for(int i=0; i<files.size(); i++) {
@@ -183,17 +193,14 @@ public class Server {
 									}
 								}
 								if(dbIndexes.size()>0) {
-									//FIXME MERGE REMOTE: Display progress in JList
-									ProgressBar progressBar = new ProgressBar();
-									
+									setStatus(login, "Starting merge");
 									new ProcessMerge(
 										"Thread.Server.ProcessMerge."+login, 
 										dbIndexes, false, false, newTracks, 
-										progressBar, new CallBackMerge())
+											tableModel.getClient(login).getProgressBar(), 
+											new CallBackMerge(login))
 									.start();
 								}
-								//FIXME MERGE REMOTE Need to send back stgh to end process
-								//or any other way
 								break;
 						}
 					} catch (ParseException ex) {
@@ -247,47 +254,36 @@ public class Server {
 				} 
 				if(clientInfo.isSyncConnected()) {
 					clientInfoModel.setSyncConnected(false);
-					clientInfoModel.setStatus("Disconnected");
+					//clientInfoModel.setStatus("Disconnected");
 					callback.disconnectedSync(clientInfo.getId());
 				}
 				tableModel.fireTableDataChanged();
 			} 
 		}
     }
-
+	
 	class CallBackMerge implements ICallBackMerge {
+		private String login;
 
-		//FIXME MERGE REMOTE: How does remote know merge is done ? yet it does 
-		
-		//FIXME MERGE REMOTE: DO not display popup
+		public CallBackMerge(String login) {
+			this.login = login;
+		}
 		
 		@Override
 		public void completed(ArrayList<FileInfo> errorList, 
 				ArrayList<FileInfo> completedList, String popupMsg, 
 				String mergeReport) {
-			
-            if(!popupMsg.equals("")) {  //NOI18N
-                popupMsg="<html>"
-                    + "<h3>"+popupMsg+"</h3>";    //NOI18N //NOI18N
-                if(!mergeReport.equals("")) {  //NOI18N
-                    popupMsg+="<table cellpadding=\"2\" cellspacing=\"0\">"
-                    + "<tr>"   //NOI18N //NOI18N
-                    + "<td></td>"  //NOI18N
-                    + "<td style=\"border-bottom:1px solid black\"></td>"  //NOI18N
-                    + "<td style=\"border-bottom:1px solid black\" align=center>"
-							+Jamuz.getDb().getName()+"</td>"  //NOI18N
-                    + "</tr>"
-                    + mergeReport  //NOI18N //NOI18N
-                    + "</table>";  //NOI18N
-                }
-                popupMsg+="</html>";  //NOI18N
-                Jamuz.getLogger().info(popupMsg);
-                Popup.info(popupMsg);
-
-            }
+            Jamuz.getLogger().info(popupMsg);
+			setStatus(login, popupMsg + " " + completedList.size()
+					+" change(s). " + errorList.size() + " error(s).");
             //Read options again (only to read lastMergeDate !!)
             //TODO MERGE Use listeners !!
             PanelMain.readOptions(); 
+		}
+
+		@Override
+		public void refresh() {
+			tableModel.fireTableDataChanged();
 		}
 	}
 	
@@ -363,14 +359,6 @@ public class Server {
 	public boolean send(String login, JSONObject obj) {
 		if(clientMap.containsKey(login)) {
 			clientMap.get(login).send(obj);
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean send(String login, Map jsonAsMap) {
-		if(clientMap.containsKey(login)) {
-			clientMap.get(login).send(jsonAsMap);
 			return true;
 		}
 		return false;

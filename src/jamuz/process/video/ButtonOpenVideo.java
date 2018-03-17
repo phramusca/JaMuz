@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jamuz.gui.swing;
+package jamuz.process.video;
 
 import jamuz.utils.Desktop;
 import java.awt.Component; 
@@ -29,7 +29,7 @@ import javax.swing.JTable;
  * Cell editor extension to display button in a JTable
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class ButtonBrowseURL extends DefaultCellEditor {
+public class ButtonOpenVideo extends DefaultCellEditor {
 
     private JButton button = null;
     private String buttonValue = null;
@@ -38,7 +38,7 @@ public class ButtonBrowseURL extends DefaultCellEditor {
     /**
 	 * Create a new button cell editor
 	 */
-	public ButtonBrowseURL() {
+	public ButtonOpenVideo() {
         super(new JCheckBox());
         button = new JButton();
         button.setOpaque(true);
@@ -65,7 +65,7 @@ public class ButtonBrowseURL extends DefaultCellEditor {
     @Override
     public Object getCellEditorValue() {
         if (isClicked) {
-			Desktop.openBrowser(buttonValue);
+			Desktop.openFolder(buttonValue);			
         }
         isClicked = false;
         return buttonValue;

@@ -19,6 +19,9 @@ package jamuz.process.video;
 
 import jamuz.Jamuz;
 import jamuz.utils.Inter;
+import jamuz.utils.Swing;
+import java.io.File;
+import javax.swing.JTextField;
 
 /**
  *
@@ -41,8 +44,11 @@ public class DialogVideoOption extends javax.swing.JDialog {
 
     private void displayOptions() {
         jTextFieldVideoLocation.setText(Jamuz.getOptions().get("video.dbLocation"));
-        jTextFieldVideoRootPath.setText(Jamuz.getOptions().get("video.rootPath"));
-        jCheckBoxVideoMoveOnSSH.setSelected(Boolean.parseBoolean(Jamuz.getOptions().get("video.SSH.enabled")));
+		jTextFieldVideoRootPath.setText(Jamuz.getOptions().get("video.rootPath"));
+        jTextFieldVideoLibraryLocation.setText(Jamuz.getOptions().get("video.location.library"));
+        jCheckBoxRemoteRepository.setSelected(Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote")));
+		
+		jCheckBoxVideoMoveOnSSH.setSelected(Boolean.parseBoolean(Jamuz.getOptions().get("video.SSH.enabled")));
         jTextFieldVideoSSHip.setText(Jamuz.getOptions().get("video.SSH.IP"));
         jTextFieldVideoSSHuser.setText(Jamuz.getOptions().get("video.SSH.user"));
         jTextFieldVideoSSHpwd.setText(Jamuz.getOptions().get("video.SSH.pwd"));
@@ -53,8 +59,11 @@ public class DialogVideoOption extends javax.swing.JDialog {
     }
     
     private void setOptions() {
-        Jamuz.getOptions().set("video.dbLocation", jTextFieldVideoLocation.getText());
-        Jamuz.getOptions().set("video.rootPath", jTextFieldVideoRootPath.getText());
+		Jamuz.getOptions().set("video.dbLocation", jTextFieldVideoLocation.getText());
+		Jamuz.getOptions().set("video.rootPath", jTextFieldVideoRootPath.getText());
+        Jamuz.getOptions().set("video.location.library", jTextFieldVideoLibraryLocation.getText());
+		Jamuz.getOptions().set("video.library.remote", Boolean.toString(jCheckBoxRemoteRepository.isSelected()));
+		
         Jamuz.getOptions().set("video.SSH.enabled", Boolean.toString(jCheckBoxVideoMoveOnSSH.isSelected()));
         Jamuz.getOptions().set("video.SSH.IP", jTextFieldVideoSSHip.getText());
         Jamuz.getOptions().set("video.SSH.user", jTextFieldVideoSSHuser.getText());
@@ -77,15 +86,10 @@ public class DialogVideoOption extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jLabelVideoLocation = new javax.swing.JLabel();
         jTextFieldVideoLocation = new javax.swing.JTextField();
-        jTextFieldVideoRootPath = new javax.swing.JTextField();
         jLabelVideoRootPath = new javax.swing.JLabel();
-        jTextFieldVideoSSHip = new javax.swing.JTextField();
-        jCheckBoxVideoMoveOnSSH = new javax.swing.JCheckBox();
-        jTextFieldVideoSSHuser = new javax.swing.JTextField();
-        jTextFieldVideoSSHpwd = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        jTextFieldVideoRootPath = new javax.swing.JTextField();
+        jButtonSelectSouce = new javax.swing.JButton();
+        jButtonSelectSouce1 = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
         jPanelTheMovieDb = new javax.swing.JPanel();
@@ -96,27 +100,46 @@ public class DialogVideoOption extends javax.swing.JDialog {
         jTextFieldVideoTMDBlang = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jButtonSelectLibraryLocation = new javax.swing.JButton();
+        jLabelVideoLibraryLocation = new javax.swing.JLabel();
+        jTextFieldVideoLibraryLocation = new javax.swing.JTextField();
+        jCheckBoxRemoteRepository = new javax.swing.JCheckBox();
+        jTextFieldVideoSSHip = new javax.swing.JTextField();
+        jTextFieldVideoSSHuser = new javax.swing.JTextField();
+        jTextFieldVideoSSHpwd = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jCheckBoxVideoMoveOnSSH = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Kodi Database"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("XBMC Database"));
 
         jLabelVideoLocation.setText(Inter.get("Label.Location")); // NOI18N
 
         jTextFieldVideoLocation.setText("/home/raph/raph-desktop/.xbmc/userdata/Database/MyVideos78.db"); // NOI18N
 
-        jTextFieldVideoRootPath.setText("/home/raph/Vidéos/Films/"); // NOI18N
+        jLabelVideoRootPath.setText("Root Path");
 
+        jButtonSelectSouce.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
-        jLabelVideoRootPath.setText(bundle.getString("Label.RootPath")); // NOI18N
+        jButtonSelectSouce.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonSelectSouce.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSelectSouceActionPerformed(evt);
+            }
+        });
 
-        jCheckBoxVideoMoveOnSSH.setText("Move on SSH");
-
-        jLabel1.setText("IP:");
-
-        jLabel2.setText("User:");
-
-        jLabel3.setText("Password:");
+        jButtonSelectSouce1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
+        jButtonSelectSouce1.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonSelectSouce1.setEnabled(false);
+        jButtonSelectSouce1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSelectSouce1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -125,28 +148,16 @@ public class DialogVideoOption extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelVideoRootPath)
-                            .addComponent(jLabelVideoLocation))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldVideoLocation)
-                            .addComponent(jTextFieldVideoRootPath)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jCheckBoxVideoMoveOnSSH)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1)
-                        .addGap(23, 23, 23)
-                        .addComponent(jTextFieldVideoSSHip)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldVideoSSHuser)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldVideoSSHpwd)))
+                    .addComponent(jLabelVideoLocation)
+                    .addComponent(jLabelVideoRootPath))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldVideoRootPath)
+                    .addComponent(jTextFieldVideoLocation, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonSelectSouce)
+                    .addComponent(jButtonSelectSouce1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -155,20 +166,14 @@ public class DialogVideoOption extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelVideoLocation)
-                    .addComponent(jTextFieldVideoLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldVideoLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSelectSouce1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldVideoRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelVideoRootPath))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldVideoSSHip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBoxVideoMoveOnSSH)
-                    .addComponent(jTextFieldVideoSSHuser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldVideoSSHpwd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)))
+                    .addComponent(jLabelVideoRootPath)
+                    .addComponent(jButtonSelectSouce))
+                .addContainerGap())
         );
 
         jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
@@ -233,6 +238,99 @@ public class DialogVideoOption extends javax.swing.JDialog {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Warning: Passwords are stored as plain text in properties file !");
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        jButtonSelectLibraryLocation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
+        jButtonSelectLibraryLocation.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonSelectLibraryLocation.setEnabled(false);
+        jButtonSelectLibraryLocation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSelectLibraryLocationActionPerformed(evt);
+            }
+        });
+
+        jLabelVideoLibraryLocation.setText("Library location");
+        jLabelVideoLibraryLocation.setToolTipText("");
+
+        jTextFieldVideoLibraryLocation.setText("/home/raph/Vidéos/Films/"); // NOI18N
+        jTextFieldVideoLibraryLocation.setEnabled(false);
+
+        jCheckBoxRemoteRepository.setText("Files are in a remote location");
+        jCheckBoxRemoteRepository.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxRemoteRepositoryItemStateChanged(evt);
+            }
+        });
+
+        jTextFieldVideoSSHip.setEnabled(false);
+
+        jTextFieldVideoSSHuser.setEnabled(false);
+
+        jTextFieldVideoSSHpwd.setEnabled(false);
+
+        jLabel1.setText("IP:");
+
+        jLabel2.setText("User:");
+
+        jLabel3.setText("Password:");
+
+        jCheckBoxVideoMoveOnSSH.setText("Move on SSH");
+        jCheckBoxVideoMoveOnSSH.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxRemoteRepository)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxVideoMoveOnSSH)
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldVideoSSHip)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)
+                        .addGap(6, 6, 6)
+                        .addComponent(jTextFieldVideoSSHuser)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldVideoSSHpwd))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabelVideoLibraryLocation)
+                        .addGap(26, 26, 26)
+                        .addComponent(jTextFieldVideoLibraryLocation)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonSelectLibraryLocation)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxRemoteRepository)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelVideoLibraryLocation)
+                    .addComponent(jTextFieldVideoLibraryLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSelectLibraryLocation))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxVideoMoveOnSSH)
+                    .addComponent(jTextFieldVideoSSHip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldVideoSSHuser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldVideoSSHpwd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -243,10 +341,11 @@ public class DialogVideoOption extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSave))
                     .addComponent(jPanelTheMovieDb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -255,16 +354,20 @@ public class DialogVideoOption extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelTheMovieDb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel)
                     .addComponent(jButtonSave))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel2.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -281,6 +384,37 @@ public class DialogVideoOption extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
+    private void jButtonSelectSouceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectSouceActionPerformed
+        getFolder(jTextFieldVideoRootPath, Inter.get("Label.RootPath"));
+    }//GEN-LAST:event_jButtonSelectSouceActionPerformed
+
+    private void jButtonSelectLibraryLocationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectLibraryLocationActionPerformed
+        getFolder(jTextFieldVideoLibraryLocation, Inter.get("Label.RootPath"));
+    }//GEN-LAST:event_jButtonSelectLibraryLocationActionPerformed
+
+    private void jButtonSelectSouce1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectSouce1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonSelectSouce1ActionPerformed
+
+    private void jCheckBoxRemoteRepositoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxRemoteRepositoryItemStateChanged
+        enableRemoteRepo(jCheckBoxRemoteRepository.isSelected());
+    }//GEN-LAST:event_jCheckBoxRemoteRepositoryItemStateChanged
+
+	private void enableRemoteRepo(boolean enable) {
+		jTextFieldVideoLibraryLocation.setEnabled(enable);
+		jButtonSelectLibraryLocation.setEnabled(enable);
+		jTextFieldVideoSSHip.setEnabled(enable);
+		jTextFieldVideoSSHuser.setEnabled(enable);
+		jTextFieldVideoSSHpwd.setEnabled(enable);
+		jCheckBoxVideoMoveOnSSH.setEnabled(enable);
+	}
+	
+	private void getFolder(JTextField textField, String title) {
+        String selectedFolder=Swing.selectFolder(textField.getText(), title);
+        if(!selectedFolder.equals("")) {  //NOI18N
+            textField.setText(selectedFolder+File.separator);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -318,6 +452,10 @@ public class DialogVideoOption extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
+    private javax.swing.JButton jButtonSelectLibraryLocation;
+    private javax.swing.JButton jButtonSelectSouce;
+    private javax.swing.JButton jButtonSelectSouce1;
+    private javax.swing.JCheckBox jCheckBoxRemoteRepository;
     private javax.swing.JCheckBox jCheckBoxVideoMoveOnSSH;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -326,10 +464,13 @@ public class DialogVideoOption extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelVideoLibraryLocation;
     private javax.swing.JLabel jLabelVideoLocation;
     private javax.swing.JLabel jLabelVideoRootPath;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelTheMovieDb;
+    private javax.swing.JTextField jTextFieldVideoLibraryLocation;
     private javax.swing.JTextField jTextFieldVideoLocation;
     private javax.swing.JTextField jTextFieldVideoRootPath;
     private javax.swing.JTextField jTextFieldVideoSSHip;

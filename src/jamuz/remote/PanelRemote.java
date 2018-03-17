@@ -19,9 +19,11 @@ package jamuz.remote;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.gui.DialogQRcode;
+import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.CrunchifyQRCode;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.net.InetAddress;
@@ -32,8 +34,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JProgressBar;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -45,9 +50,6 @@ import org.json.simple.JSONObject;
 public class PanelRemote extends javax.swing.JPanel {
 
 	private static Server server;
-
-	//TODO: use a callBackServer for all usages of PanelMain
-	private ICallBackServer callBackServer;
 
 	/**
 	 * Creates new form PanelRemote
@@ -66,10 +68,8 @@ public class PanelRemote extends javax.swing.JPanel {
 		jLabelIP.setText(IP.toString());
 	}
 	
-	public void setCallback(ICallBackServer callback) {
-		this.callBackServer = callback;
-		server = new Server((Integer) jSpinnerPort.getValue(), callBackServer);
-		
+	public void initExtended(ICallBackServer callback) {
+		server = new Server((Integer) jSpinnerPort.getValue(), callback);
 		jTableRemote.setModel(server.getTableModel());
 		jTableRemote.setRowSorter(null);
 		//Adding columns from model. Cannot be done automatically on properties
@@ -78,13 +78,24 @@ public class PanelRemote extends javax.swing.JPanel {
 		setColumn(0, 60);
 		setColumn(1, 60);
 		setColumn(2, 200);
-		//setColumn(3, 20);
-		setColumn(4, 50);
+		setColumn(3, 200);
+		
+		TableColumn column = jTableRemote.getColumnModel().getColumn(4);
+		column.setCellRenderer(new ProgressCellRender());
 		
 		server.fillClients();
 		
 		startStopRemoteServer();
 	}
+	
+	public class ProgressCellRender extends JProgressBar implements TableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, 
+				boolean isSelected, boolean hasFocus, int row, int column) {
+			ProgressBar progressBar = (ProgressBar) value;
+            return progressBar;
+        }
+    }
 	
 	private void setColumn(int index, int width) {
         TableColumn column = jTableRemote.getColumnModel().getColumn(index);
@@ -220,21 +231,19 @@ public class PanelRemote extends javax.swing.JPanel {
 		enableConfig(false);
 		if(server!=null) {
 			server.closeClients();
-		}
-        if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
-			if(callBackServer!=null) {
+			if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
 				if(server.connect()) {
 					enableConfig(false);
 					jButtonQRcode.setEnabled(true);
 					jButtonStart.setText(Inter.get("Button.Pause"));
 				}
 			}
-        }
-        else {
-            server.close();
-            enableConfig(true);
-            jButtonStart.setText(Inter.get("Button.Start"));
-        }
+			else {
+				server.close();
+				enableConfig(true);
+				jButtonStart.setText(Inter.get("Button.Start"));
+			}
+		}
         jButtonStart.setEnabled(true);
 	}
    
