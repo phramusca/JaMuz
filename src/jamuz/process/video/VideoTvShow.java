@@ -191,14 +191,23 @@ public class VideoTvShow extends VideoAbstract {
 		nbEpisodeToKeep=nbSeasonToKeep>0?-1:nbEpisodeToKeep;
 		MyTvShow myTvShow = (MyTvShow) myVideo;
 		
-		String serieStatus = ((MyTvShow) myVideo).getSerie().getStatus();
+		String tvShowStatus = ((MyTvShow) myVideo).getSerie().getStatus();
 		ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
-		if(serieStatus==null) {
+		if(tvShowStatus==null) {
 			return filesToCleanup;
 		}
 		
-		if((!keepEnded && serieStatus.equals("Ended"))
-				|| (!keepCanceled && serieStatus.equals("Canceled")) ){
+		if((!keepEnded && tvShowStatus.equals("Ended"))
+				|| (!keepCanceled && tvShowStatus.equals("Canceled")) ){
+			
+			//FIXME VIDEO Cleanup: Check that all episodes/seasons have been watched (optional)
+			
+//			List<TvSeason> seasons = myTvShow.getSerie().getSeasons();
+//			if(seasons != null && files.size()>0) {
+//
+//			}
+			
+			
 			for(FileInfoVideo fileInfoVideo : files.values()) {
 				if(fileInfoVideo.getPlayCounter()>0) {
 					File file = new File(FilenameUtils.concat(
@@ -207,6 +216,7 @@ public class VideoTvShow extends VideoAbstract {
 							:Jamuz.getOptions().get("video.rootPath"), 
 					fileInfoVideo.getRelativeFullPath()));
 					if(file.exists()) {
+						fileInfoVideo.setSourceName(tvShowStatus);
 						filesToCleanup.add(fileInfoVideo);
 					}
 				}
@@ -240,11 +250,16 @@ public class VideoTvShow extends VideoAbstract {
 							
 							if(file.exists()) {
 								if(seasonumber<(currentSeason-nbSeasonToKeep)) {
+									fileInfoVideo.setSourceName(
+											"< S"+(currentSeason-nbSeasonToKeep));
+									
 									filesToCleanup.add(fileInfoVideo);
 								} else if(
 										nbEpisodeToKeep>-1
 										&& seasonumber==currentSeason
 										&& episodeNumber<=(lastEpisode-nbEpisodeToKeep)) {
+									fileInfoVideo.setSourceName(
+											"<= S"+currentSeason+"E"+(lastEpisode-nbEpisodeToKeep));
 									filesToCleanup.add(fileInfoVideo);
 								}
 							}
