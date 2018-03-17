@@ -100,10 +100,13 @@ public abstract class VideoAbstract implements Comparable {
 	 *
 	 * @param nbSeasonToKeep
 	 * @param nbEpisodeToKeep
+	 * @param keepEnded
+	 * @param keepCanceled
 	 * @return
 	 */
 	abstract protected ArrayList<FileInfoVideo> getFilesToCleanup(
-			int nbSeasonToKeep, int nbEpisodeToKeep);
+			int nbSeasonToKeep, int nbEpisodeToKeep,
+			boolean keepEnded, boolean keepCanceled);
 
 	/**
 	 *
