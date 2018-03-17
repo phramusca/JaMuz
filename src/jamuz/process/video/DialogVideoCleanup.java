@@ -16,6 +16,8 @@
  */
 package jamuz.process.video;
 
+import javax.swing.JSpinner;
+
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
@@ -30,6 +32,9 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 	public DialogVideoCleanup(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		initComponents();
+		
+		((JSpinner.DefaultEditor) jSpinnerVideoCleanupNbSeasonToKeep.getEditor()).getTextField().setEditable(false);
+		((JSpinner.DefaultEditor) jSpinnerVideoCleanupNbEpisodeToKeep.getEditor()).getTextField().setEditable(false);
 	}
 
 	/**
@@ -46,6 +51,10 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         jSpinnerVideoCleanupNbSeasonToKeep = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jSpinnerVideoCleanupNbEpisodeToKeep = new javax.swing.JSpinner();
+        jLabel4 = new javax.swing.JLabel();
+        jCheckBoxCleanupAllMovies1 = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jCheckBoxCleanupAllMovies = new javax.swing.JCheckBox();
         jButtonVidecoConfirmCleanup = new javax.swing.JButton();
@@ -53,7 +62,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Vidéos"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("TV Shows"));
 
         jCheckBoxCleanupAllTvShows.setSelected(true);
         jCheckBoxCleanupAllTvShows.setText("Keep all episodes");
@@ -65,10 +74,26 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 
         jSpinnerVideoCleanupNbSeasonToKeep.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jSpinnerVideoCleanupNbSeasonToKeep.setEnabled(false);
+        jSpinnerVideoCleanupNbSeasonToKeep.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinnerVideoCleanupNbSeasonToKeepStateChanged(evt);
+            }
+        });
 
-        jLabel1.setText("previous season(s)");
+        jLabel1.setText("previous SEASON(s)");
 
         jLabel2.setText("Keep");
+
+        jLabel3.setText("Keep");
+
+        jSpinnerVideoCleanupNbEpisodeToKeep.setModel(new javax.swing.SpinnerNumberModel(1, 0, null, 1));
+        jSpinnerVideoCleanupNbEpisodeToKeep.setEnabled(false);
+
+        jLabel4.setText("watched EPISODE(s) in current season");
+
+        jCheckBoxCleanupAllMovies1.setSelected(true);
+        jCheckBoxCleanupAllMovies1.setText("Keep all unwatched episodes");
+        jCheckBoxCleanupAllMovies1.setEnabled(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -80,23 +105,40 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
                     .addComponent(jCheckBoxCleanupAllTvShows)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
-                        .addComponent(jLabel2)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinnerVideoCleanupNbSeasonToKeep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel1)))
-                .addContainerGap(68, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSpinnerVideoCleanupNbEpisodeToKeep, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
+                            .addComponent(jSpinnerVideoCleanupNbSeasonToKeep))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4))))
+                    .addComponent(jCheckBoxCleanupAllMovies1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jCheckBoxCleanupAllTvShows)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jSpinnerVideoCleanupNbSeasonToKeep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jSpinnerVideoCleanupNbEpisodeToKeep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxCleanupAllMovies1)
                 .addContainerGap())
         );
 
@@ -177,13 +219,26 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 		if(jCheckBoxCleanupAllMovies.isSelected() && jCheckBoxCleanupAllTvShows.isSelected()) {
 			dispose();
 		} else if(!jCheckBoxCleanupAllTvShows.isSelected()) {
-			PanelVideo.prepareCleanupTvShows((Integer)jSpinnerVideoCleanupNbSeasonToKeep.getValue());
+			PanelVideo.prepareCleanupTvShows((Integer)jSpinnerVideoCleanupNbSeasonToKeep.getValue(),
+					(Integer)jSpinnerVideoCleanupNbEpisodeToKeep.getValue());
 		}
     }//GEN-LAST:event_jButtonVidecoConfirmCleanupActionPerformed
 
     private void jCheckBoxCleanupAllTvShowsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCleanupAllTvShowsItemStateChanged
         jSpinnerVideoCleanupNbSeasonToKeep.setEnabled(!jCheckBoxCleanupAllTvShows.isSelected());
+		
+		if(!jCheckBoxCleanupAllTvShows.isSelected() 
+				&& ((Integer)jSpinnerVideoCleanupNbSeasonToKeep.getValue())<=0) {
+			jSpinnerVideoCleanupNbEpisodeToKeep.setEnabled(true);
+		} else {
+			jSpinnerVideoCleanupNbEpisodeToKeep.setEnabled(false);
+		}
     }//GEN-LAST:event_jCheckBoxCleanupAllTvShowsItemStateChanged
+
+    private void jSpinnerVideoCleanupNbSeasonToKeepStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVideoCleanupNbSeasonToKeepStateChanged
+        jSpinnerVideoCleanupNbEpisodeToKeep.setEnabled(
+				((Integer)jSpinnerVideoCleanupNbSeasonToKeep.getValue())<=0);
+    }//GEN-LAST:event_jSpinnerVideoCleanupNbSeasonToKeepStateChanged
 
 	/**
 	 */
@@ -218,11 +273,15 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton jButtonVidecoConfirmCleanup;
     private javax.swing.JCheckBox jCheckBoxCleanupAllMovies;
+    private javax.swing.JCheckBox jCheckBoxCleanupAllMovies1;
     private javax.swing.JCheckBox jCheckBoxCleanupAllTvShows;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JSpinner jSpinnerVideoCleanupNbEpisodeToKeep;
     private javax.swing.JSpinner jSpinnerVideoCleanupNbSeasonToKeep;
     // End of variables declaration//GEN-END:variables
 }

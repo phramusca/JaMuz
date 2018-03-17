@@ -284,11 +284,11 @@ public class VideoMovie extends VideoAbstract {
 	 * @return
 	 */
 	@Override
-	protected ArrayList<FileInfoVideo> getFilesToCleanup(int nbSeasonToKeep) {
+	protected ArrayList<FileInfoVideo> getFilesToCleanup(int nbSeasonToKeep, int nbEpisodeToKeep) {
 		ArrayList<FileInfoVideo> videos = new ArrayList<>();
-		if(files.size()>0) {
-			videos.add(files.firstEntry().getValue());
-		}
+//		if(files.size()>0) {
+//			videos.add(files.firstEntry().getValue());
+//		}
 		return videos;
 	}
 } 

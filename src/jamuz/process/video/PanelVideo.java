@@ -1013,12 +1013,13 @@ public class PanelVideo extends javax.swing.JPanel {
 	/**
 	 *
 	 * @param nbSeasonToKeep
+	 * @param nbEpisodeToKeep
 	 */
-	public static void prepareCleanupTvShows(int nbSeasonToKeep) {
+	public static void prepareCleanupTvShows(int nbSeasonToKeep, int nbEpisodeToKeep) {
 		ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
 		for(VideoAbstract video : processVideo.getTableModel().getFiles()) {
 			if(!video.isMovie()) {
-				filesToCleanup.addAll(video.getFilesToCleanup(nbSeasonToKeep)) ;
+				filesToCleanup.addAll(video.getFilesToCleanup(nbSeasonToKeep, nbEpisodeToKeep)) ;
 			}
         }
 		DialogVideoCleanupConfirm.main(filesToCleanup);
