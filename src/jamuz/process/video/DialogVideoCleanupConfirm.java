@@ -127,11 +127,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 		Object[] donnee = new Object[]{
 			fileInfoVideo.getTitle()+" "+fileInfoVideo.getFormattedEpisodeNumber(),
 			fileInfoVideo.getSourceName(),
-			"//"+FilenameUtils.concat(
-			Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
-					Jamuz.getOptions().get("video.location.library")
-					:Jamuz.getOptions().get("video.rootPath"), 
-			fileInfoVideo.getRelativePath()),
+			"//"+fileInfoVideo.getVideoPath(),
 			};
 		tableModel.addRow(donnee);
 	}
@@ -232,11 +228,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 				jButtonVideoDoCleanup.setEnabled(false);
 				progressBar.setup(filesToCleanup.size());
 				for(FileInfoVideo fileInfoVideo : filesToCleanup) {
-					File file = new File(FilenameUtils.concat(
-					Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
-							Jamuz.getOptions().get("video.location.library")
-							:Jamuz.getOptions().get("video.rootPath"), 
-					fileInfoVideo.getRelativeFullPath()));
+					File file = fileInfoVideo.getVideoFile();
 					progressBar.progress(fileInfoVideo.getRelativeFullPath());
 					Jamuz.getLogger().log(Level.INFO, "Deleting {0}", file.getAbsolutePath());
 					file.delete();	
