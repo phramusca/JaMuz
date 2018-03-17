@@ -281,13 +281,12 @@ public class VideoMovie extends VideoAbstract {
 
 	/**
 	 *
-	 * @param keepEnded
 	 * @param keepCanceled
 	 * @return
 	 */
 	@Override
 	protected ArrayList<FileInfoVideo> getFilesToCleanup(int nbSeasonToKeep, int nbEpisodeToKeep,
-			boolean keepEnded, boolean keepCanceled) {
+			boolean keepCanceled) {
 		ArrayList<FileInfoVideo> videos = new ArrayList<>();
 //		if(files.size()>0) {
 //			videos.add(files.firstEntry().getValue());
