@@ -84,15 +84,10 @@
                               <Component id="jSpinnerVideoCleanupNbEpisodeToKeep" pref="55" max="32767" attributes="0"/>
                               <Component id="jSpinnerVideoCleanupNbSeasonToKeep" max="32767" attributes="0"/>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel4" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="jCheckBoxCleanupAllMovies1" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -128,7 +123,6 @@
       <SubComponents>
         <Component class="javax.swing.JCheckBox" name="jCheckBoxCleanupAllTvShows">
           <Properties>
-            <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Keep all episodes"/>
           </Properties>
           <Events>
@@ -140,7 +134,6 @@
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
               <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSpinnerVideoCleanupNbSeasonToKeepStateChanged"/>
@@ -166,7 +159,6 @@
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
               <SpinnerModel initial="1" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
@@ -223,7 +215,7 @@
     </Container>
     <Component class="javax.swing.JButton" name="jButtonVidecoConfirmCleanup">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Cleanup"/>
+        <Property name="text" type="java.lang.String" value="Cleanup ..."/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonVidecoConfirmCleanupActionPerformed"/>

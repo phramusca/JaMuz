@@ -22,12 +22,15 @@ import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.tv.TvEpisode;
 import info.movito.themoviedbapi.model.tv.TvSeason;
 import info.movito.themoviedbapi.model.tv.TvSeries;
+import jamuz.Jamuz;
 import jamuz.process.video.ProcessVideo.PathBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import jamuz.utils.Inter;
 import jamuz.utils.SSH;
 import jamuz.utils.StringManager;
+import java.io.File;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Video file information class
@@ -203,13 +206,21 @@ public class VideoTvShow extends VideoAbstract {
 								currentSeason=seasonumber;
 								lastEpisode=episodeNumber;
 							}
-							if(seasonumber<(currentSeason-nbSeasonToKeep)) {
-								filesToCleanup.add(fileInfoVideo);
-							} else if(
-									nbEpisodeToKeep>-1
-									&& seasonumber==currentSeason
-									&& episodeNumber<=(lastEpisode-nbEpisodeToKeep)) {
-								filesToCleanup.add(fileInfoVideo);
+							File file = new File(FilenameUtils.concat(
+							Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
+									Jamuz.getOptions().get("video.location.library")
+									:Jamuz.getOptions().get("video.rootPath"), 
+							fileInfoVideo.getRelativeFullPath()));
+							
+							if(file.exists()) {
+								if(seasonumber<(currentSeason-nbSeasonToKeep)) {
+									filesToCleanup.add(fileInfoVideo);
+								} else if(
+										nbEpisodeToKeep>-1
+										&& seasonumber==currentSeason
+										&& episodeNumber<=(lastEpisode-nbEpisodeToKeep)) {
+									filesToCleanup.add(fileInfoVideo);
+								}
 							}
                         }
                     }
