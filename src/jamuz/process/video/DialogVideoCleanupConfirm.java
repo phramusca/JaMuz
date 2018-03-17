@@ -17,8 +17,11 @@
 package jamuz.process.video;
 
 import jamuz.Jamuz;
+import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
@@ -32,6 +35,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 
 	private static TableModel tableModel;
 	private static ArrayList<FileInfoVideo> filesToCleanup;
+	protected static ProgressBar progressBar;
 	/**
 	 * Creates new form DialogCleanup
 	 * @param parent
@@ -41,6 +45,8 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 	public DialogVideoCleanupConfirm(java.awt.Frame parent, boolean modal, ArrayList<FileInfoVideo> filesToCleanup) {
 		super(parent, modal);
 		initComponents();
+		
+		progressBar = (ProgressBar)jProgressBarVideoCleanup;
 		
 		tableModel = (TableModel) jTableVideoCleanupConfirm.getModel();
 		//Set table model
@@ -136,8 +142,10 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
         jScrollPaneVideoConfirmCleanup = new javax.swing.JScrollPane();
         jTableVideoCleanupConfirm = new javax.swing.JTable();
+        jProgressBarVideoCleanup = new jamuz.gui.swing.ProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("List of files to be deleted");
 
         jButtonVideoDoCleanup.setText("Cleanup");
         jButtonVideoDoCleanup.addActionListener(new java.awt.event.ActionListener() {
@@ -158,6 +166,9 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
         jTableVideoCleanupConfirm.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPaneVideoConfirmCleanup.setViewportView(jTableVideoCleanupConfirm);
 
+        jProgressBarVideoCleanup.setString("");
+        jProgressBarVideoCleanup.setStringPainted(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -166,22 +177,24 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 583, Short.MAX_VALUE)
+                        .addComponent(jProgressBarVideoCleanup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonVideoDoCleanup))
-                    .addComponent(jScrollPaneVideoConfirmCleanup))
+                    .addComponent(jScrollPaneVideoConfirmCleanup, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPaneVideoConfirmCleanup, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                .addComponent(jScrollPaneVideoConfirmCleanup, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonVideoDoCleanup)
-                    .addComponent(cancelButton))
+                    .addComponent(cancelButton)
+                    .addComponent(jProgressBarVideoCleanup, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -193,7 +206,28 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void jButtonVideoDoCleanupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoDoCleanupActionPerformed
-        //FIXME VIDEO cleanup: ADD CODE TO DO ACTUAL CLEANUP
+		new Thread(){
+			@Override
+			public void run() {
+				cancelButton.setEnabled(false);
+				jButtonVideoDoCleanup.setEnabled(false);
+				progressBar.setup(filesToCleanup.size());
+				for(FileInfoVideo fileInfoVideo : filesToCleanup) {
+					File file = new File(FilenameUtils.concat(
+					Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
+							Jamuz.getOptions().get("video.location.library")
+							:Jamuz.getOptions().get("video.rootPath"), 
+					fileInfoVideo.getRelativeFullPath()));
+					progressBar.progress(fileInfoVideo.getRelativeFullPath());
+					Jamuz.getLogger().log(Level.INFO, "Deleting {0}", file.getAbsolutePath());
+					file.delete();	
+
+					//TODO: Remove from db (and send db back at some point)
+				}
+				progressBar.reset();
+				dispose();
+			}
+		}.start();
     }//GEN-LAST:event_jButtonVideoDoCleanupActionPerformed
 
 	/**
@@ -230,6 +264,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton jButtonVideoDoCleanup;
+    private javax.swing.JProgressBar jProgressBarVideoCleanup;
     private javax.swing.JScrollPane jScrollPaneVideoConfirmCleanup;
     private static javax.swing.JTable jTableVideoCleanupConfirm;
     // End of variables declaration//GEN-END:variables

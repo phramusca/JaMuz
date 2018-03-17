@@ -64,7 +64,6 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("TV Shows"));
 
-        jCheckBoxCleanupAllTvShows.setSelected(true);
         jCheckBoxCleanupAllTvShows.setText("Keep all episodes");
         jCheckBoxCleanupAllTvShows.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -73,7 +72,6 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         });
 
         jSpinnerVideoCleanupNbSeasonToKeep.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-        jSpinnerVideoCleanupNbSeasonToKeep.setEnabled(false);
         jSpinnerVideoCleanupNbSeasonToKeep.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerVideoCleanupNbSeasonToKeepStateChanged(evt);
@@ -87,7 +85,6 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         jLabel3.setText("Keep");
 
         jSpinnerVideoCleanupNbEpisodeToKeep.setModel(new javax.swing.SpinnerNumberModel(1, 0, null, 1));
-        jSpinnerVideoCleanupNbEpisodeToKeep.setEnabled(false);
 
         jLabel4.setText("watched EPISODE(s) in current season");
 
@@ -112,13 +109,10 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jSpinnerVideoCleanupNbEpisodeToKeep, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
                             .addComponent(jSpinnerVideoCleanupNbSeasonToKeep))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4))))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addComponent(jCheckBoxCleanupAllMovies1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -164,7 +158,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
                 .addGap(0, 12, Short.MAX_VALUE))
         );
 
-        jButtonVidecoConfirmCleanup.setText("Cleanup");
+        jButtonVidecoConfirmCleanup.setText("Cleanup ...");
         jButtonVidecoConfirmCleanup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonVidecoConfirmCleanupActionPerformed(evt);
