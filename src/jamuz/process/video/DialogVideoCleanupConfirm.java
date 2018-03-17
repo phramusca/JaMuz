@@ -57,9 +57,9 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 		
 		tableModel = (TableModel) jTableVideoCleanupConfirm.getModel();
 		//Set table model
-		String[] columnNames = {"Open", "S", "E", "Title", "Filename"};  //NOI18N
+		String[] columnNames = {"Open", "Reason", "S", "E", "Title", "Filename"};  //NOI18N
 		Object[][] data = {
-			{"Default", "Default", "Default", "Default", "Default"}  //NOI18N
+			{"Default", "Default", "Default", "Default", "Default", "Default"}  //NOI18N
 		};
 		tableModel.setModel(columnNames, data);
 		//clear the table
@@ -78,11 +78,12 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 				boolean hasFocus, int row, int column1) -> button);
         columnButton.setCellEditor(new ButtonOpenVideo());
         tableModel.setEditable(new Integer[] {0});
+		setColumn(1, 80, 100);
 		int maxWidth=30;
-        setColumn(1, maxWidth, maxWidth);
         setColumn(2, maxWidth, maxWidth);
-		setColumn(3, 150);
-		setColumn(4, 500);
+        setColumn(3, maxWidth, maxWidth);
+		setColumn(4, 200);
+//		setColumn(5, 300);
 	
 		new Thread() {
 			@Override
@@ -119,13 +120,14 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 	}
 	
 	private static void addRow(FileInfoVideo fileInfoVideo) {
-		//"Open", "S", "E", "Title", "Filename"
+		//"Open", "Reason", "S", "E", "Title", "Filename"
 		Object[] donnee = new Object[]{
 			"//"+FilenameUtils.concat(
 			Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
 					Jamuz.getOptions().get("video.location.library")
 					:Jamuz.getOptions().get("video.rootPath"), 
 			fileInfoVideo.getRelativePath()),
+			fileInfoVideo.getSourceName(),
 			fileInfoVideo.getSeasonNumber(), 
 			fileInfoVideo.getEpisodeNumber(), 
 			fileInfoVideo.getTitle(),
