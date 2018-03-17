@@ -284,7 +284,7 @@ public class VideoMovie extends VideoAbstract {
 	 * @return
 	 */
 	@Override
-	protected ArrayList<FileInfoVideo> getFilesToCleanup() {
+	protected ArrayList<FileInfoVideo> getFilesToCleanup(int nbSeasonToKeep) {
 		ArrayList<FileInfoVideo> videos = new ArrayList<>();
 		if(files.size()>0) {
 			videos.add(files.firstEntry().getValue());
