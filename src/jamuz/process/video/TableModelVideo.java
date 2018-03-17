@@ -40,10 +40,8 @@ public class TableModelVideo extends TableModelGeneric {
 	 * Create the table model
 	 */
 	public TableModelVideo() {
-        this.files = new ArrayList<>();
-        
-        //Set column names
-        this.setColumnNames(new String [] {
+        files = new ArrayList<>();
+		columnNames=new String [] {
             "", //NOI18N
             "", //NOI18N
             Inter.get("Label.Informations"), 
@@ -54,9 +52,7 @@ public class TableModelVideo extends TableModelGeneric {
             "Rating",
             "WatchList",
             "Favorite"
-        });
-
-		this.fireTableStructureChanged();
+        };
 	}
 
     @Override
@@ -293,5 +289,4 @@ public class TableModelVideo extends TableModelGeneric {
             //this.fireTableDataChanged();
         }
     }
-    
 }

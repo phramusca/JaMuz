@@ -17,4 +17,5 @@ public interface ICallBackMerge {
 	public void completed(ArrayList<FileInfo> errorList, 
 				ArrayList<FileInfo> completedList, String popupMsg, 
 				String mergeReport);
+	public void refresh();
 }

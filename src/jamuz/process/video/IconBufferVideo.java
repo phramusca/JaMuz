@@ -119,10 +119,10 @@ public class IconBufferVideo {
             ImageIO.write(bi, "png", getCacheFile(url)); //NOI18N
             
 		} catch (IIOException ex) {
-            Jamuz.getLogger().log(Level.WARNING, "", ex);
+            Jamuz.getLogger().log(Level.FINE, "", ex);
         }
         catch (IOException | NullPointerException ex) {
-			Jamuz.getLogger().log(Level.SEVERE, "", ex);
+			Jamuz.getLogger().log(Level.FINE, "", ex);
 		}
         return icon;
     }
