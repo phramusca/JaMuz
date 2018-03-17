@@ -98,9 +98,8 @@ public class ProcessVideo extends ProcessAbstract {
         
 		List<VideoAbstract> filestoExport = tableModel.getFiles().stream().filter(video -> video.isSelected()).collect(Collectors.toList());
 		
-		//The following should never happen as it is checked in PanelVideo already
-		if(filestoExport.size()<=0) {
-			Popup.warning("You should select some files to export first");
+		if(Jamuz.getOptions().get("video.destination").startsWith("{")) {
+			Popup.warning("Invalid destination folder.");
 			return false;
 		}
 		
@@ -264,10 +263,6 @@ public class ProcessVideo extends ProcessAbstract {
                 // and that happens only when you open files in a list
                 //So for tv shows, you have to go through all or create an "All" playlist and open it
                 //Then wait a while before processing again
-                
-				//TODO: Upate Kodi database with new names
-				//Or, at least, Warn that kodi needs cleanup/update
-
                 video.moveFilesAndSrt(buffer, connKodi, myConn); 
             }
             //Check if files exist, and get size if so

@@ -613,8 +613,14 @@ public class PanelVideo extends javax.swing.JPanel {
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
         jCheckBoxVideoGet.setText(bundle.getString("MainGUI.jCheckBoxVideoGet.text")); // NOI18N
+        jCheckBoxVideoGet.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxVideoGetItemStateChanged(evt);
+            }
+        });
 
         jCheckBoxVideoMove.setText(bundle.getString("MainGUI.jCheckBoxVideoMove.text")); // NOI18N
+        jCheckBoxVideoMove.setEnabled(false);
 
         jButtonVideoOptions.setText("Options");
         jButtonVideoOptions.addActionListener(new java.awt.event.ActionListener() {
@@ -941,7 +947,7 @@ public class PanelVideo extends javax.swing.JPanel {
 	public static void enableProcess(boolean enable) {
         jButtonVideoList.setEnabled(enable);
         jCheckBoxVideoGet.setEnabled(enable);
-        jCheckBoxVideoMove.setEnabled(enable);
+//        jCheckBoxVideoMove.setEnabled(enable);
 		jCheckBoxVideoTheMovieDb.setEnabled(enable);
         jButtonVideoExport.setEnabled(enable);
         jButtonVideoOptions.setEnabled(enable);
@@ -1162,6 +1168,13 @@ public class PanelVideo extends javax.swing.JPanel {
             filterVideo(false);
         }
     }//GEN-LAST:event_jListVideoRatingValueChanged
+
+    private void jCheckBoxVideoGetItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxVideoGetItemStateChanged
+        //Not allowing move if not getting db first
+		//to avoid bad data (even if we can not be sure that retrieved kodi db is up-to-date)
+		//+if we move without getting db, it won't be sent back
+		jCheckBoxVideoMove.setEnabled(jCheckBoxVideoGet.isSelected());
+    }//GEN-LAST:event_jCheckBoxVideoGetItemStateChanged
 
     
     private static long getSpaceLeft(String pathOrFile) {

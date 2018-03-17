@@ -289,7 +289,7 @@ public class DbConnVideo extends DbConn {
 				title=getStringValue(rs, "title");  //NOI18N
                 year=getStringValue(rs, "year", "");
                 if(year.length()>4) {
-                    year=StringManager.Left(year, 4); ;  //NOI18N
+                    year=StringManager.Left(year, 4);
                 }
 				thumbnails=getStringValue(rs, "thumbnails");  //NOI18N
 				titleOri=getStringValue(rs, "titleOri", "");  //NOI18N
@@ -443,13 +443,15 @@ public class DbConnVideo extends DbConn {
 	 * @param idName
 	 * @return
 	 */
-	public boolean getBytesFromCache(Map<Integer, byte[]> objects, String table, String idName) {
+	public boolean getBytesFromCache(Map<Integer, byte[]> objects, 
+			String table, String idName) {
         ResultSet rs = null;
 		byte[] bytes;
 		int id;
 		try {
-			PreparedStatement stSelectAllTvShowsFromCache = null;
-			stSelectAllTvShowsFromCache = connection.prepareStatement("SELECT "+idName+", obj FROM "+table+"");    //NOI18N 
+			PreparedStatement stSelectAllTvShowsFromCache = 
+					connection.prepareStatement(""
+							+ "SELECT "+idName+", obj FROM "+table+"");    //NOI18N 
 			rs = stSelectAllTvShowsFromCache.executeQuery();
 			while(rs.next()){
 				id=rs.getInt(idName);
