@@ -700,15 +700,15 @@ public class PanelMain extends javax.swing.JFrame {
 //    private static JButton button;
 
     /**
-     * Read options
+     * Set options
      *
      * @return
      */
-    public static boolean readOptions() {
+    public static boolean setOptions() {
         if (!Jamuz.getMachine().read()) {
             return false;
         }
-        //FIXME OPTIONS Use listeners to address the following (and more)
+        //TODO OPTIONS Use listeners to address the following (and more)
 		//Rationalize to avoid potential errors
         //(especially when called from a process, this would not do the trick, 
 		//need a way to bypass process check)

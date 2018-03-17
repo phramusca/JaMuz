@@ -278,7 +278,7 @@ public class Server {
 					+" change(s). " + errorList.size() + " error(s).");
             //Read options again (only to read lastMergeDate !!)
             //TODO MERGE Use listeners !!
-            PanelMain.readOptions(); 
+            PanelMain.setOptions(); 
 		}
 
 		@Override
