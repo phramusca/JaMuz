@@ -177,15 +177,10 @@ public class VideoTvShow extends VideoAbstract {
 	 * @return
 	 */
 	@Override
-	public ArrayList<FileInfoVideo> getFilesToCleanup() {
-		
-		//FIXME VIDEO cleanup: Add as a parameter: 0 will keep only current season
-		int nbSeasonToKeep = 0;
-		
+	public ArrayList<FileInfoVideo> getFilesToCleanup(int nbSeasonToKeep) {
 		MyTvShow myTvShow = (MyTvShow) myVideo;
         List<TvSeason> seasons = myTvShow.getSerie().getSeasons();
         ArrayList<FileInfoVideo> filesToCleanup = new ArrayList<>();
-
         if(seasons != null) {
 			int currentSeason=-1;
 			int seasonumber;
@@ -209,14 +204,13 @@ public class VideoTvShow extends VideoAbstract {
                     }
                 }
             }
+			
+			//FIXME VIDEO cleanup:  Use status AND lastSeason 
+			String status = ((MyTvShow) myVideo).getSerie().getStatus();
+			//Ended
+			//Returning Series
+			//Cancelled
         }
-		
-		//FIXME VIDEO cleanup:  Use status AND lastSeason 
-		String status = ((MyTvShow) myVideo).getSerie().getStatus();
-		//Ended
-		//Returning Series
-		//Cancelled
-		
         return filesToCleanup;
 	}
 	
