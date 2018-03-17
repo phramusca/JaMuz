@@ -25,7 +25,7 @@ import javax.swing.JSpinner;
  */
 public class DialogVideoCleanup extends javax.swing.JDialog {
 
-	private List<VideoAbstract> files;
+	private final List<VideoAbstract> files;
 	
 	/**
 	 * Creates new form DialogCleanup
@@ -98,6 +98,9 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
         jCheckBoxCleanupAllMovies1.setSelected(true);
         jCheckBoxCleanupAllMovies1.setText("Keep all unwatched episodes");
         jCheckBoxCleanupAllMovies1.setEnabled(false);
+
+        jCheckBoxCleanupKeepEnded.setSelected(true);
+        jCheckBoxCleanupKeepEnded.setText("Keep ended series");
 
         jCheckBoxCleanupKeepCanceled.setText("Keep canceled series");
 
@@ -232,9 +235,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 					(Integer)jSpinnerVideoCleanupNbSeasonToKeep.getValue(),
 					(Integer)jSpinnerVideoCleanupNbEpisodeToKeep.getValue(),
 					jCheckBoxCleanupKeepEnded.isSelected(), jCheckBoxCleanupKeepCanceled.isSelected());
-			
 		}
-		//FIXME VIDEO Cleanup: ended series all watched (revert some of commit 3c17017159b53313788b712c505cef3dc11414ad)
     }//GEN-LAST:event_jButtonVidecoConfirmCleanupActionPerformed
 
     private void jCheckBoxCleanupAllTvShowsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCleanupAllTvShowsItemStateChanged
