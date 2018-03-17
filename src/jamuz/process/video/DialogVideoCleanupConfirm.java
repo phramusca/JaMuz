@@ -19,6 +19,7 @@ package jamuz.process.video;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
+import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 	 */
 	public DialogVideoCleanupConfirm(java.awt.Frame parent, boolean modal, 
 			List<VideoAbstract> filesToAnalyze, int nbSeasonToKeep, 
-			int nbEpisodeToKeep, boolean keepCanceled) {
+			int nbEpisodeToKeep, boolean keepEnded, boolean keepCanceled) {
 		super(parent, modal);
 		initComponents();
 		
@@ -82,11 +83,11 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
         tableModel.setEditable(new Integer[] {2});
 
 		displayFiles(filesToAnalyze, nbSeasonToKeep, 
-			nbEpisodeToKeep, keepCanceled);
+			nbEpisodeToKeep, keepEnded, keepCanceled);
 	}
 	
 	private void displayFiles(List<VideoAbstract> filesToAnalyze, int nbSeasonToKeep, 
-			int nbEpisodeToKeep, boolean keepCanceled) {
+			int nbEpisodeToKeep, boolean keepEnded, boolean keepCanceled) {
 		new Thread() {
 			@Override
 			public void run() {
