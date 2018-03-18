@@ -57,15 +57,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DbConnJaMuz extends StatSourceJaMuzTags {
 
-    //TODO: How to log SQL generated queries ?
+    //TODO DB: How to log SQL generated queries ?
     //http://code.google.com/p/log4jdbc/
     
-    //TODO: code review database methods:
+    //FIXME REVIEW: code review database methods:
     //Check that nbRowsAffected is properly checked (==1 or >0 depending)
     //Check that all functions return a boolean and that this one is used
     //Check that batches are used whenever possible and needed
     //http://stackoverflow.com/questions/2467125/reusing-a-preparedstatement-multiple-times
     
+	//FIXME REVIEW: Internationalization
+	
     private PreparedStatement stSelectFilesStats4Source;
     private PreparedStatement stSelectFilesStats4SourceAndDevice;
     
@@ -295,7 +297,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                         return false;
                     }
                 }
-				//TODO: Remove the line below if rollback and finally tests are 
+				//TODO DB TEST: Remove the line below if rollback and finally tests are 
 				//successfull
 				dbConn.connection.setAutoCommit(true);
                 return true;
@@ -307,7 +309,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             }
         } catch (SQLException ex) {
             Popup.error("updatePlaylist(" + playlist.toString() + ")", ex);   //NOI18N
-			//TODO: TEST the rollback block below and apply to other if successfull
+			//TODO DB TEST the rollback block below and apply to other if successfull
 //			try {
 //				dbConn.connection.rollback();
 //			} catch (SQLException ex1) {
@@ -315,7 +317,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
 //			}
             return false;
         } 
-		//TODO: TEST the finally block below and apply to other if successfull
+		//TODO DB TEST the finally block below and apply to other if successfull
 //		finally {
 //			try {
 //				dbConn.connection.setAutoCommit(true);
@@ -1011,9 +1013,11 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      */
     public synchronized boolean setCheckedFlagReset(CheckedFlag checkedFlag) {
         try {
-            //TODO: Shall we update the paths set as deleted or not ?
+            //FIXME CHECK: Shall we update the paths set as deleted or not ?
             PreparedStatement stUpdateCheckedFlagReset
-                    = dbConn.connection.prepareStatement("UPDATE path SET checked=0 WHERE checked=? AND deleted=0");   //NOI18N
+                    = dbConn.connection.prepareStatement(
+							"UPDATE path SET checked=0 "
+									+ "WHERE checked=? AND deleted=0");   //NOI18N
             stUpdateCheckedFlagReset.setInt(1, checkedFlag.getValue());
             stUpdateCheckedFlagReset.executeUpdate();
             //we can have no rows affected if library is empty so not checking it
@@ -1552,14 +1556,17 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             if (nbRowsAffected > 0) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stDeleteDevice, id={0} # row(s) affected: +{1}", new Object[]{id, nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, 
+						"stDeleteDevice, id={0} # row(s) affected: +{1}", 
+						new Object[]{id, nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
 			//FIXME DB: Happens when the device is linked to a stat source => 
 			// => Popup this nicely to user !
 			//instead of:
-			//java.sql.SQLException: [SQLITE_CONSTRAINT]  Abort due to constraint violation (foreign key constraint failed)
+			//java.sql.SQLException: [SQLITE_CONSTRAINT]  
+				//Abort due to constraint violation (foreign key constraint failed)
             Popup.error("deleteDevice(" + id + ")", ex);   //NOI18N
             return false;
         }
