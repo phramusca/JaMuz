@@ -17,7 +17,6 @@
 
 package jamuz.process.book;
 
-import jamuz.process.video.*;
 import jamuz.Jamuz;
 import java.io.File;
 import javax.swing.JTextField;
@@ -197,16 +196,13 @@ public class DialogBookExport extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                DialogBookExport dialog = new DialogBookExport(new javax.swing.JFrame(), true);
-                //Center the dialog on screen
-                dialog.setLocationRelativeTo(dialog.getParent());
-                //Display
-                dialog.setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> {
+			DialogBookExport dialog = new DialogBookExport(new javax.swing.JFrame(), true);
+			//Center the dialog on screen
+			dialog.setLocationRelativeTo(dialog.getParent());
+			//Display
+			dialog.setVisible(true);
+		});
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

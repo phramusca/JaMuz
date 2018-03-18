@@ -16,7 +16,6 @@
  */
 package jamuz.process.book;
 
-import info.movito.themoviedbapi.Utils;
 import jamuz.Jamuz;
 import jamuz.gui.swing.FileSizeComparable;
 import jamuz.utils.StringManager;
@@ -32,8 +31,8 @@ import org.apache.commons.io.FilenameUtils;
 public class Book implements Comparable {
 	private final String title; 
 	private final String title_sort;
-	private final String pubdate; //FIXME BOOK Format pubdate (keep only year & maybe month)
-	private final String author; //FIXME BOOK Filter author (split by /)
+	private final String pubdate; //FIXME LOW BOOK Filter pubdate (& format: keep only year & maybe month)
+	private final String author; //FIXME LOW BOOK Filter author (use books_authors_link => ArrayList)
 	private final String author_sort;  
 	private final String uuid; 
 	private final String filenameWithoutExtension;
@@ -41,8 +40,8 @@ public class Book implements Comparable {
 	private FileSizeComparable length;
 	private final String comment; 
 	private final String rating; 
-	private final String language; //FIXME BOOK Filter language
-	private final List<String> formats; //FIXME BOOK Filter format
+	private final String language; //FIXME LOW BOOK Filter language (use books_languages_link)
+	private final List<String> formats; //FIXME LOW BOOK Filter format
 	private final List<String> tags;
 	private final String tagStr;
 
@@ -52,7 +51,7 @@ public class Book implements Comparable {
 	 * @return the value of format
 	 */
 	public String getFormat() {
-		//FIXME BOOK LOW A book can have multiple versions (epub and azw for instance)
+		//FIXME LOW BOOK A book can have multiple formats (epub and azw for instance)
 		//Which to select ?
 		return formats.contains("EPUB")?"epub":formats.get(0).toLowerCase();
 	}
@@ -75,7 +74,7 @@ public class Book implements Comparable {
 		this.filenameWithoutExtension = filenameWithoutExtension;		
 		this.formats = StringManager.parseSlashList(formats);
 		this.tagStr=tags;
-		this.tags=StringManager.parseSlashList(tags);
+		this.tags=StringManager.parseSlashList(tags); //TODO BOOK Use books_tags_link instead
 	}
 
 	/**
@@ -135,29 +134,33 @@ public class Book implements Comparable {
 		return rating;
 	}
 	
-	private String getPath() {
+	private String getLocalPath() {
 		return FilenameUtils.concat(
 								Jamuz.getOptions().get("book.calibre"), 
 								path);
 	}
 	
+	public String getRelativeFullPath() {
+		return FilenameUtils.concat(path,
+				filenameWithoutExtension).concat(".").concat(getFormat());
+	}
+	
 	private String getCoverFilePath() {
 		String file = FilenameUtils.concat(
-						getPath(), 
+						getLocalPath(), 
 						"c2o_resizedcover.jpg");
 		File iconFile = new File(file);
 		if(!iconFile.exists()) {
 			file = FilenameUtils.concat(
-						getPath(), 
+						getLocalPath(), 
 						"cover.jpg");
 		}
 		return file;
 	}
 	
-	public String getFilePath() {
-		return FilenameUtils.concat(getPath(), filenameWithoutExtension)
+	public String getFullPath() {
+		return FilenameUtils.concat(getLocalPath(), filenameWithoutExtension)
 				.concat(".").concat(getFormat());
-		
 	}
 
 	/**

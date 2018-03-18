@@ -25,6 +25,8 @@ import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.ProcessAbstract;
+import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,6 +73,7 @@ public class ProcessBook extends ProcessAbstract {
                 Popup.error(Inter.get("Msg.Process.Aborted"), ex); //NOI18N
             }
             finally {
+				Popup.info("Export book complete");
                 PanelBook.progressBar.reset();
                 PanelBook.enableProcess(true);
             }
@@ -94,32 +97,23 @@ public class ProcessBook extends ProcessAbstract {
         for (Book book : filestoExport) {
 			checkAbort();
 			PanelBook.progressBar.progress(book.getTitle());
-
-			//FIXME BOOK Check and complete Export feature
-			
-			
-//			sourceFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("source"), book.getRelativeFullPath()));
-//			destinationFile = new File(FilenameUtils.concat(Jamuz.getOptions().get("destination"), book.getRelativeFullPath()));
-
-//			if(sourceFile.exists()) {
-//				if(!destinationFile.exists()) {
-//					checkAbort();
-//					PanelBook.progressBar.setIndeterminate(true);
-//
-//					try {
-//						FileSystem.copyFile(sourceFile, destinationFile);
-//						tableModel.select(book, false);
-//					} catch (IOException ex) {
-//						book.setStatus(MessageFormat.format(Inter.get("Msg.Video.ExportFailed"), ex.toString()));
-//					}
-//				}
-//				else {
-//					book.setStatus(Inter.get("Msg.Video.DestinationExist"));
-//				}
-//			}
-//			else {
-//				book.setStatus(Inter.get("Msg.Video.SourceFileMissing"));
-//			}
+			sourceFile = new File(book.getFullPath());
+			//FIXME LOW BOOK Use a template for export destination
+			destinationFile = new File(FilenameUtils.concat(
+					Jamuz.getOptions().get("book.destination"), 
+					book.getRelativeFullPath()));
+			if(sourceFile.exists() && !destinationFile.exists()) {
+				checkAbort();
+				PanelBook.progressBar.setIndeterminate(true);
+				try {
+					FileSystem.copyFile(sourceFile, destinationFile);
+					tableModel.select(book, false);
+				} catch (IOException ex) {
+					Jamuz.getLogger().warning(MessageFormat.format(
+							Inter.get("Msg.Video.ExportFailed"), 
+							ex.toString()));
+				}
+			}
 		}
         return true;
     }
@@ -132,7 +126,7 @@ public class ProcessBook extends ProcessAbstract {
         this.tableModel.clear();
         this.getDb = getDb;
         
-        ProcessListDb process = new ProcessListDb("Thread.ProcessVideo.listDb");
+        ProcessListDb process = new ProcessListDb("Thread.ProcessBook.listDb");
         process.start();
     }
     
@@ -158,17 +152,6 @@ public class ProcessBook extends ProcessAbstract {
         }
     }
  
-    //TODO: Use this: need to think of options (override or derive StatSource
-    private boolean listFS(String rootPath) throws InterruptedException {
-        PanelBook.progressBar.setup(tableModel.getFiles().size());
-        browseFS(new File(rootPath), rootPath);
-//        for (FileInfoVideo fileInfoVideo : tableModel.getFiles()) {
-//            tableModel.addRow(fileInfoVideo);
-//            PanelBook.progressBar.progress(fileInfoVideo.getTitle());
-//		}
-        return true;
-    }
-	
 	private boolean listDbfiles(boolean getDb) throws InterruptedException {
 		PanelBook.progressBar.reset();
         PanelBook.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
@@ -202,10 +185,10 @@ public class ProcessBook extends ProcessAbstract {
 		//List books
 		connCalibre.getBooks(tableModel.getFiles());
       
-		//Move - if required - and display movies 
+		//Get files length
 		PanelBook.progressBar.setup(tableModel.getFiles().size()*2);
 		for (Book book : tableModel.getFiles()) {
-			File file = new File(book.getFilePath());
+			File file = new File(book.getFullPath());
 			if(file.exists()) {
 				book.setLength(file.length());
 			}
@@ -225,6 +208,26 @@ public class ProcessBook extends ProcessAbstract {
 		return true;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
+	public TableModelBook getTableModel() {
+        return tableModel;
+    }
+	
+	
+	//TODO: Use this: need to think of options (override or derive StatSource
+    private boolean listFS(String rootPath) throws InterruptedException {
+        PanelBook.progressBar.setup(tableModel.getFiles().size());
+        browseFS(new File(rootPath), rootPath);
+//        for (FileInfoVideo fileInfoVideo : tableModel.getFiles()) {
+//            tableModel.addRow(fileInfoVideo);
+//            PanelBook.progressBar.progress(fileInfoVideo.getTitle());
+//		}
+        return true;
+    }
+	
     private void browseFS(File path, String rootPath) throws InterruptedException {
 		this.checkAbort();
 		//Verifying we have a path and not a file
@@ -249,12 +252,6 @@ public class ProcessBook extends ProcessAbstract {
 		}
 	}
     
-	/**
-	 *
-	 * @return
-	 */
-	public TableModelBook getTableModel() {
-        return tableModel;
-    }
+	
 
 }
