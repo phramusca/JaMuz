@@ -70,7 +70,6 @@ public class PlayerFlac implements PCMProcessor, LineListener, Runnable {
     
     private void play() {
         this.playerThread = new Thread(this, "Thread.PlayerFLAC.play");  //NOI18N
-        //End of move TODO
         this.playerThread.start();
     }
     
@@ -82,7 +81,8 @@ public class PlayerFlac implements PCMProcessor, LineListener, Runnable {
             decoder.removePCMProcessor(this);
             decoder=null;
         }
-        //TODO: better Manage Stop at least (stops sometimes), and "setPosition" ideally as for MP3
+        //TODO PLAYER FLAC: better Manage Stop (stops sometimes), 
+		//TODO PLAYER FLAC: better Manage "setPosition", ideally as for MP3
 	}
     
 	/**
@@ -194,7 +194,7 @@ public class PlayerFlac implements PCMProcessor, LineListener, Runnable {
 
     @Override
     public void update(LineEvent event) {
-        //TODO: How to display progress ??
+        //TODO PLAYER FLAC: How to display progress ??
         
         //This is called on "Open" and "Start" events only
 //        PanelMain.dispMP3progress((int) event.getFramePosition());

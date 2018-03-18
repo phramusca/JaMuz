@@ -449,8 +449,6 @@ public class Mplayer implements Runnable {
 	 * @return the entire line from the standard output or error of MPlayer
 	 */
 	private String waitForAnswer(String expected) {
-		// todo add the possibility to specify more options to be specified
-		// todo use regexp matching instead of the beginning of a string
 		String line = null;
 		if (expected != null) {
 			try {

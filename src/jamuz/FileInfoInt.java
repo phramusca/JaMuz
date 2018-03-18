@@ -65,7 +65,6 @@ import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
@@ -73,7 +72,6 @@ import org.jaudiotagger.tag.id3.ID3v23Frame;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 
 /**
