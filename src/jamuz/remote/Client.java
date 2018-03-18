@@ -256,7 +256,7 @@ public class Client {
 					info.setSyncConnected(!isRemote);	
                     callback.authenticated(Client.this);
 					if(info.isSyncConnected()) {
-						//FIXME REMOTE: Do this in a request/answer manner
+						//FIXME LOW REMOTE: Do this in a request/answer manner
 						//So we can set status in Server
 						//setStatus(login, "Request database");
 						sendTags();

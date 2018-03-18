@@ -277,7 +277,7 @@ public class Jamuz {
         String file=appPath;
         for (String subFolder : args) {
             file = FilenameUtils.concat(file, subFolder); //NOI18N
-			//FIXME: Create the folders if missing
+			//FIXME GLOBAL Create the folders if missing (as done when exporting video)
         } 
         file = FilenameUtils.concat(file, filename); //NOI18N
         return new File(file); //NOI18N

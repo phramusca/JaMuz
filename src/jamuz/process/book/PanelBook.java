@@ -247,7 +247,7 @@ public class PanelBook extends javax.swing.JPanel {
 	private void menuBookOpen() {
         Book book = getSelected();
         if(book!=null) {
-			Desktop.openFolder(book.getFilePath());
+			Desktop.openFolder(book.getFullPath());
         }
     }
 	
