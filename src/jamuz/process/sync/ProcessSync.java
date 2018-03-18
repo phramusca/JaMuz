@@ -16,7 +16,7 @@
  */
 
 package jamuz.process.sync;
-
+//FIXME SYNC: Problem with Guayadeque: investigate issue
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
@@ -180,7 +180,7 @@ public class ProcessSync extends ProcessAbstract {
         this.checkAbort();
         PanelSync.progressBar.setup(fileInfoSourceList.size() + fileInfoDestinationList.size());
 
-		//FIXME SYNC: Offer deletion as an option now that process is labeled "export" and not "sync" anymore !!!!
+		//FIXME LOW SYNC: Offer deletion as an option now that process is labeled "export" and not "sync" anymore !!!!
         this.toInsertInDeviceFiles = new ArrayList<>();
         //Remove files on destination
         for (FileInfoInt fileInfo : fileInfoDestinationList) {
@@ -228,9 +228,9 @@ public class ProcessSync extends ProcessAbstract {
 		//FileSystem.copyFile preserves datetime
 		//Unfortunatly on some devices it does not work
 		//ex: Android (https://stackoverflow.com/questions/18677438/android-set-last-modified-time-for-the-file)
-		//=> FIXME SYNC Make options of these, must be one or the other
+		//=> FIXME LOW SYNC Make options of these, must be one or the other
 		//to detect if file is different
-		boolean doCheckLastModified = false; // Faster but does not work for android 
+		boolean doCheckLastModified = true; // Faster but does not work for android (JaMuz Remote is not concerned)
 		boolean doCheckContent = false;		// Way Slower (especially over wifi) but more reliable
 
 		for(int i = 0; i < this.fileInfoSourceList.size(); i++) {

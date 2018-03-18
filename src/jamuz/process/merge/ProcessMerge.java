@@ -151,6 +151,10 @@ public class ProcessMerge extends ProcessAbstract {
         }
         finally {
             progressBar.reset();
+			progressBar.setString(
+					DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)
+					+" | "+popupMsg+" "+completedList.size()
+					+" change(s). " + errorList.size() + " error(s).");
 			callback.completed(errorList, completedList, popupMsg, mergeReport);
         }
 	}

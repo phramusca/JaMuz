@@ -23,9 +23,6 @@ import jamuz.gui.swing.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import org.apache.http.HttpHost;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.musicbrainz.MBWS2Exception;
 import org.musicbrainz.controller.Release;
 import org.musicbrainz.model.entity.ReleaseWs2;
@@ -39,13 +36,9 @@ import org.musicbrainz.model.RatingsWs2;
 public class ReleaseMatch implements java.lang.Comparable {
 	
 	private String source;
-    
-    //TODO: Use an enum (if not abstract classes) at least
-	private static String musicbrainz="MusicBrainz";  //NOI18N
-	private static String lastfm="Last.fm";  //NOI18N
-	
+	private static final String MUSICBRAINZ="MusicBrainz";  //NOI18N
+	private static final String LASTFM="Last.fm";  //NOI18N
 	private int score;
-	
 	private String artist;
 	private String album;
 	private String format;
@@ -60,10 +53,8 @@ public class ReleaseMatch implements java.lang.Comparable {
 //	private List<Relation> relations; //NOT usefull for now
 	private List<Track> tracks;
 	private boolean isLookup=false; //Specify if a lookup has been performed (to get tracks)
-	
 	private boolean isDiscPart=false;
 	private boolean isOriginal=false;
-	
 	private List <DuplicateInfo> duplicates;
 	private boolean isWarningDuplicate=false;
 	private boolean isErrorDuplicate=false;
@@ -120,8 +111,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 		this.year = releaseWs2.getYear();
         this.score = -1;
         RatingsWs2 ratingsWs2 = releaseWs2.getUserRating();
-//        ratingsWs2.
-		this.source=musicbrainz;
+		this.source=MUSICBRAINZ;
         this.tracks = new ArrayList<>();
     }
     
@@ -157,7 +147,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 		this.id = mbidStr[mbidStr.length-1];
 //		this.relations = new ArrayList<Relation>();
 		this.score = score;
-		this.source=musicbrainz;
+		this.source=MUSICBRAINZ;
 	}
 	
 	/**
@@ -198,7 +188,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 		
 		this.year = myYear;
 		this.id = album.getMbid();
-		this.source=lastfm;
+		this.source=LASTFM;
 		this.score = score;
 	}
 	
@@ -289,7 +279,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 	public List<Track> getTracks(ProgressBar progressBar) {
 		//Only lookup if not already done
 		if(!this.isLookup) {
-			if(this.source.equals(ReleaseMatch.musicbrainz)) {
+			if(this.source.equals(ReleaseMatch.MUSICBRAINZ)) {
 				//MusicBrainz
                 ReleaseMB releaseMB = new ReleaseMB(progressBar);
                 List<Track> MBtracks = releaseMB.lookup(this.getId(), this.isDiscPart, this.discNb, this.discTotal);
@@ -308,7 +298,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 				//		} 		
 				//		jTextArea1.append("\n"); 
 			}
-			else if(this.source.equals(ReleaseMatch.lastfm)) {
+			else if(this.source.equals(ReleaseMatch.LASTFM)) {
 				//Last.fm
                 ReleaseLastFm releaseLastFm = new ReleaseLastFm();
                 List<Track> lastFmTracks = releaseLastFm.lookup(this.getId());
@@ -349,7 +339,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 			text += " {"+this.trackTotal+" tracks}";  //NOI18N
 		}
 
-		if(this.source.equals(this.musicbrainz)) {
+		if(this.source.equals(MUSICBRAINZ)) {
 			if(isDiscPart) {
 				text += " [Disc "+ this.discNb + "/" + this.discTotal + "]";   //NOI18N //NOI18N //NOI18N
 			}
