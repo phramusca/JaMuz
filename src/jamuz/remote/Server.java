@@ -254,7 +254,7 @@ public class Server {
 				} 
 				if(clientInfo.isSyncConnected()) {
 					clientInfoModel.setSyncConnected(false);
-					//clientInfoModel.setStatus("Disconnected");
+					clientInfoModel.setStatus("Disconnected");
 					callback.disconnectedSync(clientInfo.getId());
 				}
 				tableModel.fireTableDataChanged();
@@ -263,7 +263,7 @@ public class Server {
     }
 	
 	class CallBackMerge implements ICallBackMerge {
-		private String login;
+		private final String login;
 
 		public CallBackMerge(String login) {
 			this.login = login;
@@ -274,9 +274,8 @@ public class Server {
 				ArrayList<FileInfo> completedList, String popupMsg, 
 				String mergeReport) {
             Jamuz.getLogger().info(popupMsg);
-			setStatus(login, popupMsg + " " + completedList.size()
-					+" change(s). " + errorList.size() + " error(s).");
-            //Read options again (only to read lastMergeDate !!)
+			setStatus(login, popupMsg);
+            //TODO: Read options again (only to read lastMergeDate !! Still needed ? here and elsewhere)
             //TODO MERGE Use listeners !!
             PanelMain.setOptions(); 
 		}
@@ -323,7 +322,7 @@ public class Server {
 	public void sendFile(String login, int id) {
 		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(id);
 		if(!sendFile(login, fileInfoInt)) {
-			//FIXME SYNC Happens when file not found
+			//FIXME LOW SYNC Happens (still ?) when file not found
 			// Need to mark as deleted in db 
 			// AND somehow remove it from filesToKeep
 			//and filesToGet in remote

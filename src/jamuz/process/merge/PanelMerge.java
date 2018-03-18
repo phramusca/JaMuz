@@ -364,7 +364,6 @@ public class PanelMerge extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonMergeStartActionPerformed
 
 	class CallBackMerge implements ICallBackMerge {
-		
 		@Override
 		public void completed(ArrayList<FileInfo> errorList, 
 				ArrayList<FileInfo> completedList, String popupMsg, 
@@ -386,7 +385,7 @@ public class PanelMerge extends javax.swing.JPanel {
 						myFileInfo.getRelativePath())); //NOI18N
 				displayMergeResult(myFileInfo);
 			}
-		
+			
             if(!popupMsg.equals("")) {  //NOI18N
                 popupMsg="<html>"
                     + "<h3>"+popupMsg+"</h3>";    //NOI18N //NOI18N
@@ -406,8 +405,8 @@ public class PanelMerge extends javax.swing.JPanel {
                 popupMsg+="</html>";  //NOI18N
                 Jamuz.getLogger().info(popupMsg);
                 Popup.info(popupMsg);
-
             }
+			progressBar.reset();
             //Read options again (only to read lastMergeDate !!)
             //TODO MERGE Use listeners !!
             PanelMain.setOptions(); 
