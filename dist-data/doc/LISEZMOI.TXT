@@ -5,10 +5,14 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+0.2.2	Beta	- Remote: 	progress bar fusion dans la table
+				- Video: 	fonction nettoyage, fix fonction renommage, stable
+				- Livres: 	fixes, stable
+----------------------------------------------------------------------------------------------------------------------------------
 0.2.1   Beta    Fusion avec JaMuz Remote dans onglet Remote désormais
 0.2.0	Beta	Beaucoup de changements. Compatible avec JaMuz Remote v0.2.0
 0.1.0	Beta	2ème version, première beta
-0.0.24	Alpha - 1ère version sortie
+0.0.24	Alpha	1ère version sortie
 
 ----------------------------------------------------------------------------------------------------------------------------------
 Emplacement			Description													
