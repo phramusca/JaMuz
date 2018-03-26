@@ -140,4 +140,3 @@ CREATE TABLE "file" (
     "saved" INTEGER NOT NULL DEFAULT (0),
 	FOREIGN KEY(idPath) REFERENCES path(idPath)
 );
-
