@@ -200,6 +200,8 @@ public class Server {
 											tableModel.getClient(login).getProgressBar(), 
 											new CallBackMerge(login))
 									.start();
+								} else {
+									setStatus(login, "No stat source found !");
 								}
 								break;
 						}
