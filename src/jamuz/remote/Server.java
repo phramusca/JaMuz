@@ -26,6 +26,7 @@ import jamuz.process.merge.StatSource;
 import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -148,9 +149,19 @@ public class Server {
 						String type = (String) jsonObject.get("type");
 						int idFile;
 						switch(type) {
+							case "requestTags":
+								setStatus(login, "Sending tags");
+								sendTags(login);
+								break;
+							case "requestGenres":
+								setStatus(login, "Sending genres");
+								sendGenres(login);
+								break;
+							case "requestNewFiles":
+								sendFilesToGet(login);
+								break;
 							case "requestFile":
 								idFile = (int) (long) jsonObject.get("idFile");
-								setStatus(login, "Sending file: "+idFile);
 								sendFile(login, idFile);
 								break;
 							case "ackFileReception":
@@ -323,6 +334,7 @@ public class Server {
 	
 	public void sendFile(String login, int id) {
 		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(id);
+		setStatus(login, "Sending file: "+fileInfoInt.getRelativeFullPath());
 		if(!sendFile(login, fileInfoInt)) {
 			//FIXME LOW SYNC Happens (still ?) when file not found
 			// Need to mark as deleted in db 
@@ -340,6 +352,47 @@ public class Server {
 		return true;
 	}
     
+	private void sendFilesToGet(String login) {
+		File file = Jamuz.getFile(login, "data", "devices");
+		if(file.exists()) {
+			try {
+				setStatus(login, "Sending new list of files to retrieve");
+				String json = new String(Files.readAllBytes(file.toPath()));
+				send(login, "JSON_"+json);
+				file.delete();
+			} catch (IOException ex) {
+				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		} else {
+			setStatus(login, "Sync will start soon");
+			JSONObject obj = new JSONObject();
+			obj.put("type", "StartSync");
+			send(login, obj);
+		}
+	}
+
+	private void sendGenres(String login) {
+		JSONArray list = new JSONArray();
+		for(String genre : Jamuz.getGenres()) {
+			list.add(genre);
+		}
+		JSONObject obj = new JSONObject();
+		obj.put("type", "genres");
+		obj.put("genres", list);
+		send(login, obj);
+	}
+
+	private void sendTags(String login) {
+		JSONArray list = new JSONArray();
+		for(String tag : Jamuz.getTags()) {
+			list.add(tag);
+		}
+		JSONObject obj = new JSONObject();
+		obj.put("type", "tags");
+		obj.put("tags", list);
+		send(login, obj);
+	}
+	
 	/**
      * Sends a message to all clients
 	 * @param jsonAsMap
@@ -360,6 +413,14 @@ public class Server {
 	public boolean send(String login, JSONObject obj) {
 		if(clientMap.containsKey(login)) {
 			clientMap.get(login).send(obj);
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean send(String login, String msg) {
+		if(clientMap.containsKey(login)) {
+			clientMap.get(login).send(msg);
 			return true;
 		}
 		return false;

@@ -29,14 +29,12 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketException;
-import java.nio.file.Files;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -186,7 +184,7 @@ public class Client {
 		}
 		return false;
     }
-	
+
 	private boolean sendFile(File file, DataOutputStream dos) {
 		try (FileInputStream input = new FileInputStream(file)) {
 			int read;
@@ -255,14 +253,6 @@ public class Client {
 					info.setRemoteConnected(isRemote);
 					info.setSyncConnected(!isRemote);	
                     callback.authenticated(Client.this);
-					if(info.isSyncConnected()) {
-						//FIXME LOW REMOTE: Do this in a request/answer manner
-						//So we can set status in Server
-						//setStatus(login, "Request database");
-						sendTags();
-						sendGenres();
-						sendFilesToGet();
-					}
                 }
                 else {
                     send("MSG_ERROR_CONNECTION");
@@ -270,45 +260,6 @@ public class Client {
 			} catch (IOException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		}
-		
-		private void sendFilesToGet() {
-			File file = Jamuz.getFile(info.getId(), "data", "devices");
-			if(file.exists()) {
-				try {
-					String json = new String(Files.readAllBytes(file.toPath()));
-					send("JSON_"+json);
-					file.delete();
-				} catch (IOException ex) {
-					Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			} else {
-				JSONObject obj = new JSONObject();
-				obj.put("type", "StartSync");
-				send(obj);
-			}
-		}
-		
-		private void sendGenres() {
-			JSONArray list = new JSONArray();
-			for(String genre : Jamuz.getGenres()) {
-				list.add(genre);
-			}
-			JSONObject obj = new JSONObject();
-			obj.put("type", "genres");
-			obj.put("genres", list);
-			send(obj);
-		}
-
-		private void sendTags() {
-			JSONArray list = new JSONArray();
-			for(String tag : Jamuz.getTags()) {
-				list.add(tag);
-			}
-			JSONObject obj = new JSONObject();
-			obj.put("type", "tags");
-			obj.put("tags", list);
-			send(obj);
 		}
 
 		private String isValid(String login, String pass) {
