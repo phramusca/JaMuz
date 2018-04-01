@@ -164,25 +164,33 @@ public class Server {
 								idFile = (int) (long) jsonObject.get("idFile");
 								sendFile(login, idFile);
 								break;
-							case "ackFileReception":
-								boolean requestNextFile = (boolean) jsonObject.get("requestNextFile");
-								idFile = (int) (long) jsonObject.get("idFile");
-								//Send back ack to client
-								if(requestNextFile) { //Not needed for now in this case
-									FileInfoInt file = Jamuz.getDb().getFile(idFile);
-									int idDevice = Jamuz.getMachine().getDeviceId(login);
-									JSONObject obj = new JSONObject();
-									obj.put("type", "insertDeviceFileAck");
-									obj.put("requestNextFile", requestNextFile);
-									setStatus(login, "Inserting file "+idFile+" "+file.getRelativeFullPath());
-									if(idDevice>=0 && Jamuz.getDb().insertDeviceFile(idDevice, file)) {
-										obj.put("status", "OK");
-									} else {
-										obj.put("status", "KO");
+							case "ackFileSReception":
+								setStatus(login, "Received list of files to ack");
+								int idDevice = Jamuz.getMachine().getDeviceId(login);
+								if(idDevice>=0 ) {
+									JSONArray list = new JSONArray();
+									JSONArray idFiles = (JSONArray) jsonObject.get("idFiles");
+									FileInfoInt file;
+									 ArrayList<FileInfoInt> toInsertInDeviceFiles
+											 = new ArrayList<>();
+									for(int i=0; i<idFiles.size(); i++) {
+										idFile = (int) (long) idFiles.get(i);
+										file = Jamuz.getDb().getFile(idFile);
+										toInsertInDeviceFiles.add(file);
 									}
-									obj.put("file", file.toMap());
-									setStatus(login, "Sending ack for file "+idFile+" "+file.getRelativeFullPath());
+									setStatus(login, "Inserting into device file list");
+									ArrayList<FileInfoInt> inserted= Jamuz.getDb().
+											insertDeviceFiles(toInsertInDeviceFiles, idDevice);
+									for (FileInfoInt ins : inserted) {
+										list.add(ins.toMap());
+									}
+									setStatus(login, "Sending list of ack. files");
+									JSONObject obj = new JSONObject();
+									obj.put("type", "insertDeviceFileSAck");
+									obj.put("filesAcked", list);
 									send(login, obj);
+								} else {
+									setStatus(login, "Should not happen (idDevice not found) or you're stuck");
 								}
 								break;
 							case "FilesToMerge":
@@ -468,7 +476,3 @@ public class Server {
 		}
 	}
 }
-
-
-
-

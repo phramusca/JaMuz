@@ -791,6 +791,18 @@ public class PanelStats extends javax.swing.JPanel {
         selRatings[4]=jCheckBoxSelectRating4.isSelected();
         selRatings[5]=jCheckBoxSelectRating5.isSelected();
 		
+		boolean oneSelected=false;
+		for (int i = 0; i < selRatings.length; i++) {
+            if (selRatings[i]) {
+                oneSelected=true;
+				break;
+            }
+        }
+		if(!oneSelected) {
+			Popup.warning("Select at least one rating");
+			return;
+		}
+		
 		//FIXME STATS: Use status filter too
 		//+ at least disable filters when not used
 		//OR event better, use them when applicable

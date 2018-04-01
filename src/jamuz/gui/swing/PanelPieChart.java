@@ -17,7 +17,6 @@
 
 package jamuz.gui.swing;
 
-import jamuz.Jamuz;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -34,7 +33,6 @@ import org.jCharts.properties.LegendAreaProperties;
 import org.jCharts.properties.LegendProperties;
 import org.jCharts.properties.PieChart2DProperties;
 import org.jCharts.properties.PropertyException;
-import jamuz.utils.Ftp;
 
 /**
  * An JPanel extension to display chart pies

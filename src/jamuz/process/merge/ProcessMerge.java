@@ -708,6 +708,7 @@ public class ProcessMerge extends ProcessAbstract {
 				} else {
 					//=> Compares equal still
 					// + do not save tags (nor tagsModifDate) if not changed
+					//TODO: Display real values in log text 
 					fileNew.setTags(null);
 					fileJaMuz.setTags(null);
 					fileSelectedDb.setTags(null);
