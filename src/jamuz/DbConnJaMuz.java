@@ -1035,8 +1035,9 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param idDevice
      * @return
      */
-    public synchronized boolean insertDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
-        try {
+    public synchronized ArrayList<FileInfoInt> insertDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
+        ArrayList<FileInfoInt> inserted=new ArrayList<>();
+		try {
             if (files.size() > 0) {
                 dbConn.connection.setAutoCommit(false);
                 int[] results;
@@ -1055,21 +1056,21 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                 dbConn.connection.commit();
                 long endTime = System.currentTimeMillis();
                 Jamuz.getLogger().log(Level.FINEST, "insertDeviceFile UPDATE // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
-
-                //Analyse results
-                int result;
+				
+				//Check results
+				int result;
                 for (int i = 0; i < results.length; i++) {
                     result = results[i];
-                    if (result < 0) {
-                        Jamuz.getLogger().log(Level.SEVERE, "insertDeviceFile, idFile={0}, idDevice={1}, result={2}", new Object[]{files.get(i), idDevice, result});   //NOI18N
+                    if (result >= 0) {
+                        inserted.add(files.get(i));
                     }
                 }
             }
             dbConn.connection.setAutoCommit(true);
-            return true;
+            return inserted;
         } catch (SQLException ex) {
             Popup.error("insertDeviceFile(" + idDevice + ")", ex);   //NOI18N
-            return false;
+            return inserted;
         }
     }
  

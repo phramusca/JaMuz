@@ -404,7 +404,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 				sb.append(" ");
 			}
 		} else {
-			sb.append("Empty");
+			sb.append("Empty or all identical");
 		}
 		return(sb.toString());
 	}
