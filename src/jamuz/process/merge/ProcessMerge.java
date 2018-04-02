@@ -70,7 +70,7 @@ public class ProcessMerge extends ProcessAbstract {
 	//JaMuz DB information
 	private ArrayList<FileInfo> statsListDbJaMuz;
 	private ArrayList<FileInfo> mergeListDbJaMuz;
-    private ArrayList<FileInfoInt> mergeListDbJaMuzTags;
+    private ArrayList<FileInfoInt> mergeListDbJaMuzFileTags;
     
 	//LOG files and report
 	private boolean doLogText = false;
@@ -372,7 +372,7 @@ public class ProcessMerge extends ProcessAbstract {
 
 		mergeListDbSelected = new ArrayList<>();
 		mergeListDbJaMuz = new ArrayList<>();
-        mergeListDbJaMuzTags=new ArrayList<>();
+        mergeListDbJaMuzFileTags=new ArrayList<>();
                 
 		FileInfo fileDbSelected; 
 		FileInfo fileInfoDbJaMuz;
@@ -457,7 +457,6 @@ public class ProcessMerge extends ProcessAbstract {
 		fileNew.setTags(jaMuzTags); //fileNew is initially a copy of fileJaMuz 
 		boolean isOneDbUpdated=false;
 		
-        //TODO: Remove "force Jamuz" option ? Or leave it as-is ?
         //TODO: Replace "force Jamuz" option by a "Select action" option so that user can 
         //select what direction copy info to (1>2; 2>1; and none)
         //=> Allow only one statsource so that below buttons are effective
@@ -486,6 +485,11 @@ public class ProcessMerge extends ProcessAbstract {
 						//This happens when no previous playCounter could be retrieved from JaMuzDb
 						//Means that selected Db has not yet been merged
 						playCounterToAdd=fileSelectedDb.getPlayCounter();
+						
+						//FIXME !!!!!!!!!!!!!!!! This is wrong for JaMuz Remote !!
+						//as playCounter is inserted in database during sync process
+						//BUT not previousPlayCounter apparently
+						//=> Make sure it is added, or add it if not already 
 					}
 				}
 				else {
@@ -498,7 +502,8 @@ public class ProcessMerge extends ProcessAbstract {
 					//(we can only miss some play counts IF the reset is made on selected DB. 
 					//Better than adding some each time the process is aborted)
 					//Do not think -or think well - of updating previousPlayCounter after selected DB is copied back as
-					//the problem will be on the if() above, and could cause more problems - extra play counts added again and again)
+					//the problem will be on the if() above, and could cause more problems :
+					//		- extra play counts added again and again)
 					playCounterToAdd=0;
 				}
 				fileNew.setPlayCounter(fileJaMuz.getPlayCounter()+playCounterToAdd);
@@ -580,6 +585,19 @@ public class ProcessMerge extends ProcessAbstract {
 			else if(fileSelectedDb.getRating()!=fileJaMuz.getRating()) { 
                 //TODO: include this new behavior in junit tests
 
+				//FIXME !!!!!!!!!!!!!!!!!!  : Use, instead of lastMergeDate:
+				// - getRatingModifDate() for remote !!!!
+				// - getLastPlayed() AND lastMergeDate for all other sources 
+				//			(to imprvove the guessing in unknown situations)
+				// => This applies to:
+				//		- rating
+				//		- genre
+				//		- tags
+				/////////////////////////////:
+				// Indeed, we are sending playCounter, rating, genre and tags
+				//	and that happens before merge
+				// so during merge, s .... well stgh wrong, to be found and debugged
+				
                 if(fileJaMuz.getRatingModifDate().after(
 						selectedStatSource.lastMergeDate)) {
                     //It has been modified after last merge on JaMuz
@@ -684,12 +702,12 @@ public class ProcessMerge extends ProcessAbstract {
 			
 			if(!genre.equals("") || BPM>=0) {
 				//TODO: Better use inheritance !!
-				mergeListDbJaMuzTags.add(new FileInfoInt(fileJaMuz, 
+				mergeListDbJaMuzFileTags.add(new FileInfoInt(fileJaMuz, 
 						BPM, genre));
 			}
 
 		//Comparing Tags
-            //TODO: display it on jtable and logs
+            //TODO: display it on jtable
             if(selectedStatSource.getSource().isUpdateTags()) {
 				ArrayList<String> selectedDbTags;
 				if(isRemote) {
@@ -700,9 +718,26 @@ public class ProcessMerge extends ProcessAbstract {
 				if(!Utils.equalLists(selectedDbTags, jaMuzTags)) {
 					if(fileJaMuz.getTagsModifDate().after(
 							selectedStatSource.lastMergeDate)) {
+						//It has been modified after last merge on JaMuz
+						//Could be the same on selected Db but Preferring JaMuz 
+						//since we cannot know for sure
 						fileNew.setTags(jaMuzTags);
+						
+						//*** TIP ***: To force JaMuz for user tags only, run this on JaMuz dB:
+						//update file set tagsModifDate=datetime('now');
+						//=> User tags from Jamuz will then be replicated to all sources, 
+						//then back to normal :)
+						
 					}
 					else {
+						//May have been updated on other sources as well
+						//But taking the first one
+						//Then, since tagsModifDate will be updated on JaMuz, 
+						//this value will be replicated to all other sources.
+
+						//TODO: Add sources priority as an option to decide which 
+						//source is first
+					
 						fileNew.setTags(selectedDbTags);
 					}
 				} else {
@@ -960,20 +995,20 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 
 		if(!simulate) {	
-			nbFiles=mergeListDbJaMuzTags.size();
+			nbFiles=mergeListDbJaMuzFileTags.size();
 			progressBar.progress(Inter.get("Msg.Check.SavingTags")); //NOI18N
 			callback.refresh();
 			if(nbFiles>0) {
-				Iterator<FileInfoInt> i = mergeListDbJaMuzTags.iterator();
+				Iterator<FileInfoInt> i = mergeListDbJaMuzFileTags.iterator();
 				while (i.hasNext()) {
 					FileInfoInt fileInfoInt = i.next();
 					checkAbort();
 					//TODO MERGE If aborted, tags will no more be written to file. 
 					if(!fileInfoInt.getGenre().equals("") ) {
-						fileInfoInt.saveTagGenre();
+						fileInfoInt.saveGenreToFileTags();
 					} 
 					else if(fileInfoInt.getBPM()>=0) {
-						fileInfoInt.saveTagBPM();
+						fileInfoInt.saveBPMtoFileTags();
 					}
 					//FIXME MERGE Are we updating modifiedDate (path and file) 
 					//and other stats when saving tags (always) ?
