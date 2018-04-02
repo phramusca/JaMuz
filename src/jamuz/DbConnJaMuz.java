@@ -932,15 +932,19 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      */
     public synchronized boolean updateGenre(FileInfoInt fileInfo) {
         try {
-            PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement("UPDATE file set genre=? WHERE idFile=?");  //NOI18N
+            PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement(
+					"UPDATE file set genre=?, "
+					+ "genreModifDate=datetime('now') "
+					+ "WHERE idFile=?");  //NOI18N
             stUpdateFileGenre.setString(1, fileInfo.genre);
             stUpdateFileGenre.setInt(2, fileInfo.idFile);
-
             int nbRowsAffected = stUpdateFileGenre.executeUpdate();
             if (nbRowsAffected == 1) {
                 return true;
             } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdateFileGenre, fileInfo={0} # row(s) affected: +{1}", new Object[]{fileInfo.toString(), nbRowsAffected});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateFileGenre, "
+						+ "fileInfo={0} # row(s) affected: +{1}", 
+						new Object[]{fileInfo.toString(), nbRowsAffected});   //NOI18N
                 return false;
             }
         } catch (SQLException ex) {
@@ -963,9 +967,6 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                     + "WHERE idFile=?");  //NOI18N
             stUpdateFileRating.setInt(1, fileInfo.rating);
             stUpdateFileRating.setInt(2, fileInfo.idFile);
-
-            //Note that this also sets ratingModifDate=datetime('now')
-            //so that this new rating is the one taken during merge
             int nbRowsAffected = stUpdateFileRating.executeUpdate();
             if (nbRowsAffected == 1) {
                 return true;
@@ -1956,6 +1957,8 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
 		int i=0;
 		for(FileInfo fileInfo : files) {
 			if(fileInfo.getTags()!=null) {
+				//FIXME LOW Update tags and date in the same transaction 
+				//so it can be rolled back and probably faster
 				if(!setTags(fileInfo.getTags(), fileInfo.getIdFile())) {
 					if(results!=null) {
 						results[i]=0;
@@ -1974,7 +1977,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
 	}
 	
 	/**
-     * Update updateGenreModifDate
+     * Update tagsModifDate
      *
      * @param fileInfo
      * @return
@@ -2834,18 +2837,14 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         this.stUpdateFileStatistics.setString(3, file.getFormattedLastPlayed());
         this.stUpdateFileStatistics.setString(4, file.getFormattedAddedDate());
         this.stUpdateFileStatistics.setInt(5, file.playCounter);
-        if(file.updateRatingModifDate) {
-            this.stUpdateFileStatistics.setString(6, DateTime.getCurrentUtcSql());
-        }
-        else {
-            this.stUpdateFileStatistics.setString(6, file.getFormattedRatingModifDate());
-        }
-		if(file.updateGenreModifDate) {
-            this.stUpdateFileStatistics.setString(7, DateTime.getCurrentUtcSql());
-        }
-        else {
-            this.stUpdateFileStatistics.setString(7, file.getFormattedGenreModifDate());
-        }
+        this.stUpdateFileStatistics.setString(6, 
+				file.updateRatingModifDate?
+						DateTime.getCurrentUtcSql():
+						file.getFormattedRatingModifDate());
+		this.stUpdateFileStatistics.setString(7, 
+				file.updateGenreModifDate?
+						DateTime.getCurrentUtcSql():
+						file.getFormattedGenreModifDate());
 		this.stUpdateFileStatistics.setString(8, file.getGenre());
         this.stUpdateFileStatistics.setInt(9, file.idFile);
         this.stUpdateFileStatistics.addBatch();

@@ -909,11 +909,11 @@ public class FileInfoInt extends FileInfo {
 	 *
 	 * @return
 	 */
-	public boolean saveTagBPM() {
+	public boolean saveBPMtoFileTags() {
 		return this.saveTag(FieldKey.BPM, String.valueOf(getBPM()));
     }
     
-	public boolean saveTagGenre() {
+	public boolean saveGenreToFileTags() {
 		return this.saveTag(FieldKey.GENRE, genre);
     }
 	

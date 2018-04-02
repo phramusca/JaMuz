@@ -213,8 +213,7 @@ public class Server {
 								}
 								if(dbIndexes.size()>0) {
 									setStatus(login, "Starting merge");
-									new ProcessMerge(
-										"Thread.Server.ProcessMerge."+login, 
+									new ProcessMerge("Thread.Server.ProcessMerge."+login, 
 										dbIndexes, false, false, newTracks, 
 											tableModel.getClient(login).getProgressBar(), 
 											new CallBackMerge(login))
