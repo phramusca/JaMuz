@@ -486,10 +486,11 @@ public class ProcessMerge extends ProcessAbstract {
 						//Means that selected Db has not yet been merged
 						playCounterToAdd=fileSelectedDb.getPlayCounter();
 						
-						//FIXME !!!!!!!!!!!!!!!! This is wrong for JaMuz Remote !!
+						//TODO !!!!!!!!!!!!!!!! This is wrong for JaMuz Remote !!
+						//At least after list is refreshed
 						//as playCounter is inserted in database during sync process
-						//BUT not previousPlayCounter apparently
-						//=> Make sure it is added, or add it if not already 
+						//BUT not previousPlayCounter
+						//=> just do it !
 					}
 				}
 				else {
@@ -585,10 +586,10 @@ public class ProcessMerge extends ProcessAbstract {
 			else if(fileSelectedDb.getRating()!=fileJaMuz.getRating()) { 
                 //TODO: include this new behavior in junit tests
 
-				//FIXME !!!!!!!!!!!!!!!!!!  : Use, instead of lastMergeDate:
-				// - getRatingModifDate() for remote !!!!
+				//TODO !!!!!!!!!!!!!!!! Use, instead of lastMergeDate:
+				// - fileSelectedDb.getRatingModifDate() for remote !!!!
 				// - getLastPlayed() AND lastMergeDate for all other sources 
-				//			(to imprvove the guessing in unknown situations)
+				//			(to improve the guessing in unknown situations)
 				// => This applies to:
 				//		- rating
 				//		- genre
@@ -709,12 +710,7 @@ public class ProcessMerge extends ProcessAbstract {
 		//Comparing Tags
             //TODO: display it on jtable
             if(selectedStatSource.getSource().isUpdateTags()) {
-				ArrayList<String> selectedDbTags;
-				if(isRemote) {
-					selectedDbTags = fileSelectedDb.getTags();
-				} else {
-					selectedDbTags = getTagsSelected(fileSelectedDb);
-				}
+				ArrayList<String> selectedDbTags = getTagsSelected(fileSelectedDb);
 				if(!Utils.equalLists(selectedDbTags, jaMuzTags)) {
 					if(fileJaMuz.getTagsModifDate().after(
 							selectedStatSource.lastMergeDate)) {
@@ -796,7 +792,6 @@ public class ProcessMerge extends ProcessAbstract {
 			fileNew.setRelativeFullPath(fileSelectedDb.getRelativeFullPath());
 			fileNew.setRelativePath(fileSelectedDb.getRelativePath());
 			fileNew.setFilename(fileSelectedDb.getFilename()); //This is not really usefull, though
-			fileNew.setIdFileRemote(fileSelectedDb.getIdFileRemote());
 			mergeListDbSelected.add((FileInfo) fileNew.clone());
 			Jamuz.getLogger().log(Level.FINEST, "Added to \"{0}\" merge list", 
 					fileNew.getSourceName());  //NOI18N
@@ -928,6 +923,9 @@ public class ProcessMerge extends ProcessAbstract {
 					filesToUpdatePlayCounter.add(fileInfo);
 					completedList.add((FileInfo) fileInfo.clone());
 				}
+				
+				//FIXME !!! If needed to update tagsModifDate, it has to be here
+				
 			} else {
 				int[] results = selectedStatSource
 						.getSource()

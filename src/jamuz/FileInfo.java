@@ -55,27 +55,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public void setIdFile(int idFile) {
         this.idFile = idFile;
     }
-	
-	/**
-	 * file ID in remote database
-	 */
-	protected int idFileRemote=-1;
-
-	/**
-	 *
-	 * @return
-	 */
-	public int getIdFileRemote() {
-        return idFileRemote;
-    }
-
-	/**
-	 *
-	 * @param idFileRemote
-	 */
-	public void setIdFileRemote(int idFileRemote) {
-        this.idFileRemote = idFileRemote;
-    }
     
 	/**
 	 * path ID in database
@@ -507,7 +486,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public FileInfo(String sourceName, JSONObject file) {
 		this(sourceName);
 		relativeFullPath = (String) file.get("path");
-		idFileRemote = (int) (long) file.get("idFileRemote");
 		rating = (int) (long) file.get("rating");
 		addedDate = getDate(file, "addedDate");
 		lastPlayed = getDate(file, "lastPlayed");
