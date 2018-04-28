@@ -24,8 +24,6 @@ import java.util.ArrayList;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public abstract class StatSourceAbstract {
-
-	abstract public boolean getTags(ArrayList<String> tags, FileInfo file);
 	
     /**
      * Root path
@@ -200,6 +198,14 @@ public abstract class StatSourceAbstract {
      */
     public abstract int[] updateStatistics(ArrayList<? extends FileInfo> files);
     
+	/**
+     * Get user tags
+	 * @param tags
+	 * @param file
+     * @return
+     */
+	public abstract boolean getTags(ArrayList<String> tags, FileInfo file);
+	
     /**
      * Connect database, ...
      * or whatever is needed to setup before merge
