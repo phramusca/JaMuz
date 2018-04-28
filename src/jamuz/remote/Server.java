@@ -23,6 +23,7 @@ import jamuz.gui.PanelMain;
 import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.merge.StatSource;
+import jamuz.process.sync.Device;
 import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
@@ -166,12 +167,12 @@ public class Server {
 								break;
 							case "ackFileSReception":
 								setStatus(login, "Received list of files to ack");
-								int idDevice = Jamuz.getMachine().getDeviceId(login);
-								if(idDevice>=0 ) {
+								Device device = Jamuz.getMachine().getDevice(login);
+								if(device!=null) {
 									JSONArray list = new JSONArray();
 									JSONArray idFiles = (JSONArray) jsonObject.get("idFiles");
 									FileInfoInt file;
-									 ArrayList<FileInfoInt> toInsertInDeviceFiles
+									ArrayList<FileInfoInt> toInsertInDeviceFiles
 											 = new ArrayList<>();
 									for(int i=0; i<idFiles.size(); i++) {
 										idFile = (int) (long) idFiles.get(i);
@@ -180,7 +181,11 @@ public class Server {
 									}
 									setStatus(login, "Inserting into device file list");
 									ArrayList<FileInfoInt> inserted= Jamuz.getDb().
-											insertDeviceFiles(toInsertInDeviceFiles, idDevice);
+											insertDeviceFiles(toInsertInDeviceFiles, device.getId());
+									StatSource source = Jamuz.getMachine().getStatSource(login);
+									if(!Jamuz.getDb().setPreviousPlayCounter(inserted, source.getId())) {
+										//TODO: Manage potential error
+									}
 									for (FileInfoInt ins : inserted) {
 										list.add(ins.toMap());
 									}

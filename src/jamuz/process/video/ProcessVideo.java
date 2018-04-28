@@ -96,7 +96,8 @@ public class ProcessVideo extends ProcessAbstract {
         
         checkAbort();
         
-		List<VideoAbstract> filestoExport = tableModel.getFiles().stream().filter(video -> video.isSelected()).collect(Collectors.toList());
+		List<VideoAbstract> filestoExport = tableModel.getFiles().stream()
+				.filter(video -> video.isSelected()).collect(Collectors.toList());
 		
 		if(Jamuz.getOptions().get("video.destination").startsWith("{")) {
 			Popup.warning("Invalid destination folder.");

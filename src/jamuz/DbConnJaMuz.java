@@ -47,6 +47,7 @@ import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -1144,7 +1145,7 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param idStatSource
      * @return
      */
-    public synchronized boolean setPreviousPlayCounter(ArrayList<FileInfo> files, int idStatSource) {
+    public synchronized boolean setPreviousPlayCounter(ArrayList<? super FileInfoInt> files, int idStatSource) {
         try {
             int[] results;
             PreparedStatement stUpdatePlayCounter = dbConn.connection.prepareStatement(
@@ -1152,12 +1153,13 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                     + "WHERE idFile=? AND idStatSource=?");     //NOI18N
             //First try to update values
             dbConn.connection.setAutoCommit(false);
-            for (FileInfo file : files) {
-                stUpdatePlayCounter.setInt(1, file.playCounter);
-                stUpdatePlayCounter.setInt(2, file.idFile);
-                stUpdatePlayCounter.setInt(3, idStatSource);
-                stUpdatePlayCounter.addBatch();
-            }
+			for (Iterator<? super FileInfoInt> it = files.iterator(); it.hasNext();) {
+				FileInfo file = (FileInfo) it.next();
+				stUpdatePlayCounter.setInt(1, file.playCounter);
+				stUpdatePlayCounter.setInt(2, file.idFile);
+				stUpdatePlayCounter.setInt(3, idStatSource);
+				stUpdatePlayCounter.addBatch();
+			}
             long startTime = System.currentTimeMillis();
             results = stUpdatePlayCounter.executeBatch();
             dbConn.connection.commit();
@@ -1168,13 +1170,14 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
             int result;
             FileInfo file;
             boolean doInsertBatch = false;
-            PreparedStatement stInsertPlayCounter = dbConn.connection.prepareStatement("INSERT INTO playcounter "
+            PreparedStatement stInsertPlayCounter = dbConn.connection.
+					prepareStatement("INSERT INTO playcounter "
                     + "(idFile, idStatSource, playCounter) "    //NOI18N
                     + "VALUES (?, ?, ?)");   //NOI18N
             for (int i = 0; i < results.length; i++) {
                 result = results[i];
                 if (result != 1) {
-                    file = files.get(i);
+                    file = (FileInfo) files.get(i);
                     stInsertPlayCounter.setInt(1, file.idFile);
                     stInsertPlayCounter.setInt(2, idStatSource);
                     stInsertPlayCounter.setInt(3, file.playCounter);
@@ -1187,7 +1190,9 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                 results = stInsertPlayCounter.executeBatch();
                 dbConn.connection.commit();
                 endTime = System.currentTimeMillis();
-                Jamuz.getLogger().log(Level.FINEST, "setPreviousPlayCounter INSERT // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
+                Jamuz.getLogger().log(Level.FINEST, "setPreviousPlayCounter "
+						+ "INSERT // {0} // Total execution time: {1}ms", 
+						new Object[]{results.length, endTime - startTime});    //NOI18N
                 //Check results
                 for (int i = 0; i < results.length; i++) {
                     result = results[i];
@@ -1217,7 +1222,8 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
         ResultSet rs=null;
         ResultSet keys=null;
         try {
-            PreparedStatement stSelectMachine = dbConn.connection.prepareStatement("SELECT COUNT(*), description FROM machine WHERE name=?");   //NOI18N
+            PreparedStatement stSelectMachine = dbConn.connection.prepareStatement(
+					"SELECT COUNT(*), description FROM machine WHERE name=?");   //NOI18N
             stSelectMachine.setString(1, hostname);
             rs = stSelectMachine.executeQuery();
             if (rs.getInt(1) > 0) {
@@ -1225,7 +1231,8 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                 return true;
             } else {
                 //Insert a new machine
-                PreparedStatement stInsertMachine = dbConn.connection.prepareStatement("INSERT INTO machine (name) VALUES (?)");   //NOI18N
+                PreparedStatement stInsertMachine = dbConn.connection.prepareStatement(
+						"INSERT INTO machine (name) VALUES (?)");   //NOI18N
                 stInsertMachine.setString(1, hostname);
                 int nbRowsAffected = stInsertMachine.executeUpdate();
                 if (nbRowsAffected == 1) {
@@ -1234,10 +1241,12 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                     int idMachine = keys.getInt(1);
                     rs.close();
                     //Insert default options
-                    PreparedStatement stSelectOptionType = dbConn.connection.prepareStatement("SELECT idOptionType, name, `default` "
+                    PreparedStatement stSelectOptionType = dbConn.connection.prepareStatement(
+							"SELECT idOptionType, name, `default` "
                     + "FROM optiontype");     //NOI18N
                     rs = stSelectOptionType.executeQuery();
-                    PreparedStatement stInsertOption = dbConn.connection.prepareStatement("INSERT INTO option ('idMachine', 'idOptionType', "
+                    PreparedStatement stInsertOption = dbConn.connection.prepareStatement(
+							"INSERT INTO option ('idMachine', 'idOptionType', "
                     + "'value') VALUES (?, ?, ?)");     //NOI18N
                     while (rs.next()) {
                         stInsertOption.setInt(1, idMachine);
@@ -1245,13 +1254,19 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
                         stInsertOption.setString(3, dbConn.getStringValue(rs, "default"));   //NOI18N
                         nbRowsAffected = stInsertOption.executeUpdate();
                         if (nbRowsAffected != 1) {
-                            Jamuz.getLogger().log(Level.SEVERE, "stInsertOption, idMachine={0}, idOptionType={1}, default=\"{2}\" # row(s) affected: +{1}", new Object[]{idMachine, rs.getInt("idOptionType"), dbConn.getStringValue(rs, "default"), nbRowsAffected});   //NOI18N
+                            Jamuz.getLogger().log(Level.SEVERE, "stInsertOption, "
+									+ "idMachine={0}, idOptionType={1}, default=\"{2}\" "
+									+ "# row(s) affected: +{1}", 
+									new Object[]{idMachine, rs.getInt("idOptionType"), 
+										dbConn.getStringValue(rs, "default"), nbRowsAffected});   //NOI18N
                             return false;
                         }
                     }
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stInsertMachine, hostname=\"{0}\" # row(s) affected: +{1}", new Object[]{hostname, nbRowsAffected});   //NOI18N
+                    Jamuz.getLogger().log(Level.SEVERE, "stInsertMachine, "
+							+ "hostname=\"{0}\" # row(s) affected: +{1}", 
+							new Object[]{hostname, nbRowsAffected});   //NOI18N
                     return false;
                 }
             }
@@ -1282,7 +1297,8 @@ public class DbConnJaMuz extends StatSourceJaMuzTags {
      * @param hostname
      * @return
      */
-    public boolean getStatSources(LinkedHashMap<Integer, StatSource> statSources, String hostname) {
+    public boolean getStatSources(LinkedHashMap<Integer, StatSource> statSources, 
+			String hostname) {
         ResultSet rs=null;
         try {
             PreparedStatement stSelectStatSources = dbConn.connection.prepareStatement(

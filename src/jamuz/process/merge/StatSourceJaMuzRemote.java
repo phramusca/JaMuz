@@ -151,6 +151,15 @@ public class StatSourceJaMuzRemote extends StatSourceJaMuzTags {
 		int i=0;
 		for(FileInfo fileInfo : files) {
 			if(fileInfo.getTags()!=null) {
+				
+				//FIXME !!!!!!mixing getIdFileRemote and getIdFile in the 
+				//			same tagFile table should NOT happen !!
+				// => store idFile in android database
+				//		=> this will allow easier checking of the files in sync
+				//			and will allow to merge text lists into JaMuz Remote database
+				
+				// Then, use setTags from DbConnJaMuz instead so updateTagsModifDate is done
+				
 				if(!setTags(fileInfo.getTags(), fileInfo.getIdFileRemote())) {
 					results[i]=0;
 				}

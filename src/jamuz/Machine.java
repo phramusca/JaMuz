@@ -131,6 +131,17 @@ public final class Machine {
 			return null;
 		}
 	}
+	
+	public StatSource getStatSource(String login) {
+		List<StatSource> candidates = 
+				statSources.values().stream()
+				.filter(statSource -> statSource.getSource().getLocation().equals("remote://"+login))
+				.collect(Collectors.toList());
+		if(candidates.size()==1) {
+			return candidates.get(0);
+		}
+		return null;
+	}
 
 	/**
 	 * Return list of devices as Collection
@@ -154,20 +165,33 @@ public final class Machine {
 		}
 	}
 
+	//FIXME: device and statsource are linked BUT:
+	// - the key can be different in either case 
+	//		=> search statsource always !!!
+	//			(remove getDevice(String login))
+	// Maybe keep the value in device: check how "remote://" is used first
+	//			(statsource is linked to a device anyway)
+	// - the key is bad: "remote://", use a property in statsource
+	// - make it clear in gui
+	//----------------------
+	// - devicefile is linked to a device
+	// - statsource is linked to a device
+	// - playcounter is linked to a statsource
+	
 	/**
-	 * Return requested remote device id
+	 * Return requested remote Device
 	 * @param login
 	 * @return
 	 */
-	public int getDeviceId(String login) {
+	public Device getDevice(String login) {
 		List<Device> candidates = 
 				devices.values().stream()
 				.filter(device -> device.getDestination().equals("remote://"+login))
 				.collect(Collectors.toList());
 		if(candidates.size()==1) {
-			return candidates.get(0).getId();
+			return candidates.get(0);
 		}
-		return -1;
+		return null;
 	}
 	
 	/**
@@ -185,6 +209,5 @@ public final class Machine {
 	public String getDescription() {
         return description;
     }
-    
     
 }
