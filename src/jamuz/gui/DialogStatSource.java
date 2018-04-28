@@ -341,6 +341,8 @@ public class DialogStatSource extends javax.swing.JDialog {
 				}break;
             case 5: // MyTunes 	(Android)
 				break;
+			case 6: // JaMuz Remote 	(Android)
+				break;
             default:
         }
 		jTextLocation.setText(locationFilePath);

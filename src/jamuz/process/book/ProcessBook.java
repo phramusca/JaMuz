@@ -86,7 +86,7 @@ public class ProcessBook extends ProcessAbstract {
         
         checkAbort();
         
-		List<Book> filestoExport = tableModel.getFiles().stream().filter(video -> video.isSelected()).collect(Collectors.toList());
+		List<Book> filestoExport = tableModel.getBooks().stream().filter(video -> video.isSelected()).collect(Collectors.toList());
 		
 		//The following should never happen as it is checked in PanelBook already
 		if(filestoExport.size()<=0) {
@@ -183,11 +183,11 @@ public class ProcessBook extends ProcessAbstract {
         connCalibre.connect();
         
 		//List books
-		connCalibre.getBooks(tableModel.getFiles());
+		connCalibre.getBooks(tableModel.getBooks());
       
 		//Get files length
-		PanelBook.progressBar.setup(tableModel.getFiles().size()*2);
-		for (Book book : tableModel.getFiles()) {
+		PanelBook.progressBar.setup(tableModel.getBooks().size()*2);
+		for (Book book : tableModel.getBooks()) {
 			File file = new File(book.getFullPath());
 			if(file.exists()) {
 				book.setLength(file.length());
@@ -219,9 +219,9 @@ public class ProcessBook extends ProcessAbstract {
 	
 	//TODO: Use this: need to think of options (override or derive StatSource
     private boolean listFS(String rootPath) throws InterruptedException {
-        PanelBook.progressBar.setup(tableModel.getFiles().size());
+        PanelBook.progressBar.setup(tableModel.getBooks().size());
         browseFS(new File(rootPath), rootPath);
-//        for (FileInfoVideo fileInfoVideo : tableModel.getFiles()) {
+//        for (FileInfoVideo fileInfoVideo : tableModel.getBooks()) {
 //            tableModel.addRow(fileInfoVideo);
 //            PanelBook.progressBar.progress(fileInfoVideo.getTitle());
 //		}

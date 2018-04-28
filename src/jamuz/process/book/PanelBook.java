@@ -613,7 +613,7 @@ public class PanelBook extends javax.swing.JPanel {
 	 *
 	 */
 	public static void export()  {
-        List<Book> filestoExport = processBook.getTableModel().getFiles().stream()
+        List<Book> filestoExport = processBook.getTableModel().getBooks().stream()
 				.filter(book -> book.isSelected()).collect(Collectors.toList());
 		
 		if(filestoExport.size()>0) {
