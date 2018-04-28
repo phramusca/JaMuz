@@ -593,7 +593,7 @@ public class PanelStats extends javax.swing.JPanel {
             }
             else {
                 field="toto";
-                //TODO MINOR: This should not happen. Anyway would be better to use a common Enum somehow
+                //TODO This should not happen. Anyway would be better to use a common Enum somehow
             }
             PanelSelect.setSelected(field, label);
         } else {

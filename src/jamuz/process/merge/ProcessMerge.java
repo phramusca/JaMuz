@@ -486,10 +486,11 @@ public class ProcessMerge extends ProcessAbstract {
 						//Means that selected Db has not yet been merged
 						playCounterToAdd=fileSelectedDb.getPlayCounter();
 						
-						//FIXME !!!!!!!!!!!!!!!! This is wrong for JaMuz Remote !!
+						//TODO !!!!!!!!!!!!!!!! This is wrong for JaMuz Remote !!
+						//At least after list is refreshed
 						//as playCounter is inserted in database during sync process
-						//BUT not previousPlayCounter apparently
-						//=> Make sure it is added, or add it if not already 
+						//BUT not previousPlayCounter
+						//=> just do it !
 					}
 				}
 				else {
@@ -585,10 +586,10 @@ public class ProcessMerge extends ProcessAbstract {
 			else if(fileSelectedDb.getRating()!=fileJaMuz.getRating()) { 
                 //TODO: include this new behavior in junit tests
 
-				//FIXME !!!!!!!!!!!!!!!!!!  : Use, instead of lastMergeDate:
-				// - getRatingModifDate() for remote !!!!
+				//TODO !!!!!!!!!!!!!!!! Use, instead of lastMergeDate:
+				// - fileSelectedDb.getRatingModifDate() for remote !!!!
 				// - getLastPlayed() AND lastMergeDate for all other sources 
-				//			(to imprvove the guessing in unknown situations)
+				//			(to improve the guessing in unknown situations)
 				// => This applies to:
 				//		- rating
 				//		- genre

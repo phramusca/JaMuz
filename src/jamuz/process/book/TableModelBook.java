@@ -82,7 +82,7 @@ public class TableModelBook extends TableModelGeneric {
 	 * Return list of files
 	 * @return
 	 */
-	public List<Book> getFiles() {
+	public List<Book> getBooks() {
 		return files;
 	}
 
