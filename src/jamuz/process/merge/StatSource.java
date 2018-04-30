@@ -45,10 +45,12 @@ public class StatSource {
 	 * @param isSelected  
      * @param lastMergeDate  
 	 */
-	public StatSource(int id, String name, int idStatement, String location, String user, String pwd, 
-			String rootPath, String machineName, int idDevice, boolean isSelected, String lastMergeDate) {
-		this(id, name, location, user, pwd, rootPath, machineName, isSelected, idDevice, idStatement, lastMergeDate);
-        
+	public StatSource(int id, String name, int idStatement, String location, 
+			String user, String pwd, String rootPath, String machineName, 
+			int idDevice, boolean isSelected, String lastMergeDate) {
+		
+		this(id, name, location, user, pwd, rootPath, machineName, 
+				isSelected, idDevice, idStatement, lastMergeDate);
 	}
     
     /**

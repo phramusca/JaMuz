@@ -27,6 +27,8 @@ import java.util.ArrayList;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
+
+//FIXME: Remove this StatSourceJaMuzRemote class as no more needed
 public class StatSourceJaMuzRemote extends StatSourceSQL {
 
 	/**
@@ -55,7 +57,6 @@ public class StatSourceJaMuzRemote extends StatSourceSQL {
 	
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
-        tags=file.getTags();
 		return true;
 	}
 }
