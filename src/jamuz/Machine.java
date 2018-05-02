@@ -165,13 +165,13 @@ public final class Machine {
 		}
 	}
 
-	//FIXME: device and statsource are linked BUT:
+	//FIXME !!!!!!! device and statsource are linked BUT:
 	// - the key can be different in either case 
 	//		=> search statsource always !!!
 	//			(remove getDevice(String login))
 	// Maybe keep the value in device: check how "remote://" is used first
 	//			(statsource is linked to a device anyway)
-	// - the key is bad: "remote://", use a property in statsource
+	// - the key is bad: "remote://", use a bool property in statsource instead
 	// - make it clear in gui
 	//----------------------
 	// - devicefile is linked to a device

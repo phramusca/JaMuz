@@ -115,11 +115,9 @@ public class DialogVideoOption extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("XBMC Database"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Kodi Database"));
 
         jLabelVideoLocation.setText(Inter.get("Label.Location")); // NOI18N
-
-        jTextFieldVideoLocation.setText("/home/raph/raph-desktop/.xbmc/userdata/Database/MyVideos78.db"); // NOI18N
 
         jLabelVideoRootPath.setText("Root Path");
 
@@ -366,8 +364,6 @@ public class DialogVideoOption extends javax.swing.JDialog {
                     .addComponent(jButtonSave))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jPanel2.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

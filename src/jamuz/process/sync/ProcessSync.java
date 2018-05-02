@@ -17,9 +17,6 @@
 
 package jamuz.process.sync;
 //FIXME SYNC: Problem with Guayadeque: investigate issue
-//FIXME SYNC: Speed up first ack session by sending all files at once
-//or at least by batches if too much timeout
-//(re-use merge ? with force jamuz ?)
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;

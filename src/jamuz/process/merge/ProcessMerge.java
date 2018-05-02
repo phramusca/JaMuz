@@ -488,12 +488,6 @@ public class ProcessMerge extends ProcessAbstract {
 						//This happens when no previous playCounter could be retrieved from JaMuzDb
 						//Means that selected Db has not yet been merged
 						playCounterToAdd=fileSelectedDb.getPlayCounter();
-						
-						//TODO !!!!!!!!!!!!!!!! This is wrong for JaMuz Remote !!
-						//At least after list is refreshed
-						//as playCounter is inserted in database during sync process
-						//BUT not previousPlayCounter
-						//=> just do it !
 					}
 				}
 				else {
@@ -587,21 +581,7 @@ public class ProcessMerge extends ProcessAbstract {
 				}
 			}
 			else if(fileSelectedDb.getRating()!=fileJaMuz.getRating()) {
-				//TODO: include this new behavior in junit tests
-
-				//TODO !!!!!!!!!!!!!!!! Use, instead of lastMergeDate:
-				// - fileSelectedDb.getRatingModifDate() for remote !!!!
-				// - getLastPlayed() AND lastMergeDate for all other sources 
-				//			(to improve the guessing in unknown situations)
-				// => This applies to:
-				//		- rating
-				//		- genre
-				//		- tags
-				/////////////////////////////:
-				// Indeed, we are sending playCounter, rating, genre and tags
-				//	and that happens before merge
-				// so during merge, s .... well stgh wrong, to be found and debugged
-				
+				//FIXME TEST: include this new behavior in junit tests
 				if(fileJaMuz.getRatingModifDate().after(
 						selectedStatSource.lastMergeDate)) {
 					//It has been modified after last merge on JaMuz
@@ -747,6 +727,9 @@ public class ProcessMerge extends ProcessAbstract {
 						fileNew.setTags(selectedDbTags);
 					}
 				} else {
+					//Still compared equal but user tags will not be saved
+					//even if some other fields are different
+					//=> less db usage
 					fileJaMuz.setTags(null);
 					fileSelectedDb.setTags(null);
 					fileNew.setTags(null);
@@ -917,16 +900,6 @@ public class ProcessMerge extends ProcessAbstract {
 					filesToUpdatePlayCounter.add(fileInfo);
 					completedList.add((FileInfo) fileInfo.clone());
 				}
-				
-				//FIXME !!! If needed to update tagsModifDate, it has to be here
-				// But need to have idFile in mergeListDbSelected
-				//which we do not have
-				//=> need to store idFile in jamuz remote database
-				//    => this will allow easier checking of the files in sync 
-				//      and will allow to merge text lists into JaMuz Remote database 
-
-				// Then, use setTags from DbConnJaMuz instead so updateTagsModifDate is done 
-		
 				Jamuz.getDb().setTags(mergeListDbSelected, null);
 				
 			} else {

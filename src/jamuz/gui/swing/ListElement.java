@@ -18,7 +18,6 @@
 package jamuz.gui.swing;
 
 import jamuz.FileInfoInt;
-import jamuz.process.check.FileInfoDisplay;
 import java.util.Objects;
 
 /**
