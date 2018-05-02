@@ -1014,7 +1014,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean setCheckedFlagReset(CheckedFlag checkedFlag) {
         try {
-            //FIXME CHECK: Shall we update the paths set as deleted or not ?
+            //FIXME CHECK Shall we update the paths set as deleted or not ?
             PreparedStatement stUpdateCheckedFlagReset
                     = dbConn.connection.prepareStatement(
 							"UPDATE path SET checked=0 "

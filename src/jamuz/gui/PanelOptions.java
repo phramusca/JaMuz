@@ -704,7 +704,7 @@ public class PanelOptions extends javax.swing.JPanel {
 						progressBar.setup(foldersInfo.size());
 						long totalSize=0;
 						long totalDeleted=0;
-						long maxSize=2000000000; //2 Go //FIXME: Make this an option
+						long maxSize=2000000000; //2 Go //FIXME OPTIONS Make log maxSize (cleanup) an option
 						int nbFoldersDeleted=0;
 						for (FolderInfo folderInfo : foldersInfo) {
 							checkAbort();

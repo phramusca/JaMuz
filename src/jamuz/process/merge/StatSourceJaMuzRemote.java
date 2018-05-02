@@ -28,7 +28,12 @@ import java.util.ArrayList;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 
-//FIXME: Remove this StatSourceJaMuzRemote class as no more needed
+// FIXME SYNC: Remove this StatSourceJaMuzRemote class as no more needed OR:
+// WARNING: May be needed for:
+// - playcounter insertion
+// - original path
+// - more ?
+// => If so, document it clear here and make NOT appear in gui combo
 public class StatSourceJaMuzRemote extends StatSourceSQL {
 
 	/**
