@@ -29,7 +29,7 @@ public class ClientInfo {
 	private boolean remoteConnected;
 	private boolean syncConnected;
 	private String status="";
-	private ProgressBar progressBar = new ProgressBar();
+	private final ProgressBar progressBar;
 	
 	//TODO: Manage rights
 //	private boolean allowRating;
@@ -37,19 +37,17 @@ public class ClientInfo {
 //	private boolean allow...;
 
 	public ClientInfo() {
+		this.progressBar = new ProgressBar();
 	}
 
-	public ClientInfo(String id, String name) {
-		this.id = id;
+	public ClientInfo(String login, String name, String appId) {
+		this.progressBar = new ProgressBar();
+		this.id = login+"-"+appId;
 		this.name = name;
 	}
 
 	public String getId() {
 		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getName() {

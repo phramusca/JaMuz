@@ -472,8 +472,9 @@ public class Server {
 				String line = sc.nextLine().trim();
 				String items[] = line.split("\t");
 				String login = items[0].trim();
-				String name = items[1].trim();
-				tableModel.add(new ClientInfo(login, name));
+				String appId = items[1].trim();
+				String name = items[2].trim();
+				tableModel.add(new ClientInfo(login, name, appId));
 			}
 		} catch (FileNotFoundException ex) {
 			Logger.getLogger(PanelRemote.class.getName()).log(Level.SEVERE, null, ex);
