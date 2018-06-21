@@ -5,6 +5,7 @@
  */
 package jamuz.remote;
 
+import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
 import jamuz.Jamuz;
@@ -37,6 +38,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -233,23 +236,19 @@ public class Client {
 		@Override
 		public void run() {
 			try {
-                send("MSG_ENTER_LOGIN");
-                String login = bufferedReader.readLine();
-                send("MSG_ENTER_PWD");
-                String pass = bufferedReader.readLine();
-				
-				//TODO: Replace login, pass, isRemote by a json auth message
-				boolean isRemote = !login.endsWith("-data");
-				if(!isRemote) {
-					login = login.substring(0, login.length()-"-data".length());
-				}
-				
-				String name = isValid(login, pass);
+                send("MSG_AUTHENTICATE");
+				String json = bufferedReader.readLine();		
+				JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
+				String login =  (String) jsonObject.get("login");
+				String password = (String) jsonObject.get("password");
+				boolean isRemote = (Boolean) jsonObject.get("isRemote");
+				String appId = (String) jsonObject.get("appId");
+				String name = isValid(login, appId, password);
                 if(!name.equals("")){
 					send("MSG_CONNECTED");
                     reception = new Reception(bufferedReader, callback, Client.this);
                     reception.start();
-					info = new ClientInfo(login, name);
+					info = new ClientInfo(login, name, appId);
 					info.setRemoteConnected(isRemote);
 					info.setSyncConnected(!isRemote);	
                     callback.authenticated(Client.this);
@@ -257,31 +256,38 @@ public class Client {
                 else {
                     send("MSG_ERROR_CONNECTION");
                 }
-			} catch (IOException ex) {
+			} catch (IOException | ParseException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 
-		private String isValid(String login, String pass) {
+		private String isValid(String login, String appId, String pass) {
 			//TODO: Use a better authentication & make jamuz to multi-user somehow
 			try {
 				Scanner sc = new Scanner(Jamuz.getFile("RemoteClients.txt", "data"));
 				while(sc.hasNext()){
 					String line = sc.nextLine().trim();
 					String items[] = line.split("\t");
-					if(items[0].trim().equals(login) && pass.equals("tata")){
-						return items[1];
+					if(items[0].trim().equals(login) 
+							&& items[1].trim().equals(appId)
+							&& pass.equals("tata")){
+						return items[2];
 					}
 				 }
 			} catch (FileNotFoundException ex) {	
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, "Le fichier \"RemoteClients.txt\" n'existe pas !");
 			}
 			//Not found, ask user
-			String input = JOptionPane.showInputDialog(null, "Enter device pretty name for \""+login+"\"", "");  //NOI18N
+			String input = JOptionPane.showInputDialog(null, 
+					"Enter device pretty name for \""+login+"\" ("+appId+")", "");  //NOI18N
 			if (input != null) {
 				try {
-					try (Writer output = new BufferedWriter(new FileWriter(Jamuz.getFile("RemoteClients.txt", "data"), true))) {
-						output.append("\n").append(login).append("\t").append(input);
+					try (Writer output = new BufferedWriter(new FileWriter(
+							Jamuz.getFile("RemoteClients.txt", "data"), true))) {
+						output.append(login)
+								.append("\t").append(appId)
+								.append("\t").append(input)
+								.append("\n");
 						return input;
 					}
 				} catch (IOException ex) {
