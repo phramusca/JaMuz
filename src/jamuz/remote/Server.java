@@ -183,12 +183,13 @@ public class Server {
 									ArrayList<FileInfoInt> inserted= Jamuz.getDb().
 											insertDeviceFiles(toInsertInDeviceFiles, device.getId());
 									StatSource source = Jamuz.getMachine().getStatSource(login);
-									if(!Jamuz.getDb().setPreviousPlayCounter(inserted, source.getId())) {
-										//TODO: Manage potential error
-									}
-									for (FileInfoInt ins : inserted) {
-										list.add(ins.toMap());
-									}
+									if(source!=null && Jamuz.getDb()
+											.setPreviousPlayCounter(inserted, source.getId())) {
+										for (FileInfoInt ins : inserted) {
+											list.add(ins.toMap());
+										}
+										
+									}//FIXME: else { Manage potential error => Send STOP to remote with erro msg }
 									setStatus(login, "Sending list of ack. files");
 									JSONObject obj = new JSONObject();
 									obj.put("type", "insertDeviceFileSAck");
