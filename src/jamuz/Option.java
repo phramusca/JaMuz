@@ -40,10 +40,17 @@ public class Option {
 	 * @param idOptionType
 	 * @param type
 	 */
-	public Option(String id, String value, int idMachine, int idOptionType, String type) {
+	public Option(String id, String value, int idMachine, 
+			int idOptionType, String type) {
 		this.id = id;
 		this.value = value;
-		this.comment = "<html><b>"+Inter.get("Options.Title."+id)+"</b> : "+Inter.get("Options.Comment."+id)+"</html>";  //NOI18N
+		this.comment = ""
+				+ "<html>"
+				+ "<b>"
+				+Inter.get("Options.Title."+id)
+				+"</b> : "
+				+Inter.get("Options.Comment."+id)
+				+"</html>";  //NOI18N
 		this.idMachine=idMachine;
 		this.idOptionType=idOptionType;
 		this.type=type;
@@ -111,6 +118,4 @@ public class Option {
     public String toString() {
         return id;
     }
-    
-    
 }
