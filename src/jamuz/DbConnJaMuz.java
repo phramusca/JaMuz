@@ -1792,7 +1792,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean getOptions(ArrayList<Option> myOptions, String machineName) {
         ResultSet rs=null;
         try {
-            PreparedStatement stSelectOptions = dbConn.connection.prepareStatement("SELECT O.idMachine, OT.name, O.value, O.idOptionType, OT.type "
+            PreparedStatement stSelectOptions = dbConn.connection.prepareStatement(
+					"SELECT O.idMachine, OT.name, O.value, O.idOptionType, OT.type "
                     + "FROM option O, optiontype OT, machine M "   //NOI18N
                     + "WHERE O.idMachine=M.idMachine "
                     + "AND O.idOptionType=OT.idOptionType "
@@ -1800,7 +1801,12 @@ public class DbConnJaMuz extends StatSourceSQL {
             stSelectOptions.setString(1, machineName);
             rs = stSelectOptions.executeQuery();
             while (rs.next()) {
-                myOptions.add(new Option(dbConn.getStringValue(rs, "name"), dbConn.getStringValue(rs, "value"), rs.getInt("idMachine"), rs.getInt("idOptionType"), dbConn.getStringValue(rs, "type")));   //NOI18N
+                myOptions.add(new Option(
+						dbConn.getStringValue(rs, "name"), 
+						dbConn.getStringValue(rs, "value"), 
+						rs.getInt("idMachine"), 
+						rs.getInt("idOptionType"), 
+						dbConn.getStringValue(rs, "type")));   //NOI18N
             }
 
             if(myOptions.size()<=0) {
