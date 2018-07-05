@@ -56,16 +56,7 @@ public class PanelRemote extends javax.swing.JPanel {
 	 */
 	public PanelRemote() {
 		initComponents();
-		//TODO: Update when changing port;
-		StringBuilder IP = new StringBuilder();
-		IP.append("<html>Set \"<B>");
-		try {
-			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append((Integer) jSpinnerPort.getValue()); 
-		} catch (UnknownHostException ex) {
-			IP.append("Undetermined !");
-		}
-		IP.append("\"</B> in JaMuz Remote as <B>\"&lt;IP&gt;:&lt;Port&gt;\"</B> or read QR code with your Android phone.</html>");
-		jLabelIP.setText(IP.toString());
+		setIpText();
 	}
 	
 	public void initExtended(ICallBackServer callback) {
@@ -79,12 +70,9 @@ public class PanelRemote extends javax.swing.JPanel {
 		setColumn(1, 60);
 		setColumn(2, 200);
 		setColumn(3, 300);
-		
 		TableColumn column = jTableRemote.getColumnModel().getColumn(4);
 		column.setCellRenderer(new ProgressCellRender());
-		
 		server.fillClients();
-		
 		startStopRemoteServer();
 	}
 	
@@ -227,11 +215,24 @@ public class PanelRemote extends javax.swing.JPanel {
 		jSpinnerPort.setEnabled(enable);
    }
    
+   private void setIpText() {
+	   StringBuilder IP = new StringBuilder();
+		IP.append("<html>Set \"<B>");
+		try {
+			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append((Integer) jSpinnerPort.getValue()); 
+		} catch (UnknownHostException ex) {
+			IP.append("Undetermined !");
+		}
+		IP.append("\"</B> in JaMuz Remote as <B>\"&lt;IP&gt;:&lt;Port&gt;\"</B> or read QR code with your Android phone.</html>");
+		jLabelIP.setText(IP.toString());
+   }
+   
    private void startStopRemoteServer() {
 		enableConfig(false);
 		if(server!=null) {
 			server.closeClients();
 			if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
+				server.setPort((Integer) jSpinnerPort.getValue());
 				if(server.connect()) {
 					enableConfig(false);
 					jButtonQRcode.setEnabled(true);
@@ -269,6 +270,11 @@ public class PanelRemote extends javax.swing.JPanel {
         jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder("Jamuz Remote Server"));
 
         jSpinnerPort.setModel(new javax.swing.SpinnerNumberModel(2013, 2009, 65535, 1));
+        jSpinnerPort.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinnerPortStateChanged(evt);
+            }
+        });
 
         jButtonStart.setText(Inter.get("Button.Start")); // NOI18N
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
@@ -313,21 +319,19 @@ public class PanelRemote extends javax.swing.JPanel {
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addComponent(jLabelIP)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPaneCheckTags1)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPaneCheckTags1)
-                            .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButtonQRcode)
-                                .addGap(18, 18, Short.MAX_VALUE)
-                                .addComponent(jCheckBoxServerStartOnStartup)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonStart)))
-                        .addContainerGap())))
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonQRcode)
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addComponent(jCheckBoxServerStartOnStartup)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonStart)))
+                .addContainerGap())
         );
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -368,7 +372,7 @@ public class PanelRemote extends javax.swing.JPanel {
             int port = (Integer) jSpinnerPort.getValue();
             //TODO: Use user's own secret. It also allows to identify users
             String encrypted = Encryption.encrypt(ip+":"+port, "NOTeBrrhzrtestSecretK");
-            String url = "JaMuzRemote://"+encrypted;
+            String url = "jamuzremote://"+encrypted;
             BufferedImage bufferedImage = CrunchifyQRCode.createQRcode(url, 250);
             DialogQRcode.main(bufferedImage);
         } catch (UnknownHostException ex) {
@@ -389,6 +393,10 @@ public class PanelRemote extends javax.swing.JPanel {
             model.setSelectionInterval( rowNumber, rowNumber );
         }
     }//GEN-LAST:event_jTableRemoteMousePressed
+
+    private void jSpinnerPortStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerPortStateChanged
+        setIpText();
+    }//GEN-LAST:event_jSpinnerPortStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

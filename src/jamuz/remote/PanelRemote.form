@@ -95,6 +95,9 @@
               <SpinnerModel initial="2013" maximum="65535" minimum="2009" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSpinnerPortStateChanged"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonStart">
           <Properties>

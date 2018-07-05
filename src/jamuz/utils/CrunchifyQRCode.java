@@ -52,7 +52,7 @@ public class CrunchifyQRCode {
 		//http://stackoverflow.com/questions/10258633/android-start-application-from-qr-code-with-params
 
 //		String url = "https://phramusca.github.io/JaMuz/";
-		createQRcodeFile("JaMuzRemote://192.168.0.13:6451", "/home/raph/Bureau/", "png");
+		createQRcodeFile("jamuzremote://192.168.0.13:6451", "/home/raph/Bureau/", "png");
 	}
 
 	/**

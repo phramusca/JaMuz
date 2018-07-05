@@ -52,7 +52,7 @@ public class Server {
 	 *
 	 */
 	public static ServerSocket serverSocket = null;
-	private final int port;
+	private int port;
 	private HandleLogin handleLogin;
 	private final ICallBackServer callback;
 	private final TableModelRemote tableModel;
@@ -93,7 +93,11 @@ public class Server {
 			return false;
 		}
 	}
-	
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
 	/**
 	 *
 	 */
