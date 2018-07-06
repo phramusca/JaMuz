@@ -9,28 +9,26 @@
 Pull requests are welcome.
 Please submit to the `master` branch.
 
-### TODO for Alpha 0.0.24
-- new GUI Options
- - remove table optiontpe, use hashmap instead
- - Make release
- - update process
- - tag git
+### Roadmap to Release version 1.0
 
-### TODO for Beta version 0.1
-
-- Test, Stabilize and do all other FIX-MEs
+- Test Plan:
+  - add unit tests
+  - review/update functional tests
+- Do all FIX-MEs 
+  - (to be moved or copied to Git Issues)
 - Initial options setup interface
 - Code review:
- - Exceptions handling
- - Internationalization
- - Files headers (license)
- - Javadoc
+  - Exceptions handling
+  - Internationalization
+  - Files headers (license)
+  - Javadoc
 
 ### Internationalization
 
 Using [weblate.org](https://hosted.weblate.org/engage/jamuz/)
 
 ### Stat sources
+
 In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monkey, Mixxx, MyTunes) you can add one simply by extending the jamuz.StatSourceAbstract class and adding entry to database.
 
 ## License
