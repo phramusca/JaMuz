@@ -26,50 +26,6 @@ import java.util.concurrent.TimeUnit;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class StringManager {
-    /**
-	 * Return left portion of a string
-	 * @param text
-	 * @param length
-	 * @return
-	 */
-	public static String Left(String text, int length)
-    {
-        return text.substring(0, length);
-    }
-
-    /**
-	 * Return right portion of a string
-	 * @param text
-	 * @param length
-	 * @return
-	 */
-	public static String Right(String text, int length)
-    {
-        return text.substring(text.length() - length, text.length());
-    }
-
-    /**
-	 * Return portion of a string
-	 * @param text
-	 * @param start
-	 * @param end
-	 * @return
-	 */
-	public static String Mid(String text, int start, int end)
-    {
-        return text.substring(start, end);
-    }
-
-    /**
-	 * Return portion of a string
-	 * @param text
-	 * @param start
-	 * @return
-	 */
-	public static String Mid(String text, int start)
-    {
-        return text.substring(start, text.length() - start);
-    }
 
     /**
      * Remove illegal characters from path and filename.
@@ -202,4 +158,49 @@ public class StringManager {
 //
 //        return String.format("%02dh %02dm %02ds", hours, minutes, seconds);
 //    }
+	
+	/**
+	 * Return left portion of a string
+	 * @param text
+	 * @param length
+	 * @return
+	 */
+	public static String Left(String text, int length)
+    {
+        return text.substring(0, length);
+    }
+
+    /**
+	 * Return right portion of a string
+	 * @param text
+	 * @param length
+	 * @return
+	 */
+	public static String Right(String text, int length)
+    {
+        return text.substring(text.length() - length, text.length());
+    }
+
+    /**
+	 * Return portion of a string
+	 * @param text
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public static String Mid(String text, int start, int end)
+    {
+        return text.substring(start, end);
+    }
+
+    /**
+	 * Return portion of a string
+	 * @param text
+	 * @param start
+	 * @return
+	 */
+	public static String Mid(String text, int start)
+    {
+        return text.substring(start, text.length() - start);
+    }
 }
