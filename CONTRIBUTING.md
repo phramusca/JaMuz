@@ -27,6 +27,11 @@ Please submit to the `master` branch.
 
 Using [weblate.org](https://hosted.weblate.org/engage/jamuz/)
 
+- If you plan to update the bundle**.properties files, please remember that such files are ISO 8859-1 encoded.
+- Using a different encoding may certainly result in weird characters in the GUI
+- ie: NO UTF-8 nor anything else
+(NetBeans respect the convention, but other editors may use instead UTF-8 for instance, the most common default encoding)
+
 ### Stat sources
 
 In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monkey, Mixxx, MyTunes) you can add one simply by extending the jamuz.StatSourceAbstract class and adding entry to database.
