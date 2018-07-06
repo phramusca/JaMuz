@@ -961,7 +961,7 @@ public class DialogCheck extends javax.swing.JDialog {
             }
         });
 
-        jLabelCheckReplayGain.setText("Replaygain"); // NOI18N
+        jLabelCheckReplayGain.setText("ReplayGain"); // NOI18N
 
         jLabelCheckReplayGainTag.setBackground(new java.awt.Color(255, 255, 255));
         jLabelCheckReplayGainTag.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1695,7 +1695,7 @@ public class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
         
-        if((JOptionPane.showConfirmDialog(null, "Supprimer les fichiers ?", 
+        if((JOptionPane.showConfirmDialog(null, Inter.get("Msg.Check.DeleteFilesQuestion"), 
                 Inter.get("Label.Confirm"),  //NOI18N
                 JOptionPane.YES_NO_OPTION) 
                     == JOptionPane.YES_OPTION)) {
