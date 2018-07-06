@@ -373,6 +373,7 @@ public class PanelRemote extends javax.swing.JPanel {
             //TODO: Use user's own secret. It also allows to identify users
             String encrypted = Encryption.encrypt(ip+":"+port, "NOTeBrrhzrtestSecretK");
             String url = "jamuzremote://"+encrypted;
+			//http://stackoverflow.com/questions/10258633/android-start-application-from-qr-code-with-params
             BufferedImage bufferedImage = CrunchifyQRCode.createQRcode(url, 250);
             DialogQRcode.main(bufferedImage);
         } catch (UnknownHostException ex) {
