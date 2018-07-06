@@ -1246,7 +1246,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabelCheckReplayGain">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Replaygain" noResource="true"/>
+                    <Property name="text" type="java.lang.String" value="ReplayGain" noResource="true"/>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
