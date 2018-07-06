@@ -16,6 +16,7 @@ Please submit to the `master` branch.
   - review/update functional tests
 - Do all FIX-MEs 
   - (to be moved or copied to GitHub Issues)
+- Update wiki, website, release notes and CHANGES.md
 - Initial options setup interface
 - Code review:
   - Exceptions handling
