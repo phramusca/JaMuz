@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package jamuz.remote;
-//FIXME REMOTE: Problems when switching from local to remote !!
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.gui.DialogQRcode;
@@ -370,7 +369,7 @@ public class PanelRemote extends javax.swing.JPanel {
         try {
             String ip = getLocalHostLANAddress().getHostAddress();
             int port = (Integer) jSpinnerPort.getValue();
-            //FIXME: Use user's own secret. It also allows to identify users
+            //FIXME !!!! : Use user's own secret. It also allows to identify users
             String encrypted = Encryption.encrypt(ip+":"+port, "NOTeBrrhzrtestSecretK");
             String url = "jamuzremote://"+encrypted;
 			//http://stackoverflow.com/questions/10258633/android-start-application-from-qr-code-with-params
