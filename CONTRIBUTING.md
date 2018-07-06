@@ -15,7 +15,7 @@ Please submit to the `master` branch.
   - add unit tests
   - review/update functional tests
 - Do all FIX-MEs 
-  - (to be moved or copied to Git Issues)
+  - (to be moved or copied to GitHub Issues)
 - Initial options setup interface
 - Code review:
   - Exceptions handling
