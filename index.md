@@ -2,6 +2,7 @@
 [Download **Beta version 0.2.2**](https://github.com/phramusca/JaMuz/releases/download/v0.2.2-beta/JaMuz_v0.2.2_Beta.7z)
 
 ([Release Notes and other versions](https://github.com/phramusca/JaMuz/releases))
+
 _________________________________________________________________________________
 
 
