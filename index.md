@@ -48,6 +48,6 @@ ________________________________________________________________________________
 
 _________________________________________________________________________________
 
-# [Wiki (Aide)](https://github.com/phramusca/JaMuz/wiki).
+# [Wiki (Aide)](https://github.com/phramusca/JaMuz/wiki)
 
 <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
