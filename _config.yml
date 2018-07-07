@@ -3,6 +3,6 @@ description: Music management tool
 google_analytics: 
 show_downloads: true
 theme: jekyll-theme-leap-day
-
-gems:
-  - jekyll-mentions
+github:
+  zip_url: https://github.com/phramusca/JaMuz/archive/master.zip
+  tar_url: https://github.com/phramusca/JaMuz/archive/master.tar.gz
