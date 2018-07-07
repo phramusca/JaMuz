@@ -9,7 +9,7 @@ ________________________________________________________________________________
 * Your new Android music player
 * Easily sync a playlist over WiFi from [JaMuz](https://github.com/phramusca/JaMuz) to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
 * Easily merge your ratings, tags, genre and play statistics
-* Remote control JaMuz
+* Remote control [JaMuz](https://github.com/phramusca/JaMuz)
 
 _________________________________________________________________________________
 
@@ -33,8 +33,8 @@ ________________________________________________________________________________
   * Detect duplicates.
   * Compute MP3 gain.
 * ***Sync your files to devices:***
-  * Create a device: select a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
-  * Sync your files: process deletes unwanted files on destination then copy new files.
+  * Select a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
+  * Process deletes unwanted files on destination then copy new files.
 * Create complex playlists in a simple way
 * Audio Player (using mplayer)
 * Runs on Windows and Linux (as written in Java), maybe Mac OS (not tested).
