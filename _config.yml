@@ -2,7 +2,7 @@ title: Jamuz
 description: Music management tool
 google_analytics: 
 show_downloads: false
-theme: jekyll-theme-leap-day
+theme: jekyll-theme-modernist
 
 gems:
   - jekyll-mentions
