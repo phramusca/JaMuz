@@ -1,21 +1,20 @@
 _________________________________________________________________________________
 
 # [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
-    
+
+### [Download **Beta version 0.2.0** .apk](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.2.0-beta/JaMuz_Remote_v0.2.0-beta.apk)
+
+[Release Notes and other versions](https://github.com/phramusca/JaMuz-Remote/releases)
+
 * Your new Android music player
 * Easily sync a playlist over WiFi from JaMuz to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
 * Easily merge your ratings, tags, genre and play statistics
 * Remote control JaMuz
-  
-## [Download JaMuz Remote **Beta version 0.2.0**](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.2.0-beta/JaMuz_Remote_v0.2.0-beta.apk)
-
-[Release Notes and other versions](https://github.com/phramusca/JaMuz-Remote/releases)
-
 _________________________________________________________________________________
 
 # [JaMuz](https://github.com/phramusca/JaMuz)
 
-## [Download JaMuz **Beta version 0.2.2**](https://github.com/phramusca/JaMuz/releases/download/v0.2.2-beta/JaMuz_v0.2.2_Beta.7z)
+### [Download **Beta version 0.2.2** .7z](https://github.com/phramusca/JaMuz/releases/download/v0.2.2-beta/JaMuz_v0.2.2_Beta.7z)
 
 [Release Notes and other versions](https://github.com/phramusca/JaMuz/releases)
 
