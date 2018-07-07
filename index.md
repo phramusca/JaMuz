@@ -2,12 +2,12 @@ ________________________________________________________________________________
 
 # [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
 
-### [Download **Beta version 0.2.0** .apk](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.2.0-beta/JaMuz_Remote_v0.2.0-beta.apk)
+### [Download **Beta v0.2.0** (.apk)](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.2.0-beta/JaMuz_Remote_v0.2.0-beta.apk)
 
 [Release Notes and other versions](https://github.com/phramusca/JaMuz-Remote/releases)
 
 * Your new Android music player
-* Easily sync a playlist over WiFi from JaMuz to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
+* Easily sync a playlist over WiFi from [JaMuz](https://github.com/phramusca/JaMuz) to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
 * Easily merge your ratings, tags, genre and play statistics
 * Remote control JaMuz
 
@@ -15,7 +15,7 @@ ________________________________________________________________________________
 
 # [JaMuz](https://github.com/phramusca/JaMuz)
 
-### [Download **Beta version 0.2.2** .7z](https://github.com/phramusca/JaMuz/releases/download/v0.2.2-beta/JaMuz_v0.2.2_Beta.7z)
+### [Download **Beta v0.2.2** (.7z)](https://github.com/phramusca/JaMuz/releases/download/v0.2.2-beta/JaMuz_v0.2.2_Beta.7z)
 
 [Release Notes and other versions](https://github.com/phramusca/JaMuz/releases)
 
@@ -24,9 +24,9 @@ ________________________________________________________________________________
   * Kodi (Linux / Windows)
   * Media Monkey (Windows)
   * Mixxx (Linux / Windows)
-  * JaMuz Remote (Android)
+  * [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote) (Android)
   * MyTunes (Android) [app discontinued apparently]
-  * Please [contribute](CONTRIBUTING.md) to add some more.
+  * Please [contribute](https://github.com/phramusca/JaMuz/blob/master/CONTRIBUTING.md) to add some more.
   * Data being user custom tags, rating, BPM, genre and statistics: last played, play counter and added date.
 * ***Check, tag and organize your files:***
   * Get tags and covers from Musicbrainz, last.fm and coverartarchive.org
@@ -41,7 +41,7 @@ ________________________________________________________________________________
 * Bonus: 
   * Kodi helper to manage your videos.
   * Calibre helper to manage your ebooks.
-* Translated using [WebLate](https://hosted.weblate.org/engage/jamuz/):
+* Please help out translating by using [WebLate](https://hosted.weblate.org/engage/jamuz/):
 <a href="https://hosted.weblate.org/engage/jamuz/?utm_source=widget">
 <img src="https://hosted.weblate.org/widgets/jamuz/-/multi-auto.svg?" alt="État de la traduction" />
 </a>
