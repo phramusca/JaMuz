@@ -63,7 +63,10 @@ public class PanelOptions extends javax.swing.JPanel {
 		progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 		jListGenres.setModel(Jamuz.getGenreListModel());
 		jListTags.setModel(Jamuz.getTagsModel());
-		jSpinnerBytes.getModel().setValue(Long.valueOf(Jamuz.getOptions().get("log.cleanup.keep.size.bytes")));
+		if(!Jamuz.getOptions().get("log.cleanup.keep.size.bytes").equals("{Missing}"))
+		{
+			jSpinnerBytes.getModel().setValue(Long.valueOf(Jamuz.getOptions().get("log.cleanup.keep.size.bytes")));
+		};
 	}
 	
 	public static void fillMachineList() {
