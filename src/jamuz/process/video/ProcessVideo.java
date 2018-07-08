@@ -203,6 +203,13 @@ public class ProcessVideo extends ProcessAbstract {
         }
 
 		//Connect to database
+		
+		//Checks if database is configured
+		if (Jamuz.getOptions().get("video.dbLocation") != null) {
+			Popup.info("No Video Database configured");
+			return false;
+		}
+
 		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, 
 				Jamuz.getOptions().get("video.dbLocation"), ".", "."), 
 				Jamuz.getOptions().get("video.rootPath"));
