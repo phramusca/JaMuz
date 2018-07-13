@@ -66,54 +66,47 @@ public class Jamuz {
 	public static boolean configure(String appPath) {
         Jamuz.appPath = appPath;
         logPath = appPath + "logs" + File.separator;  //NOI18N //NOI18N //NOI18N
-        
-        //Get database connection info, connect an init
+
         if(!connectDatabase()) {
             return false;
         }
-        
         readGenres(); 
         readTags();
-
 		if(!readPlaylists()) {
 			return false;
 		}
-        
-        //Get current machine
         if(!getCurrentMachine())
         {
             return false;
         }
-        
-        //Get options for current machine
         if(!getMachine().read()) {
             return false;
         }
-
-        //Create LOG
         if(!createLog()) {
             return false;
         }
         logger.info("JaMuz started"); //NOI18N
         logger.log(Level.CONFIG, "Current folder: {0}", appPath); //NOI18N
-        
-        //Detect OS and check it is supported
+
         if(!OS.detect()) {
             return false;
         }
         logger.log(Level.CONFIG, "OS: {0}", OS.getName()); //NOI18N
-        
-        //Read properties file (this is for Video)
+
         String filename = appPath + "JaMuz.properties";
-		options = new Options(filename); 
         if(new File(filename).exists()) {
+			options = new Options(filename); 
 			if(!options.read()) {
 				return false;
 			}
-		}
+		} else {
+			Popup.error("Missing JaMuz.properties file.");
+            return false;
+        }
 
 		keys = new Keys("/jamuz/keys.properties");
         if(!keys.read()) {
+			Popup.error("Missing keys.properties file from jar package.");
             return false;
         }
         
