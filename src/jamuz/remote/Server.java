@@ -472,6 +472,10 @@ public class Server {
 	public void fillClients() {
 		try {
 			tableModel.clear();
+			//checks if RemoteClients.txt exists
+			if(!Jamuz.getFile("RemoteClients.txt", "data").exists()){
+			  return;
+			}
 			Scanner sc = new Scanner(Jamuz.getFile("RemoteClients.txt", "data"));
 			while(sc.hasNext()){
 				String line = sc.nextLine().trim();
