@@ -56,9 +56,7 @@ public class Options {
 	public Options(String filename) {
 		this.properties = new Properties();
 		try {
-//			if(new File(filename).exists()) {
-				input = new FileInputStream(filename);
-//			}
+			input = new FileInputStream(filename);
 		} catch (FileNotFoundException ex) {
 			Popup.error(ex);
 		}
@@ -123,6 +121,9 @@ public class Options {
 	 * @return
 	 */
 	public boolean read() {
+		if (input==null) {
+			return false;
+		}
         try {
             properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
             return true;
