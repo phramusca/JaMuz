@@ -472,7 +472,6 @@ public class Server {
 	public void fillClients() {
 		try {
 			tableModel.clear();
-			//checks if RemoteClients.txt exists
 			if(!Jamuz.getFile("RemoteClients.txt", "data").exists()){
 			  return;
 			}
