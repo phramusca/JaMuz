@@ -63,7 +63,9 @@ public class PanelOptions extends javax.swing.JPanel {
 		progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 		jListGenres.setModel(Jamuz.getGenreListModel());
 		jListTags.setModel(Jamuz.getTagsModel());
-		jSpinnerBytes.getModel().setValue(Long.valueOf(Jamuz.getOptions().get("log.cleanup.keep.size.bytes")));
+		long size = Long.valueOf(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
+		jSpinnerBytes.getModel().setValue(size);
+		jLabelBytes.setText("("+Inter.get("Label.Keep")+" "+StringManager.humanReadableByteCount(size, false)+")");
 	}
 	
 	public static void fillMachineList() {
@@ -177,6 +179,7 @@ public class PanelOptions extends javax.swing.JPanel {
         jSpinnerBytes = new javax.swing.JSpinner();
         jLabelCleanup = new javax.swing.JLabel();
         jLabelBytes = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
         jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
@@ -437,7 +440,7 @@ public class PanelOptions extends javax.swing.JPanel {
         jProgressBarCleanupLogs.setString(" "); // NOI18N
         jProgressBarCleanupLogs.setStringPainted(true);
 
-        jButtonCleanupLogs.setText("Cleanup Logs");
+        jButtonCleanupLogs.setText("Cleanup");
         jButtonCleanupLogs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCleanupLogsActionPerformed(evt);
@@ -445,10 +448,17 @@ public class PanelOptions extends javax.swing.JPanel {
         });
 
         jSpinnerBytes.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(2000000000L), Long.valueOf(1000000000L), Long.valueOf(100000000000L), Long.valueOf(1000000L)));
+        jSpinnerBytes.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSpinnerBytesStateChanged(evt);
+            }
+        });
 
         jLabelCleanup.setText(Inter.get("Label.Keep")); // NOI18N
 
-        jLabelBytes.setText("bytes (2 Go)"); // NOI18N
+        jLabelBytes.setText("(Keep 2 Go)"); // NOI18N
+
+        jLabel1.setText("bytes"); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -457,15 +467,17 @@ public class PanelOptions extends javax.swing.JPanel {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jProgressBarCleanupLogs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jButtonCleanupLogs)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelBytes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabelCleanup)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinnerBytes, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jSpinnerBytes, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelBytes)
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(jButtonCleanupLogs)))
+                        .addComponent(jLabel1))
+                    .addComponent(jProgressBarCleanupLogs, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -474,8 +486,11 @@ public class PanelOptions extends javax.swing.JPanel {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinnerBytes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelCleanup)
-                    .addComponent(jLabelBytes)
-                    .addComponent(jButtonCleanupLogs))
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonCleanupLogs)
+                    .addComponent(jLabelBytes))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jProgressBarCleanupLogs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -512,6 +527,7 @@ public class PanelOptions extends javax.swing.JPanel {
                             .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanelOptionsTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -670,6 +686,12 @@ public class PanelOptions extends javax.swing.JPanel {
 		cleanupLog.start(); 
     }//GEN-LAST:event_jButtonCleanupLogsActionPerformed
 
+    private void jSpinnerBytesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerBytesStateChanged
+        long size = (Long) jSpinnerBytes.getValue();
+		Jamuz.getOptions().set("log.cleanup.keep.size.bytes", String.valueOf(size));
+		jLabelBytes.setText("("+Inter.get("Label.Keep")+" "+StringManager.humanReadableByteCount(size, false)+")");
+    }//GEN-LAST:event_jSpinnerBytesStateChanged
+
 	public class CleanupLog extends ProcessAbstract {
 
 		public CleanupLog() {
@@ -720,7 +742,7 @@ public class PanelOptions extends javax.swing.JPanel {
 						long totalSize=0;
 						long totalDeleted=0;
 						
-						long maxSize=Long.parseLong(Jamuz.getOptions().get("log.cleanup.keep.size.bytes")); //2 Go //FIXME OPTIONS Make log maxSize (cleanup) an option
+						long maxSize=Long.parseLong(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
 						int nbFoldersDeleted=0;
 						for (FolderInfo folderInfo : foldersInfo) {
 							checkAbort();
@@ -778,6 +800,7 @@ public class PanelOptions extends javax.swing.JPanel {
     private javax.swing.JButton jButtonTagsAdd;
     private javax.swing.JButton jButtonTagsDel;
     private javax.swing.JButton jButtonTagsEdit;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelBytes;
     private javax.swing.JLabel jLabelCleanup;
     private javax.swing.JList jListGenres;
