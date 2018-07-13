@@ -69,8 +69,9 @@
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
@@ -556,16 +557,19 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jProgressBarCleanupLogs" max="32767" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
+                              <Component id="jButtonCleanupLogs" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabelBytes" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
                               <Component id="jLabelCleanup" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jSpinnerBytes" min="-2" pref="109" max="-2" attributes="0"/>
+                              <Component id="jSpinnerBytes" pref="286" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabelBytes" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="32767" attributes="0"/>
-                              <Component id="jButtonCleanupLogs" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="jProgressBarCleanupLogs" alignment="1" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -577,8 +581,12 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jSpinnerBytes" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabelCleanup" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabelBytes" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButtonCleanupLogs" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelBytes" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jProgressBarCleanupLogs" min="-2" max="-2" attributes="0"/>
@@ -603,7 +611,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="jButtonCleanupLogs">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Cleanup Logs"/>
+                <Property name="text" type="java.lang.String" value="Cleanup"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCleanupLogsActionPerformed"/>
@@ -615,6 +623,9 @@
                   <SpinnerModel initial="2000000000" maximum="100000000000" minimum="1000000000" numberType="java.lang.Long" stepSize="1000000" type="number"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSpinnerBytesStateChanged"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelCleanup">
               <Properties>
@@ -625,7 +636,12 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelBytes">
               <Properties>
-                <Property name="text" type="java.lang.String" value="bytes (2 Go)" noResource="true"/>
+                <Property name="text" type="java.lang.String" value="(Keep 2 Go)" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="bytes" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

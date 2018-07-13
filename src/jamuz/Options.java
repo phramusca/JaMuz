@@ -73,6 +73,16 @@ public class Options {
 	public String get(String key) {
         return properties.getProperty(key, "{Missing}");
     }
+	
+	/**
+	 *
+	 * @param key
+	 * @param defaultValue
+	 * @return
+	 */
+	public String get(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
+    }
     
 	/**
 	 *
