@@ -22,6 +22,7 @@ manifest.mf
 
 build/*
 logs/*
+!/lib/*.jar
 
 data/cache/*
 data/Patterns.txt
@@ -31,9 +32,9 @@ data/RemoteClients\.txt
 
 database/*_for_comparison.sql
 
-JaMuz.xml
+/JaMuz.xml
+/JaMuz.properties
 keys.properties
-JaMuz.properties
 myMovieDb.db
 yGuard.log
 
