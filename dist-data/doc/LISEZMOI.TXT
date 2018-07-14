@@ -5,6 +5,11 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+0.3.0	Beta	- Option nettoyage des logs
+				- Correction synchronisation
+				- Traductions améliorées et nouvelles
+				- Compatible avec JaMuz Remote v0.3.0
+----------------------------------------------------------------------------------------------------------------------------------
 0.2.2	Beta	- Remote: 	progress bar fusion dans la table
 				- Video: 	fonction nettoyage, fix fonction renommage, stable
 				- Livres: 	fixes, stable

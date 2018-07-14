@@ -5,6 +5,11 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+0.3.0	Beta	- Log cleanup feature
+				- Sync fixes
+				- New and improved translations
+				- Compatible with JaMuz Remote v0.3.0
+----------------------------------------------------------------------------------------------------------------------------------
 0.2.2	Beta	- Remote: 	merge progress in table
 				- Video: 	cleanup feature, renaming fixed, stable
 				- Livres: 	fixes, stable
