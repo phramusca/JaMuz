@@ -36,4 +36,4 @@ See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
 
 <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 _________________________________________________________________________________
- ___ [Changes](CHANGES.md) ___ [Credits](CREDITS.md) ___ [License](LICENSE) ___
+ ___ [Changes](CHANGES.md) ___ [Credits](CREDITS.md) ___ [Contribute](CONTRIBUTING.md) ___ [License](LICENSE) ___ 
