@@ -27,3 +27,4 @@
 ### Contributions
 
 * [Thanks to all contributors](https://github.com/phramusca/JaMuz/graphs/contributors)
+* You too can [contribute](CONTRIBUTING.md), even if you are not a developer.
