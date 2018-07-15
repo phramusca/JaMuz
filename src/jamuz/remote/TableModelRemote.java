@@ -85,9 +85,18 @@ public class TableModelRemote extends TableModelGeneric {
         return clients.keySet();
     }
 
-    public ClientInfo getClient(String id) {
-		return clients.get(id);
+    public ClientInfo getClient(String login) {
+		return clients.get(login);
 	}
+	
+	/**
+     * get list of files
+     * @param index
+     * @return
+     */
+    public ClientInfo getClient(int index) {
+        return (new ArrayList<>(clients.values())).get(index);
+    }
 
 	@Override
     public int getRowCount() {
@@ -123,7 +132,7 @@ public class TableModelRemote extends TableModelGeneric {
      * @param client
      */
     public void add(ClientInfo client) {
-        clients.put(client.getId(), client);
+        clients.put(client.getLogin(), client);
 		this.fireTableDataChanged();
 //		this.fireIntervalAdded(this, clients.size()-1, clients.size()-1);
     }

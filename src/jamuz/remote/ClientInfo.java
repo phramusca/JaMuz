@@ -16,6 +16,8 @@
  */
 package jamuz.remote;
 
+import jamuz.Jamuz;
+import jamuz.Playlist;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.DateTime;
 
@@ -24,29 +26,38 @@ import jamuz.utils.DateTime;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class ClientInfo {
-	private String id;
+	private final int id;
+	private final String login;
+	private final String rootPath;
+	private String pwd;
 	private String name;
+	private int idPlaylist;
 	private boolean remoteConnected;
 	private boolean syncConnected;
 	private String status="";
 	private final ProgressBar progressBar;
-	
+
 	//TODO: Manage rights
 //	private boolean allowRating;
 //	private boolean allowControl;
 //	private boolean allow...;
 
-	public ClientInfo() {
-		this.progressBar = new ProgressBar();
-	}
+//	public ClientInfo() {
+//		this.progressBar = new ProgressBar();
+//	}
 
-	public ClientInfo(String login, String name, String appId) {
+	public ClientInfo(int id, String login, String name, String appId, 
+			String pwd, int idPlaylist, String rootPath) {
 		this.progressBar = new ProgressBar();
-		this.id = login+"-"+appId;
+		this.id = id;
+		this.login = login+"-"+appId;
 		this.name = name;
+		this.pwd = pwd;
+		this.idPlaylist = idPlaylist;
+		this.rootPath = rootPath;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -56,11 +67,6 @@ public class ClientInfo {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@Override
-	public String toString() {
-		return name;
 	}
 
 	public boolean isRemoteConnected() {
@@ -89,5 +95,38 @@ public class ClientInfo {
 	
 	public ProgressBar getProgressBar() {
 		return progressBar;
+	}
+	
+	public String getLogin() {
+        return login;
+    }
+	
+	String getPwd() {
+		return pwd;
+	}
+
+	void setPwd(String pwd) {
+		this.pwd=pwd;
+	}
+
+	public int getIdPlaylist() {
+        return idPlaylist;
+    }
+
+	public void setIdPlaylist(int idPlaylist) {
+        this.idPlaylist = idPlaylist;
+    }
+
+	public Playlist getPlaylist() {
+		return Jamuz.getPlaylist(this.idPlaylist);
+	}
+    
+    @Override
+	public String toString() {
+		return this.name + " (" + this.getPlaylist().toString() + ")"; //NOI18N //NOI18N //NOI18N
+	}
+
+	String getRootPath() {
+		return rootPath;
 	}
 }

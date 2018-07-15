@@ -113,7 +113,7 @@ public class Server {
 
 	void closeClients() {
 		for(Client client : clientMap.values()) {
-            closeClient(client.getInfo().getId());
+            closeClient(client.getInfo().getLogin());
         }
 	}
 
@@ -244,8 +244,8 @@ public class Server {
 		
 		@Override
 		public void authenticated(Client client) {
-			if(!clientMap.containsKey(client.getInfo().getId())) {
-                clientMap.put(client.getInfo().getId(), client);				
+			if(!clientMap.containsKey(client.getInfo().getLogin())) {
+                clientMap.put(client.getInfo().getLogin(), client);				
             }
 //            else {
 //				//TODO: This can happen. why ?
@@ -253,16 +253,16 @@ public class Server {
 //                client.getDatabase("MSG_ERROR_ALREADY_CONNECTED");
 //                closeClient(login);
 //            }
-			if(tableModel.contains(client.getInfo().getId())) {
+			if(tableModel.contains(client.getInfo().getLogin())) {
 				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getId());
 				if(client.getInfo().isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(true);
-					callback.connectedRemote(client.getInfo().getId());
+					callback.connectedRemote(client.getInfo().getLogin());
 				} 
 				if(client.getInfo().isSyncConnected()) {
 					clientInfoModel.setSyncConnected(true);
 					clientInfoModel.setStatus("Connected");
-					callback.connectedSync(client.getInfo().getId());
+					callback.connectedSync(client.getInfo().getLogin());
 				}
 			} else {
 				tableModel.add(client.getInfo());
@@ -272,20 +272,20 @@ public class Server {
 
 		@Override
 		public void disconnected(ClientInfo clientInfo) {
-			if(clientMap.containsKey(clientInfo.getId())) {
-				clientMap.get(clientInfo.getId()).close();
-				clientMap.remove(clientInfo.getId());
+			if(clientMap.containsKey(clientInfo.getLogin())) {
+				clientMap.get(clientInfo.getLogin()).close();
+				clientMap.remove(clientInfo.getLogin());
 			}
-			if(tableModel.contains(clientInfo.getId())) {
+			if(tableModel.contains(clientInfo.getLogin())) {
 				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getId());
 				if(clientInfo.isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(false);
-					callback.disconnectedRemote(clientInfo.getId());
+					callback.disconnectedRemote(clientInfo.getLogin());
 				} 
 				if(clientInfo.isSyncConnected()) {
 					clientInfoModel.setSyncConnected(false);
 					clientInfoModel.setStatus("Disconnected");
-					callback.disconnectedSync(clientInfo.getId());
+					callback.disconnectedSync(clientInfo.getLogin());
 				}
 				tableModel.fireTableDataChanged();
 			} 
@@ -472,6 +472,7 @@ public class Server {
 	public void fillClients() {
 		try {
 			tableModel.clear();
+			//FIXME: ***** Remove RemoteClients.txt and use db instead
 			if(!Jamuz.getFile("RemoteClients.txt", "data").exists()){
 			  return;
 			}
@@ -482,7 +483,10 @@ public class Server {
 				String login = items[0].trim();
 				String appId = items[1].trim();
 				String name = items[2].trim();
-				tableModel.add(new ClientInfo(login, name, appId));
+				String pwd = items[3].trim();
+				int idPlaylist = Integer.valueOf(items[4].trim());
+				String rootPath = items[5].trim();
+				tableModel.add(new ClientInfo(-1,login, name, appId, pwd, idPlaylist, rootPath));
 			}
 		} catch (FileNotFoundException ex) {
 			Logger.getLogger(PanelRemote.class.getName()).log(Level.SEVERE, null, ex);

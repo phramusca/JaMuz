@@ -27,6 +27,7 @@ import jamuz.Playlist.Filter;
 import jamuz.Playlist.Operator;
 import jamuz.Playlist.Order;
 import jamuz.process.check.DuplicateInfo;
+import jamuz.remote.ClientInfo;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -1509,6 +1510,69 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	/**
+     * Inserts or update a device
+     *
+     * @param device
+     * @return
+     */
+    public synchronized boolean setClientInfo(ClientInfo device) {
+		return false;
+//        try {
+//            if (device.getId() > -1) {
+//				PreparedStatement stUpdateDevice = dbConn.connection.prepareStatement(
+//						"UPDATE device SET name=?, source=?,"
+//                    + "destination=?, idPlaylist=? WHERE idDevice=?");    //NOI18N
+//                stUpdateDevice.setString(1, device.getName());
+//                stUpdateDevice.setString(2, device.getSource());
+//                stUpdateDevice.setString(3, device.getDestination());
+//                if (device.getIdPlaylist() > 0) {
+//                    stUpdateDevice.setInt(4, device.getIdPlaylist());
+//                } else {
+//                    stUpdateDevice.setNull(4, java.sql.Types.INTEGER);
+//                }
+//                stUpdateDevice.setInt(5, device.getId());
+//
+//                int nbRowsAffected = stUpdateDevice.executeUpdate();
+//                if (nbRowsAffected > 0) {
+//                    return true;
+//                } else {
+//                    Jamuz.getLogger().log(Level.SEVERE, 
+//							"stUpdateDevice, myStatSource={0} # row(s) affected: +{1}", 
+//							new Object[]{device.toString(), nbRowsAffected});   //NOI18N
+//                    return false;
+//                }
+//            } else {
+//                PreparedStatement stInsertDevice = dbConn.connection.prepareStatement(
+//						"INSERT INTO device "
+//							+ "(name, source, destination, idMachine, idPlaylist) "
+//						+ "VALUES (?, ?, ?, (SELECT idMachine FROM machine WHERE name=?), ?)");    //NOI18N
+//                stInsertDevice.setString(1, device.getName());
+//                stInsertDevice.setString(2, device.getSource());
+//                stInsertDevice.setString(3, device.getDestination());
+//                stInsertDevice.setString(4, device.getMachineName());
+//                if (device.getIdPlaylist() > 0) {
+//                    stInsertDevice.setInt(5, device.getIdPlaylist());
+//                } else {
+//                    stInsertDevice.setNull(5, java.sql.Types.INTEGER);
+//                }
+//
+//                int nbRowsAffected = stInsertDevice.executeUpdate();
+//                if (nbRowsAffected > 0) {
+//                    return true;
+//                } else {
+//                    Jamuz.getLogger().log(Level.SEVERE, 
+//							"stInsertDevice, myStatSource={0} # row(s) affected: +{1}", 
+//							new Object[]{device.toString(), nbRowsAffected});   //NOI18N
+//                    return false;
+//                }
+//            }
+//        } catch (SQLException ex) {
+//            Popup.error("setDevice(" + device.toString() + ")", ex);   //NOI18N
+//            return false;
+//        }
+    }
+	
     /**
      * Deletes a Stat Source
      *
