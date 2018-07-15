@@ -40,7 +40,7 @@ public class Reception  extends ProcessAbstract {
 				checkAbort();
 				String msg = bufferedReader.readLine();
                 if(msg!=null) {
-                    callback.received(client.getInfo().getId(), msg);
+                    callback.received(client.getInfo().getLogin(), msg);
                 }
                 else {
                     callback.disconnected(client.getInfo());
@@ -49,7 +49,7 @@ public class Reception  extends ProcessAbstract {
 			}
 		} catch (InterruptedException ex) {
         } catch(IOException ex) {
-            callback.received(client.getInfo().getId(), "MSG_ERROR: ".concat(ex.toString()));
+            callback.received(client.getInfo().getLogin(), "MSG_ERROR: ".concat(ex.toString()));
 		} finally {
             try {
                 bufferedReader.close();

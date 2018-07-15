@@ -224,7 +224,7 @@ public class Client {
 	
 	@Override
 	public String toString() {
-		return info.getId();
+		return info.getLogin();
 	}
 
 	class Authentication extends ProcessAbstract {
@@ -243,12 +243,15 @@ public class Client {
 				String password = (String) jsonObject.get("password");
 				boolean isRemote = (Boolean) jsonObject.get("isRemote");
 				String appId = (String) jsonObject.get("appId");
+				String rootPath = (String) jsonObject.get("rootPath");
+				
+				//FIXME/ ***** isValid to return ClientInfo from RepoClientInfo
 				String name = isValid(login, appId, password);
                 if(!name.equals("")){
 					send("MSG_CONNECTED");
                     reception = new Reception(bufferedReader, callback, Client.this);
                     reception.start();
-					info = new ClientInfo(login, name, appId);
+					info = new ClientInfo(-1, login, name, appId, password, -1, rootPath);
 					info.setRemoteConnected(isRemote);
 					info.setSyncConnected(!isRemote);	
                     callback.authenticated(Client.this);

@@ -145,7 +145,6 @@ public class TableModel extends AbstractTableModel {
 			temp[toIndex] = oFrom;
 
 			this.data = temp;
-			//Update table
 			this.fireTableDataChanged();
 		}
 	}
@@ -179,7 +178,7 @@ public class TableModel extends AbstractTableModel {
     public Class getColumnClass(int col){
         //Note: since all data on a given column are all the same
 		//we return data class of given column first row
-        if(this.data.length>0) {
+        if(this.data.length>0 && this.data[0].length>0 && this.data[0].length>col) {
             return this.data[0][col].getClass();
         }
         return null;
@@ -206,5 +205,4 @@ public class TableModel extends AbstractTableModel {
 		//Otherwise return false
 		return false;
     }
-	
 }

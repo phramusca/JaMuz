@@ -20,7 +20,6 @@ package jamuz.gui;
 import jamuz.DbInfo;
 import jamuz.process.sync.Device;
 import jamuz.Jamuz;
-import jamuz.StatSourceAbstract;
 import jamuz.process.merge.StatSource;
 import jamuz.process.merge.StatSourceKodi;
 import jamuz.process.merge.StatSourceMixxx;
@@ -30,13 +29,11 @@ import javax.swing.DefaultComboBoxModel;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
-import jamuz.utils.Swing;
 import jamuz.utils.XML;
 import java.io.File;
 import java.util.ArrayList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * JDialog extension to add/modify Stat source
@@ -358,16 +355,12 @@ public class DialogStatSource extends javax.swing.JDialog {
 	 * @param myStatSource 
 	 */
     public static void main(final StatSource myStatSource) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
-            public void run() {
-
-                DialogStatSource dialog = new DialogStatSource(new javax.swing.JFrame(), true, myStatSource);
-				//Center the dialog
-				dialog.setLocationRelativeTo(dialog.getParent());
-                dialog.setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> {
+			DialogStatSource dialog = new DialogStatSource(new javax.swing.JFrame(), true, myStatSource);
+			//Center the dialog
+			dialog.setLocationRelativeTo(dialog.getParent());
+			dialog.setVisible(true);
+		});
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

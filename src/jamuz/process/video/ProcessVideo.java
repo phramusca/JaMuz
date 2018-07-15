@@ -196,14 +196,16 @@ public class ProcessVideo extends ProcessAbstract {
         //Connect to SSH for moving/renaming files
         if(move && Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))
 				&& Boolean.parseBoolean(Jamuz.getOptions().get("video.SSH.enabled"))) {
-            myConn = new SSH(Jamuz.getOptions().get("video.SSH.IP"), Jamuz.getOptions().get("video.SSH.user"), Jamuz.getOptions().get("video.SSH.pwd")); //NOI18N
+            myConn = new SSH(Jamuz.getOptions().get("video.SSH.IP"), 
+					Jamuz.getOptions().get("video.SSH.user"), 
+					Jamuz.getOptions().get("video.SSH.pwd")); //NOI18N
             if(!myConn.connect()) {
                 return false;
             }
         }
 
 		//Connect to database
-		if (Jamuz.getOptions().get("video.dbLocation") != null) {
+		if (Jamuz.getOptions().get("video.dbLocation") == null) {
 			return false; 
 		}
 		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, 
