@@ -187,15 +187,14 @@ public class DialogClientInfo extends javax.swing.JDialog {
 	private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
 
 		String name = jTextName.getText();
-		String pwd = jTextFieldPwd.getText();
-		Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-
+		String pwd = jTextFieldPwd.getText(); //TODO: Strength password required
 		if(name.equals("") || pwd.equals("")) {  //NOI18N
 			Popup.warning(Inter.get("Error.AllFieldsMustBeSet")); //NOI18N
 		}
 		else {
 			this.device.setName(name);
 			this.device.setPwd(pwd);
+			Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
 			this.device.setIdPlaylist(playlist.getId());
 			
 			if(Jamuz.getDb().setClientInfo(this.device)) {

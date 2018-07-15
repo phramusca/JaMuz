@@ -244,61 +244,16 @@ public class Client {
 				boolean isRemote = (Boolean) jsonObject.get("isRemote");
 				String appId = (String) jsonObject.get("appId");
 				String rootPath = (String) jsonObject.get("rootPath");
-				
-				//FIXME/ ***** isValid to return ClientInfo from RepoClientInfo
-				String name = isValid(login, appId, password);
-                if(!name.equals("")){
-					send("MSG_CONNECTED");
-                    reception = new Reception(bufferedReader, callback, Client.this);
-                    reception.start();
-					info = new ClientInfo(-1, login, name, appId, password, -1, rootPath);
-					info.setRemoteConnected(isRemote);
-					info.setSyncConnected(!isRemote);	
-                    callback.authenticated(Client.this);
-                }
-                else {
-                    send("MSG_ERROR_CONNECTION");
-                }
+				send("MSG_CONNECTED");
+				reception = new Reception(bufferedReader, callback, Client.this);
+				reception.start();
+				info = new ClientInfo(-1, login+"-"+appId, "", password, -1, rootPath);
+				info.setRemoteConnected(isRemote);
+				info.setSyncConnected(!isRemote);	
+				callback.authenticated(Client.this);
 			} catch (IOException | ParseException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
 			}
-		}
-
-		private String isValid(String login, String appId, String pass) {
-			//TODO: Use a better authentication & make jamuz to multi-user somehow
-			try {
-				Scanner sc = new Scanner(Jamuz.getFile("RemoteClients.txt", "data"));
-				while(sc.hasNext()){
-					String line = sc.nextLine().trim();
-					String items[] = line.split("\t");
-					if(items[0].trim().equals(login) 
-							&& items[1].trim().equals(appId)
-							&& pass.equals("tata")){
-						return items[2];
-					}
-				 }
-			} catch (FileNotFoundException ex) {	
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, "Le fichier \"RemoteClients.txt\" n'existe pas !");
-			}
-			//Not found, ask user
-			String input = JOptionPane.showInputDialog(null, 
-					"Enter device pretty name for \""+login+"\" ("+appId+")", "");  //NOI18N
-			if (input != null) {
-				try {
-					try (Writer output = new BufferedWriter(new FileWriter(
-							Jamuz.getFile("RemoteClients.txt", "data"), true))) {
-						output.append(login)
-								.append("\t").append(appId)
-								.append("\t").append(input)
-								.append("\n");
-						return input;
-					}
-				} catch (IOException ex) {
-					Logger.getLogger(DialogScanner.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
-			//=> Not authorized then
-			return "";
 		}
 	}
 

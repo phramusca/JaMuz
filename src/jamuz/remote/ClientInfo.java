@@ -46,11 +46,11 @@ public class ClientInfo {
 //		this.progressBar = new ProgressBar();
 //	}
 
-	public ClientInfo(int id, String login, String name, String appId, 
+	public ClientInfo(int id, String login, String name, 
 			String pwd, int idPlaylist, String rootPath) {
 		this.progressBar = new ProgressBar();
 		this.id = id;
-		this.login = login+"-"+appId;
+		this.login = login;
 		this.name = name;
 		this.pwd = pwd;
 		this.idPlaylist = idPlaylist;
@@ -101,7 +101,7 @@ public class ClientInfo {
         return login;
     }
 	
-	String getPwd() {
+	public String getPwd() {
 		return pwd;
 	}
 
@@ -126,7 +126,7 @@ public class ClientInfo {
 		return this.name + " (" + this.getPlaylist().toString() + ")"; //NOI18N //NOI18N //NOI18N
 	}
 
-	String getRootPath() {
+	public String getRootPath() {
 		return rootPath;
 	}
 }
