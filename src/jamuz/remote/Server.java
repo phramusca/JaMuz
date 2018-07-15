@@ -31,6 +31,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -470,26 +471,11 @@ public class Server {
 	}
 	
 	public void fillClients() {
-		try {
-			tableModel.clear();
-			//FIXME: ***** Remove RemoteClients.txt and use db instead
-			if(!Jamuz.getFile("RemoteClients.txt", "data").exists()){
-			  return;
-			}
-			Scanner sc = new Scanner(Jamuz.getFile("RemoteClients.txt", "data"));
-			while(sc.hasNext()){
-				String line = sc.nextLine().trim();
-				String items[] = line.split("\t");
-				String login = items[0].trim();
-				String appId = items[1].trim();
-				String name = items[2].trim();
-				String pwd = items[3].trim();
-				int idPlaylist = Integer.valueOf(items[4].trim());
-				String rootPath = items[5].trim();
-				tableModel.add(new ClientInfo(-1,login, name, appId, pwd, idPlaylist, rootPath));
-			}
-		} catch (FileNotFoundException ex) {
-			Logger.getLogger(PanelRemote.class.getName()).log(Level.SEVERE, null, ex);
+		tableModel.clear();
+		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
+		Jamuz.getDb().getClients(clients);
+		for(ClientInfo clientInfo : clients.values()) {
+			tableModel.add(clientInfo);
 		}
 	}
 }

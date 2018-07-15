@@ -1513,64 +1513,102 @@ public class DbConnJaMuz extends StatSourceSQL {
 	/**
      * Inserts or update a device
      *
-     * @param device
+     * @param clientInfo
      * @return
      */
-    public synchronized boolean setClientInfo(ClientInfo device) {
-		return false;
-//        try {
-//            if (device.getId() > -1) {
-//				PreparedStatement stUpdateDevice = dbConn.connection.prepareStatement(
-//						"UPDATE device SET name=?, source=?,"
-//                    + "destination=?, idPlaylist=? WHERE idDevice=?");    //NOI18N
-//                stUpdateDevice.setString(1, device.getName());
-//                stUpdateDevice.setString(2, device.getSource());
-//                stUpdateDevice.setString(3, device.getDestination());
-//                if (device.getIdPlaylist() > 0) {
-//                    stUpdateDevice.setInt(4, device.getIdPlaylist());
-//                } else {
-//                    stUpdateDevice.setNull(4, java.sql.Types.INTEGER);
-//                }
-//                stUpdateDevice.setInt(5, device.getId());
-//
-//                int nbRowsAffected = stUpdateDevice.executeUpdate();
-//                if (nbRowsAffected > 0) {
-//                    return true;
-//                } else {
-//                    Jamuz.getLogger().log(Level.SEVERE, 
-//							"stUpdateDevice, myStatSource={0} # row(s) affected: +{1}", 
-//							new Object[]{device.toString(), nbRowsAffected});   //NOI18N
-//                    return false;
-//                }
-//            } else {
-//                PreparedStatement stInsertDevice = dbConn.connection.prepareStatement(
-//						"INSERT INTO device "
-//							+ "(name, source, destination, idMachine, idPlaylist) "
-//						+ "VALUES (?, ?, ?, (SELECT idMachine FROM machine WHERE name=?), ?)");    //NOI18N
-//                stInsertDevice.setString(1, device.getName());
-//                stInsertDevice.setString(2, device.getSource());
-//                stInsertDevice.setString(3, device.getDestination());
-//                stInsertDevice.setString(4, device.getMachineName());
-//                if (device.getIdPlaylist() > 0) {
-//                    stInsertDevice.setInt(5, device.getIdPlaylist());
-//                } else {
-//                    stInsertDevice.setNull(5, java.sql.Types.INTEGER);
-//                }
-//
-//                int nbRowsAffected = stInsertDevice.executeUpdate();
-//                if (nbRowsAffected > 0) {
-//                    return true;
-//                } else {
-//                    Jamuz.getLogger().log(Level.SEVERE, 
-//							"stInsertDevice, myStatSource={0} # row(s) affected: +{1}", 
-//							new Object[]{device.toString(), nbRowsAffected});   //NOI18N
-//                    return false;
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            Popup.error("setDevice(" + device.toString() + ")", ex);   //NOI18N
-//            return false;
-//        }
+    public synchronized boolean setClientInfo(ClientInfo clientInfo) {
+        try {
+            if (clientInfo.getId() > -1) {
+				PreparedStatement stUpdateClient = dbConn.connection.prepareStatement(
+						"UPDATE client SET login=?, rootPath=?,"
+                    + "pwd=?, name=?, idPlaylist=? WHERE idClient=?");    //NOI18N
+                stUpdateClient.setString(1, clientInfo.getLogin());
+                stUpdateClient.setString(2, clientInfo.getRootPath());
+                stUpdateClient.setString(3, clientInfo.getPwd());
+				stUpdateClient.setString(4, clientInfo.getName());
+                if (clientInfo.getIdPlaylist() > 0) {
+                    stUpdateClient.setInt(5, clientInfo.getIdPlaylist());
+                } else {
+                    stUpdateClient.setNull(5, java.sql.Types.INTEGER);
+                }
+                stUpdateClient.setInt(6, clientInfo.getId());
+
+                int nbRowsAffected = stUpdateClient.executeUpdate();
+                if (nbRowsAffected > 0) {
+                    return true;
+                } else {
+                    Jamuz.getLogger().log(Level.SEVERE, 
+							"stUpdateClient, myStatSource={0} # row(s) affected: +{1}", 
+							new Object[]{clientInfo.toString(), nbRowsAffected});   //NOI18N
+                    return false;
+                }
+            } else {
+                PreparedStatement stInsertClient = dbConn.connection.prepareStatement(
+						"INSERT INTO client "
+							+ "(login, rootPath, pwd, name, idPlaylist) "
+						+ "VALUES (?, ?, ?, ?, ?)");    //NOI18N
+                stInsertClient.setString(1, clientInfo.getLogin());
+                stInsertClient.setString(2, clientInfo.getRootPath());
+                stInsertClient.setString(3, clientInfo.getPwd());
+                stInsertClient.setString(4, clientInfo.getName());
+                if (clientInfo.getIdPlaylist() > 0) {
+                    stInsertClient.setInt(5, clientInfo.getIdPlaylist());
+                } else {
+                    stInsertClient.setNull(5, java.sql.Types.INTEGER);
+                }
+
+                int nbRowsAffected = stInsertClient.executeUpdate();
+                if (nbRowsAffected > 0) {
+                    return true;
+                } else {
+                    Jamuz.getLogger().log(Level.SEVERE, 
+							"stInsertClient, myStatSource={0} # row(s) affected: +{1}", 
+							new Object[]{clientInfo.toString(), nbRowsAffected});   //NOI18N
+                    return false;
+                }
+            }
+        } catch (SQLException ex) {
+            Popup.error("setClientInfo(" + clientInfo.toString() + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+
+	/**
+     * Get list of clients
+     *
+     * @param devices
+     * @return
+     */
+    public boolean getClients(LinkedHashMap<Integer, ClientInfo> devices) {
+        ResultSet rs=null;
+        try {
+            PreparedStatement stSelectClients = dbConn.connection.prepareStatement(
+					"SELECT idClient, login, rootPath, pwd, name, idPlaylist "
+							+ "FROM client");  //NOI18N
+            rs = stSelectClients.executeQuery();
+            while (rs.next()) {
+                int idClient = rs.getInt("idClient");  //NOI18N
+                devices.put(idClient, 
+						new ClientInfo(idClient, 
+								dbConn.getStringValue(rs, "login"), 
+								dbConn.getStringValue(rs, "name"), 
+								dbConn.getStringValue(rs, "pwd"),
+								rs.getInt("idPlaylist"),
+								dbConn.getStringValue(rs, "rootPath")
+								));
+            }
+            return true;
+        } catch (SQLException ex) {
+            Popup.error("getClients", ex);   //NOI18N
+            return false;
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+        }
     }
 	
     /**

@@ -1,3 +1,12 @@
+CREATE TABLE "client" (
+    "idClient" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
+    "login" TEXT NOT NULL,
+    "rootPath" TEXT NOT NULL,
+     "pwd" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "idPlaylist" INTEGER,
+    CONSTRAINT name_unique UNIQUE ('login')
+);
 CREATE TABLE "device" (
     "idDevice" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
     "name" TEXT NOT NULL,
