@@ -55,8 +55,10 @@ public class Server {
 	private int port;
 	private HandleLogin handleLogin;
 	private final ICallBackServer callback;
-	private final TableModelRemote tableModel;
-	private final Map<String, Client> clientMap;
+	
+	//FIXME ****** Verify that client info is well synchronized b/w these 2 below:
+	private final TableModelRemote tableModel; //contains clients info from database
+	private final Map<String, Client> clientMap; //contains connected clients
 	
 	/**
 	 *
@@ -186,6 +188,7 @@ public class Server {
 									setStatus(login, "Inserting into device file list");
 									ArrayList<FileInfoInt> inserted= Jamuz.getDb().
 											insertDeviceFiles(toInsertInDeviceFiles, device.getId());
+									//FIXME ***** StatSource will not be found here as not the same machine
 									StatSource source = Jamuz.getMachine().getStatSource(login);
 									if(source!=null && Jamuz.getDb()
 											.setPreviousPlayCounter(inserted, source.getId())) {
@@ -212,16 +215,11 @@ public class Server {
 									FileInfo file = new FileInfo(login, obj);
 									newTracks.add(file);
 								}
+								LinkedHashMap <Integer, StatSource> statSources = new LinkedHashMap<>();
+								Jamuz.getDb().getStatSources(statSources, login);
 								List<StatSource> sources = new ArrayList();
-								for(StatSource source : Jamuz.getMachine().getStatSources()) {
-									if(source.getDevice().getDestination().startsWith("remote://")) {
-										String loginSource = source.getDevice().getDestination().substring("remote://".length());
-										if(loginSource.equals(login)) {
-											sources.add(source);
-										}
-									}
-								}
-								if(sources.size()>0) {
+								if(statSources.values().iterator().hasNext()) {
+									sources.add(statSources.values().iterator().next());
 									setStatus(login, "Starting merge");
 									new ProcessMerge("Thread.Server.ProcessMerge."+login, 
 										sources, false, false, newTracks, 
@@ -243,11 +241,45 @@ public class Server {
         }
 		
 		@Override
-		public void authenticated(Client client) {
-			if(!clientMap.containsKey(client.getInfo().getLogin())) {
-                clientMap.put(client.getInfo().getLogin(), client);				
-            }
-			if(tableModel.contains(client.getInfo().getLogin())) {
+		public void connected(Client client) {
+			if(!tableModel.contains(client.getInfo().getLogin())) {
+				//Creates a new machine, device and statSource
+				//and store the client
+				StringBuilder zText = new StringBuilder ();
+				if(Jamuz.getDb().isMachine(client.getInfo().getLogin(), zText)) {
+					Device device = new Device(-1, 
+							client.getInfo().getLogin(), 
+							"source", "remote://"+client.getInfo().getLogin(), 
+							client.getInfo().getIdPlaylist(), 
+							client.getInfo().getLogin());
+					if(Jamuz.getDb().setDevice(device)) {
+						LinkedHashMap <Integer, Device> devices = new LinkedHashMap<>();
+						Jamuz.getDb().getDevices(devices, client.getInfo().getLogin());
+						int idDevice = devices.values().iterator().next().getId();
+						client.getInfo().setIdDevice(idDevice);
+						StatSource statSource = new StatSource(
+							-1, client.getInfo().getLogin(), 6, 
+							"remote://"+client.getInfo().getLogin(), "MySqlUser", "MySqlPwd", 
+							client.getInfo().getRootPath(), 
+							client.getInfo().getLogin(), 
+							idDevice, false, "");
+						if(Jamuz.getDb().setStatSource(statSource)) {
+							LinkedHashMap <Integer, StatSource> statSources = new LinkedHashMap<>();
+							Jamuz.getDb().getStatSources(statSources, client.getInfo().getLogin());
+							int idStatSource = statSources.values().iterator().next().getId();
+							client.getInfo().setIdStatSource(idStatSource);
+							if(Jamuz.getDb().setClientInfo(client.getInfo())) {
+								ClientInfo clientInfo = Jamuz.getDb().getClient(client.getInfo().getLogin());
+								client.getInfo().setId(clientInfo.getId());
+								tableModel.add(client.getInfo());
+							}
+						}
+					}
+				}
+			}
+			if(!clientMap.containsKey(client.getInfo().getLogin())
+					&& tableModel.contains(client.getInfo().getLogin())
+						&& tableModel.getClient(client.getInfo().getLogin()).isEnabled()) {
 				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getLogin());
 				if(client.getInfo().isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(true);
@@ -256,10 +288,12 @@ public class Server {
 				if(client.getInfo().isSyncConnected()) {
 					clientInfoModel.setSyncConnected(true);
 					clientInfoModel.setStatus("Connected");
-					callback.connectedSync(client.getInfo().getLogin());
 				}
-			} else {
-				tableModel.add(client.getInfo());
+                clientMap.put(client.getInfo().getLogin(), client);
+				client.send("MSG_CONNECTED");
+            } else {
+				//FIXME: ***** Make this disconnect client AND NOT RECONNECT
+				client.send("MSG_ERROR_CONNECTION"); 
 			}
 			tableModel.fireTableDataChanged();
 		}
@@ -274,12 +308,10 @@ public class Server {
 				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getLogin());
 				if(clientInfo.isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(false);
-					callback.disconnectedRemote(clientInfo.getLogin());
 				} 
 				if(clientInfo.isSyncConnected()) {
 					clientInfoModel.setSyncConnected(false);
 					clientInfoModel.setStatus("Disconnected");
-					callback.disconnectedSync(clientInfo.getLogin());
 				}
 				tableModel.fireTableDataChanged();
 			} 

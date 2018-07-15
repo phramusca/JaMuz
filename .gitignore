@@ -46,3 +46,5 @@ testenv/StatSources/
 data/devices/
 /src/jamuz/TinyTool-JsonFormat.json
 JaMuz\.db
+
+JaMuz\.xml\.bak

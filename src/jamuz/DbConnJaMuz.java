@@ -1398,7 +1398,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     public synchronized boolean setStatSource(StatSource statSource) {
         try {
             if (statSource.getId() > -1) {
-                PreparedStatement stUpdateStatSource = dbConn.connection.prepareStatement("UPDATE statsource SET location=?, "  //NOI18N
+                PreparedStatement stUpdateStatSource = dbConn.connection.
+						prepareStatement("UPDATE statsource SET location=?, "  //NOI18N
                     + "rootPath=?, "  //NOI18N
                     + "name=?, "  //NOI18N
                     + "idStatement=?, "  //NOI18N
@@ -1484,7 +1485,8 @@ public class DbConnJaMuz extends StatSourceSQL {
                     return false;
                 }
             } else {
-                PreparedStatement stInsertDevice = dbConn.connection.prepareStatement("INSERT INTO device (name, source, destination, "
+                PreparedStatement stInsertDevice = dbConn.connection.prepareStatement("INSERT INTO device "
+						+ "(name, source, destination, "
                     + "idMachine, idPlaylist) VALUES (?, ?, ?, (SELECT idMachine FROM machine WHERE name=?), ?)");    //NOI18N
                 stInsertDevice.setString(1, device.getName());
                 stInsertDevice.setString(2, device.getSource());
@@ -1521,7 +1523,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             if (clientInfo.getId() > -1) {
 				PreparedStatement stUpdateClient = dbConn.connection.prepareStatement(
 						"UPDATE client SET login=?, rootPath=?,"
-                    + "pwd=?, name=?, idPlaylist=? WHERE idClient=?");    //NOI18N
+                    + "pwd=?, name=?, idPlaylist=?, enabled=? "
+								+ "WHERE idClient=?");    //NOI18N
                 stUpdateClient.setString(1, clientInfo.getLogin());
                 stUpdateClient.setString(2, clientInfo.getRootPath());
                 stUpdateClient.setString(3, clientInfo.getPwd());
@@ -1531,7 +1534,8 @@ public class DbConnJaMuz extends StatSourceSQL {
                 } else {
                     stUpdateClient.setNull(5, java.sql.Types.INTEGER);
                 }
-                stUpdateClient.setInt(6, clientInfo.getId());
+				stUpdateClient.setBoolean(6, clientInfo.isEnabled());
+                stUpdateClient.setInt(7, clientInfo.getId());
 
                 int nbRowsAffected = stUpdateClient.executeUpdate();
                 if (nbRowsAffected > 0) {
@@ -1545,8 +1549,9 @@ public class DbConnJaMuz extends StatSourceSQL {
             } else {
                 PreparedStatement stInsertClient = dbConn.connection.prepareStatement(
 						"INSERT INTO client "
-							+ "(login, rootPath, pwd, name, idPlaylist) "
-						+ "VALUES (?, ?, ?, ?, ?)");    //NOI18N
+							+ "(login, rootPath, pwd, name, "
+								+ "idPlaylist, idDevice, idStatSource, enabled) "
+						+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");    //NOI18N
                 stInsertClient.setString(1, clientInfo.getLogin());
                 stInsertClient.setString(2, clientInfo.getRootPath());
                 stInsertClient.setString(3, clientInfo.getPwd());
@@ -1556,6 +1561,17 @@ public class DbConnJaMuz extends StatSourceSQL {
                 } else {
                     stInsertClient.setNull(5, java.sql.Types.INTEGER);
                 }
+				if (clientInfo.getIdDevice() > 0) {
+                    stInsertClient.setInt(6, clientInfo.getIdDevice());
+                } else {
+                    stInsertClient.setNull(6, java.sql.Types.INTEGER);
+                }
+				if (clientInfo.getIdStatSource() > 0) {
+                    stInsertClient.setInt(7, clientInfo.getIdStatSource());
+                } else {
+                    stInsertClient.setNull(7, java.sql.Types.INTEGER);
+                }
+				stInsertClient.setBoolean(8, clientInfo.isEnabled());
 
                 int nbRowsAffected = stInsertClient.executeUpdate();
                 if (nbRowsAffected > 0) {
@@ -1573,28 +1589,51 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	public ClientInfo getClient(String login) {
+		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
+		getClients(clients, login);
+		return clients.values().iterator().next();
+	}
+	
 	/**
      * Get list of clients
      *
-     * @param devices
+     * @param clients
      * @return
      */
-    public boolean getClients(LinkedHashMap<Integer, ClientInfo> devices) {
+    public boolean getClients(LinkedHashMap<Integer, ClientInfo> clients) {
+		return getClients(clients, "");
+	}
+	
+	/**
+     * Get list of clients
+     *
+     * @param clients
+	 * @param login
+     * @return
+     */
+    private boolean getClients(LinkedHashMap<Integer, ClientInfo> clients, String login) {
         ResultSet rs=null;
         try {
             PreparedStatement stSelectClients = dbConn.connection.prepareStatement(
-					"SELECT idClient, login, rootPath, pwd, name, idPlaylist "
-							+ "FROM client");  //NOI18N
+					"SELECT idClient, login, rootPath, pwd, name, "
+							+ "idPlaylist, idDevice, idStatSource, enabled "
+							+ "FROM client "
+							+ (login.equals("")?login:" WHERE login=? "));  //NOI18N
+			if(!login.equals("")) { stSelectClients.setString(1, login); }
             rs = stSelectClients.executeQuery();
             while (rs.next()) {
                 int idClient = rs.getInt("idClient");  //NOI18N
-                devices.put(idClient, 
+                clients.put(idClient, 
 						new ClientInfo(idClient, 
-								dbConn.getStringValue(rs, "login"), 
+								dbConn.getStringValue(rs, "login"),
+								dbConn.getStringValue(rs, "rootPath"),
 								dbConn.getStringValue(rs, "name"), 
 								dbConn.getStringValue(rs, "pwd"),
 								rs.getInt("idPlaylist"),
-								dbConn.getStringValue(rs, "rootPath")
+								rs.getInt("idDevice"),
+								rs.getInt("idStatSource"),
+								rs.getBoolean("enabled")
 								));
             }
             return true;

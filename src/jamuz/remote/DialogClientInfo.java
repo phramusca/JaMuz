@@ -29,7 +29,7 @@ import jamuz.utils.Inter;
  */
 public class DialogClientInfo extends javax.swing.JDialog {
 
-	private final ClientInfo device;
+	private final ClientInfo clientInfo;
 	
 	
 	/** Creates new form StatSourceGUI
@@ -45,6 +45,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
 		jTextFieldRootPath.setText(clientInfo.getRootPath());
 		jTextName.setText(clientInfo.getName());
 		jTextFieldPwd.setText(clientInfo.getPwd());
+		jCheckBoxEnabled.setSelected(clientInfo.isEnabled());
 		DefaultComboBoxModel comboModelPlaylist = (DefaultComboBoxModel) jComboBoxPlaylist.getModel();
 		comboModelPlaylist.removeAllElements();
 		comboModelPlaylist.addElement(Jamuz.getPlaylist(0));
@@ -54,7 +55,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
 		}
 		jComboBoxPlaylist.setSelectedItem(clientInfo.getPlaylist());
 	
-		this.device = clientInfo;
+		this.clientInfo = clientInfo;
     }
 
 
@@ -79,6 +80,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
         jLabelPwd = new javax.swing.JLabel();
         jTextFieldRootPath = new javax.swing.JTextField();
         jLabelRootPath = new javax.swing.JLabel();
+        jCheckBoxEnabled = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -125,6 +127,8 @@ public class DialogClientInfo extends javax.swing.JDialog {
         jLabelRootPath.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabelRootPath.setText(Inter.get("Label.RootPath")); // NOI18N
 
+        jCheckBoxEnabled.setText(Inter.get("DialogClientInfo.jCheckBoxEnabled.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -139,16 +143,18 @@ public class DialogClientInfo extends javax.swing.JDialog {
                     .addComponent(jLabelPwd, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 171, Short.MAX_VALUE)
+                        .addComponent(jButtonCancel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxEnabled)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonSave))
                     .addComponent(jTextFieldRootPath)
                     .addComponent(jTextName, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jComboBoxPlaylist, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextFieldPwd)
-                    .addComponent(jTextFieldLogin, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 250, Short.MAX_VALUE)
-                        .addComponent(jButtonCancel)
-                        .addGap(10, 10, 10)
-                        .addComponent(jButtonSave)))
+                    .addComponent(jTextFieldLogin, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -174,11 +180,13 @@ public class DialogClientInfo extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelPlaylist)
                     .addComponent(jComboBoxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonCancel)
-                    .addComponent(jButtonSave))
-                .addContainerGap())
+                    .addComponent(jCheckBoxEnabled)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonCancel)
+                        .addComponent(jButtonSave)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -192,12 +200,14 @@ public class DialogClientInfo extends javax.swing.JDialog {
 			Popup.warning(Inter.get("Error.AllFieldsMustBeSet")); //NOI18N
 		}
 		else {
-			this.device.setName(name);
-			this.device.setPwd(pwd);
+			this.clientInfo.setName(name);
+			this.clientInfo.setPwd(pwd);
 			Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-			this.device.setIdPlaylist(playlist.getId());
+			this.clientInfo.setIdPlaylist(playlist.getId());
+			this.clientInfo.enable(jCheckBoxEnabled.isSelected());
 			
-			if(Jamuz.getDb().setClientInfo(this.device)) {
+			if(Jamuz.getDb().setClientInfo(this.clientInfo)) {
+				//FIXME: Refresh client info in caller list (remote panel)
 				this.dispose();
 			}
 			else {
@@ -226,6 +236,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
+    private javax.swing.JCheckBox jCheckBoxEnabled;
     private javax.swing.JComboBox jComboBoxPlaylist;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelName;

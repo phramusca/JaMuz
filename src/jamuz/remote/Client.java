@@ -5,37 +5,28 @@
  */
 package jamuz.remote;
 
-import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
-import jamuz.Jamuz;
-import jamuz.process.check.DialogScanner;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
@@ -244,13 +235,12 @@ public class Client {
 				boolean isRemote = (Boolean) jsonObject.get("isRemote");
 				String appId = (String) jsonObject.get("appId");
 				String rootPath = (String) jsonObject.get("rootPath");
-				send("MSG_CONNECTED");
 				reception = new Reception(bufferedReader, callback, Client.this);
 				reception.start();
-				info = new ClientInfo(-1, login+"-"+appId, "", password, -1, rootPath);
+				info = new ClientInfo(login+"-"+appId, rootPath, password);
 				info.setRemoteConnected(isRemote);
 				info.setSyncConnected(!isRemote);	
-				callback.authenticated(Client.this);
+				callback.connected(Client.this);
 			} catch (IOException | ParseException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
 			}

@@ -20,13 +20,13 @@ public interface ICallBackReception {
 	
 	/**
 	 *
-	 * @param client
+	 * @param clientInfo
 	 */
-	public void disconnected(ClientInfo client);
+	public void disconnected(ClientInfo clientInfo);
 	
 	/**
 	 *
 	 * @param client
 	 */
-	public void authenticated(Client client);
+	public void connected(Client client);
 }

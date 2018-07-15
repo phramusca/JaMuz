@@ -140,7 +140,7 @@ public class TestProcessHelper {
     
 	//TODO: Now that using callbacks here, can we not launch gui ?
 	public static ProcessMerge processMerge;
-    private static void startProcessMerge(List<Integer> dbIndexes, 
+    private static void startProcessMerge(List<StatSource> dbIndexes, 
 			boolean simulate, boolean forceJaMuz) throws InterruptedException {
         processMerge = new ProcessMerge("Thread.ProcessHelper.startProcessMerge", 
 				dbIndexes, simulate, forceJaMuz, null, 

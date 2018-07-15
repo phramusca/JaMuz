@@ -115,6 +115,19 @@ public final class Machine {
 	 * @return
 	 */
 	public Collection<StatSource> getStatSources() {
+		return getStatSources(false);
+	}
+	
+	/**
+	 * Return Stat sources list
+	 * @param force
+	 * @return
+	 */
+	public Collection<StatSource> getStatSources(boolean force) {
+//		if(force) {
+//			statSources = new LinkedHashMap<>();
+//			Jamuz.getDb().getStatSources(statSources, this.name);
+//		}
 		return statSources.values();
 	}
 	
@@ -165,14 +178,7 @@ public final class Machine {
 		}
 	}
 
-	//FIXME !!!!!!! device and statsource are linked BUT:
-	// - the key can be different in either case 
-	//		=> search statsource always !!!
-	//			(remove getDevice(String login))
-	// Maybe keep the value in device: check how "remote://" is used first
-	//			(statsource is linked to a device anyway)
-	// - the key is bad: "remote://", use a bool property in statsource instead
-	// - make it clear in gui
+	//FIXME !!!!!!! Remove "remote://"
 	//----------------------
 	// - devicefile is linked to a device
 	// - statsource is linked to a device

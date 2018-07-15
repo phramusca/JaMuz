@@ -19,8 +19,5 @@ public interface ICallBackServer {
 	public void received(String login, String msg);
 	
 	public void connectedRemote(String login);
-	public void disconnectedRemote(String login);
-	public void connectedSync(String login);
-	public void disconnectedSync(String login);
 	
 }
