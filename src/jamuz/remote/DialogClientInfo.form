@@ -27,7 +27,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabelName" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -38,19 +38,21 @@
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="0" pref="171" max="32767" attributes="0"/>
+                      <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jCheckBoxEnabled" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButtonSave" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Component id="jTextFieldRootPath" max="32767" attributes="0"/>
                   <Component id="jTextName" alignment="1" max="32767" attributes="0"/>
                   <Component id="jComboBoxPlaylist" alignment="1" max="32767" attributes="0"/>
                   <Component id="jTextFieldPwd" alignment="0" max="32767" attributes="0"/>
                   <Component id="jTextFieldLogin" alignment="1" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="250" max="32767" attributes="0"/>
-                      <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                      <Component id="jButtonSave" min="-2" max="-2" attributes="0"/>
-                  </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -82,12 +84,15 @@
                   <Component id="jLabelPlaylist" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jComboBoxPlaylist" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButtonCancel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonSave" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jCheckBoxEnabled" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                      <Component id="jButtonCancel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonSave" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -193,6 +198,13 @@
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="jamuz/Bundle.properties" key="Label.RootPath" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="jCheckBoxEnabled">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="jamuz/Bundle.properties" key="DialogClientInfo.jCheckBoxEnabled.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

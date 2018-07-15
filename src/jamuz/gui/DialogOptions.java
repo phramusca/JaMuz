@@ -126,7 +126,7 @@ public class DialogOptions extends javax.swing.JDialog {
 		DefaultListModel listModel=(DefaultListModel) jListStatSources.getModel();
 		listModel.clear();
 		//TODO: Order by name
-		selOptions.getStatSources().stream().forEach((statSource) -> {
+		selOptions.getStatSources(true).stream().forEach((statSource) -> {
 			listModel.addElement(statSource);
 		});
 	}

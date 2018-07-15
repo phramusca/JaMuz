@@ -274,12 +274,12 @@ public class PanelMain extends javax.swing.JFrame {
 			PanelRemote.send(displayedFile);
 		}
 
-		@Override
-		public void disconnectedRemote(String login) {}
-		@Override
-		public void connectedSync(String login) {}
-		@Override
-		public void disconnectedSync(String login) {}
+//		@Override
+//		public void disconnectedRemote(String login) {}
+//		@Override
+//		public void connectedSync(String login) {}
+//		@Override
+//		public void disconnectedSync(String login) {}
 	}
 
 	private static ImageIcon createImageIcon(String path) {
