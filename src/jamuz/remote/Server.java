@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -213,19 +212,19 @@ public class Server {
 									FileInfo file = new FileInfo(login, obj);
 									newTracks.add(file);
 								}
-								List<Integer> dbIndexes = new ArrayList();
+								List<StatSource> sources = new ArrayList();
 								for(StatSource source : Jamuz.getMachine().getStatSources()) {
 									if(source.getDevice().getDestination().startsWith("remote://")) {
 										String loginSource = source.getDevice().getDestination().substring("remote://".length());
 										if(loginSource.equals(login)) {
-											dbIndexes.add(source.getId());
+											sources.add(source);
 										}
 									}
 								}
-								if(dbIndexes.size()>0) {
+								if(sources.size()>0) {
 									setStatus(login, "Starting merge");
 									new ProcessMerge("Thread.Server.ProcessMerge."+login, 
-										dbIndexes, false, false, newTracks, 
+										sources, false, false, newTracks, 
 											tableModel.getClient(login).getProgressBar(), 
 											new CallBackMerge(login))
 									.start();
@@ -248,14 +247,8 @@ public class Server {
 			if(!clientMap.containsKey(client.getInfo().getLogin())) {
                 clientMap.put(client.getInfo().getLogin(), client);				
             }
-//            else {
-//				//TODO: This can happen. why ?
-//				//Until this is solved, considering not a problem
-//                client.getDatabase("MSG_ERROR_ALREADY_CONNECTED");
-//                closeClient(login);
-//            }
 			if(tableModel.contains(client.getInfo().getLogin())) {
-				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getId());
+				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getLogin());
 				if(client.getInfo().isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(true);
 					callback.connectedRemote(client.getInfo().getLogin());
@@ -278,7 +271,7 @@ public class Server {
 				clientMap.remove(clientInfo.getLogin());
 			}
 			if(tableModel.contains(clientInfo.getLogin())) {
-				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getId());
+				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getLogin());
 				if(clientInfo.isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(false);
 					callback.disconnectedRemote(clientInfo.getLogin());
