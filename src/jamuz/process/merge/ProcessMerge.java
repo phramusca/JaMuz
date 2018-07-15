@@ -56,7 +56,7 @@ import jamuz.utils.Utils;
 public class ProcessMerge extends ProcessAbstract {
 	
 	//Process information (retrieved from caller)
-	private final List<Integer> dbIndexes;
+	private final List<StatSource> sources;
 	private final boolean simulate;
 	private final boolean forceJaMuz; //If true force statistics from JaMuz db to apply on selected databases
 	
@@ -92,18 +92,18 @@ public class ProcessMerge extends ProcessAbstract {
 	/**
 	 * Creates a new merge process instance
      * @param name
-	 * @param dbIndexes 
+	 * @param sources 
 	 * @param forceJaMuz
 	 * @param simulate  
 	 * @param files  
 	 * @param progressBar  
 	 * @param callback  
 	 */
-	public ProcessMerge(String name, List<Integer> dbIndexes, 
+	public ProcessMerge(String name, List<StatSource> sources, 
 			boolean simulate, boolean forceJaMuz, ArrayList<FileInfo> files,
 			ProgressBar progressBar, ICallBackMerge callback) {
         super(name);
-		this.dbIndexes = dbIndexes;
+		this.sources = sources;
 		this.simulate = simulate;
 		this.forceJaMuz = forceJaMuz;
 		
@@ -125,7 +125,7 @@ public class ProcessMerge extends ProcessAbstract {
         String popupMsg=Inter.get("Msg.MergeComplete");  //NOI18N
         try {
             resetAbort();
-            if(dbIndexes.size()<=0) {
+            if(sources.size()<=0) {
                 Popup.info("You must select at least one source.");
                 popupMsg="";
                 return;
@@ -174,10 +174,11 @@ public class ProcessMerge extends ProcessAbstract {
 		// warn user only at the end (some sources will be merged if so)
 		
 		//Check all selected databases
-		for (int idStatSource : dbIndexes) {
-			progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Checking"), Jamuz.getMachine().getStatSource(idStatSource).getSource().getName())); //NOI18N
+		for (StatSource statSource : sources) {
+			progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Checking"), 
+					statSource.getSource().getName())); //NOI18N
             callback.refresh();
-			if(!Jamuz.getMachine().getStatSource(idStatSource).getSource().check()) {
+			if(!statSource.getSource().check()) {
 				return false;
 			}
 			checkAbort();
@@ -185,16 +186,16 @@ public class ProcessMerge extends ProcessAbstract {
 		
 		//Get and backup all selected databases
 		if(!isRemote) {
-			for (int idStatSource : dbIndexes) {
+			for (StatSource statSource : sources) {
 				checkAbort();
 				//Retrieve database
-				if(!copyDB(Jamuz.getMachine().getStatSource(idStatSource).getSource(), true)) {
+				if(!copyDB(statSource.getSource(), true)) {
 					return false;
 				}
 				checkAbort();
 				//Backup database
 				if(!simulate) {
-					if(!backupDB(Jamuz.getMachine().getStatSource(idStatSource).getSource())) {
+					if(!backupDB(statSource.getSource())) {
 						return false;
 					}
 				}
@@ -223,8 +224,8 @@ public class ProcessMerge extends ProcessAbstract {
 		
 		//Scan and merge all selected databases
         int i=1;
-		for (int idStatSource : dbIndexes) {
-			selectedStatSource = Jamuz.getMachine().getStatSource(idStatSource);
+		for (StatSource statSource : sources) {
+			selectedStatSource = statSource;
 			if(!scanAndMerge("1-"+i)) {  //NOI18N
 				return false;
 			}
@@ -232,11 +233,11 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 		
 		//Reverse the selected database list
-		Collections.reverse(dbIndexes);
+		Collections.reverse(sources);
 		//Remove the first item (which used to be the last before reverse)
 		//Keep original for the databases copy back !
-		List<Integer> dbIndexes2 = new ArrayList<>(dbIndexes);
-		dbIndexes2.remove(0);
+		List<StatSource> sourcesReverse = new ArrayList<>(sources);
+		sourcesReverse.remove(0);
 		checkAbort();
 		
 		//Scan and merge all selected databases again (without the last one) 
@@ -244,8 +245,8 @@ public class ProcessMerge extends ProcessAbstract {
 		//in order to apply possible modifications retrieved from previously merged databases
         i=1;
         //TODO: No need to do reverse way if no changes made on first run ...
-		for (int idStatSource : dbIndexes2) {
-			selectedStatSource = Jamuz.getMachine().getStatSource(idStatSource);
+		for (StatSource statSource : sourcesReverse) {
+			selectedStatSource = statSource;
 			if(!scanAndMerge("2-"+i)) {  //NOI18N
 				return false;
 			}
@@ -260,9 +261,9 @@ public class ProcessMerge extends ProcessAbstract {
 						.getDestination().substring("remote://".length()),
 						mergeListDbSelected);
 			} else {
-				for (int idStatSource : dbIndexes) {
+				for (StatSource statSource : sources) {
 					checkAbort();
-					if(!copyDB(Jamuz.getMachine().getStatSource(idStatSource).getSource(), false)) {
+					if(!copyDB(statSource.getSource(), false)) {
 						return false;
 					}
 				}
@@ -1071,7 +1072,7 @@ public class ProcessMerge extends ProcessAbstract {
 		//but depends if selected database is sqlite or not AND if merge is simulated or not
 
 		nbSteps=1; // Récupération de "JaMuz" ...
-		for (int i=0; i<dbIndexes.size(); i++) {
+		for (int i=0; i<sources.size(); i++) {
 			//+1. Create text LOG files
 			//+1. Connect DB
 			//+1. Get stats sel DB
@@ -1084,7 +1085,7 @@ public class ProcessMerge extends ProcessAbstract {
 			//+1. Close connection
 			int nbStepsOneWay=10;
 			//Doubling for all dbIndex except the last one which is only done once
-			if(i<(dbIndexes.size()-1)) {
+			if(i<(sources.size()-1)) {
 				nbStepsOneWay*=2;
 			}
 			nbSteps+=nbStepsOneWay;

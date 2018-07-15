@@ -42,10 +42,6 @@ public class ClientInfo {
 //	private boolean allowControl;
 //	private boolean allow...;
 
-//	public ClientInfo() {
-//		this.progressBar = new ProgressBar();
-//	}
-
 	public ClientInfo(int id, String login, String name, 
 			String pwd, int idPlaylist, String rootPath) {
 		this.progressBar = new ProgressBar();
