@@ -143,7 +143,7 @@ public class Settings {
 		String destination=copyStatSourceDatabase(name, name);
         //Define stat source in Jamuz dB
         Jamuz.getDb().setStatSource(new StatSource(-1, name, idStatement, destination, "", "", 
-                rootPath, Jamuz.getMachine().getName(), idDevice, true, ""));
+                rootPath, Jamuz.getMachine().getName(), idDevice, true, "", false));
     }
 	
 	public static String copyStatSourceDatabase(String sourceName, String destinationName) throws IOException {

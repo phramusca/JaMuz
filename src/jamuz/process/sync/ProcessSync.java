@@ -20,6 +20,7 @@ package jamuz.process.sync;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
+import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.ProcessAbstract;
 import java.io.File;
 import java.io.IOException;
@@ -50,18 +51,21 @@ public class ProcessSync extends ProcessAbstract {
 	private ArrayList<FileInfoInt> fileInfoDestinationList;
 	private final Device device;
     private ArrayList<FileInfoInt> toInsertInDeviceFiles;
+	private final ProgressBar progressBar;
     
 	/**
 	 * Creates a new sync process instance  
      * @param name
      * @param device
+	 * @param progressBar
 	 */
-	public ProcessSync(String name, Device device) {
+	public ProcessSync(String name, Device device, ProgressBar progressBar) {
         super(name);
 		this.fileInfoSourceList = new ArrayList<>();
 		this.fileInfoDestinationList = new ArrayList<>();
         this.toInsertInDeviceFiles = new ArrayList<>();
 		this.device=device;
+		this.progressBar = progressBar;
 	}
 	
 	/**
@@ -80,7 +84,7 @@ public class ProcessSync extends ProcessAbstract {
                     + "OR you will face some merge \"not found\" issues.");  //TODO: Inter
         }
         finally {
-            PanelSync.progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
+            progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
             
             //Updating database only if toInsertInDeviceFiles has items 
             //This prevents problems in case aborted before any change has been made 
@@ -91,17 +95,16 @@ public class ProcessSync extends ProcessAbstract {
             if(toInsertInDeviceFiles.size()>0) {
                 Jamuz.getDb().deleteDeviceFiles(device.getId());
                 Jamuz.getDb().insertDeviceFiles(toInsertInDeviceFiles, device.getId());
-            }
-
-            PanelSync.progressBar.reset();
-            //enabling back buttons 				
+            }	
+			progressBar.setup(fileInfoSourceList.size());
+			progressBar.progress("Export complete.", fileInfoSourceList.size());
             PanelSync.enableSync(true);
         }
 	}
 	
 	private boolean sync() throws InterruptedException {
-		if(this.device.getDestination().startsWith("remote://")) {
-			String login = this.device.getDestination().substring("remote://".length());
+		if(this.device.isHidden()) {
+			String login = this.device.getDestination();
 			return syncRemote(login);
 		} else {
 			return syncFS();
@@ -109,29 +112,30 @@ public class ProcessSync extends ProcessAbstract {
 	}
 	
 	private boolean syncRemote(String login) throws InterruptedException {
-
+		// FIXME LOW SYNC do not call PanelSync from ProcessSync, as used in PanelRemote too
+		// So use a callback instead
         PanelSync.enableSyncStartButton(true);
-        PanelSync.progressBar.reset();
-        PanelSync.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
+        progressBar.reset();
+        progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
 		fileInfoSourceList = new ArrayList<>();
 		Playlist playlist = device.getPlaylist();
 		playlist.getFiles(fileInfoSourceList);
-		PanelSync.progressBar.setup(fileInfoSourceList.size());
+		progressBar.setup(fileInfoSourceList.size());
 		Map jsonAsMap = new HashMap();
 		jsonAsMap.put("type", "FilesToGet");
 		JSONArray filesToGet = new JSONArray();
 		for (FileInfoInt fileInfo : fileInfoSourceList) {
 			filesToGet.add(fileInfo.toMap());
 			PanelSync.addRowSync(fileInfo.getRelativeFullPath(), 1); //NOI18N
-            PanelSync.progressBar.progress(fileInfo.getTitle());
+            progressBar.progress(fileInfo.getTitle());
 		}
 		jsonAsMap.put("files", filesToGet);		
-		PanelSync.progressBar.reset();
-		PanelSync.progressBar.setIndeterminate("Delete in deviceFile table ..."); //NOI18N
+		progressBar.reset();
+		progressBar.setIndeterminate("Delete in deviceFile table ..."); //NOI18N
 		PanelSync.enableSyncStartButton(false);
 		Jamuz.getDb().deleteDeviceFiles(device.getId());
 		
-		PanelSync.progressBar.setIndeterminate("Saving list ..."); //NOI18N
+		progressBar.setIndeterminate("Saving list ..."); //NOI18N
 		String json = JSONValue.toJSONString(jsonAsMap);
 		File file = Jamuz.getFile(login, "data", "devices");
 		try {
@@ -165,8 +169,8 @@ public class ProcessSync extends ProcessAbstract {
         //Allowing abort
         PanelSync.enableSyncStartButton(true);
 
-        PanelSync.progressBar.reset();
-        PanelSync.progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
+        progressBar.reset();
+        progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
 
         //Get source files list (files to be sent)
         fileInfoSourceList = new ArrayList<>();
@@ -178,7 +182,7 @@ public class ProcessSync extends ProcessAbstract {
         fileInfoDestinationList = new ArrayList<>();
         this.browseFS(new File(this.device.getDestination()));
         this.checkAbort();
-        PanelSync.progressBar.setup(fileInfoSourceList.size() + fileInfoDestinationList.size());
+        progressBar.setup(fileInfoSourceList.size() + fileInfoDestinationList.size());
 
 		//FIXME LOW SYNC: Offer deletion as an option now that process is labeled "export" and not "sync" anymore !!!!
         this.toInsertInDeviceFiles = new ArrayList<>();
@@ -191,7 +195,7 @@ public class ProcessSync extends ProcessAbstract {
                 this.toInsertInDeviceFiles.add(this.fileInfoSourceList.get(idInSource));
                 //Remove from Source list as already on destination
                 fileInfoSourceList.remove(idInSource);
-                PanelSync.progressBar.setMaximum(PanelSync.progressBar.getMaximum()-1);
+                progressBar.setMaximum(progressBar.getMaximum()-1);
             }
             else {
                 //Not a file to be copied, removing it on destination
@@ -199,7 +203,7 @@ public class ProcessSync extends ProcessAbstract {
                 file.delete();
                 PanelSync.addRowSync(fileInfo.getRelativeFullPath(), 0); //NOI18N
             }
-            PanelSync.progressBar.progress(fileInfo.getTitle());
+            progressBar.progress(fileInfo.getTitle());
         }
 
         //Copy files to destination
@@ -217,7 +221,7 @@ public class ProcessSync extends ProcessAbstract {
             } catch (IOException ex) {
                 PanelSync.addRowSync(MessageFormat.format(format, fileInfo.getRelativeFullPath(), StringManager.humanReadableSeconds((System.currentTimeMillis()-startTime)/1000)), MessageFormat.format(Inter.get("Playlist.CopyFailed"), ex.toString())); //NOI18N
             }
-            PanelSync.progressBar.progress(bench.get());
+            progressBar.progress(bench.get());
         }
 		return true;
 	}

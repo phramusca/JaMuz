@@ -324,9 +324,9 @@ public class PanelMerge extends javax.swing.JPanel {
 			DefaultListModel myModel = (DefaultListModel) jListMerge.getModel();
 			myModel.clear();
 			for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
-				CheckBoxListItem checkBoxListItem = new CheckBoxListItem(statSource);
-				checkBoxListItem.setSelected(statSource.isIsSelected());
-				if(!statSource.getDevice().getDestination().startsWith("remote://")) {
+				if(!statSource.isHidden()) {
+					CheckBoxListItem checkBoxListItem = new CheckBoxListItem(statSource);
+					checkBoxListItem.setSelected(statSource.isIsSelected());
 					myModel.addElement(checkBoxListItem);
 				}
 			}

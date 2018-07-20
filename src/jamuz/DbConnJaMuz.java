@@ -1290,6 +1290,12 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	public StatSource getStatSource(String login) {
+		LinkedHashMap <Integer, StatSource> statSources = new LinkedHashMap<>();
+		Jamuz.getDb().getStatSources(statSources, login, true);
+		return statSources.values().iterator().next();
+	}
+	
     /**
      * Return list of database sources for given machine
      *
@@ -1298,40 +1304,23 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @return
      */
     public boolean getStatSources(LinkedHashMap<Integer, StatSource> statSources, 
-			String hostname) {
+			String hostname, boolean hidden) {
         ResultSet rs=null;
         try {
             PreparedStatement stSelectStatSources = dbConn.connection.prepareStatement(
-					"SELECT S.idStatSource, S.name AS name, "
+					"SELECT S.idStatSource, S.name AS sourceName, "
 						+ "S.idStatement, S.location, S.rootPath, "
 						+ "S.idDevice, S.selected, M.name AS machineName \n" 
 						+ ", S.lastMergeDate " //NOI18N
-                    + "FROM  statsource S \n"
+                    + "FROM statsource S \n"
                     + "JOIN machine M ON M.idMachine=S.idMachine \n"   //NOI18N
-                    + "WHERE  M.name=? "
+                    + "WHERE M.name=? "
 					+ "ORDER BY S.name");  //NOI18N
             stSelectStatSources.setString(1, hostname);
             rs = stSelectStatSources.executeQuery();
             while (rs.next()) {
-                //Add to the list
-                int idStatSource = rs.getInt("idStatSource");  //NOI18N
-                int idStatement = rs.getInt("idStatement");  //NOI18N
-                String statSourceLocation = dbConn.getStringValue(rs, "location");  //NOI18N
-                String machineName = dbConn.getStringValue(rs, "machineName");  //NOI18N
-                String lastMergeDate = dbConn.getStringValue(rs, "lastMergeDate", "1970-01-01 00:00:00");
-                int idDevice = rs.getInt("idDevice");  //NOI18N
-                boolean isSelected = rs.getBoolean("selected");  //NOI18N
-                StatSource source = new StatSource(
-                        idStatSource, 
-                        dbConn.getStringValue(rs, "name"), 
-                        idStatement,
-                        statSourceLocation, "", "", 
-                        dbConn.getStringValue(rs, "rootPath"), 
-                        machineName, 
-                        idDevice, 
-                        isSelected, lastMergeDate);  //NOI18N
-
-                statSources.put(idStatSource, source);
+                StatSource statSource = getStatSource(rs, hidden);
+                statSources.put(statSource.getId(), statSource);
             }
             return true;
         } catch (SQLException ex) {
@@ -1347,19 +1336,46 @@ public class DbConnJaMuz extends StatSourceSQL {
             
         }
     }
+	
+	private StatSource getStatSource(ResultSet rs, boolean hidden) throws SQLException {
+		int idStatSource = rs.getInt("idStatSource");  //NOI18N
+		int idStatement = rs.getInt("idStatement");  //NOI18N
+		String statSourceLocation = dbConn.getStringValue(rs, "location");  //NOI18N
+		String machineName = dbConn.getStringValue(rs, "machineName");  //NOI18N
+		String lastMergeDate = dbConn.getStringValue(rs, "lastMergeDate", "1970-01-01 00:00:00");
+		int idDevice = rs.getInt("idDevice");  //NOI18N
+		boolean isSelected = rs.getBoolean("selected");  //NOI18N
+		return new StatSource(
+				idStatSource, 
+				dbConn.getStringValue(rs, "sourceName"), 
+				idStatement,
+				statSourceLocation, "", "", 
+				dbConn.getStringValue(rs, "rootPath"), 
+				machineName, 
+				idDevice, 
+				isSelected, lastMergeDate, hidden);  //NOI18N
+	}
 
+	public Device getDevice(String login) {
+		LinkedHashMap <Integer, Device> devices = new LinkedHashMap<>();
+		Jamuz.getDb().getDevices(devices, login, true);
+		return devices.values().iterator().next();
+	}
+	
     /**
      * Get list of devices
      *
      * @param devices
      * @param hostname
+	 * @param hidden
      * @return
      */
-    public boolean getDevices(LinkedHashMap<Integer, Device> devices, String hostname) {
+    public boolean getDevices(LinkedHashMap<Integer, Device> devices, 
+			String hostname, boolean hidden) {
         ResultSet rs=null;
         try {
             PreparedStatement stSelectDevices = dbConn.connection.prepareStatement(
-					"SELECT idDevice, source, destination, idPlaylist, D.name "
+					"SELECT idDevice AS deviceId, source, destination, idPlaylist, D.name AS deviceName "
 					+ "FROM device D "
 					+ "JOIN machine M "
 					+ "ON M.idMachine=D.idMachine "    //NOI18N
@@ -1368,12 +1384,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             stSelectDevices.setString(1, hostname);
             rs = stSelectDevices.executeQuery();
             while (rs.next()) {
-                int idDevice = rs.getInt("idDevice");  //NOI18N
-                devices.put(idDevice, new Device(idDevice, 
-						dbConn.getStringValue(rs, "name"),  //NOI18N
-                        dbConn.getStringValue(rs, "source"), 
-						dbConn.getStringValue(rs, "destination"), 
-						rs.getInt("idPlaylist"), hostname));   //NOI18N
+                Device device = getDevice(rs, hostname, hidden);
+                devices.put(device.getId(), device);   //NOI18N
             }
             return true;
         } catch (SQLException ex) {
@@ -1388,6 +1400,15 @@ public class DbConnJaMuz extends StatSourceSQL {
             }
         }
     }
+	
+	private Device getDevice(ResultSet rs, String hostname, boolean hidden) throws SQLException {
+		int idDevice = rs.getInt("deviceId");  //NOI18N
+		return new Device(idDevice, 
+			dbConn.getStringValue(rs, "deviceName"),  //NOI18N
+			dbConn.getStringValue(rs, "source"), 
+			dbConn.getStringValue(rs, "destination"), 
+			rs.getInt("idPlaylist"), hostname, hidden);
+	}
 
     /**
      * Sets a Stat Source
@@ -1465,7 +1486,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     public synchronized boolean setDevice(Device device) {
         try {
             if (device.getId() > -1) {
-				PreparedStatement stUpdateDevice = dbConn.connection.prepareStatement("UPDATE device SET name=?, source=?,"
+				PreparedStatement stUpdateDevice = dbConn.connection.prepareStatement(
+						"UPDATE device SET name=?, source=?,"
                     + "destination=?, idPlaylist=? WHERE idDevice=?");    //NOI18N
                 stUpdateDevice.setString(1, device.getName());
                 stUpdateDevice.setString(2, device.getSource());
@@ -1481,13 +1503,17 @@ public class DbConnJaMuz extends StatSourceSQL {
                 if (nbRowsAffected > 0) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateDevice, myStatSource={0} # row(s) affected: +{1}", new Object[]{device.toString(), nbRowsAffected});   //NOI18N
+                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateDevice, "
+							+ "myStatSource={0} # row(s) affected: +{1}", 
+							new Object[]{device.toString(), nbRowsAffected});   //NOI18N
                     return false;
                 }
             } else {
-                PreparedStatement stInsertDevice = dbConn.connection.prepareStatement("INSERT INTO device "
-						+ "(name, source, destination, "
-                    + "idMachine, idPlaylist) VALUES (?, ?, ?, (SELECT idMachine FROM machine WHERE name=?), ?)");    //NOI18N
+                PreparedStatement stInsertDevice = dbConn.connection.prepareStatement(
+						"INSERT INTO device "
+							+ "(name, source, destination, "
+							+ "idMachine, idPlaylist) VALUES (?, ?, ?, "
+							+ "(SELECT idMachine FROM machine WHERE name=?), ?)");    //NOI18N
                 stInsertDevice.setString(1, device.getName());
                 stInsertDevice.setString(2, device.getSource());
                 stInsertDevice.setString(3, device.getDestination());
@@ -1502,7 +1528,9 @@ public class DbConnJaMuz extends StatSourceSQL {
                 if (nbRowsAffected > 0) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stInsertDevice, myStatSource={0} # row(s) affected: +{1}", new Object[]{device.toString(), nbRowsAffected});   //NOI18N
+                    Jamuz.getLogger().log(Level.SEVERE, "stInsertDevice, "
+							+ "myStatSource={0} # row(s) affected: +{1}", 
+							new Object[]{device.toString(), nbRowsAffected});   //NOI18N
                     return false;
                 }
             }
@@ -1521,24 +1549,20 @@ public class DbConnJaMuz extends StatSourceSQL {
     public synchronized boolean setClientInfo(ClientInfo clientInfo) {
         try {
             if (clientInfo.getId() > -1) {
+				
 				PreparedStatement stUpdateClient = dbConn.connection.prepareStatement(
-						"UPDATE client SET login=?, rootPath=?,"
-                    + "pwd=?, name=?, idPlaylist=?, enabled=? "
+						"UPDATE client SET login=?, pwd=?, name=?, enabled=? "
 								+ "WHERE idClient=?");    //NOI18N
                 stUpdateClient.setString(1, clientInfo.getLogin());
-                stUpdateClient.setString(2, clientInfo.getRootPath());
-                stUpdateClient.setString(3, clientInfo.getPwd());
-				stUpdateClient.setString(4, clientInfo.getName());
-                if (clientInfo.getIdPlaylist() > 0) {
-                    stUpdateClient.setInt(5, clientInfo.getIdPlaylist());
-                } else {
-                    stUpdateClient.setNull(5, java.sql.Types.INTEGER);
-                }
-				stUpdateClient.setBoolean(6, clientInfo.isEnabled());
-                stUpdateClient.setInt(7, clientInfo.getId());
+                stUpdateClient.setString(2, clientInfo.getPwd());
+				stUpdateClient.setString(3, clientInfo.getName());
+				stUpdateClient.setBoolean(4, clientInfo.isEnabled());
+                stUpdateClient.setInt(5, clientInfo.getId());
 
                 int nbRowsAffected = stUpdateClient.executeUpdate();
                 if (nbRowsAffected > 0) {
+					setDevice(clientInfo.getDevice());
+					setStatSource(clientInfo.getStatSource());
                     return true;
                 } else {
                     Jamuz.getLogger().log(Level.SEVERE, 
@@ -1549,29 +1573,23 @@ public class DbConnJaMuz extends StatSourceSQL {
             } else {
                 PreparedStatement stInsertClient = dbConn.connection.prepareStatement(
 						"INSERT INTO client "
-							+ "(login, rootPath, pwd, name, "
-								+ "idPlaylist, idDevice, idStatSource, enabled) "
-						+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");    //NOI18N
+							+ "(login, pwd, name, "
+								+ "idDevice, idStatSource, enabled) "
+						+ "VALUES (?, ?, ?, ?, ?, ?)");    //NOI18N
                 stInsertClient.setString(1, clientInfo.getLogin());
-                stInsertClient.setString(2, clientInfo.getRootPath());
-                stInsertClient.setString(3, clientInfo.getPwd());
-                stInsertClient.setString(4, clientInfo.getName());
-                if (clientInfo.getIdPlaylist() > 0) {
-                    stInsertClient.setInt(5, clientInfo.getIdPlaylist());
+                stInsertClient.setString(2, clientInfo.getPwd());
+                stInsertClient.setString(3, clientInfo.getName());
+				if (clientInfo.getDevice() !=null) {
+                    stInsertClient.setInt(4, clientInfo.getDevice().getId());
+                } else {
+                    stInsertClient.setNull(4, java.sql.Types.INTEGER);
+                }
+				if (clientInfo.getStatSource()!=null) {
+                    stInsertClient.setInt(5, clientInfo.getStatSource().getId());
                 } else {
                     stInsertClient.setNull(5, java.sql.Types.INTEGER);
                 }
-				if (clientInfo.getIdDevice() > 0) {
-                    stInsertClient.setInt(6, clientInfo.getIdDevice());
-                } else {
-                    stInsertClient.setNull(6, java.sql.Types.INTEGER);
-                }
-				if (clientInfo.getIdStatSource() > 0) {
-                    stInsertClient.setInt(7, clientInfo.getIdStatSource());
-                } else {
-                    stInsertClient.setNull(7, java.sql.Types.INTEGER);
-                }
-				stInsertClient.setBoolean(8, clientInfo.isEnabled());
+				stInsertClient.setBoolean(6, clientInfo.isEnabled());
 
                 int nbRowsAffected = stInsertClient.executeUpdate();
                 if (nbRowsAffected > 0) {
@@ -1615,24 +1633,28 @@ public class DbConnJaMuz extends StatSourceSQL {
     private boolean getClients(LinkedHashMap<Integer, ClientInfo> clients, String login) {
         ResultSet rs=null;
         try {
-            PreparedStatement stSelectClients = dbConn.connection.prepareStatement(
-					"SELECT idClient, login, rootPath, pwd, name, "
-							+ "idPlaylist, idDevice, idStatSource, enabled "
-							+ "FROM client "
+			PreparedStatement stSelectClients = dbConn.connection.prepareStatement(
+					"SELECT idClient, login, pwd, C.name AS clientName, enabled ,\n" +
+					"D.idDevice AS deviceId, source, destination, idPlaylist, D.name AS deviceName,\n" +
+					"S.idStatSource, S.name AS sourceName, S.idStatement, S.location, "
+							+ "S.rootPath, S.idDevice, "
+							+ "S.selected, login AS machineName , S.lastMergeDate\n" +
+					"FROM client C \n" +
+					"JOIN device D ON D.idDevice=D.idDevice\n" +
+					"JOIN statSource S ON S.idStatSource=C.idStatSource"
 							+ (login.equals("")?login:" WHERE login=? "));  //NOI18N
 			if(!login.equals("")) { stSelectClients.setString(1, login); }
             rs = stSelectClients.executeQuery();
             while (rs.next()) {
                 int idClient = rs.getInt("idClient");  //NOI18N
+				Device device = getDevice(rs, login, true);
+				StatSource statSource = getStatSource(rs, true);
                 clients.put(idClient, 
 						new ClientInfo(idClient, 
 								dbConn.getStringValue(rs, "login"),
-								dbConn.getStringValue(rs, "rootPath"),
-								dbConn.getStringValue(rs, "name"), 
+								dbConn.getStringValue(rs, "clientName"), 
 								dbConn.getStringValue(rs, "pwd"),
-								rs.getInt("idPlaylist"),
-								rs.getInt("idDevice"),
-								rs.getInt("idStatSource"),
+								device, statSource,
 								rs.getBoolean("enabled")
 								));
             }
@@ -3269,9 +3291,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             }
         }
     }
-
-    
-    
+	
     /**
      * Gets folders having given checked flag
      *

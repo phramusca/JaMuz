@@ -18,22 +18,40 @@ package jamuz.remote;
 
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
+import jamuz.Jamuz;
 import jamuz.gui.DialogQRcode;
+import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.process.sync.Device;
+import jamuz.process.sync.ProcessSync;
+import jamuz.process.video.PanelVideo;
 import jamuz.utils.CrunchifyQRCode;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -72,6 +90,12 @@ public class PanelRemote extends javax.swing.JPanel {
 		setColumn(3, 300);
 		TableColumn column = jTableRemote.getColumnModel().getColumn(4);
 		column.setCellRenderer(new ProgressCellRender());
+		
+        addMenuItem(Inter.get("Button.Edit")); //NOI18N
+        addMenuItem(Inter.get("Button.Export")); //NOI18N
+        MouseListener popupListener = new PopupListener(jPopupMenu1);
+        jTableRemote.addMouseListener(popupListener);
+		
 		server.fillClients();
 		startStopRemoteServer();
 	}
@@ -257,6 +281,7 @@ public class PanelRemote extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jPanelRemote = new javax.swing.JPanel();
         jSpinnerPort = new javax.swing.JSpinner();
         jButtonStart = new javax.swing.JButton();
@@ -266,7 +291,6 @@ public class PanelRemote extends javax.swing.JPanel {
         jButtonQRcode = new javax.swing.JButton();
         jScrollPaneCheckTags1 = new javax.swing.JScrollPane();
         jTableRemote = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
 
         jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder("Jamuz Remote Server"));
 
@@ -311,13 +335,6 @@ public class PanelRemote extends javax.swing.JPanel {
         });
         jScrollPaneCheckTags1.setViewportView(jTableRemote);
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
@@ -327,8 +344,7 @@ public class PanelRemote extends javax.swing.JPanel {
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addComponent(jLabelIP)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPaneCheckTags1)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -352,11 +368,9 @@ public class PanelRemote extends javax.swing.JPanel {
                     .addComponent(jCheckBoxServerStartOnStartup)
                     .addComponent(jButtonQRcode))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelIP)
-                    .addComponent(jButton1))
+                .addComponent(jLabelIP)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
+                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -409,25 +423,64 @@ public class PanelRemote extends javax.swing.JPanel {
         setIpText();
     }//GEN-LAST:event_jSpinnerPortStateChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+	private ClientInfo getSelected() {
 		int selectedRow = jTableRemote.getSelectedRow(); 			
 		if(selectedRow>=0) { 	
 			//convert to model index (as sortable model) 		
 			selectedRow = jTableRemote.convertRowIndexToModel(selectedRow); 
-			ClientInfo clientInfo = server.getTableModel().getClient(selectedRow);
-			DialogClientInfo.main(clientInfo);
+			return server.getTableModel().getClient(selectedRow);
 		}
-    }//GEN-LAST:event_jButton1ActionPerformed
-
+		return null;
+	}
+	
+	private void addMenuItem(String item) {
+        JMenuItem menuItem = new JMenuItem(item);
+        menuItem.addActionListener(menuListener);
+        jPopupMenu1.add(menuItem);
+    }
+    
+    ActionListener menuListener = (ActionEvent e) -> {
+		JMenuItem source = (JMenuItem)(e.getSource());
+		String sourceTxt=source.getText();
+		if(sourceTxt.equals(Inter.get("Button.Edit"))) { //NOI18N
+			menuEdit();
+		}
+		else if(sourceTxt.equals(Inter.get("Button.Export"))) { //NOI18N
+			menuExport();
+		}
+		else {
+			Popup.error("Unknown menu item: " + sourceTxt); //NOI18N
+		}
+	};
+	
+	private void menuEdit() {
+        ClientInfo clientInfo = getSelected();
+        if(clientInfo!=null) {
+			DialogClientInfo.main(clientInfo);
+        }
+    }
+	
+	private void menuExport() {
+        ClientInfo clientInfo = getSelected();
+        if(clientInfo!=null) {
+			Device device = clientInfo.getDevice();
+			//FIXME LOW REMOTE allow aborting with another menu item
+			ProcessSync processSync = new ProcessSync(
+					"Thread.PanelSync.ProcessSync.Remote", 
+					device, clientInfo.getProgressBar());
+			processSync.start();
+        }
+    }
+	
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonQRcode;
     private javax.swing.JButton jButtonStart;
     private javax.swing.JCheckBox jCheckBoxServerStartOnStartup;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelIP;
     private javax.swing.JPanel jPanelRemote;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private static javax.swing.JScrollPane jScrollPaneCheckTags1;
     private javax.swing.JSpinner jSpinnerPort;
     private static javax.swing.JTable jTableRemote;

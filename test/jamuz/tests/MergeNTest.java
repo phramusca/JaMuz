@@ -370,7 +370,7 @@ public class MergeNTest extends TestCase {
                 FilenameUtils.normalizeNoEndSeparator(getMusicFolder() + "Archive")+File.separator, 
                 FilenameUtils.normalizeNoEndSeparator(getMusicFolder() + "TestDevice")+File.separator, 
                 1, //playlist.getId()is not set (only when retrieved from db)
-                Jamuz.getMachine().getName()
+                Jamuz.getMachine().getName(), false
         );
         assertTrue("Device creation", Jamuz.getDb().setDevice(device));
         

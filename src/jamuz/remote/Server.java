@@ -173,7 +173,7 @@ public class Server {
 								break;
 							case "ackFileSReception":
 								setStatus(login, "Received list of files to ack");
-								Device device = Jamuz.getMachine().getDevice(login);
+								Device device = tableModel.getClient(login).getDevice();
 								if(device!=null) {
 									JSONArray list = new JSONArray();
 									JSONArray idFiles = (JSONArray) jsonObject.get("idFiles");
@@ -188,8 +188,7 @@ public class Server {
 									setStatus(login, "Inserting into device file list");
 									ArrayList<FileInfoInt> inserted= Jamuz.getDb().
 											insertDeviceFiles(toInsertInDeviceFiles, device.getId());
-									//FIXME ***** StatSource will not be found here as not the same machine
-									StatSource source = Jamuz.getMachine().getStatSource(login);
+									StatSource source = tableModel.getClient(login).getStatSource();
 									if(source!=null && Jamuz.getDb()
 											.setPreviousPlayCounter(inserted, source.getId())) {
 										for (FileInfoInt ins : inserted) {
@@ -215,20 +214,14 @@ public class Server {
 									FileInfo file = new FileInfo(login, obj);
 									newTracks.add(file);
 								}
-								LinkedHashMap <Integer, StatSource> statSources = new LinkedHashMap<>();
-								Jamuz.getDb().getStatSources(statSources, login);
 								List<StatSource> sources = new ArrayList();
-								if(statSources.values().iterator().hasNext()) {
-									sources.add(statSources.values().iterator().next());
-									setStatus(login, "Starting merge");
-									new ProcessMerge("Thread.Server.ProcessMerge."+login, 
-										sources, false, false, newTracks, 
-											tableModel.getClient(login).getProgressBar(), 
-											new CallBackMerge(login))
-									.start();
-								} else {
-									setStatus(login, "No stat source found !");
-								}
+								sources.add(tableModel.getClient(login).getStatSource());
+								setStatus(login, "Starting merge");
+								new ProcessMerge("Thread.Server.ProcessMerge."+login, 
+									sources, false, false, newTracks, 
+										tableModel.getClient(login).getProgressBar(), 
+										new CallBackMerge(login))
+								.start();
 								break;
 						}
 					} catch (ParseException ex) {
@@ -249,29 +242,25 @@ public class Server {
 				if(Jamuz.getDb().isMachine(client.getInfo().getLogin(), zText)) {
 					Device device = new Device(-1, 
 							client.getInfo().getLogin(), 
-							"source", "remote://"+client.getInfo().getLogin(), 
-							client.getInfo().getIdPlaylist(), 
-							client.getInfo().getLogin());
+							"source", client.getInfo().getLogin(), 
+							-1, 
+							client.getInfo().getLogin(), true);
 					if(Jamuz.getDb().setDevice(device)) {
-						LinkedHashMap <Integer, Device> devices = new LinkedHashMap<>();
-						Jamuz.getDb().getDevices(devices, client.getInfo().getLogin());
-						int idDevice = devices.values().iterator().next().getId();
-						client.getInfo().setIdDevice(idDevice);
+						Device deviceWithId = Jamuz.getDb().getDevice(client.getInfo().getLogin());
+						client.getInfo().setDevice(deviceWithId);
 						StatSource statSource = new StatSource(
 							-1, client.getInfo().getLogin(), 6, 
-							"remote://"+client.getInfo().getLogin(), "MySqlUser", "MySqlPwd", 
+							client.getInfo().getLogin(), "MySqlUser", "MySqlPwd", 
 							client.getInfo().getRootPath(), 
 							client.getInfo().getLogin(), 
-							idDevice, false, "");
+							deviceWithId.getId(), false, "", true);
 						if(Jamuz.getDb().setStatSource(statSource)) {
-							LinkedHashMap <Integer, StatSource> statSources = new LinkedHashMap<>();
-							Jamuz.getDb().getStatSources(statSources, client.getInfo().getLogin());
-							int idStatSource = statSources.values().iterator().next().getId();
-							client.getInfo().setIdStatSource(idStatSource);
+							StatSource statSourceWithId = Jamuz.getDb().getStatSource(client.getInfo().getLogin());
+							client.getInfo().setStatSource(statSourceWithId);
 							if(Jamuz.getDb().setClientInfo(client.getInfo())) {
 								ClientInfo clientInfo = Jamuz.getDb().getClient(client.getInfo().getLogin());
 								client.getInfo().setId(clientInfo.getId());
-								tableModel.add(client.getInfo());
+								tableModel.add(clientInfo);
 							}
 						}
 					}
@@ -292,7 +281,7 @@ public class Server {
                 clientMap.put(client.getInfo().getLogin(), client);
 				client.send("MSG_CONNECTED");
             } else {
-				//FIXME: ***** Make this disconnect client AND NOT RECONNECT
+				//FIXME LOW REMOTE Make this disconnect client AND NOT RECONNECT ("Authentication failed." in android notif)
 				client.send("MSG_ERROR_CONNECTION"); 
 			}
 			tableModel.fireTableDataChanged();
