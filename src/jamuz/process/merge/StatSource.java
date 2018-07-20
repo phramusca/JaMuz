@@ -31,6 +31,8 @@ import jamuz.utils.DateTime;
  */
 public class StatSource {
 
+	private boolean hidden;
+
 	/**
 	 * Used when retrieving StatSourceS from db for given machine 
 	 * @param id 
@@ -44,13 +46,15 @@ public class StatSource {
 	 * @param idDevice
 	 * @param isSelected  
      * @param lastMergeDate  
+	 * @param hidden  
 	 */
 	public StatSource(int id, String name, int idStatement, String location, 
 			String user, String pwd, String rootPath, String machineName, 
-			int idDevice, boolean isSelected, String lastMergeDate) {
+			int idDevice, boolean isSelected, String lastMergeDate, boolean hidden) {
 		
 		this(id, name, location, user, pwd, rootPath, machineName, 
 				isSelected, idDevice, idStatement, lastMergeDate);
+		this.hidden = hidden;
 	}
     
     /**
@@ -84,22 +88,22 @@ public class StatSource {
         
         switch (idStatement) {
             case 1: // Guayadeque 	(Linux)
-                this.source = new StatSourceGuayadeque(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
+                this.source = new StatSourceGuayadeque(new DbInfo(LibType.Sqlite, location, user, pwd, false), name, rootPath);
                 break;
             case 2: // Kodi 	(Linux/Windows)
-                this.source = new StatSourceKodi(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
+                this.source = new StatSourceKodi(new DbInfo(LibType.Sqlite, location, user, pwd, false), name, rootPath); 
                 break;
             case 3: // MediaMonkey (Windows)
-                this.source = new StatSourceMediaMonkey(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
+                this.source = new StatSourceMediaMonkey(new DbInfo(LibType.Sqlite, location, user, pwd, false), name, rootPath); 
                 break;
             case 4: // Mixxx 	(Linux/Windows)
-                this.source = new StatSourceMixxx(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
+                this.source = new StatSourceMixxx(new DbInfo(LibType.Sqlite, location, user, pwd, false), name, rootPath); 
                 break;
             case 5: // MyTunes 	(Android)
-                this.source = new StatSourceMyTunes(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
+                this.source = new StatSourceMyTunes(new DbInfo(LibType.Sqlite, location, user, pwd, false), name, rootPath); 
                 break;
 			case 6: // JaMuz Remote 	(Android)
-                this.source = new StatSourceJaMuzRemote(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
+                this.source = new StatSourceJaMuzRemote(new DbInfo(LibType.Sqlite, location, user, pwd, true), name, rootPath); 
                 break;
             default:
                 this.source = null;
@@ -219,6 +223,10 @@ public class StatSource {
 	@Override
 	public String toString() {
 		return this.source.getName();
+	}
+
+	boolean isHidden() {
+		return hidden;
 	}
 
 }

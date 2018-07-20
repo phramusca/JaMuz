@@ -237,9 +237,9 @@ public class Client {
 				String rootPath = (String) jsonObject.get("rootPath");
 				reception = new Reception(bufferedReader, callback, Client.this);
 				reception.start();
-				info = new ClientInfo(login+"-"+appId, rootPath, password);
+				info = new ClientInfo(login+"-"+appId, password, rootPath);
 				info.setRemoteConnected(isRemote);
-				info.setSyncConnected(!isRemote);	
+				info.setSyncConnected(!isRemote);
 				callback.connected(Client.this);
 			} catch (IOException | ParseException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);

@@ -26,11 +26,51 @@ import jamuz.utils.Inter;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Device {
-	/**
-	 * Device ID
-	 */
-	private int id;
 
+	private int id;
+	private boolean hidden;
+	private String name;
+	private String machineName;
+	private int idPlaylist;
+	private String source;
+	private String destination;
+	
+	/**
+	 * Creates a new Device from database
+	 * @param id
+	 * @param name
+	 * @param source
+	 * @param destination
+	 * @param idPlaylist
+	 * @param machineName
+	 * @param hidden
+	 */
+	public Device(int id, String name, String source, String destination, 
+			int idPlaylist, String machineName, boolean hidden) {
+		this.id = id;
+		this.name = name;
+		this.source = source;
+		this.destination = destination;
+		this.idPlaylist = idPlaylist;
+		this.machineName = machineName;
+		this.hidden = hidden;
+	}
+	
+	/**
+	 * Creates an empty device
+	 * @param machineName
+	 */
+	public Device(String machineName) {
+		this(-1, "", "", "", -1, machineName, false);  //NOI18N
+	}
+	
+    /**
+	 * This is the default "None" device
+	 */
+	public Device() {
+        this(0, Inter.get("Label.None"), "", "", 0, "", false); //NOI18N
+    }
+	
 	/**
 	 *
 	 * @return
@@ -38,11 +78,6 @@ public class Device {
 	public int getId() {
         return id;
     }
-    
-	/**
-	 * Device name
-	 */
-	private String name;
 
 	/**
 	 *
@@ -59,11 +94,6 @@ public class Device {
 	public void setName(String name) {
         this.name = name;
     }
-    
-	/**
-	 * Device source path
-	 */
-	private String source;
 
 	/**
 	 *
@@ -80,12 +110,7 @@ public class Device {
 	public void setSource(String source) {
         this.source = source;
     }
-    
-	/**
-	 * Device destination path
-	 */
-	private String destination;
-
+ 
 	/**
 	 *
 	 * @return
@@ -101,11 +126,6 @@ public class Device {
 	public void setDestination(String destination) {
         this.destination = destination;
     }
-    
-	/**
-	 * Linked playlist ID
-	 */
-	private int idPlaylist;
 
 	/**
 	 *
@@ -124,11 +144,6 @@ public class Device {
     }
     
 	/**
-	 * Machine name
-	 */
-	private String machineName;
-
-	/**
 	 *
 	 * @return
 	 */
@@ -136,39 +151,6 @@ public class Device {
         return machineName;
     }
 
-	/**
-	 * Creates a new Device from database
-	 * @param id
-	 * @param name
-	 * @param source
-	 * @param destination
-	 * @param idPlaylist
-	 * @param machineName
-	 */
-	public Device(int id, String name, String source, String destination, int idPlaylist, String machineName) {
-		this.id = id;
-		this.name = name;
-		this.source = source;
-		this.destination = destination;
-		this.idPlaylist = idPlaylist;
-		this.machineName = machineName;
-	}
-	
-	/**
-	 * Creates an empty device
-	 * @param machineName
-	 */
-	public Device(String machineName) {
-		this(-1, "", "", "", -1, machineName);  //NOI18N
-	}
-	
-    /**
-	 * This is the default "None" device
-	 */
-	public Device() {
-        this(0, Inter.get("Label.None"), "", "", 0, ""); //NOI18N
-    }
-    
 	/**
 	 * Return device's associated playlist
 	 * @return
@@ -180,5 +162,9 @@ public class Device {
     @Override
 	public String toString() {
 		return this.name + " (" + this.getPlaylist().toString() + ")"; //NOI18N //NOI18N //NOI18N
+	}
+
+	boolean isHidden() {
+		return hidden;
 	}
 }

@@ -60,10 +60,10 @@ public final class Machine {
 			if(!Jamuz.getDb().getOptions(options, this.name)) {
 				return false;
 			}
-			if(!Jamuz.getDb().getStatSources(statSources, this.name)) {
+			if(!Jamuz.getDb().getStatSources(statSources, this.name, false)) {
 				return false;
 			}
-			return Jamuz.getDb().getDevices(devices, this.name);
+			return Jamuz.getDb().getDevices(devices, this.name, false);
 		}
 		else {
 			return false;
@@ -144,17 +144,6 @@ public final class Machine {
 			return null;
 		}
 	}
-	
-	public StatSource getStatSource(String login) {
-		List<StatSource> candidates = 
-				statSources.values().stream()
-				.filter(statSource -> statSource.getSource().getLocation().equals("remote://"+login))
-				.collect(Collectors.toList());
-		if(candidates.size()==1) {
-			return candidates.get(0);
-		}
-		return null;
-	}
 
 	/**
 	 * Return list of devices as Collection
@@ -178,28 +167,6 @@ public final class Machine {
 		}
 	}
 
-	//FIXME !!!!!!! Remove "remote://"
-	//----------------------
-	// - devicefile is linked to a device
-	// - statsource is linked to a device
-	// - playcounter is linked to a statsource
-	
-	/**
-	 * Return requested remote Device
-	 * @param login
-	 * @return
-	 */
-	public Device getDevice(String login) {
-		List<Device> candidates = 
-				devices.values().stream()
-				.filter(device -> device.getDestination().equals("remote://"+login))
-				.collect(Collectors.toList());
-		if(candidates.size()==1) {
-			return candidates.get(0);
-		}
-		return null;
-	}
-	
 	/**
 	 *
 	 * @return

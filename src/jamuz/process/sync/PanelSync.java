@@ -42,7 +42,7 @@ public class PanelSync extends javax.swing.JPanel {
     /**
      * progress bar
      */
-    protected static ProgressBar progressBar;
+    private static ProgressBar progressBar;
     
     /**
      * Creates new form PanelSync
@@ -284,7 +284,7 @@ public class PanelSync extends javax.swing.JPanel {
                 enableSync(false);
                 tableModel.clear();
                 Device device = (Device) jComboBoxDevice.getSelectedItem();
-                processSync = new ProcessSync("Thread.PanelSync.ProcessSync", device);
+                processSync = new ProcessSync("Thread.PanelSync.ProcessSync", device, progressBar);
                 processSync.start();
             }
         }

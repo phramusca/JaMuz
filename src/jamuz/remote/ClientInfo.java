@@ -19,6 +19,8 @@ package jamuz.remote;
 import jamuz.Jamuz;
 import jamuz.Playlist;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.process.merge.StatSource;
+import jamuz.process.sync.Device;
 import jamuz.utils.DateTime;
 
 /**
@@ -28,46 +30,40 @@ import jamuz.utils.DateTime;
 public class ClientInfo {
 	private int id;
 	private final String login;
-	private final String rootPath;
 	private String pwd;
 	private String name;
-	private int idPlaylist;
-	private int idDevice;
-	private int idStatSource;
+	private Device device;
+	private StatSource statSource;
 	private boolean enabled;
 	private boolean remoteConnected;
 	private boolean syncConnected;
 	private String status="";
 	private final ProgressBar progressBar;
+	private final String rootPath;
 
 	//TODO: Manage rights
 //	private boolean allowRating;
 //	private boolean allowControl;
 //	private boolean allow...;
 
-	public ClientInfo(String login, String rootPath, String pwd) {
+	public ClientInfo(String login, String pwd, String rootPath) {
 		this.progressBar = new ProgressBar();
 		this.login = login;
-		this.rootPath = rootPath;
 		this.pwd = pwd;
 		this.id=-1;
 		this.name = "";
-		this.idPlaylist = -1;
-		this.idDevice = -1;
-		this.idStatSource = -1;
 		this.enabled = false;
-		
+		this.rootPath = rootPath;
 	}
 	
-	public ClientInfo(int id, String login, String rootPath, String name, 
-			String pwd, int idPlaylist, int idDevice, int idStatSource,
+	public ClientInfo(int id, String login, String name, 
+			String pwd, Device device, StatSource statSource,
 			boolean enabled) {
-		this(login, rootPath, pwd);
+		this(login, pwd, statSource.getSource().getRootPath());
 		this.id = id;
 		this.name = name;
-		this.idPlaylist = idPlaylist;
-		this.idDevice = idDevice;
-		this.idStatSource = idStatSource;
+		this.device = device;
+		this.statSource = statSource;
 		this.enabled = enabled;
 	}
 
@@ -123,16 +119,8 @@ public class ClientInfo {
 		this.pwd=pwd;
 	}
 
-	public int getIdPlaylist() {
-        return idPlaylist;
-    }
-
-	public void setIdPlaylist(int idPlaylist) {
-        this.idPlaylist = idPlaylist;
-    }
-
 	public Playlist getPlaylist() {
-		return Jamuz.getPlaylist(this.idPlaylist);
+		return Jamuz.getPlaylist(this.device.getIdPlaylist());
 	}
     
     @Override
@@ -143,21 +131,21 @@ public class ClientInfo {
 	public String getRootPath() {
 		return rootPath;
 	}
-
-	public int getIdDevice() {
-		return idDevice;
+	
+	public Device getDevice() {
+		return device;
 	}
 
-	public int getIdStatSource() {
-		return idStatSource;
+	public void setDevice(Device device) {
+		this.device = device;
 	}
 
-	void setIdDevice(int idDevice) {
-		this.idDevice=idDevice;
+	public StatSource getStatSource() {
+		return statSource;
 	}
 
-	void setIdStatSource(int idStatSource) {
-		this.idStatSource=idStatSource;
+	public void setStatSource(StatSource statSource) {
+		this.statSource = statSource;
 	}
 	
 	public void enable(boolean enable) {
@@ -171,4 +159,6 @@ public class ClientInfo {
 	void setId(int id) {
 		this.id=id;
 	}
+
+	
 }

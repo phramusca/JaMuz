@@ -211,7 +211,7 @@ public class ProcessMerge extends ProcessAbstract {
 		//We will use that copy if simulation mode, otherwise use real JamuzDb
 		if(simulate) {
             dBJaMuz = new DbConnJaMuz(
-					new DbInfo(	DbInfo.LibType.Sqlite, 
+					new DbInfo(DbInfo.LibType.Sqlite, 
 							Jamuz.getDb().getDbConn().getInfo().getLocationWork(), "", ""));
 			//Connect and create Prepared Statements
 			if(!dBJaMuz.setUp()) {

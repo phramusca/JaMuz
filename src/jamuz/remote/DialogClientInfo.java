@@ -181,11 +181,11 @@ public class DialogClientInfo extends javax.swing.JDialog {
                     .addComponent(jLabelPlaylist)
                     .addComponent(jComboBoxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBoxEnabled)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonCancel)
-                        .addComponent(jButtonSave)))
+                        .addComponent(jButtonSave))
+                    .addComponent(jCheckBoxEnabled))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -195,7 +195,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
 	private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
 
 		String name = jTextName.getText();
-		String pwd = jTextFieldPwd.getText(); //TODO: Strength password required
+		String pwd = jTextFieldPwd.getText(); //TODO: Strength password required & do save hashed if to be used
 		if(name.equals("") || pwd.equals("")) {  //NOI18N
 			Popup.warning(Inter.get("Error.AllFieldsMustBeSet")); //NOI18N
 		}
@@ -203,7 +203,8 @@ public class DialogClientInfo extends javax.swing.JDialog {
 			this.clientInfo.setName(name);
 			this.clientInfo.setPwd(pwd);
 			Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-			this.clientInfo.setIdPlaylist(playlist.getId());
+			this.clientInfo.getDevice().setIdPlaylist(playlist.getId());
+			this.clientInfo.getStatSource().getSource().setRootPath(jTextFieldRootPath.getText());
 			this.clientInfo.enable(jCheckBoxEnabled.isSelected());
 			
 			if(Jamuz.getDb().setClientInfo(this.clientInfo)) {

@@ -38,14 +38,47 @@ import jamuz.utils.Popup;
  */
 public class DbInfo {
 
+	/**
+	 * FTP user
+	 */
+	private String ftpUser="";
+	/**
+	 * FTP password
+	 */
+	private String ftpPwd="";
+	/**
+	 * FTP server
+	 */
+	private String ftpServer="";
+	/**
+	 * FTP remote folder
+	 */
+	private String ftpRemoteFolder="";
+	/**
+	 * FTP filename
+	 */
+	private String ftpFileName="";
+	/**
+	 * Database user, if applicable
+	 */
+	protected final String user;
+	/**
+	 * Database password, if applicable
+	 */
+	protected final String pwd;
+	
+	private boolean remote;
+	
     /**
      *
      * @param libType
      * @param location
      * @param user
      * @param pwd
+	 * @param remote
      */
-    public DbInfo(LibType libType, String location, String user, String pwd) {
+    public DbInfo(LibType libType, String location, String user, String pwd, boolean remote) {
+		this.remote = false;
         this.libType = libType;
         this.locationOri = location;
         this.locationWork = location;
@@ -66,7 +99,19 @@ public class DbInfo {
 			this.ftpRemoteFolder = split3[1].substring(firstDelim, lastDelim);
 			this.ftpFileName = split3[1].substring(lastDelim + 1, split3[1].length());
 		}
+		this.remote = remote;
     }
+	
+	/**
+     *
+     * @param libType
+     * @param location
+     * @param user
+     * @param pwd
+     */
+    public DbInfo(LibType libType, String location, String user, String pwd) {
+		this(libType, location, user, pwd, false);
+	}
 
     /**
 	 * Return Ftp instance
@@ -88,8 +133,8 @@ public class DbInfo {
                 if (locationOri.startsWith("ftp://")) {  //NOI18N
                     //TODO: Check FTP connect (and file ?)
                     return true;
-                } else if (this.locationOri.startsWith("remote://")) {  //NOI18N
-					String login = this.locationOri.substring("remote://".length());
+                } else if (remote) {  //NOI18N //For JaMuz Remote merge
+					String login = this.locationOri;
 					if(!PanelRemote.isConnected(login)) {
 						Popup.warning(java.text.MessageFormat.format(
 								"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
@@ -371,32 +416,5 @@ public class DbInfo {
         this.locationWork = locationWork;
     }
     
-	/**
-	 * FTP user
-	 */
-	private String ftpUser="";
-	/**
-	 * FTP password
-	 */
-	private String ftpPwd="";
-	/**
-	 * FTP server
-	 */
-	private String ftpServer="";
-	/**
-	 * FTP remote folder
-	 */
-	private String ftpRemoteFolder="";
-	/**
-	 * FTP filename
-	 */
-	private String ftpFileName="";
-	/**
-	 * Database user, if applicable
-	 */
-	protected final String user;
-	/**
-	 * Database password, if applicable
-	 */
-	protected final String pwd;
+	
 }

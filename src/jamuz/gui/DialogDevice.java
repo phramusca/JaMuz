@@ -211,12 +211,7 @@ public class DialogDevice extends javax.swing.JDialog {
 		else {
 			this.device.setName(name);
 			this.device.setSource(FilenameUtils.normalizeNoEndSeparator(source)+File.separator);
-			
-			if(destination.startsWith("remote://")) {
-				this.device.setDestination(destination);
-			} else {
-				this.device.setDestination(FilenameUtils.normalizeNoEndSeparator(destination)+File.separator);
-			}
+			this.device.setDestination(FilenameUtils.normalizeNoEndSeparator(destination)+File.separator);
 			Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
 			this.device.setIdPlaylist(playlist.getId());
 			

@@ -1,15 +1,12 @@
 CREATE TABLE "client" (
     "idClient" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
     "login" TEXT NOT NULL,
-    "rootPath" TEXT NOT NULL,
      "pwd" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "idPlaylist" INTEGER,
     "idDevice" INTEGER,
     "idStatSource" INTEGER,
     "enabled" BOOL,
     CONSTRAINT name_unique UNIQUE ('login'),
-    FOREIGN KEY(idPlaylist) REFERENCES playlist(idPlaylist),
     FOREIGN KEY(idStatSource) REFERENCES statSource(idStatSource) ON DELETE CASCADE,
     FOREIGN KEY(idDevice) REFERENCES device(idDevice) ON DELETE CASCADE
 );
