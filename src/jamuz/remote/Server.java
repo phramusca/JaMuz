@@ -267,7 +267,10 @@ public class Server {
 			}
 			if(!clientMap.containsKey(client.getInfo().getLogin())
 					&& tableModel.contains(client.getInfo().getLogin())
-						&& tableModel.getClient(client.getInfo().getLogin()).isEnabled()) {
+						&& tableModel.getClient(client.getInfo().getLogin()).isEnabled()
+					//TODO: Hash passwords at saving
+							&& tableModel.getClient(client.getInfo().getLogin()).getPwd() 
+									.equals(client.getInfo().getPwd())) {
 				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getLogin());
 				if(client.getInfo().isRemoteConnected()) {
 					clientInfoModel.setRemoteConnected(true);
