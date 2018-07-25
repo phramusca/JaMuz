@@ -40,15 +40,6 @@ import org.musicbrainz.model.entity.ReleaseWs2;
 import org.musicbrainz.model.searchresult.ReleaseResultWs2;
 import org.musicbrainz.webservice.impl.HttpClientWebServiceWs2;
 
-//FIXME CHECK Check if below error searching MB still occurs
-//GRAVE: eeding the allowable rate limit. Please see http://wiki.musicbrainz.org/XMLWebService for more information.
-//https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
-//https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting#How_can_I_be_a_good_citizen_and_be_smart_about_using_the_Web_Service.3F
-//The rate at which your IP address is making requests is measured. 
-//If that rate is too high, all your requests will be declined (http 503) until the rate drops again. 
-//Currently that rate is (on average) 1 request per second. 
-//  ===>>> Use same system as for video to delay requests (less a problem here as takes long time - is that because of limit reached for a long time and not seen as cannot catch those ù$$ùù exceptions ?)
-// ==> Consider using a cache system (does that really make sense ? as user is not supposed to make identical searches often; except for dev
 /**
  * MusicBrainz release class
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )

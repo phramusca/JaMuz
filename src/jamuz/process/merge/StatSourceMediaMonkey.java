@@ -51,7 +51,7 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
                     + "datetime(DateAdded+2415018.5) AS addedDate, '' AS genre "
                     + "FROM Songs "
                     + "ORDER BY SongPath COLLATE NOCASE"); 
-			//FIXME WINDOWS: Should not we remove  COLLATE NOCASE as now sync is case sensitive ?	
+			//FIXME WINDOWS Should not we remove  COLLATE NOCASE as now sync is case sensitive ?	
             //WARNING: Windows is not case-sensitive ... is that a problem ? (maybe for sync)
   
             this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement("UPDATE Songs SET rating=?*20, "

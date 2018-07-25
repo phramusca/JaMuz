@@ -61,7 +61,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     //TODO DB: How to log SQL generated queries ?
     //http://code.google.com/p/log4jdbc/
     
-    //FIXME REVIEW: code review database methods:
+    //FIXME REVIEW code review database methods:
     //Check that nbRowsAffected is properly checked (==1 or >0 depending)
     //Check that all functions return a boolean and that this one is used
     //Check that batches are used whenever possible and needed
@@ -1015,7 +1015,6 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public synchronized boolean setCheckedFlagReset(CheckedFlag checkedFlag) {
         try {
-            //FIXME CHECK Shall we update the paths set as deleted or not ?
             PreparedStatement stUpdateCheckedFlagReset
                     = dbConn.connection.prepareStatement(
 							"UPDATE path SET checked=0 "
@@ -1718,8 +1717,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             return false;
         }
     }
-
-	//FIXME DB: devices and stat sources are not refreshed after deletion
+	//FIXME OPTIONS devices and stat sources are not refreshed after deletion
 	
     /**
      * Deletes a device
@@ -1742,7 +1740,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 return false;
             }
         } catch (SQLException ex) {
-			//FIXME DB: Happens when the device is linked to a stat source => 
+			//FIXME OPTIONS Happens when the device is linked to a stat source => 
 			// => Popup this nicely to user !
 			//instead of:
 			//java.sql.SQLException: [SQLITE_CONSTRAINT]  
@@ -2138,7 +2136,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	
 	@Override
 	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
-		//FIXME LOW: Include setTags in upupdateStatistics so: 
+		//FIXME LOW Include setTags in upupdateStatistics so: 
 		// - it is faster 
 		// - it will be easier to merge tags with other stat sources 
 		int[] results = super.updateStatistics(files); 
