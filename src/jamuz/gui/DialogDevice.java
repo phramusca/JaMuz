@@ -248,16 +248,12 @@ public class DialogDevice extends javax.swing.JDialog {
 	 * @param device 
 	 */
     public static void main(final Device device) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
-            public void run() {
-
-                DialogDevice dialog = new DialogDevice(new javax.swing.JFrame(), true, device);
-				//Center the dialog
-				dialog.setLocationRelativeTo(dialog.getParent());
-                dialog.setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> {
+			DialogDevice dialog = new DialogDevice(new javax.swing.JFrame(), true, device);
+			//Center the dialog
+			dialog.setLocationRelativeTo(dialog.getParent());
+			dialog.setVisible(true);
+		});
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

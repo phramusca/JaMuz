@@ -16,7 +16,7 @@
  */
 
 package jamuz.process.sync;
-//FIXME SYNC: Problem with Guayadeque: investigate issue
+//FIXME !!!!!!!!!!!!!!! SYNC Problem with Guayadeque: investigate issue
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;

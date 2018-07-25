@@ -208,7 +208,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
 			this.clientInfo.enable(jCheckBoxEnabled.isSelected());
 			
 			if(Jamuz.getDb().setClientInfo(this.clientInfo)) {
-				//FIXME: Refresh client info in caller list (remote panel)
+				//FIXME REMOTE Refresh client info in caller list (remote panel, "Name" column)
 				this.dispose();
 			}
 			else {

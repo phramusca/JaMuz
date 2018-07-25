@@ -56,7 +56,6 @@ public class Server {
 	private HandleLogin handleLogin;
 	private final ICallBackServer callback;
 	
-	//FIXME ****** Verify that client info is well synchronized b/w these 2 below:
 	private final TableModelRemote tableModel; //contains clients info from database
 	private final Map<String, Client> clientMap; //contains connected clients
 	
@@ -139,7 +138,7 @@ public class Server {
 					client.login();
 				}
 			} catch (IOException | InterruptedException ex) {
-//				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(Server.class.getName()).log(Level.WARNING, null, ex);
 			}
 		}
 	}
@@ -195,7 +194,7 @@ public class Server {
 											list.add(ins.toMap());
 										}
 										
-									}//FIXME: else { Manage potential error => Send STOP to remote with erro msg }
+									}//FIXME REMOTE else { Manage potential error => Send STOP to remote with erro msg }
 									setStatus(login, "Sending list of ack. files");
 									JSONObject obj = new JSONObject();
 									obj.put("type", "insertDeviceFileSAck");
