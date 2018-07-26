@@ -463,11 +463,10 @@ public class PanelRemote extends javax.swing.JPanel {
 	private void menuExport() {
         ClientInfo clientInfo = getSelected();
         if(clientInfo!=null) {
-			Device device = clientInfo.getDevice();
 			//FIXME LOW REMOTE allow aborting with another menu item
 			ProcessSync processSync = new ProcessSync(
 					"Thread.PanelSync.ProcessSync.Remote", 
-					device, clientInfo.getProgressBar());
+					clientInfo.getDevice(), clientInfo.getProgressBar());
 			processSync.start();
         }
     }
