@@ -112,6 +112,8 @@ public class ProcessSync extends ProcessAbstract {
 	}
 	
 	private boolean syncRemote(String login) throws InterruptedException {
+		//FIXME !!!!!!!!!!!!!!! ProgressBar is not refreshed: need to use a callback
+		//to be able to fire table in PanelRemote, OR extract syncRemote to a new ProcessRemote
 		// FIXME LOW SYNC do not call PanelSync from ProcessSync, as used in PanelRemote too
 		// So use a callback instead
         PanelSync.enableSyncStartButton(true);
