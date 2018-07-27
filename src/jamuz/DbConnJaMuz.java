@@ -2083,7 +2083,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		ArrayList<String> tags = new ArrayList<>();
         try {
             st = dbConn.connection.createStatement();
-            rs = st.executeQuery("SELECT id, value FROM tag");
+            rs = st.executeQuery("SELECT id, value FROM tag ORDER BY value");
             while (rs.next()) {
                 tags.add(dbConn.getStringValue(rs, "value"));
 //                tags.put(rs.getInt("id"), dbConn.getStringValue(rs, "value"));
