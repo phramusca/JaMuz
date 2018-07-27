@@ -1717,7 +1717,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             return false;
         }
     }
-	//FIXME OPTIONS devices and stat sources are not refreshed after deletion
+	//FIXME !!!!!!!!!!!!! OPTIONS devices and stat sources are not refreshed after deletion
 	
     /**
      * Deletes a device
