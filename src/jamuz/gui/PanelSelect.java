@@ -69,7 +69,7 @@ import javax.swing.JMenu;
 //FIXME PLAYER Bug "Kid Creole and the Coconuts"
 //idPath IN (784, 785)
 //=> Album "Best Of" ne s'affiche pas !!!???
-
+//FIXME PLAYER Bug on Pause: hangs and cannot stop playback sometimes
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )

@@ -634,7 +634,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		
 		if (obj instanceof FileInfo) {
 			FileInfo thatFileInfo = (FileInfo) obj;
-            //FIXME MERGE Compare idFile instead of relativeFullPath
+            //FIXME LOW MERGE Compare idFile instead of relativeFullPath
 			// !! FIRST be sure it is always available during merge on both sides !!
             return this.relativeFullPath.equals(thatFileInfo.relativeFullPath);
 		}

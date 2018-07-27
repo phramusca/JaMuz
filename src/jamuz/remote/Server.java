@@ -193,7 +193,7 @@ public class Server {
 											list.add(ins.toMap());
 										}
 										
-									}//FIXME REMOTE else { Manage potential error => Send STOP to remote with erro msg }
+									}//FIXME LOW REMOTE else { Manage potential error => Send STOP to remote with erro msg }
 									setStatus(login, "Sending list of ack. files");
 									JSONObject obj = new JSONObject();
 									obj.put("type", "insertDeviceFileSAck");
