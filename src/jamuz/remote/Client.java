@@ -47,6 +47,7 @@ public class Client {
     private OutputStream outputStream;
 	private InputStream inputStream;
 	private String path;
+	private boolean isRemote;
 
 	/**
 	 * Set the value of locationWork
@@ -88,6 +89,36 @@ public class Client {
 		} catch (IOException ex) {
 //			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
+		}
+	}
+	
+	class Authentication extends ProcessAbstract {
+
+		public Authentication() {
+			super("Thread.Server.Authentication");
+		}
+
+		@Override
+		public void run() {
+			try {
+                send("MSG_AUTHENTICATE");
+				String json = bufferedReader.readLine();		
+				JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
+				String login =  (String) jsonObject.get("login");
+				String password = (String) jsonObject.get("password");
+				boolean isRemoteR = (Boolean) jsonObject.get("isRemote");
+				String appId = (String) jsonObject.get("appId");
+				String rootPath = (String) jsonObject.get("rootPath");
+				reception = new Reception(bufferedReader, callback, Client.this);
+				reception.start();
+				info = new ClientInfo(login+"-"+appId, password, rootPath);
+				info.setRemoteConnected(isRemoteR);
+				info.setSyncConnected(!isRemoteR);
+				isRemote = isRemoteR;
+				callback.connected(Client.this);
+			} catch (IOException | ParseException ex) {
+				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 	
@@ -191,7 +222,7 @@ public class Client {
 		} catch (SocketException ex) {
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
 			close();
-			callback.disconnected(info);
+			callback.disconnected(info, getClientId());
 		} catch (IOException ex) {
 			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -215,39 +246,14 @@ public class Client {
 	
 	@Override
 	public String toString() {
-		return info.getLogin();
-	}
-
-	class Authentication extends ProcessAbstract {
-
-		public Authentication() {
-			super("Thread.Server.Authentication");
-		}
-
-		@Override
-		public void run() {
-			try {
-                send("MSG_AUTHENTICATE");
-				String json = bufferedReader.readLine();		
-				JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-				String login =  (String) jsonObject.get("login");
-				String password = (String) jsonObject.get("password");
-				boolean isRemote = (Boolean) jsonObject.get("isRemote");
-				String appId = (String) jsonObject.get("appId");
-				String rootPath = (String) jsonObject.get("rootPath");
-				reception = new Reception(bufferedReader, callback, Client.this);
-				reception.start();
-				info = new ClientInfo(login+"-"+appId, password, rootPath);
-				info.setRemoteConnected(isRemote);
-				info.setSyncConnected(!isRemote);
-				callback.connected(Client.this);
-			} catch (IOException | ParseException ex) {
-				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
+		return getClientId();
 	}
 
 	public ClientInfo getInfo() {
 		return info;
+	}
+	
+	public String getClientId() {
+		return info.getLogin()+"-"+(isRemote?"remote":"sync");
 	}
 }

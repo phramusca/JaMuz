@@ -40,16 +40,17 @@ public class Reception  extends ProcessAbstract {
 				checkAbort();
 				String msg = bufferedReader.readLine();
                 if(msg!=null) {
-                    callback.received(client.getInfo().getLogin(), msg);
+                    callback.received(client.getClientId(), client.getInfo().getLogin(), msg);
                 }
                 else {
-                    callback.disconnected(client.getInfo());
+                    callback.disconnected(client.getInfo(), client.getClientId());
 					return;
                 }
 			}
 		} catch (InterruptedException ex) {
         } catch(IOException ex) {
-            callback.received(client.getInfo().getLogin(), "MSG_ERROR: ".concat(ex.toString()));
+            callback.received(client.getClientId(), client.getInfo().getLogin(), 
+					"MSG_ERROR: ".concat(ex.toString()));
 		} finally {
             try {
                 bufferedReader.close();

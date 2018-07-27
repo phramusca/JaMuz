@@ -13,16 +13,18 @@ public interface ICallBackReception {
 
 	/**
 	 *
+	 * @param clientId
 	 * @param login
 	 * @param msg
 	 */
-	public void received(String login, String msg);
+	public void received(String clientId, String login, String msg);
 	
 	/**
 	 *
 	 * @param clientInfo
+	 * @param clientId
 	 */
-	public void disconnected(ClientInfo clientInfo);
+	public void disconnected(ClientInfo clientInfo, String clientId);
 	
 	/**
 	 *

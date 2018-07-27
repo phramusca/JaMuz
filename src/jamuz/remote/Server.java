@@ -29,7 +29,6 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -114,7 +113,7 @@ public class Server {
 
 	void closeClients() {
 		for(Client client : clientMap.values()) {
-            closeClient(client.getInfo().getLogin());
+            closeClient(client.getClientId());
         }
 	}
 
@@ -145,8 +144,8 @@ public class Server {
 	
     class CallBackReception implements ICallBackReception {
         @Override
-        public void received(String login, String msg) {
-            if(clientMap.containsKey(login)) {
+        public void received(String clientId, String login, String msg) {
+            if(clientMap.containsKey(clientId)) {
 				if(msg.startsWith("JSON_")) {
 					String json = msg.substring(5);
 					JSONObject jsonObject;
@@ -157,18 +156,18 @@ public class Server {
 						switch(type) {
 							case "requestTags":
 								setStatus(login, "Sending tags");
-								sendTags(login);
+								sendTags(clientId);
 								break;
 							case "requestGenres":
 								setStatus(login, "Sending genres");
-								sendGenres(login);
+								sendGenres(clientId);
 								break;
 							case "requestNewFiles":
-								sendFilesToGet(login);
+								sendFilesToGet(login, clientId);
 								break;
 							case "requestFile":
 								idFile = (int) (long) jsonObject.get("idFile");
-								sendFile(login, idFile);
+								sendFile(clientId, login, idFile);
 								break;
 							case "ackFileSReception":
 								setStatus(login, "Received list of files to ack");
@@ -199,7 +198,7 @@ public class Server {
 									JSONObject obj = new JSONObject();
 									obj.put("type", "insertDeviceFileSAck");
 									obj.put("filesAcked", list);
-									send(login, obj);
+									send(clientId, obj);
 								} else {
 									setStatus(login, "Should not happen (idDevice not found) or you're stuck");
 								}
@@ -216,7 +215,7 @@ public class Server {
 								List<StatSource> sources = new ArrayList();
 								sources.add(tableModel.getClient(login).getStatSource());
 								setStatus(login, "Starting merge");
-								new ProcessMerge("Thread.Server.ProcessMerge."+login, 
+								new ProcessMerge("Thread.Server.ProcessMerge."+clientId, 
 									sources, false, false, newTracks, 
 										tableModel.getClient(login).getProgressBar(), 
 										new CallBackMerge(login))
@@ -227,7 +226,7 @@ public class Server {
 						Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
 					}				
 				} else {
-					callback.received(login, msg);
+					callback.received(clientId, msg);
 				}
             }
         }
@@ -265,23 +264,23 @@ public class Server {
 					}
 				}
 			}
-			if(!clientMap.containsKey(client.getInfo().getLogin())
+			if(!clientMap.containsKey(client.getClientId())
 					&& tableModel.contains(client.getInfo().getLogin())
 						&& tableModel.getClient(client.getInfo().getLogin()).isEnabled()
 					//TODO: Hash passwords at saving
 							&& tableModel.getClient(client.getInfo().getLogin()).getPwd() 
 									.equals(client.getInfo().getPwd())) {
 				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getLogin());
-				if(client.getInfo().isRemoteConnected()) {
-					clientInfoModel.setRemoteConnected(true);
-					callback.connectedRemote(client.getInfo().getLogin());
-				} 
+				clientMap.put(client.getClientId(), client);
+				client.send("MSG_CONNECTED");
 				if(client.getInfo().isSyncConnected()) {
 					clientInfoModel.setSyncConnected(true);
 					clientInfoModel.setStatus("Connected");
 				}
-                clientMap.put(client.getInfo().getLogin(), client);
-				client.send("MSG_CONNECTED");
+				if(client.getInfo().isRemoteConnected()) {
+					clientInfoModel.setRemoteConnected(true);
+					callback.connectedRemote(client.getClientId());
+				} 
             } else {
 				//FIXME LOW REMOTE Make this disconnect client AND NOT RECONNECT ("Authentication failed." in android notif)
 				client.send("MSG_ERROR_CONNECTION"); 
@@ -290,10 +289,10 @@ public class Server {
 		}
 
 		@Override
-		public void disconnected(ClientInfo clientInfo) {
-			if(clientMap.containsKey(clientInfo.getLogin())) {
-				clientMap.get(clientInfo.getLogin()).close();
-				clientMap.remove(clientInfo.getLogin());
+		public void disconnected(ClientInfo clientInfo, String clientId) {
+			if(clientMap.containsKey(clientId)) {
+				clientMap.get(clientId).close();
+				clientMap.remove(clientId);
 			}
 			if(tableModel.contains(clientInfo.getLogin())) {
 				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getLogin());
@@ -355,21 +354,21 @@ public class Server {
 	
 	/**
 	 *
-	 * @param login
+	 * @param clientId
 	 * @param displayedFile
 	 * @param maxWidth
 	 */
-    public void sendCover(String login, FileInfoInt displayedFile, int maxWidth) {
-		if(clientMap.containsKey(login)) {
-			clientMap.get(login).sendCover(displayedFile, maxWidth);
+    public void sendCover(String clientId, FileInfoInt displayedFile, int maxWidth) {
+		if(clientMap.containsKey(clientId)) {
+			clientMap.get(clientId).sendCover(displayedFile, maxWidth);
 		}
 		
 	}
 	
-	public void sendFile(String login, int id) {
-		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(id);
+	public void sendFile(String clientId, String login, int idFile) {
+		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
 		setStatus(login, "Sending file: "+fileInfoInt.getRelativeFullPath());
-		if(!sendFile(login, fileInfoInt)) {
+		if(!sendFile(clientId, fileInfoInt)) {
 			//FIXME LOW SYNC Happens (still ?) when file not found
 			// Need to mark as deleted in db 
 			// AND somehow remove it from filesToKeep
@@ -379,20 +378,20 @@ public class Server {
 		}
 	}
 	
-	private boolean sendFile(String login, FileInfoInt fileInfoInt) {
-		if(clientMap.containsKey(login)) {
-			return clientMap.get(login).sendFile(fileInfoInt);
+	private boolean sendFile(String clientId, FileInfoInt fileInfoInt) {
+		if(clientMap.containsKey(clientId)) {
+			return clientMap.get(clientId).sendFile(fileInfoInt);
 		}
 		return true;
 	}
     
-	private void sendFilesToGet(String login) {
+	private void sendFilesToGet(String login, String clientId) {
 		File file = Jamuz.getFile(login, "data", "devices");
 		if(file.exists()) {
 			try {
 				setStatus(login, "Sending new list of files to retrieve");
 				String json = new String(Files.readAllBytes(file.toPath()));
-				send(login, "JSON_"+json);
+				send(clientId, "JSON_"+json);
 				file.delete();
 			} catch (IOException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -401,11 +400,11 @@ public class Server {
 			setStatus(login, "Sync will start soon");
 			JSONObject obj = new JSONObject();
 			obj.put("type", "StartSync");
-			send(login, obj);
+			send(clientId, obj);
 		}
 	}
 
-	private void sendGenres(String login) {
+	private void sendGenres(String clientId) {
 		JSONArray list = new JSONArray();
 		for(String genre : Jamuz.getGenres()) {
 			list.add(genre);
@@ -413,10 +412,10 @@ public class Server {
 		JSONObject obj = new JSONObject();
 		obj.put("type", "genres");
 		obj.put("genres", list);
-		send(login, obj);
+		send(clientId, obj);
 	}
 
-	private void sendTags(String login) {
+	private void sendTags(String clientId) {
 		JSONArray list = new JSONArray();
 		for(String tag : Jamuz.getTags()) {
 			list.add(tag);
@@ -424,7 +423,7 @@ public class Server {
 		JSONObject obj = new JSONObject();
 		obj.put("type", "tags");
 		obj.put("tags", list);
-		send(login, obj);
+		send(clientId, obj);
 	}
 	
 	/**
@@ -440,13 +439,13 @@ public class Server {
         }
 	}
 	
-	public boolean isConnected(String login) {
-		return clientMap.containsKey(login);
+	public boolean isConnected(String clientId) {
+		return clientMap.containsKey(clientId);
 	}
 	
-	public boolean send(String login, JSONObject obj) {
-		if(clientMap.containsKey(login)) {
-			clientMap.get(login).send(obj);
+	public boolean send(String clientId, JSONObject obj) {
+		if(clientMap.containsKey(clientId)) {
+			clientMap.get(clientId).send(obj);
 			return true;
 		}
 		return false;
@@ -462,25 +461,17 @@ public class Server {
 	
 	/**
 	 *
-	 * @param login
+	 * @param clientId
 	 */
-	public void closeClient(String login) {
-        if(clientMap.containsKey(login)) {
-            clientMap.get(login).close();
-            clientMap.remove(login);
+	public void closeClient(String clientId) {
+        if(clientMap.containsKey(clientId)) {
+            clientMap.get(clientId).close();
+            clientMap.remove(clientId);
         }
         else {
-            callback.received(login, " has been disconnected.");
+            callback.received(clientId, " has been disconnected.");
         }
 	}
-	
-	/**
-	 *
-	 * @return
-	 */
-	public Collection<String> getClients() {
-        return clientMap.keySet();
-    }
 
 	public TableModelRemote getTableModel() {
 		return tableModel;

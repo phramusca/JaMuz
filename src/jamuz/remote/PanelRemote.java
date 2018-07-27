@@ -18,13 +18,10 @@ package jamuz.remote;
 
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
-import jamuz.Jamuz;
 import jamuz.gui.DialogQRcode;
 import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.process.sync.Device;
 import jamuz.process.sync.ProcessSync;
-import jamuz.process.video.PanelVideo;
 import jamuz.utils.CrunchifyQRCode;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
@@ -35,22 +32,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
@@ -128,9 +117,9 @@ public class PanelRemote extends javax.swing.JPanel {
         send(jsonAsMap, true);
     }
 	
-	public static void sendCover(String login, FileInfoInt displayedFile, int maxWidth) {
+	public static void sendCover(String clientId, FileInfoInt displayedFile, int maxWidth) {
 		if(server!=null) {
-			server.sendCover(login, displayedFile, maxWidth);
+			server.sendCover(clientId, displayedFile, maxWidth);
 		}
 	}
 	
@@ -140,9 +129,9 @@ public class PanelRemote extends javax.swing.JPanel {
         }
     }
 	
-	public static boolean send(String login, JSONObject obj) {
+	public static boolean send(String clientId, JSONObject obj) {
         if(server!=null) {
-            return server.send(login, obj);
+            return server.send(clientId, obj);
         }
 		return false;
     }
@@ -158,9 +147,9 @@ public class PanelRemote extends javax.swing.JPanel {
 		send(login, obj);
 	}
 	
-	public static boolean isConnected(String login) {
+	public static boolean isConnected(String clientId) {
 		if(server!=null) {
-            return server.isConnected(login);
+            return server.isConnected(clientId);
         }
 		return false;
 	}
