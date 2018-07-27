@@ -13,11 +13,11 @@ public interface ICallBackServer {
 
 	/**
 	 *
-	 * @param login
+	 * @param clientId
 	 * @param msg
 	 */
-	public void received(String login, String msg);
+	public void received(String clientId, String msg);
 	
-	public void connectedRemote(String login);
+	public void connectedRemote(String clientId);
 	
 }

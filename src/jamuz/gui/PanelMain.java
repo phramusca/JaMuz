@@ -221,10 +221,10 @@ public class PanelMain extends javax.swing.JFrame {
 	class CallBackServer implements ICallBackServer {
 		
 		@Override
-		public void received(String login, String msg) {
+		public void received(String clientId, String msg) {
 			if(msg.startsWith("sendCover")) {
 				int maxWidth = Integer.parseInt(msg.substring("sendCover".length()));
-				PanelRemote.sendCover(login, displayedFile, maxWidth);
+				PanelRemote.sendCover(clientId, displayedFile, maxWidth);
 			}
 			else if(msg.startsWith("setPlaylist")) {
 				setPlaylist(msg.substring("setPlaylist".length()));
@@ -269,8 +269,8 @@ public class PanelMain extends javax.swing.JFrame {
 		}
 
 		@Override
-		public void connectedRemote(String login) {
-			sendPlaylists(login, jComboBoxPlaylist.getSelectedItem().toString());
+		public void connectedRemote(String clientId) {
+			sendPlaylists(clientId, jComboBoxPlaylist.getSelectedItem().toString());
 			PanelRemote.send(displayedFile);
 		}
 
@@ -1681,7 +1681,7 @@ public class PanelMain extends javax.swing.JFrame {
         }
     }
     
-    private static void sendPlaylists(String login, String selectedPlaylist) {
+    private static void sendPlaylists(String clientId, String selectedPlaylist) {
 		JSONArray list = new JSONArray();
 		for(String playlist : getPlaylists()) {
 			list.add(playlist);
@@ -1690,7 +1690,7 @@ public class PanelMain extends javax.swing.JFrame {
 		obj.put("type", "playlists");
 		obj.put("playlists", list);
 		obj.put("selectedPlaylist", selectedPlaylist);
-		PanelRemote.send(login, obj);
+		PanelRemote.send(clientId, obj);
     }
 	
 	/**

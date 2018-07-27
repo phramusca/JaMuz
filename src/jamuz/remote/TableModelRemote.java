@@ -137,15 +137,15 @@ public class TableModelRemote extends TableModelGeneric {
 //		this.fireIntervalAdded(this, clients.size()-1, clients.size()-1);
     }
 
-	public void removeClient(String id) {
-		if(clients.containsKey(id)) {
-			clients.remove(id);
+	public void removeClient(String login) {
+		if(clients.containsKey(login)) {
+			clients.remove(login);
 			this.fireTableDataChanged();
 //			this.fireIntervalRemoved(this, 0, clients.size());
 		}
 	}
 
-	public boolean contains(String id) {
-		return clients.containsKey(id);
+	public boolean contains(String login) {
+		return clients.containsKey(login);
 	}
 }
