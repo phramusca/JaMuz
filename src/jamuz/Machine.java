@@ -22,8 +22,6 @@ import jamuz.process.merge.StatSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Options class
@@ -36,6 +34,8 @@ public final class Machine {
 	private LinkedHashMap <Integer, Device> devices;
     private final String name;
     private String description;
+	//FIXME !!!!!!!!!!!! Add an hidden boolean to hide remote virtual machines
+	//TODO: Do not set options for remote hidden machines
     
 	/**
 	 * Creates Options for given machine name
@@ -124,10 +124,10 @@ public final class Machine {
 	 * @return
 	 */
 	public Collection<StatSource> getStatSources(boolean force) {
-//		if(force) {
-//			statSources = new LinkedHashMap<>();
-//			Jamuz.getDb().getStatSources(statSources, this.name);
-//		}
+		if(force) {
+			statSources = new LinkedHashMap<>();
+			Jamuz.getDb().getStatSources(statSources, this.name, false);
+		}
 		return statSources.values();
 	}
 	
