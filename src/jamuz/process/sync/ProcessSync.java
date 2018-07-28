@@ -54,20 +54,24 @@ public class ProcessSync extends ProcessAbstract {
 	private final Device device;
     private ArrayList<FileInfoInt> toInsertInDeviceFiles;
 	private final ProgressBar progressBar;
+	private final ICallBackSync callback;
     
 	/**
 	 * Creates a new sync process instance  
      * @param name
      * @param device
 	 * @param progressBar
+	 * @param callback
 	 */
-	public ProcessSync(String name, Device device, ProgressBar progressBar) {
+	public ProcessSync(String name, Device device, ProgressBar progressBar, 
+			ICallBackSync callback) {
         super(name);
 		this.fileInfoSourceList = new ArrayList<>();
 		this.fileInfoDestinationList = new ArrayList<>();
         this.toInsertInDeviceFiles = new ArrayList<>();
 		this.device=device;
 		this.progressBar = progressBar;
+		this.callback = callback;
 	}
 	
 	/**
@@ -87,7 +91,7 @@ public class ProcessSync extends ProcessAbstract {
         }
         finally {
             progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
-            
+            callback.refresh();
             //Updating database only if toInsertInDeviceFiles has items 
             //This prevents problems in case aborted before any change has been made 
             //BUT problem remains if some changes occur after abortion
@@ -100,7 +104,8 @@ public class ProcessSync extends ProcessAbstract {
             }	
 			progressBar.setup(fileInfoSourceList.size());
 			progressBar.progress("Export complete.", fileInfoSourceList.size());
-            PanelSync.enableSync(true);
+			callback.refresh();
+            PanelSync.enableSync(true); //FIXME !!!!!!! Use callback for all calls to PanelSync.xxxx
         }
 	}
 	
@@ -121,10 +126,12 @@ public class ProcessSync extends ProcessAbstract {
         PanelSync.enableSyncStartButton(true);
         progressBar.reset();
         progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
+		callback.refresh();
 		fileInfoSourceList = new ArrayList<>();
 		Playlist playlist = device.getPlaylist();
 		playlist.getFiles(fileInfoSourceList);
 		progressBar.setup(fileInfoSourceList.size());
+		callback.refresh();
 		Map jsonAsMap = new HashMap();
 		jsonAsMap.put("type", "FilesToGet");
 		JSONArray filesToGet = new JSONArray();
@@ -132,14 +139,17 @@ public class ProcessSync extends ProcessAbstract {
 			filesToGet.add(fileInfo.toMap());
 			PanelSync.addRowSync(fileInfo.getRelativeFullPath(), 1); //NOI18N
             progressBar.progress(fileInfo.getTitle());
+			callback.refresh();
 		}
 		jsonAsMap.put("files", filesToGet);		
 		progressBar.reset();
 		progressBar.setIndeterminate("Delete in deviceFile table ..."); //NOI18N
+		callback.refresh();
 		PanelSync.enableSyncStartButton(false);
 		Jamuz.getDb().deleteDeviceFiles(device.getId());
 		
 		progressBar.setIndeterminate("Saving list ..."); //NOI18N
+		callback.refresh();
 		String json = JSONValue.toJSONString(jsonAsMap);
 		File file = Jamuz.getFile(login, "data", "devices");
 		try {
@@ -175,7 +185,8 @@ public class ProcessSync extends ProcessAbstract {
 
         progressBar.reset();
         progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
-
+		callback.refresh();
+		
         //Get source files list (files to be sent)
         fileInfoSourceList = new ArrayList<>();
         Playlist playlist = this.device.getPlaylist();
@@ -187,7 +198,7 @@ public class ProcessSync extends ProcessAbstract {
         this.browseFS(new File(this.device.getDestination()));
         this.checkAbort();
         progressBar.setup(fileInfoSourceList.size() + fileInfoDestinationList.size());
-
+		callback.refresh();
 		//FIXME LOW SYNC: Offer deletion as an option now that process is labeled "export" and not "sync" anymore !!!!
         this.toInsertInDeviceFiles = new ArrayList<>();
         //Remove files on destination
@@ -200,6 +211,7 @@ public class ProcessSync extends ProcessAbstract {
                 //Remove from Source list as already on destination
                 fileInfoSourceList.remove(idInSource);
                 progressBar.setMaximum(progressBar.getMaximum()-1);
+				callback.refresh();
             }
             else {
                 //Not a file to be copied, removing it on destination
@@ -208,6 +220,7 @@ public class ProcessSync extends ProcessAbstract {
                 PanelSync.addRowSync(fileInfo.getRelativeFullPath(), 0); //NOI18N
             }
             progressBar.progress(fileInfo.getTitle());
+			callback.refresh();
         }
 
         //Copy files to destination
@@ -226,6 +239,7 @@ public class ProcessSync extends ProcessAbstract {
                 PanelSync.addRowSync(MessageFormat.format(format, fileInfo.getRelativeFullPath(), StringManager.humanReadableSeconds((System.currentTimeMillis()-startTime)/1000)), MessageFormat.format(Inter.get("Playlist.CopyFailed"), ex.toString())); //NOI18N
             }
             progressBar.progress(bench.get());
+			callback.refresh();
         }
 		return true;
 	}

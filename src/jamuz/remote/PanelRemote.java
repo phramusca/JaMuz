@@ -21,6 +21,7 @@ import jamuz.FileInfoInt;
 import jamuz.gui.DialogQRcode;
 import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.process.sync.ICallBackSync;
 import jamuz.process.sync.ProcessSync;
 import jamuz.utils.CrunchifyQRCode;
 import jamuz.utils.Encryption;
@@ -455,12 +456,23 @@ public class PanelRemote extends javax.swing.JPanel {
 			//FIXME LOW REMOTE allow aborting with another menu item
 			ProcessSync processSync = new ProcessSync(
 					"Thread.PanelSync.ProcessSync.Remote", 
-					clientInfo.getDevice(), clientInfo.getProgressBar());
+					clientInfo.getDevice(), clientInfo.getProgressBar(), 
+					new CallBackSync());
 			processSync.start();
         }
     }
 	
+	class CallBackSync implements ICallBackSync {
+
+		@Override
+		public void refresh() {
+			//TODO: Refresh only concerned cell (progressBar of given login)
+			server.getTableModel().fireTableDataChanged();
+		}
+	}
+	
 	static void refreshList() {
+		//TODO: Refresh only concerned cell(s)
 		server.getTableModel().fireTableDataChanged();
 	}
 	

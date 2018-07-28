@@ -202,7 +202,7 @@ public class PanelSync extends javax.swing.JPanel {
         column.setMinWidth(icons.get(0).getIconWidth()+5);
         column.setMaxWidth(icons.get(0).getIconWidth()+5);
 
-		PanelSync.progressBar = (ProgressBar)jProgressBarSync;
+		progressBar = (ProgressBar)jProgressBarSync;
 		
 		setCombo();
 	}
@@ -275,21 +275,28 @@ public class PanelSync extends javax.swing.JPanel {
     
     private void jButtonSyncStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSyncStartActionPerformed
 
-        if (jButtonSyncStart.getText().equals(Inter.get("Button.Abort"))) { 			  //NOI18N
+        if (jButtonSyncStart.getText().equals(Inter.get("Button.Abort"))) { //NOI18N
             enableSyncStartButton(false);
-            jButtonSyncStart.setText(Inter.get("Button.Aborting")); 			  //NOI18N
+            jButtonSyncStart.setText(Inter.get("Button.Aborting")); //NOI18N
             processSync.abort();
         } else {
             if(jComboBoxDevice.getSelectedIndex()>-1) {
                 enableSync(false);
                 tableModel.clear();
                 Device device = (Device) jComboBoxDevice.getSelectedItem();
-                processSync = new ProcessSync("Thread.PanelSync.ProcessSync", device, progressBar);
+                processSync = new ProcessSync("Thread.PanelSync.ProcessSync", 
+						device, progressBar, new CallBackSync());
                 processSync.start();
             }
         }
     }//GEN-LAST:event_jButtonSyncStartActionPerformed
 
+	class CallBackSync implements ICallBackSync {
+
+		@Override
+		public void refresh() {}
+	}
+	
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed
         DialogOptions.main(Jamuz.getMachine().getName());
     }//GEN-LAST:event_jButtonMergeSourcesActionPerformed

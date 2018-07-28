@@ -151,7 +151,7 @@ public class TestProcessHelper {
 
     private static void startProcessSync(Device device) throws InterruptedException {
         ProcessSync processSync = new ProcessSync("Thread.ProcessHelper.startProcessSync"
-				, device, new ProgressBar());
+				, device, new ProgressBar(), null);
         processSync.start();
         processSync.join();
     }
