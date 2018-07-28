@@ -1215,14 +1215,16 @@ public class DbConnJaMuz extends StatSourceSQL {
      *
      * @param hostname
      * @param description
+	 * @param hidden
      * @return
      */
-    public boolean isMachine(String hostname, StringBuilder description) {
+    public boolean isMachine(String hostname, StringBuilder description, boolean hidden) {
         ResultSet rs=null;
         ResultSet keys=null;
         try {
             PreparedStatement stSelectMachine = dbConn.connection.prepareStatement(
-					"SELECT COUNT(*), description FROM machine WHERE name=?");   //NOI18N
+					"SELECT COUNT(*), description FROM machine "
+							+ "WHERE name=?");   //NOI18N
             stSelectMachine.setString(1, hostname);
             rs = stSelectMachine.executeQuery();
             if (rs.getInt(1) > 0) {
@@ -1231,8 +1233,9 @@ public class DbConnJaMuz extends StatSourceSQL {
             } else {
                 //Insert a new machine
                 PreparedStatement stInsertMachine = dbConn.connection.prepareStatement(
-						"INSERT INTO machine (name) VALUES (?)");   //NOI18N
+						"INSERT INTO machine (name, hidden) VALUES (?, ?)");   //NOI18N
                 stInsertMachine.setString(1, hostname);
+				stInsertMachine.setBoolean(2, hidden);
                 int nbRowsAffected = stInsertMachine.executeUpdate();
                 if (nbRowsAffected == 1) {
                     keys = stInsertMachine.getGeneratedKeys();
@@ -2278,7 +2281,10 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param myListModel
      */
     public void getMachineListModel(DefaultListModel myListModel) {
-        getListModel(myListModel, "SELECT name, description FROM machine "
+        getListModel(myListModel, 
+				"SELECT name, description "
+				+ "FROM machine "
+				+ "WHERE hidden=0 "
 				+ "ORDER BY name", "name");
     }
 

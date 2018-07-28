@@ -34,10 +34,6 @@ public final class Machine {
 	private LinkedHashMap <Integer, Device> devices;
     private final String name;
     private String description;
-	//FIXME !!!!!!!!!!!! Add an hidden boolean to hide remote virtual machines
-	//TODO: Do not set options for remote hidden machines
-	//+ remove hidden from statSource and device as already hidden
-	//because now linked to another machine (to be hidden)
     
 	/**
 	 * Creates Options for given machine name
@@ -57,7 +53,7 @@ public final class Machine {
 		statSources = new LinkedHashMap<>();
 		devices = new LinkedHashMap<>();
         StringBuilder zText = new StringBuilder ();
-		if(Jamuz.getDb().isMachine(this.name, zText)) {
+		if(Jamuz.getDb().isMachine(this.name, zText, false)) {
             this.description=zText.toString();
 			if(!Jamuz.getDb().getOptions(options, this.name)) {
 				return false;

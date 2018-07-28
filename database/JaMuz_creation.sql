@@ -82,11 +82,12 @@ CREATE TABLE "statSource" (
 	FOREIGN KEY(idMachine) REFERENCES machine(idMachine) ON DELETE CASCADE,
 	FOREIGN KEY(idDevice) REFERENCES device(idDevice)
 );
-CREATE TABLE "machine" (
+CREATE TABLE machine (
     "idMachine" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" TEXT NOT NULL, 
-    "description" TEXT
-);
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "hidden" INTEGER NOT NULL
+)
 CREATE TABLE "path" (
     "idPath" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "strPath" TEXT NOT NULL,
