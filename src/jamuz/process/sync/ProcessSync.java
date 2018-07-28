@@ -16,9 +16,7 @@
  */
 
 package jamuz.process.sync;
-//FIXME !!!!!!!!!!!!!!! SYNC Problem with Guayadeque: investigate issue
-// if still one. and what does it mean ? sync is not specific to a statSource
-// is this a statSource issue instead ?
+
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;

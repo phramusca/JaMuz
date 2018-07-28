@@ -16,6 +16,11 @@
  */
 
 package jamuz.process.merge;
+//FIXME LOW MERGE Problem with Guayadeque: 3 albums keep on merging
+// Album inconnu (02,10,2008 18_32_32)/
+// Autres/Nuclear Device = [1987, #2] Western Electric [France] ~MP3~/
+// Dr Dre D.I.C
+// + 1 file beach boys not found
 
 import jamuz.StatSourceSQL;
 import jamuz.FileInfo;

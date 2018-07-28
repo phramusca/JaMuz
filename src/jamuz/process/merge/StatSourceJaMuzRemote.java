@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 
-// FIXME SYNC Remove this StatSourceJaMuzRemote class as no more needed OR:
+// FIXME MERGE Remove this StatSourceJaMuzRemote class as no more needed OR:
 // WARNING: May be needed for:
 // - playcounter insertion
 // - original path
