@@ -150,6 +150,19 @@ public final class Machine {
 	 * @return
 	 */
 	public Collection<Device> getDevices() {
+		return getDevices(false);
+	}
+	
+	/**
+	 * Return list of devices as Collection
+	 * @param force
+	 * @return
+	 */
+	public Collection<Device> getDevices(boolean force) {
+		if(force) {
+			devices = new LinkedHashMap<>();
+			Jamuz.getDb().getDevices(devices, this.name, false);
+		}
 		return devices.values();
 	}
 	

@@ -138,7 +138,7 @@ public class DialogOptions extends javax.swing.JDialog {
 		//Show device list for selected machine
 		DefaultListModel devicesModel=(DefaultListModel) jListDevices.getModel();
 		devicesModel.clear();
-		selOptions.getDevices().stream().forEach((device) -> {
+		selOptions.getDevices(true).stream().forEach((device) -> {
 			devicesModel.addElement(device);
 		});
 	}
@@ -1079,7 +1079,7 @@ public class DialogOptions extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_jButtonStatSouceDelActionPerformed
-//FIXME !!!!!!!!!!!!! OPTIONS devices are not refreshed after add/delete
+
     private void jButtonDeviceAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeviceAddActionPerformed
         DialogDevice.main(new Device(machineName));
     }//GEN-LAST:event_jButtonDeviceAddActionPerformed

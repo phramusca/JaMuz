@@ -99,8 +99,8 @@ public class TestProcessHelper {
     
 	//Cannot use more nbScan & nbAnalysis for testing as we need to keep fixed idPath
 	//TODO: Support nbScan>1 & nbAnalysis>1 to check if still OK with more threads
-    private final static int nbScan=1; 
-	private final static int nbAnalysis=1;
+    private final static int NB_SCAN=1; 
+	private final static int NB_ANALYSIS=1;
     private static ProcessCheck processCheck;
     private static void startProcessCheck(boolean enableDoActions, ProcessCheck.CheckType checkType, int idPath) throws InterruptedException {
 
@@ -113,7 +113,7 @@ public class TestProcessHelper {
         //Starting process finally
         PanelCheck.tableModelActionQueue.clear();
 		PanelCheck.setThreadPanels(checkType);
-        processCheck.startCheck(checkType, idPath, nbAnalysis, nbScan);
+        processCheck.startCheck(checkType, idPath, NB_ANALYSIS, NB_SCAN);
 
 		do {
 			Thread.sleep(2000);
@@ -150,7 +150,8 @@ public class TestProcessHelper {
     }
 
     private static void startProcessSync(Device device) throws InterruptedException {
-        ProcessSync processSync = new ProcessSync("Thread.ProcessHelper.startProcessSync", device);
+        ProcessSync processSync = new ProcessSync("Thread.ProcessHelper.startProcessSync"
+				, device, new ProgressBar());
         processSync.start();
         processSync.join();
     }

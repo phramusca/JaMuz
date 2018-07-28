@@ -460,6 +460,10 @@ public class PanelRemote extends javax.swing.JPanel {
         }
     }
 	
+	static void refreshList() {
+		server.getTableModel().fireTableDataChanged();
+	}
+	
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonQRcode;
