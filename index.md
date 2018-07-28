@@ -2,7 +2,7 @@ ________________________________________________________________________________
 
 # [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote) (Android)
 
-### [Download **Beta v0.3.0** (.apk)](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.3.0-beta/JaMuz_Remote_v0.3.0-beta.apk)
+### [Download **Beta v0.4.0** (.apk)](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.4.0-beta/JaMuz_Remote_v0.4.0-beta.apk)
 
 [Release Notes and other versions](https://github.com/phramusca/JaMuz-Remote/releases)
 
@@ -43,7 +43,7 @@ ________________________________________________________________________________
   * Calibre helper to manage your ebooks.
 * Please help out translating by using [WebLate](https://hosted.weblate.org/engage/jamuz/):
 <a href="https://hosted.weblate.org/engage/jamuz/?utm_source=widget">
-<img src="https://hosted.weblate.org/widgets/jamuz/-/multi-auto.svg?" alt="État de la traduction" />
+<img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status" />
 </a>
 
 _________________________________________________________________________________
