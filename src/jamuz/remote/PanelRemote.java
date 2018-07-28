@@ -136,7 +136,7 @@ public class PanelRemote extends javax.swing.JPanel {
 		return false;
     }
 	
-	public static void send(String login, ArrayList<FileInfo> mergeListDbSelected) {
+	public static void send(String clientId, ArrayList<FileInfo> mergeListDbSelected) {
 		JSONObject obj = new JSONObject();
 		obj.put("type", "mergeListDbSelected");
 		JSONArray jsonArray = new JSONArray();
@@ -144,7 +144,7 @@ public class PanelRemote extends javax.swing.JPanel {
 				jsonArray.add(mergeListDbSelected.get(i).toMap());
 		}
 		obj.put("files", jsonArray);
-		send(login, obj);
+		send(clientId, obj);
 	}
 	
 	public static boolean isConnected(String clientId) {

@@ -257,7 +257,7 @@ public class ProcessMerge extends ProcessAbstract {
 		//Copy back databases back 
 		if(!simulate) {
 			if(isRemote) {
-				PanelRemote.send(selectedStatSource.getMachineName(),
+				PanelRemote.send(selectedStatSource.getMachineName()+"-sync",
 						mergeListDbSelected);
 			} else {
 				for (StatSource statSource : sources) {

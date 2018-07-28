@@ -1639,7 +1639,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 							+ "S.rootPath, S.idDevice, "
 							+ "S.selected, login AS machineName , S.lastMergeDate\n" +
 					"FROM client C \n" +
-					"JOIN device D ON D.idDevice=D.idDevice\n" +
+					"JOIN device D ON D.idDevice=C.idDevice\n" +
 					"JOIN statSource S ON S.idStatSource=C.idStatSource"
 							+ (login.equals("")?login:" WHERE login=? "));  //NOI18N
 			if(!login.equals("")) { stSelectClients.setString(1, login); }
