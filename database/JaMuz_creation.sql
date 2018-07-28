@@ -1,15 +1,3 @@
-CREATE TABLE "client" (
-    "idClient" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
-    "login" TEXT NOT NULL,
-     "pwd" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "idDevice" INTEGER,
-    "idStatSource" INTEGER,
-    "enabled" BOOL,
-    CONSTRAINT name_unique UNIQUE ('login'),
-    FOREIGN KEY(idStatSource) REFERENCES statSource(idStatSource) ON DELETE CASCADE,
-    FOREIGN KEY(idDevice) REFERENCES device(idDevice) ON DELETE CASCADE
-);
 CREATE TABLE "device" (
     "idDevice" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
     "name" TEXT NOT NULL,
@@ -82,12 +70,6 @@ CREATE TABLE "statSource" (
 	FOREIGN KEY(idMachine) REFERENCES machine(idMachine) ON DELETE CASCADE,
 	FOREIGN KEY(idDevice) REFERENCES device(idDevice)
 );
-CREATE TABLE machine (
-    "idMachine" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" TEXT NOT NULL,
-    "description" TEXT,
-    "hidden" INTEGER NOT NULL
-)
 CREATE TABLE "path" (
     "idPath" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "strPath" TEXT NOT NULL,
@@ -152,4 +134,22 @@ CREATE TABLE "file" (
     "genreModifDate" TEXT NOT NULL  DEFAULT "1970-01-01 00:00:00",
     "saved" INTEGER NOT NULL DEFAULT (0),
 	FOREIGN KEY(idPath) REFERENCES path(idPath)
+);
+CREATE TABLE "client" (
+    "idClient" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
+    "login" TEXT NOT NULL,
+     "pwd" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "idDevice" INTEGER,
+    "idStatSource" INTEGER,
+    "enabled" BOOL,
+    CONSTRAINT name_unique UNIQUE ('login'),
+    FOREIGN KEY(idStatSource) REFERENCES statSource(idStatSource) ON DELETE CASCADE,
+    FOREIGN KEY(idDevice) REFERENCES device(idDevice) ON DELETE CASCADE
+);
+CREATE TABLE machine (
+    "idMachine" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "hidden" INTEGER NOT NULL
 );

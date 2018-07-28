@@ -2,3 +2,4 @@
 cd1d|http://cd1d.com/fr/search/apachesolr_search/<album>
 qobuz|http://www.qobuz.com/fr-fr/search?i=boutique&q=<album>
 starzik|http://www.starzik.com/telechargement-musique/recherche?mcle=<album>
+FNAC|https://www.fnac.com/SearchResult/ResultList.aspx?Search=<album>

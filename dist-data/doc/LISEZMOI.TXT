@@ -5,19 +5,31 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+0.4.0	Beta	- Synchro JaMuz Remote améliorée et configuration simplifiée
+				- Nouvelle traduction (Portuguese (Brazil))
+				- Compatible avec JaMuz Remote v0.4.x seulement
+----------------------------------------------------------------------------------------------------------------------------------
 0.3.0	Beta	- Option nettoyage des logs
 				- Correction synchronisation
 				- Traductions améliorées et nouvelles
-				- Compatible avec JaMuz Remote v0.3.0
+				- Compatible avec JaMuz Remote v0.3.x seulement
 ----------------------------------------------------------------------------------------------------------------------------------
 0.2.2	Beta	- Remote: 	progress bar fusion dans la table
 				- Video: 	fonction nettoyage, fix fonction renommage, stable
 				- Livres: 	fixes, stable
+				- Compatible avec JaMuz Remote v0.2.x seulement
 ----------------------------------------------------------------------------------------------------------------------------------
-0.2.1   Beta    Fusion avec JaMuz Remote dans onglet Remote désormais
-0.2.0	Beta	Beaucoup de changements. Compatible avec JaMuz Remote v0.2.0
-0.1.0	Beta	2ème version, première beta
-0.0.24	Alpha	1ère version sortie
+0.2.1   Beta    - Fusion avec JaMuz Remote dans onglet Remote désormais
+				- Compatible avec JaMuz Remote v0.2.x seulement
+----------------------------------------------------------------------------------------------------------------------------------
+0.2.0	Beta	- Beaucoup de changements.
+				- Compatible avec JaMuz Remote v0.2.x seulement
+----------------------------------------------------------------------------------------------------------------------------------
+0.1.0	Beta	- 2ème version
+				- Première beta
+----------------------------------------------------------------------------------------------------------------------------------
+0.0.24	Alpha	- 1ère version sortie
+----------------------------------------------------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------------------------------------------------------------
 Emplacement			Description													
@@ -26,7 +38,7 @@ Emplacement			Description
 /doc				Documentation
 /lib				Librairies nécessaires au programme
 /logs				Fichiers de LOG (et sauvegardes bases)
-/JaMuz.db		    Base de données musicale											
+/JaMuz.db		    Votre nouvelle Base de données musicale (sauvegardez régulièrement !)
 /JaMuz.jar		    Le programme en lui-même
 /JaMuz.sh		    Script de lancement pour Linux
 /JaMuz.properties	Fichier de configuration
