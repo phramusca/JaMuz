@@ -469,6 +469,20 @@ public class PanelRemote extends javax.swing.JPanel {
 			//TODO: Refresh only concerned cell (progressBar of given login)
 			server.getTableModel().fireTableDataChanged();
 		}
+
+		@Override
+		public void enable() {}
+
+		@Override
+		public void enableButton(boolean enable) {}
+
+		@Override
+		public void addRow(String file, int idIcon) {}
+
+		@Override
+		public void addRow(String file, String msg) {}
+
+		
 	}
 	
 	static void refreshList() {

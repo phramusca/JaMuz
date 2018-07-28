@@ -12,4 +12,12 @@ package jamuz.process.sync;
 public interface ICallBackSync {
 
 	public void refresh();
+
+	public void enable();
+
+	public void enableButton(boolean enable);
+
+	public void addRow(String file, int idIcon);
+
+	public void addRow(String file, String msg);
 }

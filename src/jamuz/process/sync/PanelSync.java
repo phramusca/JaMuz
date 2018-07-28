@@ -295,6 +295,26 @@ public class PanelSync extends javax.swing.JPanel {
 
 		@Override
 		public void refresh() {}
+
+		@Override
+		public void enable() {
+			enableSync(true);
+		}
+
+		@Override
+		public void enableButton(boolean enable) {
+			enableSyncStartButton(enable);
+		}
+
+		@Override
+		public void addRow(String file, int idIcon) {
+			addRowSync(file, idIcon);
+		}
+
+		@Override
+		public void addRow(String file, String msg) {
+			addRowSync(file, msg);
+		}
 	}
 	
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed

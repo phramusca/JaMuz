@@ -105,7 +105,7 @@ public class ProcessSync extends ProcessAbstract {
 			progressBar.setup(fileInfoSourceList.size());
 			progressBar.progress("Export complete.", fileInfoSourceList.size());
 			callback.refresh();
-            PanelSync.enableSync(true); //FIXME !!!!!!! Use callback for all calls to PanelSync.xxxx
+            callback.enable(); 
         }
 	}
 	
@@ -123,7 +123,7 @@ public class ProcessSync extends ProcessAbstract {
 		//to be able to fire table in PanelRemote, OR extract syncRemote to a new ProcessRemote
 		// FIXME LOW SYNC do not call PanelSync from ProcessSync, as used in PanelRemote too
 		// So use a callback instead
-        PanelSync.enableSyncStartButton(true);
+        callback.enableButton(true);
         progressBar.reset();
         progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
 		callback.refresh();
@@ -137,7 +137,7 @@ public class ProcessSync extends ProcessAbstract {
 		JSONArray filesToGet = new JSONArray();
 		for (FileInfoInt fileInfo : fileInfoSourceList) {
 			filesToGet.add(fileInfo.toMap());
-			PanelSync.addRowSync(fileInfo.getRelativeFullPath(), 1); //NOI18N
+			callback.addRow(fileInfo.getRelativeFullPath(), 1); //NOI18N
             progressBar.progress(fileInfo.getTitle());
 			callback.refresh();
 		}
@@ -145,7 +145,7 @@ public class ProcessSync extends ProcessAbstract {
 		progressBar.reset();
 		progressBar.setIndeterminate("Delete in deviceFile table ..."); //NOI18N
 		callback.refresh();
-		PanelSync.enableSyncStartButton(false);
+		callback.enableButton(false);
 		Jamuz.getDb().deleteDeviceFiles(device.getId());
 		
 		progressBar.setIndeterminate("Saving list ..."); //NOI18N
@@ -181,7 +181,7 @@ public class ProcessSync extends ProcessAbstract {
         }
 
         //Allowing abort
-        PanelSync.enableSyncStartButton(true);
+        callback.enableButton(true);
 
         progressBar.reset();
         progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
@@ -206,7 +206,7 @@ public class ProcessSync extends ProcessAbstract {
             this.checkAbort();
             int idInSource = searchInSourceList(fileInfo.getRelativeFullPath());
             if(idInSource>=0) {
-//                    PanelSync.addRowSync(fileInfo.getRelativeFullPath(), Inter.get("Playlist.AlreadyOnDestination")); //NOI18N
+//                    PanelSync.addRow(fileInfo.getRelativeFullPath(), Inter.get("Playlist.AlreadyOnDestination")); //NOI18N
                 this.toInsertInDeviceFiles.add(this.fileInfoSourceList.get(idInSource));
                 //Remove from Source list as already on destination
                 fileInfoSourceList.remove(idInSource);
@@ -217,7 +217,7 @@ public class ProcessSync extends ProcessAbstract {
                 //Not a file to be copied, removing it on destination
                 File file = fileInfo.getFullPath();
                 file.delete();
-                PanelSync.addRowSync(fileInfo.getRelativeFullPath(), 0); //NOI18N
+                callback.addRow(fileInfo.getRelativeFullPath(), 0); //NOI18N
             }
             progressBar.progress(fileInfo.getTitle());
 			callback.refresh();
@@ -234,9 +234,18 @@ public class ProcessSync extends ProcessAbstract {
             try {
                 FileSystem.copyFile(source, destination);
                 this.toInsertInDeviceFiles.add(fileInfo);
-                PanelSync.addRowSync(MessageFormat.format(format, fileInfo.getRelativeFullPath(), StringManager.humanReadableSeconds((System.currentTimeMillis()-startTime)/1000)), 1); //NOI18N
+                callback.addRow(MessageFormat.format(format, 
+						fileInfo.getRelativeFullPath(), 
+						StringManager.humanReadableSeconds(
+								(System.currentTimeMillis()-startTime)/1000))
+						, 1); //NOI18N
             } catch (IOException ex) {
-                PanelSync.addRowSync(MessageFormat.format(format, fileInfo.getRelativeFullPath(), StringManager.humanReadableSeconds((System.currentTimeMillis()-startTime)/1000)), MessageFormat.format(Inter.get("Playlist.CopyFailed"), ex.toString())); //NOI18N
+                callback.addRow(MessageFormat.format(format, 
+						fileInfo.getRelativeFullPath(), 
+						StringManager.humanReadableSeconds(
+								(System.currentTimeMillis()-startTime)/1000)), 
+						MessageFormat.format(Inter.get("Playlist.CopyFailed"), 
+								ex.toString())); //NOI18N
             }
             progressBar.progress(bench.get());
 			callback.refresh();
