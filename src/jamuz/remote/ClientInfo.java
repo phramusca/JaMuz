@@ -159,6 +159,4 @@ public class ClientInfo {
 	void setId(int id) {
 		this.id=id;
 	}
-
-	
 }
