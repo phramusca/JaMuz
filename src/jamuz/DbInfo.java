@@ -134,7 +134,7 @@ public class DbInfo {
                     //TODO: Check FTP connect (and file ?)
                     return true;
                 } else if (remote) {  //NOI18N //For JaMuz Remote merge
-					String clientId = this.locationOri+"-remote";
+					String clientId = this.locationOri+"-sync";
 					if(!PanelRemote.isConnected(clientId)) {
 						Popup.warning(java.text.MessageFormat.format(
 								"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
