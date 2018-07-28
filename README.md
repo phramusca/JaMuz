@@ -29,7 +29,7 @@ ________________________________________________________________________________
     * Calibre helper to manage your ebooks.
   * Translated using [Weblate](https://hosted.weblate.org/engage/jamuz/):
 <a href="https://hosted.weblate.org/engage/jamuz/?utm_source=widget">
- <img src="https://hosted.weblate.org/widgets/jamuz/-/multi-auto.svg?" alt="État de la traduction" />
+<img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status" />
 </a>
   
 See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
