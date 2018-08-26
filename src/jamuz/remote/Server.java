@@ -183,6 +183,10 @@ public class Server {
 										file = Jamuz.getDb().getFile(idFile);
 										toInsertInDeviceFiles.add(file);
 									}
+									//FIXME !!!!!!!!!! Insert in devicefile at export
+									//as using db results in timeouts when using PanelCheck meantime for instance
+									//+it will speed up as no need for double-ack
+									//-> need to merge first before sending new list of files to download
 									setStatus(login, "Inserting into device file list");
 									ArrayList<FileInfoInt> inserted= Jamuz.getDb().
 											insertDeviceFiles(toInsertInDeviceFiles, device.getId());

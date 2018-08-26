@@ -111,8 +111,6 @@ public class DialogClientInfo extends javax.swing.JDialog {
 
         jComboBoxPlaylist.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jTextFieldPwd.setText(Inter.get("DialogClientInfo.jTextFieldPwd.text")); // NOI18N
-
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText(Inter.get("DialogClientInfo.jLabel3.text")); // NOI18N
 

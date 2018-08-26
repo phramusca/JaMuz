@@ -201,7 +201,8 @@ public class ProcessSync extends ProcessAbstract {
             int idInSource = searchInSourceList(fileInfo.getRelativeFullPath());
             if(idInSource>=0) {
 //                    PanelSync.addRow(fileInfo.getRelativeFullPath(), Inter.get("Playlist.AlreadyOnDestination")); //NOI18N
-                this.toInsertInDeviceFiles.add(this.fileInfoSourceList.get(idInSource));
+                this.toInsertInDeviceFiles.add(
+						this.fileInfoSourceList.get(idInSource));
                 //Remove from Source list as already on destination
                 fileInfoSourceList.remove(idInSource);
                 progressBar.setMaximum(progressBar.getMaximum()-1);
@@ -221,8 +222,10 @@ public class ProcessSync extends ProcessAbstract {
         Benchmark bench = new Benchmark(fileInfoSourceList.size());
         for (FileInfoInt fileInfo : fileInfoSourceList) {
             this.checkAbort();
-            File source = new File(FilenameUtils.concat(this.device.getSource(), fileInfo.getRelativeFullPath()));
-            File destination = new File(FilenameUtils.concat(this.device.getDestination(), fileInfo.getRelativeFullPath()));
+            File source = new File(FilenameUtils.concat(
+					this.device.getSource(), fileInfo.getRelativeFullPath()));
+            File destination = new File(FilenameUtils.concat(
+					this.device.getDestination(), fileInfo.getRelativeFullPath()));
 			long startTime=System.currentTimeMillis();
 			String format = "{0} \t ({1})";
             try {
@@ -266,19 +269,23 @@ public class ProcessSync extends ProcessAbstract {
 //			if(fileInfo.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)) { return i; }
             //We want sync to be case sensitive
             if(file.getRelativeFullPath().equals(relativeFullPath)) { 
-                File fileSource = new File(FilenameUtils.concat(this.device.getSource(), file.getRelativeFullPath()));
-                File fileDestination = new File(FilenameUtils.concat(this.device.getDestination(), relativeFullPath));
+                File fileSource = new File(FilenameUtils.concat(
+						this.device.getSource(), file.getRelativeFullPath()));
+                File fileDestination = new File(FilenameUtils.concat(
+						this.device.getDestination(), relativeFullPath));
 				
 				if(fileSource.length()==fileDestination.length()) {
 					if(!doCheckLastModified || 
 							fileSource.lastModified()==fileDestination.lastModified() ) {
 						try {
 							if(!doCheckContent || 
-									FileUtils.contentEquals(fileSource, fileDestination)) {
+									FileUtils.contentEquals(fileSource, 
+											fileDestination)) {
 								return i; 
 							}
 						} catch (IOException ex) {
-							Logger.getLogger(ProcessSync.class.getName()).log(Level.SEVERE, null, ex);
+							Logger.getLogger(ProcessSync.class.getName())
+									.log(Level.SEVERE, null, ex);
 						}
 					} 
 					return i; 
@@ -289,15 +296,20 @@ public class ProcessSync extends ProcessAbstract {
 	}
 	
 	private void browseFS(File path) throws InterruptedException {
-		Jamuz.getLogger().log(Level.FINE, "Browsing \"{0}\"", path.getAbsolutePath());  //NOI18N
+		Jamuz.getLogger().log(Level.FINE, 
+				"Browsing \"{0}\"", path.getAbsolutePath());  //NOI18N
         this.checkAbort();
         //Verifying we have a path and not a file
         if (path.isDirectory()) {
             File[] files = path.listFiles();
             if (files != null) {
                 if(files.length<=0) {
-                    if(!FilenameUtils.equalsNormalizedOnSystem(this.device.getDestination(), path.getAbsolutePath())) {
-                        Jamuz.getLogger().log(Level.FINE, "Deleted empty folder \"{0}\"", path.getAbsolutePath());  //NOI18N
+                    if(!FilenameUtils.equalsNormalizedOnSystem(
+							this.device.getDestination(), 
+							path.getAbsolutePath())) {
+                        Jamuz.getLogger().log(Level.FINE, 
+								"Deleted empty folder \"{0}\"", 
+								path.getAbsolutePath());  //NOI18N
                         path.delete();
                     }
                 }
@@ -309,8 +321,11 @@ public class ProcessSync extends ProcessAbstract {
                         }
                         else {
                             String absolutePath=file.getAbsolutePath();
-                            String relativeFullPath=absolutePath.substring(this.device.getDestination().length());
-                            FileInfoInt fileInfo = new FileInfoInt(relativeFullPath, this.device.getDestination());
+                            String relativeFullPath=absolutePath.substring(
+									this.device.getDestination().length());
+                            FileInfoInt fileInfo = new FileInfoInt(
+									relativeFullPath, 
+									this.device.getDestination());
                             this.fileInfoDestinationList.add(fileInfo);
                         }
                     }
