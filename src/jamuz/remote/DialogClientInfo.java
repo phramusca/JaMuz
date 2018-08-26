@@ -115,7 +115,6 @@ public class DialogClientInfo extends javax.swing.JDialog {
         jLabel3.setText(Inter.get("DialogClientInfo.jLabel3.text")); // NOI18N
 
         jTextFieldLogin.setEditable(false);
-        jTextFieldLogin.setText(Inter.get("DialogClientInfo.jTextFieldLogin.text")); // NOI18N
 
         jLabelPwd.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabelPwd.setText(Inter.get("DialogClientInfo.jLabelPwd.text")); // NOI18N

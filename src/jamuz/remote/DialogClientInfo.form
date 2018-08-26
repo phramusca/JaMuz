@@ -170,9 +170,6 @@
     <Component class="javax.swing.JTextField" name="jTextFieldLogin">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="DialogClientInfo.jTextFieldLogin.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
-        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelPwd">
