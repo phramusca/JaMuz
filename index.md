@@ -31,7 +31,7 @@ ________________________________________________________________________________
 * ***Check, tag and organize your files:***
   * Get tags and covers from Musicbrainz, last.fm and coverartarchive.org
   * Detect duplicates.
-  * Compute MP3 gain.
+  * Compute ReplayGain (MP3 and FLAC).
 * ***Sync your files to devices:***
   * Select a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
   * Process deletes unwanted files on destination then copy new files.
