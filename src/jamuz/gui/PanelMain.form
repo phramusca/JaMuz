@@ -163,7 +163,7 @@
             <Component class="jamuz.remote.PanelRemote" name="panelRemote">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Remote">
+                  <JTabbedPaneConstraints tabName="Server">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelRemote.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
@@ -205,7 +205,7 @@
             <Component class="jamuz.process.book.PanelBook" name="panelBook">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="Livre">
+                  <JTabbedPaneConstraints tabName="Book">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelBook.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>

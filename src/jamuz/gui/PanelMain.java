@@ -146,6 +146,7 @@ public class PanelMain extends javax.swing.JFrame {
         setTab("PanelMain.panelPlaylists.TabConstraints.tabTitle", "application_view_list");
         setTab("Label.Lyrics", "text");
         setTab("PanelMain.panelStats.TabConstraints.tabTitle", "statistics");
+		setTab("PanelMain.panelRemote.TabConstraints.tabTitle", "android");
         setTab("Label.Options", "selected");
         setTab("PanelMain.panelVideo.TabConstraints.tabTitle", "movies");
 		setTab("PanelMain.panelBook.TabConstraints.tabTitle", "book_open");
