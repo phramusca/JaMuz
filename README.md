@@ -1,4 +1,5 @@
-**JaMuz** is a **Music management** tool written in Java
+
+**JaMuz** is a **Music library manager**, **player** and more, implemented in Java
 _________________________________________________________________________________
 * **Features**:
   * ***Merge your data between your favorite players:***
