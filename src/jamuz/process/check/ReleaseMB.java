@@ -63,9 +63,16 @@ public class ReleaseMB {
 	 * @param album
 	 * @param nbAudioFiles
 	 * @param idPath
+	 * @param discNo
+	 * @param discTotal
 	 * @return
 	 */
-	public List<ReleaseMatch> search(String artist, String album, int nbAudioFiles, int idPath) {
+	public List<ReleaseMatch> search(String artist, 
+			String album, 
+			int nbAudioFiles, 
+			int idPath,
+			int discNo,
+			int discTotal) {
 		List<ReleaseMatch> matches = new ArrayList<>();
 		covers = new ArrayList<>();
 		try {
@@ -79,7 +86,6 @@ public class ReleaseMB {
 			}
 			
 			//Search for album/artist
-            doWait();
 			artist = removeIllegal(artist);
 			if(!album.equals("")) {  //NOI18N
 				album = removeIllegal(album);
@@ -89,22 +95,14 @@ public class ReleaseMB {
 				release.search("artist:'"+artist+"'");  //NOI18N
 
 			}
-            queryDone();
-            doWait();
             List<ReleaseResultWs2> releaseResultsWs2List = release.getFirstSearchResultPage();
-            queryDone();
 			for (ReleaseResultWs2 releaseResultWs2 : releaseResultsWs2List) {
 				try {
-				
 					ReleaseWs2 releaseWs2;
-	//                doWait();
 					releaseWs2 = releaseResultWs2.getRelease();
-					int score=releaseResultWs2.getScore(); //TODO: Weird how set, check if properly analyzed !
-
+					int score;
 					//TODO: Order by medium (reel-to-reel, vinyl, k7, CD), BUT before or after year order ?
-
 					ReleaseMatch myMatch;
-
 					MediumListWs2 mediumListWs2 = releaseWs2.getMediumList();
 					List<MediumWs2> mediums = mediumListWs2.getMedia();
 					int discTotalMatch = mediums.size();
@@ -112,10 +110,21 @@ public class ReleaseMB {
 					if(discTotalMatch>1) {
 						int discNb = 1;
 						for(MediumWs2 medium : mediums) {
+							score=releaseResultWs2.getScore();
 							if(medium.getTracksCount()!=nbAudioFiles) {
-								score=releaseResultWs2.getScore()-20;
+								score=score-20;
 							}
-							myMatch = new ReleaseMatch(releaseWs2, score, discNb, discTotalMatch, medium.getTracksCount(), medium.getFormat(), idPath);
+							if((discNb>0 && discTotal>0)
+									&& !(discNb==discNo && discTotal==discTotalMatch)) {
+								score=score-20;
+							}
+							myMatch = new ReleaseMatch(releaseWs2, 
+									score, 
+									discNb, 
+									discTotalMatch, 
+									medium.getTracksCount(), 
+									medium.getFormat(), 
+									idPath);
 							discNb++;
 							matches.add(myMatch);
 						}
@@ -123,7 +132,7 @@ public class ReleaseMB {
 
 					score=releaseResultWs2.getScore();
 					if(releaseWs2.getTracksCount()!=nbAudioFiles) {
-						score=releaseResultWs2.getScore()-20;
+						score=score-20;
 					}
 
 					myMatch = new ReleaseMatch(releaseWs2, score, discTotalMatch, idPath);
@@ -131,7 +140,6 @@ public class ReleaseMB {
 					covers.add(new CoverMB(CoverType.MB, myMatch.getId(), myMatch.toString()));  //NOI18N
 				}
 				catch (Exception ex) {
-					queryDone(); //Free MB for others to search
 					Jamuz.getLogger().log(Level.SEVERE, "", ex);
 					//Get next releaseWs2, no need to exit yet
 				}
@@ -143,7 +151,6 @@ public class ReleaseMB {
             return matches;
 		}
 		catch (Exception ex) {
-			queryDone(); //Free MB for others to search
 			Jamuz.getLogger().log(Level.SEVERE, "", ex);
 			return null;
 		}
@@ -185,11 +192,9 @@ public class ReleaseMB {
 //			release.getIncludes().setWorkRelations(true);
 //			release.getIncludes().setWorkLevelRelations(true);
 
-            doWait();
 			//TODO: Getting 403 Forbidden with musicbrainzws2-java-v.3.0.0 (though search works)
 			//No such issue with musicbrainzws2-java_1.01r31_20120103.rar
 			ReleaseWs2 releaseWs2Full= release.lookUp(mbId);
-            queryDone();
 			//Get relations
 //			RelationListWs2 relationListWs2 = releaseWs2Full.getRelationList();
 //			List<RelationWs2> relationWs2List = relationListWs2.getRelations();
@@ -230,45 +235,11 @@ public class ReleaseMB {
 			return tracks;
 		}
 		catch (Exception ex) {
-			queryDone(); //Free MB for others to search
             Jamuz.getLogger().log(Level.SEVERE, "", ex);
 			return null;
 		}
     }
 
-    //volatile as it has to be shared between all calling threads
-    private static volatile long lastQuery = System.currentTimeMillis();
-    private static final int waitBetweenTwoRequestsInMs = 1500;
-    private static final Object lockMB = new Object();
-    private static volatile boolean oneRunning=false;
-    
-    private void doWait() throws InterruptedException {
-        synchronized(lockMB) {
-            if(progressBar!=null) {
-                progressBar.reset();
-                progressBar.setString("Wait MB ...");
-            }
-            while(((System.currentTimeMillis() - lastQuery) < waitBetweenTwoRequestsInMs*100) && oneRunning) {
-                lockMB.wait(waitBetweenTwoRequestsInMs*10);
-            }
-            oneRunning=true;
-            if(progressBar!=null) {
-                progressBar.setIndeterminate("MB ...");
-            }
-        }
-    }
-    
-    private void queryDone() {
-        synchronized(lockMB) {
-            if(progressBar!=null) {
-                progressBar.setIndeterminate("...");
-            }
-            oneRunning=false;
-            lastQuery=System.currentTimeMillis();
-            lockMB.notify();
-        }
-    }
-    
 	private void addTracks(List<Track> tracks, List<TrackWs2> trackWs2List, int discNo, int discTotal) {
 		for (TrackWs2 trackWs2 : trackWs2List) {
 				RecordingWs2 recordingWs2 = trackWs2.getRecording();

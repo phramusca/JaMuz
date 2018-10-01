@@ -1488,7 +1488,9 @@ public class DialogCheck extends javax.swing.JDialog {
                 //Analyzing right before displaying so that previously added folders are taken into account for duplicate check
 //                progressBar.setIndeterminate("");  //NOI18N
                 //TODO: Use a real discTotal, or ask user somehow
-                folder.searchMatches(jTextFieldCheckAlbum.getText(), jTextFieldCheckAlbumArtist.getText(), progressBar);
+                folder.searchMatches(jTextFieldCheckAlbum.getText(), 
+						jTextFieldCheckAlbumArtist.getText(), -1, -1, 
+						progressBar);
                 progressBar.reset();
                 //Fill matches combo box
                 displayMatches();
@@ -1736,6 +1738,7 @@ public class DialogCheck extends javax.swing.JDialog {
 		jButtonCheckOK.setEnabled(enable);
 		jButtonCheckDelete.setEnabled(enable);
         Swing.enableComponents(jPanelGenre, enable);
+		jCheckBoxCheckGenreDisplay.setEnabled(true); //whatever jPanelGenre enabled or not
 		jComboBoxCheckMatches.setEnabled(enable);
 		jComboBoxCheckDuplicates.setEnabled(enable);
 		jTextFieldCheckYear.setEnabled(enable);
@@ -1748,6 +1751,8 @@ public class DialogCheck extends javax.swing.JDialog {
 		jPanelCheckCoverThumb.setEnabled(enable);
 //		jButtonCheckPreview.setEnabled(enable);
 		jButtonCheckEditTag.setEnabled(enable);
+		jButtonCheckScanner.setEnabled(enable);
+		jButtonSelectOriginal.setEnabled(enable);
 	}
     
 	/**
@@ -2288,7 +2293,7 @@ public class DialogCheck extends javax.swing.JDialog {
     private static javax.swing.JButton jButtonCheckOpen;
     private static javax.swing.JButton jButtonCheckPreview;
     private static javax.swing.JButton jButtonCheckSaveTags;
-    private javax.swing.JButton jButtonCheckScanner;
+    private static javax.swing.JButton jButtonCheckScanner;
     private static javax.swing.JButton jButtonCheckSearch;
     private static javax.swing.JButton jButtonCheckSingleFolder;
     private javax.swing.JButton jButtonCheckUp;

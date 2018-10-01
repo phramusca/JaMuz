@@ -33,7 +33,6 @@ import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.process.check.ProcessCheck.Action;
 import java.io.File;
-import java.io.FileFilter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Proxy;
@@ -156,7 +155,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 *
 	 * @param isLast
 	 */
-	public FolderInfo(boolean isLast) {
+	private FolderInfo(boolean isLast) {
 		this.filesAudio = new ArrayList<>();
 		this.filesDb = new ArrayList<>();
         this.filesAudioTableModel = new TableModelCheckTracks();
@@ -172,7 +171,7 @@ public class FolderInfo implements java.lang.Comparable {
 	}
     
 	/**
-	 *
+	 * LAST_FOLDER
 	 */
 	public FolderInfo() {
         this(true);
@@ -214,14 +213,7 @@ public class FolderInfo implements java.lang.Comparable {
 			
 			File folder = new File(fullPath);
 			//Count only files, NOT directories
-			this.nbFiles=folder.listFiles(new FileFilter() {
-				@Override
-				public boolean accept(File pathname) {
-//					String name = pathname.getName().toLowerCase();
-//					return name.endsWith(".xml") && pathname.isFile();
-					return pathname.isFile();
-				}
-			}).length;
+			this.nbFiles=folder.listFiles((File file) -> file.isFile()).length;
 			this.modifDate = new Date(folder.lastModified());
 		}
 		catch (Exception ex) {
@@ -1082,7 +1074,17 @@ public class FolderInfo implements java.lang.Comparable {
 			//Searching matches on MusicBrainz and Last.fm
 			//(Only if a valid artistDisplay could be retrieved)
 			if(!searchArtist.equals("")) {  //NOI18N
-				searchMatches(searchAlbum, searchArtist, progressBar);
+				int discNo=1;
+				int discTotal=1;
+				ArrayList<String> discNoList = group(this.filesAudio, "getDiscNo");  //NOI18N
+				if(!discNoList.contains("") && discNoList.size()==1) {
+					discNo=Integer.valueOf(discNoList.get(0));
+				}
+				ArrayList<String> discTotalList = group(this.filesAudio, "getDiscTotal");  //NOI18N
+				if(!discTotalList.contains("") && discTotalList.size()==1){
+					discTotal=Integer.valueOf(discTotalList.get(0));
+				}
+				searchMatches(searchAlbum, searchArtist, discNo, discTotal, progressBar);
 			}
 			progressBar.setIndeterminate(Inter.get("Msg.Check.AnalyzingFolder")); //NOI18N
             
@@ -1367,10 +1369,16 @@ public class FolderInfo implements java.lang.Comparable {
 	 * Search matches
 	 * @param album
 	 * @param artist
+	 * @param discNo
+	 * @param discTotal
      * @param progressBar
 	 * @return
 	 */
-	public boolean searchMatches(String album, String artist, ProgressBar progressBar) {
+	public boolean searchMatches(String album, 
+			String artist,
+			int discNo,
+			int discTotal, 
+			ProgressBar progressBar) {
         progressBar.setIndeterminate(Inter.get("Label.Searching"));  //NOI18N
         this.searchKey = album+artist;
         ReleaseMB releaseMB = new ReleaseMB(progressBar);
@@ -1385,7 +1393,11 @@ public class FolderInfo implements java.lang.Comparable {
             //Query MusicBrainz (better results, usually including yearDisplay and tracks)
             //Query Last.fm (in case no luck with MusicBrainz)
             
-            List<ReleaseMatch> releases = releaseMB.search(artist, album, this.filesAudio.size(), this.idPath);
+            List<ReleaseMatch> releases = releaseMB.search(
+					artist, 
+					album, 
+					this.filesAudio.size(), 
+					this.idPath, discNo, discTotal);
             progressBar.setIndeterminate(Inter.get("Label.Searching"));  //NOI18N
             if(releases!=null) {
                 releases.addAll(releaseLastFm.search(artist, album, this.idPath));
@@ -1409,7 +1421,9 @@ public class FolderInfo implements java.lang.Comparable {
 	
     private boolean isCheckingMasterLibrary() {
         //idPath = -1 when checking location.add (new files)
-        return (idPath>0 && Jamuz.getMachine().getOptionValue("library.isMaster").equals("true")); //NOI18N
+        return (idPath>0 
+				&& Jamuz.getMachine().
+						getOptionValue("library.isMaster").equals("true")); //NOI18N
     }
     
     /**
@@ -1694,7 +1708,7 @@ public class FolderInfo implements java.lang.Comparable {
 	}
 	
 	/**
-	 * Return if folder is valdid or not
+	 * Return if folder is valid or not
 	 * @return
 	 */
 	public boolean isValid() {

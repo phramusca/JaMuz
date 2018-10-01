@@ -41,22 +41,32 @@ public class ManualTesting {
 	 */
 	public static void main(String[] args) {
 		
-		File file = FileSystem.replaceHome("~/.guayadeque/guayadeque.conf");
-		if(!file.exists()) {
-			System.exit(0);
+		for(int i=0; i<100; i++) {
+			int cores=i;
+			
+			
+			int coresMax = cores-4;
+			coresMax=coresMax<2?2:coresMax; //Minimum 2
+			int coresValue = Math.round(coresMax/2);
+			
+			System.out.println(i+": "+coresValue+"/"+coresMax+" || "+(coresValue*2)+"/"+cores);
 		}
-		Document doc = XML.open(file.getAbsolutePath());
-		if(doc==null) {
-			System.exit(0);
-		}
-		ArrayList<Element> elements = XML.getElements(doc, "collection");
-		for(Element element : elements) {
-			if(XML.getAttribute(XML.getElement(element, "Type"), "value").equals("0")) {
-				System.out.println("UniqueId:"+XML.getAttribute(XML.getElement(element, "UniqueId"), "value"));
-				System.out.println("Name:"+XML.getAttribute(XML.getElement(element, "Name"), "value"));
-				System.out.println("Path0:"+XML.getAttribute(XML.getElement(element, "Path0"), "value"));
-			}
-		}
+//		File file = FileSystem.replaceHome("~/.guayadeque/guayadeque.conf");
+//		if(!file.exists()) {
+//			System.exit(0);
+//		}
+//		Document doc = XML.open(file.getAbsolutePath());
+//		if(doc==null) {
+//			System.exit(0);
+//		}
+//		ArrayList<Element> elements = XML.getElements(doc, "collection");
+//		for(Element element : elements) {
+//			if(XML.getAttribute(XML.getElement(element, "Type"), "value").equals("0")) {
+//				System.out.println("UniqueId:"+XML.getAttribute(XML.getElement(element, "UniqueId"), "value"));
+//				System.out.println("Name:"+XML.getAttribute(XML.getElement(element, "Name"), "value"));
+//				System.out.println("Path0:"+XML.getAttribute(XML.getElement(element, "Path0"), "value"));
+//			}
+//		}
 	
 
 //        try {

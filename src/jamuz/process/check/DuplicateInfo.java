@@ -29,13 +29,24 @@ public class DuplicateInfo {
      * @param rating
      * @param checkedFlag
      * @param errorLevel
+	 * @param discNo
+	 * @param discTotal
      */
-    public DuplicateInfo(String album, String artist, double rating, FolderInfo.CheckedFlag checkedFlag, int errorLevel) {
+    public DuplicateInfo(
+			String album, 
+			String artist, 
+			double rating, 
+			FolderInfo.CheckedFlag checkedFlag, 
+			int errorLevel, 
+			int discNo, 
+			int discTotal) {
         this.album = album;
         this.artist = artist;
         this.rating = rating;
         this.checkedFlag = checkedFlag;
         this.errorLevel = errorLevel;
+		this.discNo = discNo;
+		this.discTotal = discTotal;
     }
 
     private String album;
@@ -139,12 +150,41 @@ public class DuplicateInfo {
         this.errorLevel = errorLevel;
     }
 
+	private int discNo;
+
+	/**
+	 * Get the value of discNo
+	 *
+	 * @return the value of discNo
+	 */
+	public int getDiscNo() {
+		return discNo;
+	}
+
+	/**
+	 * Set the value of discNo
+	 *
+	 * @param discNo new value of discNo
+	 */
+	public void setDiscNo(int discNo) {
+		this.discNo = discNo;
+	}
+
+	private int discTotal;
+	
+	public int getDiscTotal() {
+		return discTotal;
+	}
+
+	public void setDiscTotal(int discTotal) {
+		this.discTotal = discTotal;
+	}
 
     @Override
     public String toString() {
-        return "<html><b>" + FolderInfoResult.colorField("\"" + album + "\" (\"" + artist + "\")",  //NOI18N
+        return "<html><b>" + FolderInfoResult.colorField(
+				"\"" + album + "\" "+" ["+ discNo + "/" + discTotal + "] "
+						+"(\"" + artist + "\")",  //NOI18N
                         errorLevel, false) + "</b> ["+checkedFlag.toString()+"] ["+rating+"]</html>";
     }
-    
-    
 }
