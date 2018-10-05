@@ -496,7 +496,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jPanelScanMainLayout.setHorizontalGroup(
             jPanelScanMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelScanMainLayout.createSequentialGroup()
-                .addComponent(jProgressBarCheckScanSize, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                .addComponent(jProgressBarCheckScanSize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSpinnerCheckScanNbThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -540,7 +540,7 @@ public class PanelCheck extends javax.swing.JPanel {
                 .addComponent(jProgressBarCheckAnalysisSize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSpinnerCheckAnalysisNbThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanelAnalysis, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
+            .addComponent(jPanelAnalysis, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
         );
         jPanelAnalysisMainLayout.setVerticalGroup(
             jPanelAnalysisMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -563,7 +563,7 @@ public class PanelCheck extends javax.swing.JPanel {
                     .addComponent(jPanelActionsMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanelCheckProcess, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanelScanMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanelScanMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelAnalysisMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -676,12 +676,9 @@ public class PanelCheck extends javax.swing.JPanel {
     }
     
     private static void startProcess(boolean enableDoActions, ProcessCheck.CheckType checkType, int idPath) {
-        
         enableCheck(false);
         enableRowSorter(false);
         stopActions(enableDoActions);
-        
-        //Ask user if he wants to continue in case checkQueue is not empty as it will be deleted
         if(tableModelActionQueue.getRowCount()>0) {
             int n = JOptionPane.showConfirmDialog(
 					null, Inter.get("Question.Check.RemainingActions"),
@@ -694,9 +691,12 @@ public class PanelCheck extends javax.swing.JPanel {
         }
         setThreadPanels(checkType);
         jPanelActionsMain.setVisible(enableDoActions);
-        //Starting process finally
         tableModelActionQueue.clear();
-        processCheck.startCheck(checkType, idPath, (int) jSpinnerCheckAnalysisNbThreads.getValue(), (int) jSpinnerCheckScanNbThreads.getValue());
+        processCheck.startCheck(
+				checkType, 
+				idPath, 
+				(int) jSpinnerCheckAnalysisNbThreads.getValue(), 
+				(int) jSpinnerCheckScanNbThreads.getValue());
     }
 
     

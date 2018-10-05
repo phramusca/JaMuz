@@ -22,8 +22,8 @@
                   <Component id="jPanelActionsMain" max="32767" attributes="0"/>
                   <Component id="jPanelCheckProcess" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jPanelScanMain" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jPanelScanMain" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jPanelAnalysisMain" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -380,7 +380,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Component id="jProgressBarCheckScanSize" pref="237" max="32767" attributes="2"/>
+                  <Component id="jProgressBarCheckScanSize" max="32767" attributes="2"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jSpinnerCheckScanNbThreads" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -463,7 +463,7 @@
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jSpinnerCheckAnalysisNbThreads" min="-2" max="-2" attributes="0"/>
               </Group>
-              <Component id="jPanelAnalysis" pref="540" max="32767" attributes="0"/>
+              <Component id="jPanelAnalysis" pref="422" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

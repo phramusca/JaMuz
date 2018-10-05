@@ -54,6 +54,7 @@ import jamuz.gui.swing.TableModelCheckTracks;
 import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
+import jamuz.utils.StringManager;
 import java.awt.Color;
 
 /**
@@ -1438,8 +1439,10 @@ public class FolderInfo implements java.lang.Comparable {
             updateDatabase=true;
         }
         else {
-            if(FilenameUtils.equalsNormalizedOnSystem(ProcessCheck.getDestinationLocation().getValue(), Jamuz.getMachine().getOptionValue("location.library"))
-                    && Jamuz.getMachine().getOptionValue("library.isMaster").equals("true")) {  //NOI18N
+            if(FilenameUtils.equalsNormalizedOnSystem(
+						ProcessCheck.getDestinationLocation().getValue(), 
+						Jamuz.getMachine().getOptionValue("location.library"))
+					&& Jamuz.getMachine().getOptionValue("library.isMaster").equals("true")) {  //NOI18N
                 updateDatabase=true;
             }
             checkDestination=true;
@@ -1447,8 +1450,13 @@ public class FolderInfo implements java.lang.Comparable {
         //TODO: We can end up with duplicate strPath in path table
         //(at least) when a folder is renamed manually, then scan, and move to OK that renames the folder back:
         //need to check if file exist before inserting it !!
-        moveList(this.filesAudio, useMask, MessageFormat.format(Inter.get("Msg.Check.MovingToOK"), ProcessCheck.getDestinationLocation().getValue()), 
-                ProcessCheck.getDestinationLocation().getValue(), checkDestination, progressBar);  //NOI18N
+        moveList(this.filesAudio, 
+				useMask, 
+				MessageFormat.format(Inter.get("Msg.Check.MovingToOK"), 
+					ProcessCheck.getDestinationLocation().getValue()), 
+                ProcessCheck.getDestinationLocation().getValue(), 
+				checkDestination, 
+				progressBar);  //NOI18N
 
         //Change folder path
         //TODO: Find a better way (using getDestination on path only)
@@ -1561,6 +1569,8 @@ public class FolderInfo implements java.lang.Comparable {
                     KO(progressBar);
                     break;
                 case KO_LIBRARY:
+					//FIXME: Rename too, but need to insure that filename and path are valid
+					//=> Move to a "Issues" folder and replace bad tags by "Missing artist", "Empty album" ...
                     moveToLibrary(progressBar, CheckedFlag.KO, false);
                     break;
                 case MANUAL:
@@ -1622,7 +1632,12 @@ public class FolderInfo implements java.lang.Comparable {
     
     private String getDestination(FileInfoInt fileInfo, boolean useMask) {
 		if(useMask) {
-			return fileInfo.computeMask(Jamuz.getMachine().getOptionValue("location.mask"))+"."+fileInfo.getExt();  //NOI18N
+			String destination = fileInfo.computeMask(Jamuz.getMachine().getOptionValue("location.mask"));  //NOI18N
+			if(destination.length()>150) {
+				destination=StringManager.Left(destination, 150)+"(_)";  //NOI18N
+			}
+			destination=destination+"."+fileInfo.getExt();  //NOI18N
+			return destination; 
 		}
 		else {
 			return fileInfo.getRelativeFullPath();

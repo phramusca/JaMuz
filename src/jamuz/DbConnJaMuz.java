@@ -3423,7 +3423,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 			boolean getDeleted) {
         String SqlWhere = "";
 		if(!getDeleted) {
-			SqlWhere=" WHERE deleted=0";
+			SqlWhere=" WHERE deleted=0 ";
 		}
 		return this.getFolders(folders, SqlWhere);
     }
