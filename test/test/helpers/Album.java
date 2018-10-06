@@ -15,8 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jamuz;
+package test.helpers;
 
+import jamuz.FileInfo;
+import jamuz.FileInfoInt;
+import jamuz.Jamuz;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.process.check.PanelCheck;
@@ -566,12 +569,12 @@ public final class Album {
         int idFile = idFirstFile;
         for(TrackTag trackTag : tracks) {
             files.add(new FileInfo(idFile, idPath, 
-                    trackTag.relativeFullPath, 
-                    trackTag.rating, 
+                    trackTag.getRelativePath(), 
+                    trackTag.getRating(), 
                     trackTag.getFormattedLastPlayed(), 
                     trackTag.getFormattedAddedDate(), 
-                    trackTag.playCounter, "", -1, 
-                    trackTag.BPM, "", "", "", ""));
+                    trackTag.getPlayCounter(), "", -1, 
+                    trackTag.getBPM(), "", "", "", ""));
             idFile++;
         }
         return files;
@@ -671,18 +674,28 @@ public final class Album {
                 FileInfo statSourceFile=searchInStatsList(fileName, statSourcesFiles);
                 
                 Assert.assertTrue("Search "+fileName+msg, statSourceFile!=null);
-				Assert.assertEquals("rating "+fileName+msg, albumFile.rating, statSourceFile.rating);
+				Assert.assertEquals("rating "+fileName+msg, 
+						albumFile.getRating(), 
+						statSourceFile.getRating());
 				if(statSource.getSource().isUpdatePlayCounter()) {
-					Assert.assertEquals("playCounter "+fileName+msg, albumFile.playCounter, statSourceFile.playCounter);
+					Assert.assertEquals("playCounter "+fileName+msg, 
+							albumFile.getPlayCounter(), 
+							statSourceFile.getPlayCounter());
 				}
                 if(statSource.getSource().isUpdateAddedDate()) {
-                    Assert.assertEquals("addedDate "+fileName+msg, albumFile.getFormattedAddedDate(), statSourceFile.getFormattedAddedDate());
+                    Assert.assertEquals("addedDate "+fileName+msg, 
+							albumFile.getFormattedAddedDate(), 
+							statSourceFile.getFormattedAddedDate());
                 }
                 if(statSource.getSource().isUpdateLastPlayed()) {
-                    Assert.assertEquals("lastPlayed "+fileName+msg, albumFile.getFormattedLastPlayed(), statSourceFile.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
+                    Assert.assertEquals("lastPlayed "+fileName+msg, 
+							albumFile.getFormattedLastPlayed(), 
+							statSourceFile.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
                 }
                 if(statSource.getSource().isUpdateBPM()) {
-                    Assert.assertEquals("BPM "+fileName+msg, albumFile.BPM, statSourceFile.BPM, 0.0f);
+                    Assert.assertEquals("BPM "+fileName+msg, 
+							albumFile.getBPM(), 
+							statSourceFile.getBPM(), 0.0f);
                 }
 				//TODO: Test tags mege
 			//				if(statSource.getSource().isUpdateTags()) {
@@ -696,7 +709,7 @@ public final class Album {
         int nbActual=0;
 		String albumRelativePath=getPath(this.tracks.get(0), renamed);
         for(FileInfo statSourceFile : statSourcesFiles) {
-            if(statSourceFile.relativePath.equals(albumRelativePath)) { 
+            if(statSourceFile.getRelativePath().equals(albumRelativePath)) { 
                 nbActual++;
             }
 		}
@@ -756,28 +769,28 @@ public final class Album {
             
         if(renamed) {
             //"%albumartist%/%album%/%track% %title%"
-            filename = StringManager.removeIllegal(track.albumArtist)+File.separator
-                        + StringManager.removeIllegal(track.album)+File.separator;
+            filename = StringManager.removeIllegal(track.getAlbumArtist())+File.separator
+                        + StringManager.removeIllegal(track.getAlbum())+File.separator;
 
             String trackStr="";  //NOI18N
-            if(track.discTotal>1 && track.discNo>0) {
-                trackStr="["+track.discNo+"-"+track.discTotal+"] - ";  //NOI18N
+            if(track.getDiscTotal()>1 && track.getDiscNo()>0) {
+                trackStr="["+track.getDiscNo()+"-"+track.getDiscTotal()+"] - ";  //NOI18N
             }
-            if(track.trackNo>0) {
-                trackStr=trackStr+FolderInfoResult.formatNumber(track.trackNo);
+            if(track.getTrackNo()>0) {
+                trackStr=trackStr+FolderInfoResult.formatNumber(track.getTrackNo());
             }
 
             filename += trackStr+" ";
 
             String titleStr="";  //NOI18N
-            if(!track.artist.equals(track.albumArtist)) {
-                titleStr=track.artist + " - ";  //NOI18N
+            if(!track.getArtist().equals(track.getAlbumArtist())) {
+                titleStr=track.getArtist() + " - ";  //NOI18N
             }
-            titleStr+=track.title;
+            titleStr+=track.getTitle();
             filename += StringManager.removeIllegal(titleStr)+".mp3";
         }
         else {
-            filename = track.relativeFullPath;
+            filename = track.getRelativeFullPath();
         }
         return filename;
     }
@@ -787,11 +800,11 @@ public final class Album {
             
         if(renamed) {
             //"%albumartist%/%album%/%track% %title%"
-            path = StringManager.removeIllegal(file.albumArtist)+File.separator
-                        + StringManager.removeIllegal(file.album)+File.separator;
+            path = StringManager.removeIllegal(file.getAlbumArtist())+File.separator
+                        + StringManager.removeIllegal(file.getAlbum())+File.separator;
         }
         else {
-            path = file.relativePath;
+            path = file.getRelativePath();
         }
         return path;
     }
@@ -801,42 +814,46 @@ public final class Album {
         int indexTrack=0;
         String msg;
         for (FileInfoInt file : files) {
-            msg = " ("+file.filename+", " + this.mbId+")";
-            Assert.assertEquals("artist"+msg, tracks.get(indexTrack).artist, file.artist);
-            Assert.assertEquals("albumArtist"+msg, tracks.get(indexTrack).albumArtist, file.albumArtist);
-            Assert.assertEquals("album"+msg, tracks.get(indexTrack).album, file.album);
-            Assert.assertEquals("title"+msg, tracks.get(indexTrack).title, file.title);
-            Assert.assertEquals("trackNb"+msg, tracks.get(indexTrack).trackNo, file.trackNo);
-            Assert.assertEquals("trackTotal"+msg, tracks.get(indexTrack).trackTotal, file.trackTotal);
-            Assert.assertEquals("discNo"+msg, tracks.get(indexTrack).discNo, file.discNo);
-            Assert.assertEquals("discTotal"+msg, tracks.get(indexTrack).discTotal, file.discTotal);
-            Assert.assertEquals("year"+msg, tracks.get(indexTrack).year, file.year);
-            Assert.assertEquals("genre"+msg, tracks.get(indexTrack).genre, format(file.genre));
-            Assert.assertEquals("BPM"+msg, tracks.get(indexTrack).BPM, file.BPM, 0.01f);
-            Assert.assertEquals("nbCovers"+msg, tracks.get(indexTrack).nbCovers, file.nbCovers);
-            Assert.assertEquals("comment"+msg, tracks.get(indexTrack).comment, format(file.comment));
+            msg = " ("+file.getFilename()+", " + this.mbId+")";
+            Assert.assertEquals("artist"+msg, tracks.get(indexTrack).getArtist(), file.getArtist());
+            Assert.assertEquals("albumArtist"+msg, tracks.get(indexTrack).getAlbumArtist(), file.getAlbumArtist());
+            Assert.assertEquals("album"+msg, tracks.get(indexTrack).getAlbum(), file.getAlbum());
+            Assert.assertEquals("title"+msg, tracks.get(indexTrack).getTitle(), file.getTitle());
+            Assert.assertEquals("trackNb"+msg, tracks.get(indexTrack).getTrackNo(), file.getTrackNo());
+            Assert.assertEquals("trackTotal"+msg, tracks.get(indexTrack).getTrackTotal(), file.getTrackTotal());
+            Assert.assertEquals("discNo"+msg, tracks.get(indexTrack).getDiscNo(), file.getDiscNo());
+            Assert.assertEquals("discTotal"+msg, tracks.get(indexTrack).getDiscTotal(), file.getDiscTotal());
+            Assert.assertEquals("year"+msg, tracks.get(indexTrack).getYear(), file.getYear());
+            Assert.assertEquals("genre"+msg, tracks.get(indexTrack).getGenre(), format(file.getGenre()));
+            Assert.assertEquals("BPM"+msg, tracks.get(indexTrack).getBPM(), file.getBPM(), 0.01f);
+            Assert.assertEquals("nbCovers"+msg, tracks.get(indexTrack).getNbCovers(), file.getNbCovers());
+            Assert.assertEquals("comment"+msg, tracks.get(indexTrack).getComment(), format(file.getComment()));
             
-            Assert.assertEquals("deleted"+msg, tracks.get(indexTrack).deleted, file.deleted);
+            Assert.assertEquals("deleted"+msg, tracks.get(indexTrack).isDeleted(), file.isDeleted());
             Assert.assertEquals("checkedFlag"+msg, tracks.get(indexTrack).getCheckedFlag(), file.getCheckedFlag());
             
-            Assert.assertEquals("playCounter"+msg, tracks.get(indexTrack).playCounter, file.playCounter);
-            Assert.assertEquals("rating"+msg, tracks.get(indexTrack).rating, file.rating);
+            Assert.assertEquals("playCounter"+msg, tracks.get(indexTrack).getPlayCounter(), file.getPlayCounter());
+            Assert.assertEquals("rating"+msg, tracks.get(indexTrack).getRating(), file.getRating());
             
             Date expected = DateTime.parseSqlUtc(tracks.get(indexTrack).getFormattedAddedDate());
-            long diffInSeconds = (expected.getTime() - file.addedDate.getTime()) / 1000;
+            long diffInSeconds = (expected.getTime() - file.getAddedDate().getTime()) / 1000;
             
             Assert.assertTrue("AddedDate. Expected: " + tracks.get(indexTrack).getFormattedAddedDate() + " +/- 30s, Actual: " + file.getFormattedAddedDate()+msg, diffInSeconds < 30);
-            Assert.assertEquals("lastPlayed"+msg, tracks.get(indexTrack).getFormattedLastPlayed(), file.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
+            Assert.assertEquals("lastPlayed"+msg, tracks.get(indexTrack).getFormattedLastPlayed(), 
+					file.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
             
-            Assert.assertEquals("bitRate"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).bitRate, file.getBitRate());
-            Assert.assertEquals("length"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).length, file.length);
-            Assert.assertEquals("format"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).format, file.getFormat());
+            Assert.assertEquals("bitRate"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).bitRate, 
+					file.getBitRate());
+            Assert.assertEquals("length"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).length, 
+					file.getLength());
+            Assert.assertEquals("format"+msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).format, 
+					file.getFormat());
             //Since size varies (increase) after replaygain or tag saving, 
             //only checking it is above initial size and not increased by more than around 5K
             long minimumSize = TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).size;
             long maximumSize = minimumSize + 5000;
-            Assert.assertTrue("size. Expected: between "+minimumSize+" and "+maximumSize+", Actual:"+file.size+msg, 
-                    file.size >= minimumSize && file.size <= maximumSize);
+            Assert.assertTrue("size. Expected: between "+minimumSize+" and "+maximumSize+", Actual:"+file.getSize()+msg, 
+                    file.getSize() >= minimumSize && file.getSize() <= maximumSize);
             //This requires to read tracks.get(index).size after each process => not much usefull too
 //            assertEquals("size", tracks.get(index).size, file.size); 
         

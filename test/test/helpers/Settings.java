@@ -15,8 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jamuz;
+package test.helpers;
 
+import jamuz.Jamuz;
+import jamuz.Option;
 import jamuz.process.merge.StatSource;
 import jamuz.gui.PanelMain;
 import java.awt.Color;

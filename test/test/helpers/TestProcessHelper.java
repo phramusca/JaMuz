@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jamuz;
+package test.helpers;
 
+import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.sync.Device;
 import jamuz.process.merge.ProcessMerge;

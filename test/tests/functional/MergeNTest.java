@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz.tests;
-import jamuz.AlbumBuffer;
+package tests.functional;
+import test.helpers.AlbumBuffer;
 import jamuz.process.sync.Device;
 import jamuz.FileInfo;
 import jamuz.process.check.FolderInfo;
@@ -24,9 +24,9 @@ import jamuz.process.check.PanelCheck;
 import jamuz.gui.PanelMain;
 import jamuz.Playlist;
 import jamuz.process.check.ProcessCheck.Action;
-import jamuz.TestProcessHelper;
-import jamuz.Settings;
-import static jamuz.Settings.getMusicFolder;
+import test.helpers.TestProcessHelper;
+import test.helpers.Settings;
+import static test.helpers.Settings.getMusicFolder;
 import jamuz.process.merge.StatSource;
 import java.io.File;
 import java.util.ArrayList;

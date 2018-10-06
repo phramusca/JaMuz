@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz;
+package test.helpers;
 
+import test.helpers.AlbumBuffer;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.utils.*;
 import jamuz.utils.LogText;

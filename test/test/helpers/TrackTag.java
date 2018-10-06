@@ -15,8 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jamuz;
+package test.helpers;
 
+import jamuz.FileInfoInt;
+import jamuz.Jamuz;
+import test.helpers.TrackSourceRepo;
 import jamuz.process.check.FolderInfo;
 import java.io.File;
 import java.io.IOException;

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz.tests;
+package tests.functional;
 
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
@@ -34,9 +34,7 @@ public class TESTreplaygainBrowse {
 //		String pathStr = "/home/raph/Bureau/ReplayGain/Musique-copy/King Yellowman/";
 		String pathStr = "/home/raph/Bureau/ReplayGain/FLAC-not set/";
 		boolean recalculate = true;
-		
-		
-		
+
 		////////////////////////////////////////////////////////////////////////////
 		
 		//Configure application

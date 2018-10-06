@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz.tests;
-import jamuz.AlbumBuffer;
+package tests.functional;
+import test.helpers.AlbumBuffer;
 import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
-import jamuz.TestProcessHelper;
-import jamuz.Settings;
+import test.helpers.TestProcessHelper;
+import test.helpers.Settings;
 import java.io.File;
 import junit.framework.TestCase;
 import org.junit.Test;
