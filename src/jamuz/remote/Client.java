@@ -158,7 +158,7 @@ public class Client {
 			DataInputStream dis = new DataInputStream(new BufferedInputStream(inputStream));
 			double fileSize = dis.readLong();
 			try (FileOutputStream fos = new FileOutputStream(path)) {
-				// FIXME MERGE Find best. Make a benchmark (Same on Jamuz Remote)
+				// TODO MERGE Find best. Make a benchmark (Same on Jamuz Remote)
 				//https://stackoverflow.com/questions/8748960/how-do-you-decide-what-byte-size-to-use-for-inputstream-read
 				byte[] buf = new byte[8192];
 				int bytesRead;

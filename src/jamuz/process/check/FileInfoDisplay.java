@@ -258,20 +258,6 @@ public final class FileInfoDisplay extends FileInfoInt {
 	public float getBPM() {
 		return BPM;
 	}
-
-	/**
-	 * Called dynamically by group function in FolderInfo
-	 * WARNING: It may exists no usage of that function (dynamic call)
-	 * DO NOT REMOVE before having done a "Find in Projects..." !  
-	 * @return
-	 */
-	@Override
-	public int getDiscNo() {
-		if(!this.discNoFullDisplay.getValue().contains("/")) { //NOI18N
-			return -2;
-		}
-		return Integer.valueOf(this.discNoFullDisplay.getValue().split("/")[0]); //NOI18N
-	}
 	
 	/**
 	 * Set artist 

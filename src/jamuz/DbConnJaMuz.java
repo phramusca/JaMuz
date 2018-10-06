@@ -2865,7 +2865,6 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                     + " AND album LIKE ? AND P.idPath!=? "
 					+ " AND discNo=? "
 					+ " AND discTotal=? "
-					+ " AND something with discNo and discTotal " //FIXME !!!!! CHECK checkAlbumDuplicate
                     + GROUP_DUPLICATE);     //NOI18N
                 
                 stSelectDuplicates.setString(1, artist);

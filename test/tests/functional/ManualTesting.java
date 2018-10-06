@@ -41,16 +41,11 @@ public class ManualTesting {
 	 */
 	public static void main(String[] args) {
 		
-		for(int i=0; i<100; i++) {
-			int cores=i;
-			
-			
-			int coresMax = cores-4;
-			coresMax=coresMax<2?2:coresMax; //Minimum 2
-			int coresValue = Math.round(coresMax/2);
-			
-			System.out.println(i+": "+coresValue+"/"+coresMax+" || "+(coresValue*2)+"/"+cores);
-		}
+		
+		
+		
+		
+		
 //		File file = FileSystem.replaceHome("~/.guayadeque/guayadeque.conf");
 //		if(!file.exists()) {
 //			System.exit(0);
