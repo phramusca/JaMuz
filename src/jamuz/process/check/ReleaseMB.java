@@ -18,7 +18,7 @@
 // http://code.google.com/p/musicbrainzws2-java/wiki/TableOfContents
 
 
-//FIXME: Put back wait() !!! But check it, seems to prevent process cancellation
+//FIXME !!!!! Put back wait() !!! But check it, seems to prevent process cancellation
 package jamuz.process.check;
 
 import jamuz.process.check.Cover.CoverType;
@@ -29,8 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import jamuz.process.check.ReleaseMatch.Track;
 import java.util.logging.Level;
-import org.apache.http.HttpHost;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.musicbrainz.controller.Release;
 import org.musicbrainz.model.MediumListWs2;

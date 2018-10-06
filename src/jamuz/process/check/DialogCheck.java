@@ -52,7 +52,6 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.util.Collections;
-import java.util.Comparator;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -1904,7 +1903,7 @@ public class DialogCheck extends javax.swing.JDialog {
 				setAddCheckBox(jCheckBoxCheckCoverDisplay, result, false);  //NOI18N
 				
 				//By default, display cover selected for Saving 
-                BufferedImage myImage = null;
+                BufferedImage myImage;
 				if(folder.getNewImage()!=null && folder.action.equals(ProcessCheck.Action.SAVE)) {
 					myImage = folder.getNewImage();
 				}

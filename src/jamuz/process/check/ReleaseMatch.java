@@ -77,7 +77,8 @@ public class ReleaseMatch implements java.lang.Comparable {
         
         //FIXME CHECK Support duplicate can be from a various folder (check that original is the complete album)
         //FIXME CHECK Support check duplicate status (OK, KO,...) and offer to replace if new is better
-        
+        //FIXME CHECK: List all duplicates discNo/discTotal (ex: [1-3], [2-3])
+		
 		this.duplicates = new ArrayList<>();
 		if(checkDuplicateMbId()
 				|| (isDiscPart && checkDuplicateAlbumNumber()) ) {

@@ -1569,7 +1569,7 @@ public class FolderInfo implements java.lang.Comparable {
                     KO(progressBar);
                     break;
                 case KO_LIBRARY:
-					//FIXME: Rename too, but need to insure that filename and path are valid
+					//FIXME CHECK Rename too, but need to insure that filename and path are valid
 					//=> Move to a "Issues" folder and replace bad tags by "Missing artist", "Empty album" ...
                     moveToLibrary(progressBar, CheckedFlag.KO, false);
                     break;

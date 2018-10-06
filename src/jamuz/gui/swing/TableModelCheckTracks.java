@@ -39,7 +39,7 @@ public class TableModelCheckTracks extends TableModelGeneric {
         //TODO: Add extra columns (if from library): rating, addedDate, ...
         
         //Set column names
-        this.setColumnNames(new String [] {
+        this.columnNames = new String [] {
             Inter.get("Label.File"),   //NOI18N
             Inter.get("Tag.DiscNo")+"<br/>(new)</html>",  //NOI18N
             Inter.get("Tag.DiscNo"),   //NOI18N
@@ -66,12 +66,10 @@ public class TableModelCheckTracks extends TableModelGeneric {
             Inter.get("Tag.Cover"),   //NOI18N
             Inter.get("Tag.BPM")+" (new)",   //NOI18N
 			Inter.get("Tag.BPM")   //NOI18N
-        });
+        };
         
         //Set the editable columns
 		editableColumns = new Integer[]{1, 3, 5, 7, 9, 11, 13, 19, 21, 24};
-        
-		this.fireTableStructureChanged();
 	}
 
 	/**

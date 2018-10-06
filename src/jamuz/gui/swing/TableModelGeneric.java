@@ -59,9 +59,7 @@ public abstract class TableModelGeneric extends AbstractTableModel {
 		//Otherwise return false
 		return false;
     }
-    
-    
-
+	
     @Override
     public int getColumnCount() {
         return columnNames.length;
