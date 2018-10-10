@@ -53,21 +53,21 @@ public class PatternProcessor {
         
         StringBuilder sb = new StringBuilder();
         sb.append("<html>".concat(String.valueOf(extracted.size())).concat(" | "));
-        appendValue(sb, "%z", Inter.get("Tag.AlbumArtist"), extracted); //album artist);
+        appendValue(sb, "%z", Inter.get("Tag.AlbumArtist"), extracted); //album artist
         appendValue(sb, "%b", Inter.get("Tag.Album"), extracted);//album
         
-        appendValue(sb, "%n", Inter.get("Tag.TrackNo"), extracted); //track#);
-        appendValue(sb, "%l", Inter.get("Tag.Artist"), extracted); //# of tracks);
+        appendValue(sb, "%n", Inter.get("Tag.TrackNo"), extracted); //track#
+        appendValue(sb, "%l", Inter.get("Tag.TrackTotal"), extracted); //# of tracks
         
         appendValue(sb, "%d", Inter.get("Tag.DiscNo"), extracted); //disc#);
-        appendValue(sb, "%x", Inter.get("Tag.Artist"), extracted); //# of discs);
+        appendValue(sb, "%x", Inter.get("Tag.DiscTotal"), extracted); //# of discs
         
         appendValue(sb, "%a", Inter.get("Tag.Artist"), extracted); //artist
-        appendValue(sb, "%t", Inter.get("Tag.Title"), extracted); //title);
+        appendValue(sb, "%t", Inter.get("Tag.Title"), extracted); //title
         
-        appendValue(sb, "%y", Inter.get("Tag.Year"), extracted); //year);
+        appendValue(sb, "%y", Inter.get("Tag.Year"), extracted); //year
         
-        appendValue(sb, "%c", Inter.get("Tag.Comment"), extracted); //comment);
+        appendValue(sb, "%c", Inter.get("Tag.Comment"), extracted); //comment
         sb.append("</html>");
         return sb.toString();
     }

@@ -58,6 +58,40 @@ public class DialogScanner extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         jTextFieldPath.setText(path);
+		
+		//Display legend
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html>")
+				.append("<table>")
+					.append("<tr><td>")
+						.append("%z").append(" : ").append(Inter.get("Tag.AlbumArtist"))	//album artist
+						.append("</td><td>")
+						.append("%a").append(" : ").append(Inter.get("Tag.Artist"))		//artist
+					.append("</td></tr>")
+					.append("<tr><td>")
+						.append("%b").append(" : ").append(Inter.get("Tag.Album"))		//album
+						.append("</td><td>")
+						.append("%t").append(" : ").append(Inter.get("Tag.Title"))		//title
+					.append("</td></tr>")
+					.append("<tr><td>")
+						.append("%n").append(" : ").append(Inter.get("Tag.TrackNo"))		//track#
+						.append("</td><td>")
+						.append("%l").append(" : ").append(Inter.get("Tag.TrackTotal"))	//# of tracks
+					.append("</td></tr>")
+					.append("<tr><td>")
+						.append("%d").append(" : ").append(Inter.get("Tag.DiscNo"))		//disc#
+						.append("</td><td>")
+						.append("%x").append(" : ").append(Inter.get("Tag.DiscTotal"))	//# of discs
+					.append("</td></tr>")
+					.append("<tr><td>")
+						.append("%y").append(" : ").append(Inter.get("Tag.Year"))			//year
+							.append("</td><td>")
+						.append("%c").append(" : ").append(Inter.get("Tag.Comment")) //comment
+					.append("</td></tr>")
+				.append("</table>")
+			.append("</html>");
+		jLabelScannerLegend.setText(sb.toString());
+
         patterns = new ArrayList<>();
 		try {
 			File f = Jamuz.getFile("Patterns.txt", "data");
@@ -141,21 +175,16 @@ public class DialogScanner extends javax.swing.JDialog {
         //TODO: Do the same for other badly called mouseClicked event on JTable instead of below
         //http://stackoverflow.com/questions/10467258/netbeans-how-do-i-add-a-valuechanged-listener-to-a-jtable-from-the-design-gu
         
-        jTableScanner.getSelectionModel().addListSelectionListener(
-            new javax.swing.event.ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent evt) {
-                    //Getting selected File
-                    int selectedRow = jTableScanner.getSelectedRow();
-                    if (selectedRow >= 0) {
-                        //convert to model index (as sortable model)
-                        selectedRow = jTableScanner.convertRowIndexToModel(selectedRow);
-                        jTextFieldPattern.setText(patterns.get(selectedRow));
-                        applyPattern(); 	  //NOI18N
-                    }
-                }
-            }
-        );
+        jTableScanner.getSelectionModel().addListSelectionListener((ListSelectionEvent evt) -> {
+			//Getting selected File
+			int selectedRow = jTableScanner.getSelectedRow();
+			if (selectedRow >= 0) {
+				//convert to model index (as sortable model)
+				selectedRow = jTableScanner.convertRowIndexToModel(selectedRow);
+				jTextFieldPattern.setText(patterns.get(selectedRow));
+				applyPattern(); 	  //NOI18N
+			}
+		});
         
         for(String pattern : patterns) {
             Map<String, String> extracted = PatternProcessor.getMap(path, pattern);
@@ -221,6 +250,7 @@ public class DialogScanner extends javax.swing.JDialog {
         jScrollPaneCheckTags3 = new javax.swing.JScrollPane();
         jTableScanner = new jamuz.gui.swing.TableHorizontal();
         jTextFieldPattern = new javax.swing.JTextField();
+        jLabelScannerLegend = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -243,12 +273,14 @@ public class DialogScanner extends javax.swing.JDialog {
             }
         });
 
-        jLabelExtracted.setText("jLabel1");
+        jLabelExtracted.setText("jLabelExtracted");
 
         jTableScanner.setAutoCreateColumnsFromModel(false);
         jTableScanner.setModel(new jamuz.gui.swing.TableModel());
         jTableScanner.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPaneCheckTags3.setViewportView(jTableScanner);
+
+        jLabelScannerLegend.setText("Legend"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -260,6 +292,8 @@ public class DialogScanner extends javax.swing.JDialog {
                     .addComponent(jScrollPaneCheckTags3)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabelExtracted, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabelScannerLegend, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButtonCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -276,14 +310,15 @@ public class DialogScanner extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldPattern, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabelExtracted, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonCancel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSave))
-                    .addComponent(jLabelExtracted, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabelScannerLegend, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -349,6 +384,7 @@ public class DialogScanner extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JLabel jLabelExtracted;
+    private javax.swing.JLabel jLabelScannerLegend;
     private static javax.swing.JScrollPane jScrollPaneCheckTags3;
     private static javax.swing.JTable jTableScanner;
     private javax.swing.JTextField jTextFieldPath;

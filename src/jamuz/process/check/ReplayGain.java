@@ -161,8 +161,9 @@ public class ReplayGain {
 				});
 			}
 		}
-		catch (IOException ex) {
-			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, null, ex);
+		catch (IOException 
+				| NegativeArraySizeException ex) {
+			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
 		}
 		return gv;
     }
@@ -221,8 +222,12 @@ public class ReplayGain {
 					}
 				}
 			}
-		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
-			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (CannotReadException 
+				| IOException 
+				| TagException 
+				| ReadOnlyFileException 
+				| InvalidAudioFrameException ex) {
+			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
 		}
 		return gv;
 	}

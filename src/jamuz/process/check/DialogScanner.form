@@ -24,12 +24,14 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPaneCheckTags3" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jLabelExtracted" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelScannerLegend" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jButtonCancel" max="32767" attributes="0"/>
                           <Component id="jButtonSave" max="32767" attributes="0"/>
@@ -38,7 +40,7 @@
                   <Component id="jTextFieldPath" alignment="0" pref="1185" max="32767" attributes="0"/>
                   <Component id="jTextFieldPattern" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -50,16 +52,17 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="jTextFieldPattern" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="jLabelExtracted" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonSave" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jLabelExtracted" max="32767" attributes="0"/>
+                  <Component id="jLabelScannerLegend" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jScrollPaneCheckTags3" pref="138" max="32767" attributes="2"/>
+              <Component id="jScrollPaneCheckTags3" pref="177" max="32767" attributes="2"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -99,7 +102,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelExtracted">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel1"/>
+        <Property name="text" type="java.lang.String" value="jLabelExtracted"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPaneCheckTags3">
@@ -126,6 +129,11 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.JTextField" name="jTextFieldPattern">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelScannerLegend">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Legend" noResource="true"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
