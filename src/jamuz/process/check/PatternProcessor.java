@@ -16,7 +16,9 @@
  */
 package jamuz.process.check;
 
+import jamuz.FileInfoInt;
 import jamuz.utils.Inter;
+import jamuz.utils.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,49 +42,54 @@ public class PatternProcessor {
 	public static Map<String, String> getMap(String path, String pattern) {
         return extract(path, pattern);
     }
-  
+	
 	/**
 	 *
 	 * @param path
 	 * @param pattern
 	 * @return
 	 */
-	public static String toString(String path, String pattern) {
+	public static FileInfoInt get(String path, String pattern) {
  
-        Map<String, String> extracted = extract(path, pattern);
-        
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html>".concat(String.valueOf(extracted.size())).concat(" | "));
-        appendValue(sb, "%z", Inter.get("Tag.AlbumArtist"), extracted); //album artist
-        appendValue(sb, "%b", Inter.get("Tag.Album"), extracted);//album
-        
-        appendValue(sb, "%n", Inter.get("Tag.TrackNo"), extracted); //track#
-        appendValue(sb, "%l", Inter.get("Tag.TrackTotal"), extracted); //# of tracks
-        
-        appendValue(sb, "%d", Inter.get("Tag.DiscNo"), extracted); //disc#);
-        appendValue(sb, "%x", Inter.get("Tag.DiscTotal"), extracted); //# of discs
-        
-        appendValue(sb, "%a", Inter.get("Tag.Artist"), extracted); //artist
-        appendValue(sb, "%t", Inter.get("Tag.Title"), extracted); //title
-        
-        appendValue(sb, "%y", Inter.get("Tag.Year"), extracted); //year
-        
-        appendValue(sb, "%c", Inter.get("Tag.Comment"), extracted); //comment
-        sb.append("</html>");
-        return sb.toString();
+		Map<String, String> extracted = extract(path, pattern);
+
+		String relativePath="";
+		String filename="";
+		String album=get("%b", extracted);
+		String albumArtist=get("%z", extracted);
+		String artist=get("%a", extracted);
+		String comment=get("%c", extracted);
+		int discNo=Utils.getInteger(get("%d", extracted));
+		int discTotal=Utils.getInteger(get("%x", extracted));
+		String genre="";
+		String title=get("%t", extracted);
+		int trackNo=Utils.getInteger(get("%n", extracted));
+		int trackTotal=Utils.getInteger(get("%l", extracted));
+		String year=get("%y", extracted);
+		
+		FileInfoInt fileInfoInt = new FileInfoInt(-1, -1, relativePath, 
+				filename, -1, "", "", -1, 0, album, 
+				albumArtist, artist, comment, discNo, discTotal, genre, 
+				-1, title, trackNo, trackTotal, year, -1, -1,
+				"", "", "", false, "", 
+				FolderInfo.CheckedFlag.UNCHECKED, -1, -1, -1, "");
+
+		//FIXME: Display somehow: String.valueOf(extracted.size())
+        return fileInfoInt;
     }
-    
-    private static void appendValue(StringBuilder sb, String key, String label, Map<String, String> extracted) {
+	
+	private static String get(String key, Map<String, String> extracted) {
         if(extracted.containsKey(key)) {
             String value = extracted.get(key);
             if(!value.equals("")) {
-                sb.append("".concat(label).concat(" : \"<b>").concat(value).concat("</b>\""));
+				return new StringBuilder().append("<html>")
+						.append("<b>")
+						.append(value)
+						.append("</b>").append("</html>")
+						.toString();
             }
-            else {
-                sb.append(key.concat(" : {Empty}"));
-            }
-            sb.append(" ");
         }
+		return "";
     }
 
     private static Map<String, String> extract(String path, String pattern) {

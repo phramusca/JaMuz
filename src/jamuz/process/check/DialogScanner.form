@@ -24,23 +24,17 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPaneCheckTags3" max="32767" attributes="2"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="jLabelExtracted" max="32767" attributes="0"/>
-                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelScannerLegend" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jButtonCancel" max="32767" attributes="0"/>
-                          <Component id="jButtonSave" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Component id="jTextFieldPath" alignment="0" pref="1185" max="32767" attributes="0"/>
+                  <Component id="jTextFieldPath" alignment="0" max="32767" attributes="0"/>
                   <Component id="jTextFieldPattern" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPaneCheckTags3" alignment="0" max="32767" attributes="2"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jPanel2" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -51,19 +45,13 @@
               <Component id="jTextFieldPath" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="jTextFieldPattern" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Component id="jLabelExtracted" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButtonSave" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="jLabelScannerLegend" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jScrollPaneCheckTags3" pref="177" max="32767" attributes="2"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              <Component id="jScrollPaneCheckTags3" pref="225" max="32767" attributes="2"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -72,37 +60,6 @@
     <Component class="javax.swing.JTextField" name="jTextFieldPath">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="jButtonCancel">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/jamuz/ressources/cancel.png"/>
-        </Property>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Cancel" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCancelActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="jButtonSave">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/jamuz/ressources/accept.png"/>
-        </Property>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Save" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSaveActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabelExtracted">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabelExtracted"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPaneCheckTags3">
@@ -130,10 +87,264 @@
     </Container>
     <Component class="javax.swing.JTextField" name="jTextFieldPattern">
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabelScannerLegend">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Legend" noResource="true"/>
-      </Properties>
-    </Component>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jButtonCancel" max="32767" attributes="0"/>
+                      <Component id="jButtonSave" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace pref="20" max="32767" attributes="0"/>
+                  <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButtonSave" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="21" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JButton" name="jButtonCancel">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/jamuz/ressources/cancel.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="jamuz/Bundle.properties" key="Button.Cancel" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCancelActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButtonSave">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/jamuz/ressources/accept.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="jamuz/Bundle.properties" key="Button.Save" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSaveActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="jPanel2">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabelTrackTotal" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelDiscTotal" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelTrackNo" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelDiscNo" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelYear" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabelDiscNoValue" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabelTrackTotalValue" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelTrackNoValue" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelDiscTotalValue" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelYearValue" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="jLabelTitle" max="32767" attributes="0"/>
+                                      <Component id="jLabelAlbum" max="32767" attributes="0"/>
+                                      <Component id="jLabelComment" pref="99" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabelAlbumValue" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelTitleValue" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelCommentValue" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jLabelAlbumArtist" max="32767" attributes="0"/>
+                                      <Component id="jLabelArtist" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabelArtistValue" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelAlbumArtistValue" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace pref="244" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabelTrackNo" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelTrackNoValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelArtist" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelArtistValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabelTrackTotal" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelTrackTotalValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelAlbumArtist" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelAlbumArtistValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabelDiscTotal" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelDiscTotalValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelAlbum" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelAlbumValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabelDiscNo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelDiscNoValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelTitle" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelTitleValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabelYear" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelYearValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelComment" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelCommentValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="jLabelYearValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelYearValue"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelTrackTotal">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelTrackTotal"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelTrackNoValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelTrackNoValue"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelAlbumArtistValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelAlbumArtistValue"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelDiscNo">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelDiscNo"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelDiscNoValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelDiscNoValue"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelYear">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelYear"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelCommentValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelCommentValue"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelTrackNo">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelTrackNo"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelAlbumValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelAlbumValue"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelComment">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelComment"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelArtist">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelArtist"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelTitle">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelTitle"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelTrackTotalValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelTrackTotalValue"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelArtistValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelArtistValue"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelDiscTotalValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelDiscTotalValue"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelDiscTotal">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelDiscTotal"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelAlbum">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelAlbum"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelAlbumArtist">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelAlbumArtist"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelTitleValue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabelTitleValue"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

@@ -46,4 +46,12 @@ public class Utils {
 		return one.equals(two);
 	}
 	
+	public static int getInteger(String entry) {
+        try {
+            return Integer.parseInt(entry);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+	
 }

@@ -48,6 +48,7 @@ import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.WrapLayout;
 import jamuz.utils.Inter;
 import jamuz.utils.Swing;
+import jamuz.utils.Utils;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
@@ -1794,16 +1795,16 @@ public class DialogCheck extends javax.swing.JDialog {
 //                        displayMatchTracks(21);
                         break;
                     case "%d": //disc#
-                        file.setDiscNo(getInteger(entryValue));
+                        file.setDiscNo(Utils.getInteger(entryValue));
                         break;
                     case "%l": //# of tracks
-                        file.setTrackTotal(getInteger(entryValue));
+                        file.setTrackTotal(Utils.getInteger(entryValue));
                         break;
                     case "%n": //track#
-                        file.setTrackNo(getInteger(entryValue));
+                        file.setTrackNo(Utils.getInteger(entryValue));
                         break;
                     case "%x": //# of discs
-                        file.setDiscTotal(getInteger(entryValue));
+                        file.setDiscTotal(Utils.getInteger(entryValue));
                         break;
                 }
             }
@@ -1813,15 +1814,7 @@ public class DialogCheck extends javax.swing.JDialog {
         folder.getFilesAudioTableModel().fireTableDataChanged();
         
     }
-    
-    private static int getInteger(String entry) {
-        try {
-            return Integer.parseInt(entry);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-    
+	
     /**
 	 * Displays a folder in check tab
 	 */
