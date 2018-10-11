@@ -27,7 +27,8 @@ public class DialogScannerTest {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		jamuz.process.check.DialogScanner.main(null, "Snakee-The_Grey_Cat/001_INTRO.mp3");
+		//%b - %z %y/%n.%a - %t.mp3
+		jamuz.process.check.DialogScanner.main(null, "the Grey CAT - SnaKee 1865/001.toto - INTRO.mp3");
         
     }
 }

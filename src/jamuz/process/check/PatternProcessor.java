@@ -17,7 +17,6 @@
 package jamuz.process.check;
 
 import jamuz.FileInfoInt;
-import jamuz.utils.Inter;
 import jamuz.utils.Utils;
 import java.io.File;
 import java.util.ArrayList;
@@ -26,23 +25,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class PatternProcessor {
-     
-	/**
-	 *
-	 * @param path
-	 * @param pattern
-	 * @return
-	 */
-	public static Map<String, String> getMap(String path, String pattern) {
-        return extract(path, pattern);
-    }
-	
+
 	/**
 	 *
 	 * @param path
@@ -51,7 +41,7 @@ public class PatternProcessor {
 	 */
 	public static FileInfoInt get(String path, String pattern) {
  
-		Map<String, String> extracted = extract(path, pattern);
+		Map<String, String> extracted = getMap(path, pattern);
 
 		String relativePath="";
 		String filename="";
@@ -92,7 +82,13 @@ public class PatternProcessor {
 		return "";
     }
 
-    private static Map<String, String> extract(String path, String pattern) {
+	/**
+	 * Gets Map<Identifier, Value> of extracted items
+	 * @param path
+	 * @param pattern
+	 * @return
+	 */
+	public static Map<String, String> getMap(String path, String pattern) {
         
         //Split by path separator and remove unwanted as of pattern
         int nbSeparatorInPattern = StringUtils.countMatches(pattern, File.separator);
@@ -111,6 +107,7 @@ public class PatternProcessor {
         //Extract parameters from pattern
         List<String> params = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
+		String nextChars;
         for(int i = 0; i < pattern.length(); i++)
         {
             Character c = pattern.charAt(i);
@@ -118,7 +115,13 @@ public class PatternProcessor {
                 if(!sb.toString().equals(""))
                     params.add(sb.toString());
                 sb = new StringBuilder();
-                params.add("%"+pattern.charAt(i+1));
+				nextChars = pattern.substring(i+1, i+5);
+				if(nextChars.contains("::")) {
+					i+=3;
+				} else {
+					nextChars=String.valueOf(pattern.charAt(i+1));
+				}
+                params.add("%"+nextChars);
                 i++;
             }
             else {
@@ -133,6 +136,7 @@ public class PatternProcessor {
         String param;
         int posParam;
         String before;
+		String paramBefore;
         String analyzedText = path;
         for(int i = 0; i < params.size(); i++) {
             param=params.get(i);
@@ -141,7 +145,31 @@ public class PatternProcessor {
                 if(posParam<0) return extracted;
                 before = analyzedText.substring(0, posParam);
                 analyzedText = analyzedText.substring(posParam+param.length());
-                extracted.put(params.get(i-1), before);
+				paramBefore = params.get(i-1);
+				if(paramBefore.contains("::")) {
+					switch(paramBefore.substring(4, 5)) {
+						case "U":
+							before=before.toUpperCase();
+							break;
+						case "l":
+							before=before.toLowerCase();
+							break;
+						case "c":
+							before=WordUtils.capitalize(before);
+							break;
+						case "C":
+							before=WordUtils.capitalizeFully(before);
+							break;
+						case "u":
+							before=WordUtils.uncapitalize(before);
+							break;
+						case "s":
+							before=WordUtils.swapCase(before);
+							break;
+					}
+					paramBefore=paramBefore.substring(0, 2);
+				}
+                extracted.put(paramBefore, before);
             }
         }
         return extracted;

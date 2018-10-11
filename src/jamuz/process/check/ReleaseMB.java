@@ -18,7 +18,7 @@
 // http://code.google.com/p/musicbrainzws2-java/wiki/TableOfContents
 
 
-//FIXME !!!!! Put back wait() !!! But check it, seems to prevent process cancellation
+//FIXME CHECK Put back wait()!!! But check it, seems to prevent process cancellation
 package jamuz.process.check;
 
 import jamuz.process.check.Cover.CoverType;
