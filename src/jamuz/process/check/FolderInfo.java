@@ -1781,7 +1781,14 @@ public class FolderInfo implements java.lang.Comparable {
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj); //To change body of generated methods, choose Tools | Templates.
+		if(this == obj) {
+            return true;
+        }
+		
+		if (obj instanceof FolderInfo) {
+			return super.equals(obj);
+		}
+		return false;
     }
 
     @Override
