@@ -16,7 +16,6 @@
  */
 package jamuz.process.check;
 
-import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Inter;
@@ -381,11 +380,12 @@ public class DialogScanner extends javax.swing.JDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelTrackNo)
-                    .addComponent(jLabelTrackNoValue)
-                    .addComponent(jLabelArtist)
-                    .addComponent(jLabelArtistValue))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabelTrackNoValue)
+                        .addComponent(jLabelArtist)
+                        .addComponent(jLabelArtistValue)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelTrackTotal)
@@ -462,7 +462,7 @@ public class DialogScanner extends javax.swing.JDialog {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE))
         );
 
         pack();
@@ -492,19 +492,40 @@ public class DialogScanner extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
     private void applyPattern() {
-		FileInfoInt file = PatternProcessor.get(jTextFieldPath.getText(), jTextFieldPattern.getText());
-        jLabelAlbumValue.setText(file.getAlbum());
-        jLabelAlbumArtistValue.setText(file.getAlbumArtist());
-        jLabelArtistValue.setText(file.getArtist());
-        jLabelCommentValue.setText(file.getComment());
-        jLabelDiscNoValue.setText(String.valueOf(file.getDiscNo()));
-        jLabelDiscTotalValue.setText(String.valueOf(file.getDiscTotal()));
-        jLabelTitleValue.setText(file.getTitle());
-        jLabelTrackNoValue.setText(String.valueOf(file.getTrackNo()));
-        jLabelTrackTotalValue.setText(String.valueOf(file.getTrackTotal()));
-        jLabelYearValue.setText(file.getYear());
-		
+		Map<String, String> extracted = PatternProcessor.getMap(jTextFieldPath.getText(), jTextFieldPattern.getText());
+		jLabelAlbumValue.setText(bold(extracted, "%b"));
+        jLabelAlbumArtistValue.setText(bold(extracted, "%z"));
+        jLabelArtistValue.setText(bold(extracted, "%a"));
+        jLabelCommentValue.setText(bold(extracted, "%c"));
+        jLabelDiscNoValue.setText(bold(extracted, "%d"));
+        jLabelDiscTotalValue.setText(bold(extracted, "%x"));
+        jLabelTitleValue.setText(bold(extracted, "%t"));
+        jLabelTrackNoValue.setText(bold(extracted, "%n"));
+        jLabelTrackTotalValue.setText(bold(extracted, "%l"));
+        jLabelYearValue.setText(bold(extracted, "%y"));
+		jLabelAlbumValue.setText(bold(extracted,"%b"));
+        jLabelAlbumArtistValue.setText(bold(extracted, "%z"));
+        jLabelArtistValue.setText(bold(extracted, "%a"));
+        jLabelCommentValue.setText(bold(extracted, "%c"));
+        jLabelDiscNoValue.setText(bold(extracted, "%d"));
+        jLabelDiscTotalValue.setText(bold(extracted, "%x"));
+        jLabelTitleValue.setText(bold(extracted, "%t"));
+        jLabelTrackNoValue.setText(bold(extracted, "%n"));
+        jLabelTrackTotalValue.setText(bold(extracted, "%l"));
+        jLabelYearValue.setText(bold(extracted, "%y"));
     }
+	
+	private String bold(Map<String, String> extracted, String key) {
+		String value=extracted.containsKey(key)?extracted.get(key):"";
+		if(!value.equals("")) {
+			return new StringBuilder().append("<html>")
+					.append("<b>")
+					.append(value)
+					.append("</b>").append("</html>")
+					.toString();
+		}
+		return "";
+	}
 
     /**
      * @param args the command line arguments

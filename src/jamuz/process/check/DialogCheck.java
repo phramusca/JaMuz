@@ -1984,7 +1984,8 @@ public class DialogCheck extends javax.swing.JDialog {
                     if(cover.getType().equals(Cover.CoverType.MB)) {
                         //List all MB covers
                         for(Cover.MbImage mbImage : cover.getCoverArtArchiveList()) {
-                            Cover coverMB = new Cover(Cover.CoverType.MB, "", "<html>"+mbImage.getMsg()+"<BR>"+cover.getName()+"</html>"); //NOI18N
+                            Cover coverMB = new Cover(Cover.CoverType.MB, "", 
+									"<html>"+mbImage.getMsg()+"<BR>"+cover.getName()+"</html>"); //NOI18N
                             coverMB.setImage(mbImage.getImage());
                              if(coverMB.getImage()!=null) {
                                  coversList.add(coverMB); 
@@ -1998,10 +1999,12 @@ public class DialogCheck extends javax.swing.JDialog {
                     progressBarCover.progress("");
                 }
                 progressBarCover.reset();
-                
                 //Select better image and display a message
-                Cover cover = Collections.min(coversList); //This is best cover found
-                setCover(cover);
+				Cover cover = new Cover("NotFoundName", null, "");
+				if(coversList.size()>0) {
+					cover = Collections.min(coversList); //This is best cover found
+				}
+				setCover(cover);
 
             }
         };

@@ -983,14 +983,18 @@ public class FolderInfo implements java.lang.Comparable {
                 //COVER
                 if(audioFile.getNbCovers()>0) {
                     if(!this.containsCoverHash(audioFile.getCoverHash())) {
-                        this.coversTag.add(new Cover(audioFile.getFilename(), audioFile.getCoverImage(), audioFile.getCoverHash()));
+                        this.coversTag.add(new Cover(
+								audioFile.getFilename(), 
+								audioFile.getCoverImage(), 
+								audioFile.getCoverHash()));
                     }
                 }
 
                 //Analyze BITRATE
                 if(audioFile.getBitRate().equals("")) {  //NOI18N
                     this.results.get("bitRate").setKO();  //NOI18N
-                    audioFile.bitRateDisplay=FolderInfoResult.colorField(audioFile.getBitRate(), 2);
+                    audioFile.bitRateDisplay=FolderInfoResult
+							.colorField(audioFile.getBitRate(), 2);
                 }
                 else {
                     String tempBitRate = audioFile.getBitRate();
@@ -1002,10 +1006,12 @@ public class FolderInfo implements java.lang.Comparable {
                     meanBitRate+=tempBitRateDouble;
                     if(tempBitRateDouble<128) {
                         this.results.get("bitRate").setWarning();  //NOI18N
-                        audioFile.bitRateDisplay=FolderInfoResult.colorField(audioFile.getBitRate(), 1);
+                        audioFile.bitRateDisplay=FolderInfoResult
+								.colorField(audioFile.getBitRate(), 1);
                     }
                     else {
-                        audioFile.bitRateDisplay=FolderInfoResult.colorField(audioFile.getBitRate(), 0);
+                        audioFile.bitRateDisplay=FolderInfoResult
+								.colorField(audioFile.getBitRate(), 0);
                     }
                 }
 
@@ -1570,7 +1576,7 @@ public class FolderInfo implements java.lang.Comparable {
                     break;
                 case KO_LIBRARY:
 					//FIXME CHECK Rename too, but need to insure that filename and path are valid
-					//=> Move to a "Issues" folder and replace bad tags by "Missing artist", "Empty album" ...
+					//=> Move to an "Issues" folder and replace bad tags by "Missing artist", "Empty album" ...
                     moveToLibrary(progressBar, CheckedFlag.KO, false);
                     break;
                 case MANUAL:
@@ -1617,13 +1623,18 @@ public class FolderInfo implements java.lang.Comparable {
         this.isReplayGainDone = isReplayGainDone;
     }
     
-    private boolean checkDestination(List<? extends FileInfoInt> myList, boolean useMask, String destination, ProgressBar progressBar) {
+    private boolean checkDestination(List<? extends FileInfoInt> myList, 
+			boolean useMask, String destination, ProgressBar progressBar) {
 		File destinationFile;
-		progressBar.setIndeterminate(Inter.get("Msg.Check.CheckingDestinationFiles"));  //NOI18N
+		progressBar.setIndeterminate(
+				Inter.get("Msg.Check.CheckingDestinationFiles"));  //NOI18N
 		for (FileInfoInt myFileInfo : myList) {
-			destinationFile = new File(FilenameUtils.concat(destination, getDestination(myFileInfo, useMask))); 
+			destinationFile = new File(FilenameUtils.concat(
+					destination, getDestination(myFileInfo, useMask))); 
 			if (destinationFile.exists()) {
-                Popup.warning(java.text.MessageFormat.format(Inter.get("Error.DestinationExist"), destinationFile.toString()));  //NOI18N
+                Popup.warning(java.text.MessageFormat.format(
+						Inter.get("Error.DestinationExist"), 
+						destinationFile.toString()));  //NOI18N
 				return false;
 			}
 		}
@@ -1632,7 +1643,8 @@ public class FolderInfo implements java.lang.Comparable {
     
     private String getDestination(FileInfoInt fileInfo, boolean useMask) {
 		if(useMask) {
-			String destination = fileInfo.computeMask(Jamuz.getMachine().getOptionValue("location.mask"));  //NOI18N
+			String destination = fileInfo.computeMask(
+					Jamuz.getMachine().getOptionValue("location.mask"));  //NOI18N
 			if(destination.length()>150) {
 				destination=StringManager.Left(destination, 150)+"(_)";  //NOI18N
 			}
@@ -1650,12 +1662,13 @@ public class FolderInfo implements java.lang.Comparable {
 	 */
 	public List<Cover> getCoverList() {
 		ArrayList<Cover> coversList=new ArrayList<>();
-		//List non-audio files
 		for (FileInfoInt myFileInfo : this.filesImage) {
-			coversList.add(new Cover(CoverType.FILE, myFileInfo.getFullPath().getAbsolutePath(), myFileInfo.getFilename()));  //NOI18N
+			coversList.add(new Cover(CoverType.FILE, 
+					myFileInfo.getFullPath().getAbsolutePath(), 
+					myFileInfo.getFilename()));  //NOI18N
 		}
 		coversList.addAll(this.coversTag);
-		if(this.searchKey!=null) { //can be null if search not performed, if artist and album are empty
+		if(this.searchKey!=null && this.coversInternet.containsKey(this.searchKey)) {
 			coversList.addAll(this.coversInternet.get(this.searchKey));
 		}
 		return coversList;
@@ -1666,10 +1679,6 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public List<FileInfoDisplay> getFilesAudio() {
-		//Uncommented to fix sorting for "Save" action in "Check"
-		//Does not look like it was needed, at least not directly
-		//=> remove if no impact elsewhere
-//		Collections.sort(this.filesAudio);
 		return this.filesAudio;
 	}
 	
@@ -1764,12 +1773,10 @@ public class FolderInfo implements java.lang.Comparable {
 
     @Override
 	public int compareTo(Object o) {
-		
         //ORDER BY action
 		if (this.action.getOrder() < ((FolderInfo) o).action.getOrder()) return -1;
 		if (this.action.getOrder() > ((FolderInfo) o).action.getOrder()) return 1;
         return 0;
-		
 	}
 
     @Override
@@ -1959,7 +1966,5 @@ public class FolderInfo implements java.lang.Comparable {
 		public Color getColor() {
             return color;
         }
-        
 	}
-	
 }

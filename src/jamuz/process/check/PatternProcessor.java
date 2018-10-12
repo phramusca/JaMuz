@@ -16,8 +16,6 @@
  */
 package jamuz.process.check;
 
-import jamuz.FileInfoInt;
-import jamuz.utils.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,55 +30,6 @@ import org.apache.commons.lang3.text.WordUtils;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class PatternProcessor {
-
-	/**
-	 *
-	 * @param path
-	 * @param pattern
-	 * @return
-	 */
-	public static FileInfoInt get(String path, String pattern) {
- 
-		Map<String, String> extracted = getMap(path, pattern);
-
-		String relativePath="";
-		String filename="";
-		String album=get("%b", extracted);
-		String albumArtist=get("%z", extracted);
-		String artist=get("%a", extracted);
-		String comment=get("%c", extracted);
-		int discNo=Utils.getInteger(get("%d", extracted));
-		int discTotal=Utils.getInteger(get("%x", extracted));
-		String genre="";
-		String title=get("%t", extracted);
-		int trackNo=Utils.getInteger(get("%n", extracted));
-		int trackTotal=Utils.getInteger(get("%l", extracted));
-		String year=get("%y", extracted);
-		
-		FileInfoInt fileInfoInt = new FileInfoInt(-1, -1, relativePath, 
-				filename, -1, "", "", -1, 0, album, 
-				albumArtist, artist, comment, discNo, discTotal, genre, 
-				-1, title, trackNo, trackTotal, year, -1, -1,
-				"", "", "", false, "", 
-				FolderInfo.CheckedFlag.UNCHECKED, -1, -1, -1, "");
-
-		//FIXME: Display somehow: String.valueOf(extracted.size())
-        return fileInfoInt;
-    }
-	
-	private static String get(String key, Map<String, String> extracted) {
-        if(extracted.containsKey(key)) {
-            String value = extracted.get(key);
-            if(!value.equals("")) {
-				return new StringBuilder().append("<html>")
-						.append("<b>")
-						.append(value)
-						.append("</b>").append("</html>")
-						.toString();
-            }
-        }
-		return "";
-    }
 
 	/**
 	 * Gets Map<Identifier, Value> of extracted items
