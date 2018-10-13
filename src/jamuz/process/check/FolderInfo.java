@@ -149,7 +149,7 @@ public class FolderInfo implements java.lang.Comparable {
 	public void setPath(String rootPath, String relativePath) {
 		this.rootPath = rootPath;
 		this.relativePath = relativePath;
-		this.fullPath = this.rootPath+relativePath;
+		fullPath = rootPath+relativePath;
 	}
 	
 	/**
@@ -157,15 +157,15 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @param isLast
 	 */
 	private FolderInfo(boolean isLast) {
-		this.filesAudio = new ArrayList<>();
-		this.filesDb = new ArrayList<>();
-        this.filesAudioTableModel = new TableModelCheckTracks();
-		this.filesOther = new ArrayList<>();
-		this.filesImage = new ArrayList<>();
-		this.filesConvertible = new ArrayList<>();
-        this.coversInternet = new LinkedHashMap<>(); // Linked to preserver order
-		this.matches = new LinkedHashMap<>(); // Linked to preserver order
-        this.action = Action.ANALYZING;
+		filesAudio = new ArrayList<>();
+		filesDb = new ArrayList<>();
+        filesAudioTableModel = new TableModelCheckTracks();
+		filesOther = new ArrayList<>();
+		filesImage = new ArrayList<>();
+		filesConvertible = new ArrayList<>();
+        coversInternet = new LinkedHashMap<>(); // Linked to preserver order
+		matches = new LinkedHashMap<>(); // Linked to preserver order
+        action = Action.ANALYZING;
         isActionDone=false;
         results = new HashMap<>();
         this.isLast = isLast;
@@ -188,14 +188,14 @@ public class FolderInfo implements java.lang.Comparable {
 	 */
 	public FolderInfo(int id, String relativePath, Date modifDate, boolean deleted, CheckedFlag checkedFlag) {
 		this(false);
-		this.idPath=id;
+		idPath=id;
 		this.modifDate=(Date) modifDate.clone();
 		this.deleted=deleted;
 		this.checkedFlag=checkedFlag;
 		
-		this.rootPath = Jamuz.getMachine().getOptionValue("location.library");  //NOI18N
+		rootPath = Jamuz.getMachine().getOptionValue("location.library");  //NOI18N
 		this.relativePath = relativePath;
-		this.fullPath = this.rootPath+this.relativePath;
+		fullPath = rootPath+relativePath;
 	}
 	
 	/**
@@ -207,15 +207,15 @@ public class FolderInfo implements java.lang.Comparable {
 		this(false);
 		
 		try {
-			this.checkedFlag=CheckedFlag.UNCHECKED;
+			checkedFlag=CheckedFlag.UNCHECKED;
 			this.fullPath = fullPath;
 			this.rootPath = rootPath;
-			this.relativePath = this.fullPath.substring(rootPath.length());
+			relativePath = fullPath.substring(rootPath.length());
 			
 			File folder = new File(fullPath);
 			//Count only files, NOT directories
-			this.nbFiles=folder.listFiles((File file) -> file.isFile()).length;
-			this.modifDate = new Date(folder.lastModified());
+			nbFiles=folder.listFiles((File file) -> file.isFile()).length;
+			modifDate = new Date(folder.lastModified());
 		}
 		catch (Exception ex) {
 			Popup.error(ex);
@@ -234,8 +234,8 @@ public class FolderInfo implements java.lang.Comparable {
     
 	//TODO: Use a HashMap instead ...
 	private int searchInFileInfoDbList(String relativeFullPath) {
-		for(int i = 0; i < this.filesDb.size(); i++) {
-			FileInfo myFileInfo = this.filesDb.get(i);
+		for(int i = 0; i < filesDb.size(); i++) {
+			FileInfo myFileInfo = filesDb.get(i);
             if(myFileInfo.getRelativeFullPath().equals(relativeFullPath)) { return i; }
 		}
 		return -1;
@@ -271,22 +271,22 @@ public class FolderInfo implements java.lang.Comparable {
 	 */
 	public boolean scan(boolean full, ProgressBar progressBar) {
 		boolean scanDeletedFiles=true;
-		//We cannot set or retrieve anything from database if path is a new insertion (this.idPath=-1)
+		//We cannot set or retrieve anything from database if path is a new insertion (idPath=-1)
 		//Anyway, all files on that folder are not (supposed to be) in databsase yet, so will be inserted
-		if(this.idPath>0) {
+		if(idPath>0) {
 			progressBar.setIndeterminate(Inter.get("Msg.Check.Scan.Setup")); //NOI18N
 			//Get list of files from library including deleted
-			if(!Jamuz.getDb().getFiles(this.filesDb, this.idPath, true)) {
+			if(!Jamuz.getDb().getFiles(filesDb, idPath, true)) {
 				return false;
 			}
 		}
 		
 		//Loop on files from filesystem
-		progressBar.setup(this.filesAudio.size());
-		for (FileInfoInt fileFS : this.filesAudio) {
+		progressBar.setup(filesAudio.size());
+		for (FileInfoInt fileFS : filesAudio) {
 			int idFileDb = searchInFileInfoDbList(fileFS.getRelativeFullPath());
 			if(idFileDb>=0) {
-				FileInfoInt fileDb = this.filesDb.get(idFileDb);
+				FileInfoInt fileDb = filesDb.get(idFileDb);
 				//Date comparison may not work: compare formatted strings instead !!! 
 				//to compare with same formatDisplay as within database
 				if(fileDb.isDeleted() || full || !fileFS.getFormattedModifDate().equals(fileDb.getFormattedModifDate())) {
@@ -304,7 +304,7 @@ public class FolderInfo implements java.lang.Comparable {
 			else {
                 scanDeletedFiles=false; //No need to search for deleted files if path is a new insertion
 				fileFS.readTags(true); //TODO: Use returned boolean ! (shall we ?)
-				fileFS.setIdPath(this.idPath);
+				fileFS.setIdPath(idPath);
 				if(!fileFS.insertTagsInDb()) {
 					fileFS.unsetCover(); //To prevent memory errors
                     return false;
@@ -316,7 +316,7 @@ public class FolderInfo implements java.lang.Comparable {
 		
 		if(scanDeletedFiles) {
 			progressBar.setIndeterminate(Inter.get("Msg.Check.Scan.Deleted")); //NOI18N
-            if(!this.scanDeletedFiles(progressBar)) {
+            if(!scanDeletedFiles(progressBar)) {
 				return false;
 			}
 		}
@@ -330,13 +330,13 @@ public class FolderInfo implements java.lang.Comparable {
 		
 //        progressBar.setIndeterminate("Listing files"); //TODO: Inter
         //Get list of files from library exluding the one(s) already set as deleted
-		if(!Jamuz.getDb().getFiles(this.filesDb, this.idPath, false)) {
+		if(!Jamuz.getDb().getFiles(filesDb, idPath, false)) {
 			return false;
 		}
 
 		//Loop on those files
         progressBar.setup(filesDb.size());
-		for (FileInfoInt fileDB : this.filesDb) {
+		for (FileInfoInt fileDB : filesDb) {
 			if(!fileDB.scanDeleted()) {
 				return false;
 			}
@@ -353,16 +353,16 @@ public class FolderInfo implements java.lang.Comparable {
 	 */
 	public boolean scanDeleted(ProgressBar progressBar) {
 		//Check if folder exist
-		File path = new File(this.fullPath);
+		File path = new File(fullPath);
 		if(!path.exists()) {
 			//Path does not exist. Set path and associated files as deleted in database
-			if(!Jamuz.getDb().setPathDeleted(this.idPath)) {
+			if(!Jamuz.getDb().setPathDeleted(idPath)) {
 				return false;
 			}
 		}
 		else {
 			//Path does exist. Check if files have been deleted
-			this.scanDeletedFiles(progressBar);
+			scanDeletedFiles(progressBar);
 		}
 		return true;
 	}
@@ -372,26 +372,26 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	private boolean insertOrUpdateInDb(CheckedFlag checkedFlag) {
-		File folder = new File(this.fullPath);
-		this.modifDate = new Date(folder.lastModified());
+		File folder = new File(fullPath);
+		modifDate = new Date(folder.lastModified());
 		
 		//If idPath is not known, check if it exists
-		if(this.idPath<0) {
-			this.idPath = Jamuz.getDb().getIdPath(this.relativePath);
+		if(idPath<0) {
+			idPath = Jamuz.getDb().getIdPath(relativePath);
 		}
 
-//		if(this.isWarning()) {
+//		if(isWarning()) {
 //			checkedFlag=CheckedFlag.OK_WARNING;
 //		}
 //		else {
 //			checkedFlag=CheckedFlag.OK;
 //		}
 
-		if(this.idPath>=0) {
-			return this.updateInDb(checkedFlag);
+		if(idPath>=0) {
+			return updateInDb(checkedFlag);
 		}
 		else {
-			return this.insertInDb(checkedFlag);
+			return insertInDb(checkedFlag);
 		}
 	}
 	
@@ -402,8 +402,8 @@ public class FolderInfo implements java.lang.Comparable {
 	 */
 	public boolean insertInDb(CheckedFlag checkedFlag) {
 		int [] key = new int[1]; //Hint: Using a int table a cannot pass a simple integer by reference
-		boolean result = Jamuz.getDb().insertPath(this.relativePath, this.modifDate, checkedFlag, this.mbId, key);
-		this.idPath=key[0]; //Get insertion key
+		boolean result = Jamuz.getDb().insertPath(relativePath, modifDate, checkedFlag, mbId, key);
+		idPath=key[0]; //Get insertion key
 		return result;
 	}
 	
@@ -413,7 +413,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public boolean updateInDb(CheckedFlag checkedFlag) {
-		return Jamuz.getDb().updatePath(this.idPath, this.modifDate, checkedFlag, this.relativePath, this.mbId);
+		return Jamuz.getDb().updatePath(idPath, modifDate, checkedFlag, relativePath, mbId);
 	}
 
     /**
@@ -445,74 +445,74 @@ public class FolderInfo implements java.lang.Comparable {
         List <String> filesDeletableExtensions = new ArrayList(
 				Arrays.asList(Jamuz.getMachine().getOptionValue("files.delete")
 						.split(","))); //NOI18N
-		this.filesConvertibleExtensions = new HashMap<>();
+		filesConvertibleExtensions = new HashMap<>();
 		for(String string : Jamuz.getMachine().getOptionValue("files.convert")
 				.split(",")) { //NOI18N
             String[] strings = string.split(":"); //NOI18N
 			filesConvertibleExtensions.put(strings[0], strings[1]);
         }
 		
-		this.filesAudio.clear();
-        this.filesAudioTableModel.clear();
-		this.filesOther.clear();
-		this.filesImage.clear();
-		this.filesConvertible.clear();
-		File path = new File(this.fullPath);
+		filesAudio.clear();
+        filesAudioTableModel.clear();
+		filesOther.clear();
+		filesImage.clear();
+		filesConvertible.clear();
+		File path = new File(fullPath);
 		File[] files = path.listFiles();
 		if (files != null) {
 			progressBar.setup(files.length);
 			progressBar.setMsgMax(30);
 			for (File file : files) {
 				String absolutePath=file.getAbsolutePath();
-				String relativeFullPath=absolutePath.substring(this.rootPath.length());
+				String relativeFullPath=absolutePath.substring(rootPath.length());
 
 				if (!file.isDirectory()) {
-					FileInfoInt myFileInfoNew = new FileInfoDisplay(relativeFullPath, this.rootPath);
+					FileInfoInt myFileInfoNew = new FileInfoDisplay(relativeFullPath, rootPath);
 					if(filesAudioExtensions.contains(myFileInfoNew.getExt())) {
 						if(readTags) {
 							myFileInfoNew.readTags(false);//TODO: Use returned boolean ! (shall we ?)
 						} 
                         FileInfoDisplay fileInfoDisplay = (FileInfoDisplay) myFileInfoNew;
                         fileInfoDisplay.initDisplay();
-						this.filesAudio.add(fileInfoDisplay);
+						filesAudio.add(fileInfoDisplay);
 					}
 					else if(filesImageExtensions.contains(myFileInfoNew.getExt())) {
-						this.filesImage.add(myFileInfoNew);
+						filesImage.add(myFileInfoNew);
 					}
 					else if(filesConvertibleExtensions.containsKey(myFileInfoNew.getExt())) {
 						if(readTags) {
 							myFileInfoNew.readTags(false);
 						}
-						this.filesConvertible.add(myFileInfoNew);
+						filesConvertible.add(myFileInfoNew);
 					}
 					else if(filesDeletableExtensions.contains(myFileInfoNew.getExt())) {
                         //Direct deletion if
                         file.delete();
 					}
 					else {
-						this.filesOther.add(myFileInfoNew);
+						filesOther.add(myFileInfoNew);
 					}
 				}
 //				progressBar.progress(": "+file.getName());  //NOI18N
                 progressBar.progress(": "+relativeFullPath);  //NOI18N
 			}
 			progressBar.reset();
-			Collections.sort(this.filesAudio);
+			Collections.sort(filesAudio);
 			
 			//Delete image files if no audio, no convertible 
 			// and no other (not know has being deletable - so deleted) files have been found
-			if(this.filesAudio.size()<=0) {
-				if(this.filesConvertible.size()<=0) {
-					if(this.filesOther.size()<=0){
-						deleteList(this.filesImage, null);
+			if(filesAudio.size()<=0) {
+				if(filesConvertible.size()<=0) {
+					if(filesOther.size()<=0){
+						deleteList(filesImage, null);
 						return true;
 					}
 				}
 			}
 			
 			//Transcode convertible files
-			if(transcode && this.filesConvertible.size()>0) {
-				this.transcode(progressBar);
+			if(transcode && filesConvertible.size()>0) {
+				transcode(progressBar);
 			}
 
 			//FIXME PLAYER ReplayGain. Complete and test, then use (and on remote too)
@@ -532,8 +532,8 @@ public class FolderInfo implements java.lang.Comparable {
 				}
 				if(!isValid || recalculateGain) {
 					//Compute replaygain for MP3 files (if any)
-					MP3gain mP3gain = new MP3gain(recalculateGain, this.rootPath, 
-							this.relativePath, progressBar);
+					MP3gain mP3gain = new MP3gain(recalculateGain, rootPath, 
+							relativePath, progressBar);
 					if(mP3gain.process()) {
 						filesAudio.stream().forEach((fileInfoDisplay) -> {
 							GainValues gv = fileInfoDisplay.getReplayGain(true);
@@ -571,7 +571,7 @@ public class FolderInfo implements java.lang.Comparable {
 		progressBar.setup(filesConvertible.size());
 		for (FileInfoInt file : filesConvertible) {
 			try {							
-				String destExt=this.filesConvertibleExtensions.get(file.getExt());
+				String destExt=filesConvertibleExtensions.get(file.getExt());
 				progressBar.progress(MessageFormat.format(Inter.get("Msg.Check.Transcoding"), destExt));  //NOI18N
 				
 				basePath=file.getFullPath().getAbsolutePath();
@@ -681,21 +681,21 @@ public class FolderInfo implements java.lang.Comparable {
 	 * Deletes all files in folder
 	 */
 	private void deleteAllFiles(ProgressBar progressBar) {
-		progressBar.setup(this.filesAudio.size()
-				+this.getFilesOther().size()
-				+this.getFilesConvertible().size()
-				+this.getFilesImage().size());
-		deleteList(this.filesAudio, progressBar);
-		deleteList(this.getFilesOther(), progressBar);
-		deleteList(this.getFilesConvertible(), progressBar);
-		deleteList(this.getFilesImage(), progressBar);
+		progressBar.setup(filesAudio.size()
+				+getFilesOther().size()
+				+getFilesConvertible().size()
+				+getFilesImage().size());
+		deleteList(filesAudio, progressBar);
+		deleteList(getFilesOther(), progressBar);
+		deleteList(getFilesConvertible(), progressBar);
+		deleteList(getFilesImage(), progressBar);
         
         //TODO: If no more files in folder, remove the folder too
 	}
 
 	private void deleteList(List<? extends FileInfoInt> myList, ProgressBar progressBar) {
 		for (FileInfoInt myFileInfo : myList) {
-			File myFile = new File(this.rootPath + File.separator + myFileInfo.getRelativeFullPath()); 
+			File myFile = new File(rootPath + File.separator + myFileInfo.getRelativeFullPath()); 
             myFile.delete();
 			if(progressBar!=null) {
 				progressBar.progress(Inter.get("Msg.Check.DeletingFiles"));  //NOI18N
@@ -721,7 +721,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * Queue folder to player
 	 */
 	public void queueAll() {
-        for (FileInfoInt myFileInfo : this.filesAudio) {
+        for (FileInfoInt myFileInfo : filesAudio) {
             PanelMain.addToQueue(myFileInfo, ProcessCheck.getRootLocation().getValue()); 
         }
         PanelMain.playSelected(false);
@@ -769,11 +769,11 @@ public class FolderInfo implements java.lang.Comparable {
 		
         progressBar.setIndeterminate(Inter.get("Msg.Check.AnalyzingFolder")); //NOI18N
         
-		this.coversTag = new ArrayList<>();
+		coversTag = new ArrayList<>();
          //Needed here even if used in analyseMatch only as causes a bug in getCoverList (called before) otherwise
-		this.originals = new ArrayList<>();
+		originals = new ArrayList<>();
 		
-        this.filesAudioTableModel.clear();
+        filesAudioTableModel.clear();
 		
 		results = new HashMap<>();
 
@@ -809,20 +809,20 @@ public class FolderInfo implements java.lang.Comparable {
 			Caller.getInstance().setProxy(proxy);
 		}
 	
-		this.results.get("nbFiles").value=String.valueOf(this.filesAudio.size());  //NOI18N
-		this.results.get("nbFiles").tooltip=Inter.get("Tooltip.NumberOfFiles");  //NOI18N
+		results.get("nbFiles").value=String.valueOf(filesAudio.size());  //NOI18N
+		results.get("nbFiles").tooltip=Inter.get("Tooltip.NumberOfFiles");  //NOI18N
 		
-		int nbNonAudioFiles = this.filesOther.size();
-		nbNonAudioFiles += this.filesImage.size();
-		nbNonAudioFiles += this.filesConvertible.size();
+		int nbNonAudioFiles = filesOther.size();
+		nbNonAudioFiles += filesImage.size();
+		nbNonAudioFiles += filesConvertible.size();
 		
-		if(nbNonAudioFiles<=0 && this.filesAudio.size()<=0) {
-			this.results.get("nbFiles").setKO();  //NOI18N
-			this.results.get("nbFiles").tooltip=Inter.get("Tooltip.NoFilesFound");  //NOI18N
+		if(nbNonAudioFiles<=0 && filesAudio.size()<=0) {
+			results.get("nbFiles").setKO();  //NOI18N
+			results.get("nbFiles").tooltip=Inter.get("Tooltip.NoFilesFound");  //NOI18N
 		}
-		else if(this.filesAudio.size()<=0) {
-			this.results.get("nbFiles").setKO();  //NOI18N
-			this.results.get("nbFiles").tooltip=Inter.get("Tooltip.NoSupportedAudioFiles");  //NOI18N
+		else if(filesAudio.size()<=0) {
+			results.get("nbFiles").setKO();  //NOI18N
+			results.get("nbFiles").tooltip=Inter.get("Tooltip.NoSupportedAudioFiles");  //NOI18N
             
             for(FileInfoInt fileInfo : getFilesConvertible()) {
                 addRowTag(FolderInfoResult.colorField(fileInfo.getFilename(), 0));
@@ -836,97 +836,97 @@ public class FolderInfo implements java.lang.Comparable {
 		}
 		else {
 			//Analyse hasID3v1
-			ArrayList<String> hasID3v1List = group(this.filesAudio, "hasID3v1");  //NOI18N
+			ArrayList<String> hasID3v1List = group(filesAudio, "hasID3v1");  //NOI18N
 			if(hasID3v1List.contains("true")) {  //NOI18N
-				this.results.get("hasID3v1").value=Inter.get("Label.Yes");  //NOI18N
-				this.results.get("hasID3v1").setKO();  //NOI18N
+				results.get("hasID3v1").value=Inter.get("Label.Yes");  //NOI18N
+				results.get("hasID3v1").setKO();  //NOI18N
 			}
 			else {
-				this.results.get("hasID3v1").value=Inter.get("Label.No");  //NOI18N
+				results.get("hasID3v1").value=Inter.get("Label.No");  //NOI18N
 			}
 			
 			//Analyse isReplayGainDone
-			if(!this.isReplayGainDone) {
-				this.results.get("isReplayGainDone").value=Inter.get("Label.No");  //NOI18N
-				this.results.get("isReplayGainDone").setKO();  //NOI18N
+			if(!isReplayGainDone) {
+				results.get("isReplayGainDone").value=Inter.get("Label.No");  //NOI18N
+				results.get("isReplayGainDone").setKO();  //NOI18N
 			}
 			else {
-				this.results.get("isReplayGainDone").value=Inter.get("Label.Yes");  //NOI18N
+				results.get("isReplayGainDone").value=Inter.get("Label.Yes");  //NOI18N
 			}
 			
 			//Analyse number of covers
 			double mean=0;
-			for(FileInfoInt audioFile : this.filesAudio) {
+			for(FileInfoInt audioFile : filesAudio) {
 				mean+=audioFile.getNbCovers();
 			}
-			mean=mean/this.filesAudio.size();
+			mean=mean/filesAudio.size();
 			if(mean<1) {
 				//Some files do not have a cover
-				this.results.get("cover").setKO();  //NOI18N
-				this.results.get("cover").value=Inter.get("Label.Check.MissingCover"); //NOI18N
+				results.get("cover").setKO();  //NOI18N
+				results.get("cover").value=Inter.get("Label.Check.MissingCover"); //NOI18N
 			}
 			else if(mean>1) {
-				this.results.get("cover").setKO();  //NOI18N
-				this.results.get("cover").value=Inter.get("Label.Check.ExtraCover"); //NOI18N
+				results.get("cover").setKO();  //NOI18N
+				results.get("cover").value=Inter.get("Label.Check.ExtraCover"); //NOI18N
 			}
 			else { //mean==1
 				//All files have only one cover
 				//Analyse cover Hash
-				for(FileInfoInt audioFile : this.filesAudio) { //Need to read image from tag to be able to read hash
+				for(FileInfoInt audioFile : filesAudio) { //Need to read image from tag to be able to read hash
 					audioFile.getCoverImage();
 				}
-				ArrayList<String> coverHashList = group(this.filesAudio, "getCoverHash");  //NOI18N
+				ArrayList<String> coverHashList = group(filesAudio, "getCoverHash");  //NOI18N
 				if(coverHashList.contains("")) { //NOI18N
-					this.results.get("cover").setKO();  //NOI18N
-					this.results.get("cover").value=Inter.get("Label.Check.HashIssue"); //NOI18N
+					results.get("cover").setKO();  //NOI18N
+					results.get("cover").value=Inter.get("Label.Check.HashIssue"); //NOI18N
 				}
 				else if(coverHashList.size()!=1) {  //NOI18N
-					this.results.get("cover").setKO();  //NOI18N
-					this.results.get("cover").value=String.valueOf(coverHashList.size())+" &ne;"; // "&ne;" => "≠" //NOI18N
+					results.get("cover").setKO();  //NOI18N
+					results.get("cover").value=String.valueOf(coverHashList.size())+" &ne;"; // "&ne;" => "≠" //NOI18N
 				}
 				else {
-					BufferedImage myImage=this.filesAudio.get(0).getCoverImage();
-					this.results.get("cover").value = Inter.get("Label.All")+" "+myImage.getWidth()+"x"+myImage.getHeight(); //NOI18N
+					BufferedImage myImage=filesAudio.get(0).getCoverImage();
+					results.get("cover").value = Inter.get("Label.All")+" "+myImage.getWidth()+"x"+myImage.getHeight(); //NOI18N
 					if(myImage.getWidth()<200 || myImage.getHeight()<200) {
-						this.results.get("cover").setWarning(); //NOI18N
+						results.get("cover").setWarning(); //NOI18N
 					}
 					else if(myImage.getWidth()<100 || myImage.getHeight()<100) {
-						this.results.get("cover").setKO(); //NOI18N
+						results.get("cover").setKO(); //NOI18N
 					}
 				}
 			}
             
 			//Get YEAR, if all the same and valid
-			ArrayList<String> yearList = group(this.filesAudio, "getYear");  //NOI18N
+			ArrayList<String> yearList = group(filesAudio, "getYear");  //NOI18N
 			if(yearList.size()==1) {
 				if(yearList.get(0).equals("")) {  //NOI18N
-					this.results.get("year").value="{Empty}";  //NOI18N
-					this.results.get("year").setWarning(); //NOI18N
+					results.get("year").value="{Empty}";  //NOI18N
+					results.get("year").setWarning(); //NOI18N
 				}
 				else if(yearList.get(0).matches("\\d{4}")) {  //NOI18N
-					this.results.get("year").value=yearList.get(0);  //NOI18N
+					results.get("year").value=yearList.get(0);  //NOI18N
 				}
 				else {
-					this.results.get("year").value="{Error}";  //NOI18N
-					this.results.get("year").setKO(); //NOI18N
+					results.get("year").value="{Error}";  //NOI18N
+					results.get("year").setKO(); //NOI18N
 				}
 			}
 			else {
-				this.results.get("year").value="{Multi}";  //NOI18N
-				this.results.get("year").setWarning(); //NOI18N
+				results.get("year").value="{Multi}";  //NOI18N
+				results.get("year").setWarning(); //NOI18N
 			}
 
 			//Get GENRE, if all the same and valid
-			ArrayList<String> genreList = group(this.filesAudio, "getGenre");  //NOI18N
+			ArrayList<String> genreList = group(filesAudio, "getGenre");  //NOI18N
 			if(genreList.size()==1) {
                 //TODO: Use genre cache (in some combo or else, not to query db each time !!)
 				if(Jamuz.getDb().checkGenre(genreList.get(0))) {
-					this.results.get("genre").value=genreList.get(0);  //NOI18N
+					results.get("genre").value=genreList.get(0);  //NOI18N
 				}
 			}
 			
 			//Get artistDisplay for matches search. Can be Album Artist if all the same and not empty
-			ArrayList<String> artistList = group(this.filesAudio, "getArtist");  //NOI18N
+			ArrayList<String> artistList = group(filesAudio, "getArtist");  //NOI18N
 			if(!artistList.contains("")){  //NOI18N
 				if(artistList.size()>1) {
 					searchArtist="Various Artists";  //NOI18N
@@ -936,37 +936,37 @@ public class FolderInfo implements java.lang.Comparable {
 				}
 			}
 			//Get ALBUMARTIST
-			ArrayList<String> albumArtistList = group(this.filesAudio, "getAlbumArtist");  //NOI18N
+			ArrayList<String> albumArtistList = group(filesAudio, "getAlbumArtist");  //NOI18N
 			if(!albumArtistList.contains("")) {  //NOI18N
 				if(albumArtistList.size()==1){
-					this.results.get("albumArtist").value=albumArtistList.get(0);  //NOI18N
+					results.get("albumArtist").value=albumArtistList.get(0);  //NOI18N
 					searchArtist=albumArtistList.get(0);
 				}
 				else {
-					this.results.get("albumArtist").value="{Multi}";  //NOI18N
-					this.results.get("albumArtist").setKO();  //NOI18N
+					results.get("albumArtist").value="{Multi}";  //NOI18N
+					results.get("albumArtist").setKO();  //NOI18N
 				}
 			}
 			else {
-				this.results.get("albumArtist").value="{Empty}";  //NOI18N
-				this.results.get("albumArtist").setKO();  //NOI18N
+				results.get("albumArtist").value="{Empty}";  //NOI18N
+				results.get("albumArtist").setKO();  //NOI18N
 			}
 			
 			//Analyse ALBUM
-			ArrayList<String> albumList = group(this.filesAudio, "getAlbum");  //NOI18N
+			ArrayList<String> albumList = group(filesAudio, "getAlbum");  //NOI18N
 			if(!albumList.contains("")) {  //NOI18N
 				if(albumList.size()==1){
 					results.get("album").value=albumList.get(0);  //NOI18N
 					searchAlbum=albumList.get(0);
 				}
 				else {
-					this.results.get("album").value="{Multi}";  //NOI18N
-					this.results.get("album").setKO();  //NOI18N
+					results.get("album").value="{Multi}";  //NOI18N
+					results.get("album").setKO();  //NOI18N
 				}
 			}
 			else {
-				this.results.get("album").value="{Empty}";  //NOI18N
-				this.results.get("album").setKO();  //NOI18N
+				results.get("album").value="{Empty}";  //NOI18N
+				results.get("album").setKO();  //NOI18N
 			}
 
 			//TODO: Make this configurable in options
@@ -978,12 +978,12 @@ public class FolderInfo implements java.lang.Comparable {
 			
 			//FILE BY FILE ANALYSIS
             progressBar.setup(filesAudio.size());
-			for(FileInfoDisplay audioFile : this.filesAudio) {
+			for(FileInfoDisplay audioFile : filesAudio) {
                 
                 //COVER
                 if(audioFile.getNbCovers()>0) {
-                    if(!this.containsCoverHash(audioFile.getCoverHash())) {
-                        this.coversTag.add(new Cover(
+                    if(!containsCoverHash(audioFile.getCoverHash())) {
+                        coversTag.add(new Cover(
 								audioFile.getFilename(), 
 								audioFile.getCoverImage(), 
 								audioFile.getCoverHash()));
@@ -992,7 +992,7 @@ public class FolderInfo implements java.lang.Comparable {
 
                 //Analyze BITRATE
                 if(audioFile.getBitRate().equals("")) {  //NOI18N
-                    this.results.get("bitRate").setKO();  //NOI18N
+                    results.get("bitRate").setKO();  //NOI18N
                     audioFile.bitRateDisplay=FolderInfoResult
 							.colorField(audioFile.getBitRate(), 2);
                 }
@@ -1005,7 +1005,7 @@ public class FolderInfo implements java.lang.Comparable {
                     double tempBitRateDouble = Double.parseDouble(tempBitRate);
                     meanBitRate+=tempBitRateDouble;
                     if(tempBitRateDouble<128) {
-                        this.results.get("bitRate").setWarning();  //NOI18N
+                        results.get("bitRate").setWarning();  //NOI18N
                         audioFile.bitRateDisplay=FolderInfoResult
 								.colorField(audioFile.getBitRate(), 1);
                     }
@@ -1017,11 +1017,11 @@ public class FolderInfo implements java.lang.Comparable {
 
                 //Analyze LENGTH
                 if(audioFile.getLength() <= 0) {
-                    this.results.get("length").setKO();  //NOI18N
+                    results.get("length").setKO();  //NOI18N
                     audioFile.setLengthDisplay(FolderInfoResult.colorField(audioFile.getLengthDisplay(), 2));
                 }
                 else if(audioFile.getLength() < 30) {
-                    this.results.get("length").setWarning();  //NOI18N
+                    results.get("length").setWarning();  //NOI18N
                     audioFile.setLengthDisplay(FolderInfoResult.colorField(audioFile.getLengthDisplay(), 1));
                 }
                 else {
@@ -1038,11 +1038,11 @@ public class FolderInfo implements java.lang.Comparable {
 				//	find . -size 0 -print0 | xargs -0 rm
 				//to delete all 0o files recursively in current folder and below
                 if(audioFile.getSize() <= 0) {
-                    this.results.get("size").setKO();  //NOI18N
+                    results.get("size").setKO();  //NOI18N
                     audioFile.setSizeDisplay(FolderInfoResult.colorField(audioFile.getSizeDisplay(), 2));
                 }
                 else if(audioFile.getSize() < 400000) {
-                    this.results.get("size").setWarning();  //NOI18N
+                    results.get("size").setWarning();  //NOI18N
                     audioFile.setSizeDisplay(FolderInfoResult.colorField(audioFile.getSizeDisplay(), 1));
                 }
                 else {
@@ -1052,11 +1052,11 @@ public class FolderInfo implements java.lang.Comparable {
                 //Analyse FORMAT
                 if(audioFile.getFormat().equals("")) {  //NOI18N
                     //This should never happen
-                    this.results.get("format").setKO();  //NOI18N
+                    results.get("format").setKO();  //NOI18N
                     audioFile.formatDisplay=FolderInfoResult.colorField(audioFile.getFormat(), 2);
                 }
                 else if(!supportedFormats.contains(audioFile.getFormat())) {  //NOI18N
-                    this.results.get("format").setKO();  //NOI18N
+                    results.get("format").setKO();  //NOI18N
                     audioFile.formatDisplay=FolderInfoResult.colorField(audioFile.getFormat(), 2);
                 }
                 else {
@@ -1070,24 +1070,24 @@ public class FolderInfo implements java.lang.Comparable {
 			progressBar.setIndeterminate(Inter.get("Msg.Check.AnalyzingFolder")); //NOI18N
             
 			//Analyse mean BITRATE
-			meanBitRate = meanBitRate / this.filesAudio.size();
+			meanBitRate = meanBitRate / filesAudio.size();
 			//TODO: Looks like (to be further analysed) that ogg have lower bitrates
 			//at least with my test convertion of WMA 128, which results to a mean bitrate of 82 (74 to 93)
 			if(meanBitRate<128) {
-				this.results.get("bitRate").setKO();  //NOI18N
+				results.get("bitRate").setKO();  //NOI18N
 			}
-			this.results.get("bitRate").value=String.valueOf(meanBitRate);  //NOI18N
+			results.get("bitRate").value=String.valueOf(meanBitRate);  //NOI18N
 			
 			//Searching matches on MusicBrainz and Last.fm
 			//(Only if a valid artistDisplay could be retrieved)
 			if(!searchArtist.equals("")) {  //NOI18N
 				int discNo=1;
 				int discTotal=1;
-				ArrayList<String> discNoList = group(this.filesAudio, "getDiscNo");  //NOI18N
+				ArrayList<String> discNoList = group(filesAudio, "getDiscNo");  //NOI18N
 				if(!discNoList.contains("") && discNoList.size()==1) {
 					discNo=Integer.valueOf(discNoList.get(0));
 				}
-				ArrayList<String> discTotalList = group(this.filesAudio, "getDiscTotal");  //NOI18N
+				ArrayList<String> discTotalList = group(filesAudio, "getDiscTotal");  //NOI18N
 				if(!discTotalList.contains("") && discTotalList.size()==1){
 					discTotal=Integer.valueOf(discTotalList.get(0));
 				}
@@ -1096,34 +1096,34 @@ public class FolderInfo implements java.lang.Comparable {
 			progressBar.setIndeterminate(Inter.get("Msg.Check.AnalyzingFolder")); //NOI18N
             
 			//Add original(s) artistDisplay/album/year to originals list
-			ArrayList<String> releaseList = group(this.filesAudio, "getRelease");  //NOI18N
+			ArrayList<String> releaseList = group(filesAudio, "getRelease");  //NOI18N
 			int i=1;
 			for (String myRelease : releaseList) {
 				String[] split = myRelease.split("X7IzQsi3");  //NOI18N //TODO: Use something nicer than this bad coding
-				addToOriginals(Inter.get("Label.original")+i, split[0], split[1], split[2], Integer.parseInt(split[3]), this.idPath);  //NOI18N
+				addToOriginals(Inter.get("Label.original")+i, split[0], split[1], split[2], Integer.parseInt(split[3]), idPath);  //NOI18N
 			}
 			
 			//Add path parts to originals list (may be usefull when no tags are available)
-			String path=this.filesAudio.get(0).getRelativePath();
+			String path=filesAudio.get(0).getRelativePath();
 			File file = new File(path);
 			
 			if(file.getPath().contains(File.separator)) {
 				if(file.getParent().equals("")) {  //NOI18N
-					addToOriginals(Inter.get("Label.File"), file.getName(), "", "", 0, this.idPath);  //NOI18N
+					addToOriginals(Inter.get("Label.File"), file.getName(), "", "", 0, idPath);  //NOI18N
 				}
 				else {
-					addToOriginals(Inter.get("Label.File"), file.getParentFile().getPath(), file.getName(), "", 0, this.idPath);  //NOI18N
+					addToOriginals(Inter.get("Label.File"), file.getParentFile().getPath(), file.getName(), "", 0, idPath);  //NOI18N
 				}
 			}
 			else {
-				addToOriginals(Inter.get("Label.File"), file.getPath(), "", "", 0, this.idPath);  //NOI18N
+				addToOriginals(Inter.get("Label.File"), file.getPath(), "", "", 0, idPath);  //NOI18N
 			}
 			
 		}
 	}
 	
     private boolean containsCoverHash(String hash) {
-		for(Cover cover : this.coversTag) {
+		for(Cover cover : coversTag) {
 			if(cover.getHash().equals(hash)) {
                 return true;
             }
@@ -1146,8 +1146,8 @@ public class FolderInfo implements java.lang.Comparable {
         }
         else {
             matchId=matchId-matchesL.size();
-            if(matchId < this.originals.size()) {
-                return this.originals.get(matchId);
+            if(matchId < originals.size()) {
+                return originals.get(matchId);
             }
             else {
                 return null;
@@ -1168,54 +1168,54 @@ public class FolderInfo implements java.lang.Comparable {
             return;
         }
 		//Assume no duplicates at first
-		this.results.get("duplicates").setOK();  //NOI18N
+		results.get("duplicates").setOK();  //NOI18N
 		if(match.isIsErrorDuplicate()) {
-			this.results.get("duplicates").setKO();  //NOI18N
+			results.get("duplicates").setKO();  //NOI18N
 		}
 		if(match.isIsWarningDuplicate()) {
-			this.results.get("duplicates").setWarning();  //NOI18N
+			results.get("duplicates").setWarning();  //NOI18N
 		}
 		
-		this.results.get("nbFiles").restoreFolderErrorLevel(); //NOI18N
+		results.get("nbFiles").restoreFolderErrorLevel(); //NOI18N
 		//Get match tracks
 		List<Track> tracks=match.getTracks(progressBar);
         progressBar.setIndeterminate(Inter.get("Msg.Scan.SearchingMatches"));  //NOI18N
 		if(match.isOriginal()) {
-			this.results.get("nbFiles").tooltip=Inter.get("Tooltip.OriginalMatch");  //NOI18N
-			this.results.get("nbFiles").setWarning();  //NOI18N
+			results.get("nbFiles").tooltip=Inter.get("Tooltip.OriginalMatch");  //NOI18N
+			results.get("nbFiles").setWarning();  //NOI18N
 		}
 		else {
 			if(tracks.size()<=0) {
-				this.results.get("nbFiles").tooltip=Inter.get("Tooltip.MatchHasNoTracks");  //NOI18N
-				this.results.get("nbFiles").setWarning();  //NOI18N
+				results.get("nbFiles").tooltip=Inter.get("Tooltip.MatchHasNoTracks");  //NOI18N
+				results.get("nbFiles").setWarning();  //NOI18N
 			}
 			else {
-				if(tracks.size() != this.filesAudio.size()) {
-					this.results.get("nbFiles").tooltip=Inter.get("Tooltip.NumberOfTracksDiffer");  //NOI18N
-					this.results.get("nbFiles").setKO();  //NOI18N
+				if(tracks.size() != filesAudio.size()) {
+					results.get("nbFiles").tooltip=Inter.get("Tooltip.NumberOfTracksDiffer");  //NOI18N
+					results.get("nbFiles").setKO();  //NOI18N
 				}
 				else {
 					//Note: If "nbFiles" has errorlevel set >0 during folder analysis
 					//then we will not look for matches as no supported audio files found to search for
 					//So we can change resultsMap.get("nbFiles") as we like without interference
-					this.results.get("nbFiles").tooltip=Inter.get("Tooltip.NumberOfFiles");  //NOI18N
-					this.results.get("nbFiles").setOK();  //NOI18N
+					results.get("nbFiles").tooltip=Inter.get("Tooltip.NumberOfFiles");  //NOI18N
+					results.get("nbFiles").setOK();  //NOI18N
 				}
 			}
 		}
         
         //Analyse if match has a year
-        this.results.get("year").restoreFolderErrorLevel(); //NOI18N
-        this.results.get("year").tooltip=null; //NOI18N
+        results.get("year").restoreFolderErrorLevel(); //NOI18N
+        results.get("year").tooltip=null; //NOI18N
         if(match.getYear().equals("")) { //NOI18N
-            this.results.get("year").tooltip=Inter.get("Tooltip.MatchHasNoYear"); //NOI18N
-            this.results.get("year").setWarning(true);  //NOI18N
+            results.get("year").tooltip=Inter.get("Tooltip.MatchHasNoYear"); //NOI18N
+            results.get("year").setWarning(true);  //NOI18N
         }
         
         ReleaseMatch.Track track;
         int i=0;
         filesAudioTableModel.clear();
-        for(FileInfoInt fileAudio : this.filesAudio) {
+        for(FileInfoInt fileAudio : filesAudio) {
             if(i<tracks.size()) {
                 track=tracks.get(i);
             }
@@ -1292,7 +1292,7 @@ public class FolderInfo implements java.lang.Comparable {
         editableColumns.add(21);
         editableColumns.add(24);
         for(int colId : editableColumns) {
-            this.results.get(FolderInfo.getField(colId)).restoreFolderErrorLevel();  //NOI18N
+            results.get(FolderInfo.getField(colId)).restoreFolderErrorLevel();  //NOI18N
         }
         editableColumns.add(13);//Add year, not before as we do not want to restore error level;
         //Analyse tracks
@@ -1334,7 +1334,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 */
 	public void analyseMatchTracks(int colId) {
         
-        this.results.get(FolderInfo.getField(colId)).restoreFolderErrorLevel();  //NOI18N
+        results.get(FolderInfo.getField(colId)).restoreFolderErrorLevel();  //NOI18N
 		
 		for(int rowId=0; rowId < filesAudioTableModel.getRowCount(); rowId++) {
 			analyseMatchTrack(rowId, colId);
@@ -1349,7 +1349,7 @@ public class FolderInfo implements java.lang.Comparable {
         //TODO: use polymorphism instead
         if (newValueObject instanceof String) {
             String newValue = (String) newValueObject;
-            tagValue.setDisplay(this.results.get(field).analyseTrack(tagValue.getValue(), newValue, field));
+            tagValue.setDisplay(results.get(field).analyseTrack(tagValue.getValue(), newValue, field));
         } else if (newValueObject instanceof Float) { //This is for BPM
             Float newValue = (Float) newValueObject;
             Float tagValueFloat;
@@ -1359,7 +1359,7 @@ public class FolderInfo implements java.lang.Comparable {
             catch(java.lang.NumberFormatException ex) {
                 tagValueFloat=Float.valueOf(0);
             }
-            tagValue.setDisplay(this.results.get(field).analyseTrackBpm(tagValueFloat, newValue));
+            tagValue.setDisplay(results.get(field).analyseTrackBpm(tagValueFloat, newValue));
         } else {
             Popup.error("Unknown class");
         }
@@ -1369,7 +1369,7 @@ public class FolderInfo implements java.lang.Comparable {
 	//analyse()
 	private void addToOriginals(String source, String artist, String album, String year, int trackTotal, int idPath) {
 		ReleaseMatch myMatch = new ReleaseMatch(-1, source, artist, album, year, trackTotal, idPath);
-		this.originals.add(myMatch);
+		originals.add(myMatch);
 	}
 	
 	/**
@@ -1387,39 +1387,39 @@ public class FolderInfo implements java.lang.Comparable {
 			int discTotal, 
 			ProgressBar progressBar) {
         progressBar.setIndeterminate(Inter.get("Label.Searching"));  //NOI18N
-        this.searchKey = album+artist;
+        searchKey = album+artist;
         ReleaseMB releaseMB = new ReleaseMB(progressBar);
         ReleaseLastFm releaseLastFm = new ReleaseLastFm();
-        if(this.matches.containsKey(this.searchKey)) {
-            if(this.matches.get(this.searchKey)==null) {
+        if(matches.containsKey(searchKey)) {
+            if(matches.get(searchKey)==null) {
                 //Remove map entry if entry was null (connexion issue) so it can be retried
-                this.matches.remove(this.searchKey);
+                matches.remove(searchKey);
             }
         }
-        if(!this.matches.containsKey(this.searchKey)) {
+        if(!matches.containsKey(searchKey)) {
             //Query MusicBrainz (better results, usually including yearDisplay and tracks)
             //Query Last.fm (in case no luck with MusicBrainz)
             
             List<ReleaseMatch> releases = releaseMB.search(
 					artist, 
 					album, 
-					this.filesAudio.size(), 
-					this.idPath, discNo, discTotal);
+					filesAudio.size(), 
+					idPath, discNo, discTotal);
             progressBar.setIndeterminate(Inter.get("Label.Searching"));  //NOI18N
             if(releases!=null) {
-                releases.addAll(releaseLastFm.search(artist, album, this.idPath));
-                this.matches.put(this.searchKey, releases);
+                releases.addAll(releaseLastFm.search(artist, album, idPath));
+                matches.put(searchKey, releases);
             }
             else {
-                this.matches.put(this.searchKey, null); //Meaning search issue
+                matches.put(searchKey, null); //Meaning search issue
             }
         }
-        if(!this.coversInternet.containsKey(this.searchKey)) {
+        if(!coversInternet.containsKey(searchKey)) {
             //Adding Last.fm covers first (usually more results)
             List<Cover> searchedCovers = releaseLastFm.getCoverList();
             //Then adding MusicBrainz's covers (from covertartarchive)
             searchedCovers.addAll(releaseMB.getCoverList());
-            this.coversInternet.put(this.searchKey, searchedCovers);
+            coversInternet.put(searchKey, searchedCovers);
         }
 
 		//TODO: Not always return true !
@@ -1448,7 +1448,8 @@ public class FolderInfo implements java.lang.Comparable {
             if(FilenameUtils.equalsNormalizedOnSystem(
 						ProcessCheck.getDestinationLocation().getValue(), 
 						Jamuz.getMachine().getOptionValue("location.library"))
-					&& Jamuz.getMachine().getOptionValue("library.isMaster").equals("true")) {  //NOI18N
+					&& Jamuz.getMachine().getOptionValue("library.isMaster")
+							.equals("true")) {  //NOI18N
                 updateDatabase=true;
             }
             checkDestination=true;
@@ -1456,10 +1457,11 @@ public class FolderInfo implements java.lang.Comparable {
         //TODO: We can end up with duplicate strPath in path table
         //(at least) when a folder is renamed manually, then scan, and move to OK that renames the folder back:
         //need to check if file exist before inserting it !!
-        moveList(this.filesAudio, 
+        moveList(filesAudio, 
 				useMask, 
-				MessageFormat.format(Inter.get("Msg.Check.MovingToOK"), 
-					ProcessCheck.getDestinationLocation().getValue()), 
+				MessageFormat.format(
+						Inter.get("Msg.Check.MovingToOK"), 
+						ProcessCheck.getDestinationLocation().getValue()), 
                 ProcessCheck.getDestinationLocation().getValue(), 
 				checkDestination, 
 				progressBar);  //NOI18N
@@ -1468,18 +1470,25 @@ public class FolderInfo implements java.lang.Comparable {
         //TODO: Find a better way (using getDestination on path only)
         String rootPathOri = getRootPath();
         String relativePathOri = getRelativePath();
-        setPath(ProcessCheck.getDestinationLocation().getValue(), this.filesAudio.get(0).getRelativePath());
+        setPath(ProcessCheck.getDestinationLocation().getValue(), 
+				filesAudio.get(0).getRelativePath());
 
         if(updateDatabase) {
             //Insert or update path in database
-            progressBar.setIndeterminate(java.text.MessageFormat.format(Inter.get("Msg.Check.UpdatingFolderInDb"), getRelativePath())); //NOI18N
-            //insertOrUpdateInDb(checkedFlag); => Cannot do it here as isCheckingMasterLibrary() would always return true
+            progressBar.setIndeterminate(MessageFormat.format(
+					Inter.get("Msg.Check.UpdatingFolderInDb"), 
+					getRelativePath())); //NOI18N
+            //insertOrUpdateInDb(checkedFlag); 
+				//=> Cannot move insertOrUpdateInDb(checkedFlag); here 
+				//   as isCheckingMasterLibrary() would always return true
             if(isCheckingMasterLibrary()) {
                 insertOrUpdateInDb(checkedFlag);
-                progressBar.setup(this.filesAudio.size());
-                for(FileInfoInt fileInfo : this.filesAudio) {
+                progressBar.setup(filesAudio.size());
+                for(FileInfoInt fileInfo : filesAudio) {
                     fileInfo.updateInDb();
-                    progressBar.progress(java.text.MessageFormat.format(Inter.get("Msg.Check.UpdatingFileInDb"), fileInfo.getFilename())); //NOI18N
+                    progressBar.progress(MessageFormat.format(
+							Inter.get("Msg.Check.UpdatingFileInDb"), 
+							fileInfo.getFilename())); //NOI18N
                 }
             }
             else {
@@ -1493,9 +1502,6 @@ public class FolderInfo implements java.lang.Comparable {
         setPath(rootPathOri, relativePathOri);
 	}
     
-    /**
-	 * Sets folder as KO
-	 */
 	private void KO(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
             //TODO: Rename path and files as for OK
@@ -1504,11 +1510,13 @@ public class FolderInfo implements java.lang.Comparable {
             Jamuz.getDb().setCheckedFlag(idPath, FolderInfo.CheckedFlag.KO);
         }
         else {
-            moveList(this.filesAudio, false, java.text.MessageFormat.format(Inter.get("Msg.Check.MovingToKO"), ProcessCheck.getKoLocation().getValue()), ProcessCheck.getKoLocation().getValue(), true, progressBar);	  //NOI18N
-            List<FileInfoInt> merged = getFilesOther();
-            merged.addAll(getFilesConvertible());
-            merged.addAll(getFilesImage());
-            moveList(merged, false, java.text.MessageFormat.format(Inter.get("Msg.Check.MovingToKO"), ProcessCheck.getKoLocation().getValue()), ProcessCheck.getKoLocation().getValue(), true, progressBar);	  //NOI18N
+            moveList(getAllFiles(), 
+					false, 
+					MessageFormat.format(
+						Inter.get("Msg.Check.MovingToKO"), 
+						ProcessCheck.getKoLocation().getValue()), 
+					ProcessCheck.getKoLocation().getValue(), 
+					true, progressBar);	  //NOI18N
         }
 	}
     
@@ -1518,34 +1526,53 @@ public class FolderInfo implements java.lang.Comparable {
             return false;
         }
         else {
-            moveList(this.filesAudio, false, java.text.MessageFormat.format(Inter.get("Msg.Check.MovingToManual"), ProcessCheck.getManualLocation().getValue()), ProcessCheck.getManualLocation().getValue(), true, progressBar);	  //NOI18N
-            List<FileInfoInt> merged = getFilesOther();
-            merged.addAll(getFilesConvertible());
-            merged.addAll(getFilesImage());
-            moveList(merged, false, java.text.MessageFormat.format(Inter.get("Msg.Check.MovingToManual"), ProcessCheck.getManualLocation().getValue()), ProcessCheck.getManualLocation().getValue(), true, progressBar);	  //NOI18N
+            moveList(getAllFiles(), 
+					false, 
+					MessageFormat.format(
+						Inter.get("Msg.Check.MovingToManual"), 
+						ProcessCheck.getManualLocation().getValue()), 
+					ProcessCheck.getManualLocation().getValue(), 
+					true, progressBar);	  //NOI18N
             return true;
         }
 	}
     
-    private void moveList(List<? extends FileInfoInt> myList, boolean useMask, String msg, String destination, boolean checkDest, ProgressBar progressBar) {
+	private List<FileInfoInt> getAllFiles() {
+		List<FileInfoInt> merged = filesOther;
+			merged.addAll(filesAudio);
+            merged.addAll(filesConvertible);
+            merged.addAll(filesImage);
+		return merged;
+	}
+	
+    private void moveList(
+			List<? extends FileInfoInt> myList, 
+			boolean useMask, 
+			String msg, 
+			String destination, 
+			boolean checkDest, 
+			ProgressBar progressBar) {
 		File originalFile;
 		String destinationRelativePath;
 		File destinationFile;
 		
 		boolean doMove=true;
-		if(checkDest) {
-			if(!checkDestination(myList, useMask, destination, progressBar)) {
-				doMove=false;
-			}
+		if(checkDest && !checkDestination(myList, useMask, destination, progressBar)) {
+			doMove=false;
 		}
-		
 		if(doMove) {
 			progressBar.setup(myList.size());
 			for (FileInfoInt fileInfo : myList) {
-				originalFile = new File(FilenameUtils.concat(ProcessCheck.getRootLocation().getValue(), fileInfo.getRelativeFullPath())); 
+				originalFile = new File(FilenameUtils.concat(
+						ProcessCheck.getRootLocation().getValue(), 
+						fileInfo.getRelativeFullPath())); 
 				destinationRelativePath = getDestination(fileInfo, useMask);
-				destinationFile = new File(FilenameUtils.concat(destination, destinationRelativePath));
-				if(!FilenameUtils.equalsNormalizedOnSystem(destinationFile.getAbsolutePath(), originalFile.getAbsolutePath())) {
+				destinationFile = new File(FilenameUtils.concat(
+						destination, 
+						destinationRelativePath));
+				if(!FilenameUtils.equalsNormalizedOnSystem(
+						destinationFile.getAbsolutePath(), 
+						originalFile.getAbsolutePath())) {
                     if(FileSystem.moveFile(originalFile, destinationFile)) {
                         fileInfo.setRootPath(destination);
                         fileInfo.setPath(destinationRelativePath);
@@ -1597,19 +1624,19 @@ public class FolderInfo implements java.lang.Comparable {
             }
             if(isActionDone) {
                 //Deleting potentially huge items, to prevent memory issues
-                this.coversInternet=null;
-                this.coversTag=null;
-                this.filesAudio=null;
-                this.filesAudioTableModel=null;
-                this.filesConvertible=null;
-                this.filesConvertibleExtensions=null;
-                this.filesDb=null;
-                this.filesImage=null;
-                this.filesOther=null;
-//                this.matches=null; //Used in toString, cannot remove
-                this.newImage=null;
-                this.originals=null;
-//                this.results=null; //Used in toString, cannot remove
+                coversInternet=null;
+                coversTag=null;
+                filesAudio=null;
+                filesAudioTableModel=null;
+                filesConvertible=null;
+                filesConvertibleExtensions=null;
+                filesDb=null;
+                filesImage=null;
+                filesOther=null;
+//                matches=null; //Used in toString, cannot remove
+                newImage=null;
+                originals=null;
+//                results=null; //Used in toString, cannot remove
             }
         }
         return isActionDone;
@@ -1632,7 +1659,7 @@ public class FolderInfo implements java.lang.Comparable {
 			destinationFile = new File(FilenameUtils.concat(
 					destination, getDestination(myFileInfo, useMask))); 
 			if (destinationFile.exists()) {
-                Popup.warning(java.text.MessageFormat.format(
+                Popup.warning(MessageFormat.format(
 						Inter.get("Error.DestinationExist"), 
 						destinationFile.toString()));  //NOI18N
 				return false;
@@ -1662,14 +1689,14 @@ public class FolderInfo implements java.lang.Comparable {
 	 */
 	public List<Cover> getCoverList() {
 		ArrayList<Cover> coversList=new ArrayList<>();
-		for (FileInfoInt myFileInfo : this.filesImage) {
+		for (FileInfoInt myFileInfo : filesImage) {
 			coversList.add(new Cover(CoverType.FILE, 
 					myFileInfo.getFullPath().getAbsolutePath(), 
 					myFileInfo.getFilename()));  //NOI18N
 		}
-		coversList.addAll(this.coversTag);
-		if(this.searchKey!=null && this.coversInternet.containsKey(this.searchKey)) {
-			coversList.addAll(this.coversInternet.get(this.searchKey));
+		coversList.addAll(coversTag);
+		if(searchKey!=null && coversInternet.containsKey(searchKey)) {
+			coversList.addAll(coversInternet.get(searchKey));
 		}
 		return coversList;
 	}
@@ -1679,7 +1706,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public List<FileInfoDisplay> getFilesAudio() {
-		return this.filesAudio;
+		return filesAudio;
 	}
 	
 	/**
@@ -1687,7 +1714,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public List<FileInfoInt> getFilesOther() {
-		return this.filesOther;
+		return filesOther;
 	}
 
 	/**
@@ -1720,7 +1747,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public String getRelativePath() {
-		return this.relativePath;
+		return relativePath;
 	}
 	
 	/**
@@ -1728,7 +1755,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public String getFullPath() {
-		return this.fullPath;
+		return fullPath;
 	}
 	
 	/**
@@ -1749,7 +1776,7 @@ public class FolderInfo implements java.lang.Comparable {
         StringBuilder builder = new StringBuilder();
         String result;
         builder.append("<html><b>");
-        builder.append(this.relativePath);
+        builder.append(relativePath);
         builder.append("</b><BR/> | ");
         for (Map.Entry<String, FolderInfoResult> entry : results.entrySet()) {
             if(entry.getValue().errorLevel>0) {
@@ -1774,8 +1801,8 @@ public class FolderInfo implements java.lang.Comparable {
     @Override
 	public int compareTo(Object o) {
         //ORDER BY action
-		if (this.action.getOrder() < ((FolderInfo) o).action.getOrder()) return -1;
-		if (this.action.getOrder() > ((FolderInfo) o).action.getOrder()) return 1;
+		if (action.getOrder() < ((FolderInfo) o).action.getOrder()) return -1;
+		if (action.getOrder() > ((FolderInfo) o).action.getOrder()) return 1;
         return 0;
 	}
 
@@ -1822,10 +1849,10 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public List<ReleaseMatch> getMatches() {
-        if(this.searchKey==null) {
+        if(searchKey==null) {
             return new ArrayList<>();
         }
-		return this.matches.get(this.searchKey);
+		return matches.get(searchKey);
 	}
 	
 	/**
@@ -1833,7 +1860,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public List<ReleaseMatch> getOriginals() {
-		return this.originals;
+		return originals;
 	}
 
 	/**
@@ -1859,7 +1886,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public String getRootPath() {
-		return this.rootPath;
+		return rootPath;
 	}
 
     /**
@@ -1917,9 +1944,7 @@ public class FolderInfo implements java.lang.Comparable {
 	public void setMbId(String mbId) {
         this.mbId = mbId;
     }
-    
-    //TODO: Use CheckedFlag enum instead of integers in whole project whenever possible
-
+	
 	/**
 	 * Checked Flag
 	 */
@@ -1967,7 +1992,7 @@ public class FolderInfo implements java.lang.Comparable {
 		}
 
 		/**
-		 *
+		 * return color
 		 * @return
 		 */
 		public Color getColor() {
