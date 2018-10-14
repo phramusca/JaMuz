@@ -44,12 +44,9 @@ public class ButtonCheck extends DefaultCellEditor {
         super(new JCheckBox());
         button = new JButton();
         button.setOpaque(true);
-        button.addActionListener(new ActionListener() {
-			@Override
-            public void actionPerformed(ActionEvent e) {
-                fireEditingStopped();
-            }
-        });
+        button.addActionListener((ActionEvent e) -> {
+			fireEditingStopped();
+		});
     }
 
     @Override

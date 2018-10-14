@@ -1476,7 +1476,7 @@ public class FolderInfo implements java.lang.Comparable {
         setPath(ProcessCheck.getDestinationLocation().getValue(), 
 				filesAudio.get(0).getRelativePath());
 		
-		//FIXME !!! CHECK Issue when after a renaming (OK, OK - Warning of multiple CDs albums) 
+		//FIXME !!! CHECK Issue when after a renaming ("OK", "OK - Warning" of multiple CDs albums) 
 			// two strPath in db happen to end up with same value
 			// In that case, only one of each is selected, so others are not available for deletion (this run)
 			// since foldersDb does not allow duplicate keys (being strPath for scan purposes)

@@ -251,12 +251,14 @@ public class PanelRemote extends javax.swing.JPanel {
 					enableConfig(false);
 					jButtonQRcode.setEnabled(true);
 					jButtonStart.setText(Inter.get("Button.Pause"));
+				} else {
+					enableConfig(true);
 				}
 			}
 			else {
 				server.close();
-				enableConfig(true);
 				jButtonStart.setText(Inter.get("Button.Start"));
+				enableConfig(true);
 			}
 		}
         jButtonStart.setEnabled(true);
