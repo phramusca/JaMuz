@@ -1469,32 +1469,26 @@ public class FolderInfo implements java.lang.Comparable {
 				checkDestination, 
 				progressBar);  //NOI18N
 
-        //Change folder path
-        //TODO: Find a better way (using getDestination on path only)
-        String rootPathOri = getRootPath();
-        String relativePathOri = getRelativePath();
-        setPath(ProcessCheck.getDestinationLocation().getValue(), 
+        if(updateDatabase) {
+			//Change folder path
+			//TODO: Find a better way (using getDestination on path only)
+			String rootPathOri = getRootPath();
+			String relativePathOri = getRelativePath();
+			
+			setPath(ProcessCheck.getDestinationLocation().getValue(), 
 				filesAudio.get(0).getRelativePath());
 		
-		//FIXME !!! CHECK Issue when after a renaming ("OK", "OK - Warning" of multiple CDs albums) 
-			// two strPath in db happen to end up with same value
-			// In that case, only one of each is selected, so others are not available for deletion (this run)
-			// since foldersDb does not allow duplicate keys (being strPath for scan purposes)
-			// => Use only one idPath when, while renaming,
-			// it appears that another strPath already exists
-			// and mark others (at least current one) as deleted
+			//Prevent duplicate strPath
+			int newIdPath = Jamuz.getDb().getIdPath(filesAudio.get(0).getRelativePath());
+			if(idPath>=0 && newIdPath>=0 && idPath!=newIdPath) {
+				if(Jamuz.getDb().setIdPath(idPath, newIdPath)) {
+					idPath=newIdPath;
+					checkedFlag=CheckedFlag.UNCHECKED;
+				} else {
+					return;
+				}
+			}
 			
-//		if(!fullPath.equals(ProcessCheck.getDestinationLocation().getValue()+filesAudio.get(0).getRelativePath())) {
-//			Then we have a duplicate path in db
-//					Need to use only one idPath and delete the other
-//			int newIdPath = Jamuz.getDb().getIdPath(relativePath);
-//			if(idPath!=newIdPath) {
-//				Supprimer 
-//			}
-//		}
-		
-
-        if(updateDatabase) {
             //Insert or update path in database
             progressBar.setIndeterminate(MessageFormat.format(
 					Inter.get("Msg.Check.UpdatingFolderInDb"), 
@@ -1517,10 +1511,10 @@ public class FolderInfo implements java.lang.Comparable {
                 //Scan files for insertion of new files
                 scan(true, progressBar);
             }
-            progressBar.reset();
+			//Change path back so that source path is browsed (and scanned for deleted as required)
+			setPath(rootPathOri, relativePathOri);
+			progressBar.reset();
         }
-        //Change path back so that source path is browsed (and scanned for deleted as required)
-        setPath(rootPathOri, relativePathOri);
 	}
     
 	private void KO(ProgressBar progressBar) {

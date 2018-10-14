@@ -470,6 +470,34 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	/**
+	 * Updates all files with idPath to newIdPath
+	 * @param idPath
+	 * @param newIdPath
+	 * @return
+	 */
+	public synchronized boolean setIdPath(int idPath, int newIdPath) {
+        try {
+            PreparedStatement stUpdateIdPathInFile = dbConn.connection.prepareStatement(
+					"UPDATE file "
+                    + "SET idPath=? "    //NOI18N
+                    + "WHERE idPath=?");   //NOI18N
+            stUpdateIdPathInFile.setInt(1, newIdPath);
+            stUpdateIdPathInFile.setInt(2, idPath);
+            int nbRowsAffected = stUpdateIdPathInFile.executeUpdate();
+            if (nbRowsAffected >0) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "setIdPath, idPath={0}, newIdPath={1} "
+						+ "# row(s) affected: +{2}", new Object[]{idPath, newIdPath, nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("setIdPath(" + idPath + ", " + newIdPath + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+	
     /**
      * Checks if path exists in database
      *
@@ -482,7 +510,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             path = FilenameUtils.separatorsToUnix(path);
             
             PreparedStatement stSelectPath = dbConn.connection.prepareStatement(
-					"SELECT idPath FROM path WHERE strPath=?");   //NOI18N
+					"SELECT idPath FROM path WHERE strPath=? ORDER BY idPath");   //NOI18N
             stSelectPath.setString(1, path);
             rs = stSelectPath.executeQuery();
             if (rs.next()) { //Check if we have a result, so we can move to this one
