@@ -9,7 +9,7 @@ insert into "optiontype" ("idOptionType", "name", "default", "type") values ('7'
 insert into "optiontype" ("idOptionType", "name", "default", "type") values ('8', 'log.level', 'INFO', 'list');
 insert into "optiontype" ("idOptionType", "name", "default", "type") values ('9', 'log.limit', '5242880', 'integer');
 insert into "optiontype" ("idOptionType", "name", "default", "type") values ('10', 'log.count', '20', 'integer');
-insert into "optiontype" ("idOptionType", "name", "default", "type") values ('11', 'files.audio', 'mp3', 'csv');
+insert into "optiontype" ("idOptionType", "name", "default", "type") values ('11', 'files.audio', 'mp3,flac', 'csv');
 insert into "optiontype" ("idOptionType", "name", "default", "type") values ('12', 'files.image', 'png,jpg,jpeg,bmp,gif', 'csv');
 insert into "optiontype" ("idOptionType", "name", "default", "type") values ('13', 'files.convert', 'wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3', 'csv');
 insert into "optiontype" ("idOptionType", "name", "default", "type") values ('14', 'files.delete', 'db,ini,txt,m3u,pls,htm,html,doc,nfo,url', 'csv');
