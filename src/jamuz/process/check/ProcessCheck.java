@@ -543,14 +543,6 @@ public class ProcessCheck {
         }
 
 		private boolean scanDeleted() throws InterruptedException {
-			//FIXME !!! Issue when after a renaming (OK, OK - Warning of multiple CDs albums) 
-			// two strPath in db happen to end up with same value
-			// In that case, only one of each is selected, so others are not available for deletion (this run)
-			// since foldersDb does not allow duplicate keys (being strPath for scan purposes)
-			// => Use only one idPath when, while renaming,
-			// it appears that another strPath already exists
-			// and mark others (at least current one) as deleted
-			
             //Get list of folders from library deleted included
             if(!Jamuz.getDb().getFolders(foldersDb, false)) {
                 return false;

@@ -1436,7 +1436,10 @@ public class FolderInfo implements java.lang.Comparable {
     /**
 	 * Insert folder in database with given checkeFlag
 	 */
-	private void moveToLibrary(ProgressBar progressBar, CheckedFlag checkedFlag, boolean useMask) {
+	private void moveToLibrary(
+			ProgressBar progressBar, 
+			CheckedFlag checkedFlag, 
+			boolean useMask) {
         //TODO: Check duplicates at this point again, as a previous OK (resulting in db insertion) may have inserted a duplicate !
         
         boolean updateDatabase=false;
@@ -1472,6 +1475,24 @@ public class FolderInfo implements java.lang.Comparable {
         String relativePathOri = getRelativePath();
         setPath(ProcessCheck.getDestinationLocation().getValue(), 
 				filesAudio.get(0).getRelativePath());
+		
+		//FIXME !!! CHECK Issue when after a renaming (OK, OK - Warning of multiple CDs albums) 
+			// two strPath in db happen to end up with same value
+			// In that case, only one of each is selected, so others are not available for deletion (this run)
+			// since foldersDb does not allow duplicate keys (being strPath for scan purposes)
+			// => Use only one idPath when, while renaming,
+			// it appears that another strPath already exists
+			// and mark others (at least current one) as deleted
+			
+//		if(!fullPath.equals(ProcessCheck.getDestinationLocation().getValue()+filesAudio.get(0).getRelativePath())) {
+//			Then we have a duplicate path in db
+//					Need to use only one idPath and delete the other
+//			int newIdPath = Jamuz.getDb().getIdPath(relativePath);
+//			if(idPath!=newIdPath) {
+//				Supprimer 
+//			}
+//		}
+		
 
         if(updateDatabase) {
             //Insert or update path in database
