@@ -2808,7 +2808,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
     }
 
     private static final String SELECT_DUPLICATE = 
-			"SELECT album, artist, checked, discNo, discTotal, "
+			"SELECT album, albumArtist, checked, discNo, discTotal, "
 			+ " ifnull(round(((sum(case when rating > 0 then rating end))"
 			+ "/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating  "
 			+ " FROM path P JOIN file F ON F.idPath=P.idPath ";
@@ -2875,7 +2875,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 	 * exists in JaMuz database
      *
      * @param myList
-     * @param artist
+     * @param albumArtist
      * @param album
      * @param idPath
 	 * @param discNo
@@ -2883,19 +2883,19 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * @return
      */
     public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList, 
-			String artist, String album, int idPath, int discNo, int discTotal) {
+			String albumArtist, String album, int idPath, int discNo, int discTotal) {
 		
-        if (!artist.equals("") && !album.equals("")) {    //NOI18N
+        if (!albumArtist.equals("") && !album.equals("")) {    //NOI18N
             try {
                 PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE
-                    + " WHERE artist LIKE ? "  //NOI18N
+                    + " WHERE albumArtist LIKE ? "  //NOI18N
                     + " AND album LIKE ? AND P.idPath!=? "
 					+ " AND discNo=? "
 					+ " AND discTotal=? "
                     + GROUP_DUPLICATE);     //NOI18N
                 
-                stSelectDuplicates.setString(1, artist);
+                stSelectDuplicates.setString(1, albumArtist);
                 stSelectDuplicates.setString(2, album);
                 stSelectDuplicates.setInt(3, idPath);
 				stSelectDuplicates.setInt(4, discNo);
@@ -2903,7 +2903,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                 getDuplicates(myList, stSelectDuplicates, 2);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkDuplicate(" + artist + "," + album + ")", ex);   //NOI18N
+                Popup.error("checkDuplicate(" + albumArtist + "," + album + ")", ex);   //NOI18N
             }
         }
         return false;
@@ -2913,29 +2913,29 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      * Check if a duplicate artist/album couple exists in JaMuz database
      *
      * @param myList
-     * @param artist
+     * @param albumArtist
      * @param album
      * @param idPath
      * @return
      */
     public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList, 
-			String artist, String album, int idPath) {
+			String albumArtist, String album, int idPath) {
 		
-        if (!artist.equals("") && !album.equals("")) {    //NOI18N
+        if (!albumArtist.equals("") && !album.equals("")) {    //NOI18N
             try {
                 PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE
-                    + " WHERE artist LIKE ? "  //NOI18N
+                    + " WHERE albumArtist LIKE ? "  //NOI18N
                     + " AND album LIKE ? AND P.idPath!=? "
                     + GROUP_DUPLICATE);     //NOI18N
                 
-                stSelectDuplicates.setString(1, artist);
+                stSelectDuplicates.setString(1, albumArtist);
                 stSelectDuplicates.setString(2, album);
                 stSelectDuplicates.setInt(3, idPath);
                 getDuplicates(myList, stSelectDuplicates, 1);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkDuplicate(" + artist + "," + album + ")", ex);   //NOI18N
+                Popup.error("checkDuplicate(" + albumArtist + "," + album + ")", ex);   //NOI18N
             }
         }
         return false;
@@ -2955,19 +2955,19 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         try {
             rs = st.executeQuery();
             String album;
-            String artist;
+            String albumArtist;
             double albumRating;
             CheckedFlag checkedFlag;
 			int discNo;
 			int discTotal;
             while (rs.next()) {
                 album = dbConn.getStringValue(rs, "album");
-                artist = dbConn.getStringValue(rs, "artist");
+                albumArtist = dbConn.getStringValue(rs, "albumArtist");
                 albumRating = rs.getDouble("albumRating");
                 checkedFlag = CheckedFlag.values()[rs.getInt("checked")];
 				discNo = rs.getInt("discNo");
 				discTotal = rs.getInt("discTotal");
-                myList.add(new DuplicateInfo(album, artist, albumRating, checkedFlag, 
+                myList.add(new DuplicateInfo(album, albumArtist, albumRating, checkedFlag, 
 						errorlevel, discNo, discTotal));
             }
         } catch (SQLException ex) {

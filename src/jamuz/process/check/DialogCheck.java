@@ -1658,9 +1658,9 @@ public class DialogCheck extends javax.swing.JDialog {
             field = "album";
             label = duplicateInfo.getAlbum();
         }
-        else if(!duplicateInfo.getArtist().equals("")) {
+        else if(!duplicateInfo.getAlbumArtist().equals("")) {
             field = "artist";
-            label = duplicateInfo.getArtist();
+            label = duplicateInfo.getAlbumArtist();
         }
         else {
             field = "artist";
@@ -2064,20 +2064,17 @@ public class DialogCheck extends javax.swing.JDialog {
 	}
     
     private void displayMatch(int matchId) throws CloneNotSupportedException {
-
 		enableAddOptions(false);
         progressBar.setIndeterminate(Inter.get("Msg.Scan.SearchingMatches"));  //NOI18N
-
         ReleaseMatch match = folder.getMatch(matchId);//TODO: support match==null (should not happen)
-        Map<String, FolderInfoResult> results = folder.getResults();        
-
+        Map<String, FolderInfoResult> results = folder.getResults(); 
+		
         folder.analyseMatch(matchId, progressBar);
-
+		
         progressBar.setIndeterminate(Inter.get("Msg.Scan.AnalyzingMatch"));  //NOI18N
         FolderInfoResult result = folder.getResults().get("nbFiles");  //NOI18N
         jLabelCheckNbFiles.setText(result.getDisplayText());
         jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());
-        //Also displayed in displayMatch
 
     //DUPLICATES
         jComboBoxCheckDuplicates.removeAllItems();
@@ -2099,7 +2096,6 @@ public class DialogCheck extends javax.swing.JDialog {
     //TRACKS (ARTIST, TITLE, ...)
 
         //Number of files vs tracks
-        
         result = results.get("nbFiles");  //NOI18N
         jLabelCheckNbFiles.setText(result.getDisplayText());
         jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());

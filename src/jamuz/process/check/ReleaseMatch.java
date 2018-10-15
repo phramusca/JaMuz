@@ -68,26 +68,6 @@ public class ReleaseMatch implements java.lang.Comparable {
 		this.year = year;
 		this.tracks = new ArrayList<>();
 		this.idPath = idPath;
-		
-		//Search for duplicates
-        
-        //FIXME CHECK Add type in displayed combo (exact duplicate, ...) if color not enough. 
-		//At least mention "duplicate found: "
-        // or " no duplicates"
-        
-        //FIXME CHECK Support duplicate can be from a various folder (check that original is the complete album)
-        //FIXME CHECK Support check duplicate status (OK, KO,...) and offer to replace if new is better
-        //FIXME CHECK: List all duplicates discNo/discTotal (ex: [1-3], [2-3])
-		
-		this.duplicates = new ArrayList<>();
-		if(checkDuplicateMbId()
-				|| (isDiscPart && checkDuplicateAlbumNumber()) ) {
-			isErrorDuplicate=true;
-		} else if(checkDuplicateAlbum()
-				||checkExactAlbum()
-				||checkSimilarAlbum()) {
-			isWarningDuplicate=true;
-		}
 	}
 	
 	/**
@@ -210,7 +190,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 		this.source = source;
 		this.trackTotal = trackTotal;
 	}
-	
+
 	private boolean checkExactAlbum() {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
 		Jamuz.getDb().checkAlbumExact(myList, album, idPath);
@@ -241,7 +221,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 		return false;
 	}
 	
-	private boolean checkDuplicateAlbumNumber() {
+	private boolean checkDuplicateAlbumArtistNumber() {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
 		Jamuz.getDb().checkAlbumDuplicate(myList, artist, album, idPath, discNb, discTotal);
 		if(myList.size()>0) {
@@ -251,7 +231,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 		return false;
 	}
 	
-	private boolean checkDuplicateAlbum() {
+	private boolean checkSimilarAlbumArtist() {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
 		Jamuz.getDb().checkAlbumDuplicate(myList, artist, album, idPath);
 		if(myList.size()>0) {
@@ -266,7 +246,32 @@ public class ReleaseMatch implements java.lang.Comparable {
 	 * @return
 	 */
 	public List<DuplicateInfo> getDuplicates() {
-		return this.duplicates;
+		if(duplicates==null) {
+			//Search for duplicates
+        
+			//FIXME CHECK Add type in displayed combo (exact duplicate, ...) if color not enough. 
+			//At least mention "duplicate found: "
+			// or " no duplicates"
+
+			//FIXME CHECK Support duplicate can be from a various folder (check that original is the complete album)
+			//FIXME CHECK Support check duplicate status (OK, KO,...) and offer to replace if new is better
+			//FIXME CHECK: List all duplicates discNo/discTotal (ex: [1-3], [2-3])
+
+			//FIXME !! CHECK Not searched soon enough it seems since status is wrong until selected again
+			
+			duplicates = new ArrayList<>();
+			if(		checkDuplicateMbId() 
+					|| (isDiscPart && checkDuplicateAlbumArtistNumber())
+					|| (!isDiscPart && checkSimilarAlbumArtist())) {
+				isErrorDuplicate=true;
+			} else if( 
+					(isDiscPart && checkSimilarAlbumArtist())
+					|| checkSimilarAlbum()
+					|| checkExactAlbum()) {
+				isWarningDuplicate=true;
+			}
+		}
+		return duplicates;
 	}
 
 	/**

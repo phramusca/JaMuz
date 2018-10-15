@@ -25,7 +25,7 @@ public class DuplicateInfo {
     /**
      *
      * @param album
-     * @param artist
+     * @param albumArtist
      * @param rating
      * @param checkedFlag
      * @param errorLevel
@@ -34,14 +34,14 @@ public class DuplicateInfo {
      */
     public DuplicateInfo(
 			String album, 
-			String artist, 
+			String albumArtist, 
 			double rating, 
 			FolderInfo.CheckedFlag checkedFlag, 
 			int errorLevel, 
 			int discNo, 
 			int discTotal) {
         this.album = album;
-        this.artist = artist;
+        this.albumArtist = albumArtist;
         this.rating = rating;
         this.checkedFlag = checkedFlag;
         this.errorLevel = errorLevel;
@@ -69,24 +69,24 @@ public class DuplicateInfo {
         this.album = album;
     }
 
-    private String artist;
+    private String albumArtist;
 
     /**
-     * Get the value of artist
+     * Get the value of albumArtist
      *
-     * @return the value of artist
+     * @return the value of albumArtist
      */
-    public String getArtist() {
-        return artist;
+    public String getAlbumArtist() {
+        return albumArtist;
     }
 
     /**
-     * Set the value of artist
+     * Set the value of albumArtist
      *
-     * @param artist new value of artist
+     * @param artist new value of albumArtist
      */
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setAlbumArtist(String artist) {
+        this.albumArtist = artist;
     }
 
         private double rating;
@@ -182,9 +182,8 @@ public class DuplicateInfo {
 
     @Override
     public String toString() {
-        return "<html><b>" + FolderInfoResult.colorField(
-				"\"" + album + "\" "+" ["+ discNo + "/" + discTotal + "] "
-						+"(\"" + artist + "\")",  //NOI18N
+        return "<html><b>" + FolderInfoResult.colorField("\"" + album + "\" "+" ["+ discNo + "/" + discTotal + "] "
+						+"(\"" + albumArtist + "\")",  //NOI18N
                         errorLevel, false) + "</b> ["+checkedFlag.toString()+"] ["+rating+"]</html>";
     }
 }

@@ -785,7 +785,7 @@ public class ProcessCheck {
 				//Analyse match tracks
                 this.checkAbort();
                 folder.analyseMatchTracks();
-
+				
                 //Select appropriate action
                 if(folder.isValid()) { //ie: no KO result
                     if(folder.getMatches().size()>0) {

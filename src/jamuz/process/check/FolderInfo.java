@@ -1135,7 +1135,6 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public ReleaseMatch getMatch(int matchId) {
-        //TODO: Why matchesL and not matches directly ???
         List<ReleaseMatch> matchesL = getMatches();
         if(matchesL==null) return null;
         
@@ -1165,7 +1164,12 @@ public class FolderInfo implements java.lang.Comparable {
         if(match==null) {
             return;
         }
-		//Assume no duplicates at first
+		
+		results.get("nbFiles").restoreFolderErrorLevel(); //NOI18N
+		//Get match tracks
+		List<Track> tracks=match.getTracks(progressBar);
+		
+		match.getDuplicates();
 		results.get("duplicates").setOK();  //NOI18N
 		if(match.isIsErrorDuplicate()) {
 			results.get("duplicates").setKO();  //NOI18N
@@ -1174,9 +1178,6 @@ public class FolderInfo implements java.lang.Comparable {
 			results.get("duplicates").setWarning();  //NOI18N
 		}
 		
-		results.get("nbFiles").restoreFolderErrorLevel(); //NOI18N
-		//Get match tracks
-		List<Track> tracks=match.getTracks(progressBar);
         progressBar.setIndeterminate(Inter.get("Msg.Scan.SearchingMatches"));  //NOI18N
 		if(match.isOriginal()) {
 			results.get("nbFiles").tooltip=Inter.get("Tooltip.OriginalMatch");  //NOI18N
