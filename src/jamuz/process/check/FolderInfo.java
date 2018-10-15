@@ -97,6 +97,8 @@ public class FolderInfo implements java.lang.Comparable {
 	private Map<String, List<Cover>> coversInternet;
 	private List<Cover> coversTag;
 	
+	private String newGenre;
+	
     private BufferedImage newImage=null;
 	//TODO: ReplayGain: 
 	// - Store information in database by file (so we can check this when checking existing library)
@@ -135,10 +137,6 @@ public class FolderInfo implements java.lang.Comparable {
         this.scanType = scanType;
     }
     
-	/**
-	 * Rating
-	 */
-	protected String rating;
     private String searchKey=null;
 
 	/**
@@ -1243,7 +1241,9 @@ public class FolderInfo implements java.lang.Comparable {
 
             fileInfoDisplay.setAlbumArtist(match.getArtist());
             fileInfoDisplay.setAlbum(match.getAlbum());
-
+			if(newGenre!=null) {
+				fileInfoDisplay.setGenre(newGenre);
+			}
             fileInfoDisplay.isAudioFile=true;
             fileInfoDisplay.coverIconDisplay=IconBufferCover.getCoverIcon(fileAudio, true);
             addRowTag(fileInfoDisplay);
@@ -1933,6 +1933,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @param text
 	 */
 	public void setNewGenre(String text) {
+		newGenre=text;
         filesAudioTableModel.setValueAt(text, 9);
     }
 
@@ -1959,6 +1960,10 @@ public class FolderInfo implements java.lang.Comparable {
 	public void setMbId(String mbId) {
         this.mbId = mbId;
     }
+
+	public String getNewGenre() {
+		return newGenre;
+	}
 	
 	/**
 	 * Checked Flag

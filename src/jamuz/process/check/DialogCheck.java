@@ -131,14 +131,6 @@ public class DialogCheck extends javax.swing.JDialog {
         public void actionPerformed(ActionEvent e) {
             String genre = e.getActionCommand();
             applyGenre(genre);
-            
-            FolderInfoResult result = folder.getResults().get("genre"); //NOI18N
-            if(result.errorLevel<=0 && result.value.equals(genre)) {
-                highlightGenre(result.value, Color.GREEN);
-            }
-            else {
-                highlightGenre(genre, Color.ORANGE);
-            }
         }
     }
 
@@ -1739,7 +1731,8 @@ public class DialogCheck extends javax.swing.JDialog {
 		jButtonCheckOK.setEnabled(enable);
 		jButtonCheckDelete.setEnabled(enable);
         Swing.enableComponents(jPanelGenre, enable);
-		jCheckBoxCheckGenreDisplay.setEnabled(true); //whatever jPanelGenre enabled or not
+		//whatever jPanelGenre enabled or not:
+		jCheckBoxCheckGenreDisplay.setEnabled(true); 
 		jComboBoxCheckMatches.setEnabled(enable);
 		jComboBoxCheckDuplicates.setEnabled(enable);
 		jTextFieldCheckYear.setEnabled(enable);
@@ -1750,7 +1743,6 @@ public class DialogCheck extends javax.swing.JDialog {
         jButtonCheckApplyAlbum.setEnabled(enable);
         jButtonCheckApplyYear.setEnabled(enable);
 		jPanelCheckCoverThumb.setEnabled(enable);
-//		jButtonCheckPreview.setEnabled(enable);
 		jButtonCheckEditTag.setEnabled(enable);
 		jButtonCheckScanner.setEnabled(enable);
 		jButtonSelectOriginal.setEnabled(enable);
@@ -1864,7 +1856,9 @@ public class DialogCheck extends javax.swing.JDialog {
 			//GENRE
 				result = folder.getResults().get("genre"); //NOI18N
                 setAddCheckBox(jCheckBoxCheckGenreDisplay, result);  //NOI18N
-                if(result.errorLevel>0) {
+				if(folder.getNewGenre()!=null) {
+					applyGenre(folder.getNewGenre());
+				} else if(result.errorLevel>0) {
                     highlightGenre(true);
 				}
 				else {
@@ -2172,10 +2166,18 @@ public class DialogCheck extends javax.swing.JDialog {
         progressBar.reset();
 	}
 
-    private void applyGenre(String genre) {
+    private static void applyGenre(String genre) {
 		if(folder.getFilesAudioTableModel() != null) { //Happens at init, because we need to fillup jComboBoxGenre before tableModelAddTags
             folder.setNewGenre(genre);
             displayMatchTracks(9);
+		}
+		
+		FolderInfoResult result = folder.getResults().get("genre"); //NOI18N
+		if(result.errorLevel<=0 && result.value.equals(genre)) {
+			highlightGenre(result.value, Color.GREEN);
+		}
+		else {
+			highlightGenre(genre, Color.ORANGE);
 		}
 	}
 
