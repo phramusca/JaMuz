@@ -1907,11 +1907,11 @@ public class DialogCheck extends javax.swing.JDialog {
 					coverImg.setImage(null);
 					if(folder.getFilesImage().size()>0) {
 						jPanelCheckCoverThumb.setEnabled(true);
-						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.Select"), 2, true)); //NOI18N
+						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.Select"), 2)); //NOI18N
 					}
 					else {
 						jPanelCheckCoverThumb.setEnabled(false);
-						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.None"), 2, true)); //NOI18N
+						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.None"), 2)); //NOI18N
 					}
 				}
 				
@@ -2030,11 +2030,11 @@ public class DialogCheck extends javax.swing.JDialog {
         if(folder.getFirstCoverFromTags()==null) {
             if(folder.getFilesImage().size()>0 || image!=null) {
                 jPanelCheckCoverThumb.setEnabled(true); //TODO: This does not work on jPanelCheckCoverThumb (check all usages)
-                jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.Select"), 2, true)); //NOI18N
+                jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.Select"), 2)); //NOI18N
             }
             else {
                 jPanelCheckCoverThumb.setEnabled(false);
-                jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.None"), 2, true)); //NOI18N
+                jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.None"), 2)); //NOI18N
             }
         }
         

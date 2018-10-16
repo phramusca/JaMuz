@@ -355,7 +355,7 @@ public class FolderInfoResult {
                 return colorField(tagValue, 0);
             }
 		}
-		else if(matchValue.toLowerCase().equals(tagValue.toLowerCase())) {
+		else if(matchValue.trim().toLowerCase().equals(tagValue.trim().toLowerCase())) {
 			this.setWarning(true);
 			return colorField(tagValue, 1);
 		}
