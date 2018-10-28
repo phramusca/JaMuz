@@ -912,10 +912,6 @@ public class FileInfoInt extends FileInfo {
 	public boolean saveBPMtoFileTags() {
 		return this.saveTag(FieldKey.BPM, String.valueOf(getBPM()));
     }
-    
-	public boolean saveGenreToFileTags() {
-		return this.saveTag(FieldKey.GENRE, genre);
-    }
 	
 	/**
 	 *
@@ -951,7 +947,9 @@ public class FileInfoInt extends FileInfo {
 					break;
 			}
 			return true;
-		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException | CannotWriteException ex) {
+		} catch (CannotReadException | IOException | TagException 
+				| ReadOnlyFileException | InvalidAudioFrameException 
+				| CannotWriteException ex) {
 			Popup.error("Error writing \""+key.toString()+"\" to \""+getFullPath()+"\"", ex);  //NOI18N
 			return false;
 		}
@@ -980,14 +978,11 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public boolean updateRating(String rating) {
-        if(this.saveTag(FieldKey.RATING, rating)) {
-            this.rating=Integer.valueOf(rating);
-            if(this.idFile>-1) { //File displayed in player may not be from database (check new)
-                return Jamuz.getDb().updateRating(this);
-            }
-            return true;
+        this.rating=Integer.valueOf(rating);
+		if(this.idFile>-1) { //File displayed in player may not be from database (check new)
+			return Jamuz.getDb().updateRating(this);
 		}
-		return false;
+		return true;
     }
      
 	/**

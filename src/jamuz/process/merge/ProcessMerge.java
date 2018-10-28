@@ -979,14 +979,16 @@ public class ProcessMerge extends ProcessAbstract {
 					checkAbort();
 					//TODO MERGE If aborted, tags will no more be written to file. 
 					if(!fileInfoInt.getGenre().equals("") ) {
-						fileInfoInt.saveGenreToFileTags();
-					} 
+						fileInfoInt.updateGenre(fileInfoInt.getGenre());
+					}
 					else if(fileInfoInt.getBPM()>=0) {
 						fileInfoInt.saveBPMtoFileTags();
 					}
-					//FIXME MERGE Are we updating modifiedDate (path and file) 
-					//and other stats when saving tags (always) ?
-					//+ile.setLastModified() too
+					//FIXME TEST MERGE Are we updating *modifDate 
+					//	(modifDate in path and file 
+							// + ratingModifDate, tagsModifDate & genreModifDate) 
+					//	when saving tags and whererver required
+					//FIXME TEST MERGE Is file.setLastModified() called accordingly ?
 					checkAbort();
 					i.remove();
 				}

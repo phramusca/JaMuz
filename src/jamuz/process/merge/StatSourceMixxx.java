@@ -47,7 +47,7 @@ public class StatSourceMixxx extends StatSourceSQL {
     public boolean setUp() {
         try {
             this.dbConn.connect();
-			//FIXME MERGE mixxx does not update well if folder modification 
+			//FIXME TEST MERGE mixxx does not update well if folder modification 
 			//date is not changed
 			//So need to make some tests and check that we are always updating date 
 			//when modifying files (tags)
