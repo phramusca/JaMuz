@@ -2813,7 +2813,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 			+ "/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating  "
 			+ " FROM path P JOIN file F ON F.idPath=P.idPath ";
     private static final String GROUP_DUPLICATE = 
-			" AND F.deleted=0 AND P.deleted=0 GROUP BY P.idPath";   //NOI18N
+			" AND F.deleted=0 AND P.deleted=0 GROUP BY P.idPath, discNo";   //NOI18N
     
     
     /**
@@ -2890,7 +2890,8 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                 PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE
                     + " WHERE albumArtist LIKE ? "  //NOI18N
-                    + " AND album LIKE ? AND P.idPath!=? "
+                    + " AND album LIKE ? "
+					+ " AND P.idPath!=? "
 					+ " AND discNo=? "
 					+ " AND discTotal=? "
                     + GROUP_DUPLICATE);     //NOI18N

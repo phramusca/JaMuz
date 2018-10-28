@@ -46,7 +46,8 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
         try {
             this.dbConn.connect();
             //http://www.mediamonkey.com/forum/viewtopic.php?f=2&t=25687&sid=34fcd9835844e407f703630b8b4cc7ab&start=15
-            this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement("SELECT SongPath AS fullPath, rating/20 AS rating, playCounter, "
+            this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement(
+					"SELECT SongPath AS fullPath, rating/20 AS rating, playCounter, "
                     + "datetime(LastTimePlayed+2415018.5) AS lastplayed, "
                     + "datetime(DateAdded+2415018.5) AS addedDate, '' AS genre "
                     + "FROM Songs "
@@ -54,7 +55,8 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
 			//FIXME WINDOWS Should not we remove  COLLATE NOCASE as now sync is case sensitive ?	
             //WARNING: Windows is not case-sensitive ... is that a problem ? (maybe for sync)
   
-            this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement("UPDATE Songs SET rating=?*20, "
+            this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement(
+					"UPDATE Songs SET rating=?*20, "
                     + "LastTimePlayed=(strftime('%J', ?) -2415018.5), "
                     + "DateAdded=(strftime('%J', ?) -2415018.5), "
                     + "playCounter=? "

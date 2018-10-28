@@ -1520,9 +1520,6 @@ public class FolderInfo implements java.lang.Comparable {
     
 	private void KO(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            //TODO: Rename path and files as for OK
-            //ONLY IF all needed tags are valid for location.mask
-            //ie: same album artist and same album (for the path) as instance
             Jamuz.getDb().setCheckedFlag(idPath, FolderInfo.CheckedFlag.KO);
         }
         else {
@@ -1615,10 +1612,11 @@ public class FolderInfo implements java.lang.Comparable {
                     moveToLibrary(progressBar, CheckedFlag.OK_WARNING, true);
                     break;
                 case KO:
+					//FIXME LOW CHECK Rename too, if on library
                     KO(progressBar);
                     break;
                 case KO_LIBRARY:
-					//FIXME CHECK Rename too, but need to insure that filename and path are valid
+					//FIXME LOW CHECK Rename too, but need to insure that filename and path are valid
 					//=> Move to an "Issues" folder and replace bad tags by "Missing artist", "Empty album" ...
                     moveToLibrary(progressBar, CheckedFlag.KO, false);
                     break;

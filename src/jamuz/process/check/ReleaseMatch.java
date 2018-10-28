@@ -248,17 +248,10 @@ public class ReleaseMatch implements java.lang.Comparable {
 	public List<DuplicateInfo> getDuplicates() {
 		if(duplicates==null) {
 			//Search for duplicates
-        
-			//FIXME CHECK Add type in displayed combo (exact duplicate, ...) if color not enough. 
-			//At least mention "duplicate found: "
-			// or " no duplicates"
 
-			//FIXME CHECK Support duplicate can be from a various folder (check that original is the complete album)
-			//FIXME CHECK Support check duplicate status (OK, KO,...) and offer to replace if new is better
-			//FIXME CHECK: List all duplicates discNo/discTotal (ex: [1-3], [2-3])
+			//FIXME LOW CHECK duplicate: check that original is the complete album (can be from a various artist/album folder)
+			//FIXME LOW CHECK duplicate: Offer to replace if new is better (OK > OK - Warning (> Manual) > KO)
 
-			//FIXME !! CHECK Not searched soon enough it seems since status is wrong until selected again
-			
 			duplicates = new ArrayList<>();
 			if(		checkDuplicateMbId() 
 					|| (isDiscPart && checkDuplicateAlbumArtistNumber())
