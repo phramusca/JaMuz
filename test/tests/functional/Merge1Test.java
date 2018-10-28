@@ -37,7 +37,7 @@ public class Merge1Test extends TestCase {
 	 */
 	@Test
     public void test() throws Exception {
-		//FIXME TEST Do the same with multi-stat sources
+		//FIXME TEST MERGE Do the same with multi-stat sources
 		//=> Yes, similar to MergeNTest 
 		//BUT without check process and no device
 		

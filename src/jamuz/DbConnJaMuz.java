@@ -2167,7 +2167,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	
 	@Override
 	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
-		//FIXME LOW Include setTags in upupdateStatistics so: 
+		//FIXME MERGE TAGS Include setTags in upupdateStatistics so: 
 		// - it is faster 
 		// - it will be easier to merge tags with other stat sources 
 		int[] results = super.updateStatistics(files); 

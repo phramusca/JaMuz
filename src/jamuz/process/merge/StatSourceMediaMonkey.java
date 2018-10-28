@@ -87,7 +87,7 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
 
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
-		//TODO TAGS get tags from MediaMonkey
+		//FIXME WIDOWS MERGE TAGS get tags from MediaMonkey
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
