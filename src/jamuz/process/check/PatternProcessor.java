@@ -61,11 +61,15 @@ public class PatternProcessor {
         {
             Character c = pattern.charAt(i);
             if(c == '%') {
-                if(!sb.toString().equals(""))
+                if(!sb.toString().equals("")) {
                     params.add(sb.toString());
+				}
                 sb = new StringBuilder();
-				nextChars = pattern.substring(i+1, i+5);
-				if(nextChars.contains("::")) {
+				if((i+1)>=pattern.length()) {
+					break;
+				}
+				if((i+5)<pattern.length() && pattern.substring(i+1, i+5).contains("::")) {
+					nextChars=pattern.substring(i+1, i+5);
 					i+=3;
 				} else {
 					nextChars=String.valueOf(pattern.charAt(i+1));
@@ -94,31 +98,33 @@ public class PatternProcessor {
                 if(posParam<0) return extracted;
                 before = analyzedText.substring(0, posParam);
                 analyzedText = analyzedText.substring(posParam+param.length());
-				paramBefore = params.get(i-1);
-				if(paramBefore.contains("::")) {
-					switch(paramBefore.substring(4, 5)) {
-						case "U":
-							before=before.toUpperCase();
-							break;
-						case "l":
-							before=before.toLowerCase();
-							break;
-						case "c":
-							before=WordUtils.capitalize(before);
-							break;
-						case "C":
-							before=WordUtils.capitalizeFully(before);
-							break;
-						case "u":
-							before=WordUtils.uncapitalize(before);
-							break;
-						case "s":
-							before=WordUtils.swapCase(before);
-							break;
+				if(i>0) {
+					paramBefore = params.get(i-1);
+					if(paramBefore.contains("::")) {
+						switch(paramBefore.substring(4, 5)) {
+							case "U":
+								before=before.toUpperCase();
+								break;
+							case "l":
+								before=before.toLowerCase();
+								break;
+							case "c":
+								before=WordUtils.capitalize(before);
+								break;
+							case "C":
+								before=WordUtils.capitalizeFully(before);
+								break;
+							case "u":
+								before=WordUtils.uncapitalize(before);
+								break;
+							case "s":
+								before=WordUtils.swapCase(before);
+								break;
+						}
+						paramBefore=paramBefore.substring(0, 2);
 					}
-					paramBefore=paramBefore.substring(0, 2);
+					extracted.put(paramBefore, before);
 				}
-                extracted.put(paramBefore, before);
             }
         }
         return extracted;
