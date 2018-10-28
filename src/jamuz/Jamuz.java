@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.conn.params.ConnRoutePNames;
@@ -270,7 +271,11 @@ public class Jamuz {
         String file=appPath;
         for (String subFolder : args) {
             file = FilenameUtils.concat(file, subFolder); //NOI18N
-			//FIXME GLOBAL Create the folders if missing (as done when exporting video)
+			try {
+				FileUtils.forceMkdir(new File(file));
+			} catch (IOException ex) {
+				Logger.getLogger(Jamuz.class.getName()).log(Level.SEVERE, null, ex);
+			}
         } 
         file = FilenameUtils.concat(file, filename); //NOI18N
         return new File(file); //NOI18N
