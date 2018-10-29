@@ -156,7 +156,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="jTextLocation">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1" noResource="true"/>
+        <Property name="text" type="java.lang.String" value="jTextLocation" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelRootPath">
@@ -168,7 +168,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="jTextRootPath">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1" noResource="true"/>
+        <Property name="text" type="java.lang.String" value="jTextRootPath" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonCancel">

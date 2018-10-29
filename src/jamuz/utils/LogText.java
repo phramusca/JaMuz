@@ -48,7 +48,7 @@ public class LogText {
 	public boolean createFile(String LogFileName) {
 		try {
 			//Create LOG file
-			String logFilePath = FilenameUtils.concat(logPath, LogFileName);  //NOI18N
+			String logFilePath = FilenameUtils.concat(logPath, StringManager.removeIllegal(LogFileName));  //NOI18N
 			File f = new File(logFilePath);
 			f.createNewFile(); //Creates if not exist
 			//Open file for writing

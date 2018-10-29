@@ -123,11 +123,11 @@ public class DialogStatSource extends javax.swing.JDialog {
 
         jLabelLocation.setText(bundle.getString("Label.Location")); // NOI18N
 
-        jTextLocation.setText("jTextField1"); // NOI18N
+        jTextLocation.setText("jTextLocation"); // NOI18N
 
         jLabelRootPath.setText(bundle.getString("Label.RootPath")); // NOI18N
 
-        jTextRootPath.setText("jTextField1"); // NOI18N
+        jTextRootPath.setText("jTextRootPath"); // NOI18N
 
         jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
         jButtonCancel.setText(bundle.getString("Button.Cancel")); // NOI18N

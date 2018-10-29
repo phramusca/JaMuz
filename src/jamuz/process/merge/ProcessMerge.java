@@ -1039,9 +1039,9 @@ public class ProcessMerge extends ProcessAbstract {
         String name=selectedStatSource.getSource().getName()
                 +" ["+DateTime.formatUTC(selectedStatSource.lastMergeDate, 
 						DateTime.DateTimeFormat.FILE, false)+"]";
-        if(!logDbSelected.createFile(prefix+"3-"+name + ".txt")) {
+        if(!logDbSelected.createFile(prefix + "3-" + name + ".txt")) {
             Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
-					new Object[] {prefix+name+".txt"}));  //NOI18N
+					new Object[] {prefix + name + ".txt"}));  //NOI18N
             return false;
         }
         return true;
