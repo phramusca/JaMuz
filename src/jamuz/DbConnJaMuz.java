@@ -2145,11 +2145,11 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public boolean getTags(ArrayList<String> tags, int idFile) {
         try {
-            PreparedStatement stSelectPlaylists = dbConn.connection.prepareStatement(
+            PreparedStatement stSelectTags = dbConn.connection.prepareStatement(
                     "SELECT value FROM tag T JOIN tagFile F ON T.id=F.idTag "
 							+ "WHERE F.idFile=?");    //NOI18N
-            stSelectPlaylists.setInt(1, idFile);
-            ResultSet rs = stSelectPlaylists.executeQuery();
+            stSelectTags.setInt(1, idFile);
+            ResultSet rs = stSelectTags.executeQuery();
             while (rs.next()) {
                 tags.add(dbConn.getStringValue(rs, "value"));
             }
@@ -2167,9 +2167,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 	
 	@Override
 	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
-		//FIXME MERGE TAGS Include setTags in upupdateStatistics so: 
-		// - it is faster 
-		// - it will be easier to merge tags with other stat sources 
 		int[] results = super.updateStatistics(files); 
 		return setTags(files, results); 
 	}
@@ -2240,6 +2237,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             if (tags.size() > 0) {
                 dbConn.getConnnection().setAutoCommit(false);
                 int[] results;
+				//FIXME MERGE What if value does not exist ? ex with guayadeque
+				// Ends up that all tags are deleted both side this way
                 PreparedStatement stInsertTagFile = dbConn.getConnnection()
 						.prepareStatement(
 					"INSERT OR IGNORE INTO tagFile "

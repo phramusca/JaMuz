@@ -31,10 +31,8 @@ import jamuz.utils.Inter;
 import jamuz.utils.OS;
 import jamuz.utils.XML;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.filefilter.FileFileFilter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -301,7 +299,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 					if(doc==null) {
 						break;
 					}
-					String uniqueId="";
+					String uniqueId;
 					ArrayList<Element> elements = XML.getElements(doc, "collection");
 					for(Element element : elements) {
 						if(XML.getAttribute(XML.getElement(element, "Type"), "value").equals("0")) {
@@ -322,17 +320,23 @@ public class DialogStatSource extends javax.swing.JDialog {
                 break;
             case 2: // Kodi 	(Linux/Windows)
                 if(OS.isUnix()) {
-					File[] files = FileSystem.replaceHome("~/.kodi/userdata/Database/")
-							.listFiles((File dir, String name) -> name.startsWith("MyMusic") && name.endsWith(".db"));
+					File[] files = FileSystem.replaceHome(
+							"~/.kodi/userdata/Database/")
+							.listFiles((File dir, String name) -> 
+									name.startsWith("MyMusic") 
+											&& name.endsWith(".db"));
 					if (files != null) {
 						for (File file : files) {
 							if((new File(file.getAbsolutePath()).exists())) {
 								StatSourceKodi source = new StatSourceKodi(
-								new DbInfo(DbInfo.LibType.Sqlite, file.getAbsolutePath(), "", ""), 
+								new DbInfo(DbInfo.LibType.Sqlite, 
+										file.getAbsolutePath(), "", ""), 
 								"StatSourceKodi", ""); 
 								if(source.setUp()) {
 									String rootPath=source.guessRootPath();
-									list.add(new Locations(rootPath, source.getLocation(), file.getName()+" : "+rootPath));
+									list.add(new Locations(rootPath, 
+											source.getLocation(), 
+											file.getName()+" : "+rootPath));
 								}
 							}
 						}
@@ -341,14 +345,17 @@ public class DialogStatSource extends javax.swing.JDialog {
 				break;
             case 4: // Mixxx 	(Linux/Windows)
                 if(OS.isUnix()) {
-					String location=FileSystem.replaceHome("~/.mixxx/mixxxdb.sqlite").getAbsolutePath();
+					String location=FileSystem.replaceHome(
+							"~/.mixxx/mixxxdb.sqlite").getAbsolutePath();
 					if((new File(location).exists())) {
 						StatSourceMixxx source = new StatSourceMixxx(
 							new DbInfo(DbInfo.LibType.Sqlite, location, "", ""), 
 							"StatSourceMixxx", ""); 
 						if(source.setUp()) {
 							String rootPath=source.guessRootPath();
-							list.add(new Locations(rootPath, source.getLocation(), source.getLocation()+" : "+rootPath));
+							list.add(new Locations(rootPath, 
+									source.getLocation(), 
+									source.getLocation()+" : "+rootPath));
 						}
 					}
 				}
