@@ -25,9 +25,13 @@ package jamuz.process.merge;
 import jamuz.StatSourceSQL;
 import jamuz.FileInfo;
 import jamuz.DbInfo;
+import jamuz.Jamuz;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 /**
  *
@@ -42,7 +46,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 	 * @param rootPath
 	 */
 	public StatSourceGuayadeque(DbInfo dbInfo, String name, String rootPath) {
-        super(dbInfo, name, rootPath, true, true, false, true, false, false);
+        super(dbInfo, name, rootPath, true, true, false, true, true, false);
     }
 
     @Override
@@ -59,9 +63,12 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 							+ "'' AS genre  "
                     + "FROM songs ORDER BY song_path, song_filename");
             
-            this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement("UPDATE songs SET song_rating=?, song_lastplay=strftime('%s',?), "
-                    + "song_addedtime=strftime('%s',?), song_playcount=? "
-                + "WHERE song_path=? AND song_filename=?");  //NOI18N
+            this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement(
+					"UPDATE songs SET song_rating=?, "
+						+ "song_lastplay=strftime('%s',?), "
+						+ "song_addedtime=strftime('%s',?), "
+						+ "song_playcount=? "
+					+ " WHERE song_path=? AND song_filename=?");  //NOI18N
 
              return true;
         } catch (SQLException ex) {
@@ -94,9 +101,131 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
-		//FIXME MERGE TAGS get tags from Guayadeque
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		try {
+            PreparedStatement stSelectPlaylists = dbConn.getConnnection().prepareStatement(
+                    "SELECT tag_name FROM tags T "
+							+ " JOIN settags ST ON T.tag_id=ST.settag_tagid "
+							+ " JOIN songs S ON ST.settag_songid=S.song_id "
+							+ " WHERE song_path=? AND song_filename=? ");    //NOI18N
+			stSelectPlaylists.setString(1, this.getRootPath()+getPath(file.getRelativePath())); 
+			stSelectPlaylists.setString(2, file.getFilename());
+            ResultSet rs = stSelectPlaylists.executeQuery();
+            while (rs.next()) {
+                tags.add(dbConn.getStringValue(rs, "tag_name"));
+            }
+			return true;
+        } catch (SQLException ex) {
+            Popup.error("getTags("+this.getRootPath()+getPath(file.getRelativePath())+","+file.getFilename()+")", ex);   //NOI18N
+			return false;
+        }
 	}
 
+	@Override
+	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
+		int[] results = super.updateStatistics(files); 
+		return setTags(files, results); 
+	}
+	
+	public synchronized int[] setTags(ArrayList<? extends FileInfo> files, int[] results) {
+		int i=0;
+		for(FileInfo fileInfo : files) {
+			if(fileInfo.getTags()!=null) {
+				if(!setTags(fileInfo.getTags(), fileInfo)) {
+					if(results!=null) {
+						results[i]=0;
+					}
+				}
+			}
+			i++;
+		}
+		return results;
+	}
+	
+	private boolean setTags(ArrayList<String> tags, FileInfo fileInfo) {
+		if(!deleteTagFiles(fileInfo)) {
+			return false;
+		}
+		return insertTagFiles(tags, fileInfo);
+	}
 
+	/**
+	 *
+	 * @param idFile
+	 * @return
+	 */
+	private boolean deleteTagFiles(FileInfo file) {
+        try {
+            PreparedStatement stDeleteTagFiles = dbConn.getConnnection()
+					.prepareStatement(
+					"DELETE FROM settags "
+							+ "WHERE settag_songid=("
+								+ "	SELECT song_id FROM songs "
+								+ " WHERE song_path=? AND song_filename=? ) ");  //NOI18N
+            stDeleteTagFiles.setString(1, getRootPath()+getPath(file.getRelativePath())); 
+			stDeleteTagFiles.setString(2, file.getFilename());
+            long startTime = System.currentTimeMillis();
+            int result = stDeleteTagFiles.executeUpdate();
+            long endTime = System.currentTimeMillis();
+            Jamuz.getLogger().log(Level.FINEST, "stDeleteTagFiles DELETE "
+					+ "// Total execution time: {0}ms", 
+					new Object[]{endTime - startTime});    //NOI18N
+
+            if (result < 0) {
+                Jamuz.getLogger().log(Level.SEVERE, "stDeleteTagFiles, "
+						+ "song_path={0}, song_filename={1}, result={2}", 
+						new Object[]{getRootPath()+getPath(file.getRelativePath()), file.getFilename(), result});   //NOI18N
+            }
+            
+            return true;
+
+        } catch (SQLException ex) {
+            Popup.error("deleteTagFiles("+this.getRootPath()+getPath(file.getRelativePath())+","+file.getFilename()+")", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	private boolean insertTagFiles(ArrayList<String> tags, FileInfo file) {
+        try {
+            if (tags.size() > 0) {
+                dbConn.getConnnection().setAutoCommit(false);
+                int[] results;
+				//FIXME MERGE When tag_name not found, insert it
+				// or we end up with tag_name=null in settags table
+                PreparedStatement stInsertTagFile = dbConn.getConnnection()
+						.prepareStatement(
+					"INSERT  INTO settags "
+                    + "(settag_songid, settag_tagid) "    //NOI18N
+                    + "VALUES ((SELECT song_id FROM songs WHERE song_path=? AND song_filename=?), "
+							+ "(SELECT tag_id FROM tags WHERE tag_name=?))");   //NOI18N
+                for (String tag : tags) {
+					stInsertTagFile.setString(1, getRootPath()+getPath(file.getRelativePath())); 
+					stInsertTagFile.setString(2, file.getFilename());
+                    stInsertTagFile.setString(3, tag);
+                    stInsertTagFile.addBatch();
+                }
+                long startTime = System.currentTimeMillis();
+                results = stInsertTagFile.executeBatch();
+                dbConn.getConnnection().commit();
+                long endTime = System.currentTimeMillis();
+                Jamuz.getLogger().log(Level.FINEST, "insertTagFiles UPDATE // {0} "
+						+ "// Total execution time: {1}ms", 
+						new Object[]{results.length, endTime - startTime});    //NOI18N
+                //Analyse results
+                int result;
+                for (int i = 0; i < results.length; i++) {
+                    result = results[i];
+                    if (result < 0) {
+                        Jamuz.getLogger().log(Level.SEVERE, "insertTagFiles, "
+						+ "song_path={0}, song_filename={1}, result={2}", 
+						new Object[]{getRootPath()+getPath(file.getRelativePath()), file.getFilename(), result});   //NOI18N
+                    }
+                }
+                dbConn.getConnnection().setAutoCommit(true);
+            }
+            return true;
+        } catch (SQLException ex) {
+            Popup.error("insertTagFiles("+this.getRootPath()+getPath(file.getRelativePath())+","+file.getFilename()+")", ex);   //NOI18N
+            return false;
+        }
+    }
 }
