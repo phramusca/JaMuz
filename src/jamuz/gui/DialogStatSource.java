@@ -31,7 +31,10 @@ import jamuz.utils.Inter;
 import jamuz.utils.OS;
 import jamuz.utils.XML;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.io.filefilter.FileFileFilter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -73,6 +76,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 		jCheckBoxSelected.setSelected(statSource.isIsSelected());
 		
 		jComboBoxType.setSelectedIndex(statSource.getIdStatement() - 1);
+//		setLocationAndRootPath();
     }
 
 
@@ -99,6 +103,7 @@ public class DialogStatSource extends javax.swing.JDialog {
         jComboBoxDevice = new javax.swing.JComboBox<>();
         jCheckBoxSelected = new javax.swing.JCheckBox();
         jButtonAuto = new javax.swing.JButton();
+        jComboBoxLocations = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -156,6 +161,12 @@ public class DialogStatSource extends javax.swing.JDialog {
             }
         });
 
+        jComboBoxLocations.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxLocationsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -175,16 +186,17 @@ public class DialogStatSource extends javax.swing.JDialog {
                     .addComponent(jComboBoxDevice, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextLocation, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBoxLocations, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jCheckBoxSelected)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 416, Short.MAX_VALUE)
-                                .addComponent(jButtonCancel))
-                            .addComponent(jTextRootPath))
+                                .addComponent(jButtonCancel)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonSave, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButtonAuto))))
+                            .addComponent(jButtonSave)
+                            .addComponent(jButtonAuto, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(jTextLocation)
+                    .addComponent(jTextRootPath))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -199,16 +211,17 @@ public class DialogStatSource extends javax.swing.JDialog {
                     .addComponent(jTextName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelName))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelLocation)
-                            .addComponent(jTextLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelRootPath)
-                            .addComponent(jTextRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButtonAuto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonAuto, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jComboBoxLocations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelLocation)
+                    .addComponent(jTextLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelRootPath)
+                    .addComponent(jTextRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelDevice)
@@ -218,7 +231,7 @@ public class DialogStatSource extends javax.swing.JDialog {
                     .addComponent(jButtonCancel)
                     .addComponent(jButtonSave)
                     .addComponent(jCheckBoxSelected))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -275,9 +288,8 @@ public class DialogStatSource extends javax.swing.JDialog {
     }//GEN-LAST:event_jComboBoxTypeActionPerformed
 
 	private void setLocationAndRootPath() {
-		String locationFilePath="";
-		String rootPath="";
 		//FIXME WINDOWS (Kodi, MediaMonkey, Mixxx)
+		List list = new ArrayList();
 		switch (jComboBoxType.getSelectedIndex()+1) {
             case 1: // Guayadeque 	(Linux)
 				if(OS.isUnix()) {
@@ -294,61 +306,97 @@ public class DialogStatSource extends javax.swing.JDialog {
 					for(Element element : elements) {
 						if(XML.getAttribute(XML.getElement(element, "Type"), "value").equals("0")) {
 							uniqueId=XML.getAttribute(XML.getElement(element, "UniqueId"), "value");
-//							System.out.println("UniqueId:"+XML.getAttribute(XML.getElement(element, "UniqueId"), "value"));
-//							String name=XML.getAttribute(XML.getElement(element, "Name"), "value");
-//							System.out.println("Name:"+name);
-							rootPath=XML.getAttribute(XML.getElement(element, "Path0"), "value");
-//							System.out.println("Path0:"+XML.getAttribute(XML.getElement(element, "Path0"), "value"));
-							//TODO: Offer choice to select
-							break;
-						}
+							String rootPath=XML.getAttribute(XML.getElement(element, "Path0"), "value");
+							String locationFilePath="~/.guayadeque/Collections/"+uniqueId+"/guayadeque.db";
+							locationFilePath=FileSystem.replaceHome(locationFilePath).getAbsolutePath();
+							list.add(new Locations(rootPath, locationFilePath, uniqueId+" : "+rootPath));
+						} 
+						// Jamendo, Magnatunes not supported external sources
+//						else {
+//							uniqueId=rootPath=XML.getAttribute(XML.getElement(element, "Type"), "value");
+//							locationFilePath=XML.getAttribute(XML.getElement(element, "UniqueId"), "value");
+//							list.add(new Locations(rootPath, locationFilePath, uniqueId+" : "+locationFilePath));
+//						}
 					}
-					locationFilePath+="~/.guayadeque/Collections/"+uniqueId+"/guayadeque.db";
-					locationFilePath=FileSystem.replaceHome(locationFilePath).getAbsolutePath();
 				}
                 break;
             case 2: // Kodi 	(Linux/Windows)
                 if(OS.isUnix()) {
-					String location=FileSystem.replaceHome("~/.kodi/userdata/Database/MyMusic56.db").getAbsolutePath();
-					StatSourceKodi source = new StatSourceKodi(
-							new DbInfo(DbInfo.LibType.Sqlite, location, "", ""), 
-							"StatSourceKodi", ""); 
-					if(source.check()) {
-						if(source.setUp()) {
-							rootPath=source.guessRootPath();
-							locationFilePath=source.getLocation();
+					File[] files = FileSystem.replaceHome("~/.kodi/userdata/Database/")
+							.listFiles((File dir, String name) -> name.startsWith("MyMusic") && name.endsWith(".db"));
+					if (files != null) {
+						for (File file : files) {
+							if((new File(file.getAbsolutePath()).exists())) {
+								StatSourceKodi source = new StatSourceKodi(
+								new DbInfo(DbInfo.LibType.Sqlite, file.getAbsolutePath(), "", ""), 
+								"StatSourceKodi", ""); 
+								if(source.setUp()) {
+									String rootPath=source.guessRootPath();
+									list.add(new Locations(rootPath, source.getLocation(), file.getName()+" : "+rootPath));
+								}
+							}
 						}
 					}
 				} 
 				break;
-            case 3: // MediaMonkey (Windows)
-                break;
             case 4: // Mixxx 	(Linux/Windows)
                 if(OS.isUnix()) {
 					String location=FileSystem.replaceHome("~/.mixxx/mixxxdb.sqlite").getAbsolutePath();
-					StatSourceMixxx source = new StatSourceMixxx(
+					if((new File(location).exists())) {
+						StatSourceMixxx source = new StatSourceMixxx(
 							new DbInfo(DbInfo.LibType.Sqlite, location, "", ""), 
 							"StatSourceMixxx", ""); 
-					if(source.check()) {
 						if(source.setUp()) {
-							rootPath=source.guessRootPath();
-							locationFilePath=source.getLocation();
+							String rootPath=source.guessRootPath();
+							list.add(new Locations(rootPath, source.getLocation(), source.getLocation()+" : "+rootPath));
 						}
 					}
-				}break;
+				}
+				break;
+			case 3: // MediaMonkey (Windows)
+				list.add(new Locations("", "", "No \"Auto\" mode for MediaMonkey"));
+				break;
             case 5: // MyTunes 	(Android)
+				list.add(new Locations("", "", "No \"Auto\" mode for MyTunes"));
 				break;
 			case 6: // JaMuz Remote 	(Android)
+				list.add(new Locations("", "", "No \"Auto\" mode for JaMuz Remote"));
 				break;
             default:
         }
-		jTextLocation.setText(locationFilePath);
-		jTextRootPath.setText(rootPath);
+		if(list.size()<=0) {
+			list.add(new Locations("", "", "No source found."));
+		} 
+		jComboBoxLocations.setModel(new DefaultComboBoxModel(list.toArray()));
+		jComboBoxLocations.setSelectedIndex(0);
+	}
+	
+	private class Locations {
+		private final String rootPath;
+		private final String locationFilePath;
+		private final String display;
+
+		public Locations(String rootPath, String locationFilePath, String display) {
+			this.rootPath = rootPath;
+			this.locationFilePath = locationFilePath;
+			this.display = display;
+		}
+
+		@Override
+		public String toString() {
+			return display;
+		}
 	}
 	
     private void jButtonAutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAutoActionPerformed
         setLocationAndRootPath();
     }//GEN-LAST:event_jButtonAutoActionPerformed
+
+    private void jComboBoxLocationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxLocationsActionPerformed
+        Locations locations = (Locations) jComboBoxLocations.getSelectedItem();
+		jTextLocation.setText(locations.locationFilePath);
+		jTextRootPath.setText(locations.rootPath);
+    }//GEN-LAST:event_jComboBoxLocationsActionPerformed
 
     /**
 	 * Open the GUI
@@ -369,6 +417,7 @@ public class DialogStatSource extends javax.swing.JDialog {
     private javax.swing.JButton jButtonSave;
     private javax.swing.JCheckBox jCheckBoxSelected;
     private javax.swing.JComboBox<Device> jComboBoxDevice;
+    private javax.swing.JComboBox<String> jComboBoxLocations;
     private javax.swing.JComboBox jComboBoxType;
     private javax.swing.JLabel jLabelDevice;
     private javax.swing.JLabel jLabelLocation;

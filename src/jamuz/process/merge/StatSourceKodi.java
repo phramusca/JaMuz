@@ -87,7 +87,6 @@ public class StatSourceKodi extends StatSourceSQL {
 	public String guessRootPath() {
         ResultSet rs = null;
         try {
-            
             PreparedStatement stSelectPath = dbConn.getConnnection().prepareStatement(
 					"SELECT strPath FROM path ORDER BY length(strPath) ASC LIMIT 1");   //NOI18N
             rs = stSelectPath.executeQuery();
