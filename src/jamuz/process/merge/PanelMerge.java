@@ -22,6 +22,7 @@ import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
 import jamuz.gui.PanelMain;
+import jamuz.gui.PanelOptions;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -410,6 +411,9 @@ public class PanelMerge extends javax.swing.JPanel {
             //Read options again (only to read lastMergeDate !!)
             //TODO MERGE Use listeners !!
             PanelMain.setOptions(); 
+			//Refresh tags list
+			Jamuz.readTags(); 
+			PanelOptions.setListTagsModel();
             enableMerge(true);
 		}
 

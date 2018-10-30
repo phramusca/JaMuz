@@ -61,7 +61,6 @@ public class PanelOptions extends javax.swing.JPanel {
 		fillMachineList();
 		progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 		jListGenres.setModel(Jamuz.getGenreListModel());
-		jListTags.setModel(Jamuz.getTagsModel());
 		long size = Long.valueOf(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
 		jSpinnerBytes.getModel().setValue(size);
 		jLabelBytes.setText("("+Inter.get("Label.Keep")+" "+StringManager.humanReadableByteCount(size, false)+")");
@@ -337,7 +336,7 @@ public class PanelOptions extends javax.swing.JPanel {
                     .addComponent(jButtonResetCheckedFlagWarning)
                     .addComponent(jButtonResetCheckedFlagOK))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBarResetChecked, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+                .addComponent(jProgressBarResetChecked, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -647,13 +646,17 @@ public class PanelOptions extends javax.swing.JPanel {
 					// - The tag is added back
 					// - If you then merge forcing JaMuz, all files loose this tag
                     Jamuz.getDb().updateTag((String) jListTags.getSelectedValue(), input); 
-                    Jamuz.readTags(); 
-					jListTags.setModel(Jamuz.getTagsModel());
+					Jamuz.readTags(); 
+                    jListTags.setModel(Jamuz.getTagsModel());
                 } 
             } 
         } 
     }//GEN-LAST:event_jButtonTagsEditActionPerformed
 
+	public static void setListTagsModel() {
+		jListTags.setModel(Jamuz.getTagsModel());
+	}
+	
     private void jButtonTagsDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsDelActionPerformed
         if (jListTags.getSelectedIndex() > -1) { 
             int n = JOptionPane.showConfirmDialog( 
@@ -802,9 +805,9 @@ public class PanelOptions extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelBytes;
     private javax.swing.JLabel jLabelCleanup;
-    private javax.swing.JList jListGenres;
+    private static javax.swing.JList jListGenres;
     private static javax.swing.JList jListMachines;
-    private javax.swing.JList jListTags;
+    private static javax.swing.JList jListTags;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;

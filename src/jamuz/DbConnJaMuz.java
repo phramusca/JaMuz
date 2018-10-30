@@ -26,6 +26,7 @@ import jamuz.Playlist.Field;
 import jamuz.Playlist.Filter;
 import jamuz.Playlist.Operator;
 import jamuz.Playlist.Order;
+import jamuz.gui.PanelOptions;
 import jamuz.process.check.DuplicateInfo;
 import jamuz.remote.ClientInfo;
 import java.io.File;
@@ -2232,22 +2233,56 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 	
+	private boolean isTag(String tag) {
+        ResultSet rs=null;
+        ResultSet keys=null;
+        try {
+            PreparedStatement stSelectMachine = 
+					dbConn.getConnnection().prepareStatement(
+					"SELECT COUNT(*) FROM tag WHERE value=?");   //NOI18N
+            stSelectMachine.setString(1, tag);
+            rs = stSelectMachine.executeQuery();
+            if (rs.getInt(1) > 0) {
+                return true;
+            } else {
+				return insertTag(tag);
+            }
+        } catch (SQLException ex) {
+            Popup.error("isTag(" + tag + ")", ex);   //NOI18N
+            return false;
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            
+            try {
+                if (keys!=null) keys.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            
+        }
+    }
+	
 	private boolean insertTagFiles(ArrayList<String> tags, int idFile) {
         try {
             if (tags.size() > 0) {
                 dbConn.getConnnection().setAutoCommit(false);
                 int[] results;
-				//FIXME MERGE What if value does not exist ? ex with guayadeque
-				// Ends up that all tags are deleted both side this way
                 PreparedStatement stInsertTagFile = dbConn.getConnnection()
 						.prepareStatement(
 					"INSERT OR IGNORE INTO tagFile "
                     + "(idFile, idTag) "    //NOI18N
                     + "VALUES (?, (SELECT id FROM tag WHERE value=?))");   //NOI18N
                 for (String tag : tags) {
-                    stInsertTagFile.setInt(1, idFile);
-                    stInsertTagFile.setString(2, tag);
-                    stInsertTagFile.addBatch();
+					if(isTag(tag)) { //TODO: get id instead of using tag name
+						stInsertTagFile.setInt(1, idFile);
+						stInsertTagFile.setString(2, tag);
+						stInsertTagFile.addBatch();
+					}
                 }
                 long startTime = System.currentTimeMillis();
                 results = stInsertTagFile.executeBatch();

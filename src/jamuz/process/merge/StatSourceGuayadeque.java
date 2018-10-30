@@ -26,6 +26,7 @@ import jamuz.StatSourceSQL;
 import jamuz.FileInfo;
 import jamuz.DbInfo;
 import jamuz.Jamuz;
+import jamuz.gui.PanelOptions;
 import java.sql.SQLException;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
@@ -184,13 +185,61 @@ public class StatSourceGuayadeque extends StatSourceSQL {
         }
     }
 	
+    private boolean isTag(String tag) {
+        ResultSet rs=null;
+        ResultSet keys=null;
+        try {
+            PreparedStatement stSelectMachine = dbConn.getConnnection().prepareStatement(
+					"SELECT COUNT(*), tag_name FROM tags "
+							+ "WHERE tag_name=?");   //NOI18N
+            stSelectMachine.setString(1, tag);
+            rs = stSelectMachine.executeQuery();
+            if (rs.getInt(1) > 0) {
+                return true;
+            } else {
+                //Insert a new tag
+                PreparedStatement stInsertMachine = dbConn.getConnnection().prepareStatement(
+						"INSERT INTO tags (tag_name) VALUES (?)");   //NOI18N
+                stInsertMachine.setString(1, tag);
+                int nbRowsAffected = stInsertMachine.executeUpdate();
+                if (nbRowsAffected == 1) {
+//                    keys = stInsertMachine.getGeneratedKeys();
+//                    keys.next();
+//                    int tag_id = keys.getInt(1);
+                    rs.close();
+                    return true;
+                } else {
+                    Jamuz.getLogger().log(Level.SEVERE, "stInsertMachine, "
+							+ "hostname=\"{0}\" # row(s) affected: +{1}", 
+							new Object[]{tag, nbRowsAffected});   //NOI18N
+                    return false;
+                }
+            }
+        } catch (SQLException ex) {
+            Popup.error("isTag(" + tag + ")", ex);   //NOI18N
+            return false;
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            
+            try {
+                if (keys!=null) keys.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            
+        }
+    }
+
 	private boolean insertTagFiles(ArrayList<String> tags, FileInfo file) {
         try {
             if (tags.size() > 0) {
                 dbConn.getConnnection().setAutoCommit(false);
                 int[] results;
-				//FIXME MERGE When tag_name not found, insert it
-				// or we end up with tag_name=null in settags table
                 PreparedStatement stInsertTagFile = dbConn.getConnnection()
 						.prepareStatement(
 					"INSERT  INTO settags "
@@ -198,10 +247,12 @@ public class StatSourceGuayadeque extends StatSourceSQL {
                     + "VALUES ((SELECT song_id FROM songs WHERE song_path=? AND song_filename=?), "
 							+ "(SELECT tag_id FROM tags WHERE tag_name=?))");   //NOI18N
                 for (String tag : tags) {
-					stInsertTagFile.setString(1, getRootPath()+getPath(file.getRelativePath())); 
-					stInsertTagFile.setString(2, file.getFilename());
-                    stInsertTagFile.setString(3, tag);
-                    stInsertTagFile.addBatch();
+					if(isTag(tag)) { //TODO: get id instead of using tag name
+						stInsertTagFile.setString(1, getRootPath()+getPath(file.getRelativePath())); 
+						stInsertTagFile.setString(2, file.getFilename());
+						stInsertTagFile.setString(3, tag);
+						stInsertTagFile.addBatch();
+					}
                 }
                 long startTime = System.currentTimeMillis();
                 results = stInsertTagFile.executeBatch();
