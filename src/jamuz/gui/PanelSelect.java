@@ -69,7 +69,8 @@ import javax.swing.JMenu;
 //FIXME PLAYER Bug "Kid Creole and the Coconuts"
 //idPath IN (784, 785)
 //=> Album "Best Of" ne s'affiche pas !!!???
-//FIXME PLAYER Bug on Pause: hangs and cannot stop playback sometimes
+
+//FIXME PLAYER Bug on Play/Pause: hangs and cannot stop playback sometimes
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
@@ -185,38 +186,28 @@ public class PanelSelect extends javax.swing.JPanel {
         
         
         //Menu listener
-        ActionListener menuListener = new ActionListener() {
-
-			@Override
-            public void actionPerformed(ActionEvent e) {
-                JMenuItem source = (JMenuItem)(e.getSource());
-                String sourceTxt=source.getText();
-//                String s = "Action event detected."
-//                           + "\n"
-//                           + "    Event source: " + source.getText()
-//                           + " (an instance of " + getClassName(source) + ")";
-//                Popup.info(s);
-                if(sourceTxt.equals(Inter.get("Button.Edit"))) { //NOI18N
-                    menuEdit();
-                }
-                else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueue.text"))) { //NOI18N
-                    menuQueue();
-                }
-                else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueueAll.text"))) { //NOI18N
-                    menuQueueAll();
-                }
-				else if(sourceTxt.equals("Preview")) { //NOI18N
-                    menuPreview();
-                }
-                else if(sourceTxt.equals(Inter.get("Label.Check"))) { //NOI18N
-                    menuCheck();
-                }
-                else {
-                    Popup.error(Inter.get("UNKNOWN MENU ITEM"));
-                }
-                
-            }
-        };
+        ActionListener menuListener = (ActionEvent e) -> {
+			JMenuItem source = (JMenuItem)(e.getSource());
+			String sourceTxt=source.getText();
+			if(sourceTxt.equals(Inter.get("Button.Edit"))) { //NOI18N
+				menuEdit();
+			}
+			else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueue.text"))) { //NOI18N
+				menuQueue();
+			}
+			else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueueAll.text"))) { //NOI18N
+				menuQueueAll();
+			}
+			else if(sourceTxt.equals("Preview")) { //NOI18N
+				menuPreview();
+			}
+			else if(sourceTxt.equals(Inter.get("Label.Check"))) { //NOI18N
+				menuCheck();
+			}
+			else {
+				Popup.error(Inter.get("UNKNOWN MENU ITEM"));
+			}
+		};
         
         JMenuItem  menuItem = new JMenuItem(Inter.get("MainGUI.jButtonSelectQueue.text")); //NOI18N
         menuItem.addActionListener(menuListener);
@@ -958,7 +949,7 @@ public class PanelSelect extends javax.swing.JPanel {
             PanelCheck.check(myFileInfo.getIdPath());			 		
 		}
     }
-    private static Mplayer mplayer= new Mplayer();
+    private static final Mplayer mplayer= new Mplayer();
 	private void menuPreview() {
 		//Getting selected File 		
 		int selectedRow = jTableSelect.getSelectedRow(); 			
