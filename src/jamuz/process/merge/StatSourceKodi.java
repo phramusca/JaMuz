@@ -111,9 +111,7 @@ public class StatSourceKodi extends StatSourceSQL {
 
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
-		//FIXME MERGE TAGS get tags from Kodi
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	
+		//No such thing as tag in kodi, at least when checked
+		throw new UnsupportedOperationException("Not supported yet.");
+	}	
 }

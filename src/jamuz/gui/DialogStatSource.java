@@ -320,27 +320,21 @@ public class DialogStatSource extends javax.swing.JDialog {
                 break;
             case 2: // Kodi 	(Linux/Windows)
                 if(OS.isUnix()) {
-					File[] files = FileSystem.replaceHome(
-							"~/.kodi/userdata/Database/")
-							.listFiles((File dir, String name) -> 
-									name.startsWith("MyMusic") 
-											&& name.endsWith(".db"));
-					if (files != null) {
-						for (File file : files) {
-							if((new File(file.getAbsolutePath()).exists())) {
-								StatSourceKodi source = new StatSourceKodi(
-								new DbInfo(DbInfo.LibType.Sqlite, 
-										file.getAbsolutePath(), "", ""), 
-								"StatSourceKodi", ""); 
-								if(source.setUp()) {
-									String rootPath=source.guessRootPath();
-									list.add(new Locations(rootPath, 
-											source.getLocation(), 
-											file.getName()+" : "+rootPath));
-								}
+					File location=FileSystem.replaceHome("~/.kodi/userdata/profiles");
+					if(location.exists()) {
+						File[] files = location
+								.listFiles((File dir, String name) -> 
+										new File(dir, name).isDirectory());
+						if (files != null) {
+							for (File file : files) {
+								getKodiDatabases(file.getAbsolutePath()+"/Database/", list);
 							}
 						}
-					}
+					} 
+//					else {
+//						getKodiDatabases("~/.kodi/userdata/Database/", list);
+//					}
+					getKodiDatabases("~/.kodi/userdata/Database/", list);
 				} 
 				break;
             case 4: // Mixxx 	(Linux/Windows)
@@ -376,6 +370,29 @@ public class DialogStatSource extends javax.swing.JDialog {
 		} 
 		jComboBoxLocations.setModel(new DefaultComboBoxModel(list.toArray()));
 		jComboBoxLocations.setSelectedIndex(0);
+	}
+	
+	private void getKodiDatabases(String path, List list) {
+		File[] files = FileSystem.replaceHome(path)
+				.listFiles((File dir, String name) -> 
+						name.startsWith("MyMusic") 
+								&& name.endsWith(".db"));
+		if (files != null) {
+			for (File file : files) {
+				if((new File(file.getAbsolutePath()).exists())) {
+					StatSourceKodi source = new StatSourceKodi(
+					new DbInfo(DbInfo.LibType.Sqlite, 
+							file.getAbsolutePath(), "", ""), 
+					"StatSourceKodi", ""); 
+					if(source.setUp()) {
+						String rootPath=source.guessRootPath();
+						list.add(new Locations(rootPath, 
+								source.getLocation(), 
+								file.getName()+" : "+rootPath));
+					}
+				}
+			}
+		}
 	}
 	
 	private class Locations {
