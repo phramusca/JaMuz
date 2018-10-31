@@ -300,7 +300,7 @@ public class PanelMain extends javax.swing.JFrame {
 		FileInfoInt file = queueModel.getPlayingSong().getFile();
 		if(file.isFromLibrary()) {
 			Jamuz.getDb().updateLastPlayedAndCounter(file);
-			//FIXME PLAYER Do not increase playCounter when moved back on queue and moved forward
+			//FIXME LOW PLAYER Do not increase playCounter when moved back on queue and moved forward
 			// especially if many back and forward
 			//If not, increase playCounter too much
 			// => Refer to JaMuzRemote:

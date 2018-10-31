@@ -62,13 +62,13 @@ public class DbConnJaMuz extends StatSourceSQL {
     //TODO DB: How to log SQL generated queries ?
     //http://code.google.com/p/log4jdbc/
     
-    //FIXME REVIEW code review database methods:
+    //FIXME ZZ REVIEW code review database methods:
     //Check that nbRowsAffected is properly checked (==1 or >0 depending)
     //Check that all functions return a boolean and that this one is used
     //Check that batches are used whenever possible and needed
     //http://stackoverflow.com/questions/2467125/reusing-a-preparedstatement-multiple-times
     
-	//FIXME REVIEW: Internationalization
+	//FIXME ZZ REVIEW: Internationalization
 	
     private PreparedStatement stSelectFilesStats4Source;
     private PreparedStatement stSelectFilesStats4SourceAndDevice;
@@ -1772,7 +1772,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 return false;
             }
         } catch (SQLException ex) {
-			//FIXME OPTIONS Happens when the device is linked to a stat source => 
+			//FIXME LOW OPTIONS Happens when the device is linked to a stat source => 
 			// => Popup this nicely to user !
 			//instead of:
 			//java.sql.SQLException: [SQLITE_CONSTRAINT]  

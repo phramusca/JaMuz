@@ -64,6 +64,7 @@ public class PanelOptions extends javax.swing.JPanel {
 		long size = Long.valueOf(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
 		jSpinnerBytes.getModel().setValue(size);
 		jLabelBytes.setText("("+Inter.get("Label.Keep")+" "+StringManager.humanReadableByteCount(size, false)+")");
+		jListTags.setModel(Jamuz.getTagsModel());
 	}
 	
 	public static void fillMachineList() {
@@ -648,14 +649,14 @@ public class PanelOptions extends javax.swing.JPanel {
 					// - If you then merge forcing JaMuz, all files loose this tag
 					// => Make sure that tags are well updated on all sources, incl. JaMuz Remote
                     Jamuz.getDb().updateTag((String) jListTags.getSelectedValue(), input); 
-					Jamuz.readTags(); 
-                    jListTags.setModel(Jamuz.getTagsModel());
+					refreshListTagsModel();
                 } 
             } 
         } 
     }//GEN-LAST:event_jButtonTagsEditActionPerformed
 
-	public static void setListTagsModel() {
+	public static void refreshListTagsModel() {
+		Jamuz.readTags();
 		jListTags.setModel(Jamuz.getTagsModel());
 	}
 	
@@ -667,8 +668,7 @@ public class PanelOptions extends javax.swing.JPanel {
                     JOptionPane.YES_NO_OPTION); 
             if (n == JOptionPane.YES_OPTION) {
                 Jamuz.getDb().deleteTag((String) jListTags.getSelectedValue()); 
-                Jamuz.readTags(); 
-				jListTags.setModel(Jamuz.getTagsModel());
+                refreshListTagsModel();
             } 
         } 
     }//GEN-LAST:event_jButtonTagsDelActionPerformed
@@ -680,8 +680,7 @@ public class PanelOptions extends javax.swing.JPanel {
             Popup.warning(MessageFormat.format(Inter.get("Msg.Options.Tag.Exists"), input));  //NOI18N 
         } else if (!input.equals("")) {  //NOI18N 
             Jamuz.getDb().insertTag(input); 
-            Jamuz.readTags(); 
-			jListTags.setModel(Jamuz.getTagsModel());
+            refreshListTagsModel();
         }
     }//GEN-LAST:event_jButtonTagsAddActionPerformed
 

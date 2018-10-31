@@ -325,13 +325,10 @@ public class FolderInfo implements java.lang.Comparable {
 	}
 	
 	private boolean scanDeletedFiles(ProgressBar progressBar) {
-		
-//        progressBar.setIndeterminate("Listing files"); //TODO: Inter
         //Get list of files from library exluding the one(s) already set as deleted
 		if(!Jamuz.getDb().getFiles(filesDb, idPath, false)) {
 			return false;
 		}
-
 		//Loop on those files
         progressBar.setup(filesDb.size());
 		for (FileInfoInt fileDB : filesDb) {
@@ -377,13 +374,6 @@ public class FolderInfo implements java.lang.Comparable {
 		if(idPath<0) {
 			idPath = Jamuz.getDb().getIdPath(relativePath);
 		}
-
-//		if(isWarning()) {
-//			checkedFlag=CheckedFlag.OK_WARNING;
-//		}
-//		else {
-//			checkedFlag=CheckedFlag.OK;
-//		}
 
 		if(idPath>=0) {
 			return updateInDb(checkedFlag);
@@ -491,7 +481,6 @@ public class FolderInfo implements java.lang.Comparable {
 						filesOther.add(myFileInfoNew);
 					}
 				}
-//				progressBar.progress(": "+file.getName());  //NOI18N
                 progressBar.progress(": "+relativeFullPath);  //NOI18N
 			}
 			progressBar.reset();
