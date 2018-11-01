@@ -69,6 +69,11 @@ public class DbConnJaMuz extends StatSourceSQL {
     //http://stackoverflow.com/questions/2467125/reusing-a-preparedstatement-multiple-times
     
 	//FIXME ZZ REVIEW: Internationalization
+	// ( !! Test at each step !! )
+	// 1 - Use BundleScanner to remove uneeded entries
+	// 2 - Use NetBeans editor to merge duplicate entries if applicable
+	// 3 - Use NetBeans internationalization tool
+	// 4 - Run and manually find missing translations (en / fre)
 	
     private PreparedStatement stSelectFilesStats4Source;
     private PreparedStatement stSelectFilesStats4SourceAndDevice;
@@ -176,7 +181,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             stUpdateTag.setString(2, oldTag);
             int nbRowsAffected = stUpdateTag.executeUpdate();
             if (nbRowsAffected == 1) {
-                return true;
+                return updateTagsModifDate(newTag);
             } else {
                 Jamuz.getLogger().log(Level.SEVERE, "stUpdateTag, oldTag={0}, "
 						+ "newTag={1} # row(s) affected: +{2}", 
@@ -185,6 +190,30 @@ public class DbConnJaMuz extends StatSourceSQL {
             }
         } catch (SQLException ex) {
             Popup.error("updateTag(" + oldTag + ", " + newTag + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	private synchronized boolean updateTagsModifDate(String newTag) {
+        try {
+            PreparedStatement stUpdateTagsModifDate = dbConn.getConnnection().prepareStatement(
+					"UPDATE file SET tagsModifDate=datetime('now') " + 
+					"WHERE idFile=(SELECT TF.idFile\n" +
+						"FROM tag T \n" +
+						"JOIN tagfile TF ON TF.idTag=T.id \n" +
+						"WHERE T.value=?)");  //NOI18N
+            stUpdateTagsModifDate.setString(1, newTag);
+            int nbRowsAffected = stUpdateTagsModifDate.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateTagsModifDate, "
+						+ "newTag={0} # row(s) affected: +{1}", 
+						new Object[]{newTag, nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("updateTagsModifDate(" + newTag + ")", ex);   //NOI18N
             return false;
         }
     }
@@ -2201,11 +2230,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return insertTagFiles(tags, idFile);
 	}
 
-	/**
-	 *
-	 * @param idFile
-	 * @return
-	 */
 	private boolean deleteTagFiles(int idFile) {
         try {
             PreparedStatement stDeleteTagFiles = dbConn.getConnnection()

@@ -606,7 +606,9 @@ public class PanelOptions extends javax.swing.JPanel {
     private void jButtonGenresDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenresDelActionPerformed
         if (jListGenres.getSelectedIndex() > -1) { 
             int n = JOptionPane.showConfirmDialog( 
-                    this, MessageFormat.format(Inter.get("Msg.Options.DeleteGenre"), jListGenres.getSelectedValue()), //NOI18N 
+                    this, MessageFormat.format(
+							Inter.get("Msg.Options.DeleteGenre"), 
+							jListGenres.getSelectedValue()), //NOI18N 
                     Inter.get("Label.Confirm"), //NOI18N 
                     JOptionPane.YES_NO_OPTION); 
             if (n == JOptionPane.YES_OPTION) { 
@@ -618,7 +620,8 @@ public class PanelOptions extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonGenresDelActionPerformed
 
     private void jButtonRetagAllFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRetagAllFilesActionPerformed
-        //To re-save all files and remove all remaining unwanted tags, especially ID3v1 and POPM (popularity meter) that Guayadeque can use and  
+        //To re-save all files and remove all remaining unwanted tags, 
+		//	especially ID3v1 and POPM (popularity meter) that Guayadeque can use and  
 		//messes up with the syncing if not used with extra care 
 		//TODO: Add a reset "saved" field in file table, as done for CheckedFlag 
 
@@ -636,19 +639,19 @@ public class PanelOptions extends javax.swing.JPanel {
 
     private void jButtonTagsEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsEditActionPerformed
         if (jListTags.getSelectedIndex() > -1) { 
-            String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.Tag.New"), jListTags.getSelectedValue());  //NOI18N 
+            String input = JOptionPane.showInputDialog(null, 
+					Inter.get("Msg.Options.Tag.New"), 
+					jListTags.getSelectedValue());  //NOI18N 
             if (input != null) { 
                 int n = JOptionPane.showConfirmDialog( 
-                        this, MessageFormat.format(Inter.get("Msg.Options.Tag.Update"), jListTags.getSelectedValue(), input), //NOI18N 
+                        this, MessageFormat.format(
+								Inter.get("Msg.Options.Tag.Update"), 
+								jListTags.getSelectedValue(), input), //NOI18N 
                         Inter.get("Label.Confirm"), //NOI18N 
                         JOptionPane.YES_NO_OPTION); 
-                if (n == JOptionPane.YES_OPTION) { 
-					//FIXME MERGE Renaming a tag issues merge 
-					// (and that was before merge with guayadeque and mixxx for user tags) :
-					// - The tag is added back
-					// - If you then merge forcing JaMuz, all files loose this tag
-					// => Make sure that tags are well updated on all sources, incl. JaMuz Remote
-                    Jamuz.getDb().updateTag((String) jListTags.getSelectedValue(), input); 
+                if (n == JOptionPane.YES_OPTION) {
+                    Jamuz.getDb().updateTag((String) 
+							jListTags.getSelectedValue(), input); 
 					refreshListTagsModel();
                 } 
             } 
@@ -663,7 +666,9 @@ public class PanelOptions extends javax.swing.JPanel {
     private void jButtonTagsDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsDelActionPerformed
         if (jListTags.getSelectedIndex() > -1) { 
             int n = JOptionPane.showConfirmDialog( 
-                    this, MessageFormat.format(Inter.get("Msg.Options.Tag.Delete"), jListTags.getSelectedValue()), //NOI18N 
+                    this, MessageFormat.format(
+							Inter.get("Msg.Options.Tag.Delete"), 
+							jListTags.getSelectedValue()), //NOI18N 
                     Inter.get("Label.Confirm"), //NOI18N 
                     JOptionPane.YES_NO_OPTION); 
             if (n == JOptionPane.YES_OPTION) {
