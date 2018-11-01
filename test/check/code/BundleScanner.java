@@ -16,6 +16,7 @@
  */
 package check.code;
 
+import jamuz.Jamuz;
 import jamuz.utils.FileSystem;
 import java.io.BufferedReader;
 import java.io.File;
@@ -184,9 +185,9 @@ public class BundleScanner {
                 if (br != null)
                     br.close();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                System.err.println("Exception while closing bufferedreader " + e.toString());
+				Jamuz.getLogger().log(Level.SEVERE, "Exception while closing bufferedreader ", ex); 
             }
         }
     }

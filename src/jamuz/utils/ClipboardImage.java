@@ -16,12 +16,14 @@
  */
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.util.logging.Level;
 
 /**
  *
@@ -42,16 +44,14 @@ public class ClipboardImage {
 			{
 				return (Image) transferable.getTransferData(DataFlavor.imageFlavor);
 			}
-			catch (UnsupportedFlavorException | IOException e)
+			catch (UnsupportedFlavorException | IOException ex)
 			{
-				//TODO: handle this as desired
-				e.printStackTrace();
+				Jamuz.getLogger().log(Level.SEVERE, "getImageFromClipboard: ", ex); 
 			}
 		}
 		else
 		{
-			//TODO: handle this as desired
-			System.err.println("getImageFromClipboard: That wasn't an image!");
+			Jamuz.getLogger().log(Level.SEVERE, "getImageFromClipboard: That wasn't an image!"); 
 		}
 		return null;
 	}

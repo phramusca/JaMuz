@@ -270,7 +270,9 @@ public class Mplayer implements Runnable {
 			//Start process
 			String[] stockArr = new String[cmdArray.size()];
 			stockArr = cmdArray.toArray(stockArr);
+			Jamuz.getLogger().log(Level.FINEST, "Starting");  //NOI18N
 			process = runtime.exec(stockArr);
+			Jamuz.getLogger().log(Level.FINEST, "Started");  //NOI18N
 
 			writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 			inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -283,7 +285,6 @@ public class Mplayer implements Runnable {
 						errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 						String line;
 						while((line = errorReader.readLine()) != null) {
-							System.err.println("errorReader: "+line);
 							Jamuz.getLogger().log(Level.SEVERE, line);  //NOI18N
 						}
 					} catch(IOException ex) {
@@ -301,7 +302,7 @@ public class Mplayer implements Runnable {
 				}
 			};
 			readErrorThread.start();
-			
+			Jamuz.getLogger().log(Level.FINEST, "Waiting");  //NOI18N
 			process.waitFor(1, TimeUnit.SECONDS);
 			
 			positionUpdater = new Updater();
@@ -311,11 +312,8 @@ public class Mplayer implements Runnable {
 					
 			//Waiting for process
 			process.waitFor();
-			
+			Jamuz.getLogger().log(Level.FINEST, "Waited");  //NOI18N
 			synchronized(lockPlayer) {
-			
-	//			readInputThread.join();
-	//			readErrorThread.join();
 				Jamuz.getLogger().finest("Playback finished");  //NOI18N
 
 				if(positionUpdater!=null) {
@@ -374,9 +372,11 @@ public class Mplayer implements Runnable {
 	public String play(String filePath, boolean resume) {
 		synchronized(lockPlayer) {
 			try {
+				Jamuz.getLogger().log(Level.INFO, "Stoping");  //NOI18N
 				if(this.stop()) {
-					lockPlayer.wait();
+					lockPlayer.wait(5000);
 				}
+				Jamuz.getLogger().log(Level.INFO, "Stopped");  //NOI18N
 
 				this.filePath = filePath;
 
@@ -423,15 +423,15 @@ public class Mplayer implements Runnable {
 	private String execute(String command, String expected) {
 		if (process != null && process.isAlive()) {
 			try {
-//				System.out.println("Send to MPlayer the command \"" + command + "\" and expecting "
-//						+ (expected != null ? "\"" + expected + "\"" : "no answer"));
+				Jamuz.getLogger().log(Level.FINEST, "Send to MPlayer the command \"{0}\" and expecting {1}", 
+						new Object[]{command, expected != null ? "\"" + expected + "\"" : "no answer"});  //NOI18N
 				writer.write(command);
 				writer.write("\n");
 				writer.flush();
-//				System.out.println("Command sent");
+				Jamuz.getLogger().log(Level.FINEST, "Command sent");  //NOI18N
 				if (expected != null) {
 					String response = waitForAnswer(expected);
-//					System.out.println("MPlayer command response: " + response);
+					Jamuz.getLogger().log(Level.FINEST, "MPlayer command response: {0}", response);  //NOI18N
 					return response;
 				}
 			} catch (IOException ex) {
@@ -453,7 +453,6 @@ public class Mplayer implements Runnable {
 		if (expected != null) {
 			try {
 				while ((line = inputReader.readLine()) != null) {
-//					System.out.println("Reading line: " + line);
 					if (line.startsWith(expected)) {
 						return line;
 					}
