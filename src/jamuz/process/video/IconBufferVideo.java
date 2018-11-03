@@ -31,6 +31,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
+import jamuz.utils.Utils;
 
 /**
  *
@@ -102,8 +103,7 @@ public class IconBufferVideo {
     private static ImageIcon readIconFromInternet(String url) {
         ImageIcon icon=null;
         try {
-            URL myURL = new URL(url);
-            BufferedImage myImage = ImageIO.read(myURL);
+            BufferedImage myImage = ImageIO.read(Utils.getFinalURL(url));
             icon = new ImageIcon(((new ImageIcon(myImage).getImage())
 					.getScaledInstance(-1, IconBufferVideo.ICON_HEIGHT, 
 							java.awt.Image.SCALE_SMOOTH)));
@@ -119,10 +119,10 @@ public class IconBufferVideo {
             ImageIO.write(bi, "png", getCacheFile(url)); //NOI18N
             
 		} catch (IIOException ex) {
-            Jamuz.getLogger().log(Level.FINE, "", ex);
+            Jamuz.getLogger().log(Level.FINEST, url, ex);
         }
         catch (IOException | NullPointerException ex) {
-			Jamuz.getLogger().log(Level.FINE, "", ex);
+			Jamuz.getLogger().log(Level.FINEST, url, ex);
 		}
         return icon;
     }

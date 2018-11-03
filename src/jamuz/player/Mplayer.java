@@ -258,7 +258,6 @@ public class Mplayer implements Runnable {
 			cmdArray.add("-ao");
 			cmdArray.add("alsa:device="+audioCard.getValue());
 		}
-
 		
 		cmdArray.add("-slave");
 		cmdArray.add("-quiet");
@@ -423,15 +422,15 @@ public class Mplayer implements Runnable {
 	private String execute(String command, String expected) {
 		if (process != null && process.isAlive()) {
 			try {
-				Jamuz.getLogger().log(Level.FINEST, "Send to MPlayer the command \"{0}\" and expecting {1}", 
-						new Object[]{command, expected != null ? "\"" + expected + "\"" : "no answer"});  //NOI18N
+//				Jamuz.getLogger().log(Level.FINEST, "Send to MPlayer the command \"{0}\" and expecting {1}", 
+//						new Object[]{command, expected != null ? "\"" + expected + "\"" : "no answer"});  //NOI18N
 				writer.write(command);
 				writer.write("\n");
 				writer.flush();
-				Jamuz.getLogger().log(Level.FINEST, "Command sent");  //NOI18N
+//				Jamuz.getLogger().log(Level.FINEST, "Command sent");  //NOI18N
 				if (expected != null) {
 					String response = waitForAnswer(expected);
-					Jamuz.getLogger().log(Level.FINEST, "MPlayer command response: {0}", response);  //NOI18N
+//					Jamuz.getLogger().log(Level.FINEST, "MPlayer command response: {0}", response);  //NOI18N
 					return response;
 				}
 			} catch (IOException ex) {

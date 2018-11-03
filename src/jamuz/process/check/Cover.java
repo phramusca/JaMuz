@@ -28,6 +28,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import jamuz.utils.Popup;
 import jamuz.utils.Inter;
+import jamuz.utils.Utils;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -147,8 +148,7 @@ public class Cover implements java.lang.Comparable {
 		BufferedImage myImage=null;
 		try {
 			if(type.equals(CoverType.URL)) {
-                URL myURL = new URL(this.value);
-                myImage = ImageIO.read(myURL);
+                myImage = ImageIO.read(Utils.getFinalURL(value));
             }
             else if(type.equals(CoverType.FILE)) {
                 File file = new File(this.value); 

@@ -16,6 +16,9 @@
  */
 package jamuz.utils;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,5 +56,19 @@ public class Utils {
             return -1;
         }
     }
+	
+	public static URL getFinalURL(String url) throws IOException {
+		HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+		con.setInstanceFollowRedirects(false);
+		con.connect();
+		con.getInputStream();
+
+		if (con.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM 
+				|| con.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
+			String redirectUrl = con.getHeaderField("Location");
+			return getFinalURL(redirectUrl);
+		}
+		return new URL(url);
+	}
 	
 }
