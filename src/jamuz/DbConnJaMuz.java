@@ -26,7 +26,6 @@ import jamuz.Playlist.Field;
 import jamuz.Playlist.Filter;
 import jamuz.Playlist.Operator;
 import jamuz.Playlist.Order;
-import jamuz.gui.PanelOptions;
 import jamuz.process.check.DuplicateInfo;
 import jamuz.remote.ClientInfo;
 import java.io.File;
@@ -2621,8 +2620,9 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         ResultSet rs=null;
         try {
             st = dbConn.connection.createStatement();
+			//FIXME LOW PanelSelect better validate year (but regex is not available by default :( )
             rs = st.executeQuery("SELECT "+maxOrMin+"(year) FROM file "
-					+ "WHERE year GLOB '[0-9][0-9][0-9][0-9]'"); 
+					+ "WHERE year GLOB '[0-9][0-9][0-9][0-9]' AND length(year)=4"); 
 						//To exclude wrong entries (not YYYY format)
             return rs.getDouble(1);
 
@@ -3062,7 +3062,12 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                 " \nWHERE F.deleted=0 AND P.deleted=0 "    //NOI18N
                 + " \nAND F.rating IN " + getCSVlist(selRatings) 
                 + " \nAND P.checked IN " + getCSVlist(selCheckedFlag)  //NOI18N
-                + " \nAND F.year>=" + yearFrom + " AND F.year<=" + yearTo    //NOI18N //NOI18N
+				//FIXME LOW PanelSelect Check year valid and offer "allow invalid" as an option
+				//https://stackoverflow.com/questions/5071601/how-do-i-use-regex-in-a-sqlite-query
+//				else if(yearList.get(0).matches("\\d{4}")) {  //NOI18N
+//					results.get("year").value=yearList.get(0);  //NOI18N
+//				}
+                + " \nAND ((F.year>=" + yearFrom + " AND F.year<=" + yearTo +") OR length(F.year)!=4)"   //NOI18N //NOI18N
                 + " \nAND F.BPM>=" + bpmFrom + " AND F.BPM<=" + bpmTo;    //NOI18N //NOI18N
 
         if (!selGenre.equals("%")) {  //NOI18N
