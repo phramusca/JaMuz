@@ -1337,8 +1337,8 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanelPlayerCoverMousePressed
 
     private void jButtonPlayerPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlayerPlayActionPerformed
-        if (jButtonPlayerPlay.getText().equals(Inter.get("Button.Pause"))) { //NOI18N
-            pause();
+		if (jButtonPlayerPlay.getText().equals(Inter.get("Button.Pause"))) { //NOI18N
+			pause();
         } else {
 			//resume
             playSelected(true);

@@ -22,7 +22,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -107,7 +106,6 @@ public class IconBufferVideo {
             icon = new ImageIcon(((new ImageIcon(myImage).getImage())
 					.getScaledInstance(-1, IconBufferVideo.ICON_HEIGHT, 
 							java.awt.Image.SCALE_SMOOTH)));
-            
             //Write to cache
             BufferedImage bi = new BufferedImage(
 					icon.getImage().getWidth(null),
@@ -126,5 +124,4 @@ public class IconBufferVideo {
 		}
         return icon;
     }
-
 }

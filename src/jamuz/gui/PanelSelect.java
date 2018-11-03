@@ -70,7 +70,6 @@ import javax.swing.JMenu;
 //idPath IN (784, 785)
 //=> Album "Best Of" ne s'affiche pas !!!???
 
-//FIXME PLAYER Bug on Play/Pause: hangs and cannot stop playback sometimes
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
