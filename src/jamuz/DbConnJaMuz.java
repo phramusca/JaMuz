@@ -2082,8 +2082,12 @@ public class DbConnJaMuz extends StatSourceSQL {
                 sql = "SELECT checked, strPath, name, coverHash, album, artist, albumArtist, year, "
                         + "ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, " +  //NOI18N
                         "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"  //NOI18N
+						//FIXME LOW PanelSelect SELECT BY idPath (as grouped)
+							//ex: Album "Charango" is either from Morcheeba or Yannick Noah
+							//BUT files from both album are displayed in both cases
+							//(WAS seen as only one album in Select tab, before group by idPath)
                         + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
-                sql += " GROUP BY album ";
+                sql += " GROUP BY P.idPath ";
                 sql += " HAVING (sum(case when rating IN "+getCSVlist(selRatings)+" then 1 end))>0 ";
                 sql += " ORDER BY " + sqlOrder;
                 break;
@@ -2204,7 +2208,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		int i=0;
 		for(FileInfo fileInfo : files) {
 			if(fileInfo.getTags()!=null) {
-				//FIXME LOW Update tags and date in the same transaction 
+				//FIXME LOW MERGE Update tags and date in the same transaction 
 				//so it can be rolled back and probably faster
 				if(!setTags(fileInfo.getTags(), fileInfo.getIdFile())) {
 					if(results!=null) {

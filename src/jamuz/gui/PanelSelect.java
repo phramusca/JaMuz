@@ -83,9 +83,7 @@ public class PanelSelect extends javax.swing.JPanel {
     private static String selGenre; //TODO: Deriver ListElement et l'appliquer a selGenre (pour affichage icone de la même façon)
 	private static ListElement selArtist;
 	private static ListElement selAlbum; 
-	//FIXME PLAYER ex: Album "Charango" is either from Morcheeba or Yannick Noah
-    //BUT seen as only one album in Select tab
-
+	
 	/**
 	 *
 	 */
@@ -304,7 +302,7 @@ public class PanelSelect extends javax.swing.JPanel {
         double minYear = Jamuz.getDb().getYear("MIN"); //NOI18N
         minYear = (10*Math.floor(minYear/10));
         double maxYear = Jamuz.getDb().getYear("MAX"); //NOI18N
-        maxYear = (10*Math.ceil(maxYear/10));
+        maxYear = (10*Math.ceil(maxYear/10))+10;
         SpinnerModel yearModel; 
         yearModel = new SpinnerNumberModel(minYear, minYear, maxYear, 10.0);
         jSpinnerSelectYearFrom.setModel(yearModel);
