@@ -190,7 +190,10 @@ public class PanelMain extends javax.swing.JFrame {
 		MPlaybackListener mPlaybackListener = new MPlaybackListener() {
 			@Override
 			public void volumeChanged(float volume) {
-				jSpinnerVolume.getModel().setValue(volume);
+				if(volume>=0) {
+					volume=5*Math.round(volume/5);
+					jSpinnerVolume.getModel().setValue((float)volume);
+				}
 			}
 
 			@Override

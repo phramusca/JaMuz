@@ -397,7 +397,7 @@ public class Mplayer implements Runnable {
 	 * @param command
 	 *            the command to be sent
 	 */
-	private void execute(String command) {
+	private synchronized void execute(String command) {
 		execute(command, null);
 	}
 	
@@ -410,7 +410,7 @@ public class Mplayer implements Runnable {
 	 *            the string with which has to start the line; if null don't wait for an answer
 	 * @return the MPlayer answer
 	 */
-	private String execute(String command, String expected) {
+	private synchronized String execute(String command, String expected) {
 		if (process != null && process.isAlive()) {
 			try {
 //				Jamuz.getLogger().log(Level.FINEST, "Send to MPlayer the command \"{0}\" and expecting {1}", 
@@ -467,7 +467,7 @@ public class Mplayer implements Runnable {
 	/**
 	 * @return time position
 	 */
-	public double getPosition() {
+	public synchronized double getPosition() {
 		return getPropertyAsDouble("time_pos");
 	}
 	
@@ -476,7 +476,7 @@ public class Mplayer implements Runnable {
 	 * @param name
 	 * @return
 	 */
-	protected double getPropertyAsDouble(String name) {
+	protected synchronized double getPropertyAsDouble(String name) {
 		try {
 			String valueS = getProperty(name);
 			double valueL = Double.parseDouble(valueS);
@@ -491,7 +491,7 @@ public class Mplayer implements Runnable {
 	 * @param name
 	 * @return
 	 */
-	protected float getPropertyAsFloat(String name) {
+	protected synchronized float getPropertyAsFloat(String name) {
 		try {
 			String valueS = getProperty(name);
 			return Float.parseFloat(valueS);
@@ -505,7 +505,7 @@ public class Mplayer implements Runnable {
 	 * @param name
 	 * @return
 	 */
-	protected String getProperty(String name) {
+	protected synchronized String getProperty(String name) {
 		if (name == null || process == null || !process.isAlive()) {
 			return null;
 		}
@@ -529,7 +529,7 @@ public class Mplayer implements Runnable {
 	/**
 	 * @return volume
 	 */
-	public float getVolume() {
+	public synchronized float getVolume() {
 		return getPropertyAsFloat("volume");
 	}
 	
