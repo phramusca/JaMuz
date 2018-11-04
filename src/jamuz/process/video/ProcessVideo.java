@@ -205,7 +205,8 @@ public class ProcessVideo extends ProcessAbstract {
         }
 
 		//Connect to database
-		if (Jamuz.getOptions().get("video.dbLocation") == null) {
+		String dbLocation = Jamuz.getOptions().get("video.dbLocation");
+		if (dbLocation == null || dbLocation.trim().equals("")) {
 			return false; 
 		}
 		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, 
@@ -237,6 +238,8 @@ public class ProcessVideo extends ProcessAbstract {
 				//TODO: Explain that backup kodi db is not available
 				//and so user must first run video process with "Get Db" checked
 				Popup.error(java.text.MessageFormat.format(Inter.get("Error.PathNotFound"), new Object[] {kodiBackupFile})); //NOI18N
+				return false;
+			} else if(kodiDbFile.isDirectory()) {
 				return false;
 			}
             connKodi.getInfo().setLocationWork(kodiBackupFile); //NOI18N
