@@ -163,7 +163,7 @@ public class MergeNTest extends TestCase {
         }
         
 		/***********************************************************
-		 * Check library in order to modiy path and filenames
+		 * Check library in order to modify path and filenames
 		 * Set genre, cover and SAVE action
 		 * Apply changes
 		***********************************************************/
