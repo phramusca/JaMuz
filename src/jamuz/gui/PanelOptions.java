@@ -756,7 +756,7 @@ public class PanelOptions extends javax.swing.JPanel {
 							checkAbort();
 							progressBar.progress(folderInfo.folder.getName());
 							totalSize+=folderInfo.size;
-							//FIXME: LOW Replace all System.out and .err by JaMuz.getLogger
+							//FIXME LOW GLOBAL Replace all System.out and .err by JaMuz.getLogger
 							System.out.println(folderInfo.folder.getName()
 									+" ("+StringManager.humanReadableByteCount(
 											folderInfo.size, true)+")"

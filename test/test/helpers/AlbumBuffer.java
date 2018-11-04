@@ -44,8 +44,7 @@ public class AlbumBuffer {
      * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
      */
     public static Album getAlbum(String mbId, String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		
-        String key = mbId + "--" + version;
+		String key = mbId + "--" + version;
         
         if(albums.containsKey(key)) {
             return albums.get(key);
@@ -57,6 +56,4 @@ public class AlbumBuffer {
         
         return album;
 	}
-    
-
 }

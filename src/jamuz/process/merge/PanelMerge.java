@@ -356,9 +356,13 @@ public class PanelMerge extends javax.swing.JPanel {
 					sources.add(statSource);
                 }
             }
-            processMerge = new ProcessMerge("Thread.PanelMerge.ProcessMerge", sources, 
-					jCheckBoxMergeSimulate.isSelected(), jCheckBoxMergeForce.isSelected(), 
-					null, progressBar, new CallBackMerge());
+            processMerge = new ProcessMerge(
+					"Thread.PanelMerge.ProcessMerge", 
+					sources, 
+					jCheckBoxMergeSimulate.isSelected(), 
+					jCheckBoxMergeForce.isSelected(), 
+					null, progressBar, 
+					new CallBackMerge());
             processMerge.start();
 			jButtonMergeStart.setEnabled(true);
         }

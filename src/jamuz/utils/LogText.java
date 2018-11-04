@@ -47,8 +47,12 @@ public class LogText {
 	 */
 	public boolean createFile(String LogFileName) {
 		try {
-			//Create LOG file
-			String logFilePath = FilenameUtils.concat(logPath, StringManager.removeIllegal(LogFileName));  //NOI18N
+			
+			String ext = FilenameUtils.getExtension(LogFileName);
+			String baseName = FilenameUtils.getBaseName(LogFileName);
+			baseName=StringManager.removeIllegal(baseName);
+			String logFilePath = FilenameUtils.concat(logPath, 
+					baseName+(ext.equals("")?"":("."+ext)));  //NOI18N
 			File f = new File(logFilePath);
 			f.createNewFile(); //Creates if not exist
 			//Open file for writing
@@ -56,7 +60,8 @@ public class LogText {
 			this.logPrintWriter = new PrintWriter(outFile);
 			return true;
 		} catch (IOException ex) {
-			Popup.error(Inter.get("Error.IOException")+" (create LogText file):\n"+ex.toString());  //NOI18N
+			Popup.error(Inter.get("Error.IOException")
+					+" (create LogText file):\n"+ex.toString());  //NOI18N
 			return false;
 		}
 	}

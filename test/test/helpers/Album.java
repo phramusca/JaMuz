@@ -55,6 +55,8 @@ import jamuz.utils.StringManager;
 public final class Album {
     
     private final String mbId;
+	private String version;
+	
     private final ArrayList<TrackTag> tracks;
 
 	/**
@@ -112,6 +114,7 @@ public final class Album {
 	 */
 	public Album(String mbId, String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this(mbId);
+		this.version=version;
         readFromFile(version);
     }
 
@@ -145,8 +148,15 @@ public final class Album {
 
     private void readFromFile(String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         
-        SpreadSheet spreadSheet = SpreadSheet.createFromFile(getFile());
+		File file=getFile();
+		if(!file.exists()) {
+			return;
+		}
+        SpreadSheet spreadSheet = SpreadSheet.createFromFile(file);
         Sheet sheet = spreadSheet.getSheet(version);
+		if(sheet==null) {
+			return;
+		}
         int nRowCount = sheet.getRowCount();
         int nColCount = sheet.getColumnCount();
         tracks.clear();
@@ -546,13 +556,15 @@ public final class Album {
 	 * @throws ReadOnlyFileException
 	 * @throws InvalidAudioFrameException
 	 */
-	public void create() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	public void create() throws CannotReadException, IOException, TagException, 
+			ReadOnlyFileException, InvalidAudioFrameException {
         for(TrackTag track : tracks) {
             track.create(location);
         }
     }
  
-    private void checkDb() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+    private void checkDb() throws CannotReadException, IOException, TagException, 
+			ReadOnlyFileException, InvalidAudioFrameException {
         FolderInfo folder = Jamuz.getDb().getFolder(idPath);
         Assert.assertTrue("Could not retrieve idPath="+idPath, folder!=null);
         
@@ -640,7 +652,9 @@ public final class Album {
 	 * @throws ReadOnlyFileException
 	 * @throws InvalidAudioFrameException
 	 */
-	public void setAndCheckStatsInJamuzDb() throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	public void setAndCheckStatsInJamuzDb() throws IOException, 
+			CannotReadException, TagException, 
+			ReadOnlyFileException, InvalidAudioFrameException {
         Jamuz.getDb().updateStatistics(getFiles());
         checkDb();
     }
@@ -651,16 +665,22 @@ public final class Album {
 	 * @param isDevice
 	 * @param renamed
 	 */
-	public void checkStatSource(int idStatSource, boolean isDevice, boolean renamed) {
+	public void checkStatSource(int idStatSource, 
+			boolean isDevice, 
+			boolean renamed) {
         
         StatSource statSource = Jamuz.getMachine().getStatSource(idStatSource);
-        String msg = " (idStatement="+statSource.getIdStatement()+", "+this.mbId+")";
+        String msg = " (idStatement="+statSource.getIdStatement()
+							+", "+this.version
+							+", "+this.mbId+")";
         ArrayList<FileInfo> statSourcesFiles = new ArrayList<>();
-        statSource.getSource().getSource(System.getProperty("java.io.tmpdir")+File.separator);
+        statSource.getSource().getSource(
+				System.getProperty("java.io.tmpdir")+File.separator);
         statSource.getSource().setUp();
         statSource.getSource().getStatistics(statSourcesFiles);
         statSource.getSource().tearDown();
-        statSource.getSource().sendSource(System.getProperty("java.io.tmpdir")+File.separator);
+        statSource.getSource().sendSource(
+				System.getProperty("java.io.tmpdir")+File.separator);
 
         int nbExpected=0;
         for (TrackTag albumFile : tracks) {
@@ -767,8 +787,10 @@ public final class Album {
             
         if(renamed) {
             //"%albumartist%/%album%/%track% %title%"
-            filename = StringManager.removeIllegal(track.getAlbumArtist())+File.separator
-                        + StringManager.removeIllegal(track.getAlbum())+File.separator;
+            filename = StringManager.removeIllegal(
+					track.getAlbumArtist())+File.separator
+                        + StringManager.removeIllegal(
+								track.getAlbum())+File.separator;
 
             String trackStr="";  //NOI18N
             if(track.getDiscTotal()>1 && track.getDiscNo()>0) {
@@ -808,11 +830,11 @@ public final class Album {
     }
 
     private void compare(ArrayList<FileInfoInt> files) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        Assert.assertEquals("Nb files " + this.mbId, tracks.size(), files.size());
+        Assert.assertEquals("Nb files " + mbId, tracks.size(), files.size());
         int indexTrack=0;
         String msg;
         for (FileInfoInt file : files) {
-            msg = " ("+file.getFilename()+", " + this.mbId+")";
+            msg = " ("+file.getFilename()+", "+version+", " + mbId+")";
             Assert.assertEquals("artist"+msg, tracks.get(indexTrack).getArtist(), file.getArtist());
             Assert.assertEquals("albumArtist"+msg, tracks.get(indexTrack).getAlbumArtist(), file.getAlbumArtist());
             Assert.assertEquals("album"+msg, tracks.get(indexTrack).getAlbum(), file.getAlbum());

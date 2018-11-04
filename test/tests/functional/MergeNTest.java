@@ -42,6 +42,8 @@ import jamuz.utils.Inter;
  */
 public class MergeNTest extends TestCase {
 
+	//FIXME TEST !!!!! Refer to "TestPlan.ods"
+	
 	/**
 	 *
 	 * @throws Exception
@@ -122,13 +124,21 @@ public class MergeNTest extends TestCase {
                 Device device = statSource.getDevice();
                 Playlist playlist = device.getPlaylist(); 
                 //Check merge
-                AlbumBuffer.getAlbum(mbId, "MergeDevice4_1stMerge").checkStatSource(statSource.getId(), playlist.getId()>0, false);
+                AlbumBuffer
+						.getAlbum(mbId, "MergeDevice4_1stMerge")
+						.checkStatSource(
+								statSource.getId(), 
+								playlist.getId()>0, 
+								false);
                 //Change stats in stat source
-                //FIXME TEST change statistics in album defintion files for all stat sources, inclusing jamuz for all albums
-                AlbumBuffer.getAlbum(mbId, "MergeDevice5_"+statSource.getIdStatement()).setAndCheckStatsInStatSource(statSource.getId(), playlist.getId()>0);
+//                AlbumBuffer.getAlbum(mbId, 
+//						"MergeDevice5_"+statSource.getIdStatement())
+//							.setAndCheckStatsInStatSource(
+//									statSource.getId(), 
+//									playlist.getId()>0);
             }
             //Change stats in JamuZ
-			//FIXME TEST Update ratingModifDate & tagsModifDate as done in Jumuz (check that)
+			//FIXME TEST !!!!!!!!!!! Update ratingModifDate & tagsModifDate as done in Jamuz (check that)
 			//and update ratings in 6cc35892-c44f-4aa7-bfee-5f63eca70821.ods 
 			//accordingly
             AlbumBuffer.getAlbum(mbId, "MergeDevice5_JaMuz").setAndCheckStatsInJamuzDb();
@@ -144,7 +154,11 @@ public class MergeNTest extends TestCase {
             for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
                 Device device = statSource.getDevice();
                 Playlist playlist = device.getPlaylist(); 
-                AlbumBuffer.getAlbum(mbId, "MergeDevice6_New").checkStatSource(statSource.getId(), playlist.getId()>0, false);
+                AlbumBuffer.getAlbum(mbId, "MergeDevice6_New")
+						.checkStatSource(
+								statSource.getId(), 
+								playlist.getId()>0, 
+								false);
             }
         }
         
@@ -407,7 +421,7 @@ public class MergeNTest extends TestCase {
                 rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
                 idDevice = -1);
         Settings.addStatSource(
-                name = "MusicIndexDatabase_Device.db", //MyTunes, could be removed ... 
+                name = "MusicIndexDatabase_Device.db", //MyTunes (could be removed ...) 
                 idStatement=5, 
                 rootPath="/storage/extSdCard/Musique/",
                 idDevice = 1); //This one has a linked device

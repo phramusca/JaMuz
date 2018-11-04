@@ -17,6 +17,7 @@
 
 package test.helpers;
 
+import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.sync.Device;
@@ -25,8 +26,11 @@ import jamuz.process.sync.ProcessSync;
 import jamuz.process.check.ProcessCheck;
 import jamuz.process.merge.StatSource;
 import jamuz.process.check.PanelCheck;
+import jamuz.process.merge.ICallBackMerge;
+import jamuz.process.sync.ICallBackSync;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  *
@@ -79,11 +83,11 @@ public class TestProcessHelper {
 	 * @throws InterruptedException
 	 */
 	public static void merge() throws InterruptedException {
-        List dbIndexes = new ArrayList();
+        List sources = new ArrayList();
         for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
-			dbIndexes.add(statSource.getId());
+			sources.add(statSource);
         }
-        startProcessMerge(dbIndexes, false, false);
+        startProcessMerge(sources, false, false);
 		
         //FIXME TEST Also test simulate and forceJamuz parameters
     }
@@ -141,18 +145,60 @@ public class TestProcessHelper {
     
 	//TODO: Now that using callbacks here, can we not launch gui ?
 	public static ProcessMerge processMerge;
-    private static void startProcessMerge(List<StatSource> dbIndexes, 
+    private static void startProcessMerge(List<StatSource> sources, 
 			boolean simulate, boolean forceJaMuz) throws InterruptedException {
         processMerge = new ProcessMerge("Thread.ProcessHelper.startProcessMerge", 
-				dbIndexes, simulate, forceJaMuz, null, 
-				new ProgressBar(), null);
+				sources, simulate, forceJaMuz, null, 
+				new ProgressBar(), new ICallBackMerge() {
+			@Override
+			public void completed(
+					ArrayList<FileInfo> errorList, 
+					ArrayList<FileInfo> completedList, 
+					String popupMsg, 
+					String mergeReport) {
+				Jamuz.getLogger().log(Level.INFO, "Sync callback: addRow popupMsg={0}, mergeReport={1}", 
+						new Object[]{popupMsg, mergeReport});
+			}
+
+			@Override
+			public void refresh() {
+				Jamuz.getLogger().info("Sync callback: refresh");
+			}
+		});
         processMerge.start();
         processMerge.join();
     }
 
     private static void startProcessSync(Device device) throws InterruptedException {
         ProcessSync processSync = new ProcessSync("Thread.ProcessHelper.startProcessSync"
-				, device, new ProgressBar(), null);
+				, device, new ProgressBar(), new ICallBackSync() {
+			@Override
+			public void refresh() {
+				Jamuz.getLogger().info("Sync callback: refresh");
+			}
+
+			@Override
+			public void enable() {
+				Jamuz.getLogger().info("Sync callback: enable");
+			}
+
+			@Override
+			public void enableButton(boolean enable) {
+				Jamuz.getLogger().log(Level.INFO, "Sync callback: enableButton:{0}", enable);
+			}
+
+			@Override
+			public void addRow(String file, int idIcon) {
+				Jamuz.getLogger().log(Level.INFO, "Sync callback: addRow file={0}, idIcon={1}", 
+						new Object[]{file, idIcon});
+			}
+
+			@Override
+			public void addRow(String file, String msg) {
+				Jamuz.getLogger().log(Level.INFO, "Sync callback: addRow file={0}, msg={1}", 
+						new Object[]{file, msg});
+			}
+		});
         processSync.start();
         processSync.join();
     }
