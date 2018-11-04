@@ -502,7 +502,9 @@ public class FolderInfo implements java.lang.Comparable {
 				transcode(progressBar);
 			}
 
-			//FIXME PLAYER ReplayGain. Complete and test, then use (and on remote too)
+			//FIXME TEST ReplayGain
+			//FIXME LOW REMOTE If replaygain tags cannot be read on remote (try to use what is done here first)
+			//then sync tags and use those insted (ie: do not try to read replaygain on remote, sync it instead)
 			if(!isReplayGainDone || recalculateGain) {
 				//http://www.bobulous.org.uk/misc/Replay-Gain-in-Linux.html				
 				//http://id3.org/id3v2.3.0#User_defined_text_information_frame

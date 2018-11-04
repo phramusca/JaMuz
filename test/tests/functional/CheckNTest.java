@@ -63,7 +63,8 @@ public class CheckNTest extends TestCase {
             
             //Set genre, cover and SAVE action. Apply changes
             //Note that MusiBrainz album should have been retrieved
-            FolderInfo folder = AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").getCheckedFolder();
+            FolderInfo folder = AlbumBuffer.getAlbum(mbId, "CheckTest1_KO")
+					.getCheckedFolder();
             folder.setNewGenre("Reggae");
             folder.setNewImage(Settings.getTestCover());
             folder.action=Action.SAVE;
@@ -94,7 +95,8 @@ public class CheckNTest extends TestCase {
     }
 
     private void checkNumberScanned(int expected){
-        assertEquals("number of checked folders", expected, PanelCheck.tableModelActionQueue.getFolders().size());
+        assertEquals("number of checked folders", expected, 
+				PanelCheck.tableModelActionQueue.getFolders().size());
     }
     
 	/**

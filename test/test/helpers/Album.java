@@ -143,8 +143,6 @@ public final class Album {
 		return index;
 	}
 
-	
-	
     private void readFromFile(String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         
         SpreadSheet spreadSheet = SpreadSheet.createFromFile(getFile());

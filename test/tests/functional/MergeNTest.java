@@ -390,7 +390,7 @@ public class MergeNTest extends TestCase {
         );
         Settings.addStatSource(
 				//FIXME TEST WINDOWS Test on Windows, on a SSH box and a FTP box
-                name = "MyMusic32_Device.db", 
+                name = "MyMusic32_Device.db", //kodi
                 idStatement=2, 
                 rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
                 idDevice = -1);
@@ -407,7 +407,7 @@ public class MergeNTest extends TestCase {
                 rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
                 idDevice = -1);
         Settings.addStatSource(
-                name = "MusicIndexDatabase_Device.db", 
+                name = "MusicIndexDatabase_Device.db", //MyTunes, could be removed ... 
                 idStatement=5, 
                 rootPath="/storage/extSdCard/Musique/",
                 idDevice = 1); //This one has a linked device

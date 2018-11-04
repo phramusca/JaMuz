@@ -17,7 +17,6 @@
 
 package test.helpers;
 
-import test.helpers.Settings;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
