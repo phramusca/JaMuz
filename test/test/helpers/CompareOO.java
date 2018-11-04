@@ -48,21 +48,11 @@ public class CompareOO {
 	 */
 	public static void main(String[] args) {
 
-		List<String> mbIds = new ArrayList<>();
-        mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
-        mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
-        mbIds.add("c212b71b-848c-491c-8ae7-b62a993ae194");
-        mbIds.add("8cfbb741-bd63-449f-9e48-4d234264c8d5");
-        mbIds.add("be04bc1f-fc63-48f5-b1ca-2723f17d241d");
-        mbIds.add("6cc35892-c44f-4aa7-bfee-5f63eca70821");
-        mbIds.add("7598d527-bc8d-4282-a72c-874f335d05ac");
-        mbIds.add("13ca98f6-1a9f-4d76-a3b3-a72a16d91916");
-		
-		compareMerge1Test(mbIds);
-//		compareMergeNTest(mbIds);
+		compareMerge1Test();
+//		compareMergeNTest();
     } 
 	
-	private static void compareMerge1Test(List<String> mbIds) {
+	private static void compareMerge1Test() {
 		
 		List<String> versions = new ArrayList<>();
 		versions.add("MergeTest1_Creation");
@@ -77,10 +67,13 @@ public class CompareOO {
 		versions.add("MergeTest5_JaMuz");
 		versions.add("MergeTest5_New");
 		
+		List<String> mbIds = new ArrayList<>();
+        mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
+		
 		compareAlbums("Merge1Test", mbIds, versions);
 	}
 	
-	private static void compareMergeNTest(List<String> mbIds) {
+	private static void compareMergeNTest() {
 		
 		String testName = "MergeNTest";
 		
@@ -141,10 +134,21 @@ public class CompareOO {
 		versions.add("MergeDevice11_Sync");
 		versions.add("MergeDevice11_Sync2");
 		
-        compareAlbums(testName, mbIds, versions);
+		List<String> mbIds = new ArrayList<>();
+        mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
+        mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
+        mbIds.add("c212b71b-848c-491c-8ae7-b62a993ae194");
+        mbIds.add("8cfbb741-bd63-449f-9e48-4d234264c8d5");
+        mbIds.add("be04bc1f-fc63-48f5-b1ca-2723f17d241d");
+        mbIds.add("6cc35892-c44f-4aa7-bfee-5f63eca70821");
+        mbIds.add("7598d527-bc8d-4282-a72c-874f335d05ac");
+        mbIds.add("13ca98f6-1a9f-4d76-a3b3-a72a16d91916");
+		
+		compareAlbums(testName, mbIds, versions);
 	}
 	
-	private static void compareAlbums(String testName, List<String> mbIds, List<String> versions) {
+	private static void compareAlbums(String testName, List<String> mbIds, 
+			List<String> versions) {
 		for(String mbId : mbIds) {
 			for(int i=0; i<(versions.size()-1); i++) {
 				String firstTab = versions.get(i);
@@ -157,11 +161,13 @@ public class CompareOO {
         }
 	}
 	
-	private static void compareAlbums(String mbId, String tab1, String tab2, String testName) {
+	private static void compareAlbums(String mbId, String tab1, 
+			String tab2, String testName) {
 		compareAlbums(mbId, mbId, tab1, tab2, testName);
 	}
 	
-	private static void compareAlbums(String mbId1, String mbId2, String tab1, String tab2, String testName) {
+	private static void compareAlbums(String mbId1, String mbId2, String tab1, 
+			String tab2, String testName) {
 		try {
 			Album firstAlbum = AlbumBuffer.getAlbum(mbId1, tab1);
 			Album secondAlbum = AlbumBuffer.getAlbum(mbId2, tab2);
