@@ -48,8 +48,8 @@ public class CompareOO {
 	 */
 	public static void main(String[] args) {
 
-		compareMerge1Test();
-//		compareMergeNTest();
+//		compareMerge1Test();
+		compareMergeNTest();
     } 
 	
 	private static void compareMerge1Test() {
@@ -99,18 +99,18 @@ public class CompareOO {
 //		versions.add("MergeDevice5_JaMuz");
 
 
-//		versions.add("MergeDevice5_1");
-//		versions.add("MergeDevice6_New");
-//		versions.add("MergeDevice5_2");
-//		versions.add("MergeDevice6_New");
-//		versions.add("MergeDevice5_3");
-//		versions.add("MergeDevice6_New");
-//		versions.add("MergeDevice5_4");
-//		versions.add("MergeDevice6_New");
-//		versions.add("MergeDevice5_5");
-//		versions.add("MergeDevice6_New");
-//		versions.add("MergeDevice5_JaMuz");
-//		versions.add("MergeDevice6_New");
+		versions.add("MergeDevice5_1");
+		versions.add("MergeDevice6_New");
+		versions.add("MergeDevice5_2");
+		versions.add("MergeDevice6_New");
+		versions.add("MergeDevice5_3");
+		versions.add("MergeDevice6_New");
+		versions.add("MergeDevice5_4");
+		versions.add("MergeDevice6_New");
+		versions.add("MergeDevice5_5");
+		versions.add("MergeDevice6_New");
+		versions.add("MergeDevice5_JaMuz");
+		versions.add("MergeDevice6_New");
 
 
 //		versions.add("MergeDevice6_New");
@@ -130,9 +130,8 @@ public class CompareOO {
 //		versions.add("MergeDevice10_JaMuz");
 //		versions.add("MergeDevice10_New");
 
-
-		versions.add("MergeDevice11_Sync");
-		versions.add("MergeDevice11_Sync2");
+//		versions.add("MergeDevice11_Sync");
+//		versions.add("MergeDevice11_Sync2");
 		
 		List<String> mbIds = new ArrayList<>();
         mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");

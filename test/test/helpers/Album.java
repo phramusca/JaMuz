@@ -579,7 +579,7 @@ public final class Album {
         int idFile = idFirstFile;
         for(TrackTag trackTag : tracks) {
             files.add(new FileInfo(idFile, idPath, 
-                    trackTag.getRelativePath(), 
+                    trackTag.getRelativeFullPath(), 
                     trackTag.getRating(), 
                     trackTag.getFormattedLastPlayed(), 
                     trackTag.getFormattedAddedDate(), 

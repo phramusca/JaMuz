@@ -131,11 +131,11 @@ public class MergeNTest extends TestCase {
 								playlist.getId()>0, 
 								false);
                 //Change stats in stat source
-//                AlbumBuffer.getAlbum(mbId, 
-//						"MergeDevice5_"+statSource.getIdStatement())
-//							.setAndCheckStatsInStatSource(
-//									statSource.getId(), 
-//									playlist.getId()>0);
+                AlbumBuffer.getAlbum(mbId, 
+						"MergeDevice5_"+statSource.getIdStatement())
+							.setAndCheckStatsInStatSource(
+									statSource.getId(), 
+									playlist.getId()>0);
             }
             //Change stats in JamuZ
 			//FIXME TEST !!!!!!!!!!! Update ratingModifDate & tagsModifDate as done in Jamuz (check that)
