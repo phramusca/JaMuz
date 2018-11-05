@@ -46,14 +46,19 @@ public class Creation {
             ReadOnlyFileException, InvalidAudioFrameException {
         
 		//Create new ods (OpenDocument SpreadSheet) album test files
-		//This is not up-to-date:
-		//- Some versions (tabs) are missing
-		//- All tabs will be the same
-		//=> Current test files have been manually modified later on.
-		//You can use CompareOO to analyse those
 		
 		
         List<String> mbIds = new ArrayList<>();
+		
+		
+		// WARNING : DO NOT USE AS-IS !!!!
+		// - Current test files have been manually modified later on.
+		//		!!!! THEY WOULD BE OVERWRITTEN !!!!
+		//		(You can use CompareOO to analyse those)
+		// - This is not up-to-date !!!!!!! :
+		//		- Some versions (tabs) are missing
+		//		- All tabs will be the same
+		
 //        mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
 //        mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
 //        mbIds.add("c212b71b-848c-491c-8ae7-b62a993ae194");

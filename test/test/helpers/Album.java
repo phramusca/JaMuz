@@ -630,16 +630,22 @@ public final class Album {
 	 * @throws ReadOnlyFileException
 	 * @throws InvalidAudioFrameException
 	 */
-	public void checkActionsTableModel() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	public void checkActionsTableModel() throws CannotReadException, IOException, 
+			TagException, ReadOnlyFileException, InvalidAudioFrameException {
         //Check tracks
         compare((ArrayList<FileInfoInt>)(List<?>)getCheckedFolder().getFilesAudio());
 
         //Check results
+		String msg = " ("+version+", " + mbId+")";
         for (Map.Entry<String, FolderInfoResult> entry : results.entrySet()) {
-            FolderInfoResult resultActual = getCheckedFolder().getResults().get(entry.getKey());
+            FolderInfoResult resultActual = getCheckedFolder()
+					.getResults().get(entry.getKey());
             FolderInfoResult resultExpected = entry.getValue();
             if(!resultExpected.getValue().startsWith("{")) {
-                Assert.assertEquals(entry.getKey()+" "+resultActual, resultExpected, resultActual);
+                Assert.assertEquals(
+						msg+" "+entry.getKey(), 
+						resultExpected, 
+						resultActual);
             }
         }
     }
@@ -872,7 +878,9 @@ public final class Album {
             //only checking it is above initial size and not increased by more than around 5K
             long minimumSize = TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).size;
             long maximumSize = minimumSize + 5000;
-            Assert.assertTrue("size. Expected: between "+minimumSize+" and "+maximumSize+", Actual:"+file.getSize()+msg, 
+            Assert.assertTrue("size. "
+					+ "Expected: between "+minimumSize+" and "+maximumSize+", "
+					+ "Actual:"+file.getSize()+msg, 
                     file.getSize() >= minimumSize && file.getSize() <= maximumSize);
             //This requires to read tracks.get(index).size after each process => not much usefull too
 //            assertEquals("size", tracks.get(index).size, file.size); 

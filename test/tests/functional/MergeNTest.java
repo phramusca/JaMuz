@@ -222,13 +222,13 @@ public class MergeNTest extends TestCase {
         for(String mbId : mbIds) {
             nbErrorsExpected+=AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").getNbTracks();
         }
-        //*2*(2*(Jamuz.getMachine().getStatSources().size()-2)+1) BECAUSE:
+		
+		int nbSourcesWithoutErrors=1; // MyTunes only for now. Update nbNoErrors accordingly if changed
+		int nbErrorsTotal=nbErrorsExpected*((Jamuz.getMachine().getStatSources().size()*2)-1)*2; //-1 because one source does only one round
+		int nbNoErrors=nbErrorsExpected*nbSourcesWithoutErrors*2*2; //Unless it is the middle one done only one way ...
+		nbErrorsExpected=nbErrorsTotal-nbNoErrors; 
         //  *2:         source vs jamuz and reverse side
         //  *2:         1st and second run
-        //  -1:         for removing middle merged source (has only one run)
-        //  +1:         to add unique run for middle stat source
-        //  -1 again:   to remove MyTunes that has no expected errors
-        nbErrorsExpected=nbErrorsExpected*2*(2*(Jamuz.getMachine().getStatSources().size()-1)+1-1);
         ArrayList<FileInfo> errorList = TestProcessHelper.processMerge.getErrorList();
         assertEquals("Nb errors", nbErrorsExpected, errorList.size());
         //None expected completed (all missing on both sides, and MyTunes has no changes)
@@ -252,6 +252,11 @@ public class MergeNTest extends TestCase {
                 }
             }
             //Change stats in JamuZ
+			
+			//FIXME TEST !!!!! Continue here: 
+			//Somehow genre for 1st track in "9e0"/"10_JaMuz" is empty (expected is 
+			//	"Reggae", as it IS at this stage in JaMuz.db)
+			
             AlbumBuffer.getAlbum(mbId, "MergeDevice10_JaMuz").setAndCheckStatsInJamuzDb();
         }
 		
