@@ -107,7 +107,10 @@ public class TestProcessHelper {
     private final static int NB_SCAN=1; 
 	private final static int NB_ANALYSIS=1;
     private static ProcessCheck processCheck;
-    private static void startProcessCheck(boolean enableDoActions, ProcessCheck.CheckType checkType, int idPath) throws InterruptedException {
+    private static void startProcessCheck(
+			boolean enableDoActions, 
+			ProcessCheck.CheckType checkType, 
+			int idPath) throws InterruptedException {
 
         PanelCheck.enableCheck(false);
         PanelCheck.enableRowSorter(false);

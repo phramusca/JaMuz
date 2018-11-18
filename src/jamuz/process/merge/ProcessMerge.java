@@ -581,7 +581,6 @@ public class ProcessMerge extends ProcessAbstract {
 				}
 			}
 			else if(fileSelectedDb.getRating()!=fileJaMuz.getRating()) {
-				//FIXME TEST include this new behavior in junit tests
 				if(fileJaMuz.getRatingModifDate().after(
 						selectedStatSource.lastMergeDate)) {
 					//It has been modified after last merge on JaMuz
