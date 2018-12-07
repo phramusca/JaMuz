@@ -86,7 +86,8 @@ public class ProcessBook extends ProcessAbstract {
         
         checkAbort();
         
-		List<Book> filestoExport = tableModel.getBooks().stream().filter(video -> video.isSelected()).collect(Collectors.toList());
+		List<Book> filestoExport = tableModel.getBooks().stream().filter(
+				video -> video.isSelected()).collect(Collectors.toList());
 		
 		//The following should never happen as it is checked in PanelBook already
 		if(filestoExport.size()<=0) {

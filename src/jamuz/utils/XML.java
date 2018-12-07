@@ -77,6 +77,11 @@ public class XML {
 		return (Element) node;
 	}
 	
+	public static String getElementValue(Element element) {
+		NodeList mySubElementList = element.getChildNodes();
+		return ((Node) mySubElementList.item(0)).getNodeValue();
+	}
+	
 	public static String getAttribute(Element element, String attribute) {
 		return element.getAttribute(attribute);
 	}

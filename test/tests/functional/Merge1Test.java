@@ -42,47 +42,59 @@ public class Merge1Test extends TestCase {
         /***********************************************************
 		 * Create an album
 		***********************************************************/
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest1_Creation").create();
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest1_Creation").create();
         
         /***********************************************************
 		 * Scan library quick
 		***********************************************************/
         TestProcessHelper.scanLibraryQuick();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest2_DB").checkDbAndFS(false);
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest2_DB").checkDbAndFS(false);
         
 		/***********************************************************
 		 * Merge
 		***********************************************************/
         PanelMain.selectTab(Inter.get("Label.Merge"));
         TestProcessHelper.merge();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkJaMuz();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest3").checkStatSource(1, false, false);
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest3").checkJaMuz();
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest3").checkStatSource(1, false, false);
 
 		/***********************************************************
 		 * Change stats in stat source & JamuZ
 		***********************************************************/
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_1").setAndCheckStatsInStatSource(1, false); // Guayadeque 
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_JaMuz").setAndCheckStatsInJamuzDb();
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest4_1").setAndCheckStatsInStatSource(1, false); // Guayadeque 
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest4_JaMuz").setAndCheckStatsInJamuzDb();
 
 		/***********************************************************
 		 * Merge again and check merge ok
 		***********************************************************/
         TestProcessHelper.merge();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_New").checkJaMuz();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest4_New").checkStatSource(1, false, false);
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest4_New").checkJaMuz();
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest4_New").checkStatSource(1, false, false);
         
 		/***********************************************************
 		 * Change stats in stat source & JamuZ, playCounter especially
 		***********************************************************/
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest5_1").setAndCheckStatsInStatSource(1, false); // Guayadeque 
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest5_JaMuz").setAndCheckStatsInJamuzDb();
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest5_1").setAndCheckStatsInStatSource(1, false); // Guayadeque 
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest5_JaMuz").setAndCheckStatsInJamuzDb();
 
 		/***********************************************************
 		 * Merge again and check merge ok
 		***********************************************************/
         TestProcessHelper.merge();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest5_New").checkJaMuz();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", "MergeTest5_New").checkStatSource(1, false, false);
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest5_New").checkJaMuz();
+        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+				"MergeTest5_New").checkStatSource(1, false, false);
 
     }
 

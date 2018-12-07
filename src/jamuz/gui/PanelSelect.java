@@ -1187,11 +1187,8 @@ public class PanelSelect extends javax.swing.JPanel {
 					PanelMain.setColumnVisible(TABLE_COLUMN_MODEL, 12, checkList(12));  //NOI18N
 				}
 				
-                //Enable row tableSorter (cannot be done if model is empty)
                 if(tableModel.getRowCount()>0) {
-                    //Enable auto sorter
                     jTableSelect.setAutoCreateRowSorter(true);
-                    //Sort by action, result
                     TableRowSorter<TableModel> tableSorter = new TableRowSorter<>(tableModel);
                     jTableSelect.setRowSorter(tableSorter);
                     List <RowSorter.SortKey> sortKeys = new ArrayList<>();
