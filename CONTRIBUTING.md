@@ -46,8 +46,7 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
 - Test Plan:
   - add unit tests
   - review/update functional tests
-- Do all FIX-MEs 
-  - (to be moved or copied to GitHub Issues)
+- Do all FIXMEs
 - Update wiki, website, release notes and CHANGES.md
 - Initial options setup interface
 - Code review:
