@@ -28,7 +28,7 @@ ________________________________________________________________________________
   * Bonus: 
     * Kodi helper to manage your videos.
     * Calibre helper to manage your ebooks.
-  * Translated using [Weblate](https://hosted.weblate.org/engage/jamuz/):
+  * Translated using [Weblate](https://hosted.weblate.org/engage/jamuz/) (you can contribute here):
 <a href="https://hosted.weblate.org/engage/jamuz/?utm_source=widget">
 <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status" />
 </a>
