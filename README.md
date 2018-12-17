@@ -16,8 +16,8 @@ ________________________________________________________________________________
     * Detect duplicates.
     * Compute ReplayGain (MP3 and FLAC).
   * ***Sync your files to devices:***
-    * Create a device: select a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
-    * Sync your files: process deletes unwanted files on destination then copy new files.
+    * Select a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
+    * Process deletes unwanted files on destination then copy new files.
   * ***[JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)***
     * Your new Android music player
     * Easily sync a playlist over WiFi from JaMuz to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
@@ -28,7 +28,7 @@ ________________________________________________________________________________
   * Bonus: 
     * Kodi helper to manage your videos.
     * Calibre helper to manage your ebooks.
-  * Translated using [Weblate](https://hosted.weblate.org/engage/jamuz/) (you can contribute here):
+  * Please help out translating by using [WebLate](https://hosted.weblate.org/engage/jamuz/):
 <a href="https://hosted.weblate.org/engage/jamuz/?utm_source=widget">
 <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status" />
 </a>
