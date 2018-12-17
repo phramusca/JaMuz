@@ -33,7 +33,7 @@ ________________________________________________________________________________
 <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status" />
 </a>
   
-See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
+* See [further information on the WIKI](https://github.com/phramusca/JaMuz/wiki).
 
 * I'll always be pleased if you offer me a beer (or a cup of tea, or more) to support my contribution :)
   * Recurrent donations using Liberapay.com: <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
