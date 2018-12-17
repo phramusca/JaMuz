@@ -41,4 +41,4 @@ ________________________________________________________________________________
 
 
 ______________________________________________________________________________________
-___ [Credits](CREDITS.md) ___ [Contribute](CONTRIBUTING.md) ___ [License](LICENSE) ___ 
+___ [Credits](CREDITS.md) ___ [Contributing](CONTRIBUTING.md) ___ [License](LICENSE) ___ 
