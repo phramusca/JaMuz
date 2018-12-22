@@ -32,7 +32,7 @@ Please submit to the `master` branch.
   TheMovieDb={yourKey}
   LastFm={yourKey}
   ```
-* Copy from {Repo}/"dist" to {Repo}/ :
+* Copy from {Repo}/dist to {Repo}/ :
   * JaMuz.db
   * JaMuz.properties
 * You can now run and enjoy (hopefully)
