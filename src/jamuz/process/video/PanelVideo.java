@@ -150,7 +150,7 @@ public class PanelVideo extends javax.swing.JPanel {
         jTableVideo.setRowHeight(IconBufferVideo.ICON_HEIGHT);
         
 //        DefaultTableCellRenderer renderer = new TableCellRendererTooltip();
-         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setVerticalAlignment(SwingConstants.TOP);
         jTableVideo.getColumnModel().getColumn(4).setCellRenderer(renderer);
         jTableVideo.getColumnModel().getColumn(2).setCellRenderer(renderer);        

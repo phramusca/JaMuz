@@ -1155,10 +1155,14 @@ public class DbConnJaMuz extends StatSourceSQL {
 			long startTime = System.currentTimeMillis();
 			result = stInsertDeviceFile.executeUpdate();
 			long endTime = System.currentTimeMillis();
-			Jamuz.getLogger().log(Level.FINEST, "insertDeviceFile UPDATE // {0} // Total execution time: {1}ms", new Object[]{result, endTime - startTime});    //NOI18N
+			Jamuz.getLogger().log(Level.FINEST, "insertDeviceFile UPDATE // {0} "
+					+ "// Total execution time: {1}ms", 
+					new Object[]{result, endTime - startTime});    //NOI18N
 
 			if (result < 0) {
-				Jamuz.getLogger().log(Level.SEVERE, "insertDeviceFile, idFile={0}, idDevice={1}, result={2}", new Object[]{file.getIdFile(), idDevice, result});   //NOI18N
+				Jamuz.getLogger().log(Level.SEVERE, "insertDeviceFile, "
+						+ "idFile={0}, idDevice={1}, result={2}", 
+						new Object[]{file.getIdFile(), idDevice, result});   //NOI18N
 				return false;
 			}
             return true;
@@ -1175,15 +1179,20 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public synchronized boolean deleteDeviceFiles(int idDevice) {
         try {
-            PreparedStatement stDeleteDeviceFiles = dbConn.connection.prepareStatement("DELETE FROM deviceFile WHERE idDevice=?");  //NOI18N
+            PreparedStatement stDeleteDeviceFiles = dbConn.connection.prepareStatement(
+					"DELETE FROM deviceFile WHERE idDevice=?");  //NOI18N
             stDeleteDeviceFiles.setInt(1, idDevice);
             long startTime = System.currentTimeMillis();
             int result = stDeleteDeviceFiles.executeUpdate();
             long endTime = System.currentTimeMillis();
-            Jamuz.getLogger().log(Level.FINEST, "stDeleteDeviceFile DELETE // Total execution time: {0}ms", new Object[]{endTime - startTime});    //NOI18N
+            Jamuz.getLogger().log(Level.FINEST, "stDeleteDeviceFile DELETE "
+					+ "// Total execution time: {0}ms", 
+					new Object[]{endTime - startTime});    //NOI18N
 
             if (result < 0) {
-                Jamuz.getLogger().log(Level.SEVERE, "stDeleteDeviceFile, idDevice={0}, result={1}", new Object[]{idDevice, result});   //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, 
+						"stDeleteDeviceFile, idDevice={0}, result={1}", 
+						new Object[]{idDevice, result});   //NOI18N
             }
             
             return true;

@@ -22,10 +22,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
-import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import jamuz.utils.Popup;
@@ -38,7 +35,6 @@ import jamuz.utils.StringManager;
 
 
 public class IconBufferBook {
-    private static final Map<String, ImageIcon> ICONS = new HashMap<>();
 
     /**
      * Icon height.
@@ -60,21 +56,9 @@ public class IconBufferBook {
      * @return
      */
     public static ImageIcon getCoverIcon(String key, String file, boolean readIfNotFound) {
-		if(ICONS.containsKey(key)) {
-            return ICONS.get(key);
-        }
-        ImageIcon icon=null;
-        if(readIfNotFound) {
-            //Icon not found, retrieving it and add it to the map
-            icon= readIconFromCache(key);
-            if(icon!=null) {
-                ICONS.put(key, icon);
-                return icon;
-            }
-            icon= readIcon(key, file);
-            if(icon!=null) {
-                ICONS.put(key, icon);
-            }
+        ImageIcon icon=readIconFromCache(key);
+		if(icon==null && readIfNotFound) {
+			icon = readIcon(key, file);
         }
         return icon;
 	}
@@ -114,10 +98,8 @@ public class IconBufferBook {
             g2.drawImage(icon.getImage(), 0, 0, null);
             g2.dispose();
             ImageIO.write(bi, "png", getCacheFile(key)); //NOI18N
-		} catch (IIOException ex) {
-            Jamuz.getLogger().log(Level.SEVERE, "", ex);
-        }
-        catch (IOException ex) {
+		} 
+        catch (IOException | OutOfMemoryError ex) {
 			Jamuz.getLogger().log(Level.SEVERE, "", ex);
 		}
         return icon;
