@@ -41,28 +41,19 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
  *
  * @author raph
  */
-public class CrunchifyQRCode {
-
-	/**
-	 *
-	 * @param args
-	 */
-	public static void main(String[] args) {
-//		String url = "https://phramusca.github.io/JaMuz/";
-		createQRcodeFile("jamuzremote://192.168.0.13:6451", "/home/raph/Bureau/", "png");
-	}
+public class QRCode {
 
 	/**
 	 *
 	 * @param url
 	 * @param path
-	 * @param fileType
+	 * @param extension
 	 */
-	public static void createQRcodeFile(String url, String path, String fileType) {
-		BufferedImage image = createQRcode(url, 250);
+	public static void create(String url, String path, String extension) {
+		BufferedImage image = QRCode.create(url, 250);
 		
 		try {
-			ImageIO.write(image, "png", new File(path+StringManager.removeIllegal(url)+"."+fileType));
+			ImageIO.write(image, "png", new File(path+StringManager.removeIllegal(url)+"."+extension));
 		}
 		catch (IOException e) {
 			Popup.error(e);
@@ -75,7 +66,7 @@ public class CrunchifyQRCode {
 	 * @param size
 	 * @return
 	 */
-	public static BufferedImage createQRcode(String myCodeText, int size) {
+	public static BufferedImage create(String myCodeText, int size) {
 		try {
 			
 			Map<EncodeHintType, Object> hintMap = new EnumMap<>(EncodeHintType.class);

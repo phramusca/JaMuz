@@ -373,7 +373,7 @@ public class Server {
 		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
 		setStatus(login, "Sending file: "+fileInfoInt.getRelativeFullPath());
 		if(!sendFile(clientId, fileInfoInt)) {
-			//FIXME LOW SYNC Happens (still ?) when file not found
+			//TODO SYNC Happens (still ?) when file not found
 			// Need to mark as deleted in db 
 			// AND somehow remove it from filesToKeep
 			//and filesToGet in remote

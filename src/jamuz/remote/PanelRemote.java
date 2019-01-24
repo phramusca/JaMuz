@@ -23,7 +23,7 @@ import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.sync.ICallBackSync;
 import jamuz.process.sync.ProcessSync;
-import jamuz.utils.CrunchifyQRCode;
+import jamuz.utils.QRCode;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -390,7 +390,7 @@ public class PanelRemote extends javax.swing.JPanel {
             String encrypted = Encryption.encrypt(ip+":"+port, "NOTeBrrhzrtestSecretK");
             String url = "jamuzremote://"+encrypted;
 			//http://stackoverflow.com/questions/10258633/android-start-application-from-qr-code-with-params
-            BufferedImage bufferedImage = CrunchifyQRCode.createQRcode(url, 250);
+            BufferedImage bufferedImage = QRCode.create(url, 250);
             DialogQRcode.main(bufferedImage);
         } catch (UnknownHostException ex) {
         }
