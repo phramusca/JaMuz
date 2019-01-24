@@ -31,20 +31,20 @@ public class Encryption {
 	
 	private static final String ALGO = "AES";
 	
-	/**
-	 *
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		String clear = "MaChaineAvegrer";
-		System.out.println("clear: "+clear);
-		String encrypted = encrypt(clear, "NOTeBrrhzrtestSecretK");
-		System.out.println("encrypted: "+encrypted);
-		String decrypted = decrypt(encrypted, "NOTeBrrhzrtestSecretK");
-		System.out.println("decrypted: "+decrypted);
-		String decryptedWrong = decrypt(encrypted, "fgv");
-		System.out.println("decryptedWrong: "+decryptedWrong);
-	}
+//	/**
+//	 *
+//	 * @param args
+//	 */
+//	public static void main(String[] args) {
+//		String clear = "MaChaineAvegrer";
+//		System.out.println("clear: "+clear);
+//		String encrypted = encrypt(clear, "NOTeBrrhzrtestSecretK");
+//		System.out.println("encrypted: "+encrypted);
+//		String decrypted = decrypt(encrypted, "NOTeBrrhzrtestSecretK");
+//		System.out.println("decrypted: "+decrypted);
+//		String decryptedWrong = decrypt(encrypted, "fgv");
+//		System.out.println("decryptedWrong: "+decryptedWrong);
+//	}
 	
 	/**
 	 *
