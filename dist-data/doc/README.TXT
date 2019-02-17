@@ -5,6 +5,15 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+0.4.1	Beta	- Better duplicate searching
+                - Auto set number of check processes based on available threads.
+                - Scanner: WordUtils (::C ::l ...) + legend
+                - Sync user tags with guayadeque and mixxx
+                - Support kodi profiles in source options
+                - FLAC support by default
+                - Various and many fixes
+                - Remove MB wait (good idea ?)
+----------------------------------------------------------------------------------------------------------------------------------
 0.4.0	Beta	- Sync improved and easy setup
 				- New translation (Portuguese (Brazil))
 				- Compatible with JaMuz Remote v0.4.x only

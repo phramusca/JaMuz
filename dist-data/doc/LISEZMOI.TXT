@@ -5,6 +5,15 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+0.4.1	Beta	- Meilleure recherche de doublons
+                - Configuration du nombre de processus de vérification automatique
+                - Scanner: WordUtils (::C ::l ...) + légende
+                - Sync étiquettes avec guayadeque and mixxx
+                - Support profils kodi dans les sources
+                - FLAC support par défault
+                - Corrections Nombreuses et variées
+                - Suppression attente MB (bonne idée ?)
+----------------------------------------------------------------------------------------------------------------------------------
 0.4.0	Beta	- Synchro JaMuz Remote améliorée et configuration simplifiée
 				- Nouvelle traduction (Portuguese (Brazil))
 				- Compatible avec JaMuz Remote v0.4.x seulement
