@@ -301,9 +301,9 @@ public class TheMovieDb {
     private Map<Integer, MovieDb> getWatchList() {
         Map<Integer, MovieDb> watchList = new HashMap<>();
         try {
-            MovieResultsPage page = account.getWatchListMovies(sessionToken, accountId, 1);
+            MovieResultsPage page = account.getWatchListMovies(sessionToken, accountId, language, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                page = account.getWatchListMovies(sessionToken, accountId, i);
+                page = account.getWatchListMovies(sessionToken, accountId, language, i);
                 for(MovieDb movie : page.getResults()) {
                     watchList.put(movie.getId(), movie);
                 }
@@ -322,9 +322,9 @@ public class TheMovieDb {
     private Map<Integer, TvSeries> getWatchListTv() {
         Map<Integer, TvSeries> watchList = new HashMap<>();
         try {
-            TvResultsPage page = account.getWatchListSeries(sessionToken, accountId, 1);
+            TvResultsPage page = account.getWatchListSeries(sessionToken, accountId, language, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                page = account.getWatchListSeries(sessionToken, accountId, i);
+                page = account.getWatchListSeries(sessionToken, accountId, language, i);
                 for(TvSeries serie : page.getResults()) {
                     watchList.put(serie.getId(), serie);
                 }
@@ -339,9 +339,9 @@ public class TheMovieDb {
     private Map<Integer, TvSeries> getFavoritesTv() {
         Map<Integer, TvSeries> favorites = new HashMap<>();
         try {
-            TvResultsPage page = account.getFavoriteSeries(sessionToken, accountId, 1);
+            TvResultsPage page = account.getFavoriteSeries(sessionToken, accountId, language, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                page = account.getFavoriteSeries(sessionToken, accountId, i);
+                page = account.getFavoriteSeries(sessionToken, accountId, language, i);
                 for(TvSeries serie : page.getResults()) {
                     favorites.put(serie.getId(), serie);
                 }
@@ -356,7 +356,7 @@ public class TheMovieDb {
     private Map<Integer, MovieDb> getFavorites() {
         Map<Integer, MovieDb> favorites = new HashMap<>();
         try {
-            MovieResultsPage page = account.getFavoriteMovies(sessionToken, accountId);
+            MovieResultsPage page = account.getFavoriteMovies(sessionToken, accountId, language);
             for(MovieDb movie : page.getResults()) {
                 favorites.put(movie.getId(), movie);
             }
@@ -370,9 +370,9 @@ public class TheMovieDb {
     private Map<Integer, TvSeries> getUserRatingsTv() {
         Map<Integer, TvSeries> userRatings = new HashMap<>();
         try {
-            TvResultsPage page = account.getRatedTvSeries(sessionToken, accountId, 1);
+            TvResultsPage page = account.getRatedTvSeries(sessionToken, accountId, language, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                page = account.getRatedTvSeries(sessionToken, accountId, i);
+                page = account.getRatedTvSeries(sessionToken, accountId, language, i);
                 for(TvSeries serie : page.getResults()) {
                     userRatings.put(serie.getId(), serie);
                 }
@@ -388,9 +388,9 @@ public class TheMovieDb {
     private Map<Integer, MovieDb> getUserRatings() {
         Map<Integer, MovieDb> userRatings = new HashMap<>();
         try {
-            MovieResultsPage page = account.getRatedMovies(sessionToken, accountId, 1);
+            MovieResultsPage page = account.getRatedMovies(sessionToken, accountId, language, 1);
             for(int i=0; i<=page.getTotalPages(); i++) {
-                page = account.getRatedMovies(sessionToken, accountId, i);
+                page = account.getRatedMovies(sessionToken, accountId, language, i);
                 for(MovieDb movie : page.getResults()) {
                     userRatings.put(movie.getId(), movie);
                 }

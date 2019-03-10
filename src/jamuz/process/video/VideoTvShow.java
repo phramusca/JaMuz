@@ -60,7 +60,7 @@ public class VideoTvShow extends VideoAbstract {
             ratingVotes, "{Empty}", year, 
             "{Empty}", -1, mppaRating, -1, genre, "{Empty}", 
             titleOri, studio, trailerURL, fanartURLs, "{Empty}");
-        this.thumbnails = parseURLTvShows(thumbnails);
+        this.thumbnails = parseURLStringList(thumbnails, "<thumb aspect=\"poster\">", "</thumb>");
         myVideo = new MyTvShow(new TvSeries());
     }
 
@@ -108,17 +108,6 @@ public class VideoTvShow extends VideoAbstract {
 		this.thumbnails.add("https://image.tmdb.org/t/p/w396"+myTvShow.getSerie().getPosterPath()); 
         this.fanarts.add("https://image.tmdb.org/t/p/w396"+myTvShow.getSerie().getBackdropPath()); 
 	}
-    
-    private List<String> parseURLTvShows(String string) {
-        List<String> URLs = new ArrayList<>();
-        for(String splitted : string.split("<thumb aspect=\"poster\">")) { //NOI18N
-            if(splitted.startsWith("http")) { //NOI18N
-                splitted = splitted.substring(0, splitted.indexOf("</thumb>")); //NOI18N
-                URLs.add(splitted);
-            }
-        }
-        return URLs;
-    }
     
 	/**
 	 *

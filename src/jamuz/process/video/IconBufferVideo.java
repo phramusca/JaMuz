@@ -65,17 +65,14 @@ public class IconBufferVideo {
         }
         ImageIcon icon=null;
         if(readIfNotFound) {
-            //Icon not found, retrieving it and add it to the map
             icon= readIconFromCache(url);
-            if(icon!=null) {
-                icons.put(url, icon);
-                return icon;
-            }
-            icon= readIconFromInternet(url);
-            if(icon!=null) {
-                icons.put(url, icon);
-            }
+            if(icon==null) {
+				icon= readIconFromInternet(url);
+			} 
         }
+		if(icon!=null) {
+			icons.put(url, icon);
+		}
         return icon;
 	}
  

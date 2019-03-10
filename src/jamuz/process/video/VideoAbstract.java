@@ -424,17 +424,22 @@ public abstract class VideoAbstract implements Comparable {
 	 * @param string
 	 * @return
 	 */
-	protected final List<String> parseURLStringList(String string) {
+	protected final List<String> parseURLStringList(String string, String start, String end) {
+		//FIXME: Use a real XML parser here !! that may explain the icons not found
         List<String> URLs = new ArrayList<>();
         if(string!=null) {
-            for(String splitted : string.split("preview=\"")) { //NOI18N
+            for(String splitted : string.split(start)) { //NOI18N
                 if(splitted.startsWith("http")) { //NOI18N
-                    splitted = splitted.substring(0, splitted.indexOf("\">")); //NOI18N
+                    splitted = splitted.substring(0, splitted.indexOf(end)); //NOI18N
                     URLs.add(splitted);
                 }
             }
         }
         return URLs;
+    }
+	
+	final List<String> parseURLStringList(String string) {
+		return parseURLStringList(string, "preview=\"", "\">");
     }
 
     /**
