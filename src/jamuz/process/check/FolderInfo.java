@@ -958,12 +958,13 @@ public class FolderInfo implements java.lang.Comparable {
 				results.get("album").setKO();  //NOI18N
 			}
 
-			//TODO: Make this configurable in options
+			//FIXME: Make supported Formats configurable in options + support regex
 			ArrayList supportedFormats = new ArrayList<>();
 			supportedFormats.add("MPEG-1 Layer 3"); //NOI18N
 			supportedFormats.add("MPEG-2 Layer 3"); //NOI18N
 			supportedFormats.add("Ogg Vorbis v1"); //NOI18N
             supportedFormats.add("FLAC 16 bits"); //NOI18N
+			supportedFormats.add("FLAC 24 bits"); //NOI18N
 			
 			//FILE BY FILE ANALYSIS
             progressBar.setup(filesAudio.size());

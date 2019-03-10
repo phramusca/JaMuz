@@ -259,8 +259,6 @@ public class TableModelVideo extends TableModelGeneric {
 				Popup.error(ex);
 			}
 		}
-
-		// Démarrage du thread
 		tLoadIcons = new LoadIconsThread("Thread.TableModelVideo.loadThumbnails");
 		tLoadIcons.start();
 	}
@@ -274,19 +272,15 @@ public class TableModelVideo extends TableModelGeneric {
         @Override
 		public void run() {
             try {
-                loadIcons();
+                for(VideoAbstract fileInfoVideo : files) {
+					tLoadIcons.checkAbort();
+					fileInfoVideo.getThumbnail(true);
+					//this.fireTableDataChanged();
+				}
             }
             catch (InterruptedException ex) {
                 Popup.info(Inter.get("Msg.Process.Aborted"));  //NOI18N
             } 
 		}
 	}
-    
-    private void loadIcons() throws InterruptedException {
-        for(VideoAbstract fileInfoVideo : this.files) {
-            tLoadIcons.checkAbort();
-            fileInfoVideo.getThumbnail(true);
-            //this.fireTableDataChanged();
-        }
-    }
 }
