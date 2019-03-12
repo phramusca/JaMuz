@@ -2862,20 +2862,23 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      */
     public boolean checkAlbumSimilar(ArrayList<DuplicateInfo> myList, 
 			String album, int idPath) {
-        try {
-            PreparedStatement stSelectAlbumSimilar = dbConn.connection.prepareStatement(
-					SELECT_DUPLICATE
-                    + " WHERE album LIKE ? AND P.idPath!=?"
-                    + GROUP_DUPLICATE);     //NOI18N
-            stSelectAlbumSimilar.setString(1, "%" + album + "%");   //NOI18N
-            stSelectAlbumSimilar.setInt(2, idPath);
-            
-            getDuplicates(myList, stSelectAlbumSimilar, 1);
-            return true;
-        } catch (SQLException ex) {
-            Popup.error("checkSimilarAlbum(" + album + ")", ex);   //NOI18N
-            return false;
-        }
+        if (!album.equals("")) {
+			try {
+
+				PreparedStatement stSelectAlbumSimilar = dbConn.connection.prepareStatement(
+						SELECT_DUPLICATE
+						+ " WHERE album LIKE ? AND P.idPath!=?"
+						+ GROUP_DUPLICATE);     //NOI18N
+				stSelectAlbumSimilar.setString(1, "%" + album + "%");   //NOI18N
+				stSelectAlbumSimilar.setInt(2, idPath);
+
+				getDuplicates(myList, stSelectAlbumSimilar, 1);
+				return true;
+			} catch (SQLException ex) {
+				Popup.error("checkSimilarAlbum(" + album + ")", ex);   //NOI18N
+			}
+		}
+		return false;
     }
 
     private static final String SELECT_DUPLICATE = 
@@ -2897,20 +2900,22 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
      */
     public boolean checkAlbumExact(ArrayList<DuplicateInfo> myList, String album, 
 			int idPath) {
-        try {
-            PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(
-					SELECT_DUPLICATE
-                    + " WHERE album = ? AND P.idPath!=?"
-                    + GROUP_DUPLICATE);     //NOI18N
-            
-            stSelectAlbumExact.setString(1, album);
-            stSelectAlbumExact.setInt(2, idPath);
-            getDuplicates(myList, stSelectAlbumExact, 1);
-            return true;
-        } catch (SQLException ex) {
-            Popup.error("checkExactAlbum(" + album + ")", ex);   //NOI18N
-            return false;
-        }
+		if(!album.equals("")) {
+			try {
+				PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(
+						SELECT_DUPLICATE
+						+ " WHERE album = ? AND P.idPath!=?"
+						+ GROUP_DUPLICATE);     //NOI18N
+
+				stSelectAlbumExact.setString(1, album);
+				stSelectAlbumExact.setInt(2, idPath);
+				getDuplicates(myList, stSelectAlbumExact, 1);
+				return true;
+			} catch (SQLException ex) {
+				Popup.error("checkExactAlbum(" + album + ")", ex);   //NOI18N
+			}
+		}
+		return false;
     }
 
     /**
@@ -2920,12 +2925,13 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 	 * @param mbId
      * @return
      */
-    public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList, 
+    public boolean checkAlbumDuplicate(
+			ArrayList<DuplicateInfo> myList, 
 			String mbId) {
-		
         if (mbId!=null && !mbId.equals("")) {    //NOI18N
             try {
-                PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
+                PreparedStatement stSelectDuplicates = 
+					dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE
                     + " WHERE mbId LIKE ? "  //NOI18N
                     + " AND P.idPath!=? "
