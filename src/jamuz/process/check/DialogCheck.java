@@ -420,6 +420,7 @@ public class DialogCheck extends javax.swing.JDialog {
         jButtonSelectOriginal = new javax.swing.JButton();
         jButtonSelectDuplicate = new javax.swing.JButton();
         jButtonCheckScanner = new javax.swing.JButton();
+        jButtonNoDuplicate = new javax.swing.JButton();
         jScrollPaneCheckTags = new javax.swing.JScrollPane();
         jTableCheck = new jamuz.gui.swing.TableHorizontal();
         jButtonCheckUp = new javax.swing.JButton();
@@ -892,7 +893,7 @@ public class DialogCheck extends javax.swing.JDialog {
             .addGroup(jPanelGenreLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jCheckBoxCheckGenreDisplay)
-                .addContainerGap(391, Short.MAX_VALUE))
+                .addContainerGap(407, Short.MAX_VALUE))
         );
         jPanelGenreLayout.setVerticalGroup(
             jPanelGenreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1043,6 +1044,13 @@ public class DialogCheck extends javax.swing.JDialog {
             }
         });
 
+        jButtonNoDuplicate.setText("No duplicates");
+        jButtonNoDuplicate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonNoDuplicateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelCheckTagsLayout = new javax.swing.GroupLayout(jPanelCheckTags);
         jPanelCheckTags.setLayout(jPanelCheckTagsLayout);
         jPanelCheckTagsLayout.setHorizontalGroup(
@@ -1075,7 +1083,10 @@ public class DialogCheck extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBoxCheckMatches, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBoxCheckDuplicates, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                            .addGroup(jPanelCheckTagsLayout.createSequentialGroup()
+                                .addComponent(jButtonNoDuplicate)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxCheckDuplicates, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         jPanelCheckTagsLayout.setVerticalGroup(
             jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1090,7 +1101,8 @@ public class DialogCheck extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jComboBoxCheckDuplicates, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonSelectDuplicate))
+                            .addComponent(jButtonSelectDuplicate)
+                            .addComponent(jButtonNoDuplicate))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1715,6 +1727,23 @@ public class DialogCheck extends javax.swing.JDialog {
         PanelMain.forward();
     }//GEN-LAST:event_jButtonPlayerForwardActionPerformed
 
+    private void jButtonNoDuplicateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNoDuplicateActionPerformed
+		// TODO: Ask twice if duplicate status is KO
+		int n = JOptionPane.showConfirmDialog(
+					null, Inter.get("Question.Check.CleanDuplicate"),  //NOI18N
+					Inter.get("Label.Confirm"),  //NOI18N
+					JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			DuplicateInfo duplicateInfo = (DuplicateInfo) jComboBoxCheckDuplicates.getSelectedItem();
+			duplicateInfo.setErrorLevel(0);
+//			jComboBoxCheckDuplicates.updateUI();
+			ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());
+			match.resetStatus();
+			folder.setDuplicateStatus(match);
+			enableButtons();
+		}
+    }//GEN-LAST:event_jButtonNoDuplicateActionPerformed
+
        /**
 	 *
 	 * @param enable
@@ -2065,36 +2094,30 @@ public class DialogCheck extends javax.swing.JDialog {
     
     private void displayMatch(int matchId) throws CloneNotSupportedException {
 		enableAddOptions(false);
-        progressBar.setIndeterminate(Inter.get("Msg.Scan.SearchingMatches"));  //NOI18N
         ReleaseMatch match = folder.getMatch(matchId);//TODO: support match==null (should not happen)
         Map<String, FolderInfoResult> results = folder.getResults(); 
-		
         folder.analyseMatch(matchId, progressBar);
-		
-        progressBar.setIndeterminate(Inter.get("Msg.Scan.AnalyzingMatch"));  //NOI18N
         FolderInfoResult result = folder.getResults().get("nbFiles");  //NOI18N
         jLabelCheckNbFiles.setText(result.getDisplayText());
         jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());
 
     //DUPLICATES
         jComboBoxCheckDuplicates.removeAllItems();
-        if(match!=null) {
-            if(match.getDuplicates()!=null) {
-                if(match.getDuplicates().size()>0) {
-                    for(DuplicateInfo duplicate : match.getDuplicates()) {
-                        jComboBoxCheckDuplicates.addItem(duplicate);
-                    }
-                    jButtonSelectDuplicate.setEnabled(true);
-                }
-                else {
-                    jComboBoxCheckDuplicates.addItem(FolderInfoResult.colorField(Inter.get("Label.None"),0));  //NOI18N
-                    jButtonSelectDuplicate.setEnabled(false);
-                }
-            }
+        if(match!=null && match.getDuplicates()!=null) {
+			if(match.getDuplicates().size()>0) {
+				for(DuplicateInfo duplicate : match.getDuplicates()) {
+					jComboBoxCheckDuplicates.addItem(duplicate);
+				}
+				jButtonSelectDuplicate.setEnabled(true);
+			}
+			else {
+				jComboBoxCheckDuplicates.addItem(FolderInfoResult.colorField(Inter.get("Label.None"),0));  //NOI18N
+				jButtonSelectDuplicate.setEnabled(false);
+			}
         }
+		progressBar.setIndeterminate(Inter.get("Msg.Scan.AnalyzingMatch"));  //NOI18N
 
-    //TRACKS (ARTIST, TITLE, ...)
-
+		//TRACKS (ARTIST, TITLE, ...)
         //Number of files vs tracks
         result = results.get("nbFiles");  //NOI18N
         jLabelCheckNbFiles.setText(result.getDisplayText());
@@ -2106,8 +2129,7 @@ public class DialogCheck extends javax.swing.JDialog {
         else {
             jLabelCheckNbTracks.setText("");
         }
-        progressBar.setIndeterminate(Inter.get("Msg.Scan.AnalyzingMatch"));  //NOI18N
-    
+        
         //Display all tracks 
         displayMatchTracks();
 
@@ -2138,28 +2160,32 @@ public class DialogCheck extends javax.swing.JDialog {
         jLabelCheckYearTag.setToolTipText(result.getDisplayToolTip());
 
 
-    //ENABLE (OR NOT) OK, KO and DEL buttons
-        enableAddOptions(true);
-        jButtonCheckKO.setEnabled(!folder.isValid());
-        jButtonCheckOK.setEnabled(folder.isValid());
-
-        if(folder.isValid()) {
-            if(folder.isWarning()) {
-                jButtonCheckOK.setBackground(Color.orange);
-                jButtonCheckKO.setEnabled(true);
-                jButtonCheckDelete.setEnabled(true);
-            }
-            else {
-                jButtonCheckOK.setBackground(new Color(0, 128, 0));
-                jButtonCheckDelete.setEnabled(false);
-            }
-        }
-        else {
-            jButtonCheckOK.setBackground(Color.gray);
-            jButtonCheckDelete.setEnabled(true);
-        }
+        enableButtons();
 
         progressBar.reset();
+	}
+
+	private void enableButtons() {
+		//ENABLE (OR NOT) OK, KO and DEL buttons
+		enableAddOptions(true);
+		jButtonCheckKO.setEnabled(!folder.isValid());
+		jButtonCheckOK.setEnabled(folder.isValid());
+		
+		if(folder.isValid()) {
+			if(folder.isWarning()) {
+				jButtonCheckOK.setBackground(Color.orange);
+				jButtonCheckKO.setEnabled(true);
+				jButtonCheckDelete.setEnabled(true);
+			}
+			else {
+				jButtonCheckOK.setBackground(new Color(0, 128, 0));
+				jButtonCheckDelete.setEnabled(false);
+			}
+		}
+		else {
+			jButtonCheckOK.setBackground(Color.gray);
+			jButtonCheckDelete.setEnabled(true);
+		}
 	}
 
     private static void applyGenre(String genre) {
@@ -2292,6 +2318,7 @@ public class DialogCheck extends javax.swing.JDialog {
     private static javax.swing.JButton jButtonCheckSingleFolder;
     private javax.swing.JButton jButtonCheckUp;
     private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonNoDuplicate;
     private static javax.swing.JButton jButtonPlayerForward;
     private static javax.swing.JButton jButtonPlayerNext;
     private static javax.swing.JButton jButtonPlayerPrevious;

@@ -516,6 +516,10 @@ public class ReleaseMatch implements java.lang.Comparable {
 		return discTotal;
 	}
 
+	void resetStatus() {
+		isErrorDuplicate=false;
+		isWarningDuplicate=false;
+	}
 	
 	/**
 	 * Relation class
