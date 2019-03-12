@@ -51,6 +51,7 @@ import java.util.LinkedHashMap;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModelCheckTracks;
+import static jamuz.process.check.DialogCheck.progressBar;
 import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
@@ -958,7 +959,7 @@ public class FolderInfo implements java.lang.Comparable {
 				results.get("album").setKO();  //NOI18N
 			}
 
-			//FIXME: Make supported Formats configurable in options + support regex
+			//FIXME !!! Make supported Formats configurable in options + support regex
 			ArrayList supportedFormats = new ArrayList<>();
 			supportedFormats.add("MPEG-1 Layer 3"); //NOI18N
 			supportedFormats.add("MPEG-2 Layer 3"); //NOI18N
@@ -1151,26 +1152,19 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @throws java.lang.CloneNotSupportedException
 	 */
 	public void analyseMatch(int matchId, ProgressBar progressBar) throws CloneNotSupportedException {
-        
         ReleaseMatch match = getMatch(matchId);
         if(match==null) {
             return;
         }
 		
+		progressBar.setIndeterminate(Inter.get("Msg.Scan.SearchingMatches"));  //NOI18N
 		results.get("nbFiles").restoreFolderErrorLevel(); //NOI18N
 		//Get match tracks
-		List<Track> tracks=match.getTracks(progressBar);
-		
 		match.getDuplicates();
-		results.get("duplicates").setOK();  //NOI18N
-		if(match.isIsErrorDuplicate()) {
-			results.get("duplicates").setKO();  //NOI18N
-		}
-		if(match.isIsWarningDuplicate()) {
-			results.get("duplicates").setWarning();  //NOI18N
-		}
+		setDuplicateStatus(match);
 		
-        progressBar.setIndeterminate(Inter.get("Msg.Scan.SearchingMatches"));  //NOI18N
+        progressBar.setIndeterminate(Inter.get("Msg.Scan.AnalyzingMatch"));  //NOI18N
+		List<Track> tracks=match.getTracks(progressBar);
 		if(match.isOriginal()) {
 			results.get("nbFiles").tooltip=Inter.get("Tooltip.OriginalMatch");  //NOI18N
 			results.get("nbFiles").setWarning();  //NOI18N
@@ -1954,6 +1948,16 @@ public class FolderInfo implements java.lang.Comparable {
 
 	public String getNewGenre() {
 		return newGenre;
+	}
+
+	void setDuplicateStatus(ReleaseMatch match) {
+		results.get("duplicates").setOK();  //NOI18N
+		if(match.isIsErrorDuplicate()) {
+			results.get("duplicates").setKO();  //NOI18N
+		}
+		if(match.isIsWarningDuplicate()) {
+			results.get("duplicates").setWarning();  //NOI18N
+		}
 	}
 	
 	/**

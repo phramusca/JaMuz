@@ -294,7 +294,11 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jComboBoxCheckMatches" max="32767" attributes="2"/>
-                                  <Component id="jComboBoxCheckDuplicates" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="jButtonNoDuplicate" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jComboBoxCheckDuplicates" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -316,6 +320,7 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jComboBoxCheckDuplicates" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonSelectDuplicate" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButtonNoDuplicate" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -1038,7 +1043,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jCheckBoxCheckGenreDisplay" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="391" max="32767" attributes="0"/>
+                          <EmptySpace pref="407" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1333,6 +1338,14 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButtonNoDuplicate">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="No duplicates"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonNoDuplicateActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

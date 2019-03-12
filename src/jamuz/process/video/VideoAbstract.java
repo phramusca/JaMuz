@@ -422,10 +422,13 @@ public abstract class VideoAbstract implements Comparable {
 	/**
 	 *
 	 * @param string
+	 * @param start
+	 * @param end
 	 * @return
 	 */
 	protected final List<String> parseURLStringList(String string, String start, String end) {
-		//FIXME: Use a real XML parser here !! that may explain the icons not found
+		//FIXME VIDEO Pb reading covers in some cases
+		// Use a real XML parser here !! that may explain the icons not found
         List<String> URLs = new ArrayList<>();
         if(string!=null) {
             for(String splitted : string.split(start)) { //NOI18N

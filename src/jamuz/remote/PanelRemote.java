@@ -68,7 +68,7 @@ public class PanelRemote extends javax.swing.JPanel {
 	}
 	
 	public void initExtended(ICallBackServer callback) {
-		//FIXME: Store and restore server port
+		//FIXME !!!!! Store and restore server port
 		server = new Server((Integer) jSpinnerPort.getValue(), callback);
 		jTableRemote.setModel(server.getTableModel());
 		jTableRemote.setRowSorter(null);
