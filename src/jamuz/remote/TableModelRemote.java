@@ -39,12 +39,16 @@ public class TableModelRemote extends TableModelGeneric {
 	}
 	
 	public void setColumnNames() {
+		//FIXME Z SERVER Progress & status
+		// -Inter
+		// - split "Status" into "Datetime" and "Status"
+		// -use "Status" & "Progress" columns accordingly
         this.setColumnNames(new String [] {
             "Remote",
 			"Sync",
 			"Name",
-			"Sync Status",
-			"Merge Status"
+			"Status",
+			"Progress"
         });
 		this.fireTableStructureChanged();
 	}

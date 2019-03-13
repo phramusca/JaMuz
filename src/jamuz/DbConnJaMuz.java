@@ -61,13 +61,13 @@ public class DbConnJaMuz extends StatSourceSQL {
     //TODO DB: How to log SQL generated queries ?
     //http://code.google.com/p/log4jdbc/
     
-    //FIXME ZZ REVIEW code review database methods:
+    //FIXME ZZZZZZ REVIEW code review database methods:
     //Check that nbRowsAffected is properly checked (==1 or >0 depending)
     //Check that all functions return a boolean and that this one is used
     //Check that batches are used whenever possible and needed
     //http://stackoverflow.com/questions/2467125/reusing-a-preparedstatement-multiple-times
     
-	//FIXME ZZ REVIEW: Internationalization
+	//FIXME ZZZZZZ REVIEW: Internationalization
 	// ( !! Test at each step !! )
 	// 1 - Use BundleScanner to remove uneeded entries
 	// 2 - Use NetBeans editor to merge duplicate entries if applicable
@@ -1809,7 +1809,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 return false;
             }
         } catch (SQLException ex) {
-			//FIXME LOW OPTIONS Happens when the device is linked to a stat source => 
+			//FIXME Z OPTIONS Happens when the device is linked to a stat source => 
 			// => Popup this nicely to user !
 			//instead of:
 			//java.sql.SQLException: [SQLITE_CONSTRAINT]  
@@ -2091,7 +2091,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 sql = "SELECT checked, strPath, name, coverHash, album, artist, albumArtist, year, "
                         + "ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, " +  //NOI18N
                         "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"  //NOI18N
-						//FIXME LOW PanelSelect SELECT BY idPath (as grouped)
+						//FIXME Z PanelSelect SELECT BY idPath (as grouped)
 							//ex: Album "Charango" is either from Morcheeba or Yannick Noah
 							//BUT files from both album are displayed in both cases
 							//(WAS seen as only one album in Select tab, before group by idPath)
@@ -2217,7 +2217,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		int i=0;
 		for(FileInfo fileInfo : files) {
 			if(fileInfo.getTags()!=null) {
-				//FIXME LOW MERGE Update tags and date in the same transaction 
+				//FIXME Z MERGE Update tags and date in the same transaction 
 				//so it can be rolled back and probably faster
 				if(!setTags(fileInfo.getTags(), fileInfo.getIdFile())) {
 					if(results!=null) {
@@ -2633,7 +2633,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
         ResultSet rs=null;
         try {
             st = dbConn.connection.createStatement();
-			//FIXME LOW PanelSelect better validate year (but regex is not available by default :( )
+			//FIXME ZZ PanelSelect better validate year (but regex is not available by default :( )
             rs = st.executeQuery("SELECT "+maxOrMin+"(year) FROM file "
 					+ "WHERE year GLOB '[0-9][0-9][0-9][0-9]' AND length(year)=4"); 
 						//To exclude wrong entries (not YYYY format)
@@ -3081,7 +3081,7 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                 " \nWHERE F.deleted=0 AND P.deleted=0 "    //NOI18N
                 + " \nAND F.rating IN " + getCSVlist(selRatings) 
                 + " \nAND P.checked IN " + getCSVlist(selCheckedFlag)  //NOI18N
-				//FIXME LOW PanelSelect Check year valid and offer "allow invalid" as an option
+				//FIXME Z PanelSelect Check year valid and offer "allow invalid" as an option
 				//https://stackoverflow.com/questions/5071601/how-do-i-use-regex-in-a-sqlite-query
 //				else if(yearList.get(0).matches("\\d{4}")) {  //NOI18N
 //					results.get("year").value=yearList.get(0);  //NOI18N

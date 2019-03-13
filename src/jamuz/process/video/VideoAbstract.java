@@ -427,7 +427,7 @@ public abstract class VideoAbstract implements Comparable {
 	 * @return
 	 */
 	protected final List<String> parseURLStringList(String string, String start, String end) {
-		//FIXME VIDEO Pb reading covers in some cases
+		//FIXME ZZ VIDEO Pb reading covers in some cases
 		// Use a real XML parser here !! that may explain the icons not found
         List<String> URLs = new ArrayList<>();
         if(string!=null) {

@@ -803,7 +803,7 @@ public class PanelStats extends javax.swing.JPanel {
 			return;
 		}
 		
-		//FIXME LOW STATS Use status filters when applicable
+		//FIXME ZZ STATS Use status filters when applicable
 		
         String stat = getSelectedButtonText(buttonGroupStat);
         

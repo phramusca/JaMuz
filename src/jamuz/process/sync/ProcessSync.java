@@ -193,7 +193,7 @@ public class ProcessSync extends ProcessAbstract {
         this.checkAbort();
         progressBar.setup(fileInfoSourceList.size() + fileInfoDestinationList.size());
 		callback.refresh();
-		//FIXME LOW SYNC: Offer deletion as an option now that process is labeled "export" and not "sync" anymore !!!!
+		//FIXME Z SYNC: Offer deletion as an option now that process is labeled "export" and not "sync" anymore !!!!
         this.toInsertInDeviceFiles = new ArrayList<>();
         //Remove files on destination
         for (FileInfoInt fileInfo : fileInfoDestinationList) {
@@ -256,7 +256,7 @@ public class ProcessSync extends ProcessAbstract {
 		//FileSystem.copyFile preserves datetime
 		//Unfortunatly on some devices it does not work
 		//ex: Android (https://stackoverflow.com/questions/18677438/android-set-last-modified-time-for-the-file)
-		//=> FIXME LOW SYNC Make options of these, must be one or the other
+		//=> FIXME Z SYNC Make options of these, must be one or the other
 		//to detect if file is different
 		boolean doCheckLastModified = true; // Faster but does not work for android (JaMuz Remote is not concerned)
 		boolean doCheckContent = false;		// Way Slower (especially over wifi) but more reliable

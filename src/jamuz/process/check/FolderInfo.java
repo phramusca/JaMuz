@@ -504,7 +504,7 @@ public class FolderInfo implements java.lang.Comparable {
 			}
 
 			//FIXME TEST ReplayGain
-			//FIXME LOW REMOTE If replaygain tags cannot be read on remote (try to use what is done here first)
+			//FIXME Z SERVER If replaygain tags cannot be read on remote (try to use what is done here first)
 			//then sync tags and use those instead (ie: do not try to read replaygain on remote, sync it instead)
 			if(!isReplayGainDone || recalculateGain) {
 				//http://www.bobulous.org.uk/misc/Replay-Gain-in-Linux.html				
@@ -1020,7 +1020,7 @@ public class FolderInfo implements java.lang.Comparable {
                 }
 
                 //Analyze SIZE
-				//FIXME LOW SCAN We should delete files with (audioFile.getSize() <= 0) as:
+				//FIXME Z SCAN We should delete files with (audioFile.getSize() <= 0) as:
 				//makes writing tags crashing
 				//kodi does not include those in library so they end up not found during merge
 				//not valid anyway and cause other problems
@@ -1598,11 +1598,11 @@ public class FolderInfo implements java.lang.Comparable {
                     moveToLibrary(progressBar, CheckedFlag.OK_WARNING, true);
                     break;
                 case KO:
-					//FIXME LOW CHECK Rename too, if on library
+					//FIXME Z CHECK Rename too, if on library
                     KO(progressBar);
                     break;
                 case KO_LIBRARY:
-					//FIXME LOW CHECK Rename too, but need to insure that filename and path are valid
+					//FIXME Z CHECK Rename too, but need to insure that filename and path are valid
 					//=> Move to an "Issues" folder and replace bad tags by "Missing artist", "Empty album" ...
                     moveToLibrary(progressBar, CheckedFlag.KO, false);
                     break;
