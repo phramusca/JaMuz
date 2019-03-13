@@ -187,7 +187,7 @@ public class Server {
 										file = Jamuz.getDb().getFile(idFile);
 										toInsertInDeviceFiles.add(file);
 									}
-									//FIXME LOW REMOTE Insert in devicefile at export
+									//FIXME Z SERVER Insert in devicefile at export
 									//as using db results in timeouts when using PanelCheck meantime for instance
 									//+it will speed up as no need for double-ack
 									//-> need to merge first before sending new list of files to download
@@ -201,7 +201,7 @@ public class Server {
 											list.add(ins.toMap());
 										}
 										
-									}//FIXME LOW REMOTE else { Manage potential error => Send STOP to remote with error msg }
+									}//FIXME Z SERVER else { Manage potential error => Send STOP to remote with error msg }
 									setStatus(login, "Sending list of ack. files");
 									JSONObject obj = new JSONObject();
 									obj.put("type", "insertDeviceFileSAck");
@@ -290,7 +290,7 @@ public class Server {
 					callback.connectedRemote(client.getClientId());
 				} 
             } else {
-				//FIXME LOW REMOTE Make this disconnect client AND NOT RECONNECT ("Authentication failed." in android notif)
+				//FIXME Z SERVER Make this disconnect client AND NOT RECONNECT ("Authentication failed." in android notif)
 				client.send("MSG_ERROR_CONNECTION"); 
 			}
 			tableModel.fireTableDataChanged();

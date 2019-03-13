@@ -475,7 +475,7 @@ public class PanelRemote extends javax.swing.JPanel {
 	private void menuExport() {
         ClientInfo clientInfo = getSelected();
         if(clientInfo!=null) {
-			//FIXME LOW REMOTE allow aborting with another menu item
+			//FIXME Z SERVER allow aborting with another menu item
 			ProcessSync processSync = new ProcessSync(
 					"Thread.PanelSync.ProcessSync.Remote", 
 					clientInfo.getDevice(), clientInfo.getProgressBar(), 

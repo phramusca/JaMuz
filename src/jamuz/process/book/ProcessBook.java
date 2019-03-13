@@ -99,7 +99,7 @@ public class ProcessBook extends ProcessAbstract {
 			checkAbort();
 			PanelBook.progressBar.progress(book.getTitle());
 			sourceFile = new File(book.getFullPath());
-			//FIXME LOW BOOK Use a template for export destination
+			//FIXME ZZZ BOOK Use a template for export destination
 			destinationFile = new File(FilenameUtils.concat(
 					Jamuz.getOptions().get("book.destination"), 
 					book.getRelativeFullPath()));

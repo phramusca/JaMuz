@@ -31,8 +31,8 @@ import org.apache.commons.io.FilenameUtils;
 public class Book implements Comparable {
 	private final String title; 
 	private final String title_sort;
-	private final String pubdate; //FIXME LOW BOOK Filter pubdate (& format: keep only year & maybe month)
-	private final String author; //FIXME LOW BOOK Filter author (use books_authors_link => ArrayList)
+	private final String pubdate; //FIXME ZZZ BOOK Filter pubdate (& format: keep only year & maybe month)
+	private final String author; //FIXME ZZZ BOOK Filter author (use books_authors_link => ArrayList)
 	private final String author_sort;  
 	private final String uuid; 
 	private final String filenameWithoutExtension;
@@ -40,8 +40,8 @@ public class Book implements Comparable {
 	private FileSizeComparable length;
 	private final String comment; 
 	private final String rating; 
-	private final String language; //FIXME LOW BOOK Filter language (use books_languages_link)
-	private final List<String> formats; //FIXME LOW BOOK Filter format
+	private final String language; //FIXME ZZZ BOOK Filter language (use books_languages_link)
+	private final List<String> formats; //FIXME ZZZ BOOK Filter format
 	private final List<String> tags;
 	private final String tagStr;
 
@@ -51,7 +51,7 @@ public class Book implements Comparable {
 	 * @return the value of format
 	 */
 	public String getFormat() {
-		//FIXME LOW BOOK A book can have multiple formats (epub and azw for instance)
+		//FIXME ZZZ BOOK A book can have multiple formats (epub and azw for instance)
 		//Which to select ?
 		return formats.contains("EPUB")?"epub":formats.get(0).toLowerCase();
 	}
