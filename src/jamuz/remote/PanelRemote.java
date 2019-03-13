@@ -18,6 +18,7 @@ package jamuz.remote;
 
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
+import jamuz.Jamuz;
 import jamuz.gui.DialogQRcode;
 import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressBar;
@@ -66,10 +67,15 @@ public class PanelRemote extends javax.swing.JPanel {
 		initComponents();
 		setIpText();
 	}
-	
+
 	public void initExtended(ICallBackServer callback) {
-		//FIXME !!!!! Store and restore server port
-		server = new Server((Integer) jSpinnerPort.getValue(), callback);
+		
+		boolean onStartup = Boolean.valueOf(Jamuz.getOptions().get("server.on.startup", "false"));
+		jCheckBoxServerStartOnStartup.setSelected(onStartup);
+		int port = Integer.valueOf(Jamuz.getOptions().get("server.port", "2013"));
+		jSpinnerPort.setValue(port);
+		server = new Server(port, callback);
+
 		jTableRemote.setModel(server.getTableModel());
 		jTableRemote.setRowSorter(null);
 		//Adding columns from model. Cannot be done automatically on properties
@@ -88,7 +94,9 @@ public class PanelRemote extends javax.swing.JPanel {
         jTableRemote.addMouseListener(popupListener);
 		
 		server.fillClients();
-		startStopRemoteServer();
+		if(onStartup) {
+			startStopRemoteServer();
+		}
 	}
 	
 	public class ProgressCellRender extends JProgressBar implements TableCellRenderer {
@@ -249,6 +257,8 @@ public class PanelRemote extends javax.swing.JPanel {
 			if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
 				server.setPort((Integer) jSpinnerPort.getValue());
 				if(server.connect()) {
+					Jamuz.getOptions().set("server.port", String.valueOf(server.getPort()));
+					Jamuz.getOptions().save();
 					enableConfig(false);
 					jButtonQRcode.setEnabled(true);
 					jButtonStart.setText(Inter.get("Button.Pause"));
@@ -306,7 +316,11 @@ public class PanelRemote extends javax.swing.JPanel {
         jCheckBoxServerStartOnStartup.setSelected(true);
         jCheckBoxServerStartOnStartup.setText(Inter.get("PanelMain.jCheckBoxServerStartOnStartup.text")); // NOI18N
         jCheckBoxServerStartOnStartup.setToolTipText(Inter.get("PanelMain.jCheckBoxServerStartOnStartup.toolTipText")); // NOI18N
-        jCheckBoxServerStartOnStartup.setEnabled(false);
+        jCheckBoxServerStartOnStartup.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxServerStartOnStartupItemStateChanged(evt);
+            }
+        });
 
         jLabelIP.setText("IP: xxx.xxx.xxx.xxx"); // NOI18N
 
@@ -337,17 +351,16 @@ public class PanelRemote extends javax.swing.JPanel {
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addComponent(jLabelIP)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPaneCheckTags1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jCheckBoxServerStartOnStartup))
+                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonQRcode)
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(jCheckBoxServerStartOnStartup)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonStart)))
                 .addContainerGap())
         );
@@ -358,12 +371,13 @@ public class PanelRemote extends javax.swing.JPanel {
                     .addComponent(jButtonStart)
                     .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(jCheckBoxServerStartOnStartup)
                     .addComponent(jButtonQRcode))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelIP)
+                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelIP)
+                    .addComponent(jCheckBoxServerStartOnStartup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -415,6 +429,11 @@ public class PanelRemote extends javax.swing.JPanel {
     private void jSpinnerPortStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerPortStateChanged
         setIpText();
     }//GEN-LAST:event_jSpinnerPortStateChanged
+
+    private void jCheckBoxServerStartOnStartupItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxServerStartOnStartupItemStateChanged
+        Jamuz.getOptions().set("server.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
+		Jamuz.getOptions().save();
+    }//GEN-LAST:event_jCheckBoxServerStartOnStartupItemStateChanged
 
 	private ClientInfo getSelected() {
 		int selectedRow = jTableRemote.getSelectedRow(); 			

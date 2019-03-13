@@ -117,6 +117,10 @@ public class Server {
         }
 	}
 
+	int getPort() {
+		return port;
+	}
+
 	class HandleLogin extends ProcessAbstract {
 
 		public HandleLogin(ServerSocket ss){

@@ -58,18 +58,17 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabelIP" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="jCheckBoxServerStartOnStartup" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jScrollPaneCheckTags1" max="32767" attributes="2"/>
+                      <Component id="jScrollPaneCheckTags1" pref="492" max="32767" attributes="2"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jSpinnerPort" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="jButtonQRcode" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="32767" attributes="0"/>
-                          <Component id="jCheckBoxServerStartOnStartup" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="jButtonStart" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -84,13 +83,15 @@
                       <Component id="jButtonStart" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jSpinnerPort" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jCheckBoxServerStartOnStartup" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButtonQRcode" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabelIP" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabelIP" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jCheckBoxServerStartOnStartup" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPaneCheckTags1" pref="38" max="32767" attributes="2"/>
+                  <Component id="jScrollPaneCheckTags1" pref="32" max="32767" attributes="2"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -133,8 +134,10 @@
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="jamuz/gui/Bundle.properties" key="PanelMain.jCheckBoxServerStartOnStartup.toolTipText" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jCheckBoxServerStartOnStartupItemStateChanged"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelIP">
           <Properties>
