@@ -959,7 +959,9 @@ public class FolderInfo implements java.lang.Comparable {
 				results.get("album").setKO();  //NOI18N
 			}
 
-			//FIXME !!! Make supported Formats configurable in options + support regex
+			//FIXME !!! Make supported Formats configurable in options 
+			// - Offer user the choice to add a new one from Check panel when required
+			// - support regex
 			ArrayList supportedFormats = new ArrayList<>();
 			supportedFormats.add("MPEG-1 Layer 3"); //NOI18N
 			supportedFormats.add("MPEG-2 Layer 3"); //NOI18N
