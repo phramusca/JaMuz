@@ -339,7 +339,6 @@ public class PanelMerge extends javax.swing.JPanel {
 	}
     
     private void jButtonMergeStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeStartActionPerformed
-
         if (jButtonMergeStart.getText().equals(Inter.get("Button.Abort"))) { 
 			jButtonMergeStart.setEnabled(false);
             jButtonMergeStart.setText(Inter.get("Button.Aborting")); 			  //NOI18N
