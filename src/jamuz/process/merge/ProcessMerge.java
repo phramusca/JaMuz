@@ -151,13 +151,14 @@ public class ProcessMerge extends ProcessAbstract {
         }
         finally {
             progressBar.reset();
+			//FIXME !!! Ending with 210 errors, but not all are logged. Why ???
 			progressBar.setString(
 					DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)
 					+" | "+popupMsg+" "+completedList.size()
 					+" change(s). " + errorList.size() + " error(s).");
 			callback.completed(errorList, completedList, popupMsg, mergeReport);
         }
-	}
+	} 
 
 	private boolean mergeMain() throws InterruptedException, CloneNotSupportedException {
 		
@@ -405,18 +406,16 @@ public class ProcessMerge extends ProcessAbstract {
 							dBJaMuz.getName()
 						})); 
                 //Add to ErrorList
-//				myFileInfoDbSelected.sourceName=MessageFormat.format(Inter.get("Error.Merge.NotFound"), 
-//new Object[] {dBJaMuz.name, selectedStatSource.source.name});  //NOI18N
                 fileDbSelected.setSourceName(run+"-"+dBJaMuz.getName()
 						+":\t"+Inter.get("Label.NotFound"));
                 errorList.add((FileInfo) fileDbSelected.clone());
-                if(fileDbSelected.getRating()>0) {
+//                if(fileDbSelected.getRating()>0) {
                     if(doLogText) {
                         addToLog(fileDbSelected.getRating()+","
 								+fileDbSelected.getFormattedLastPlayed()+","
 								+fileDbSelected.getRelativeFullPath(), ""); //NOI18N
                     }
-                }
+//                }
 				nbFilesNotFoundSelected+=1;
 			}
         }
@@ -433,13 +432,13 @@ public class ProcessMerge extends ProcessAbstract {
 					+selectedStatSource.getSource().getName()
 					+":\t"+Inter.get("Label.NotFound"));
             errorList.add((FileInfo) fileInfoDbJaMuz.clone());
-            if(fileInfoDbJaMuz.getRating()>0) {
+//            if(fileInfoDbJaMuz.getRating()>0) {
                 if(doLogText) {
                     addToLog("", fileInfoDbJaMuz.getRating()+","
 							+fileInfoDbJaMuz.getFormattedLastPlayed()+","
 							+fileInfoDbJaMuz.getRelativeFullPath()); 
                 }
-            }
+//            }
             nbFilesNotFoundJaMuz+=1;
         }
 	}
