@@ -187,6 +187,9 @@
                           <Events>
                             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jRadioSelectAlbumNameItemStateChanged"/>
                           </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                          </AuxValues>
                         </Component>
                         <Component class="javax.swing.JRadioButton" name="jRadioSelectAlbumDate">
                           <Properties>
@@ -279,6 +282,9 @@
                           <Events>
                             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jRadioSelectArtistNameItemStateChanged"/>
                           </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                          </AuxValues>
                         </Component>
                         <Component class="javax.swing.JRadioButton" name="jRadioSelectArtistRating">
                           <Properties>

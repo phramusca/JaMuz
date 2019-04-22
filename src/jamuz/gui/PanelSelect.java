@@ -1023,6 +1023,8 @@ public class PanelSelect extends javax.swing.JPanel {
         jCheckBoxSelectCheckedFlag1.setSelected(true);
         jCheckBoxSelectCheckedFlag2.setSelected(true);
         jCheckBoxSelectCheckedFlag3.setSelected(true);
+		jRadioSelectAlbumName.setSelected(true);
+		jRadioSelectArtistName.setSelected(true);
         
         selGenre="%"; 
 		selArtist = new ListElement("%", "artist"); //NOI18N
@@ -1519,9 +1521,9 @@ public class PanelSelect extends javax.swing.JPanel {
     private javax.swing.JPanel jPanelSelectYear;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JRadioButton jRadioSelectAlbumDate;
-    private javax.swing.JRadioButton jRadioSelectAlbumName;
+    private static javax.swing.JRadioButton jRadioSelectAlbumName;
     private javax.swing.JRadioButton jRadioSelectAlbumRating;
-    private javax.swing.JRadioButton jRadioSelectArtistName;
+    private static javax.swing.JRadioButton jRadioSelectArtistName;
     private javax.swing.JRadioButton jRadioSelectArtistRating;
     private javax.swing.JScrollPane jScrollPaneSelect;
     private javax.swing.JScrollPane jScrollPaneSelectAlbum;
