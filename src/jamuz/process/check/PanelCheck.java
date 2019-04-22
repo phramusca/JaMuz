@@ -145,6 +145,14 @@ public class PanelCheck extends javax.swing.JPanel {
 					res+="accept.png"; //NOI18N
 					color=Color.ORANGE;
 					break;
+				case KO_LIBRARY:
+					res+="document_insert.png";
+					color=Color.RED;
+					break;
+				case WARNING_LIBRARY:
+					res+="document_insert.png";
+					color=Color.ORANGE;
+					break;
 				case SAVE:
 					res+="application_form_edit.png"; //NOI18N
 					color=new Color(0,153,143);
@@ -156,6 +164,7 @@ public class PanelCheck extends javax.swing.JPanel {
 				case MANUAL:
 					res+="document_todo.png";
 					break;
+				
 			}
 			jButtonActionInJList.setIcon(new javax.swing.ImageIcon(getClass().getResource(res)));
 			jButtonActionInJList.setText(folder.action.toString());

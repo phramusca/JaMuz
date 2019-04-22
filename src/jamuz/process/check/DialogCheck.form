@@ -235,10 +235,10 @@
                   <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/cancel.png"/>
+                  <Image iconType="3" name="/jamuz/ressources/document_insert.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.KO.Library" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.KO" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -254,10 +254,10 @@
                   <Color blue="0" green="c8" id="orange" palette="1" red="ff" type="palette"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/accept.png"/>
+                  <Image iconType="3" name="/jamuz/ressources/document_insert.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK.Warning.Library" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK.Warning" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>

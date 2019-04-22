@@ -111,7 +111,7 @@ public class DialogCheck extends javax.swing.JDialog {
 
         DialogCheck dialog = new DialogCheck(new JFrame(), true, folder);
 		
-		Dimension parentSize = PanelMain.getDimension();
+		Dimension parentSize = (Dimension) PanelMain.getDimension().clone();
 		
         //Set dialog size to x% of screen size
         parentSize.height = parentSize.height * 85/100;
@@ -482,8 +482,8 @@ public class DialogCheck extends javax.swing.JDialog {
         jProgressBarCheckDialog.setStringPainted(true);
 
         jButtonCheckKOLibrary.setBackground(java.awt.Color.red);
-        jButtonCheckKOLibrary.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
-        jButtonCheckKOLibrary.setText(bundle.getString("Check.KO.Library")); // NOI18N
+        jButtonCheckKOLibrary.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/document_insert.png"))); // NOI18N
+        jButtonCheckKOLibrary.setText(bundle.getString("Check.KO")); // NOI18N
         jButtonCheckKOLibrary.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCheckKOLibraryActionPerformed(evt);
@@ -491,8 +491,8 @@ public class DialogCheck extends javax.swing.JDialog {
         });
 
         jButtonCheckOKLibrary.setBackground(java.awt.Color.orange);
-        jButtonCheckOKLibrary.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/accept.png"))); // NOI18N
-        jButtonCheckOKLibrary.setText(bundle.getString("Check.OK.Warning.Library")); // NOI18N
+        jButtonCheckOKLibrary.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/document_insert.png"))); // NOI18N
+        jButtonCheckOKLibrary.setText(bundle.getString("Check.OK.Warning")); // NOI18N
         jButtonCheckOKLibrary.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCheckOKLibraryActionPerformed(evt);
@@ -1339,14 +1339,10 @@ public class DialogCheck extends javax.swing.JDialog {
     private void jButtonCheckPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckPreviewActionPerformed
         PanelMain.getQueueModel().clear();
         folder.queueAll();
-//        this.dispose();
     }//GEN-LAST:event_jButtonCheckPreviewActionPerformed
 
     private void jButtonCheckEditTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckEditTagActionPerformed
-        //        FolderInfo folderInfo = process.getFolderInfo();
-        //        if(folderInfo!=null) {
-            PanelMain.editLocation(folder.getFullPath());
-            //        }
+        PanelMain.editLocation(folder.getFullPath());
     }//GEN-LAST:event_jButtonCheckEditTagActionPerformed
 
     private void jButtonCheckOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckOKActionPerformed
