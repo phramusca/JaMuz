@@ -26,7 +26,6 @@ import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -51,8 +50,6 @@ import jamuz.utils.Swing;
 import jamuz.utils.Utils;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import javax.swing.BorderFactory;
@@ -113,15 +110,13 @@ public class DialogCheck extends javax.swing.JDialog {
 		//</editor-fold>
 
         DialogCheck dialog = new DialogCheck(new JFrame(), true, folder);
-        //Get screen size
-		Dimension screenSize = new Dimension();
-		GraphicsDevice gd = dialog.getGraphicsConfiguration().getDevice();		
-		screenSize.width = gd.getDisplayMode().getWidth();
-		screenSize.height = gd.getDisplayMode().getHeight();
+		
+		Dimension parentSize = PanelMain.getDimension();
+		
         //Set dialog size to x% of screen size
-        screenSize.height = screenSize.height * 85/100;
-        screenSize.width = screenSize.width * 95/100;
-        dialog.setSize(screenSize);
+        parentSize.height = parentSize.height * 85/100;
+        parentSize.width = parentSize.width * 95/100;
+        dialog.setSize(parentSize);
         //Center the dialog on screen
         dialog.setLocationRelativeTo(dialog.getParent());
         //Change title
