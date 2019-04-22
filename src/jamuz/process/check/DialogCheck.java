@@ -51,6 +51,8 @@ import jamuz.utils.Swing;
 import jamuz.utils.Utils;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import javax.swing.BorderFactory;
@@ -112,7 +114,10 @@ public class DialogCheck extends javax.swing.JDialog {
 
         DialogCheck dialog = new DialogCheck(new JFrame(), true, folder);
         //Get screen size
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension screenSize = new Dimension();
+		GraphicsDevice gd = dialog.getGraphicsConfiguration().getDevice();		
+		screenSize.width = gd.getDisplayMode().getWidth();
+		screenSize.height = gd.getDisplayMode().getHeight();
         //Set dialog size to x% of screen size
         screenSize.height = screenSize.height * 85/100;
         screenSize.width = screenSize.width * 95/100;
