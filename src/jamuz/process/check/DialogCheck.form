@@ -53,7 +53,7 @@
                       <Component id="jButtonDelete" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPaneCheckTags" pref="808" max="32767" attributes="2"/>
+                  <Component id="jScrollPaneCheckTags" pref="1266" max="32767" attributes="2"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jPanel10" min="-2" max="-2" attributes="0"/>
@@ -114,11 +114,13 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonCheckKO" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButtonCheckKO1Library" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonCheckKOLibrary" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonCheckOK" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jProgressBarCheckDialog" pref="10" max="32767" attributes="0"/>
+                      <Component id="jButtonCheckOKLibrary" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jProgressBarCheckDialog" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -133,7 +135,8 @@
                           <Component id="jButtonCheckKO" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButtonCheckOK" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jProgressBarCheckDialog" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonCheckKO1Library" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonCheckKOLibrary" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonCheckOKLibrary" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
@@ -147,7 +150,7 @@
                   <Image iconType="3" name="/jamuz/ressources/accept.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Button.OK" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -166,7 +169,7 @@
                   <Image iconType="3" name="/jamuz/ressources/cancel.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Button.KO" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.KO" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -226,7 +229,7 @@
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JButton" name="jButtonCheckKO1Library">
+            <Component class="javax.swing.JButton" name="jButtonCheckKOLibrary">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
@@ -239,7 +242,26 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCheckKO1LibraryActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCheckKOLibraryActionPerformed"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButtonCheckOKLibrary">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="c8" id="orange" palette="1" red="ff" type="palette"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/jamuz/ressources/accept.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK.Warning.Library" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCheckOKLibraryActionPerformed"/>
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
