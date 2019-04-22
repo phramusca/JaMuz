@@ -991,11 +991,11 @@ public class ProcessCheck {
 		/**
 		 *
 		 */
-        KO_LIBRARY(Inter.get("Check.KO.Library"), 6),        
+        KO_LIBRARY(Inter.get("Check.KO"), 6),        
 		/**
 		 *
 		 */
-		WARNING_LIBRARY(Inter.get("Check.OK.Warning.Library"), 7),
+		WARNING_LIBRARY(Inter.get("Check.OK.Warning"), 7),
 		/**
          * Analysis in progress (default value is not changed either auto or manually)
          */

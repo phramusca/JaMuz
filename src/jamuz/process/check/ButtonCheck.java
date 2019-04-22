@@ -20,7 +20,6 @@ package jamuz.process.check;
 import jamuz.process.check.ProcessCheck.Action;
 import java.awt.Color;
 import java.awt.Component;  
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;  
 import javax.swing.DefaultCellEditor;  
 import javax.swing.JButton;  
