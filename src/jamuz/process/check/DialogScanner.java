@@ -389,19 +389,20 @@ public class DialogScanner extends javax.swing.JDialog {
                     .addComponent(jLabelDiscTotal)
                     .addComponent(jLabelDiscTotalValue)
                     .addComponent(jLabelTitle)
-                    .addComponent(jLabelAlbumValue))
+                    .addComponent(jLabelTitleValue))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelDiscNo)
                     .addComponent(jLabelDiscNoValue)
                     .addComponent(jLabelComment)
-                    .addComponent(jLabelTitleValue))
+                    .addComponent(jLabelCommentValue))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelYear)
                     .addComponent(jLabelYearValue)
                     .addComponent(jLabelAlbum)
-                    .addComponent(jLabelCommentValue)))
+                    .addComponent(jLabelAlbumValue))
+                .addGap(0, 0, 0))
         );
 
         jLabel1.setText("<html>\n::U TO UPPER CASE<BR/>\n::l to lower case<BR/>\n::c Capitalize first<BR/>\n<b>::C</b> Capitalize Fully<BR/>\n::u uncapitalize<BR/>\n::s sWaP CaSe<BR/>\n</html>"); // NOI18N

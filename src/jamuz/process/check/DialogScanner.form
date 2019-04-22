@@ -213,22 +213,23 @@
                       <Component id="jLabelDiscTotal" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelDiscTotalValue" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelTitle" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelAlbumValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelTitleValue" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabelDiscNo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelDiscNoValue" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelComment" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelTitleValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelCommentValue" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabelYear" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelYearValue" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelAlbum" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelCommentValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelAlbumValue" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
