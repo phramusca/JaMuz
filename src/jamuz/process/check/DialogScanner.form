@@ -24,16 +24,16 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jTextFieldPath" alignment="0" max="32767" attributes="0"/>
                   <Component id="jTextFieldPattern" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jScrollPaneCheckTags3" alignment="0" max="32767" attributes="2"/>
+                  <Component id="jScrollPaneCheckTags3" alignment="0" pref="1151" max="32767" attributes="2"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" pref="42" max="32767" attributes="0"/>
+                      <Component id="jPanel2" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -48,13 +48,15 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="jTextFieldPattern" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jPanel1" max="32767" attributes="0"/>
-                  <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="jPanel1" max="32767" attributes="0"/>
+                      <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jScrollPaneCheckTags3" pref="74" max="32767" attributes="2"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPaneCheckTags3" pref="92" max="32767" attributes="2"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -152,52 +154,37 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabelTrackNo" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelTrackTotal" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelDiscTotal" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelTrackNo" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelDiscNo" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelYear" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelDiscNo" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelYear" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabelDiscNoValue" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabelTrackTotalValue" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabelTrackNoValue" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabelDiscTotalValue" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabelYearValue" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="jLabelTitle" max="32767" attributes="0"/>
-                                      <Component id="jLabelAlbum" max="32767" attributes="0"/>
-                                      <Component id="jLabelComment" pref="99" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabelAlbumValue" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabelTitleValue" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabelCommentValue" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jLabelAlbumArtist" max="32767" attributes="0"/>
-                                      <Component id="jLabelArtist" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabelArtistValue" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabelAlbumArtistValue" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                      </Group>
+                      <Component id="jLabelTrackTotalValue" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabelTrackNoValue" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabelDiscTotalValue" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabelDiscNoValue" max="32767" attributes="0"/>
+                      <Component id="jLabelYearValue" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabelAlbumArtist" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelArtist" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelTitle" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelComment" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelAlbum" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabelAlbumArtistValue" max="32767" attributes="0"/>
+                      <Component id="jLabelArtistValue" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabelAlbumValue" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabelTitleValue" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jLabelCommentValue" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -225,24 +212,23 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabelDiscTotal" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelDiscTotalValue" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelAlbum" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelTitle" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelAlbumValue" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabelDiscNo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelDiscNoValue" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelTitle" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelComment" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelTitleValue" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabelYear" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelYearValue" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelComment" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelAlbum" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelCommentValue" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
