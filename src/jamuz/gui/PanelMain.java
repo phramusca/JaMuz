@@ -332,7 +332,7 @@ public class PanelMain extends javax.swing.JFrame {
     public static ImageIcon getRatingIcon(int rating) {
         return ratingIcon[rating];
     }
-
+	
     /**
      * Add a song to the audio player queue
      *
@@ -776,6 +776,16 @@ public class PanelMain extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JaMuz"); // NOI18N
         setExtendedState(1);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jSplitPaneMain.setOneTouchExpandable(true);
 
@@ -1583,6 +1593,19 @@ public class PanelMain extends javax.swing.JFrame {
         MPLAYER.setVolume((float)jSpinnerVolume.getValue());
     }//GEN-LAST:event_jSpinnerVolumeStateChanged
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        size=getSize();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        size=getSize();
+    }//GEN-LAST:event_formComponentResized
+
+	private static Dimension size=null;
+	public static Dimension getDimension() {
+		return size;
+	}
+	
 	/**
 	 *
 	 */

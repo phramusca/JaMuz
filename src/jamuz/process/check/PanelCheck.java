@@ -21,7 +21,6 @@ import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
 import jamuz.gui.PanelMain;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,6 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.ProgressBar;
@@ -182,7 +180,7 @@ public class PanelCheck extends javax.swing.JPanel {
         progressActionsSize         = (ProgressBar)jProgressBarCheckActionsSize;
         progressActionsDequeue      = (ProgressBar)jProgressBarCheckActionsDequeue;
     }
-    
+    	
     public static void setThreadPanels(ProcessCheck.CheckType checkType) {
         jPanelAnalysisMain.setVisible(!(
                 checkType.equals(CheckType.SCAN_QUICK) 
@@ -801,4 +799,5 @@ public class PanelCheck extends javax.swing.JPanel {
     private static javax.swing.JSpinner jSpinnerCheckScanNbThreads;
     private static javax.swing.JTable jTableCheck;
     // End of variables declaration//GEN-END:variables
+	
 }
