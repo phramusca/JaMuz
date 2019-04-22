@@ -317,6 +317,8 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jComboBoxCheckMatches" max="32767" attributes="2"/>
                                   <Group type="102" attributes="0">
+                                      <Component id="jButtonDuplicateCompare" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jButtonNoDuplicate" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jComboBoxCheckDuplicates" max="32767" attributes="0"/>
@@ -343,6 +345,7 @@
                                   <Component id="jComboBoxCheckDuplicates" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonSelectDuplicate" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonNoDuplicate" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButtonDuplicateCompare" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -1367,6 +1370,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonNoDuplicateActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButtonDuplicateCompare">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Compare"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDuplicateCompareActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

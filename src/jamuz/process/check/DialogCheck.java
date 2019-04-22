@@ -422,6 +422,7 @@ public class DialogCheck extends javax.swing.JDialog {
         jButtonSelectDuplicate = new javax.swing.JButton();
         jButtonCheckScanner = new javax.swing.JButton();
         jButtonNoDuplicate = new javax.swing.JButton();
+        jButtonDuplicateCompare = new javax.swing.JButton();
         jScrollPaneCheckTags = new javax.swing.JScrollPane();
         jTableCheck = new jamuz.gui.swing.TableHorizontal();
         jButtonCheckUp = new javax.swing.JButton();
@@ -1064,6 +1065,13 @@ public class DialogCheck extends javax.swing.JDialog {
             }
         });
 
+        jButtonDuplicateCompare.setText("Compare");
+        jButtonDuplicateCompare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDuplicateCompareActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelCheckTagsLayout = new javax.swing.GroupLayout(jPanelCheckTags);
         jPanelCheckTags.setLayout(jPanelCheckTagsLayout);
         jPanelCheckTagsLayout.setHorizontalGroup(
@@ -1097,6 +1105,8 @@ public class DialogCheck extends javax.swing.JDialog {
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBoxCheckMatches, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanelCheckTagsLayout.createSequentialGroup()
+                                .addComponent(jButtonDuplicateCompare)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonNoDuplicate)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jComboBoxCheckDuplicates, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
@@ -1115,7 +1125,8 @@ public class DialogCheck extends javax.swing.JDialog {
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jComboBoxCheckDuplicates, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButtonSelectDuplicate)
-                            .addComponent(jButtonNoDuplicate))
+                            .addComponent(jButtonNoDuplicate)
+                            .addComponent(jButtonDuplicateCompare))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1762,6 +1773,11 @@ public class DialogCheck extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonCheckOKLibraryActionPerformed
 
+    private void jButtonDuplicateCompareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDuplicateCompareActionPerformed
+        DuplicateInfo duplicateInfo = (DuplicateInfo) jComboBoxCheckDuplicates.getSelectedItem();
+		DialogDuplicate.main(getSize(), folder, duplicateInfo);
+    }//GEN-LAST:event_jButtonDuplicateCompareActionPerformed
+
        /**
 	 *
 	 * @param enable
@@ -1945,7 +1961,6 @@ public class DialogCheck extends javax.swing.JDialog {
 					myImage = folder.getNewImage();
 				}
 				else {
-					//Then, display first cover from audio files tags
 					myImage = folder.getFirstCoverFromTags();
 				}
 				PanelCover coverImg = (PanelCover) jPanelCheckCoverThumb;
@@ -2131,11 +2146,13 @@ public class DialogCheck extends javax.swing.JDialog {
 				}
 				jButtonSelectDuplicate.setEnabled(true);
 				jButtonNoDuplicate.setEnabled(true);
+				jButtonDuplicateCompare.setEnabled(true);
 			}
 			else {
 				jComboBoxCheckDuplicates.addItem(FolderInfoResult.colorField(Inter.get("Label.None"),0));  //NOI18N
 				jButtonSelectDuplicate.setEnabled(false);
 				jButtonNoDuplicate.setEnabled(false);
+				jButtonDuplicateCompare.setEnabled(false);
 			}
         }
 		progressBar.setIndeterminate(Inter.get("Msg.Scan.AnalyzingMatch"));  //NOI18N
@@ -2179,8 +2196,8 @@ public class DialogCheck extends javax.swing.JDialog {
         }
         jLabelCheckAlbumTag.setText(results.get("album").getDisplayText()); //NOI18N
         jLabelCheckAlbumArtistTag.setText(results.get("albumArtist").getDisplayText()); //NOI18N
-        jLabelCheckYearTag.setText(result.getDisplayText());
-        jLabelCheckYearTag.setToolTipText(result.getDisplayToolTip());
+        jLabelCheckYearTag.setText(results.get("year").getDisplayText());
+        jLabelCheckYearTag.setToolTipText(results.get("year").getDisplayToolTip());
 
 
         enableButtons();
@@ -2346,6 +2363,7 @@ public class DialogCheck extends javax.swing.JDialog {
     private static javax.swing.JButton jButtonCheckSingleFolder;
     private javax.swing.JButton jButtonCheckUp;
     private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonDuplicateCompare;
     private javax.swing.JButton jButtonNoDuplicate;
     private static javax.swing.JButton jButtonPlayerForward;
     private static javax.swing.JButton jButtonPlayerNext;
