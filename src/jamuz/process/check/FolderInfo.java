@@ -1597,6 +1597,7 @@ public class FolderInfo implements java.lang.Comparable {
 					moveToLibrary(progressBar, CheckedFlag.OK, true);
                     break;
                 case WARNING:
+				case WARNING_LIBRARY:
                     moveToLibrary(progressBar, CheckedFlag.OK_WARNING, true);
                     break;
                 case KO:

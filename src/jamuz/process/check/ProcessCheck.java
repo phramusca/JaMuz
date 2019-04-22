@@ -964,47 +964,42 @@ public class ProcessCheck {
      * Action (move to OK, Delete, save, ...)
      */
     public enum Action {
-
-        /**
-         * Analysis in progress (default value is not changed either auto or manually)
-         */
-        ANALYZING("...", 0), //NOI18N
-
 		/**
 		 *
 		 */
-
-        MANUAL("", -1),
-        
-        /**
-         *  OK
-         */
-        OK(Inter.get("Check.OK"), 4), //NOI18N
-
+        MANUAL("", 0),
         /**
          * Warning 
          */
         WARNING(Inter.get("Check.OK.Warning"), 1), //NOI18N
-
-        /**
-         * KO
-         */
-        KO(Inter.get("Check.KO"), 6), //NOI18N
-
 		/**
-		 *
-		 */
-
-        KO_LIBRARY(Inter.get("Check.KO.Library"), 5),        
-        /**
          * Delete
          */
         DEL(Inter.get("Label.Delete"), 2), //NOI18N
-
-        /**
+		/**
          * Save tags
          */
-        SAVE(Inter.get("Button.Save"), 3); //NOI18N
+        SAVE(Inter.get("Button.Save"), 3), 
+        /**
+         *  OK
+         */
+        OK(Inter.get("Check.OK"), 4), //NOI18N
+		/**
+         * KO
+         */
+        KO(Inter.get("Check.KO"), 5),
+		/**
+		 *
+		 */
+        KO_LIBRARY(Inter.get("Check.KO.Library"), 6),        
+		/**
+		 *
+		 */
+		WARNING_LIBRARY(Inter.get("Check.OK.Warning.Library"), 7),
+		/**
+         * Analysis in progress (default value is not changed either auto or manually)
+         */
+        ANALYZING("...", 8); //NOI18N
 		
 		private final String display;
         private final int order;

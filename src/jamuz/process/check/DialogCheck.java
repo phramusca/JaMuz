@@ -371,7 +371,8 @@ public class DialogCheck extends javax.swing.JDialog {
         jButtonCheckDelete = new javax.swing.JButton();
         jButtonCheckSaveTags = new javax.swing.JButton();
         jProgressBarCheckDialog = new jamuz.gui.swing.ProgressBar();
-        jButtonCheckKO1Library = new javax.swing.JButton();
+        jButtonCheckKOLibrary = new javax.swing.JButton();
+        jButtonCheckOKLibrary = new javax.swing.JButton();
         jPanelCheckTags = new javax.swing.JPanel();
         jPanelCheckCoverThumb = new jamuz.gui.PanelCover();
         jComboBoxCheckMatches = new javax.swing.JComboBox();
@@ -448,7 +449,7 @@ public class DialogCheck extends javax.swing.JDialog {
 
         jButtonCheckOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/accept.png"))); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
-        jButtonCheckOK.setText(bundle.getString("Button.OK")); // NOI18N
+        jButtonCheckOK.setText(bundle.getString("Check.OK")); // NOI18N
         jButtonCheckOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCheckOKActionPerformed(evt);
@@ -457,7 +458,7 @@ public class DialogCheck extends javax.swing.JDialog {
 
         jButtonCheckKO.setBackground(java.awt.Color.red);
         jButtonCheckKO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
-        jButtonCheckKO.setText(bundle.getString("Button.KO")); // NOI18N
+        jButtonCheckKO.setText(bundle.getString("Check.KO")); // NOI18N
         jButtonCheckKO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCheckKOActionPerformed(evt);
@@ -485,12 +486,21 @@ public class DialogCheck extends javax.swing.JDialog {
         jProgressBarCheckDialog.setString("null");
         jProgressBarCheckDialog.setStringPainted(true);
 
-        jButtonCheckKO1Library.setBackground(java.awt.Color.red);
-        jButtonCheckKO1Library.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
-        jButtonCheckKO1Library.setText(bundle.getString("Check.KO.Library")); // NOI18N
-        jButtonCheckKO1Library.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCheckKOLibrary.setBackground(java.awt.Color.red);
+        jButtonCheckKOLibrary.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png"))); // NOI18N
+        jButtonCheckKOLibrary.setText(bundle.getString("Check.KO.Library")); // NOI18N
+        jButtonCheckKOLibrary.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCheckKO1LibraryActionPerformed(evt);
+                jButtonCheckKOLibraryActionPerformed(evt);
+            }
+        });
+
+        jButtonCheckOKLibrary.setBackground(java.awt.Color.orange);
+        jButtonCheckOKLibrary.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/accept.png"))); // NOI18N
+        jButtonCheckOKLibrary.setText(bundle.getString("Check.OK.Warning.Library")); // NOI18N
+        jButtonCheckOKLibrary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCheckOKLibraryActionPerformed(evt);
             }
         });
 
@@ -506,11 +516,13 @@ public class DialogCheck extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCheckKO)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonCheckKO1Library)
+                .addComponent(jButtonCheckKOLibrary)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCheckOK)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.DEFAULT_SIZE, 10, Short.MAX_VALUE)
+                .addComponent(jButtonCheckOKLibrary)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanelCheckFolderLayout.setVerticalGroup(
@@ -523,7 +535,8 @@ public class DialogCheck extends javax.swing.JDialog {
                     .addComponent(jButtonCheckKO)
                     .addComponent(jButtonCheckOK)
                     .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonCheckKO1Library))
+                    .addComponent(jButtonCheckKOLibrary)
+                    .addComponent(jButtonCheckOKLibrary))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -1274,7 +1287,7 @@ public class DialogCheck extends javax.swing.JDialog {
                     .addComponent(jButtonCheckUp)
                     .addComponent(jButtonDelete, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE))
+                .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 1266, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1342,7 +1355,6 @@ public class DialogCheck extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCheckEditTagActionPerformed
 
     private void jButtonCheckOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckOKActionPerformed
-
         if(folder.isWarning()) {
             folder.action=ProcessCheck.Action.WARNING;
         }
@@ -1657,11 +1669,11 @@ public class DialogCheck extends javax.swing.JDialog {
         displayMatchTracks(19);
     }//GEN-LAST:event_jButtonCheckApplyAlbumArtistActionPerformed
 
-    private void jButtonCheckKO1LibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckKO1LibraryActionPerformed
+    private void jButtonCheckKOLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckKOLibraryActionPerformed
         folder.action = ProcessCheck.Action.KO_LIBRARY;
         PanelCheck.addToActionQueue(folder);
         this.dispose();
-    }//GEN-LAST:event_jButtonCheckKO1LibraryActionPerformed
+    }//GEN-LAST:event_jButtonCheckKOLibraryActionPerformed
 
     private void jButtonSelectOriginalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectOriginalActionPerformed
         jComboBoxCheckMatches.setSelectedIndex(folder.getMatches().size());
@@ -1749,6 +1761,16 @@ public class DialogCheck extends javax.swing.JDialog {
 		}
     }//GEN-LAST:event_jButtonNoDuplicateActionPerformed
 
+    private void jButtonCheckOKLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckOKLibraryActionPerformed
+		if(folder.isWarning()) {
+			ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());
+			folder.setMbId(match.getId());
+			folder.action = ProcessCheck.Action.WARNING_LIBRARY;
+			PanelCheck.addToActionQueue(folder);
+			this.dispose();
+        }
+    }//GEN-LAST:event_jButtonCheckOKLibraryActionPerformed
+
        /**
 	 *
 	 * @param enable
@@ -1761,8 +1783,9 @@ public class DialogCheck extends javax.swing.JDialog {
 		jButtonCheckSingleFolder.setEnabled(enable);
 		jButtonCheckSaveTags.setEnabled(enable);
 		jButtonCheckKO.setEnabled(enable);
-        jButtonCheckKO1Library.setEnabled(enable);
+        jButtonCheckKOLibrary.setEnabled(enable);
 		jButtonCheckOK.setEnabled(enable);
+		jButtonCheckOKLibrary.setEnabled(enable);
 		jButtonCheckDelete.setEnabled(enable);
         Swing.enableComponents(jPanelGenre, enable);
 		//whatever jPanelGenre enabled or not:
@@ -1861,6 +1884,8 @@ public class DialogCheck extends javax.swing.JDialog {
 		
 			if(folder.getFilesAudio().size()<=0) { //No supported audio files on folder
 				jTableCheck.setEnabled(true);
+				jButtonCheckOKLibrary.setEnabled(false);
+				jButtonCheckOKLibrary.setBackground(Color.gray);
 				jButtonCheckOK.setBackground(Color.gray);
 				jButtonCheckDelete.setEnabled(true);
 				jButtonCheckKO.setEnabled(true);
@@ -2114,10 +2139,12 @@ public class DialogCheck extends javax.swing.JDialog {
 					jComboBoxCheckDuplicates.addItem(duplicate);
 				}
 				jButtonSelectDuplicate.setEnabled(true);
+				jButtonNoDuplicate.setEnabled(true);
 			}
 			else {
 				jComboBoxCheckDuplicates.addItem(FolderInfoResult.colorField(Inter.get("Label.None"),0));  //NOI18N
 				jButtonSelectDuplicate.setEnabled(false);
+				jButtonNoDuplicate.setEnabled(false);
 			}
         }
 		progressBar.setIndeterminate(Inter.get("Msg.Scan.AnalyzingMatch"));  //NOI18N
@@ -2175,19 +2202,23 @@ public class DialogCheck extends javax.swing.JDialog {
 		enableAddOptions(true);
 		jButtonCheckKO.setEnabled(!folder.isValid());
 		jButtonCheckOK.setEnabled(folder.isValid());
+		jButtonCheckOKLibrary.setEnabled(folder.isValid());
 		
 		if(folder.isValid()) {
 			if(folder.isWarning()) {
 				jButtonCheckOK.setBackground(Color.orange);
+				jButtonCheckOKLibrary.setBackground(Color.orange);
 				jButtonCheckKO.setEnabled(true);
 				jButtonCheckDelete.setEnabled(true);
 			}
 			else {
 				jButtonCheckOK.setBackground(new Color(0, 128, 0));
 				jButtonCheckDelete.setEnabled(false);
+				jButtonCheckOKLibrary.setEnabled(false);
 			}
 		}
 		else {
+			
 			jButtonCheckOK.setBackground(Color.gray);
 			jButtonCheckDelete.setEnabled(true);
 		}
@@ -2313,8 +2344,9 @@ public class DialogCheck extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCheckDown;
     protected static javax.swing.JButton jButtonCheckEditTag;
     private static javax.swing.JButton jButtonCheckKO;
-    private static javax.swing.JButton jButtonCheckKO1Library;
+    private static javax.swing.JButton jButtonCheckKOLibrary;
     private static javax.swing.JButton jButtonCheckOK;
+    private static javax.swing.JButton jButtonCheckOKLibrary;
     private static javax.swing.JButton jButtonCheckOpen;
     private static javax.swing.JButton jButtonCheckPreview;
     private static javax.swing.JButton jButtonCheckSaveTags;
