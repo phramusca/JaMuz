@@ -31,6 +31,7 @@ public class DuplicateInfo {
      * @param errorLevel
 	 * @param discNo
 	 * @param discTotal
+	 * @param folderInfo
      */
     public DuplicateInfo(
 			String album, 
@@ -39,7 +40,8 @@ public class DuplicateInfo {
 			FolderInfo.CheckedFlag checkedFlag, 
 			int errorLevel, 
 			int discNo, 
-			int discTotal) {
+			int discTotal,
+			FolderInfo folderInfo) {
         this.album = album;
         this.albumArtist = albumArtist;
         this.rating = rating;
@@ -47,8 +49,15 @@ public class DuplicateInfo {
         this.errorLevel = errorLevel;
 		this.discNo = discNo;
 		this.discTotal = discTotal;
+		this.folderInfo = folderInfo;
     }
 
+	private final FolderInfo folderInfo;
+
+	public FolderInfo getFolderInfo() {
+		return folderInfo;
+	}
+	
     private String album;
 
     /**

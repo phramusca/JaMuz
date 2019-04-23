@@ -2880,15 +2880,15 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
 		}
 		return false;
     }
-
+	
     private static final String SELECT_DUPLICATE = 
 			"SELECT album, albumArtist, checked, discNo, discTotal, "
 			+ " ifnull(round(((sum(case when rating > 0 then rating end))"
-			+ "/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating  "
+			+ "/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, "
+			+ " P.idPath, P.strPath, P.modifDate, P.deleted"
 			+ " FROM path P JOIN file F ON F.idPath=P.idPath ";
     private static final String GROUP_DUPLICATE = 
 			" AND F.deleted=0 AND P.deleted=0 GROUP BY P.idPath, discNo";   //NOI18N
-    
     
     /**
      * Check if an exact album exists in JaMuz database
@@ -3045,8 +3045,19 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
                 checkedFlag = CheckedFlag.values()[rs.getInt("checked")];
 				discNo = rs.getInt("discNo");
 				discTotal = rs.getInt("discTotal");
+				
+	    		Date dbModifDate = DateTime.parseSqlUtc(
+						dbConn.getStringValue(rs, "modifDate"));   //NOI18N
+                String path = FilenameUtils.separatorsToSystem(
+						dbConn.getStringValue(rs, "strPath", false));   //NOI18N
+   				
+				FolderInfo folderInfo = new FolderInfo(rs.getInt("idPath"), 
+						path, dbModifDate,  //NOI18N
+                        rs.getBoolean("deleted"), 
+						CheckedFlag.values()[rs.getInt("checked")]);
+				
                 myList.add(new DuplicateInfo(album, albumArtist, albumRating, checkedFlag, 
-						errorlevel, discNo, discTotal));
+						errorlevel, discNo, discTotal, folderInfo));
             }
         } catch (SQLException ex) {
             Popup.error("getDuplicates(...)", ex);   //NOI18N
