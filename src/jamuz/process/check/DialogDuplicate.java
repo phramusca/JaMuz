@@ -20,17 +20,21 @@ import jamuz.IconBufferCover;
 import jamuz.gui.DialogCoverDisplay;
 import jamuz.gui.PanelCover;
 import jamuz.gui.PanelMain;
+import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableCellListener;
 import jamuz.gui.swing.TableColumnModel;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
 /**
@@ -41,7 +45,8 @@ public class DialogDuplicate extends javax.swing.JDialog {
 
 	private final FolderInfo folder;
 	private final DuplicateInfo duplicateInfo;
-	private static TableColumnModel columnModel;
+//	private static TableColumnModel columnModel;
+	protected static ProgressBar progressBar;
 
 	/**
 	 * Creates new form DialogDuplicate
@@ -77,74 +82,102 @@ public class DialogDuplicate extends javax.swing.JDialog {
 				jPanelCheckCoverThumb.setEnabled(false);
 			}
 		}
+		jTableCheck.setModel(folder.getFilesAudioTableModel());		
+		setTable(jTableCheck);
 		
 		//Display potential duplicate
-		jLabelCheckAlbumTag1.setText(duplicateInfo.getAlbum()); //NOI18N
-        jLabelCheckAlbumArtistTag1.setText(duplicateInfo.getAlbumArtist()); //NOI18N
-        jLabelCheckYearTag1.setText("????");
-		jLabelCheckDesc1.setText(duplicateInfo.toString());
 		
+		FolderInfo duplicateFolderInfo = duplicateInfo.getFolderInfo();
+		progressBar = (ProgressBar)jProgressBarDuplicate;
+		duplicateFolderInfo.browse(false, true, progressBar);
+		try {
+			duplicateFolderInfo.analyse(progressBar);
+			duplicateFolderInfo.analyseMatch(0, progressBar); //Analyse first match
+		} catch (CloneNotSupportedException ex) {
+			Logger.getLogger(DialogDuplicate.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		duplicateFolderInfo.analyseMatchTracks();
+		duplicateFolderInfo.setAction(); 
+		progressBar.reset();
 		
-		// FIXME: Only display useful columns
+		Map<String, FolderInfoResult> resultsDuplicate = duplicateFolderInfo.getResults(); 
+		jLabelCheckAlbumTag1.setText(resultsDuplicate.get("album").getDisplayText()); //NOI18N
+        jLabelCheckAlbumArtistTag1.setText(resultsDuplicate.get("albumArtist").getDisplayText()); //NOI18N
+        jLabelCheckYearTag1.setText(resultsDuplicate.get("year").getDisplayText());
+		jLabelCheckDesc1.setText(duplicateFolderInfo.toString());
+
+		BufferedImage imageDuplicate = duplicateFolderInfo.getFirstCoverFromTags();
+		PanelCover coverImgDup = (PanelCover) jPanelCheckCoverThumb1;
+		if(imageDuplicate!=null) {
+			coverImgDup.setImage(imageDuplicate);
+		}
+		else {
+			coverImgDup.setImage(null);
+			if(duplicateFolderInfo.getFilesImage().size()>0) {
+				jPanelCheckCoverThumb1.setEnabled(true);
+			}
+			else {
+				jPanelCheckCoverThumb1.setEnabled(false);
+			}
+		}
+		jTableCheck1.setModel(duplicateFolderInfo.getFilesAudioTableModel());
+		setTable(jTableCheck1);
 		
-		
-		columnModel = new TableColumnModel(); //To avoid duplicate columns to be added again and again
-            //(we could also have tested if it had columns instead of deleting/recreating)
-				
-		//Set table's model
-        jTableCheck.setModel(folder.getFilesAudioTableModel());
+	}
+	
+	private void setTable(JTable table) {
         
 		//Assigning XTableColumnModel to allow show/hide columns
-		jTableCheck.setColumnModel(columnModel);
+		table.setColumnModel(new TableColumnModel());
 		//Adding columns from model
-		jTableCheck.createDefaultColumnsFromModel();
+		table.createDefaultColumnsFromModel();
 		
 		TableColumn column;
 
 		//	0:  "Filename"
-		column = jTableCheck.getColumnModel().getColumn(0);
+		column = table.getColumnModel().getColumn(0);
 		column.setMinWidth(100);
 
 		//	1:  "Disc # (new)"
 		//	2:  "Disc #"
-		column = jTableCheck.getColumnModel().getColumn(1);
+		column = table.getColumnModel().getColumn(1);
 		column.setMinWidth(55);
 		column.setMaxWidth(55);
-		column = jTableCheck.getColumnModel().getColumn(2);
+		column = table.getColumnModel().getColumn(2);
 		column.setMinWidth(55);
 		column.setMaxWidth(55);
 		
 		//	3:  "Track # (new)"
 		//	4:  "Track #"
-		column = jTableCheck.getColumnModel().getColumn(3);
+		column = table.getColumnModel().getColumn(3);
 		column.setMinWidth(55);
 		column.setMaxWidth(55);
-		column = jTableCheck.getColumnModel().getColumn(4);
+		column = table.getColumnModel().getColumn(4);
 		column.setMinWidth(55);
 		column.setMaxWidth(55);
 		
 		//	5:  "Artist (new)"
 		//	6:  "Artist"
-		column = jTableCheck.getColumnModel().getColumn(5);
+		column = table.getColumnModel().getColumn(5);
 		column.setMinWidth(50);
 		column.setPreferredWidth(100);
-		column = jTableCheck.getColumnModel().getColumn(6);
+		column = table.getColumnModel().getColumn(6);
 		column.setMinWidth(50);
 		column.setPreferredWidth(100);
 		
 		//	7:  "Title (new)"
-		column = jTableCheck.getColumnModel().getColumn(7);
+		column = table.getColumnModel().getColumn(7);
 		column.setMinWidth(50);
 		column.setPreferredWidth(100);
 		
 		//	8:  "Title"
-		column = jTableCheck.getColumnModel().getColumn(8);
+		column = table.getColumnModel().getColumn(8);
 		column.setMinWidth(50);
 		column.setPreferredWidth(100);
 		
 		//	9:  "Genre (new)"
 			//Render "Genre" column with a combo box
-		column = jTableCheck.getColumnModel().getColumn(9);
+		column = table.getColumnModel().getColumn(9);
 		JComboBox comboBox = new JComboBox(PanelMain.getComboGenre());
 		column.setCellEditor(new DefaultCellEditor(comboBox));
 			//set its width
@@ -152,81 +185,81 @@ public class DialogDuplicate extends javax.swing.JDialog {
 		column.setMaxWidth(200);
 		column.setPreferredWidth(100);
 		//	10: "Genre"
-		column = jTableCheck.getColumnModel().getColumn(10);
+		column = table.getColumnModel().getColumn(10);
 		column.setMinWidth(80);
 		column.setPreferredWidth(80);
 		
 		//	11: "Album (new)"
 		//	12: "Album"
-		column = jTableCheck.getColumnModel().getColumn(11);
+		column = table.getColumnModel().getColumn(11);
 		column.setMinWidth(80);
 		column.setPreferredWidth(100);
-		column = jTableCheck.getColumnModel().getColumn(12);
+		column = table.getColumnModel().getColumn(12);
 		column.setMinWidth(80);
 		column.setPreferredWidth(100);
 		
 		//	13: "Year (new)"
 		//	14: "Year"
-		column = jTableCheck.getColumnModel().getColumn(13);
+		column = table.getColumnModel().getColumn(13);
 		column.setMinWidth(50);
 		column.setPreferredWidth(50);
-		column = jTableCheck.getColumnModel().getColumn(14);
+		column = table.getColumnModel().getColumn(14);
 		column.setMinWidth(50);
 		column.setPreferredWidth(50);
 		
 		//	15: "BitRate"
-		column = jTableCheck.getColumnModel().getColumn(15);
+		column = table.getColumnModel().getColumn(15);
 		column.setMinWidth(50);
 		column.setPreferredWidth(50);
 		
 		//	16: "Length"
-		column = jTableCheck.getColumnModel().getColumn(16);
+		column = table.getColumnModel().getColumn(16);
 		column.setMinWidth(80);
 		column.setPreferredWidth(100);
 		
 		//	17: "Format"
-		column = jTableCheck.getColumnModel().getColumn(17);
+		column = table.getColumnModel().getColumn(17);
 		column.setMinWidth(80);
 		column.setPreferredWidth(100);
 		
 		//	18: "Size"
-		column = jTableCheck.getColumnModel().getColumn(18);
+		column = table.getColumnModel().getColumn(18);
 		column.setMinWidth(80);
 		column.setPreferredWidth(100);
 		
 		//	19: "Album Artist (new)"
 		//	20: "Album Artist"
-		column = jTableCheck.getColumnModel().getColumn(19);
+		column = table.getColumnModel().getColumn(19);
 		column.setMinWidth(80);
 		column.setPreferredWidth(100);
-		column = jTableCheck.getColumnModel().getColumn(20);
+		column = table.getColumnModel().getColumn(20);
 		column.setMinWidth(80);
 		column.setPreferredWidth(100);
 		
 		//	21: "Comment (new)"
 		//	22: "Comment"
-		column = jTableCheck.getColumnModel().getColumn(21);
+		column = table.getColumnModel().getColumn(21);
 		column.setMinWidth(20);
 		column.setPreferredWidth(20);
-		column = jTableCheck.getColumnModel().getColumn(22);
+		column = table.getColumnModel().getColumn(22);
 		column.setMinWidth(80);
 		column.setPreferredWidth(100);
 		
 		//	23: "Cover"
-		column = jTableCheck.getColumnModel().getColumn(23);
+		column = table.getColumnModel().getColumn(23);
 		column.setMinWidth(IconBufferCover.getCoverIconSize());
 		column.setMaxWidth(IconBufferCover.getCoverIconSize());
-		jTableCheck.addMouseListener(new java.awt.event.MouseAdapter() {
+		table.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				int col = jTableCheck.convertColumnIndexToModel(jTableCheck.columnAtPoint(evt.getPoint()));
+				int col = table.convertColumnIndexToModel(table.columnAtPoint(evt.getPoint()));
 				if (col == 23) {
                     //Getting selected File
-                    int selectedRow = jTableCheck.getSelectedRow();
+                    int selectedRow = table.getSelectedRow();
                     //TODO: Does not work after having used moveRow function:
                     //Find a way to get corresponding rowIndex in getFilesAudio(),
                     //maybe based on filename
-                    selectedRow = jTableCheck.convertRowIndexToModel(selectedRow);
+                    selectedRow = table.convertRowIndexToModel(selectedRow);
 //                    FileInfoDisplay file = folder.getFilesAudioTableModel().getFiles().get(selectedRow);
                     
                     if(selectedRow<folder.getFilesAudio().size()) { 
@@ -239,18 +272,18 @@ public class DialogDuplicate extends javax.swing.JDialog {
 		
 		//	24: "BPMDisplay"
 		//	25: "BPMDisplay"
-		column = jTableCheck.getColumnModel().getColumn(24);
+		column = table.getColumnModel().getColumn(24);
 		column.setMinWidth(40);
 		column.setPreferredWidth(40);
-		column = jTableCheck.getColumnModel().getColumn(25);
+		column = table.getColumnModel().getColumn(25);
 		column.setMinWidth(40);
 		column.setPreferredWidth(40);
 		
 		//Hide all columns except permanent ones (filename, track#, trackTotal, disc#, discTotal)
-		PanelMain.setColumnVisible(columnModel, 5, 25, false);
+		PanelMain.setColumnVisible((TableColumnModel)table.getColumnModel(), 5, 25, false);
 		
 		//need to change jScrollPane's header height, NOT jTableTags's if not bug !
-		Dimension d = jTableCheck.getTableHeader().getPreferredSize();
+		Dimension d = table.getTableHeader().getPreferredSize();
 		d.height = 34;
 		jScrollPaneCheckTags.getColumnHeader().setPreferredSize(d);
 		
@@ -264,8 +297,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
 				displayMatchTracks(tcl.getColumn());
 			}
 		};
-		TableCellListener tcl = new TableCellListener(jTableCheck, action);	
-		
+		TableCellListener tcl = new TableCellListener(table, action);	
 	}
 
 	private void displayMatchTracks(int colId) {
@@ -297,6 +329,9 @@ public class DialogDuplicate extends javax.swing.JDialog {
         jLabelCheckAlbumArtistTag1 = new javax.swing.JLabel();
         jLabelCheckAlbumTag1 = new javax.swing.JLabel();
         jLabelCheckYearTag1 = new javax.swing.JLabel();
+        jProgressBarDuplicate = new jamuz.gui.swing.ProgressBar();
+        jLabelCheckChecked = new javax.swing.JLabel();
+        jLabelCheckAlbumArtistTag3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -392,6 +427,19 @@ public class DialogDuplicate extends javax.swing.JDialog {
         jLabelCheckYearTag1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCheckYearTag1.setOpaque(true);
 
+        jProgressBarDuplicate.setString(""); // NOI18N
+        jProgressBarDuplicate.setStringPainted(true);
+
+        jLabelCheckChecked.setBackground(new java.awt.Color(255, 255, 255));
+        jLabelCheckChecked.setText(" "); // NOI18N
+        jLabelCheckChecked.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jLabelCheckChecked.setOpaque(true);
+
+        jLabelCheckAlbumArtistTag3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabelCheckAlbumArtistTag3.setText(" "); // NOI18N
+        jLabelCheckAlbumArtistTag3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jLabelCheckAlbumArtistTag3.setOpaque(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -401,29 +449,29 @@ public class DialogDuplicate extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanelCheckCoverThumb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 738, Short.MAX_VALUE)
                         .addComponent(jPanelCheckCoverThumb1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelCheckDesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
+                            .addComponent(jScrollPaneCheckTags)
+                            .addComponent(jLabelCheckDesc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabelCheckAlbumTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelCheckAlbumArtistTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jLabelCheckAlbumArtistTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabelCheckChecked, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabelCheckYearTag, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelCheckDesc1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabelCheckAlbumTag1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
-                                    .addComponent(jLabelCheckAlbumArtistTag1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(3, 3, 3))
+                            .addComponent(jLabelCheckDesc1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabelCheckYearTag1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelCheckAlbumArtistTag3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabelCheckAlbumTag1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPaneCheckTags1)
+                            .addComponent(jLabelCheckAlbumArtistTag1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jProgressBarDuplicate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -434,28 +482,29 @@ public class DialogDuplicate extends javax.swing.JDialog {
                     .addComponent(jPanelCheckCoverThumb1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanelCheckCoverThumb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelCheckAlbumArtistTag)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelCheckAlbumTag))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelCheckAlbumArtistTag1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelCheckAlbumTag1)))
+                .addComponent(jProgressBarDuplicate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelCheckAlbumTag)
+                    .addComponent(jLabelCheckAlbumArtistTag1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelCheckAlbumArtistTag)
+                    .addComponent(jLabelCheckAlbumTag1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelCheckChecked)
                     .addComponent(jLabelCheckYearTag)
-                    .addComponent(jLabelCheckYearTag1))
-                .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabelCheckDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
-                    .addComponent(jLabelCheckDesc1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabelCheckYearTag1)
+                    .addComponent(jLabelCheckAlbumArtistTag3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelCheckDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelCheckDesc1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                    .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
 
         pack();
@@ -497,9 +546,9 @@ public class DialogDuplicate extends javax.swing.JDialog {
 		DialogDuplicate dialog = new DialogDuplicate(new JFrame(), true, folder, duplicateInfo);
 				
         //Set dialog size to x% of parent size
-//        parentSize.height = parentSize.height * 85/100;
-//        parentSize.width = parentSize.width * 95/100;
-//        dialog.setSize(parentSize);
+        parentSize.height = parentSize.height * 85/100;
+        parentSize.width = parentSize.width * 95/100;
+        dialog.setSize(parentSize);
         //Center the dialog on screen
         dialog.setLocationRelativeTo(dialog.getParent());
         //Display
@@ -509,14 +558,17 @@ public class DialogDuplicate extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static javax.swing.JLabel jLabelCheckAlbumArtistTag;
     private static javax.swing.JLabel jLabelCheckAlbumArtistTag1;
+    private static javax.swing.JLabel jLabelCheckAlbumArtistTag3;
     private static javax.swing.JLabel jLabelCheckAlbumTag;
     private static javax.swing.JLabel jLabelCheckAlbumTag1;
+    private static javax.swing.JLabel jLabelCheckChecked;
     private static javax.swing.JLabel jLabelCheckDesc;
     private static javax.swing.JLabel jLabelCheckDesc1;
     private static javax.swing.JLabel jLabelCheckYearTag;
     private static javax.swing.JLabel jLabelCheckYearTag1;
     public static javax.swing.JPanel jPanelCheckCoverThumb;
     public static javax.swing.JPanel jPanelCheckCoverThumb1;
+    private static javax.swing.JProgressBar jProgressBarDuplicate;
     private static javax.swing.JScrollPane jScrollPaneCheckTags;
     private static javax.swing.JScrollPane jScrollPaneCheckTags1;
     private static javax.swing.JTable jTableCheck;

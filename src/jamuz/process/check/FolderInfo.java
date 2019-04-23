@@ -51,7 +51,6 @@ import java.util.LinkedHashMap;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModelCheckTracks;
-import static jamuz.process.check.DialogCheck.progressBar;
 import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
@@ -1961,6 +1960,96 @@ public class FolderInfo implements java.lang.Comparable {
 		if(match.isIsWarningDuplicate()) {
 			results.get("duplicates").setWarning();  //NOI18N
 		}
+	}
+
+	void setAction() {
+		//Select appropriate action
+		if(isValid()) { //ie: no KO result
+			if(getMatches().size()>0) {
+				setMbId(getMatches().get(0).getId());
+			}
+			if(isWarning()) {
+				action=Action.WARNING;
+			}
+			else {
+				action=Action.OK;
+			}
+		}
+		else { //At least one result is KO
+			if(getFilesAudio().size()<=0 
+					&& getFilesConvertible().size()<=0
+					&& getFilesOther().size()<=0) {
+				//Delete if it only remains images
+				action=Action.DEL;
+			}
+			else if(getMatches()==null) {
+				//This happens in case of connexion error
+				//=> Need to retry or check connexion
+				action=Action.MANUAL;
+			}
+			else if(getMatches().size()<=0) {
+				//can be empty:
+				// - if search not performed, if artist and album are empty
+				// - if no matches found (but searched for)
+				action=Action.KO;
+			}
+			else {
+				ReleaseMatch match=getMatches().get(0);
+				if(match.getDuplicates().size()>0) {
+					action=Action.KO;
+				}
+				else if(match.getScore()<100) {
+					action=Action.KO;
+				}
+				else {
+					//Analyzing results
+					int nbFailed=0;
+					String resultFailed="";
+					for(Map.Entry<String, FolderInfoResult> entry : getResults().entrySet()) {
+						if(entry.getValue().isNotValid()) {
+							nbFailed++;
+							resultFailed = entry.getKey();
+						}
+					}
+					if(nbFailed>1) {
+						//More than one not valid => Need manual review
+						action=Action.MANUAL;
+					}
+					else {
+						//There is only one item wrong. For some we can select proper action
+						switch(resultFailed) {
+							case "hasID3v1":
+								action=Action.SAVE;
+								break;
+							case "cover":
+								if(getFilesImage().size()>0 || getCoverList().size()>0 || getFirstCoverFromTags()!=null) {
+									//There is a cover somewhere (tag, file or found) so need user to choose from
+									//Well, getCoverList() only contains a list of information. 
+									//Covers are only searched when opening DialogCheck, but at least there is hope :)
+									action=Action.MANUAL;
+								}
+								else {
+									//No image files, no covers found and no covers in tag: only a warning (as it is the only KO)
+									action=Action.WARNING;
+								}
+								break;
+							case "bitRate":
+								//TODO: SET KO or delete : make it an option 
+								//as well as bitrate levels and ideally add options for other criterias as well)
+								action=Action.KO;
+								break;
+							default:
+								//For all other cases, need manual review
+								action=Action.MANUAL;
+								break;
+						}
+					}
+
+				}
+				//TODO: Actions Set: After action Save tags done, scan and analyze again to select new action
+				//=> Problem if all DoScan have stopped meantime ...
+			}
+		}				
 	}
 	
 	/**
