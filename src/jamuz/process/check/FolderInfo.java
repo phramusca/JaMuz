@@ -241,21 +241,23 @@ public class FolderInfo implements java.lang.Comparable {
 	
     /**
 	 * Check folder again
+	 * @param callback
+	 * @param progressBar
 	 */
-	public void reCheck() {
+	public void reCheck(ICallBackCheck callback, ProgressBar progressBar) {
 		Thread t = new Thread("Thread.FolderInfo.reCheck") {
 			@Override
 			public void run() {
-                browse(false, true, DialogCheck.progressBar, true);
+                browse(false, true, progressBar, true);
                 if(isCheckingMasterLibrary()) {
-                    scan(true, DialogCheck.progressBar);
+                    scan(true, progressBar);
                 }
                 try {
-                    analyse(DialogCheck.progressBar);
+                    analyse(progressBar);
                 } catch (CloneNotSupportedException ex) {
                     Popup.error(ex); //Should never happen as Cloneable
                 }
-                DialogCheck.displayFolder();
+                callback.reChecked();
 			}
 		};
 		t.start();

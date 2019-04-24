@@ -17,12 +17,8 @@
 
 package jamuz.process.check;
 
-import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.Inter;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,30 +38,40 @@ public class PanelDuplicate extends javax.swing.JPanel {
     }
     
 	void init(FolderInfo folderInfo) {
-		init(folderInfo, false);
-	}
-	
-	void init(FolderInfo folderInfo, boolean analyse) {
-		new Thread("Thread.PanelDuplicate.init") {
+		new Thread("Thread.PanelDuplicate.init folder") {
 			@Override
 			public void run() {
-				if(analyse) {
-					folderInfo.browse(false, true, (ProgressBar)jProgressBarCheckDialog);
-					try {
-						folderInfo.analyse((ProgressBar)jProgressBarCheckDialog);
-						folderInfo.analyseMatch(0, (ProgressBar)jProgressBarCheckDialog); //Analyse first match
-					} catch (CloneNotSupportedException ex) {
-						Logger.getLogger(DialogDuplicate.class.getName()).log(Level.SEVERE, null, ex);
-					}
-					folderInfo.analyseMatchTracks();
-					folderInfo.setAction(); 
-					((ProgressBar)jProgressBarCheckDialog).reset();
-				}
-
-				checkDisplay = new CheckDisplay(folderInfo, (ProgressBar)jProgressBarCheckDialog, jCheckBoxCheckAlbumArtistDisplay, jCheckBoxCheckAlbumDisplay, jCheckBoxCheckArtistDisplay, jCheckBoxCheckBPMDisplay, jCheckBoxCheckBitRateDisplay, jCheckBoxCheckCommentDisplay, jCheckBoxCheckCoverDisplay, jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, jCheckBoxCheckLengthDisplay, jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckDesc, jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, jLabelCheckGenre, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck);
-				checkDisplay.initExtended();
+				display(folderInfo);
+				jLabelCheckStatus.setText(folderInfo.getCheckedFlag().toString());
 			}
 		}.start();
+	}
+	
+	void init(DuplicateInfo duplicateInfo) {
+		new Thread("Thread.PanelDuplicate.init duplicate") {
+			@Override
+			public void run() {
+				FolderInfo folderInfo = duplicateInfo.getFolderInfo();
+				folderInfo.browse(false, true, (ProgressBar)jProgressBarCheckDialog);
+				try {
+					folderInfo.analyse((ProgressBar)jProgressBarCheckDialog);
+					folderInfo.analyseMatch(0, (ProgressBar)jProgressBarCheckDialog); //Analyse first match
+				} catch (CloneNotSupportedException ex) {
+					Logger.getLogger(DialogDuplicate.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				folderInfo.analyseMatchTracks();
+				folderInfo.setAction(); 
+				((ProgressBar)jProgressBarCheckDialog).reset();
+				display(folderInfo);
+				jLabelCheckStatus.setText(folderInfo.action.toString());
+				
+			}
+		}.start();
+	}
+	
+	private void display(FolderInfo folderInfo) {
+		checkDisplay = new CheckDisplay(folderInfo, (ProgressBar)jProgressBarCheckDialog, jCheckBoxCheckAlbumArtistDisplay, jCheckBoxCheckAlbumDisplay, jCheckBoxCheckArtistDisplay, jCheckBoxCheckBPMDisplay, jCheckBoxCheckBitRateDisplay, jCheckBoxCheckCommentDisplay, jCheckBoxCheckCoverDisplay, jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, jCheckBoxCheckLengthDisplay, jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckDesc, jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, jLabelCheckGenre, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck);
+		checkDisplay.displayFolder();
 	}
 	
     /**
@@ -111,6 +117,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
         jScrollPaneCheckTags = new javax.swing.JScrollPane();
         jTableCheck = new jamuz.gui.swing.TableHorizontal();
         jProgressBarCheckDialog = new jamuz.gui.swing.ProgressBar();
+        jLabelCheckStatus = new javax.swing.JLabel();
 
         jPanelCheckCoverThumb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanelCheckCoverThumb.setMaximumSize(new java.awt.Dimension(150, 150));
@@ -221,40 +228,40 @@ public class PanelDuplicate extends javax.swing.JPanel {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBoxCheckGenreDisplay)
-                    .addComponent(jCheckBoxCheckYearDisplay))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxCheckYearDisplay)
+                        .addGap(21, 21, 21)
                         .addComponent(jLabelCheckYearTag, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jCheckBoxCheckArtistDisplay)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckCheckTitleDisplay)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabelCheckNbTracks, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelCheckNbFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabelCheckGenre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addComponent(jLabelCheckNbFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckCheckTitleDisplay))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxCheckGenreDisplay)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelCheckGenre, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxCheckArtistDisplay)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxCheckYearDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelCheckYearTag)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabelCheckNbTracks)
-                        .addComponent(jLabelCheckNbFiles)
-                        .addComponent(jCheckBoxCheckArtistDisplay)
-                        .addComponent(jCheckCheckTitleDisplay)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelCheckNbTracks)
+                    .addComponent(jCheckCheckTitleDisplay)
+                    .addComponent(jLabelCheckNbFiles))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxCheckGenreDisplay)
-                    .addComponent(jLabelCheckGenre))
-                .addContainerGap())
+                    .addComponent(jLabelCheckGenre)
+                    .addComponent(jCheckBoxCheckArtistDisplay))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(java.awt.Color.lightGray);
@@ -267,6 +274,11 @@ public class PanelDuplicate extends javax.swing.JPanel {
         jCheckBoxCheckSizeDisplay.setText(bundle.getString("Tag.Size")); // NOI18N
 
         jCheckBoxCheckBitRateDisplay.setText(bundle.getString("Tag.BitRate")); // NOI18N
+        jCheckBoxCheckBitRateDisplay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxCheckBitRateDisplayActionPerformed(evt);
+            }
+        });
 
         jLabelCheckMeanBitRateTag.setBackground(new java.awt.Color(255, 255, 255));
         jLabelCheckMeanBitRateTag.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -299,51 +311,55 @@ public class PanelDuplicate extends javax.swing.JPanel {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxCheckCommentDisplay)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabelCheckReplayGain)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabelCheckReplayGain)
+                            .addComponent(jLabelCheckID3v1)
+                            .addComponent(jCheckBoxCheckBitRateDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelCheckReplayGainTag, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jCheckBoxCheckCommentDisplay)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jCheckBoxCheckBitRateDisplay)
-                                .addComponent(jLabelCheckID3v1))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabelCheckID3v1Tag, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabelCheckMeanBitRateTag, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelCheckReplayGainTag, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelCheckID3v1Tag, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelCheckMeanBitRateTag, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jCheckBoxCheckBPMDisplay)
                     .addComponent(jCheckBoxCheckFormatDisplay)
                     .addComponent(jCheckBoxCheckSizeDisplay)
                     .addComponent(jCheckBoxCheckLengthDisplay))
-                .addGap(0, 0, 0))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelCheckReplayGain)
-                    .addComponent(jLabelCheckReplayGainTag)
-                    .addComponent(jCheckBoxCheckFormatDisplay))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelCheckID3v1Tag)
-                    .addComponent(jLabelCheckID3v1)
-                    .addComponent(jCheckBoxCheckSizeDisplay))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelCheckMeanBitRateTag)
-                    .addComponent(jCheckBoxCheckBitRateDisplay)
-                    .addComponent(jCheckBoxCheckLengthDisplay))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBoxCheckBPMDisplay)
-                    .addComponent(jCheckBoxCheckCommentDisplay)))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxCheckFormatDisplay)
+                        .addGap(0, 0, 0)
+                        .addComponent(jCheckBoxCheckSizeDisplay)
+                        .addGap(0, 0, 0)
+                        .addComponent(jCheckBoxCheckLengthDisplay)
+                        .addGap(0, 0, 0)
+                        .addComponent(jCheckBoxCheckBPMDisplay))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelCheckReplayGain)
+                            .addComponent(jLabelCheckReplayGainTag))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelCheckID3v1)
+                            .addComponent(jLabelCheckID3v1Tag))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCheckBoxCheckBitRateDisplay)
+                            .addComponent(jLabelCheckMeanBitRateTag))
+                        .addGap(7, 7, 7)
+                        .addComponent(jCheckBoxCheckCommentDisplay)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(java.awt.Color.lightGray);
@@ -374,7 +390,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
         );
 
         jLabelCheckDesc.setBackground(new java.awt.Color(255, 255, 255));
-        jLabelCheckDesc.setText(" "); // NOI18N
+        jLabelCheckDesc.setText("<html>\nLine1<BR/>\nLine2<BR/>\nLine3<BR/>\n</html>"); // NOI18N
         jLabelCheckDesc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCheckDesc.setOpaque(true);
 
@@ -386,28 +402,38 @@ public class PanelDuplicate extends javax.swing.JPanel {
         jProgressBarCheckDialog.setString("null");
         jProgressBarCheckDialog.setStringPainted(true);
 
+        jLabelCheckStatus.setBackground(new java.awt.Color(255, 255, 255));
+        jLabelCheckStatus.setText(" "); // NOI18N
+        jLabelCheckStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jLabelCheckStatus.setOpaque(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPaneCheckTags)
-                    .addComponent(jLabelCheckDesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelCheckDesc)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanelCheckCoverThumb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
-                                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(91, 91, 91)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(160, 160, 160))))
+                    .addComponent(jLabelCheckStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,22 +441,24 @@ public class PanelDuplicate extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanelCheckCoverThumb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelCheckDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addComponent(jLabelCheckStatus)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                .addComponent(jLabelCheckDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -438,6 +466,10 @@ public class PanelDuplicate extends javax.swing.JPanel {
     private void jCheckBoxCheckArtistDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxCheckArtistDisplayActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBoxCheckArtistDisplayActionPerformed
+
+    private void jCheckBoxCheckBitRateDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxCheckBitRateDisplayActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBoxCheckBitRateDisplayActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBoxCheckAlbumArtistDisplay;
@@ -464,6 +496,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelCheckNbTracks;
     private javax.swing.JLabel jLabelCheckReplayGain;
     private javax.swing.JLabel jLabelCheckReplayGainTag;
+    private javax.swing.JLabel jLabelCheckStatus;
     private javax.swing.JLabel jLabelCheckYearTag;
     private javax.swing.JLabel jLabelCoverInfo;
     private javax.swing.JPanel jPanel4;

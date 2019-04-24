@@ -48,15 +48,19 @@ import javax.swing.table.TableRowSorter;
 public class DialogScanner extends javax.swing.JDialog {
 
     private static TableModel tableModel;
+	private final ICallBackCheck callback;
     /**
      * Creates new form NewJFrame
      * @param parent
      * @param modal
      * @param path
+	 * @param callback
      */
-    public DialogScanner(java.awt.Frame parent, boolean modal, String path) {
+    public DialogScanner(java.awt.Frame parent, boolean modal, String path, ICallBackCheck callback) {
         super(parent, modal);
         initComponents();
+		
+		this.callback = callback;
         jTextFieldPath.setText(path);
 		jLabelAlbum.setText("%b : "+Inter.get("Tag.Album"));
 		jLabelAlbumArtist.setText("%z : "+Inter.get("Tag.AlbumArtist"));
@@ -177,8 +181,6 @@ public class DialogScanner extends javax.swing.JDialog {
 		else {
 			jTableScanner.setAutoCreateRowSorter(false);
 		}
-        
-        
     }
     
     private static void addRow(Map<String, String> extracted) {
@@ -480,7 +482,7 @@ public class DialogScanner extends javax.swing.JDialog {
             }
         }
         
-        DialogCheck.applyPattern(pattern);
+        callback.completed(pattern);
         this.dispose();
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
@@ -523,8 +525,9 @@ public class DialogScanner extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      * @param path
+	 * @param callback
      */
-    public static void main(String args[], String path) {
+    public static void main(String args[], String path, ICallBackCheck callback) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -542,7 +545,7 @@ public class DialogScanner extends javax.swing.JDialog {
         }
         //</editor-fold>
 
-        DialogScanner dialog = new DialogScanner(new JFrame(), true, path);
+        DialogScanner dialog = new DialogScanner(new JFrame(), true, path, callback);
         dialog.setLocationRelativeTo(dialog.getParent());
         dialog.setVisible(true);
     }

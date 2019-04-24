@@ -78,9 +78,11 @@ public class CheckDisplay {
 		this.jPanelCheckCoverThumb = jPanelCheckCoverThumb;
 		this.jScrollPaneCheckTags = jScrollPaneCheckTags;
 		this.jTableCheck = jTableCheck;
+		
+		initComponents();
 	}
 	
-	void initExtended() {
+	private void initComponents() {
         
         //Set table's model
         jTableCheck.setModel(folder.getFilesAudioTableModel());
@@ -341,14 +343,17 @@ public class CheckDisplay {
 		jPanelCheckCoverThumb.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                DialogCoverSelect.main(folder, (int)jLabelCoverInfo.getLocationOnScreen().getX());
+                DialogCoverSelect.main(folder, 
+					(int)jLabelCoverInfo.getLocationOnScreen().getX(), 
+					(BufferedImage image) -> {
+						PanelCover coverImg = (PanelCover) jPanelCheckCoverThumb;
+						coverImg.setImage(image);
+				});
             }
         });
-		
-		displayFolder();
 	}
     
-    private void displayMatchTracks(int colId) {
+    void displayMatchTracks(int colId) {
         //Need to analyse the whole column so that errorLevels are properly set
         folder.analyseMatchTracks(colId);
         folder.getFilesAudioTableModel().fireTableDataChanged();
@@ -389,9 +394,10 @@ public class CheckDisplay {
 				jLabelCheckAlbumTag.setText(folder.getResults().get("album").getDisplayText()); //NOI18N
 				jLabelCheckAlbumArtistTag.setText(folder.getResults().get("albumArtist").getDisplayText()); //NOI18N
 				jLabelCheckYearTag.setText(folder.getResults().get("year").getDisplayText());
-				jLabelCheckDesc.setText(folder.toString());
+				if(jLabelCheckDesc!=null) {
+					jLabelCheckDesc.setText(folder.toString());
+				}
 //				jLabelCheckNbTracks.setText(folder.getResults().get("nbTracks").getDisplayText());
-				jLabelCheckGenre.setText(folder.getResults().get("genre").getDisplayText());
 			//END SPECIFIC TO THIS MODEL
 			
 			//HasID3v1
@@ -405,17 +411,9 @@ public class CheckDisplay {
 			//GENRE
 				result = folder.getResults().get("genre"); //NOI18N
                 setAddCheckBox(jCheckBoxCheckGenreDisplay, result);  //NOI18N
-				
-				jLabelCheckReplayGainTag.setText(result.getDisplayText());
-				
-//				if(folder.getNewGenre()!=null) {
-//					applyGenre(folder.getNewGenre());
-//				} else if(result.errorLevel>0) {
-//                    highlightGenre(true);
-//				}
-//				else {
-//                    highlightGenre(result.value, Color.GREEN);
-//				}
+				if(jLabelCheckGenre!=null) {
+					jLabelCheckGenre.setText(result.getDisplayText());
+				}
 
 			//COMMENT
 //				setAddCheckBox(jCheckBoxCheckCommentDisplay, folder.getResults().get("comment"));  //NOI18N
@@ -450,12 +448,11 @@ public class CheckDisplay {
 					myImage = folder.getFirstCoverFromTags();
 				}
 				PanelCover coverImg = (PanelCover) jPanelCheckCoverThumb;
+				coverImg.setImage(myImage);
 				if(myImage!=null) {
-					coverImg.setImage(myImage);
 					jLabelCoverInfo.setText(result.getDisplayText());
 				}
 				else {
-					coverImg.setImage(null);
 					if(folder.getFilesImage().size()>0) {
 						jPanelCheckCoverThumb.setEnabled(true);
 						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.Select"), 2)); //NOI18N
@@ -471,7 +468,7 @@ public class CheckDisplay {
 		}
 	}
     
-	private void unSelectCheckBoxes() {
+	void unSelectCheckBoxes() {
 		unSelectCheckBox(jCheckBoxCheckArtistDisplay);
 		unSelectCheckBox(jCheckCheckTitleDisplay);
 		unSelectCheckBox(jCheckBoxCheckGenreDisplay);
@@ -511,7 +508,7 @@ public class CheckDisplay {
 		setAddCheckBox(checkbox, results.get(FolderInfo.getField(colId)), select);  //NOI18N
 	}
         
-    private void displayMatchColumns(Map<String, FolderInfoResult> results) {
+    void displayMatchColumns(Map<String, FolderInfoResult> results) {
 		Integer[] columns = {5, 7, 9, 11, 13, 19, 21, 24};
         for(int colId : columns) {
 			displayMatchColumn(results, colId);
