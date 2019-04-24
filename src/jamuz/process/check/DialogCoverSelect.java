@@ -33,6 +33,7 @@ import jamuz.gui.swing.SortedListModel;
 import jamuz.utils.ClipboardImage;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 
 /**
  * A JDialog extension to select an album cover.
@@ -46,13 +47,18 @@ public class DialogCoverSelect extends javax.swing.JDialog {
      * Progress Bar to display images retrieving progress
      */
     private final ProgressBar progressBar;
+	private final ICallBackCover callback;
 	
 	/** Creates new CoverSelectGUI
 	 * @param parent
 	 * @param modal 
 	 * @param myFolderInfo  
+	 * @param callback  
 	 */
-	public DialogCoverSelect(java.awt.Frame parent, boolean modal, FolderInfo myFolderInfo) {
+	public DialogCoverSelect(java.awt.Frame parent, 
+			boolean modal, 
+			FolderInfo myFolderInfo,
+			ICallBackCover callback) {
 		super(parent, modal);
 		initComponents();
 		if(myFolderInfo.getFilesAudio().size()>0) {
@@ -74,6 +80,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
         progressBar = (ProgressBar)jProgressBar;
         
         listCovers();
+		this.callback = callback;
 	}
     
     private final SortedListModel<Cover> model;
@@ -210,19 +217,11 @@ public class DialogCoverSelect extends javax.swing.JDialog {
         if(coverId>=0) {
             Cover myCover = model.getElementAt(coverId);
             BufferedImage image = myCover.getImage();
-            setImage(image);
+            callback.setImage(image);
         }
 
 		this.dispose();
 	}//GEN-LAST:event_jButtonOKActionPerformed
-
-	private void setImage(BufferedImage image) {
-//		if(image!=null) {
-			//Display selected image on MainGUI
-			PanelCover mainCoverImg = (PanelCover) DialogCheck.jPanelCheckCoverThumb;
-			mainCoverImg.setImage(image);
-//		}
-	}
 	
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
        this.dispose();
@@ -235,21 +234,24 @@ public class DialogCoverSelect extends javax.swing.JDialog {
     private void jButtonClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClipboardActionPerformed
         BufferedImage image = (BufferedImage) ClipboardImage.getImageFromClipboard();
 		if(image!=null) {
-			setImage(image);
+			callback.setImage(image);
 			this.dispose();
+		} else {
+			Popup.warning("No image found on clipboard");
 		}
     }//GEN-LAST:event_jButtonClipboardActionPerformed
 
     private void jButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveActionPerformed
-        setImage(null);
+        callback.setImage(null);
 		this.dispose();
     }//GEN-LAST:event_jButtonRemoveActionPerformed
     
 	/**
 	 * @param myFolderInfo 
      * @param x 
+	 * @param callback 
 	 */
-	public static void main(final FolderInfo myFolderInfo, final Integer x) {
+	public static void main(final FolderInfo myFolderInfo, final Integer x, ICallBackCover callback) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -268,32 +270,27 @@ public class DialogCoverSelect extends javax.swing.JDialog {
 		//</editor-fold>
 
 		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				DialogCoverSelect dialog = new DialogCoverSelect(new javax.swing.JFrame(), true, myFolderInfo );
-				//Center the dialog
-//				dialog.setLocationRelativeTo(dialog.getParent());
-                
-                //Set dialog to mouse location
-                PointerInfo a = MouseInfo.getPointerInfo();
-                Point b  = a.getLocation();
-//                int x = (int)b.getX();
-                int y = (int)b.getY();
-                int newX=x-dialog.getWidth();
-                //size of the screen
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                if(newX + dialog.getWidth()>screenSize.getWidth() ) {
-                    newX=(int)screenSize.getWidth() - dialog.getWidth();
-                }
-                int newY=y;
-                if(newY + dialog.getHeight()>screenSize.getHeight()) {
-                    newY=(int)screenSize.getHeight()- dialog.getHeight();
-                }
-                dialog.setLocation(newX, newY);
-                
-                dialog.setVisible(true);
+		java.awt.EventQueue.invokeLater(() -> {
+			DialogCoverSelect dialog = new DialogCoverSelect(new javax.swing.JFrame(), true, myFolderInfo, callback );
+			//Center the dialog
+//			dialog.setLocationRelativeTo(dialog.getParent());
+			//Set dialog to mouse location
+			PointerInfo a = MouseInfo.getPointerInfo();
+			Point b  = a.getLocation();
+			//                int x = (int)b.getX();
+			int y = (int)b.getY();
+			int newX=x-dialog.getWidth();
+			//size of the screen
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			if(newX + dialog.getWidth()>screenSize.getWidth() ) {
+				newX=(int)screenSize.getWidth() - dialog.getWidth();
 			}
+			int newY = y;
+			if(newY + dialog.getHeight()>screenSize.getHeight()) {
+				newY=(int)screenSize.getHeight()- dialog.getHeight();
+			}
+			dialog.setLocation(newX, newY);
+			dialog.setVisible(true);
 		});
 	}
 	

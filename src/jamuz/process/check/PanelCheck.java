@@ -125,50 +125,9 @@ public class PanelCheck extends javax.swing.JPanel {
 		column.setCellRenderer((JTable table, Object value, boolean isSelected, 
 				boolean hasFocus, int row, int column1) -> {
 			FolderInfo folder = (FolderInfo) value;
-			
-			String res="/jamuz/ressources/"; //NOI18N
-			Color color=Color.WHITE;
-			switch(folder.action) {
-				case DEL:
-					res+="bin.png"; //NOI18N
-					color=Color.DARK_GRAY;
-					break;
-				case KO:
-					res+="cancel.png"; //NOI18N
-					color=Color.RED;
-					break;
-				case OK:
-					res+="accept.png"; //NOI18N
-					color=new Color(0, 128, 0);
-					break;
-				case WARNING:
-					res+="accept.png"; //NOI18N
-					color=Color.ORANGE;
-					break;
-				case KO_LIBRARY:
-					res+="document_insert.png";
-					color=Color.RED;
-					break;
-				case WARNING_LIBRARY:
-					res+="document_insert.png";
-					color=Color.ORANGE;
-					break;
-				case SAVE:
-					res+="application_form_edit.png"; //NOI18N
-					color=new Color(0,153,143);
-					break;
-				case ANALYZING:
-					res+="search_plus.png"; //NOI18N
-					color=Color.LIGHT_GRAY;
-					break;
-				case MANUAL:
-					res+="document_todo.png";
-					break;
-				
-			}
-			jButtonActionInJList.setIcon(new javax.swing.ImageIcon(getClass().getResource(res)));
+			jButtonActionInJList.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/"+folder.action.getRes())));
 			jButtonActionInJList.setText(folder.action.toString());
-			jButtonActionInJList.setBackground(color);
+			jButtonActionInJList.setBackground(folder.action.getColor());
 			return jButtonActionInJList;
 		});  
 		column.setCellEditor(new ButtonCheck());

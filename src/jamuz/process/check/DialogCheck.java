@@ -17,10 +17,8 @@
 
 package jamuz.process.check;
 
-import jamuz.IconBufferCover;
 import jamuz.Jamuz;
 import jamuz.IconBuffer;
-import jamuz.gui.DialogCoverDisplay;
 import jamuz.gui.PanelCover;
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
@@ -33,16 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.table.TableColumn;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.gui.swing.TableCellListener;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.WrapLayout;
 import jamuz.utils.Inter;
@@ -60,16 +51,16 @@ import javax.swing.JButton;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class DialogCheck extends javax.swing.JDialog {
+public final class DialogCheck extends javax.swing.JDialog {
 
-    private static FolderInfo folder;
-    private static TableColumnModel columnModel;
-
+    private FolderInfo folder;
+	private final CheckDisplay checkDisplay;
+	
     /**
      * Progress bar
      */
-    protected static ProgressBar progressBar;
-    private static ProgressBar progressBarCover;
+    protected ProgressBar progressBar;
+    private final ProgressBar progressBarCover;
     
     /**
      * Creates new form PanelDialogCheck
@@ -80,12 +71,20 @@ public class DialogCheck extends javax.swing.JDialog {
     public DialogCheck(java.awt.Frame parent, boolean modal, FolderInfo folder) {
         super(parent, modal);
         initComponents();
-
-        DialogCheck.folder = folder;
-        columnModel = new TableColumnModel(); //To avoid duplicate columns to be added again and again
-            //(we could also have tested if it had columns instead of deleting/recreating)
-        initExtended();
-        displayFolder();
+		this.folder=folder;
+		progressBar = (ProgressBar)jProgressBarCheckDialog;
+        progressBarCover = (ProgressBar) jProgressBarCover;
+		
+		checkDisplay = new CheckDisplay(folder, progressBar, jCheckBoxCheckAlbumArtistDisplay, 
+				jCheckBoxCheckAlbumDisplay, jCheckBoxCheckArtistDisplay, jCheckBoxCheckBPMDisplay, 
+				jCheckBoxCheckBitRateDisplay, jCheckBoxCheckCommentDisplay, jCheckBoxCheckCoverDisplay, 
+				jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, jCheckBoxCheckLengthDisplay, 
+				jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, 
+				jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, 
+				null, jLabelCheckID3v1, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, 
+				null, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck);
+		initGenre();
+		displayFolder();
     }
 
      /**
@@ -134,9 +133,8 @@ public class DialogCheck extends javax.swing.JDialog {
         }
     }
 
-    private void initExtended() {
-		  
-        //Filling genres list
+	private void initGenre() {
+		 //Filling genres list
         ActionListener actionListener = new GenreButtonListener();
         jPanelGenre.setLayout(new WrapLayout(FlowLayout.LEADING, 0, 0));
         for(String genre : Jamuz.getGenres()) {
@@ -157,199 +155,27 @@ public class DialogCheck extends javax.swing.JDialog {
         }
         jPanelGenre.validate();
         jPanelGenre.repaint();
-
-        progressBar = (ProgressBar)jProgressBarCheckDialog;
-        progressBarCover = (ProgressBar) jProgressBarCover;
-        
-        //Set table's model
-        jTableCheck.setModel(folder.getFilesAudioTableModel());
-        
-		//Assigning XTableColumnModel to allow show/hide columns
-		jTableCheck.setColumnModel(columnModel);
-		//Adding columns from model
-		jTableCheck.createDefaultColumnsFromModel();
-		
-		TableColumn column;
-
-		//	0:  "Filename"
-		column = jTableCheck.getColumnModel().getColumn(0);
-		column.setMinWidth(100);
-
-		//	1:  "Disc # (new)"
-		//	2:  "Disc #"
-		column = jTableCheck.getColumnModel().getColumn(1);
-		column.setMinWidth(55);
-		column.setMaxWidth(55);
-		column = jTableCheck.getColumnModel().getColumn(2);
-		column.setMinWidth(55);
-		column.setMaxWidth(55);
-		
-		//	3:  "Track # (new)"
-		//	4:  "Track #"
-		column = jTableCheck.getColumnModel().getColumn(3);
-		column.setMinWidth(55);
-		column.setMaxWidth(55);
-		column = jTableCheck.getColumnModel().getColumn(4);
-		column.setMinWidth(55);
-		column.setMaxWidth(55);
-		
-		//	5:  "Artist (new)"
-		//	6:  "Artist"
-		column = jTableCheck.getColumnModel().getColumn(5);
-		column.setMinWidth(50);
-		column.setPreferredWidth(100);
-		column = jTableCheck.getColumnModel().getColumn(6);
-		column.setMinWidth(50);
-		column.setPreferredWidth(100);
-		
-		//	7:  "Title (new)"
-		column = jTableCheck.getColumnModel().getColumn(7);
-		column.setMinWidth(50);
-		column.setPreferredWidth(100);
-		
-		//	8:  "Title"
-		column = jTableCheck.getColumnModel().getColumn(8);
-		column.setMinWidth(50);
-		column.setPreferredWidth(100);
-		
-		//	9:  "Genre (new)"
-			//Render "Genre" column with a combo box
-		column = jTableCheck.getColumnModel().getColumn(9);
-		JComboBox comboBox = new JComboBox(PanelMain.getComboGenre());
-		column.setCellEditor(new DefaultCellEditor(comboBox));
-			//set its width
-		column.setMinWidth(100);
-		column.setMaxWidth(200);
-		column.setPreferredWidth(100);
-		//	10: "Genre"
-		column = jTableCheck.getColumnModel().getColumn(10);
-		column.setMinWidth(80);
-		column.setPreferredWidth(80);
-		
-		//	11: "Album (new)"
-		//	12: "Album"
-		column = jTableCheck.getColumnModel().getColumn(11);
-		column.setMinWidth(80);
-		column.setPreferredWidth(100);
-		column = jTableCheck.getColumnModel().getColumn(12);
-		column.setMinWidth(80);
-		column.setPreferredWidth(100);
-		
-		//	13: "Year (new)"
-		//	14: "Year"
-		column = jTableCheck.getColumnModel().getColumn(13);
-		column.setMinWidth(50);
-		column.setPreferredWidth(50);
-		column = jTableCheck.getColumnModel().getColumn(14);
-		column.setMinWidth(50);
-		column.setPreferredWidth(50);
-		
-		//	15: "BitRate"
-		column = jTableCheck.getColumnModel().getColumn(15);
-		column.setMinWidth(50);
-		column.setPreferredWidth(50);
-		
-		//	16: "Length"
-		column = jTableCheck.getColumnModel().getColumn(16);
-		column.setMinWidth(80);
-		column.setPreferredWidth(100);
-		
-		//	17: "Format"
-		column = jTableCheck.getColumnModel().getColumn(17);
-		column.setMinWidth(80);
-		column.setPreferredWidth(100);
-		
-		//	18: "Size"
-		column = jTableCheck.getColumnModel().getColumn(18);
-		column.setMinWidth(80);
-		column.setPreferredWidth(100);
-		
-		//	19: "Album Artist (new)"
-		//	20: "Album Artist"
-		column = jTableCheck.getColumnModel().getColumn(19);
-		column.setMinWidth(80);
-		column.setPreferredWidth(100);
-		column = jTableCheck.getColumnModel().getColumn(20);
-		column.setMinWidth(80);
-		column.setPreferredWidth(100);
-		
-		//	21: "Comment (new)"
-		//	22: "Comment"
-		column = jTableCheck.getColumnModel().getColumn(21);
-		column.setMinWidth(20);
-		column.setPreferredWidth(20);
-		column = jTableCheck.getColumnModel().getColumn(22);
-		column.setMinWidth(80);
-		column.setPreferredWidth(100);
-		
-		//	23: "Cover"
-		column = jTableCheck.getColumnModel().getColumn(23);
-		column.setMinWidth(IconBufferCover.getCoverIconSize());
-		column.setMaxWidth(IconBufferCover.getCoverIconSize());
-		jTableCheck.addMouseListener(new java.awt.event.MouseAdapter() {
-			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				int col = jTableCheck.convertColumnIndexToModel(jTableCheck.columnAtPoint(evt.getPoint()));
-				if (col == 23) {
-                    //Getting selected File
-                    int selectedRow = jTableCheck.getSelectedRow();
-                    //TODO: Does not work after having used moveRow function:
-                    //Find a way to get corresponding rowIndex in getFilesAudio(),
-                    //maybe based on filename
-                    selectedRow = jTableCheck.convertRowIndexToModel(selectedRow);
-//                    FileInfoDisplay file = folder.getFilesAudioTableModel().getFiles().get(selectedRow);
-                    
-                    if(selectedRow<folder.getFilesAudio().size()) { 
-                        //Getting from there as it contains the covers
-                        DialogCoverDisplay.main(folder.getFilesAudio().get(selectedRow).getCoverImage()); 	
-                    }
-				}
-			}
-		});
-		
-		//	24: "BPMDisplay"
-		//	25: "BPMDisplay"
-		column = jTableCheck.getColumnModel().getColumn(24);
-		column.setMinWidth(40);
-		column.setPreferredWidth(40);
-		column = jTableCheck.getColumnModel().getColumn(25);
-		column.setMinWidth(40);
-		column.setPreferredWidth(40);
-		
-		//Hide all columns except permanent ones (filename, track#, trackTotal, disc#, discTotal)
-		PanelMain.setColumnVisible(columnModel, 5, 25, false);
-		
-		//need to change jScrollPane's header height, NOT jTableTags's if not bug !
-		Dimension d = jTableCheck.getTableHeader().getPreferredSize();
-		d.height = 34;
-		jScrollPaneCheckTags.getColumnHeader().setPreferredSize(d);
-		
-		Action action;
-		action = new AbstractAction()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				TableCellListener tcl = (TableCellListener)e.getSource();
-				displayMatchTracks(tcl.getColumn());
-			}
-		};
-		TableCellListener tcl = new TableCellListener(jTableCheck, action);		
 	}
     
-    private static void displayMatchTracks() {
+    private void displayMatchTracks() {
         folder.analyseMatchTracks();
         folder.getFilesAudioTableModel().fireTableDataChanged();
-        displayMatchColumns(folder.getResults());
+        checkDisplay.displayMatchColumns(folder.getResults());
 	}
-    
-    private static void displayMatchTracks(int colId) {
-        //Need to analyse the whole column so that errorLevels are properly set
-        folder.analyseMatchTracks(colId);
-        folder.getFilesAudioTableModel().fireTableDataChanged();
-        displayMatchColumn(folder.getResults(), colId);
-    }
 
+	class CallBackCheck implements ICallBackCheck {
+
+		@Override
+		public void completed(String pattern) {
+			applyPattern(pattern);
+		}
+
+		@Override
+		public void reChecked() {
+			displayFolder();
+		}
+	}
+	
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -542,11 +368,6 @@ public class DialogCheck extends javax.swing.JDialog {
         jPanelCheckCoverThumb.setMaximumSize(new java.awt.Dimension(150, 150));
         jPanelCheckCoverThumb.setMinimumSize(new java.awt.Dimension(150, 150));
         jPanelCheckCoverThumb.setPreferredSize(new java.awt.Dimension(150, 150));
-        jPanelCheckCoverThumb.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanelCheckCoverThumbMouseClicked(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanelCheckCoverThumbLayout = new javax.swing.GroupLayout(jPanelCheckCoverThumb);
         jPanelCheckCoverThumb.setLayout(jPanelCheckCoverThumbLayout);
@@ -583,18 +404,8 @@ public class DialogCheck extends javax.swing.JDialog {
         jLabelCheckNbFiles.setOpaque(true);
 
         jCheckBoxCheckArtistDisplay.setText(bundle.getString("Tag.Artist")); // NOI18N
-        jCheckBoxCheckArtistDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckArtistDisplayItemStateChanged(evt);
-            }
-        });
 
         jCheckCheckTitleDisplay.setText(bundle.getString("Tag.Title")); // NOI18N
-        jCheckCheckTitleDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckCheckTitleDisplayItemStateChanged(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -636,11 +447,6 @@ public class DialogCheck extends javax.swing.JDialog {
         jTextFieldCheckYear.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         jCheckBoxCheckYearDisplay.setText(bundle.getString("Tag.Year")); // NOI18N
-        jCheckBoxCheckYearDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckYearDisplayItemStateChanged(evt);
-            }
-        });
 
         jLabelCheckYearTag.setBackground(new java.awt.Color(255, 255, 255));
         jLabelCheckYearTag.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -685,12 +491,6 @@ public class DialogCheck extends javax.swing.JDialog {
         jLabelCoverInfo.setText("Cover info"); // NOI18N
         jLabelCoverInfo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCoverInfo.setOpaque(true);
-
-        jCheckBoxCheckCoverDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckCoverDisplayItemStateChanged(evt);
-            }
-        });
 
         jProgressBarCover.setString(" "); // NOI18N
         jProgressBarCover.setStringPainted(true);
@@ -837,18 +637,6 @@ public class DialogCheck extends javax.swing.JDialog {
         jPanel8.setBackground(java.awt.Color.lightGray);
         jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jCheckBoxCheckAlbumDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckAlbumDisplayItemStateChanged(evt);
-            }
-        });
-
-        jCheckBoxCheckAlbumArtistDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckAlbumArtistDisplayItemStateChanged(evt);
-            }
-        });
-
         jLabelCheckAlbumTag.setBackground(new java.awt.Color(255, 255, 255));
         jLabelCheckAlbumTag.setText(" "); // NOI18N
         jLabelCheckAlbumTag.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -894,11 +682,6 @@ public class DialogCheck extends javax.swing.JDialog {
         jPanelGenre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jCheckBoxCheckGenreDisplay.setText(bundle.getString("Tag.Genre")); // NOI18N
-        jCheckBoxCheckGenreDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckGenreDisplayItemStateChanged(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanelGenreLayout = new javax.swing.GroupLayout(jPanelGenre);
         jPanelGenre.setLayout(jPanelGenreLayout);
@@ -921,32 +704,12 @@ public class DialogCheck extends javax.swing.JDialog {
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jCheckBoxCheckFormatDisplay.setText(bundle.getString("Tag.Format")); // NOI18N
-        jCheckBoxCheckFormatDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckFormatDisplayItemStateChanged(evt);
-            }
-        });
 
         jCheckBoxCheckLengthDisplay.setText(bundle.getString("Tag.Length")); // NOI18N
-        jCheckBoxCheckLengthDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckLengthDisplayItemStateChanged(evt);
-            }
-        });
 
         jCheckBoxCheckSizeDisplay.setText(bundle.getString("Tag.Size")); // NOI18N
-        jCheckBoxCheckSizeDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckSizeDisplayItemStateChanged(evt);
-            }
-        });
 
         jCheckBoxCheckBitRateDisplay.setText(bundle.getString("Tag.BitRate")); // NOI18N
-        jCheckBoxCheckBitRateDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckBitRateDisplayItemStateChanged(evt);
-            }
-        });
 
         jLabelCheckMeanBitRateTag.setBackground(new java.awt.Color(255, 255, 255));
         jLabelCheckMeanBitRateTag.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -955,18 +718,8 @@ public class DialogCheck extends javax.swing.JDialog {
         jLabelCheckMeanBitRateTag.setOpaque(true);
 
         jCheckBoxCheckBPMDisplay.setText(bundle.getString("Tag.BPM")); // NOI18N
-        jCheckBoxCheckBPMDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckBPMDisplayItemStateChanged(evt);
-            }
-        });
 
         jCheckBoxCheckCommentDisplay.setText(bundle.getString("Tag.Comment")); // NOI18N
-        jCheckBoxCheckCommentDisplay.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxCheckCommentDisplayItemStateChanged(evt);
-            }
-        });
 
         jLabelCheckReplayGain.setText("ReplayGain"); // NOI18N
 
@@ -1344,7 +1097,7 @@ public class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonCheckSingleFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckSingleFolderActionPerformed
         enableAddOptions(false);
-        folder.reCheck();
+        folder.reCheck(new CallBackCheck(), progressBar);
     }//GEN-LAST:event_jButtonCheckSingleFolderActionPerformed
 
     private void jButtonCheckPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckPreviewActionPerformed
@@ -1468,7 +1221,7 @@ public class DialogCheck extends javax.swing.JDialog {
 
 			//Set new image
 			BufferedImage image=null;
-			PanelCover coverImg = (PanelCover) DialogCheck.jPanelCheckCoverThumb;
+			PanelCover coverImg = (PanelCover)jPanelCheckCoverThumb;
 			if(coverImg.isCover()) {
 				image=coverImg.getImage();
 			}
@@ -1482,10 +1235,6 @@ public class DialogCheck extends javax.swing.JDialog {
     private void jButtonCheckOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckOpenActionPerformed
         jamuz.utils.Desktop.openFolder(folder.getFullPath());
     }//GEN-LAST:event_jButtonCheckOpenActionPerformed
-
-    private void jPanelCheckCoverThumbMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelCheckCoverThumbMouseClicked
-        DialogCoverSelect.main(folder, (int)jLabelCoverInfo.getLocationOnScreen().getX());
-    }//GEN-LAST:event_jPanelCheckCoverThumbMouseClicked
 
     private void jComboBoxCheckMatchesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCheckMatchesActionPerformed
         if (jComboBoxCheckMatches.getModel().getSize() > 0) {
@@ -1518,8 +1267,6 @@ public class DialogCheck extends javax.swing.JDialog {
                 progressBar.reset();
                 //Fill matches combo box
                 displayMatches();
-
-               
             }
         };
         t.start();
@@ -1527,91 +1274,12 @@ public class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonCheckApplyArtistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckApplyArtistActionPerformed
         folder.setNewArtist(jTextFieldCheckAlbumArtist.getText());
-        displayMatchTracks(5);
+        checkDisplay.displayMatchTracks(5);
     }//GEN-LAST:event_jButtonCheckApplyArtistActionPerformed
-
-    private void jCheckBoxCheckSizeDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckSizeDisplayItemStateChanged
-        //	18: "Size"
-        PanelMain.setColumnVisible(columnModel, 18, jCheckBoxCheckSizeDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckSizeDisplayItemStateChanged
-
-    private void jCheckBoxCheckFormatDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckFormatDisplayItemStateChanged
-        //	17: "Format"
-        PanelMain.setColumnVisible(columnModel, 17, jCheckBoxCheckFormatDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckFormatDisplayItemStateChanged
-
-    private void jCheckCheckTitleDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckCheckTitleDisplayItemStateChanged
-        //	7:  "Title (new)"
-        //	8:  "Title"
-        PanelMain.setColumnVisible(columnModel, 7, 8, jCheckCheckTitleDisplay.isSelected());
-    }//GEN-LAST:event_jCheckCheckTitleDisplayItemStateChanged
-
-    private void jCheckBoxCheckGenreDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckGenreDisplayItemStateChanged
-        //	9:  "Genre (new)"
-        //	10: "Genre"
-        PanelMain.setColumnVisible(columnModel, 9, 10, jCheckBoxCheckGenreDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckGenreDisplayItemStateChanged
-
-    private void jCheckBoxCheckAlbumArtistDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckAlbumArtistDisplayItemStateChanged
-        //	19: "Album Artist (new)"
-        //	20: "Album Artist"
-        PanelMain.setColumnVisible(columnModel, 19, 20, jCheckBoxCheckAlbumArtistDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckAlbumArtistDisplayItemStateChanged
-
-    private void jCheckBoxCheckAlbumDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckAlbumDisplayItemStateChanged
-        //	11: "Album (new)"
-        //	12: "Album"
-        PanelMain.setColumnVisible(columnModel, 11, 12, jCheckBoxCheckAlbumDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckAlbumDisplayItemStateChanged
-
-    private void jCheckBoxCheckCommentDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckCommentDisplayItemStateChanged
-        //	21: "Comment (new)"
-        //	22: "Comment"
-        PanelMain.setColumnVisible(columnModel, 21, 22, jCheckBoxCheckCommentDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckCommentDisplayItemStateChanged
-
-    private void jCheckBoxCheckYearDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckYearDisplayItemStateChanged
-        //	13: "Year (new)"
-        //	14: "Year"
-        PanelMain.setColumnVisible(columnModel, 13, 14, jCheckBoxCheckYearDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckYearDisplayItemStateChanged
-
-    private void jCheckBoxCheckCoverDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckCoverDisplayItemStateChanged
-        //	23: "Cover"
-        PanelMain.setColumnVisible(columnModel, 23, jCheckBoxCheckCoverDisplay.isSelected());
-        if(jCheckBoxCheckCoverDisplay.isSelected()) {
-            jTableCheck.setRowHeight(IconBufferCover.getCoverIconSize());
-        }
-        else {
-            jTableCheck.setRowHeight(16);
-        }
-    }//GEN-LAST:event_jCheckBoxCheckCoverDisplayItemStateChanged
-
-    private void jCheckBoxCheckBitRateDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckBitRateDisplayItemStateChanged
-        //	15: "BitRate"
-        PanelMain.setColumnVisible(columnModel, 15, jCheckBoxCheckBitRateDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckBitRateDisplayItemStateChanged
-
-    private void jCheckBoxCheckBPMDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckBPMDisplayItemStateChanged
-        //	24: "BPM (new)"
-        //	25: "BPM"
-        PanelMain.setColumnVisible(columnModel, 24, 25, jCheckBoxCheckBPMDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckBPMDisplayItemStateChanged
-
-    private void jCheckBoxCheckLengthDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckLengthDisplayItemStateChanged
-        //	16: "Length"
-        PanelMain.setColumnVisible(columnModel, 16, jCheckBoxCheckLengthDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckLengthDisplayItemStateChanged
-
-    private void jCheckBoxCheckArtistDisplayItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxCheckArtistDisplayItemStateChanged
-        //	5:  "Artist (new)"
-        //	6:  "Artist"
-        PanelMain.setColumnVisible(columnModel, 5, 6, jCheckBoxCheckArtistDisplay.isSelected());
-    }//GEN-LAST:event_jCheckBoxCheckArtistDisplayItemStateChanged
 
     private void jButtonVArtistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVArtistActionPerformed
         jTextFieldCheckAlbumArtist.setText("Various Artists");  //NOI18N
-        displayMatchTracks(19);
+        checkDisplay.displayMatchTracks(19);
     }//GEN-LAST:event_jButtonVArtistActionPerformed
 
     private void jButtonCheckUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckUpActionPerformed
@@ -1653,22 +1321,22 @@ public class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonCheckApplyAlbumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckApplyAlbumActionPerformed
         folder.setNewAlbum(jTextFieldCheckAlbum.getText());
-        displayMatchTracks(11);
+        checkDisplay.displayMatchTracks(11);
     }//GEN-LAST:event_jButtonCheckApplyAlbumActionPerformed
 
     private void jButtonCheckApplyYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckApplyYearActionPerformed
         folder.setNewYear(jTextFieldCheckYear.getText());
-        displayMatchTracks(13);
+        checkDisplay.displayMatchTracks(13);
     }//GEN-LAST:event_jButtonCheckApplyYearActionPerformed
 
     private void jButtonVAlbumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVAlbumActionPerformed
         jTextFieldCheckAlbum.setText("Various Albums");  //NOI18N
-        displayMatchTracks(11);
+        checkDisplay.displayMatchTracks(11);
     }//GEN-LAST:event_jButtonVAlbumActionPerformed
 
     private void jButtonCheckApplyAlbumArtistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckApplyAlbumArtistActionPerformed
         folder.setNewAlbumArtist(jTextFieldCheckAlbumArtist.getText());
-        displayMatchTracks(19);
+        checkDisplay.displayMatchTracks(19);
     }//GEN-LAST:event_jButtonCheckApplyAlbumArtistActionPerformed
 
     private void jButtonCheckKOLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckKOLibraryActionPerformed
@@ -1713,11 +1381,11 @@ public class DialogCheck extends javax.swing.JDialog {
     private void jButtonCheckScannerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckScannerActionPerformed
         if(folder.getFilesAudio().size()>-1) {
             FileInfoDisplay file = folder.getFilesAudio().get(0);
-            DialogScanner.main(null, folder.getRelativePath()+file.getFilename());
+            DialogScanner.main(null, folder.getRelativePath()+file.getFilename(), new CallBackCheck());
         }
         
     }//GEN-LAST:event_jButtonCheckScannerActionPerformed
-
+	
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
         
         if((JOptionPane.showConfirmDialog(null, Inter.get("Msg.Check.DeleteFilesQuestion"), 
@@ -1738,7 +1406,7 @@ public class DialogCheck extends javax.swing.JDialog {
                 progressBar.reset();
             }
 			enableAddOptions(false);
-			folder.reCheck();
+			folder.reCheck(new CallBackCheck(), progressBar);
         }
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
@@ -1782,7 +1450,7 @@ public class DialogCheck extends javax.swing.JDialog {
 	 *
 	 * @param enable
 	 */
-	private static void enableAddOptions(boolean enable) {
+	private void enableAddOptions(boolean enable) {
 		jTextFieldCheckAlbum.setEnabled(enable);
 		jTextFieldCheckAlbumArtist.setEnabled(enable);
         jButtonVAlbum.setEnabled(enable);
@@ -1816,7 +1484,7 @@ public class DialogCheck extends javax.swing.JDialog {
 	 *
 	 * @param pattern
 	 */
-	public static void applyPattern(String pattern) {
+	public void applyPattern(String pattern) {
 
         String entryValue;
         for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {            
@@ -1874,114 +1542,29 @@ public class DialogCheck extends javax.swing.JDialog {
     /**
 	 * Displays a folder in check tab
 	 */
-	public static  void displayFolder(){
-	
+	private void displayFolder() {
 		enableAddOptions(false);
 		clearCheckTab();
 		
 		if(folder!=null) {
-			progressBar.setIndeterminate(""); //NOI18N
-			FolderInfoResult result;
-
-		//Number of tracks
-			result = folder.getResults().get("nbFiles");  //NOI18N
-			jLabelCheckNbFiles.setText(result.getDisplayText());
-			jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());
-			//Also displayed in displayMatch
-		
-			if(folder.getFilesAudio().size()<=0) { //No supported audio files on folder
-				jTableCheck.setEnabled(true);
+			checkDisplay.displayFolder();
+			if(folder.getFilesAudio().size()<=0) {
 				jButtonCheckOKLibrary.setEnabled(false);
 				jButtonCheckOKLibrary.setBackground(Color.gray);
 				jButtonCheckOK.setBackground(Color.gray);
 				jButtonCheckDelete.setEnabled(true);
 				jButtonCheckKO.setEnabled(true);
-				
-				unSelectCheckBoxes();
-				
-				//Hide track & disc # columns
-				PanelMain.setColumnVisible(columnModel, 1, 4, false);
-				
-				progressBar.reset();
-			}
-			else {
-                //Start this at first, this is in a thread so it goes on
-                listCovers();
-                
-				//Display track & disc # columns
-				PanelMain.setColumnVisible(columnModel, 1, 4, true);
-				
-			//HasID3v1
-				result = folder.getResults().get("hasID3v1");  //NOI18N
-				jLabelCheckID3v1Tag.setText(result.getDisplayText());
-
-			//isReplayGainDone
-				result = folder.getResults().get("isReplayGainDone");  //NOI18N
-				jLabelCheckReplayGainTag.setText(result.getDisplayText());
-				
-			//GENRE
-				result = folder.getResults().get("genre"); //NOI18N
-                setAddCheckBox(jCheckBoxCheckGenreDisplay, result);  //NOI18N
+			} else {
+				listCovers();
+				FolderInfoResult resultGenre = folder.getResults().get("genre"); //NOI18N
 				if(folder.getNewGenre()!=null) {
 					applyGenre(folder.getNewGenre());
-				} else if(result.errorLevel>0) {
-                    highlightGenre(true);
+				} else if(resultGenre.errorLevel>0) {
+					highlightGenre(true);
 				}
 				else {
-                    highlightGenre(result.value, Color.GREEN);
+					highlightGenre(resultGenre.value, Color.GREEN);
 				}
-
-			//COMMENT
-//				setAddCheckBox(jCheckBoxCheckCommentDisplay, folder.getResults().get("comment"));  //NOI18N
-
-			//BITRATE
-				result = folder.getResults().get("bitRate"); //NOI18N
-                setAddCheckBox(jCheckBoxCheckBitRateDisplay, result);  //NOI18N
-				jLabelCheckMeanBitRateTag.setText(result.getDisplayText());
-
-			//FORMAT
-				setAddCheckBox(jCheckBoxCheckFormatDisplay, folder.getResults().get("format"));  //NOI18N
-
-			//BPM
-//				setAddCheckBox(jCheckBoxCheckBPMDisplay, folder.getResults().get("bpm"));  //NOI18N
-
-			//LENGTH
-				setAddCheckBox(jCheckBoxCheckLengthDisplay, folder.getResults().get("length"));  //NOI18N
-
-			//SIZE
-				setAddCheckBox(jCheckBoxCheckSizeDisplay, folder.getResults().get("size"));  //NOI18N
-
-			//COVER
-                result=folder.getResults().get("cover"); //NOI18N
-				setAddCheckBox(jCheckBoxCheckCoverDisplay, result, false);  //NOI18N
-				
-				//By default, display cover selected for Saving 
-                BufferedImage myImage;
-				if(folder.getNewImage()!=null && folder.action.equals(ProcessCheck.Action.SAVE)) {
-					myImage = folder.getNewImage();
-				}
-				else {
-					myImage = folder.getFirstCoverFromTags();
-				}
-				PanelCover coverImg = (PanelCover) jPanelCheckCoverThumb;
-				if(myImage!=null) {
-					coverImg.setImage(myImage);
-					jLabelCoverInfo.setText(result.getDisplayText());
-				}
-				else {
-					coverImg.setImage(null);
-					if(folder.getFilesImage().size()>0) {
-						jPanelCheckCoverThumb.setEnabled(true);
-						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.Select"), 2)); //NOI18N
-					}
-					else {
-						jPanelCheckCoverThumb.setEnabled(false);
-						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.None"), 2)); //NOI18N
-					}
-				}
-				
-
-			//MATCHES
 				displayMatches();
 			}
 		}
@@ -1991,7 +1574,7 @@ public class DialogCheck extends javax.swing.JDialog {
 	 *
 	 * @param highlight
 	 */
-	public static void highlightGenre(boolean highlight) {
+	public void highlightGenre(boolean highlight) {
         Component[] components = jPanelGenre.getComponents();
         for (Component component : components) {
             if (component instanceof JButton) {
@@ -2013,7 +1596,7 @@ public class DialogCheck extends javax.swing.JDialog {
 	 * @param genre
 	 * @param selectedColor
 	 */
-	public static void highlightGenre(String genre, Color selectedColor) {
+	public void highlightGenre(String genre, Color selectedColor) {
         Component[] components = jPanelGenre.getComponents();
         for (Component component : components) {
             if (component instanceof JButton) {
@@ -2030,7 +1613,7 @@ public class DialogCheck extends javax.swing.JDialog {
         }
     }
     
-    private static void listCovers() {
+    private void listCovers() {
          Thread t = new Thread("Thread.CoverSelectGUI.listCovers") {
             @Override
             public void run() {
@@ -2071,20 +1654,20 @@ public class DialogCheck extends javax.swing.JDialog {
         
     }
     
-    private static void setCoverIfBetter(Cover cover) {
+    private void setCoverIfBetter(Cover cover) {
         if(cover.compareTo(currentCover)<0) {
             setCover(cover);
         }
     }
     
-    private static Cover currentCover=new Cover(Cover.CoverType.FILE, "value", "name");
-    private static void setCover(Cover cover) {
+    private Cover currentCover=new Cover(Cover.CoverType.FILE, "value", "name");
+    private void setCover(Cover cover) {
         BufferedImage image = cover.getImage();
         if(image!=null) {
             //TODO: Display more text: source string + make jlabel bigger and remove "Search:" label (good as it will reduce year panel)
             jLabelCoverFound.setText(cover.getSizeHTML());
             //Display selected image on MainGUI
-            PanelCover mainCoverImg = (PanelCover) DialogCheck.jPanelCheckCoverThumb;
+            PanelCover mainCoverImg = (PanelCover)jPanelCheckCoverThumb;
             mainCoverImg.setImage(image);
             currentCover=cover;
         }
@@ -2105,7 +1688,7 @@ public class DialogCheck extends javax.swing.JDialog {
         
     }
     
-    private static void displayMatches() {
+    private void displayMatches() {
 		jComboBoxCheckMatches.removeAllItems();
 		//Add matches
         List<ReleaseMatch> matches = folder.getMatches();
@@ -2119,13 +1702,6 @@ public class DialogCheck extends javax.swing.JDialog {
 			jComboBoxCheckMatches.addItem("<html>"+myMatch.toString()+"</html>"); //NOI18N
 		}
         jButtonSelectOriginal.setEnabled(folder.getMatches().size()>0);
-		//TODO: How to have jComboBoxMatches proper display ???
-//		jComboBoxMatches.revalidate();
-//		jComboBoxMatches.updateUI();
-//		jComboBoxMatches.repaint();
-//		jComboBoxMatches.contentsChanged(null);
-//		jComboBoxMatches.firePopupMenuWillBecomeVisible();
-//		jComboBoxMatches.setVisible(true);
 	}
     
     private void displayMatch(int matchId) throws CloneNotSupportedException {
@@ -2232,10 +1808,10 @@ public class DialogCheck extends javax.swing.JDialog {
 		}
 	}
 
-    private static void applyGenre(String genre) {
+    private void applyGenre(String genre) {
 		if(folder.getFilesAudioTableModel() != null) { //Happens at init, because we need to fillup jComboBoxGenre before tableModelAddTags
             folder.setNewGenre(genre);
-            displayMatchTracks(9);
+            checkDisplay.displayMatchTracks(9);
 		}
 		
 		FolderInfoResult result = folder.getResults().get("genre"); //NOI18N
@@ -2250,7 +1826,7 @@ public class DialogCheck extends javax.swing.JDialog {
     /**
 	 * Clear Check tab
 	 */
-	public static void clearCheckTab() {
+	public void clearCheckTab() {
 		jTextFieldCheckAlbumArtist.setText("");  //NOI18N
 		jTextFieldCheckAlbum.setText("");  //NOI18N
 		jComboBoxCheckMatches.removeAllItems();
@@ -2271,7 +1847,7 @@ public class DialogCheck extends javax.swing.JDialog {
 		jLabelCheckMeanBitRateTag.setText(" ");  //NOI18N
 		
 //		jPanelCheckTags.setBorder(javax.swing.BorderFactory.createTitledBorder("Tags")); 
-		unSelectCheckBoxes();
+		checkDisplay.unSelectCheckBoxes();
 	}
     
     private void moveCheckRow(int fromIndex, int toIndex) {
@@ -2282,126 +1858,66 @@ public class DialogCheck extends javax.swing.JDialog {
 			Jamuz.getLogger().log(Level.SEVERE, "moveCheckRow", ex); //NOI18N
 		}
 	}
-
-	private static void unSelectCheckBoxes() {
-		unSelectCheckBox(jCheckBoxCheckArtistDisplay);
-		unSelectCheckBox(jCheckCheckTitleDisplay);
-		unSelectCheckBox(jCheckBoxCheckGenreDisplay);
-		unSelectCheckBox(jCheckBoxCheckAlbumDisplay);
-		unSelectCheckBox(jCheckBoxCheckAlbumArtistDisplay);
-		unSelectCheckBox(jCheckBoxCheckYearDisplay);
-		unSelectCheckBox(jCheckBoxCheckCoverDisplay);
-		unSelectCheckBox(jCheckBoxCheckFormatDisplay);
-		unSelectCheckBox(jCheckBoxCheckBitRateDisplay);
-		unSelectCheckBox(jCheckBoxCheckLengthDisplay);
-		unSelectCheckBox(jCheckBoxCheckSizeDisplay);
-		unSelectCheckBox(jCheckBoxCheckCommentDisplay);
-		unSelectCheckBox(jCheckBoxCheckBPMDisplay);
-	}  
-    
-    private static void unSelectCheckBox(JCheckBox checkbox) {
-		checkbox.setSelected(false);
-		checkbox.setForeground(Color.BLACK);
-	}  
-    
-    private static void displayMatchColumn(Map<String, FolderInfoResult> results, int colId) {
-		
-		javax.swing.JCheckBox checkbox=null;
-        boolean select=true;
-		switch (colId) {
-//			case 1: field="discNoFull";	break;
-//			case 3: field="trackNoFull"; break;
-			case 5: checkbox=jCheckBoxCheckArtistDisplay;	break;
-			case 7: checkbox=jCheckCheckTitleDisplay; break;
-			case 9: checkbox=jCheckBoxCheckGenreDisplay; break;
-			case 11: checkbox=jCheckBoxCheckAlbumDisplay; break; //select=false; break;
-			case 13: checkbox=jCheckBoxCheckYearDisplay; select=false; break;
-			case 19: checkbox=jCheckBoxCheckAlbumArtistDisplay; break; //select=false; break;
-			case 21: checkbox=jCheckBoxCheckCommentDisplay; select=false; break;
-			case 24: checkbox=jCheckBoxCheckBPMDisplay; break;
-		}
-		setAddCheckBox(checkbox, results.get(FolderInfo.getField(colId)), select);  //NOI18N
-	}
-        
-    private static void displayMatchColumns(Map<String, FolderInfoResult> results) {
-		Integer[] columns = {5, 7, 9, 11, 13, 19, 21, 24};
-        for(int colId : columns) {
-			displayMatchColumn(results, colId);
-        }
-	}
-
-    private static void setAddCheckBox(JCheckBox checkbox, FolderInfoResult result) {
-        setAddCheckBox(checkbox, result, true);
-    }
-    
-    private static void setAddCheckBox(JCheckBox checkbox, FolderInfoResult result, boolean select) {
-		if(checkbox!=null) {
-            if(select) {
-                checkbox.setSelected(result.isNotValid());
-            }
-			checkbox.setForeground(result.getDisplayColor());
-		}
-	}
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private static javax.swing.JButton jButtonCheckApplyAlbum;
-    private static javax.swing.JButton jButtonCheckApplyAlbumArtist;
-    private static javax.swing.JButton jButtonCheckApplyArtist;
-    private static javax.swing.JButton jButtonCheckApplyYear;
-    private static javax.swing.JButton jButtonCheckDelete;
+    private javax.swing.JButton jButtonCheckApplyAlbum;
+    private javax.swing.JButton jButtonCheckApplyAlbumArtist;
+    private javax.swing.JButton jButtonCheckApplyArtist;
+    private javax.swing.JButton jButtonCheckApplyYear;
+    private javax.swing.JButton jButtonCheckDelete;
     private javax.swing.JButton jButtonCheckDown;
-    protected static javax.swing.JButton jButtonCheckEditTag;
-    private static javax.swing.JButton jButtonCheckKO;
-    private static javax.swing.JButton jButtonCheckKOLibrary;
-    private static javax.swing.JButton jButtonCheckOK;
-    private static javax.swing.JButton jButtonCheckOKLibrary;
-    private static javax.swing.JButton jButtonCheckOpen;
-    private static javax.swing.JButton jButtonCheckPreview;
-    private static javax.swing.JButton jButtonCheckSaveTags;
-    private static javax.swing.JButton jButtonCheckScanner;
-    private static javax.swing.JButton jButtonCheckSearch;
-    private static javax.swing.JButton jButtonCheckSingleFolder;
+    private javax.swing.JButton jButtonCheckEditTag;
+    private javax.swing.JButton jButtonCheckKO;
+    private javax.swing.JButton jButtonCheckKOLibrary;
+    private javax.swing.JButton jButtonCheckOK;
+    private javax.swing.JButton jButtonCheckOKLibrary;
+    private javax.swing.JButton jButtonCheckOpen;
+    private javax.swing.JButton jButtonCheckPreview;
+    private javax.swing.JButton jButtonCheckSaveTags;
+    private javax.swing.JButton jButtonCheckScanner;
+    private javax.swing.JButton jButtonCheckSearch;
+    private javax.swing.JButton jButtonCheckSingleFolder;
     private javax.swing.JButton jButtonCheckUp;
     private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonDuplicateCompare;
     private javax.swing.JButton jButtonNoDuplicate;
-    private static javax.swing.JButton jButtonPlayerForward;
-    private static javax.swing.JButton jButtonPlayerNext;
-    private static javax.swing.JButton jButtonPlayerPrevious;
+    private javax.swing.JButton jButtonPlayerForward;
+    private javax.swing.JButton jButtonPlayerNext;
+    private javax.swing.JButton jButtonPlayerPrevious;
     private javax.swing.JButton jButtonSelectDuplicate;
-    private static javax.swing.JButton jButtonSelectOriginal;
-    private static javax.swing.JButton jButtonVAlbum;
-    private static javax.swing.JButton jButtonVArtist;
-    private static javax.swing.JCheckBox jCheckBoxCheckAlbumArtistDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckAlbumDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckArtistDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckBPMDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckBitRateDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckCommentDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckCoverDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckFormatDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckGenreDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckLengthDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckSizeDisplay;
-    private static javax.swing.JCheckBox jCheckBoxCheckYearDisplay;
-    private static javax.swing.JCheckBox jCheckCheckTitleDisplay;
-    private static javax.swing.JComboBox jComboBoxCheckDuplicates;
-    private static javax.swing.JComboBox jComboBoxCheckMatches;
+    private javax.swing.JButton jButtonSelectOriginal;
+    private javax.swing.JButton jButtonVAlbum;
+    private javax.swing.JButton jButtonVArtist;
+    private javax.swing.JCheckBox jCheckBoxCheckAlbumArtistDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckAlbumDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckArtistDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckBPMDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckBitRateDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckCommentDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckCoverDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckFormatDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckGenreDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckLengthDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckSizeDisplay;
+    private javax.swing.JCheckBox jCheckBoxCheckYearDisplay;
+    private javax.swing.JCheckBox jCheckCheckTitleDisplay;
+    private javax.swing.JComboBox jComboBoxCheckDuplicates;
+    private javax.swing.JComboBox jComboBoxCheckMatches;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private static javax.swing.JLabel jLabelCheckAlbumArtistTag;
-    private static javax.swing.JLabel jLabelCheckAlbumTag;
-    private static javax.swing.JLabel jLabelCheckID3v1;
-    private static javax.swing.JLabel jLabelCheckID3v1Tag;
-    private static javax.swing.JLabel jLabelCheckMeanBitRateTag;
-    private static javax.swing.JLabel jLabelCheckNbFiles;
-    private static javax.swing.JLabel jLabelCheckNbTracks;
-    private static javax.swing.JLabel jLabelCheckReplayGain;
-    private static javax.swing.JLabel jLabelCheckReplayGainTag;
-    private static javax.swing.JLabel jLabelCheckYearTag;
-    private static javax.swing.JLabel jLabelCoverFound;
-    private static javax.swing.JLabel jLabelCoverInfo;
+    private javax.swing.JLabel jLabelCheckAlbumArtistTag;
+    private javax.swing.JLabel jLabelCheckAlbumTag;
+    private javax.swing.JLabel jLabelCheckID3v1;
+    private javax.swing.JLabel jLabelCheckID3v1Tag;
+    private javax.swing.JLabel jLabelCheckMeanBitRateTag;
+    private javax.swing.JLabel jLabelCheckNbFiles;
+    private javax.swing.JLabel jLabelCheckNbTracks;
+    private javax.swing.JLabel jLabelCheckReplayGain;
+    private javax.swing.JLabel jLabelCheckReplayGainTag;
+    private javax.swing.JLabel jLabelCheckYearTag;
+    private javax.swing.JLabel jLabelCoverFound;
+    private javax.swing.JLabel jLabelCoverInfo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
@@ -2411,17 +1927,17 @@ public class DialogCheck extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    public static javax.swing.JPanel jPanelCheckCoverThumb;
+    private javax.swing.JPanel jPanelCheckCoverThumb;
     private javax.swing.JPanel jPanelCheckFolder;
-    private static javax.swing.JPanel jPanelCheckTags;
-    private static javax.swing.JPanel jPanelGenre;
-    private static javax.swing.JProgressBar jProgressBarCheckDialog;
+    private javax.swing.JPanel jPanelCheckTags;
+    private javax.swing.JPanel jPanelGenre;
+    private javax.swing.JProgressBar jProgressBarCheckDialog;
     private javax.swing.JProgressBar jProgressBarCover;
-    private static javax.swing.JScrollPane jScrollPaneCheckTags;
-    private static javax.swing.JTable jTableCheck;
-    private static javax.swing.JTextField jTextFieldCheckAlbum;
-    private static javax.swing.JTextField jTextFieldCheckAlbumArtist;
-    private static javax.swing.JTextField jTextFieldCheckYear;
+    private javax.swing.JScrollPane jScrollPaneCheckTags;
+    private javax.swing.JTable jTableCheck;
+    private javax.swing.JTextField jTextFieldCheckAlbum;
+    private javax.swing.JTextField jTextFieldCheckAlbumArtist;
+    private javax.swing.JTextField jTextFieldCheckYear;
     // End of variables declaration//GEN-END:variables
 
 }

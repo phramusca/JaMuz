@@ -31,6 +31,7 @@ import jamuz.gui.swing.ProgressBar;
 import static jamuz.process.check.PanelCheck.enableRowSorter;
 import jamuz.utils.Benchmark;
 import jamuz.utils.StringManager;
+import java.awt.Color;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -875,51 +876,63 @@ public class ProcessCheck {
      */
     public enum Action {
 		/**
-		 *
+		 * Manual
 		 */
-        MANUAL("", 0),
+        MANUAL("", 0, "document_todo.png", Color.WHITE),
         /**
          * Warning 
          */
-        WARNING(Inter.get("Check.OK.Warning"), 1), //NOI18N
+        WARNING(Inter.get("Check.OK.Warning"), 1, "accept.png", Color.ORANGE), //NOI18N
 		/**
          * Delete
          */
-        DEL(Inter.get("Label.Delete"), 2), //NOI18N
+        DEL(Inter.get("Label.Delete"), 2, "bin.png", Color.DARK_GRAY), //NOI18N
 		/**
          * Save tags
          */
-        SAVE(Inter.get("Button.Save"), 3), 
+        SAVE(Inter.get("Button.Save"), 3, "application_form_edit.png", new Color(0,153,143)), 
         /**
          *  OK
          */
-        OK(Inter.get("Check.OK"), 4), //NOI18N
+        OK(Inter.get("Check.OK"), 4, "accept.png", new Color(0, 128, 0)), //NOI18N
 		/**
          * KO
          */
-        KO(Inter.get("Check.KO"), 5),
+        KO(Inter.get("Check.KO"), 5, "cancel.png", Color.RED),
 		/**
-		 *
+		 * KO in library
 		 */
-        KO_LIBRARY(Inter.get("Check.KO"), 6),        
+        KO_LIBRARY(Inter.get("Check.KO"), 6, "document_insert.png", Color.RED),        
 		/**
-		 *
+		 * Warning in library
 		 */
-		WARNING_LIBRARY(Inter.get("Check.OK.Warning"), 7),
+		WARNING_LIBRARY(Inter.get("Check.OK.Warning"), 7, "document_insert.png", Color.ORANGE),
 		/**
          * Analysis in progress (default value is not changed either auto or manually)
          */
-        ANALYZING("...", 8); //NOI18N
+        ANALYZING("...", 8, "search_plus.png", Color.LIGHT_GRAY); //NOI18N
 		
 		private final String display;
         private final int order;
-		private Action(String display, int order) {
+		private final String res;
+		private final Color color;
+		private Action(String display, int order, String res, Color color) {
 			this.display = display;
             this.order = order;
+			this.res = res;
+			this.color = color;
 		}
 		@Override
 		public String toString() {
 			return display;
+		}
+
+		public String getRes() {
+			return res;
+		}
+
+		public Color getColor() {
+			return color;
 		}
 
         /**
@@ -931,7 +944,7 @@ public class ProcessCheck {
         }
 
 	};
-    
+	
 	/**
 	 *
 	 */

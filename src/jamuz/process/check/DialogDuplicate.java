@@ -36,8 +36,12 @@ public class DialogDuplicate extends javax.swing.JDialog {
 		super(parent, modal);
 		initComponents();
 		
-		panelDuplicate1.init(folder);
-		panelDuplicate2.init(duplicateInfo.getFolderInfo(), true);
+		if(folder!=null) {
+			panelDuplicate1.init(folder);
+		}
+		if(duplicateInfo!=null) {
+			panelDuplicate2.init(duplicateInfo);
+		}
 	}
 		
 	/**
