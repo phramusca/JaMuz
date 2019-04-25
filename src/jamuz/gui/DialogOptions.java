@@ -681,8 +681,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Check options", jPanelCheckOptions);
 
-        jSplitPane1.setDividerLocation(290);
-        jSplitPane1.setDividerSize(2);
+        jSplitPane1.setResizeWeight(0.5);
 
         jPanelStatSources.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), bundle.getString("DialogOptions.jPanelStatSources.border.title"))); // NOI18N
 
@@ -778,7 +777,7 @@ public class DialogOptions extends javax.swing.JDialog {
             jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelStatSources1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPaneStatSouces1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .addComponent(jScrollPaneStatSouces1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelStatSources1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButtonDeviceAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -808,7 +807,7 @@ public class DialogOptions extends javax.swing.JDialog {
             jPanelSourceAndDevicesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSourceAndDevicesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
+                .addComponent(jSplitPane1)
                 .addContainerGap())
         );
         jPanelSourceAndDevicesLayout.setVerticalGroup(
