@@ -518,7 +518,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 
 	void resetStatus() {
 		isErrorDuplicate=false;
-		isWarningDuplicate=false;
+		isWarningDuplicate=duplicates!=null&&duplicates.size()>0;
 	}
 	
 	/**

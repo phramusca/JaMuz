@@ -64,6 +64,7 @@
       <SubComponents>
         <Container class="javax.swing.JSplitPane" name="jSplitPaneSelect">
           <Properties>
+            <Property name="dividerLocation" type="int" value="380"/>
             <Property name="orientation" type="int" value="0"/>
           </Properties>
 
@@ -243,7 +244,7 @@
                                       <Component id="jRadioSelectArtistRating" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="jScrollPaneSelectArtist" pref="360" max="32767" attributes="0"/>
+                                  <Component id="jScrollPaneSelectArtist" pref="351" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -908,7 +909,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabelSelected" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPaneSelect" pref="232" max="32767" attributes="0"/>
+                          <Component id="jScrollPaneSelect" pref="223" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jToggleButtonSelectShowBasic" alignment="3" min="-2" max="-2" attributes="0"/>

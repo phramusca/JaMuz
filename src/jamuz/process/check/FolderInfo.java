@@ -700,7 +700,7 @@ public class FolderInfo implements java.lang.Comparable {
     /**
      * delete all files in folder
      */
-    private void delete(ProgressBar progressBar) {
+    void delete(ProgressBar progressBar) {
         deleteAllFiles(progressBar);
         browse(false, false, progressBar);
         if(isCheckingMasterLibrary()) {
