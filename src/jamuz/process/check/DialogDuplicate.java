@@ -27,7 +27,8 @@ import javax.swing.JOptionPane;
  */
 public class DialogDuplicate extends javax.swing.JDialog {
 
-	private DuplicateInfo duplicateInfo;
+	private final DuplicateInfo duplicateInfo;
+	private final ICallBackDuplicate callback;
 	
 	/**
 	 * Creates new form DialogDuplicate
@@ -35,8 +36,10 @@ public class DialogDuplicate extends javax.swing.JDialog {
 	 * @param modal
 	 * @param folder
 	 * @param duplicateInfo
+	 * @param callback
 	 */
-	public DialogDuplicate(java.awt.Frame parent, boolean modal, FolderInfo folder, DuplicateInfo duplicateInfo) {
+	public DialogDuplicate(java.awt.Frame parent, boolean modal, 
+			FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackDuplicate callback) {
 		super(parent, modal);
 		initComponents();
 		this.duplicateInfo=duplicateInfo;
@@ -48,6 +51,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
 			jLabelCheckStatusDuplicate.setText("Potential duplicate. Status: "+duplicateInfo.getFolderInfo().getCheckedFlag().toString()+". Action: "+duplicateInfo.getFolderInfo().action.toString());
 			panelDuplicate2.init(duplicateInfo);
 		}
+		this.callback = callback;
 	}
 		
 	/**
@@ -103,8 +107,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
         jLabelCheckStatusDuplicate.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCheckStatusDuplicate.setOpaque(true);
 
-        jButtonNoDuplicate.setText("No duplicates");
-        jButtonNoDuplicate.setEnabled(false);
+        jButtonNoDuplicate.setText("Not a duplicate");
         jButtonNoDuplicate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNoDuplicateActionPerformed(evt);
@@ -157,17 +160,8 @@ public class DialogDuplicate extends javax.swing.JDialog {
             Inter.get("Label.Confirm"),  //NOI18N
             JOptionPane.YES_NO_OPTION);
         if (n == JOptionPane.YES_OPTION) {
-            
-			
-			//FIXME: !!!!!!!
-//			callback.
-//					
-//					
-//			duplicateInfo.setErrorLevel(0);
-//            ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());
-//            match.resetStatus();
-//            folder.setDuplicateStatus(match);
-//            enableButtons();
+			callback.notAduplicate();
+			this.dispose();
         }
     }//GEN-LAST:event_jButtonNoDuplicateActionPerformed
 
@@ -175,8 +169,9 @@ public class DialogDuplicate extends javax.swing.JDialog {
 	 * @param parentSize
 	 * @param folder
 	 * @param duplicateInfo
+	 * @param callback
 	 */
-	public static void main(Dimension parentSize, FolderInfo folder, DuplicateInfo duplicateInfo) {
+	public static void main(Dimension parentSize, FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackDuplicate callback) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -196,7 +191,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
 		
 		//</editor-fold>
 
-		DialogDuplicate dialog = new DialogDuplicate(new JFrame(), true, folder, duplicateInfo);
+		DialogDuplicate dialog = new DialogDuplicate(new JFrame(), true, folder, duplicateInfo, callback);
 				
         //Set dialog size to x% of parent size
         parentSize.height = parentSize.height * 85/100;

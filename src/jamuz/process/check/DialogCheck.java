@@ -1379,9 +1379,25 @@ public final class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonDuplicateCompareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDuplicateCompareActionPerformed
         DuplicateInfo duplicateInfo = (DuplicateInfo) jComboBoxCheckDuplicates.getSelectedItem();
-		DialogDuplicate.main(getSize(), folder, duplicateInfo);
+		DialogDuplicate.main(getSize(), folder, duplicateInfo, new CallBackDuplicate());
     }//GEN-LAST:event_jButtonDuplicateCompareActionPerformed
 
+	private class CallBackDuplicate implements ICallBackDuplicate {
+
+		@Override
+		public void notAduplicate() {
+			DuplicateInfo duplicateInfo = (DuplicateInfo) jComboBoxCheckDuplicates.getSelectedItem();
+			ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());
+		
+			match.getDuplicates().remove(duplicateInfo);
+			jComboBoxCheckDuplicates.removeItemAt(jComboBoxCheckDuplicates.getSelectedIndex());
+			
+			match.resetStatus();
+			folder.setDuplicateStatus(match);
+			enableButtons();
+		}
+	}
+	
        /**
 	 *
 	 * @param enable
@@ -1869,5 +1885,4 @@ public final class DialogCheck extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldCheckAlbumArtist;
     private javax.swing.JTextField jTextFieldCheckYear;
     // End of variables declaration//GEN-END:variables
-
 }

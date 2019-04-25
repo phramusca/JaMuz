@@ -141,8 +141,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="jButtonNoDuplicate">
               <Properties>
-                <Property name="text" type="java.lang.String" value="No duplicates"/>
-                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="text" type="java.lang.String" value="Not a duplicate"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonNoDuplicateActionPerformed"/>
