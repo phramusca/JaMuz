@@ -53,7 +53,7 @@
                       <Component id="jButtonDelete" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPaneCheckTags" pref="1266" max="32767" attributes="2"/>
+                  <Component id="jScrollPaneCheckTags" pref="1154" max="32767" attributes="2"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jPanel10" min="-2" max="-2" attributes="0"/>
@@ -78,9 +78,9 @@
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="jButtonCheckUp" pref="70" max="32767" attributes="0"/>
+                          <Component id="jButtonCheckUp" pref="56" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonCheckDown" pref="62" max="32767" attributes="0"/>
+                          <Component id="jButtonCheckDown" pref="48" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="jButtonDelete" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -283,24 +283,18 @@
                               <Component id="jPanel8" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jButtonSelectDuplicate" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
                                       <Component id="jButtonSelectOriginal" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jButtonCheckScanner" min="-2" pref="28" max="-2" attributes="0"/>
                                   </Group>
+                                  <Component id="jButtonDuplicateCompare" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jComboBoxCheckMatches" max="32767" attributes="2"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="jButtonDuplicateCompare" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jButtonNoDuplicate" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jComboBoxCheckDuplicates" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="jComboBoxCheckDuplicates" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -321,8 +315,6 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jComboBoxCheckDuplicates" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButtonSelectDuplicate" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButtonNoDuplicate" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonDuplicateCompare" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -946,7 +938,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jCheckBoxCheckGenreDisplay" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="407" max="32767" attributes="0"/>
+                          <EmptySpace pref="726" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -985,43 +977,39 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabelCheckReplayGain" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabelCheckReplayGainTag" min="-2" pref="31" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                                  <Component id="jCheckBoxCheckCommentDisplay" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="jCheckBoxCheckBitRateDisplay" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabelCheckID3v1" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabelCheckID3v1Tag" alignment="1" min="-2" pref="31" max="-2" attributes="0"/>
-                                          <Component id="jLabelCheckMeanBitRateTag" alignment="1" min="-2" pref="31" max="-2" attributes="0"/>
-                                      </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jCheckBoxCheckCommentDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jCheckBoxCheckBitRateDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelCheckReplayGain" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelCheckID3v1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabelCheckID3v1Tag" min="-2" pref="31" max="-2" attributes="0"/>
+                                      <Component id="jLabelCheckMeanBitRateTag" min="-2" pref="31" max="-2" attributes="0"/>
+                                      <Component id="jLabelCheckReplayGainTag" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jCheckBoxCheckBPMDisplay" min="-2" max="-2" attributes="0"/>
-                              <Component id="jCheckBoxCheckFormatDisplay" min="-2" max="-2" attributes="0"/>
                               <Component id="jCheckBoxCheckSizeDisplay" min="-2" max="-2" attributes="0"/>
-                              <Component id="jCheckBoxCheckLengthDisplay" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxCheckFormatDisplay" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxCheckLengthDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxCheckBPMDisplay" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabelCheckReplayGain" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabelCheckReplayGainTag" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1029,22 +1017,22 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabelCheckID3v1Tag" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabelCheckID3v1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelCheckID3v1Tag" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jCheckBoxCheckSizeDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabelCheckMeanBitRateTag" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jCheckBoxCheckBitRateDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabelCheckMeanBitRateTag" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jCheckBoxCheckLengthDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jCheckBoxCheckBPMDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jCheckBoxCheckCommentDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxCheckBPMDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1159,16 +1147,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSelectOriginalActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButtonSelectDuplicate">
-              <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Button.Select" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSelectDuplicateActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JButton" name="jButtonCheckScanner">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -1177,14 +1155,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCheckScannerActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButtonNoDuplicate">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="No duplicates"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonNoDuplicateActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jButtonDuplicateCompare">

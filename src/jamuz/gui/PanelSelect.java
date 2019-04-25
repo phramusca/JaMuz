@@ -388,7 +388,7 @@ public class PanelSelect extends javax.swing.JPanel {
 
         jSplitPaneSelect.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jSplitPaneSelectArtistAlbum.setDividerLocation(300);
+        jSplitPaneSelectArtistAlbum.setResizeWeight(0.5);
 
         jListSelectAlbum.setModel(new DefaultListModel());
         jListSelectAlbum.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -438,7 +438,7 @@ public class PanelSelect extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jRadioSelectAlbumRating)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPaneSelectAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)))
+                    .addComponent(jScrollPaneSelectAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)))
         );
         jPanelSelectAlbumLayout.setVerticalGroup(
             jPanelSelectAlbumLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
