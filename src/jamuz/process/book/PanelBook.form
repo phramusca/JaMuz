@@ -65,7 +65,7 @@
       <SubComponents>
         <Container class="javax.swing.JSplitPane" name="jSplitPane1">
           <Properties>
-            <Property name="dividerLocation" type="int" value="150"/>
+            <Property name="dividerLocation" type="int" value="200"/>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -80,7 +80,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabelVideoStatus" pref="150" max="32767" attributes="0"/>
+                      <Component id="jLabelVideoStatus" pref="200" max="32767" attributes="0"/>
                       <Component id="jScrollPaneSelectGenre4" alignment="0" pref="0" max="32767" attributes="0"/>
                       <Component id="jScrollPaneSelectGenre1" alignment="0" pref="0" max="32767" attributes="0"/>
                   </Group>
@@ -173,7 +173,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPaneCheckTags1" pref="740" max="32767" attributes="2"/>
+                              <Component id="jScrollPaneCheckTags1" pref="690" max="32767" attributes="2"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">

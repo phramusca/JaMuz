@@ -29,12 +29,14 @@ import java.util.logging.Logger;
 public class PanelDuplicate extends javax.swing.JPanel {
 
 	private CheckDisplay checkDisplay;
+	private ProgressBar progressBar;
 	
     /**
      * Creates new form PanelLyrics
      */
     public PanelDuplicate() {
         initComponents();
+		progressBar = (ProgressBar)jProgressBarCheckDialog;
     }
     
 	void init(FolderInfo folderInfo) {
@@ -51,24 +53,28 @@ public class PanelDuplicate extends javax.swing.JPanel {
 			@Override
 			public void run() {
 				FolderInfo folderInfo = duplicateInfo.getFolderInfo();
-				folderInfo.browse(false, true, (ProgressBar)jProgressBarCheckDialog);
+				folderInfo.browse(false, true, progressBar);
 				try {
-					folderInfo.analyse((ProgressBar)jProgressBarCheckDialog);
-					folderInfo.analyseMatch(0, (ProgressBar)jProgressBarCheckDialog); //Analyse first match
+					folderInfo.analyse(progressBar);
+					folderInfo.analyseMatch(0, progressBar); //Analyse first match
 				} catch (CloneNotSupportedException ex) {
 					Logger.getLogger(DialogDuplicate.class.getName()).log(Level.SEVERE, null, ex);
 				}
 				folderInfo.analyseMatchTracks();
 				folderInfo.setAction(); 
-				((ProgressBar)jProgressBarCheckDialog).reset();
+				(progressBar).reset();
 				display(folderInfo);
 			}
 		}.start();
 	}
 	
 	private void display(FolderInfo folderInfo) {
-		checkDisplay = new CheckDisplay(folderInfo, (ProgressBar)jProgressBarCheckDialog, jCheckBoxCheckAlbumArtistDisplay, jCheckBoxCheckAlbumDisplay, jCheckBoxCheckArtistDisplay, jCheckBoxCheckBPMDisplay, jCheckBoxCheckBitRateDisplay, jCheckBoxCheckCommentDisplay, jCheckBoxCheckCoverDisplay, jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, jCheckBoxCheckLengthDisplay, jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckDesc, jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, jLabelCheckGenre, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck);
+		checkDisplay = new CheckDisplay(folderInfo, progressBar, jCheckBoxCheckAlbumArtistDisplay, jCheckBoxCheckAlbumDisplay, jCheckBoxCheckArtistDisplay, jCheckBoxCheckBPMDisplay, jCheckBoxCheckBitRateDisplay, jCheckBoxCheckCommentDisplay, jCheckBoxCheckCoverDisplay, jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, jCheckBoxCheckLengthDisplay, jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckDesc, jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, jLabelCheckGenre, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck);
 		checkDisplay.displayFolder();
+	}
+	
+	ProgressBar getProgressBar() {
+		return progressBar;
 	}
 	
     /**
@@ -455,5 +461,4 @@ public class PanelDuplicate extends javax.swing.JPanel {
     private javax.swing.JTable jTableCheck;
     // End of variables declaration//GEN-END:variables
 
-	
 }

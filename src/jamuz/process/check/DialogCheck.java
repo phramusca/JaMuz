@@ -246,6 +246,7 @@ public final class DialogCheck extends javax.swing.JDialog {
         jButtonSelectOriginal = new javax.swing.JButton();
         jButtonCheckScanner = new javax.swing.JButton();
         jButtonDuplicateCompare = new javax.swing.JButton();
+        jButtonCheckNoneDuplicates = new javax.swing.JButton();
         jScrollPaneCheckTags = new javax.swing.JScrollPane();
         jTableCheck = new jamuz.gui.swing.TableHorizontal();
         jButtonCheckUp = new javax.swing.JButton();
@@ -745,8 +746,8 @@ public final class DialogCheck extends javax.swing.JDialog {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBoxCheckBitRateDisplay)
-                            .addComponent(jLabelCheckReplayGain)
-                            .addComponent(jLabelCheckID3v1))
+                            .addComponent(jLabelCheckID3v1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabelCheckReplayGain, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelCheckID3v1Tag, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -806,6 +807,13 @@ public final class DialogCheck extends javax.swing.JDialog {
             }
         });
 
+        jButtonCheckNoneDuplicates.setText("None are duplicates");
+        jButtonCheckNoneDuplicates.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCheckNoneDuplicatesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelCheckTagsLayout = new javax.swing.GroupLayout(jPanelCheckTags);
         jPanelCheckTags.setLayout(jPanelCheckTagsLayout);
         jPanelCheckTagsLayout.setHorizontalGroup(
@@ -838,7 +846,10 @@ public final class DialogCheck extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBoxCheckMatches, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBoxCheckDuplicates, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                            .addGroup(jPanelCheckTagsLayout.createSequentialGroup()
+                                .addComponent(jComboBoxCheckDuplicates, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonCheckNoneDuplicates))))))
         );
         jPanelCheckTagsLayout.setVerticalGroup(
             jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -853,7 +864,8 @@ public final class DialogCheck extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jComboBoxCheckDuplicates, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonDuplicateCompare))
+                            .addComponent(jButtonDuplicateCompare)
+                            .addComponent(jButtonCheckNoneDuplicates))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1382,20 +1394,35 @@ public final class DialogCheck extends javax.swing.JDialog {
 		DialogDuplicate.main(getSize(), folder, duplicateInfo, new CallBackDuplicate());
     }//GEN-LAST:event_jButtonDuplicateCompareActionPerformed
 
+    private void jButtonCheckNoneDuplicatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckNoneDuplicatesActionPerformed
+        int n = JOptionPane.showConfirmDialog(
+            null, Inter.get("Question.Check.CleanAllDuplicates"),  //NOI18N
+            Inter.get("Label.Confirm"),  //NOI18N
+            JOptionPane.YES_NO_OPTION);
+        if (n == JOptionPane.YES_OPTION) {
+			ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());
+			match.getDuplicates().clear();
+			jComboBoxCheckDuplicates.removeAllItems();
+			resetStatus(match);
+        }
+    }//GEN-LAST:event_jButtonCheckNoneDuplicatesActionPerformed
+
 	private class CallBackDuplicate implements ICallBackDuplicate {
 
 		@Override
 		public void notAduplicate() {
 			DuplicateInfo duplicateInfo = (DuplicateInfo) jComboBoxCheckDuplicates.getSelectedItem();
 			ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());
-		
 			match.getDuplicates().remove(duplicateInfo);
 			jComboBoxCheckDuplicates.removeItemAt(jComboBoxCheckDuplicates.getSelectedIndex());
-			
-			match.resetStatus();
-			folder.setDuplicateStatus(match);
-			enableButtons();
+			resetStatus(match);
 		}
+	}
+	
+	private void resetStatus(ReleaseMatch match) {
+		match.resetStatus();
+		folder.setDuplicateStatus(match);
+		enableButtons();
 	}
 	
        /**
@@ -1817,6 +1844,7 @@ public final class DialogCheck extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCheckEditTag;
     private javax.swing.JButton jButtonCheckKO;
     private javax.swing.JButton jButtonCheckKOLibrary;
+    private javax.swing.JButton jButtonCheckNoneDuplicates;
     private javax.swing.JButton jButtonCheckOK;
     private javax.swing.JButton jButtonCheckOKLibrary;
     private javax.swing.JButton jButtonCheckOpen;

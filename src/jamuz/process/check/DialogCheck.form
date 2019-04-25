@@ -294,7 +294,11 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jComboBoxCheckMatches" max="32767" attributes="2"/>
-                                  <Component id="jComboBoxCheckDuplicates" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="jComboBoxCheckDuplicates" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jButtonCheckNoneDuplicates" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -316,6 +320,7 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jComboBoxCheckDuplicates" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButtonDuplicateCompare" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButtonCheckNoneDuplicates" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -984,8 +989,8 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jCheckBoxCheckBitRateDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabelCheckReplayGain" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabelCheckID3v1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelCheckID3v1" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelCheckReplayGain" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -1163,6 +1168,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDuplicateCompareActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButtonCheckNoneDuplicates">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="None are duplicates"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCheckNoneDuplicatesActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
