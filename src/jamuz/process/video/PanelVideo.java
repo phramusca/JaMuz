@@ -202,7 +202,7 @@ public class PanelVideo extends javax.swing.JPanel {
 //                "6", "7", "8", "9", "10");
 //        jListVideoRating.setModel(getModel(ratings, false));
 
-		listDb();
+//		listDb();
 	}
     
     class OpenUrlAction extends AbstractAction {
