@@ -17,6 +17,7 @@
 
 package jamuz.process.check;
 
+import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.Inter;
 import java.util.logging.Level;
@@ -29,7 +30,8 @@ import java.util.logging.Logger;
 public class PanelDuplicate extends javax.swing.JPanel {
 
 	private CheckDisplay checkDisplay;
-	private ProgressBar progressBar;
+	private final ProgressBar progressBar;
+	private DuplicateInfo duplicateInfo=null;
 	
     /**
      * Creates new form PanelLyrics
@@ -39,7 +41,13 @@ public class PanelDuplicate extends javax.swing.JPanel {
 		progressBar = (ProgressBar)jProgressBarCheckDialog;
     }
     
-	void init(FolderInfo folderInfo) {
+	void init(FolderInfo folderInfo, DuplicateInfo diToSelect, ICallBackDuplicate callback) {
+		this.duplicateInfo = diToSelect;
+		jComboBoxCheckDuplicates.addActionListener((java.awt.event.ActionEvent evt) -> {
+			if(checkDisplay.enableCombo) {
+				callback.duplicate((DuplicateInfo) jComboBoxCheckDuplicates.getSelectedItem());
+			}
+		});
 		new Thread("Thread.PanelDuplicate.init folder") {
 			@Override
 			public void run() {
@@ -69,8 +77,9 @@ public class PanelDuplicate extends javax.swing.JPanel {
 	}
 	
 	private void display(FolderInfo folderInfo) {
-		checkDisplay = new CheckDisplay(folderInfo, progressBar, jCheckBoxCheckAlbumArtistDisplay, jCheckBoxCheckAlbumDisplay, jCheckBoxCheckArtistDisplay, jCheckBoxCheckBPMDisplay, jCheckBoxCheckBitRateDisplay, jCheckBoxCheckCommentDisplay, jCheckBoxCheckCoverDisplay, jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, jCheckBoxCheckLengthDisplay, jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckDesc, jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, jLabelCheckGenre, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck);
+		checkDisplay = new CheckDisplay(folderInfo, progressBar, jCheckBoxCheckAlbumArtistDisplay, jCheckBoxCheckAlbumDisplay, jCheckBoxCheckArtistDisplay, jCheckBoxCheckBPMDisplay, jCheckBoxCheckBitRateDisplay, jCheckBoxCheckCommentDisplay, jCheckBoxCheckCoverDisplay, jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, jCheckBoxCheckLengthDisplay, jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckDesc, jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, jLabelCheckGenre, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck, jComboBoxCheckDuplicates, jComboBoxCheckMatches);
 		checkDisplay.displayFolder();
+		
 	}
 	
 	ProgressBar getProgressBar() {
@@ -119,6 +128,8 @@ public class PanelDuplicate extends javax.swing.JPanel {
         jScrollPaneCheckTags = new javax.swing.JScrollPane();
         jTableCheck = new jamuz.gui.swing.TableHorizontal();
         jProgressBarCheckDialog = new jamuz.gui.swing.ProgressBar();
+        jComboBoxCheckMatches = new javax.swing.JComboBox();
+        jComboBoxCheckDuplicates = new javax.swing.JComboBox();
 
         jPanelCheckCoverThumb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanelCheckCoverThumb.setMaximumSize(new java.awt.Dimension(150, 150));
@@ -298,7 +309,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jCheckCheckTitleDisplay)
                     .addComponent(jCheckBoxCheckArtistDisplay))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -383,10 +394,17 @@ public class PanelDuplicate extends javax.swing.JPanel {
         jProgressBarCheckDialog.setString("null");
         jProgressBarCheckDialog.setStringPainted(true);
 
+        jComboBoxCheckMatches.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxCheckMatchesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -399,14 +417,19 @@ public class PanelDuplicate extends javax.swing.JPanel {
                             .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabelCheckDesc))
+                    .addComponent(jLabelCheckDesc)
+                    .addComponent(jComboBoxCheckMatches, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxCheckDuplicates, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jComboBoxCheckMatches, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxCheckDuplicates, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelCheckDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -421,9 +444,26 @@ public class PanelDuplicate extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
+                .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBoxCheckMatchesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCheckMatchesActionPerformed
+        if (jComboBoxCheckMatches.getModel().getSize() > 0) {
+            Thread t = new Thread("Thread.PanelCheckDialog.displayMatch") {
+                @Override
+                public void run() {
+                    try {
+                        checkDisplay.displayMatch(jComboBoxCheckMatches.getSelectedIndex(), duplicateInfo);
+                    } catch (CloneNotSupportedException ex) {
+                        //Should never happen since FileInfoDisplay implements Cloneable
+                        Jamuz.getLogger().log(Level.SEVERE, "applyMatch()", ex); //NOI18N
+                    }
+                }
+            };
+            t.start();
+        }
+    }//GEN-LAST:event_jComboBoxCheckMatchesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBoxCheckAlbumArtistDisplay;
@@ -439,6 +479,8 @@ public class PanelDuplicate extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBoxCheckSizeDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckYearDisplay;
     private javax.swing.JCheckBox jCheckCheckTitleDisplay;
+    private javax.swing.JComboBox jComboBoxCheckDuplicates;
+    private javax.swing.JComboBox jComboBoxCheckMatches;
     private javax.swing.JLabel jLabelCheckAlbumArtistTag;
     private javax.swing.JLabel jLabelCheckAlbumTag;
     private javax.swing.JLabel jLabelCheckDesc;

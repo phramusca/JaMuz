@@ -10,5 +10,5 @@ package jamuz.process.check;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public interface ICallBackDuplicate {
-	public void notAduplicate();
+	public void duplicate(DuplicateInfo duplicateInfo);
 }

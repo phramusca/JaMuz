@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 public class DialogDuplicate extends javax.swing.JDialog {
 
 	private final DuplicateInfo duplicateInfo;
-	private final ICallBackDuplicate callback;
+	private final ICallBackCheck callback;
 	
 	/**
 	 * Creates new form DialogDuplicate
@@ -39,21 +39,33 @@ public class DialogDuplicate extends javax.swing.JDialog {
 	 * @param callback
 	 */
 	public DialogDuplicate(java.awt.Frame parent, boolean modal, 
-			FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackDuplicate callback) {
+			FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackCheck callback) {
 		super(parent, modal);
 		initComponents();
 		this.duplicateInfo=duplicateInfo;
 		if(folder!=null) {
-			jLabelCheckStatus.setText("Folder being checked. Action: "+folder.action.toString());
-			panelDuplicate1.init(folder);
+			
+			jLabelCheckStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/"+folder.action.getRes())));
+			jLabelCheckStatus.setBackground(folder.action.getColor());
+			jLabelCheckStatus.setText("<html><b>Folder being checked: "+folder.action.toString()+"<b></html>");
+			panelDuplicate1.init(folder, duplicateInfo, (DuplicateInfo duplicateInfo1) -> {
+				if(duplicateInfo1!=null) {
+					initPanel2(duplicateInfo1);
+				}
+			});
 		}
 		if(duplicateInfo!=null) {
-			jLabelCheckStatusDuplicate.setText("Potential duplicate. Status: "+duplicateInfo.getFolderInfo().getCheckedFlag().toString()+". Action: "+duplicateInfo.getFolderInfo().action.toString());
-			panelDuplicate2.init(duplicateInfo);
+			initPanel2(duplicateInfo);
 		}
 		this.callback = callback;
 	}
 		
+	private void initPanel2(DuplicateInfo duplicateInfo) {
+		jLabelCheckStatusDuplicate.setBackground(duplicateInfo.getFolderInfo().getCheckedFlag().getColor());
+		jLabelCheckStatusDuplicate.setText("<html><b>Potential duplicate: "+duplicateInfo.getFolderInfo().getCheckedFlag().toString()+"<b></html>");
+		panelDuplicate2.init(duplicateInfo);
+	}
+	
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,7 +93,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
         jLabelCheckStatus.setText(" "); // NOI18N
         jLabelCheckStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCheckStatus.setOpaque(true);
-
+        jPanel1.add(jLabelCheckStatus);
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -107,6 +119,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
         jLabelCheckStatusDuplicate.setText(" "); // NOI18N
         jLabelCheckStatusDuplicate.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCheckStatusDuplicate.setOpaque(true);
+        jPanel2.add(jLabelCheckStatusDuplicate);
 
         jButtonNoDuplicate.setText("Not a duplicate");
         jButtonNoDuplicate.addActionListener(new java.awt.event.ActionListener() {
@@ -114,6 +127,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
                 jButtonNoDuplicateActionPerformed(evt);
             }
         });
+        jPanel2.add(jButtonNoDuplicate);
 
         jButtonCheckDelete.setBackground(java.awt.Color.black);
         jButtonCheckDelete.setForeground(java.awt.Color.white);
@@ -186,7 +200,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
             JOptionPane.YES_NO_OPTION);
         if (n == JOptionPane.YES_OPTION) {
             duplicateInfo.getFolderInfo().delete(panelDuplicate2.getProgressBar());
-			panelDuplicate2.init(duplicateInfo.getFolderInfo());
+			panelDuplicate2.init(duplicateInfo.getFolderInfo(), null, (DuplicateInfo di) -> {});
 			callback.notAduplicate();
             this.dispose();
         }
@@ -198,7 +212,8 @@ public class DialogDuplicate extends javax.swing.JDialog {
 	 * @param duplicateInfo
 	 * @param callback
 	 */
-	public static void main(Dimension parentSize, FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackDuplicate callback) {
+	public static void main(Dimension parentSize, FolderInfo folder, 
+			DuplicateInfo duplicateInfo, ICallBackCheck callback) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -218,7 +233,8 @@ public class DialogDuplicate extends javax.swing.JDialog {
 		
 		//</editor-fold>
 
-		DialogDuplicate dialog = new DialogDuplicate(new JFrame(), true, folder, duplicateInfo, callback);
+		DialogDuplicate dialog = new DialogDuplicate(new JFrame(), true, folder, 
+				duplicateInfo, callback);
 				
         //Set dialog size to x% of parent size
         parentSize.height = parentSize.height * 85/100;

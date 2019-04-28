@@ -21,7 +21,6 @@ import jamuz.Jamuz;
 import jamuz.IconBuffer;
 import jamuz.gui.PanelCover;
 import jamuz.gui.PanelMain;
-import jamuz.gui.PanelSelect;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -81,7 +80,8 @@ public final class DialogCheck extends javax.swing.JDialog {
 				jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, 
 				jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, 
 				null, jLabelCheckID3v1, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, 
-				null, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck);
+				null, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck, 
+				jComboBoxCheckDuplicates, jComboBoxCheckMatches);
 		initGenre();
 		displayFolder();
     }
@@ -156,13 +156,9 @@ public final class DialogCheck extends javax.swing.JDialog {
         jPanelGenre.repaint();
 	}
     
-    private void displayMatchTracks() {
-        folder.analyseMatchTracks();
-        folder.getFilesAudioTableModel().fireTableDataChanged();
-        checkDisplay.displayMatchColumns(folder.getResults());
-	}
+    
 
-	class CallBackCheck implements ICallBackCheck {
+	class CallBackCheck implements ICallBackScanner {
 
 		@Override
 		public void completed(String pattern) {
@@ -1228,7 +1224,42 @@ public final class DialogCheck extends javax.swing.JDialog {
                 @Override
                 public void run() {
                     try {
-                        displayMatch(jComboBoxCheckMatches.getSelectedIndex());
+						enableAddOptions(false);
+						ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());//TODO: support match==null (should not happen)
+						if(match!=null && match.getDuplicates()!=null) {
+							if(match.getDuplicates().size()>0) {
+								jButtonDuplicateCompare.setEnabled(true);
+							}
+							else {
+								jButtonDuplicateCompare.setEnabled(false);
+							}
+						}
+                        checkDisplay.displayMatch(jComboBoxCheckMatches.getSelectedIndex(), null);
+
+						//Need to display albumArtist, Album and year after displaying tracks as 
+						//analysis is done there
+						if(match!=null) {
+							jTextFieldCheckAlbumArtist.setText(match.getArtist());
+							jTextFieldCheckAlbum.setText(match.getAlbum());
+							Map<String, FolderInfoResult> results = folder.getResults(); 
+							FolderInfoResult resultYear = results.get("year"); //NOI18N
+							if (!match.getYear().equals("")) { 				  //NOI18N
+								jTextFieldCheckYear.setText(match.getYear()); 			
+							}
+							else if(!resultYear.value.startsWith("{")){ //NOI18N
+								jTextFieldCheckYear.setText(resultYear.value);
+							}
+							else {
+								jTextFieldCheckYear.setText(""); //NOI18N
+							}
+						}
+						else {
+							jTextFieldCheckAlbumArtist.setText("");
+							jTextFieldCheckAlbum.setText("");
+							jTextFieldCheckYear.setText(""); //NOI18N
+						}
+						
+						enableButtons();
                     } catch (CloneNotSupportedException ex) {
                         //Should never happen since FileInfoDisplay implements Cloneable
                         Jamuz.getLogger().log(Level.SEVERE, "applyMatch()", ex); //NOI18N
@@ -1252,7 +1283,8 @@ public final class DialogCheck extends javax.swing.JDialog {
 						progressBar);
                 progressBar.reset();
                 //Fill matches combo box
-                displayMatches();
+                checkDisplay.displayMatches();
+				jButtonSelectOriginal.setEnabled(folder.getMatches().size()>0);
             }
         };
         t.start();
@@ -1407,7 +1439,7 @@ public final class DialogCheck extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonCheckNoneDuplicatesActionPerformed
 
-	private class CallBackDuplicate implements ICallBackDuplicate {
+	private class CallBackDuplicate implements ICallBackCheck {
 
 		@Override
 		public void notAduplicate() {
@@ -1473,29 +1505,23 @@ public final class DialogCheck extends javax.swing.JDialog {
                     case "%b": //album
                         jTextFieldCheckAlbum.setText(entryValue);
                         file.setAlbum(entryValue);
-//                        displayMatchTracks(11);
                         break;
                     case "%a": //artist
                         file.setArtist(entryValue);
-//                        displayMatchTracks(5);
                         break;
                     case "%y": //year
                         jTextFieldCheckYear.setText(entryValue);
                         file.setYear(entryValue);
-//                        displayMatchTracks(13);
                         break;
                     case "%t": //title
                         file.setTitle(entryValue);
-//                        displayMatchTracks(7);
                         break;
                     case "%z": //album artist
                         jTextFieldCheckAlbumArtist.setText(entryValue);
                         file.setAlbumArtist(entryValue);
-//                        displayMatchTracks(19);
                         break;
                     case "%c": //comment
                         file.setComment(entryValue);
-//                        displayMatchTracks(21);
                         break;
                     case "%d": //disc#
                         file.setDiscNo(Utils.getInteger(entryValue));
@@ -1512,7 +1538,7 @@ public final class DialogCheck extends javax.swing.JDialog {
                 }
             }
         }
-        displayMatchTracks();
+        checkDisplay.displayMatchTracks();
         //TODO: Is this not done yet ? >> Re-calculate differences and check AlbumArtist, album, artist, title accordingly
         folder.getFilesAudioTableModel().fireTableDataChanged();
         
@@ -1544,7 +1570,6 @@ public final class DialogCheck extends javax.swing.JDialog {
 				else {
 					highlightGenre(resultGenre.value, Color.GREEN);
 				}
-				displayMatches();
 			}
 		}
 	}
@@ -1666,96 +1691,7 @@ public final class DialogCheck extends javax.swing.JDialog {
         }
         
     }
-    
-    private void displayMatches() {
-		jComboBoxCheckMatches.removeAllItems();
-		//Add matches
-        List<ReleaseMatch> matches = folder.getMatches();
-        if(matches!=null) {
-            for(ReleaseMatch releaseMatch : matches) {
-                jComboBoxCheckMatches.addItem("<html>"+releaseMatch.toString()+"</html>"); //NOI18N
-            }
-        }
-		//Add originals
-		for(ReleaseMatch myMatch : folder.getOriginals()) {
-			jComboBoxCheckMatches.addItem("<html>"+myMatch.toString()+"</html>"); //NOI18N
-		}
-        jButtonSelectOriginal.setEnabled(folder.getMatches().size()>0);
-	}
-    
-    private void displayMatch(int matchId) throws CloneNotSupportedException {
-		enableAddOptions(false);
-        ReleaseMatch match = folder.getMatch(matchId);//TODO: support match==null (should not happen)
-        Map<String, FolderInfoResult> results = folder.getResults(); 
-        folder.analyseMatch(matchId, progressBar);
-        FolderInfoResult result = folder.getResults().get("nbFiles");  //NOI18N
-        jLabelCheckNbFiles.setText(result.getDisplayText());
-        jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());
-
-    //DUPLICATES
-        jComboBoxCheckDuplicates.removeAllItems();
-        if(match!=null && match.getDuplicates()!=null) {
-			if(match.getDuplicates().size()>0) {
-				for(DuplicateInfo duplicate : match.getDuplicates()) {
-					jComboBoxCheckDuplicates.addItem(duplicate);
-				}
-				jButtonDuplicateCompare.setEnabled(true);
-			}
-			else {
-				jComboBoxCheckDuplicates.addItem(FolderInfoResult.colorField(Inter.get("Label.None"),0));  //NOI18N
-				jButtonDuplicateCompare.setEnabled(false);
-			}
-        }
-		progressBar.setIndeterminate(Inter.get("Msg.Scan.AnalyzingMatch"));  //NOI18N
-
-		//TRACKS (ARTIST, TITLE, ...)
-        //Number of files vs tracks
-        result = results.get("nbFiles");  //NOI18N
-        jLabelCheckNbFiles.setText(result.getDisplayText());
-        jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());
-        if(match!=null) {
-            List<ReleaseMatch.Track> tracks=match.getTracks(progressBar); 
-            jLabelCheckNbTracks.setText(String.valueOf(tracks.size()));
-        }
-        else {
-            jLabelCheckNbTracks.setText("");
-        }
-        
-        //Display all tracks 
-        displayMatchTracks();
-
-        //Need to display albumArtist, Album and year after displaying tracks as 
-        //analysis is done there
-        if(match!=null) {
-            jTextFieldCheckAlbumArtist.setText(match.getArtist());
-            jTextFieldCheckAlbum.setText(match.getAlbum());
-            result = results.get("year"); //NOI18N
-            if (!match.getYear().equals("")) { 				  //NOI18N
-                jTextFieldCheckYear.setText(match.getYear()); 			
-            }
-            else if(!result.value.startsWith("{")){ //NOI18N
-                jTextFieldCheckYear.setText(result.value);
-            }
-            else {
-                jTextFieldCheckYear.setText(""); //NOI18N
-            }
-        }
-        else {
-            jTextFieldCheckAlbumArtist.setText("");
-            jTextFieldCheckAlbum.setText("");
-            jTextFieldCheckYear.setText(""); //NOI18N
-        }
-        jLabelCheckAlbumTag.setText(results.get("album").getDisplayText()); //NOI18N
-        jLabelCheckAlbumArtistTag.setText(results.get("albumArtist").getDisplayText()); //NOI18N
-        jLabelCheckYearTag.setText(results.get("year").getDisplayText());
-        jLabelCheckYearTag.setToolTipText(results.get("year").getDisplayToolTip());
-
-
-        enableButtons();
-
-        progressBar.reset();
-	}
-
+	
 	private void enableButtons() {
 		//ENABLE (OR NOT) OK, KO and DEL buttons
 		enableAddOptions(true);
@@ -1828,7 +1764,7 @@ public final class DialogCheck extends javax.swing.JDialog {
     private void moveCheckRow(int fromIndex, int toIndex) {
 		try {
 			folder.getFilesAudioTableModel().moveRow(fromIndex, toIndex);
-			displayMatchTracks();
+			checkDisplay.displayMatchTracks();
 		} catch (CloneNotSupportedException ex) {
 			Jamuz.getLogger().log(Level.SEVERE, "moveCheckRow", ex); //NOI18N
 		}

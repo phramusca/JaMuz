@@ -48,7 +48,7 @@ import javax.swing.table.TableRowSorter;
 public class DialogScanner extends javax.swing.JDialog {
 
     private static TableModel tableModel;
-	private final ICallBackCheck callback;
+	private final ICallBackScanner callback;
     /**
      * Creates new form NewJFrame
      * @param parent
@@ -56,7 +56,7 @@ public class DialogScanner extends javax.swing.JDialog {
      * @param path
 	 * @param callback
      */
-    public DialogScanner(java.awt.Frame parent, boolean modal, String path, ICallBackCheck callback) {
+    public DialogScanner(java.awt.Frame parent, boolean modal, String path, ICallBackScanner callback) {
         super(parent, modal);
         initComponents();
 		
@@ -527,7 +527,7 @@ public class DialogScanner extends javax.swing.JDialog {
      * @param path
 	 * @param callback
      */
-    public static void main(String args[], String path, ICallBackCheck callback) {
+    public static void main(String args[], String path, ICallBackScanner callback) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

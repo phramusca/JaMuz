@@ -244,7 +244,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @param callback
 	 * @param progressBar
 	 */
-	public void reCheck(ICallBackCheck callback, ProgressBar progressBar) {
+	public void reCheck(ICallBackScanner callback, ProgressBar progressBar) {
 		Thread t = new Thread("Thread.FolderInfo.reCheck") {
 			@Override
 			public void run() {

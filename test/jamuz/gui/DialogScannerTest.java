@@ -16,8 +16,8 @@
  */
 package jamuz.gui;
 
-import jamuz.process.check.ICallBackCheck;
 import java.io.Console;
+import jamuz.process.check.ICallBackScanner;
 
 /**
  *
@@ -31,7 +31,7 @@ public class DialogScannerTest {
 	 */
 	public static void main(String[] args) {
 		//%b - %z %y/%n.%a - %t.mp3
-		jamuz.process.check.DialogScanner.main(null, "the Grey CAT - SnaKee 1865/001.toto - INTRO.mp3", new ICallBackCheck() {
+		jamuz.process.check.DialogScanner.main(null, "the Grey CAT - SnaKee 1865/001.toto - INTRO.mp3", new ICallBackScanner() {
 			@Override
 			public void completed(String pattern) {
 				System.out.println(".completed("+pattern+")");

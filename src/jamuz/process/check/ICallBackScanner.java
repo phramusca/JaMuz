@@ -9,6 +9,7 @@ package jamuz.process.check;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public interface ICallBackCheck {
-	public void notAduplicate();
+public interface ICallBackScanner {
+	public void completed(String pattern);
+	public void reChecked();
 }

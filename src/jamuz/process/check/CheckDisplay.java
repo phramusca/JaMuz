@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -46,9 +47,45 @@ import javax.swing.table.TableColumn;
  */
 public class CheckDisplay {
 
-	
+	private final JComboBox jComboBoxCheckDuplicates;
+	private final JComboBox jComboBoxCheckMatches;
+	boolean enableCombo=false;
 
-	public CheckDisplay(FolderInfo folder, ProgressBar progressBar, JCheckBox jCheckBoxCheckAlbumArtistDisplay, JCheckBox jCheckBoxCheckAlbumDisplay, JCheckBox jCheckBoxCheckArtistDisplay, JCheckBox jCheckBoxCheckBPMDisplay, JCheckBox jCheckBoxCheckBitRateDisplay, JCheckBox jCheckBoxCheckCommentDisplay, JCheckBox jCheckBoxCheckCoverDisplay, JCheckBox jCheckBoxCheckFormatDisplay, JCheckBox jCheckBoxCheckGenreDisplay, JCheckBox jCheckBoxCheckLengthDisplay, JCheckBox jCheckBoxCheckSizeDisplay, JCheckBox jCheckBoxCheckYearDisplay, JCheckBox jCheckCheckTitleDisplay, JLabel jLabelCheckAlbumArtistTag, JLabel jLabelCheckAlbumTag, JLabel jLabelCheckNbTracks, JLabel jLabelCheckYearTag, JLabel jLabelCheckDesc, JLabel jLabelCheckID3v1Tag, JLabel jLabelCheckMeanBitRateTag, JLabel jLabelCheckNbFiles, JLabel jLabelCheckReplayGainTag, JLabel jLabelCheckGenre, JLabel jLabelCoverInfo, JPanel jPanelCheckCoverThumb, JScrollPane jScrollPaneCheckTags, JTable jTableCheck) {
+	/**
+	 *
+	 * @param folder
+	 * @param progressBar
+	 * @param jCheckBoxCheckAlbumArtistDisplay
+	 * @param jCheckBoxCheckAlbumDisplay
+	 * @param jCheckBoxCheckArtistDisplay
+	 * @param jCheckBoxCheckBPMDisplay
+	 * @param jCheckBoxCheckBitRateDisplay
+	 * @param jCheckBoxCheckCommentDisplay
+	 * @param jCheckBoxCheckCoverDisplay
+	 * @param jCheckBoxCheckFormatDisplay
+	 * @param jCheckBoxCheckGenreDisplay
+	 * @param jCheckBoxCheckLengthDisplay
+	 * @param jCheckBoxCheckSizeDisplay
+	 * @param jCheckBoxCheckYearDisplay
+	 * @param jCheckCheckTitleDisplay
+	 * @param jLabelCheckAlbumArtistTag
+	 * @param jLabelCheckAlbumTag
+	 * @param jLabelCheckNbTracks
+	 * @param jLabelCheckYearTag
+	 * @param jLabelCheckDesc
+	 * @param jLabelCheckID3v1Tag
+	 * @param jLabelCheckMeanBitRateTag
+	 * @param jLabelCheckNbFiles
+	 * @param jLabelCheckReplayGainTag
+	 * @param jLabelCheckGenre
+	 * @param jLabelCoverInfo
+	 * @param jPanelCheckCoverThumb
+	 * @param jScrollPaneCheckTags
+	 * @param jTableCheck
+	 * @param jComboBoxCheckDuplicates
+	 * @param jComboBoxCheckMatches
+	 */
+	public CheckDisplay(FolderInfo folder, ProgressBar progressBar, JCheckBox jCheckBoxCheckAlbumArtistDisplay, JCheckBox jCheckBoxCheckAlbumDisplay, JCheckBox jCheckBoxCheckArtistDisplay, JCheckBox jCheckBoxCheckBPMDisplay, JCheckBox jCheckBoxCheckBitRateDisplay, JCheckBox jCheckBoxCheckCommentDisplay, JCheckBox jCheckBoxCheckCoverDisplay, JCheckBox jCheckBoxCheckFormatDisplay, JCheckBox jCheckBoxCheckGenreDisplay, JCheckBox jCheckBoxCheckLengthDisplay, JCheckBox jCheckBoxCheckSizeDisplay, JCheckBox jCheckBoxCheckYearDisplay, JCheckBox jCheckCheckTitleDisplay, JLabel jLabelCheckAlbumArtistTag, JLabel jLabelCheckAlbumTag, JLabel jLabelCheckNbTracks, JLabel jLabelCheckYearTag, JLabel jLabelCheckDesc, JLabel jLabelCheckID3v1Tag, JLabel jLabelCheckMeanBitRateTag, JLabel jLabelCheckNbFiles, JLabel jLabelCheckReplayGainTag, JLabel jLabelCheckGenre, JLabel jLabelCoverInfo, JPanel jPanelCheckCoverThumb, JScrollPane jScrollPaneCheckTags, JTable jTableCheck, JComboBox jComboBoxCheckDuplicates, JComboBox jComboBoxCheckMatches) {
 		this.folder = folder;
 		this.progressBar = progressBar;
 		this.jCheckBoxCheckAlbumArtistDisplay = jCheckBoxCheckAlbumArtistDisplay;
@@ -80,6 +117,8 @@ public class CheckDisplay {
 		this.jTableCheck = jTableCheck;
 		
 		initComponents();
+		this.jComboBoxCheckDuplicates = jComboBoxCheckDuplicates;
+		this.jComboBoxCheckMatches = jComboBoxCheckMatches;
 	}
 	
 	private void initComponents() {
@@ -353,12 +392,86 @@ public class CheckDisplay {
         });
 	}
     
+	void displayMatches() {
+		jComboBoxCheckMatches.removeAllItems();
+		//Add matches
+        List<ReleaseMatch> matches = folder.getMatches();
+        if(matches!=null) {
+            for(ReleaseMatch releaseMatch : matches) {
+                jComboBoxCheckMatches.addItem("<html>"+releaseMatch.toString()+"</html>"); //NOI18N
+            }
+        }
+		//Add originals
+		for(ReleaseMatch myMatch : folder.getOriginals()) {
+			jComboBoxCheckMatches.addItem("<html>"+myMatch.toString()+"</html>"); //NOI18N
+		}
+        
+	}
+	
+	void displayMatchTracks() {
+        folder.analyseMatchTracks();
+        folder.getFilesAudioTableModel().fireTableDataChanged();
+        displayMatchColumns(folder.getResults());
+	}
+	
     void displayMatchTracks(int colId) {
         //Need to analyse the whole column so that errorLevels are properly set
         folder.analyseMatchTracks(colId);
         folder.getFilesAudioTableModel().fireTableDataChanged();
         displayMatchColumn(folder.getResults(), colId);
     }
+	
+	void displayMatch(int matchId, DuplicateInfo diToSelect) throws CloneNotSupportedException {
+		jComboBoxCheckDuplicates.setEnabled(false);
+        ReleaseMatch match = folder.getMatch(matchId);//TODO: support match==null (should not happen)
+        Map<String, FolderInfoResult> results = folder.getResults(); 
+        folder.analyseMatch(matchId, progressBar);
+        FolderInfoResult result = folder.getResults().get("nbFiles");  //NOI18N
+        jLabelCheckNbFiles.setText(result.getDisplayText());
+        jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());
+
+    //DUPLICATES
+        jComboBoxCheckDuplicates.removeAllItems();
+        if(match!=null && match.getDuplicates()!=null) {
+			if(match.getDuplicates().size()>0) {
+				for(DuplicateInfo duplicate : match.getDuplicates()) {
+					jComboBoxCheckDuplicates.addItem(duplicate);
+				}
+			}
+			else {
+				jComboBoxCheckDuplicates.addItem(FolderInfoResult.colorField(Inter.get("Label.None"),0));  //NOI18N
+			}
+        }
+		if(diToSelect!=null) {
+			jComboBoxCheckDuplicates.setSelectedItem(diToSelect);
+		}
+		progressBar.setIndeterminate(Inter.get("Msg.Scan.AnalyzingMatch"));  //NOI18N
+		enableCombo=true;
+		
+		//TRACKS (ARTIST, TITLE, ...)
+        //Number of files vs tracks
+        result = results.get("nbFiles");  //NOI18N
+        jLabelCheckNbFiles.setText(result.getDisplayText());
+        jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());
+        if(match!=null) {
+            List<ReleaseMatch.Track> tracks=match.getTracks(progressBar); 
+            jLabelCheckNbTracks.setText(String.valueOf(tracks.size()));
+        }
+        else {
+            jLabelCheckNbTracks.setText("");
+        }
+        
+        //Display all tracks 
+        displayMatchTracks();
+
+        jLabelCheckAlbumTag.setText(results.get("album").getDisplayText()); //NOI18N
+        jLabelCheckAlbumArtistTag.setText(results.get("albumArtist").getDisplayText()); //NOI18N
+        jLabelCheckYearTag.setText(results.get("year").getDisplayText());
+        jLabelCheckYearTag.setToolTipText(results.get("year").getDisplayToolTip());
+
+        progressBar.reset();
+		jComboBoxCheckDuplicates.setEnabled(true);
+	}
 		
     /**
 	 * Displays a folder in check tab
@@ -386,20 +499,13 @@ public class CheckDisplay {
 				progressBar.reset();
 			}
 			else {
-                
+                if(jLabelCheckDesc!=null) {
+					jLabelCheckDesc.setText(folder.toString());
+				}
+				
 				//Display track & disc # columns
 				PanelMain.setColumnVisible(columnModel, 1, 4, true);
 				
-			//SPECIFIC TO THIS MODEL
-				jLabelCheckAlbumTag.setText(folder.getResults().get("album").getDisplayText()); //NOI18N
-				jLabelCheckAlbumArtistTag.setText(folder.getResults().get("albumArtist").getDisplayText()); //NOI18N
-				jLabelCheckYearTag.setText(folder.getResults().get("year").getDisplayText());
-				if(jLabelCheckDesc!=null) {
-					jLabelCheckDesc.setText(folder.toString());
-				}
-//				jLabelCheckNbTracks.setText(folder.getResults().get("nbTracks").getDisplayText());
-			//END SPECIFIC TO THIS MODEL
-			
 			//HasID3v1
 				result = folder.getResults().get("hasID3v1");  //NOI18N
 				jLabelCheckID3v1Tag.setText(result.getDisplayText());
@@ -462,6 +568,8 @@ public class CheckDisplay {
 						jLabelCoverInfo.setText(FolderInfoResult.colorField(Inter.get("Label.None"), 2)); //NOI18N
 					}
 				}
+				
+				displayMatches();
 				
 				progressBar.reset();
 			}
