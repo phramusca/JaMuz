@@ -11,4 +11,5 @@ package jamuz.process.check;
  */
 public interface ICallBackCheck {
 	public void notAduplicate();
+	public void delete();
 }
