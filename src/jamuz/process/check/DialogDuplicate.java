@@ -16,6 +16,7 @@
  */
 package jamuz.process.check;
 
+import jamuz.player.DialogPlayer;
 import jamuz.utils.Inter;
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -79,6 +80,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jLabelCheckStatus = new javax.swing.JLabel();
         panelDuplicate1 = new jamuz.process.check.PanelDuplicate();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabelCheckStatusDuplicate = new javax.swing.JLabel();
         panelDuplicate2 = new jamuz.process.check.PanelDuplicate();
@@ -93,24 +95,38 @@ public class DialogDuplicate extends javax.swing.JDialog {
         jLabelCheckStatus.setText(" "); // NOI18N
         jLabelCheckStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCheckStatus.setOpaque(true);
-        jPanel1.add(jLabelCheckStatus);
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelCheckStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelDuplicate1, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelCheckStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap())
-            .addComponent(panelDuplicate1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelCheckStatus)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelDuplicate1, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelCheckStatus)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panelDuplicate1, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
@@ -119,7 +135,6 @@ public class DialogDuplicate extends javax.swing.JDialog {
         jLabelCheckStatusDuplicate.setText(" "); // NOI18N
         jLabelCheckStatusDuplicate.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCheckStatusDuplicate.setOpaque(true);
-        jPanel2.add(jLabelCheckStatusDuplicate);
 
         jButtonNoDuplicate.setText("Not a duplicate");
         jButtonNoDuplicate.addActionListener(new java.awt.event.ActionListener() {
@@ -127,7 +142,6 @@ public class DialogDuplicate extends javax.swing.JDialog {
                 jButtonNoDuplicateActionPerformed(evt);
             }
         });
-        jPanel2.add(jButtonNoDuplicate);
 
         jButtonCheckDelete.setBackground(java.awt.Color.black);
         jButtonCheckDelete.setForeground(java.awt.Color.white);
@@ -206,6 +220,10 @@ public class DialogDuplicate extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonCheckDeleteActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        DialogPlayer.main(duplicateInfo.getFolderInfo().getFilesAudio().get(0));
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 	/**
 	 * @param parentSize
 	 * @param folder
@@ -247,6 +265,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonCheckDelete;
     private javax.swing.JButton jButtonNoDuplicate;
     private javax.swing.JLabel jLabelCheckStatus;
