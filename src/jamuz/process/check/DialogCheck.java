@@ -1113,7 +1113,11 @@ public final class DialogCheck extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCheckKOActionPerformed
 
     private void jButtonCheckDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckDeleteActionPerformed
-        int n = JOptionPane.showConfirmDialog(
+         deleteFolder();
+    }//GEN-LAST:event_jButtonCheckDeleteActionPerformed
+
+	private void deleteFolder() {
+		int n = JOptionPane.showConfirmDialog(
 					null, Inter.get("Question.Check.DeleteFolderContent"),  //NOI18N
 					Inter.get("Label.Confirm"),  //NOI18N
 					JOptionPane.YES_NO_OPTION);
@@ -1121,9 +1125,9 @@ public final class DialogCheck extends javax.swing.JDialog {
 			folder.action = ProcessCheck.Action.DEL;
             PanelCheck.addToActionQueue(folder);
             this.dispose();
-		} 
-    }//GEN-LAST:event_jButtonCheckDeleteActionPerformed
-
+		}
+	}
+	
     private void jButtonCheckSaveTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckSaveTagsActionPerformed
 
         //Check that files are ordered in jTableCheck
@@ -1452,6 +1456,11 @@ public final class DialogCheck extends javax.swing.JDialog {
 			match.getDuplicates().remove(duplicateInfo);
 			jComboBoxCheckDuplicates.removeItemAt(jComboBoxCheckDuplicates.getSelectedIndex());
 			resetStatus(match);
+		}
+
+		@Override
+		public void delete() {
+			deleteFolder();
 		}
 	}
 	
