@@ -367,6 +367,9 @@ public class CheckDisplay {
 			}
 		});
 		
+		//FIXME !!! Make artist and album triCheckBoxes
+		// new state being only OK column (ie not new) when artist/album OK
+		
 		jCheckBoxCheckArtistDisplay.addItemListener((java.awt.event.ItemEvent evt) -> {
 			//	5:  "Artist (new)"
 			//	6:  "Artist"

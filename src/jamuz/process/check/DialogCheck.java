@@ -1229,9 +1229,11 @@ public final class DialogCheck extends javax.swing.JDialog {
 						if(match!=null && match.getDuplicates()!=null) {
 							if(match.getDuplicates().size()>0) {
 								jButtonDuplicateCompare.setEnabled(true);
+								jButtonCheckNoneDuplicates.setEnabled(true);
 							}
 							else {
 								jButtonDuplicateCompare.setEnabled(false);
+								jButtonCheckNoneDuplicates.setEnabled(false);
 							}
 						}
                         checkDisplay.displayMatch(jComboBoxCheckMatches.getSelectedIndex(), null);

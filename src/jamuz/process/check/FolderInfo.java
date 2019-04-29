@@ -889,6 +889,7 @@ public class FolderInfo implements java.lang.Comparable {
             
 			//Get YEAR, if all the same and valid
 			ArrayList<String> yearList = group(filesAudio, "getYear");  //NOI18N
+			String year="";
 			if(yearList.size()==1) {
 				if(yearList.get(0).equals("")) {  //NOI18N
 					results.get("year").value="{Empty}";  //NOI18N
@@ -896,6 +897,7 @@ public class FolderInfo implements java.lang.Comparable {
 				}
 				else if(yearList.get(0).matches("\\d{4}")) {  //NOI18N
 					results.get("year").value=yearList.get(0);  //NOI18N
+					year=yearList.get(0);
 				}
 				else {
 					results.get("year").value="{Error}";  //NOI18N
@@ -1091,6 +1093,9 @@ public class FolderInfo implements java.lang.Comparable {
             
 			//Add original(s) artistDisplay/album/year to originals list
 			ArrayList<String> releaseList = group(filesAudio, "getRelease");  //NOI18N
+			if(releaseList.size()>1) {
+				addToOriginals(Inter.get("Label.original")+0, "Various Artists", searchAlbum.equals("")?"Various Albums":searchAlbum, year, filesAudio.size(), idPath);
+			}
 			int i=1;
 			for (String myRelease : releaseList) {
 				String[] split = myRelease.split("X7IzQsi3");  //NOI18N //TODO: Use something nicer than this bad coding
