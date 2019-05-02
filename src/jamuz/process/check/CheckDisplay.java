@@ -23,6 +23,7 @@ import jamuz.gui.PanelMain;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableCellListener;
 import jamuz.gui.swing.TableColumnModel;
+import jamuz.gui.swing.TriStateCheckBox;
 import jamuz.utils.Inter;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -50,6 +51,8 @@ public class CheckDisplay {
 	private final JComboBox jComboBoxCheckDuplicates;
 	private final JComboBox jComboBoxCheckMatches;
 	boolean enableCombo=false;
+	private final JLabel jLabelArtist;
+	private final JLabel jLabelTitle;
 
 	/**
 	 *
@@ -84,8 +87,10 @@ public class CheckDisplay {
 	 * @param jTableCheck
 	 * @param jComboBoxCheckDuplicates
 	 * @param jComboBoxCheckMatches
+	 * @param jLabelArtist
+	 * @param jLabelTitle
 	 */
-	public CheckDisplay(FolderInfo folder, ProgressBar progressBar, JCheckBox jCheckBoxCheckAlbumArtistDisplay, JCheckBox jCheckBoxCheckAlbumDisplay, JCheckBox jCheckBoxCheckArtistDisplay, JCheckBox jCheckBoxCheckBPMDisplay, JCheckBox jCheckBoxCheckBitRateDisplay, JCheckBox jCheckBoxCheckCommentDisplay, JCheckBox jCheckBoxCheckCoverDisplay, JCheckBox jCheckBoxCheckFormatDisplay, JCheckBox jCheckBoxCheckGenreDisplay, JCheckBox jCheckBoxCheckLengthDisplay, JCheckBox jCheckBoxCheckSizeDisplay, JCheckBox jCheckBoxCheckYearDisplay, JCheckBox jCheckCheckTitleDisplay, JLabel jLabelCheckAlbumArtistTag, JLabel jLabelCheckAlbumTag, JLabel jLabelCheckNbTracks, JLabel jLabelCheckYearTag, JLabel jLabelCheckDesc, JLabel jLabelCheckID3v1Tag, JLabel jLabelCheckMeanBitRateTag, JLabel jLabelCheckNbFiles, JLabel jLabelCheckReplayGainTag, JLabel jLabelCheckGenre, JLabel jLabelCoverInfo, JPanel jPanelCheckCoverThumb, JScrollPane jScrollPaneCheckTags, JTable jTableCheck, JComboBox jComboBoxCheckDuplicates, JComboBox jComboBoxCheckMatches) {
+	public CheckDisplay(FolderInfo folder, ProgressBar progressBar, JCheckBox jCheckBoxCheckAlbumArtistDisplay, JCheckBox jCheckBoxCheckAlbumDisplay, TriStateCheckBox jCheckBoxCheckArtistDisplay, JCheckBox jCheckBoxCheckBPMDisplay, JCheckBox jCheckBoxCheckBitRateDisplay, JCheckBox jCheckBoxCheckCommentDisplay, JCheckBox jCheckBoxCheckCoverDisplay, JCheckBox jCheckBoxCheckFormatDisplay, JCheckBox jCheckBoxCheckGenreDisplay, JCheckBox jCheckBoxCheckLengthDisplay, JCheckBox jCheckBoxCheckSizeDisplay, JCheckBox jCheckBoxCheckYearDisplay, TriStateCheckBox jCheckCheckTitleDisplay, JLabel jLabelCheckAlbumArtistTag, JLabel jLabelCheckAlbumTag, JLabel jLabelCheckNbTracks, JLabel jLabelCheckYearTag, JLabel jLabelCheckDesc, JLabel jLabelCheckID3v1Tag, JLabel jLabelCheckMeanBitRateTag, JLabel jLabelCheckNbFiles, JLabel jLabelCheckReplayGainTag, JLabel jLabelCheckGenre, JLabel jLabelCoverInfo, JPanel jPanelCheckCoverThumb, JScrollPane jScrollPaneCheckTags, JTable jTableCheck, JComboBox jComboBoxCheckDuplicates, JComboBox jComboBoxCheckMatches, JLabel jLabelArtist, JLabel jLabelTitle) {
 		this.folder = folder;
 		this.progressBar = progressBar;
 		this.jCheckBoxCheckAlbumArtistDisplay = jCheckBoxCheckAlbumArtistDisplay;
@@ -119,6 +124,8 @@ public class CheckDisplay {
 		initComponents();
 		this.jComboBoxCheckDuplicates = jComboBoxCheckDuplicates;
 		this.jComboBoxCheckMatches = jComboBoxCheckMatches;
+		this.jLabelArtist = jLabelArtist;
+		this.jLabelTitle = jLabelTitle;
 	}
 	
 	private void initComponents() {
@@ -139,6 +146,8 @@ public class CheckDisplay {
 		column = columnModel.getColumn(0);
 		column.setMinWidth(100);
 
+		//FIXME !!! Display "Disc # (new)" and "Track # (new)" ONLY if related result it not OK (Same as tristate check boxes - artitst and title)
+		
 		//	1:  "Disc # (new)"
 		//	2:  "Disc #"
 		column = columnModel.getColumn(1);
@@ -367,19 +376,44 @@ public class CheckDisplay {
 			}
 		});
 		
-		//FIXME !!! Make artist and album triCheckBoxes
-		// new state being only OK column (ie not new) when artist/album OK
-		
-		jCheckBoxCheckArtistDisplay.addItemListener((java.awt.event.ItemEvent evt) -> {
+		jCheckBoxCheckArtistDisplay.addChangeListener((javax.swing.event.ChangeEvent evt) -> {
 			//	5:  "Artist (new)"
 			//	6:  "Artist"
-			PanelMain.setColumnVisible(columnModel, 5, 6, jCheckBoxCheckArtistDisplay.isSelected());
+			TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
+			if(!checkbox.getModel().isArmed()) {
+				switch(checkbox.getState()) {
+					case ALL:
+						PanelMain.setColumnVisible(columnModel, 5, false);
+						PanelMain.setColumnVisible(columnModel, 6, true);
+						break;
+					case SELECTED:
+						PanelMain.setColumnVisible(columnModel, 5, 6, true);
+						break;
+					case UNSELECTED:
+						PanelMain.setColumnVisible(columnModel, 5, 6, false);
+						break;
+				}
+			}
 		});
 		
-		jCheckCheckTitleDisplay.addItemListener((java.awt.event.ItemEvent evt) -> {
+		jCheckCheckTitleDisplay.addChangeListener((javax.swing.event.ChangeEvent evt) -> {
 			//	7:  "Title (new)"
 			//	8:  "Title"
-			PanelMain.setColumnVisible(columnModel, 7, 8, jCheckCheckTitleDisplay.isSelected());
+			TriStateCheckBox checkbox = (TriStateCheckBox) evt.getSource();
+			if(!checkbox.getModel().isArmed()) {
+				switch(checkbox.getState()) {
+					case ALL:
+						PanelMain.setColumnVisible(columnModel, 7, false);
+						PanelMain.setColumnVisible(columnModel, 8, true);
+						break;
+					case SELECTED:
+						PanelMain.setColumnVisible(columnModel, 7, 8, true);
+						break;
+					case UNSELECTED:
+						PanelMain.setColumnVisible(columnModel, 7, 8, false);
+						break;
+				}
+			}
 		});
 		
 		jPanelCheckCoverThumb.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -424,7 +458,7 @@ public class CheckDisplay {
         displayMatchColumn(folder.getResults(), colId);
     }
 	
-	void displayMatch(int matchId, DuplicateInfo diToSelect) throws CloneNotSupportedException {
+	void displayMatch(int matchId, DuplicateInfo diToSelect) {
 		jComboBoxCheckDuplicates.setEnabled(false);
         ReleaseMatch match = folder.getMatch(matchId);//TODO: support match==null (should not happen)
         Map<String, FolderInfoResult> results = folder.getResults(); 
@@ -603,20 +637,36 @@ public class CheckDisplay {
     private void displayMatchColumn(Map<String, FolderInfoResult> results, int colId) {
 		
 		javax.swing.JCheckBox checkbox=null;
+		TriStateCheckBox triStateCheckBox=null;
+		JLabel jLabel=null;
         boolean select=true;
 		switch (colId) {
 //			case 1: field="discNoFull";	break;
 //			case 3: field="trackNoFull"; break;
-			case 5: checkbox=jCheckBoxCheckArtistDisplay;	break;
-			case 7: checkbox=jCheckCheckTitleDisplay; break;
+			case 5: 
+				triStateCheckBox=jCheckBoxCheckArtistDisplay; 
+				jLabel=jLabelArtist;
+				break;
+//				checkbox=jCheckBoxCheckArtistDisplay; break;
+			case 7: 
+				triStateCheckBox=jCheckCheckTitleDisplay; 
+				jLabel=jLabelTitle;
+				break;
+//				checkbox=jCheckCheckTitleDisplay; break;
 			case 9: checkbox=jCheckBoxCheckGenreDisplay; break;
-			case 11: checkbox=jCheckBoxCheckAlbumDisplay; break; //select=false; break;
+			case 11: checkbox=jCheckBoxCheckAlbumDisplay; break; 
 			case 13: checkbox=jCheckBoxCheckYearDisplay; select=false; break;
-			case 19: checkbox=jCheckBoxCheckAlbumArtistDisplay; break; //select=false; break;
+			case 19: checkbox=jCheckBoxCheckAlbumArtistDisplay; break;
 			case 21: checkbox=jCheckBoxCheckCommentDisplay; select=false; break;
 			case 24: checkbox=jCheckBoxCheckBPMDisplay; break;
 		}
-		setAddCheckBox(checkbox, results.get(FolderInfo.getField(colId)), select);  //NOI18N
+		FolderInfoResult result = results.get(FolderInfo.getField(colId));
+		if(triStateCheckBox!=null) {
+			setAddCheckBox(triStateCheckBox, jLabel, result, select);
+		} else {
+			setAddCheckBox(checkbox, result, select);  //NOI18N
+		}
+		
 	}
         
     void displayMatchColumns(Map<String, FolderInfoResult> results) {
@@ -630,6 +680,20 @@ public class CheckDisplay {
         setAddCheckBox(checkbox, result, true);
     }
     
+	private void setAddCheckBox(TriStateCheckBox checkbox, JLabel jLabel, FolderInfoResult result, boolean select) {
+		if(checkbox!=null) {
+			if(select) {
+				if(result.isNotValid()) {
+					checkbox.setState(TriStateCheckBox.State.SELECTED);
+				} else {
+					checkbox.setState(TriStateCheckBox.State.ALL);
+				}
+			}
+			//FIXME !!! get associated label
+			jLabel.setForeground(result.getDisplayColor());
+		}
+	}
+	
     private void setAddCheckBox(JCheckBox checkbox, FolderInfoResult result, boolean select) {
 		if(checkbox!=null) {
             if(select) {
@@ -645,7 +709,7 @@ public class CheckDisplay {
 	
 	private final javax.swing.JCheckBox jCheckBoxCheckAlbumArtistDisplay;
     private final javax.swing.JCheckBox jCheckBoxCheckAlbumDisplay;
-    private final javax.swing.JCheckBox jCheckBoxCheckArtistDisplay;
+    private final TriStateCheckBox jCheckBoxCheckArtistDisplay;
     private final javax.swing.JCheckBox jCheckBoxCheckBPMDisplay;
     private final javax.swing.JCheckBox jCheckBoxCheckBitRateDisplay;
     private final javax.swing.JCheckBox jCheckBoxCheckCommentDisplay;
@@ -655,10 +719,10 @@ public class CheckDisplay {
     private final javax.swing.JCheckBox jCheckBoxCheckLengthDisplay;
     private final javax.swing.JCheckBox jCheckBoxCheckSizeDisplay;
     private final javax.swing.JCheckBox jCheckBoxCheckYearDisplay;
-    private final javax.swing.JCheckBox jCheckCheckTitleDisplay;
+    private final TriStateCheckBox jCheckCheckTitleDisplay;
 	private final javax.swing.JLabel jLabelCheckAlbumArtistTag;
     private final javax.swing.JLabel jLabelCheckAlbumTag;
-    private final javax.swing.JLabel jLabelCheckNbTracks; //FIXME !!!
+    private final javax.swing.JLabel jLabelCheckNbTracks;
 	private final javax.swing.JLabel jLabelCheckYearTag;
 	private final javax.swing.JLabel jLabelCheckDesc;		
 	private final javax.swing.JLabel jLabelCheckID3v1Tag;

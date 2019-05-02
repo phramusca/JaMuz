@@ -21,9 +21,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanelCheckCoverThumb" alignment="0" min="-2" max="-2" attributes="1"/>
-                          <Component id="jPanel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jPanelCheckCoverThumb" max="32767" attributes="1"/>
+                          <Component id="jPanel6" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -65,7 +65,7 @@
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPaneCheckTags" pref="203" max="32767" attributes="2"/>
+              <Component id="jScrollPaneCheckTags" pref="167" max="32767" attributes="2"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -233,13 +233,6 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="jCheckBoxCheckBPMDisplay" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-                          <Component id="jLabelCheckNbTracks" min="-2" pref="31" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabelCheckNbFiles" min="-2" pref="31" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jCheckBoxCheckGenreDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jCheckBoxCheckYearDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -254,13 +247,28 @@
                               <Component id="jLabelCheckGenre" min="-2" pref="159" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jCheckBoxCheckBPMDisplay" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+                          <Component id="jLabelCheckNbTracks" min="-2" pref="31" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jLabelCheckNbFiles" min="-2" pref="31" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jCheckCheckTitleDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jCheckBoxCheckArtistDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="jCheckCheckTitleDisplay" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                          <Component id="jLabelTitle" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="jCheckBoxCheckArtistDisplay" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                          <Component id="jLabelArtist" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace pref="39" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -270,8 +278,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jCheckBoxCheckBPMDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabelCheckNbTracks" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -283,10 +291,19 @@
                                       <Component id="jLabelCheckGenre" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jCheckCheckTitleDisplay" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jCheckBoxCheckArtistDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                                          <Component id="jLabelArtist" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jCheckBoxCheckArtistDisplay" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jCheckCheckTitleDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabelTitle" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -499,17 +516,22 @@
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="jCheckCheckTitleDisplay">
+        <Component class="jamuz.gui.swing.TriStateCheckBox" name="jCheckCheckTitleDisplay">
+        </Component>
+        <Component class="jamuz.gui.swing.TriStateCheckBox" name="jCheckBoxCheckArtistDisplay">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelArtist">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Artist" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckArtistDisplay">
+        <Component class="javax.swing.JLabel" name="jLabelTitle">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Artist" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Title" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -533,7 +555,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jCheckBoxCheckCoverDisplay" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabelCoverInfo" pref="115" max="32767" attributes="0"/>
+                  <Component id="jLabelCoverInfo" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

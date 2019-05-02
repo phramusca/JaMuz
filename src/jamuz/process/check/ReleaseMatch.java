@@ -249,9 +249,6 @@ public class ReleaseMatch implements java.lang.Comparable {
 		if(duplicates==null) {
 			//Search for duplicates
 
-			//FIXME Z CHECK duplicate: check that original is the complete album (can be from a various artist/album folder)
-			//FIXME Z CHECK duplicate: Offer to replace if new is better (OK > OK - Warning (> Manual) > KO)
-
 			duplicates = new ArrayList<>();
 			if(		checkDuplicateMbId() 
 					|| (isDiscPart && checkDuplicateAlbumArtistNumber())

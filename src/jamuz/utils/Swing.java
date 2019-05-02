@@ -96,35 +96,35 @@ public class Swing {
 	}
 	
 	/**
-	 * Select a folder (open a folder chooser GUI)
+	 * Select a file (open a file chooser GUI)
 	 * @param defaultFile 
 	 * @return
 	 */
-	public static String selectile(String defaultFile) {
-		return selectile(defaultFile, new ArrayList<>(), "Select file");
+	public static String selectFile(String defaultFile) {
+		return selectFile(defaultFile, new ArrayList<>(), "Select file");
 	}
 	
 	/**
-	 *
+	 * Select a file (open a file chooser GUI)
 	 * @param defaultFile
 	 * @param fileType
 	 * @param title
 	 * @return
 	 */
-	public static String selectile(String defaultFile, FileType fileType, String title) {
+	public static String selectFile(String defaultFile, FileType fileType, String title) {
 		List<Swing.FileType> fileTypes = new ArrayList<>();
 		fileTypes.add(fileType);
-		return selectile(defaultFile, fileTypes, title);
+		return selectFile(defaultFile, fileTypes, title);
 	}
 	
 	/**
-	 * Select a folder (open a folder chooser GUI)
+	 * Select a file (open a file chooser GUI)
 	 * @param defaultFile 
 	 * @param fileTypes 
 	 * @param title 
 	 * @return
 	 */
-	public static String selectile(String defaultFile, List<FileType> fileTypes, String title) {
+	public static String selectFile(String defaultFile, List<FileType> fileTypes, String title) {
 		JFileChooser fc = new JFileChooser(defaultFile);
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setDialogTitle(title);

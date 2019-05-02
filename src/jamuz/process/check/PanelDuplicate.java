@@ -77,7 +77,16 @@ public class PanelDuplicate extends javax.swing.JPanel {
 	}
 	
 	private void display(FolderInfo folderInfo) {
-		checkDisplay = new CheckDisplay(folderInfo, progressBar, jCheckBoxCheckAlbumArtistDisplay, jCheckBoxCheckAlbumDisplay, jCheckBoxCheckArtistDisplay, jCheckBoxCheckBPMDisplay, jCheckBoxCheckBitRateDisplay, jCheckBoxCheckCommentDisplay, jCheckBoxCheckCoverDisplay, jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, jCheckBoxCheckLengthDisplay, jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckDesc, jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, jLabelCheckGenre, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck, jComboBoxCheckDuplicates, jComboBoxCheckMatches);
+		checkDisplay = new CheckDisplay(folderInfo, progressBar, jCheckBoxCheckAlbumArtistDisplay, 
+				jCheckBoxCheckAlbumDisplay, jCheckBoxCheckArtistDisplay, 
+				jCheckBoxCheckBPMDisplay, jCheckBoxCheckBitRateDisplay, jCheckBoxCheckCommentDisplay, 
+				jCheckBoxCheckCoverDisplay, jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, 
+				jCheckBoxCheckLengthDisplay, jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, 
+				jCheckCheckTitleDisplay, jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, 
+				jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckDesc, jLabelCheckID3v1Tag, 
+				jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, jLabelCheckGenre, 
+				jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck, 
+				jComboBoxCheckDuplicates, jComboBoxCheckMatches, jLabelArtist, jLabelTitle);
 		checkDisplay.displayFolder();
 		
 	}
@@ -119,8 +128,10 @@ public class PanelDuplicate extends javax.swing.JPanel {
         jLabelCheckGenre = new javax.swing.JLabel();
         jLabelCheckNbTracks = new javax.swing.JLabel();
         jLabelCheckNbFiles = new javax.swing.JLabel();
-        jCheckCheckTitleDisplay = new javax.swing.JCheckBox();
-        jCheckBoxCheckArtistDisplay = new javax.swing.JCheckBox();
+        jCheckCheckTitleDisplay = new jamuz.gui.swing.TriStateCheckBox();
+        jCheckBoxCheckArtistDisplay = new jamuz.gui.swing.TriStateCheckBox();
+        jLabelArtist = new javax.swing.JLabel();
+        jLabelTitle = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabelCoverInfo = new javax.swing.JLabel();
         jCheckBoxCheckCoverDisplay = new javax.swing.JCheckBox();
@@ -258,9 +269,10 @@ public class PanelDuplicate extends javax.swing.JPanel {
         jLabelCheckNbFiles.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCheckNbFiles.setOpaque(true);
 
-        jCheckCheckTitleDisplay.setText(bundle.getString("Tag.Title")); // NOI18N
+        jLabelArtist.setText(Inter.get("Tag.Artist")); // NOI18N
+        jLabelArtist.setToolTipText("");
 
-        jCheckBoxCheckArtistDisplay.setText(bundle.getString("Tag.Artist")); // NOI18N
+        jLabelTitle.setText(Inter.get("Tag.Title")); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -289,12 +301,6 @@ public class PanelDuplicate extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jCheckBoxCheckBPMDisplay)
-                        .addGap(57, 57, 57)
-                        .addComponent(jLabelCheckNbTracks, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelCheckNbFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBoxCheckGenreDisplay)
                             .addComponent(jCheckBoxCheckYearDisplay))
@@ -304,12 +310,24 @@ public class PanelDuplicate extends javax.swing.JPanel {
                                 .addComponent(jLabelCheckYearTag, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jCheckBoxCheckCommentDisplay))
-                            .addComponent(jLabelCheckGenre, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabelCheckGenre, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxCheckBPMDisplay)
+                        .addGap(57, 57, 57)
+                        .addComponent(jLabelCheckNbTracks, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelCheckNbFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckCheckTitleDisplay)
-                    .addComponent(jCheckBoxCheckArtistDisplay))
-                .addContainerGap(39, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jCheckCheckTitleDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabelTitle))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxCheckArtistDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jLabelArtist)))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -317,7 +335,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jCheckBoxCheckBPMDisplay)
@@ -328,9 +346,15 @@ public class PanelDuplicate extends javax.swing.JPanel {
                                     .addComponent(jCheckBoxCheckGenreDisplay)
                                     .addComponent(jLabelCheckGenre)))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jCheckCheckTitleDisplay)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jCheckBoxCheckArtistDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addComponent(jLabelArtist)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxCheckArtistDisplay)))
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jCheckCheckTitleDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jCheckBoxCheckYearDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -370,7 +394,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(jCheckBoxCheckCoverDisplay)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelCoverInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
+                .addComponent(jLabelCoverInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -409,9 +433,9 @@ public class PanelDuplicate extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelCheckCoverThumb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanelCheckCoverThumb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -444,7 +468,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
+                .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -453,12 +477,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
             Thread t = new Thread("Thread.PanelCheckDialog.displayMatch") {
                 @Override
                 public void run() {
-                    try {
-                        checkDisplay.displayMatch(jComboBoxCheckMatches.getSelectedIndex(), duplicateInfo);
-                    } catch (CloneNotSupportedException ex) {
-                        //Should never happen since FileInfoDisplay implements Cloneable
-                        Jamuz.getLogger().log(Level.SEVERE, "applyMatch()", ex); //NOI18N
-                    }
+					checkDisplay.displayMatch(jComboBoxCheckMatches.getSelectedIndex(), duplicateInfo);
                 }
             };
             t.start();
@@ -468,7 +487,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBoxCheckAlbumArtistDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckAlbumDisplay;
-    private javax.swing.JCheckBox jCheckBoxCheckArtistDisplay;
+    private jamuz.gui.swing.TriStateCheckBox jCheckBoxCheckArtistDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckBPMDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckBitRateDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckCommentDisplay;
@@ -478,9 +497,10 @@ public class PanelDuplicate extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBoxCheckLengthDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckSizeDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckYearDisplay;
-    private javax.swing.JCheckBox jCheckCheckTitleDisplay;
+    private jamuz.gui.swing.TriStateCheckBox jCheckCheckTitleDisplay;
     private javax.swing.JComboBox jComboBoxCheckDuplicates;
     private javax.swing.JComboBox jComboBoxCheckMatches;
+    private javax.swing.JLabel jLabelArtist;
     private javax.swing.JLabel jLabelCheckAlbumArtistTag;
     private javax.swing.JLabel jLabelCheckAlbumTag;
     private javax.swing.JLabel jLabelCheckDesc;
@@ -494,6 +514,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelCheckReplayGainTag;
     private javax.swing.JLabel jLabelCheckYearTag;
     private javax.swing.JLabel jLabelCoverInfo;
+    private javax.swing.JLabel jLabelTitle;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel8;

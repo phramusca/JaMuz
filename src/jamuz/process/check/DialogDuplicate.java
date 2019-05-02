@@ -80,6 +80,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
         jLabelCheckStatus = new javax.swing.JLabel();
         panelDuplicate1 = new jamuz.process.check.PanelDuplicate();
         jButtonCheckDelete1 = new javax.swing.JButton();
+        jButtonReplace = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabelCheckStatusDuplicate = new javax.swing.JLabel();
         panelDuplicate2 = new jamuz.process.check.PanelDuplicate();
@@ -106,6 +107,13 @@ public class DialogDuplicate extends javax.swing.JDialog {
             }
         });
 
+        jButtonReplace.setText("Replace =>");
+        jButtonReplace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonReplaceActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -116,6 +124,8 @@ public class DialogDuplicate extends javax.swing.JDialog {
                 .addComponent(jLabelCheckStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCheckDelete1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonReplace)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -124,7 +134,8 @@ public class DialogDuplicate extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelCheckStatus)
-                    .addComponent(jButtonCheckDelete1))
+                    .addComponent(jButtonCheckDelete1)
+                    .addComponent(jButtonReplace))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelDuplicate1, javax.swing.GroupLayout.DEFAULT_SIZE, 687, Short.MAX_VALUE))
         );
@@ -224,6 +235,10 @@ public class DialogDuplicate extends javax.swing.JDialog {
 		this.dispose();
     }//GEN-LAST:event_jButtonCheckDelete1ActionPerformed
 
+    private void jButtonReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReplaceActionPerformed
+        //FIXME !!! Offer to replace if new is better (OK > OK - Warning (> Manual) > KO)
+    }//GEN-LAST:event_jButtonReplaceActionPerformed
+
 	/**
 	 * @param parentSize
 	 * @param folder
@@ -268,6 +283,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCheckDelete;
     private javax.swing.JButton jButtonCheckDelete1;
     private javax.swing.JButton jButtonNoDuplicate;
+    private javax.swing.JButton jButtonReplace;
     private javax.swing.JLabel jLabelCheckStatus;
     private javax.swing.JLabel jLabelCheckStatusDuplicate;
     private javax.swing.JPanel jPanel1;
