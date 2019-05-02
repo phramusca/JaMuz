@@ -81,7 +81,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 				jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, 
 				null, jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, 
 				null, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck, 
-				jComboBoxCheckDuplicates, jComboBoxCheckMatches);
+				jComboBoxCheckDuplicates, jComboBoxCheckMatches, jLabelArtist, jLabelTitle);
 		initGenre();
 		displayFolder();
     }
@@ -180,6 +180,7 @@ public final class DialogCheck extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel4 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jPanelCheckFolder = new javax.swing.JPanel();
         jButtonCheckOK = new javax.swing.JButton();
@@ -196,8 +197,10 @@ public final class DialogCheck extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         jLabelCheckNbTracks = new javax.swing.JLabel();
         jLabelCheckNbFiles = new javax.swing.JLabel();
-        jCheckBoxCheckArtistDisplay = new javax.swing.JCheckBox();
-        jCheckCheckTitleDisplay = new javax.swing.JCheckBox();
+        jCheckBoxCheckArtistDisplay = new jamuz.gui.swing.TriStateCheckBox();
+        jCheckCheckTitleDisplay = new jamuz.gui.swing.TriStateCheckBox();
+        jLabelArtist = new javax.swing.JLabel();
+        jLabelTitle = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jButtonCheckApplyYear = new javax.swing.JButton();
         jTextFieldCheckYear = new javax.swing.JTextField();
@@ -257,6 +260,8 @@ public final class DialogCheck extends javax.swing.JDialog {
         jButtonPlayerForward = new javax.swing.JButton();
         jButtonPlayerNext = new javax.swing.JButton();
         jButtonDelete = new javax.swing.JButton();
+
+        jLabel4.setText("jLabel4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -397,9 +402,13 @@ public final class DialogCheck extends javax.swing.JDialog {
         jLabelCheckNbFiles.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabelCheckNbFiles.setOpaque(true);
 
-        jCheckBoxCheckArtistDisplay.setText(bundle.getString("Tag.Artist")); // NOI18N
+        jCheckBoxCheckArtistDisplay.setToolTipText("");
 
-        jCheckCheckTitleDisplay.setText(bundle.getString("Tag.Title")); // NOI18N
+        jCheckCheckTitleDisplay.setToolTipText("");
+
+        jLabelArtist.setText(Inter.get("Tag.Artist")); // NOI18N
+
+        jLabelTitle.setText(Inter.get("Tag.Title")); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -411,21 +420,28 @@ public final class DialogCheck extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelCheckNbFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxCheckArtistDisplay)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckCheckTitleDisplay)
+                .addComponent(jCheckBoxCheckArtistDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jLabelArtist)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckCheckTitleDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jLabelTitle)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(0, 4, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelCheckNbTracks)
-                    .addComponent(jLabelCheckNbFiles)
-                    .addComponent(jCheckBoxCheckArtistDisplay)
-                    .addComponent(jCheckCheckTitleDisplay))
-                .addGap(0, 4, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabelCheckNbTracks)
+                        .addComponent(jLabelCheckNbFiles)
+                        .addComponent(jCheckBoxCheckArtistDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jCheckCheckTitleDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelArtist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel5.setBackground(java.awt.Color.lightGray);
@@ -1229,49 +1245,44 @@ public final class DialogCheck extends javax.swing.JDialog {
             Thread t = new Thread("Thread.PanelCheckDialog.displayMatch") {
                 @Override
                 public void run() {
-                    try {
-						enableAddOptions(false);
-						ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());//TODO: support match==null (should not happen)
-						if(match!=null && match.getDuplicates()!=null) {
-							if(match.getDuplicates().size()>0) {
-								jButtonDuplicateCompare.setEnabled(true);
-								jButtonCheckNoneDuplicates.setEnabled(true);
-							}
-							else {
-								jButtonDuplicateCompare.setEnabled(false);
-								jButtonCheckNoneDuplicates.setEnabled(false);
-							}
-						}
-                        checkDisplay.displayMatch(jComboBoxCheckMatches.getSelectedIndex(), null);
-
-						//Need to display albumArtist, Album and year after displaying tracks as 
-						//analysis is done there
-						if(match!=null) {
-							jTextFieldCheckAlbumArtist.setText(match.getArtist());
-							jTextFieldCheckAlbum.setText(match.getAlbum());
-							Map<String, FolderInfoResult> results = folder.getResults(); 
-							FolderInfoResult resultYear = results.get("year"); //NOI18N
-							if (!match.getYear().equals("")) { 				  //NOI18N
-								jTextFieldCheckYear.setText(match.getYear()); 			
-							}
-							else if(!resultYear.value.startsWith("{")){ //NOI18N
-								jTextFieldCheckYear.setText(resultYear.value);
-							}
-							else {
-								jTextFieldCheckYear.setText(""); //NOI18N
-							}
+					enableAddOptions(false);
+					ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());//TODO: support match==null (should not happen)
+					if(match!=null && match.getDuplicates()!=null) {
+						if(match.getDuplicates().size()>0) {
+							jButtonDuplicateCompare.setEnabled(true);
+							jButtonCheckNoneDuplicates.setEnabled(true);
 						}
 						else {
-							jTextFieldCheckAlbumArtist.setText("");
-							jTextFieldCheckAlbum.setText("");
+							jButtonDuplicateCompare.setEnabled(false);
+							jButtonCheckNoneDuplicates.setEnabled(false);
+						}
+					}
+					checkDisplay.displayMatch(jComboBoxCheckMatches.getSelectedIndex(), null);
+
+					//Need to display albumArtist, Album and year after displaying tracks as 
+					//analysis is done there
+					if(match!=null) {
+						jTextFieldCheckAlbumArtist.setText(match.getArtist());
+						jTextFieldCheckAlbum.setText(match.getAlbum());
+						Map<String, FolderInfoResult> results = folder.getResults(); 
+						FolderInfoResult resultYear = results.get("year"); //NOI18N
+						if (!match.getYear().equals("")) { 				  //NOI18N
+							jTextFieldCheckYear.setText(match.getYear()); 			
+						}
+						else if(!resultYear.value.startsWith("{")){ //NOI18N
+							jTextFieldCheckYear.setText(resultYear.value);
+						}
+						else {
 							jTextFieldCheckYear.setText(""); //NOI18N
 						}
-						
-						enableButtons();
-                    } catch (CloneNotSupportedException ex) {
-                        //Should never happen since FileInfoDisplay implements Cloneable
-                        Jamuz.getLogger().log(Level.SEVERE, "applyMatch()", ex); //NOI18N
-                    }
+					}
+					else {
+						jTextFieldCheckAlbumArtist.setText("");
+						jTextFieldCheckAlbum.setText("");
+						jTextFieldCheckYear.setText(""); //NOI18N
+					}
+
+					enableButtons();
                 }
             };
             t.start();
@@ -1813,7 +1824,7 @@ public final class DialogCheck extends javax.swing.JDialog {
     private javax.swing.JButton jButtonVArtist;
     private javax.swing.JCheckBox jCheckBoxCheckAlbumArtistDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckAlbumDisplay;
-    private javax.swing.JCheckBox jCheckBoxCheckArtistDisplay;
+    private jamuz.gui.swing.TriStateCheckBox jCheckBoxCheckArtistDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckBPMDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckBitRateDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckCommentDisplay;
@@ -1823,12 +1834,14 @@ public final class DialogCheck extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBoxCheckLengthDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckSizeDisplay;
     private javax.swing.JCheckBox jCheckBoxCheckYearDisplay;
-    private javax.swing.JCheckBox jCheckCheckTitleDisplay;
+    private jamuz.gui.swing.TriStateCheckBox jCheckCheckTitleDisplay;
     private javax.swing.JComboBox jComboBoxCheckDuplicates;
     private javax.swing.JComboBox jComboBoxCheckMatches;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabelArtist;
     private javax.swing.JLabel jLabelCheckAlbumArtistTag;
     private javax.swing.JLabel jLabelCheckAlbumTag;
     private javax.swing.JLabel jLabelCheckID3v1;
@@ -1841,6 +1854,7 @@ public final class DialogCheck extends javax.swing.JDialog {
     private javax.swing.JLabel jLabelCheckYearTag;
     private javax.swing.JLabel jLabelCoverFound;
     private javax.swing.JLabel jLabelCoverInfo;
+    private javax.swing.JLabel jLabelTitle;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;

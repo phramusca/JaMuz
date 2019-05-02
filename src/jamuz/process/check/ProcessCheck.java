@@ -779,23 +779,16 @@ public class ProcessCheck {
                 Popup.error(ex);
             }
             folder.action=Action.ANALYZING;
-            try {
-                this.checkAbort();
-                folder.analyseMatch(0, PanelCheck.progressBarListAnalysisDequeue.get(progressBarId)); //Analyse first match
-                this.checkAbort();
-                folder.analyseMatchTracks();
-				folder.setAction();                
-            } catch (CloneNotSupportedException ex) {
-                //Should never happen since FileInfoDisplay implements Cloneable
-                Jamuz.getLogger().log(Level.SEVERE, "analyseMatch()", ex); //NOI18N
-            } finally {
-                waitActionQueue(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
-                
-                PanelCheck.tableModelActionQueue.addRow(folder);
-                enableRowSorter(PanelCheck.tableModelActionQueue.getRowCount()>0);
-                PanelCheck.progressBarListAnalysisDequeue.get(progressBarId).reset();
-                PanelCheck.addToActionQueue(folder);
-            }
+            this.checkAbort();
+			folder.analyseMatch(0, PanelCheck.progressBarListAnalysisDequeue.get(progressBarId)); //Analyse first match
+			this.checkAbort();
+			folder.analyseMatchTracks();
+			folder.setAction();            
+			waitActionQueue(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
+			PanelCheck.tableModelActionQueue.addRow(folder);
+			enableRowSorter(PanelCheck.tableModelActionQueue.getRowCount()>0);
+			PanelCheck.progressBarListAnalysisDequeue.get(progressBarId).reset();
+			PanelCheck.addToActionQueue(folder);
         }
     }
     

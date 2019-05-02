@@ -962,9 +962,9 @@ public class FolderInfo implements java.lang.Comparable {
 				results.get("album").setKO();  //NOI18N
 			}
 
-			//FIXME !!! Make supported Formats configurable in options 
+			//FIXME Z OPTIONS Make supported Formats configurable in options 
 			// - Offer user the choice to add a new one from Check panel when required
-			// - support regex
+			// - (support regex)
 			ArrayList supportedFormats = new ArrayList<>();
 			supportedFormats.add("MPEG-1 Layer 3"); //NOI18N
 			supportedFormats.add("MPEG-2 Layer 3"); //NOI18N
@@ -1157,9 +1157,8 @@ public class FolderInfo implements java.lang.Comparable {
 	 * Analyse match againts folder information
      * @param matchId
      * @param progressBar
-	 * @throws java.lang.CloneNotSupportedException
 	 */
-	public void analyseMatch(int matchId, ProgressBar progressBar) throws CloneNotSupportedException {
+	public void analyseMatch(int matchId, ProgressBar progressBar) {
         ReleaseMatch match = getMatch(matchId);
         if(match==null) {
             return;
@@ -1218,30 +1217,33 @@ public class FolderInfo implements java.lang.Comparable {
                         fileAudio.getArtist(), fileAudio.getTitle(), 
                         Long.valueOf(0), "");  //NOI18N
             }
-//            FileInfoDisplay fileInfoDisplay = new FileInfoDisplay(fileAudio);
-            FileInfoDisplay fileInfoDisplay = (FileInfoDisplay) fileAudio.clone();
-//            fileInfoDisplay.init();
-            //Set new values from existing file as not available in match
-//            fileInfoDisplay.filename=fileAudio.filename;
-//            fileInfoDisplay.setGenre(fileAudio.genre);
-//            fileInfoDisplay.BPM=fileAudio.BPM;
-            //Set new values from match
-            fileInfoDisplay.setTrack(track);
-            if(!match.getYear().equals("")) { //NOI18N
-                fileInfoDisplay.setYear(match.getYear());
-            }
-            else {
-                fileInfoDisplay.setYear(fileAudio.getYear());
-            }   
 
-            fileInfoDisplay.setAlbumArtist(match.getArtist());
-            fileInfoDisplay.setAlbum(match.getAlbum());
-			if(newGenre!=null) {
-				fileInfoDisplay.setGenre(newGenre);
+			FileInfoDisplay fileInfoDisplay = null;
+			try {
+				fileInfoDisplay = (FileInfoDisplay) fileAudio.clone();
+			} catch (CloneNotSupportedException ex) {
+				//Should never happen since FileInfoDisplay implements Cloneable
+				Jamuz.getLogger().log(Level.SEVERE, "applyMatch()", ex); //NOI18N
 			}
-            fileInfoDisplay.isAudioFile=true;
-            fileInfoDisplay.coverIconDisplay=IconBufferCover.getCoverIcon(fileAudio, true);
-            addRowTag(fileInfoDisplay);
+            if(fileInfoDisplay!=null) {
+				//Set new values from match
+				fileInfoDisplay.setTrack(track);
+				if(!match.getYear().equals("")) { //NOI18N
+					fileInfoDisplay.setYear(match.getYear());
+				}
+				else {
+					fileInfoDisplay.setYear(fileAudio.getYear());
+				}   
+
+				fileInfoDisplay.setAlbumArtist(match.getArtist());
+				fileInfoDisplay.setAlbum(match.getAlbum());
+				if(newGenre!=null) {
+					fileInfoDisplay.setGenre(newGenre);
+				}
+				fileInfoDisplay.isAudioFile=true;
+				fileInfoDisplay.coverIconDisplay=IconBufferCover.getCoverIcon(fileAudio, true);
+				addRowTag(fileInfoDisplay);
+			}
             i++;
         }
         //Add potential extra titles from match

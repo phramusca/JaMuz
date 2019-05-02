@@ -151,7 +151,6 @@ public class ProcessMerge extends ProcessAbstract {
         }
         finally {
             progressBar.reset();
-			//FIXME !!! Ending with 210 errors, but not all are logged. Why ???
 			progressBar.setString(
 					DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)
 					+" | "+popupMsg+" "+completedList.size()
