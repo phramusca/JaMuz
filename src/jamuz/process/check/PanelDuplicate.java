@@ -17,11 +17,8 @@
 
 package jamuz.process.check;
 
-import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.Inter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -56,24 +53,32 @@ public class PanelDuplicate extends javax.swing.JPanel {
 		}.start();
 	}
 	
-	void init(DuplicateInfo duplicateInfo) {
-		new Thread("Thread.PanelDuplicate.init duplicate") {
+	void reCheck(FolderInfo folderInfo, ICallBackDuplicate callback) {
+		folderInfo.reCheck(new ICallBackReCheck() {
 			@Override
-			public void run() {
-				FolderInfo folderInfo = duplicateInfo.getFolderInfo();
-				folderInfo.browse(false, true, progressBar);
-				try {
-					folderInfo.analyse(progressBar);
-					folderInfo.analyseMatch(0, progressBar); //Analyse first match
-				} catch (CloneNotSupportedException ex) {
-					Logger.getLogger(DialogDuplicate.class.getName()).log(Level.SEVERE, null, ex);
-				}
+			public void reChecked() {
+				folderInfo.analyseMatch(0, progressBar); //Analyse first match
+				folderInfo.analyseMatchTracks();
+				folderInfo.setAction(); 
+				(progressBar).reset();
+				display(folderInfo);
+				callback.duplicate((DuplicateInfo) jComboBoxCheckDuplicates.getSelectedItem());
+			}
+		}, progressBar);
+	}
+	
+	void init(DuplicateInfo duplicateInfo) {
+		FolderInfo folderInfo = duplicateInfo.getFolderInfo();
+		folderInfo.reCheck(new ICallBackReCheck() {
+			@Override
+			public void reChecked() {
+				folderInfo.analyseMatch(0, progressBar); //Analyse first match
 				folderInfo.analyseMatchTracks();
 				folderInfo.setAction(); 
 				(progressBar).reset();
 				display(folderInfo);
 			}
-		}.start();
+		}, progressBar);
 	}
 	
 	private void display(FolderInfo folderInfo) {
@@ -83,7 +88,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
 				jCheckBoxCheckCoverDisplay, jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, 
 				jCheckBoxCheckLengthDisplay, jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, 
 				jCheckCheckTitleDisplay, jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, 
-				jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckDesc, jLabelCheckID3v1Tag, 
+				jLabelCheckNbTracks, jLabelCheckYearTag, jLabelCheckID3v1Tag, 
 				jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, jLabelCheckGenre, 
 				jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck, 
 				jComboBoxCheckDuplicates, jComboBoxCheckMatches, jLabelArtist, jLabelTitle);
@@ -135,7 +140,6 @@ public class PanelDuplicate extends javax.swing.JPanel {
         jPanel6 = new javax.swing.JPanel();
         jLabelCoverInfo = new javax.swing.JLabel();
         jCheckBoxCheckCoverDisplay = new javax.swing.JCheckBox();
-        jLabelCheckDesc = new javax.swing.JLabel();
         jScrollPaneCheckTags = new javax.swing.JScrollPane();
         jTableCheck = new jamuz.gui.swing.TableHorizontal();
         jProgressBarCheckDialog = new jamuz.gui.swing.ProgressBar();
@@ -346,13 +350,13 @@ public class PanelDuplicate extends javax.swing.JPanel {
                                     .addComponent(jCheckBoxCheckGenreDisplay)
                                     .addComponent(jLabelCheckGenre)))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jCheckBoxCheckArtistDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel4Layout.createSequentialGroup()
                                         .addGap(3, 3, 3)
-                                        .addComponent(jLabelArtist)))
+                                        .addComponent(jLabelArtist))
+                                    .addComponent(jCheckBoxCheckArtistDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jCheckCheckTitleDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -405,11 +409,6 @@ public class PanelDuplicate extends javax.swing.JPanel {
                     .addComponent(jLabelCoverInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
-        jLabelCheckDesc.setBackground(new java.awt.Color(255, 255, 255));
-        jLabelCheckDesc.setText("<html>\nLine1<BR/>\nLine2<BR/>\nLine3<BR/>\n</html>"); // NOI18N
-        jLabelCheckDesc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jLabelCheckDesc.setOpaque(true);
-
         jTableCheck.setAutoCreateColumnsFromModel(false);
         jTableCheck.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTableCheck.setAutoscrolls(false);
@@ -441,7 +440,6 @@ public class PanelDuplicate extends javax.swing.JPanel {
                             .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabelCheckDesc)
                     .addComponent(jComboBoxCheckMatches, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jComboBoxCheckDuplicates, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -453,8 +451,6 @@ public class PanelDuplicate extends javax.swing.JPanel {
                 .addComponent(jComboBoxCheckMatches, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxCheckDuplicates, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelCheckDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -503,7 +499,6 @@ public class PanelDuplicate extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelArtist;
     private javax.swing.JLabel jLabelCheckAlbumArtistTag;
     private javax.swing.JLabel jLabelCheckAlbumTag;
-    private javax.swing.JLabel jLabelCheckDesc;
     private javax.swing.JLabel jLabelCheckGenre;
     private javax.swing.JLabel jLabelCheckID3v1;
     private javax.swing.JLabel jLabelCheckID3v1Tag;
@@ -523,5 +518,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPaneCheckTags;
     private javax.swing.JTable jTableCheck;
     // End of variables declaration//GEN-END:variables
+
+	
 
 }

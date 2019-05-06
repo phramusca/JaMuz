@@ -32,7 +32,6 @@
                           <Component id="jProgressBarCheckDialog" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="jLabelCheckDesc" max="32767" attributes="2"/>
                   <Component id="jComboBoxCheckMatches" alignment="0" max="32767" attributes="2"/>
                   <Component id="jComboBoxCheckDuplicates" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -47,8 +46,6 @@
               <Component id="jComboBoxCheckMatches" min="-2" pref="45" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jComboBoxCheckDuplicates" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabelCheckDesc" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
@@ -292,15 +289,15 @@
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jCheckBoxCheckArtistDisplay" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                                           <Component id="jLabelArtist" min="-2" max="-2" attributes="0"/>
                                       </Group>
+                                      <Component id="jCheckBoxCheckArtistDisplay" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jCheckCheckTitleDisplay" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabelTitle" alignment="0" max="32767" attributes="0"/>
                                   </Group>
@@ -591,20 +588,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="jLabelCheckDesc">
-      <Properties>
-        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" red="ff" type="rgb"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;Line1&lt;BR/&gt;&#xa;Line2&lt;BR/&gt;&#xa;Line3&lt;BR/&gt;&#xa;&lt;/html&gt;" noResource="true"/>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-            <EtchetBorder/>
-          </Border>
-        </Property>
-        <Property name="opaque" type="boolean" value="true"/>
-      </Properties>
-    </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPaneCheckTags">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>

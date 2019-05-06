@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz.gui.swing;
+package jamuz.process.check;
 
-import jamuz.process.check.FileInfoDisplay;
+import jamuz.gui.swing.TableModelGeneric;
 import java.util.ArrayList;
 import java.util.List;
 import jamuz.utils.Inter;
@@ -231,22 +231,22 @@ public class TableModelCheckTracks extends TableModelGeneric {
             if(toOri.isAudioFile && fromOri.isAudioFile) {
                 //those new values (from ReleaseMatch Track) do not move
                 //only if all are audio files (not N/A entry)
-                from.setArtist(toOri.getArtist());
                 from.setGenre(toOri.getGenre());
                 from.setYear(toOri.getYear());
 
-                to.setArtist(fromOri.getArtist());
                 to.setGenre(fromOri.getGenre());
                 to.setYear(fromOri.getYear());
             }
             
             //those new values (from ReleaseMatch Track) do not move
-            from.setTitle(toOri.getTitle());
+			from.setArtist(toOri.getArtist());
+            from.setTitle(toOri.getTitle()); 
 			from.setDiscNo(toOri.getDiscNo());
 			from.setDiscTotal(toOri.getDiscTotal());
 			from.setTrackNo(toOri.getTrackNo());
 			from.setTrackTotal(toOri.getTrackTotal());
 			
+			to.setArtist(fromOri.getArtist());
             to.setTitle(fromOri.getTitle());
 			to.setDiscNo(fromOri.getDiscNo());
 			to.setDiscTotal(fromOri.getDiscTotal());

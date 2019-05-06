@@ -75,7 +75,6 @@ public class CheckDisplay {
 	 * @param jLabelCheckAlbumTag
 	 * @param jLabelCheckNbTracks
 	 * @param jLabelCheckYearTag
-	 * @param jLabelCheckDesc
 	 * @param jLabelCheckID3v1Tag
 	 * @param jLabelCheckMeanBitRateTag
 	 * @param jLabelCheckNbFiles
@@ -90,7 +89,7 @@ public class CheckDisplay {
 	 * @param jLabelArtist
 	 * @param jLabelTitle
 	 */
-	public CheckDisplay(FolderInfo folder, ProgressBar progressBar, JCheckBox jCheckBoxCheckAlbumArtistDisplay, JCheckBox jCheckBoxCheckAlbumDisplay, TriStateCheckBox jCheckBoxCheckArtistDisplay, JCheckBox jCheckBoxCheckBPMDisplay, JCheckBox jCheckBoxCheckBitRateDisplay, JCheckBox jCheckBoxCheckCommentDisplay, JCheckBox jCheckBoxCheckCoverDisplay, JCheckBox jCheckBoxCheckFormatDisplay, JCheckBox jCheckBoxCheckGenreDisplay, JCheckBox jCheckBoxCheckLengthDisplay, JCheckBox jCheckBoxCheckSizeDisplay, JCheckBox jCheckBoxCheckYearDisplay, TriStateCheckBox jCheckCheckTitleDisplay, JLabel jLabelCheckAlbumArtistTag, JLabel jLabelCheckAlbumTag, JLabel jLabelCheckNbTracks, JLabel jLabelCheckYearTag, JLabel jLabelCheckDesc, JLabel jLabelCheckID3v1Tag, JLabel jLabelCheckMeanBitRateTag, JLabel jLabelCheckNbFiles, JLabel jLabelCheckReplayGainTag, JLabel jLabelCheckGenre, JLabel jLabelCoverInfo, JPanel jPanelCheckCoverThumb, JScrollPane jScrollPaneCheckTags, JTable jTableCheck, JComboBox jComboBoxCheckDuplicates, JComboBox jComboBoxCheckMatches, JLabel jLabelArtist, JLabel jLabelTitle) {
+	public CheckDisplay(FolderInfo folder, ProgressBar progressBar, JCheckBox jCheckBoxCheckAlbumArtistDisplay, JCheckBox jCheckBoxCheckAlbumDisplay, TriStateCheckBox jCheckBoxCheckArtistDisplay, JCheckBox jCheckBoxCheckBPMDisplay, JCheckBox jCheckBoxCheckBitRateDisplay, JCheckBox jCheckBoxCheckCommentDisplay, JCheckBox jCheckBoxCheckCoverDisplay, JCheckBox jCheckBoxCheckFormatDisplay, JCheckBox jCheckBoxCheckGenreDisplay, JCheckBox jCheckBoxCheckLengthDisplay, JCheckBox jCheckBoxCheckSizeDisplay, JCheckBox jCheckBoxCheckYearDisplay, TriStateCheckBox jCheckCheckTitleDisplay, JLabel jLabelCheckAlbumArtistTag, JLabel jLabelCheckAlbumTag, JLabel jLabelCheckNbTracks, JLabel jLabelCheckYearTag, JLabel jLabelCheckID3v1Tag, JLabel jLabelCheckMeanBitRateTag, JLabel jLabelCheckNbFiles, JLabel jLabelCheckReplayGainTag, JLabel jLabelCheckGenre, JLabel jLabelCoverInfo, JPanel jPanelCheckCoverThumb, JScrollPane jScrollPaneCheckTags, JTable jTableCheck, JComboBox jComboBoxCheckDuplicates, JComboBox jComboBoxCheckMatches, JLabel jLabelArtist, JLabel jLabelTitle) {
 		this.folder = folder;
 		this.progressBar = progressBar;
 		this.jCheckBoxCheckAlbumArtistDisplay = jCheckBoxCheckAlbumArtistDisplay;
@@ -110,7 +109,6 @@ public class CheckDisplay {
 		this.jLabelCheckAlbumTag = jLabelCheckAlbumTag;
 		this.jLabelCheckNbTracks = jLabelCheckNbTracks;
 		this.jLabelCheckYearTag = jLabelCheckYearTag;
-		this.jLabelCheckDesc = jLabelCheckDesc;
 		this.jLabelCheckID3v1Tag = jLabelCheckID3v1Tag;
 		this.jLabelCheckMeanBitRateTag = jLabelCheckMeanBitRateTag;
 		this.jLabelCheckNbFiles = jLabelCheckNbFiles;
@@ -146,7 +144,7 @@ public class CheckDisplay {
 		column = columnModel.getColumn(0);
 		column.setMinWidth(100);
 
-		//FIXME !!! Display "Disc # (new)" and "Track # (new)" ONLY if related result it not OK (Same as tristate check boxes - artitst and title)
+		//FIXME Z CHECK Display "Disc # (new)" and "Track # (new)" ONLY if related result it not OK (Same as tristate check boxes - artitst and title)
 		
 		//	1:  "Disc # (new)"
 		//	2:  "Disc #"
@@ -536,10 +534,6 @@ public class CheckDisplay {
 				progressBar.reset();
 			}
 			else {
-                if(jLabelCheckDesc!=null) {
-					jLabelCheckDesc.setText(folder.toString());
-				}
-				
 				//Display track & disc # columns
 				PanelMain.setColumnVisible(columnModel, 1, 4, true);
 				
@@ -689,7 +683,6 @@ public class CheckDisplay {
 					checkbox.setState(TriStateCheckBox.State.ALL);
 				}
 			}
-			//FIXME !!! get associated label
 			jLabel.setForeground(result.getDisplayColor());
 		}
 	}
@@ -724,7 +717,6 @@ public class CheckDisplay {
     private final javax.swing.JLabel jLabelCheckAlbumTag;
     private final javax.swing.JLabel jLabelCheckNbTracks;
 	private final javax.swing.JLabel jLabelCheckYearTag;
-	private final javax.swing.JLabel jLabelCheckDesc;		
 	private final javax.swing.JLabel jLabelCheckID3v1Tag;
     private final javax.swing.JLabel jLabelCheckMeanBitRateTag;
     private final javax.swing.JLabel jLabelCheckNbFiles;

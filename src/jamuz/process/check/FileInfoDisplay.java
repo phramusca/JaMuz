@@ -18,6 +18,7 @@
 package jamuz.process.check;
 
 import jamuz.FileInfoInt;
+import jamuz.gui.swing.TableValue;
 import jamuz.process.check.ReleaseMatch.Track;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
@@ -132,20 +133,19 @@ public final class FileInfoDisplay extends FileInfoInt {
 		String naNumber = "-- --";  //NOI18N
 		this.discNoFullDisplay=new TableValue(naNumber);
 		this.trackNoFullDisplay=new TableValue(naNumber);
-		String na = "<html><font color=\"red\">N/A</font></html>";  //NOI18N
-		this.filename=na;
+		this.filename=TableValue.na;
         this.BPM=0;
-		this.BPMDisplay=new TableValue(na);
-        this.album=na;
-		this.albumDisplay=new TableValue(na);
-        this.albumArtist=na;
-		this.albumArtistDisplay=new TableValue(na);
-        this.artist=na;
-		this.artistDisplay=new TableValue(na);
+		this.BPMDisplay=new TableValue(TableValue.na);
+        this.album=TableValue.na;
+		this.albumDisplay=new TableValue(TableValue.na);
+        this.albumArtist=TableValue.na;
+		this.albumArtistDisplay=new TableValue(TableValue.na);
+        this.artist=track.getArtist();
+		this.artistDisplay=new TableValue(TableValue.na);
 		this.title=track.getTitle();
-		this.titleDisplay=new TableValue(na);
-        this.year=na;
-		this.yearDisplay=new TableValue(na);
+		this.titleDisplay=new TableValue(TableValue.na);
+        this.year=TableValue.na;
+		this.yearDisplay=new TableValue(TableValue.na);
 		this.genre=Inter.get("Label.SelectOne"); //NOI18N
 		this.genreDisplay=new TableValue(Inter.get("Label.SelectOne")); //NOI18N
 	}
@@ -344,46 +344,5 @@ public final class FileInfoDisplay extends FileInfoInt {
 	@Override
 	public FileInfoDisplay clone() throws CloneNotSupportedException {
 		return (FileInfoDisplay) super.clone();
-	}
-	
-    //TODO: Move to a dedicated class file in swingExtensions
-	/**
-	 * Used for displaying items in table html formatted
-	 * while keeping raw data value available
-	 */
-	public static class TableValue{
-
-		private final String value;
-		private String display;
-		
-		/**
-		 * Create a new TableValue
-		 * @param value
-		 */
-		public TableValue(String value) {
-			this.value=value;
-			this.display=value;
-		}
-
-		@Override
-		public String toString() {
-			return display;
-		}
-
-		/**
-		 * Get value
-		 * @return
-		 */
-		public String getValue() {
-			return value;
-		}
-
-		/**
-		 * Set value to be displayed
-		 * @param display
-		 */
-		public void setDisplay(String display) {
-			this.display = display;
-		}
 	}
 }

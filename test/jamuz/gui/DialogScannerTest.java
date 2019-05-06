@@ -36,11 +36,6 @@ public class DialogScannerTest {
 			public void completed(String pattern) {
 				System.out.println(".completed("+pattern+")");
 			}
-
-			@Override
-			public void reChecked() {
-				System.out.println(".completed()");
-			}
 		});
     }
 }

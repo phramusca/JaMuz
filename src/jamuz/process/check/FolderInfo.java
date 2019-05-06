@@ -28,7 +28,6 @@ import it.sauronsoftware.jave.EncoderException;
 import it.sauronsoftware.jave.EncodingAttributes;
 import jamuz.FileInfo;
 import jamuz.process.check.Cover.CoverType;
-import jamuz.process.check.FileInfoDisplay.TableValue;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.process.check.ProcessCheck.Action;
@@ -50,7 +49,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.gui.swing.TableModelCheckTracks;
+import jamuz.gui.swing.TableValue;
 import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
@@ -244,7 +243,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @param callback
 	 * @param progressBar
 	 */
-	public void reCheck(ICallBackScanner callback, ProgressBar progressBar) {
+	public void reCheck(ICallBackReCheck callback, ProgressBar progressBar) {
 		Thread t = new Thread("Thread.FolderInfo.reCheck") {
 			@Override
 			public void run() {
@@ -287,12 +286,15 @@ public class FolderInfo implements java.lang.Comparable {
 			int idFileDb = searchInFileInfoDbList(fileFS.getRelativeFullPath());
 			if(idFileDb>=0) {
 				FileInfoInt fileDb = filesDb.get(idFileDb);
-				//Date comparison may not work: compare formatted strings instead !!! 
+				//Date comparison may not work: compare formatted strings instead 
 				//to compare with same formatDisplay as within database
 				if(fileDb.isDeleted() || full || !fileFS.getFormattedModifDate().equals(fileDb.getFormattedModifDate())) {
 					fileFS.readTags(true); //TODO: Use returned boolean ! (shall we ?)
 					fileFS.setIdFile(fileDb.getIdFile());
 					fileFS.setIdPath(fileDb.getIdPath());
+					fileFS.setRating(fileDb.getRating());
+					
+					
 					//Update file in database (deleted=0 and tags)
 					if(!fileFS.updateTagsInDb()) {
 						fileFS.unsetCover(); //To prevent memory errors
@@ -1257,7 +1259,6 @@ public class FolderInfo implements java.lang.Comparable {
 	}
 	
     private void addRowTag(FileInfoDisplay fileInfoDisplay) {
-        //Genre
 		fileInfoDisplay.setGenre(PanelMain.getGenre(fileInfoDisplay.getGenre()));
 		filesAudioTableModel.addRow(fileInfoDisplay);
 	}
@@ -2059,6 +2060,10 @@ public class FolderInfo implements java.lang.Comparable {
 				//=> Problem if all DoScan have stopped meantime ...
 			}
 		}				
+	}
+
+	List<FileInfoInt> getFilesDb() {
+		return filesDb;
 	}
 	
 	/**
