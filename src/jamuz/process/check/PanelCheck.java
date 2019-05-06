@@ -31,7 +31,6 @@ import javax.swing.SortOrder;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.gui.swing.TableModelCheck;
 import jamuz.gui.swing.WrapLayout;
 import jamuz.process.check.ProcessCheck.CheckType;
 import jamuz.utils.Inter;
@@ -389,7 +388,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jProgressBarCheckActionsDequeue.setStringPainted(true);
 
         jTableCheck.setAutoCreateColumnsFromModel(false);
-        jTableCheck.setModel(new jamuz.gui.swing.TableModelCheck());
+        jTableCheck.setModel(new jamuz.process.check.TableModelCheck());
         jTableCheck.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTableCheck.setAutoscrolls(false);
         jScrollPaneCheckTags2.setViewportView(jTableCheck);

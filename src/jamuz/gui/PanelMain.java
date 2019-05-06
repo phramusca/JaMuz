@@ -768,8 +768,8 @@ public class PanelMain extends javax.swing.JFrame {
         jComboBoxPlayerRating = new javax.swing.JComboBox();
         jLabelTags = new javax.swing.JLabel();
         jButtonTags = new javax.swing.JButton();
-        jButtonCheckUp = new javax.swing.JButton();
-        jButtonCheckDown = new javax.swing.JButton();
+        jButtonQueueUp = new javax.swing.JButton();
+        jButtonQueueDown = new javax.swing.JButton();
         jComboBoxPlaylist = new javax.swing.JComboBox();
         jButtonRefreshHiddenQueue = new javax.swing.JButton();
 
@@ -1024,17 +1024,17 @@ public class PanelMain extends javax.swing.JFrame {
                 .addGap(0, 0, 0))
         );
 
-        jButtonCheckUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_up.png"))); // NOI18N
-        jButtonCheckUp.addActionListener(new java.awt.event.ActionListener() {
+        jButtonQueueUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_up.png"))); // NOI18N
+        jButtonQueueUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCheckUpActionPerformed(evt);
+                jButtonQueueUpActionPerformed(evt);
             }
         });
 
-        jButtonCheckDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_down.png"))); // NOI18N
-        jButtonCheckDown.addActionListener(new java.awt.event.ActionListener() {
+        jButtonQueueDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/arrow_down.png"))); // NOI18N
+        jButtonQueueDown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCheckDownActionPerformed(evt);
+                jButtonQueueDownActionPerformed(evt);
             }
         });
 
@@ -1065,9 +1065,9 @@ public class PanelMain extends javax.swing.JFrame {
             .addGroup(jPanelPlayerLayout.createSequentialGroup()
                 .addComponent(jButtonPlayerClear)
                 .addGap(18, 18, 18)
-                .addComponent(jButtonCheckUp)
+                .addComponent(jButtonQueueUp)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonCheckDown)
+                .addComponent(jButtonQueueDown)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jToggleButtonPlayerInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanelPlayerLayout.createSequentialGroup()
@@ -1101,8 +1101,8 @@ public class PanelMain extends javax.swing.JFrame {
                     .addComponent(jButtonPlayerClear)
                     .addComponent(jToggleButtonPlayerInfo)
                     .addGroup(jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButtonCheckDown, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonCheckUp))))
+                        .addComponent(jButtonQueueDown, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonQueueUp))))
         );
 
         jSplitPaneMain.setLeftComponent(jPanelPlayer);
@@ -1435,7 +1435,7 @@ public class PanelMain extends javax.swing.JFrame {
         playerInfo.setVisible(!playerInfo.isVisible());
     }//GEN-LAST:event_jToggleButtonPlayerInfoActionPerformed
 
-    private void jButtonCheckUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckUpActionPerformed
+    private void jButtonQueueUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQueueUpActionPerformed
 
         int[] selectedRows = jListPlayerQueue.getSelectedIndices();
         int selectedRow;
@@ -1449,31 +1449,8 @@ public class PanelMain extends javax.swing.JFrame {
             }
         }
         jListPlayerQueue.clearSelection();
-//        for(int i : selectedNew) {
-            jListPlayerQueue.setSelectedIndices(convertIntegers(selectedNew));
-//        }
-//        
-//        
-////        int[] selectedRows = jListPlayerQueue.getSelectedRows();
-//        int selectedRow = jListPlayerQueue.getSelectedIndex();
-////        ArrayList<Integer> selectedNew= new ArrayList();
-////        for(int i=0; i<selectedRows.length; i++) {
-////            selectedRow = queueModel.getPlayingIndex();
-//        if(selectedRow>=0) {
-//            int newRow = selectedRow-1;
-//            if(newRow>=0) {
-////                queueModel.moveRow(selectedRow, newRow);
-//                moveQueueRow(selectedRow, newRow);
-////                selectedNew.add(newRow);
-//                jListPlayerQueue.setSelectedIndex(newRow);
-//            }
-////        }
-////        jTableCheck.clearSelection();
-////        for(int i : selectedNew) {
-////            jTableCheck.addRowSelectionInterval(i, i);
-////        }
-//        }
-    }//GEN-LAST:event_jButtonCheckUpActionPerformed
+        jListPlayerQueue.setSelectedIndices(convertIntegers(selectedNew));
+    }//GEN-LAST:event_jButtonQueueUpActionPerformed
 
     private static int[] convertIntegers(List<Integer> integers)
     {
@@ -1493,7 +1470,7 @@ public class PanelMain extends javax.swing.JFrame {
 		}
 	}
     
-    private void jButtonCheckDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckDownActionPerformed
+    private void jButtonQueueDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQueueDownActionPerformed
         int[] selectedRows = jListPlayerQueue.getSelectedIndices();
         int selectedRow;
         ArrayList<Integer> selectedNew= new ArrayList();
@@ -1506,40 +1483,8 @@ public class PanelMain extends javax.swing.JFrame {
             }
         }
         jListPlayerQueue.clearSelection();
-//        for(int i : selectedNew) {
-            jListPlayerQueue.setSelectedIndices(convertIntegers(selectedNew));
-//        }
-
-
-//        int selectedRow = jListPlayerQueue.getSelectedIndex();
-////        ArrayList<Integer> selectedNew= new ArrayList();
-////        for(int i=0; i<selectedRows.length; i++) {
-////            selectedRow = queueModel.getPlayingIndex();
-//        if(selectedRow>=0) {
-//            int newRow = selectedRow+1;
-//            if(newRow>=0) {
-////                queueModel.moveRow(selectedRow, newRow);
-//                moveQueueRow(selectedRow, newRow);
-////                selectedNew.add(newRow);
-//            }
-//            jListPlayerQueue.setSelectedIndex(newRow);
-//        }
-//        int[] selectedRows = jTableCheck.getSelectedRows();
-//        int selectedRow;
-//        ArrayList<Integer> selectedNew= new ArrayList();
-//        for(int i=selectedRows.length-1; i>=0; i--) {
-//            selectedRow = selectedRows[i];
-//            int newRow = selectedRow+1;
-//            if(newRow>=0) {
-//                moveQueueRow(selectedRow, newRow);
-//                selectedNew.add(newRow);
-//            }
-//        }
-//        jTableCheck.clearSelection();
-//        for(int i : selectedNew) {
-//            jTableCheck.addRowSelectionInterval(i, i);
-//        }
-    }//GEN-LAST:event_jButtonCheckDownActionPerformed
+		jListPlayerQueue.setSelectedIndices(convertIntegers(selectedNew));
+    }//GEN-LAST:event_jButtonQueueDownActionPerformed
 
     private static boolean refreshHiddenQueue=true;
     
@@ -1884,12 +1829,12 @@ public class PanelMain extends javax.swing.JFrame {
 		});
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonCheckDown;
-    private javax.swing.JButton jButtonCheckUp;
     private javax.swing.JButton jButtonPlayerClear;
     private static javax.swing.JButton jButtonPlayerNext;
     protected static javax.swing.JButton jButtonPlayerPlay;
     private static javax.swing.JButton jButtonPlayerPrevious;
+    private javax.swing.JButton jButtonQueueDown;
+    private javax.swing.JButton jButtonQueueUp;
     private javax.swing.JButton jButtonRefreshHiddenQueue;
     private static javax.swing.JButton jButtonTags;
     private static javax.swing.JComboBox jComboBoxPlayerGenre;

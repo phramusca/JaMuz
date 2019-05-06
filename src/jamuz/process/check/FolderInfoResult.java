@@ -218,6 +218,7 @@ public class FolderInfoResult {
 			case "albumArtist": //NOI18N
 			case "album":  //NOI18N
 			case "genre": //NOI18N
+			case "filename": //NOI18N
 				return this.analyseTrackString(tagValue, matchValue);
 			case "year":  //NOI18N
 				return this.analyseTrackYear(tagValue, matchValue);

@@ -241,9 +241,9 @@
                   <Group type="102" attributes="0">
                       <Component id="jButtonPlayerClear" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jButtonCheckUp" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonQueueUp" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButtonCheckDown" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonQueueDown" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jToggleButtonPlayerInfo" min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
@@ -281,8 +281,8 @@
                           <Component id="jButtonPlayerClear" min="-2" max="-2" attributes="0"/>
                           <Component id="jToggleButtonPlayerInfo" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jButtonCheckDown" max="32767" attributes="0"/>
-                              <Component id="jButtonCheckUp" min="-2" max="-2" attributes="0"/>
+                              <Component id="jButtonQueueDown" max="32767" attributes="0"/>
+                              <Component id="jButtonQueueUp" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -678,24 +678,24 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="jButtonCheckUp">
+            <Component class="javax.swing.JButton" name="jButtonQueueUp">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/jamuz/ressources/arrow_up.png"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCheckUpActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonQueueUpActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButtonCheckDown">
+            <Component class="javax.swing.JButton" name="jButtonQueueDown">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/jamuz/ressources/arrow_down.png"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCheckDownActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonQueueDownActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JComboBox" name="jComboBoxPlaylist">

@@ -79,7 +79,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 				jCheckBoxCheckFormatDisplay, jCheckBoxCheckGenreDisplay, jCheckBoxCheckLengthDisplay, 
 				jCheckBoxCheckSizeDisplay, jCheckBoxCheckYearDisplay, jCheckCheckTitleDisplay, 
 				jLabelCheckAlbumArtistTag, jLabelCheckAlbumTag, jLabelCheckNbTracks, jLabelCheckYearTag, 
-				null, jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, 
+				jLabelCheckID3v1Tag, jLabelCheckMeanBitRateTag, jLabelCheckNbFiles, jLabelCheckReplayGainTag, 
 				null, jLabelCoverInfo, jPanelCheckCoverThumb, jScrollPaneCheckTags, jTableCheck, 
 				jComboBoxCheckDuplicates, jComboBoxCheckMatches, jLabelArtist, jLabelTitle);
 		initGenre();
@@ -156,15 +156,7 @@ public final class DialogCheck extends javax.swing.JDialog {
         jPanelGenre.repaint();
 	}
     
-    
-
-	class CallBackCheck implements ICallBackScanner {
-
-		@Override
-		public void completed(String pattern) {
-			applyPattern(pattern);
-		}
-
+    class CallBackReCheck implements ICallBackReCheck {
 		@Override
 		public void reChecked() {
 			displayFolder();
@@ -434,11 +426,12 @@ public final class DialogCheck extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabelCheckNbTracks)
-                        .addComponent(jLabelCheckNbFiles)
-                        .addComponent(jCheckBoxCheckArtistDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jCheckCheckTitleDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jCheckCheckTitleDisplay, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelCheckNbTracks)
+                            .addComponent(jLabelCheckNbFiles)
+                            .addComponent(jCheckBoxCheckArtistDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabelArtist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -1097,7 +1090,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonCheckSingleFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckSingleFolderActionPerformed
         enableAddOptions(false);
-        folder.reCheck(new CallBackCheck(), progressBar);
+        folder.reCheck(new CallBackReCheck(), progressBar);
     }//GEN-LAST:event_jButtonCheckSingleFolderActionPerformed
 
     private void jButtonCheckPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckPreviewActionPerformed
@@ -1149,6 +1142,8 @@ public final class DialogCheck extends javax.swing.JDialog {
         //Check that files are ordered in jTableCheck
         //and, if not, ask user if he wants to continue saving anyway
 
+		//FIXME !!!! Do not display popup if no changes to disc#full nor track#full (ie: no match tracks - only?)
+		
         //discNo is often not set (-1), especially when there is only one disc
         int discNoTheo=1;
         ArrayList<String> discNos = FolderInfo.group(folder.getFilesAudioTableModel().getFiles(), "getDiscNo");  //NOI18N
@@ -1164,7 +1159,7 @@ public final class DialogCheck extends javax.swing.JDialog {
         boolean doSave=true;
         for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {
             if(file.isAudioFile) {
-
+				
                 if(!file.discNoFullDisplay.getValue().contains("/") || !file.trackNoFullDisplay.getValue().contains("/")) { //NOI18N
                     //TODO: Try getting trackNo from filename
                     doSave=false;
@@ -1200,7 +1195,6 @@ public final class DialogCheck extends javax.swing.JDialog {
             }
         }
 
-        //TODO: If titles are ok and so is track #, then we shall not ask for confirmation
         if(!doSave) {
             int n = JOptionPane.showConfirmDialog(
                 null, Inter.get("Question.Check.TrackOrder"), //NOI18N
@@ -1397,9 +1391,13 @@ public final class DialogCheck extends javax.swing.JDialog {
     private void jButtonCheckScannerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckScannerActionPerformed
         if(folder.getFilesAudio().size()>-1) {
             FileInfoDisplay file = folder.getFilesAudio().get(0);
-            DialogScanner.main(null, folder.getRelativePath()+file.getFilename(), new CallBackCheck());
+            DialogScanner.main(null, folder.getRelativePath()+file.getFilename(), new ICallBackScanner() {
+				@Override
+				public void completed(String pattern) {
+					applyPattern(pattern);
+				}
+			} );
         }
-        
     }//GEN-LAST:event_jButtonCheckScannerActionPerformed
 	
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
@@ -1422,7 +1420,7 @@ public final class DialogCheck extends javax.swing.JDialog {
                 progressBar.reset();
             }
 			enableAddOptions(false);
-			folder.reCheck(new CallBackCheck(), progressBar);
+			folder.reCheck(new CallBackReCheck(), progressBar);
         }
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
