@@ -204,22 +204,17 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="jLabelCheckReplayGain" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabelCheckID3v1" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabelCheckReplayGainTag" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="jLabelCheckID3v1Tag" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                          </Group>
+                      <Component id="jLabelCheckReplayGain" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelCheckID3v1" min="-2" max="-2" attributes="0"/>
+                      <Component id="jCheckBoxCheckBitRateDisplay" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                          <Component id="jLabelCheckReplayGainTag" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
+                          <Component id="jLabelCheckID3v1Tag" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="jCheckBoxCheckBitRateDisplay" min="-2" pref="66" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabelCheckMeanBitRateTag" min="-2" pref="31" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="jLabelCheckMeanBitRateTag" alignment="1" min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
