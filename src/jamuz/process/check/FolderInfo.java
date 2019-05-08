@@ -279,7 +279,6 @@ public class FolderInfo implements java.lang.Comparable {
 				return false;
 			}
 		}
-		
 		//Loop on files from filesystem
 		progressBar.setup(filesAudio.size());
 		for (FileInfoInt fileFS : filesAudio) {
@@ -293,8 +292,6 @@ public class FolderInfo implements java.lang.Comparable {
 					fileFS.setIdFile(fileDb.getIdFile());
 					fileFS.setIdPath(fileDb.getIdPath());
 					fileFS.setRating(fileDb.getRating());
-					
-					
 					//Update file in database (deleted=0 and tags)
 					if(!fileFS.updateTagsInDb()) {
 						fileFS.unsetCover(); //To prevent memory errors
@@ -315,16 +312,13 @@ public class FolderInfo implements java.lang.Comparable {
 			}
 			progressBar.progress(fileFS.getRelativePath());
 		}
-		
 		if(scanDeletedFiles) {
 			progressBar.setIndeterminate(Inter.get("Msg.Check.Scan.Deleted")); //NOI18N
             if(!scanDeletedFiles(progressBar)) {
 				return false;
 			}
-		}
-		
+		}	
 		progressBar.reset();
-		
 		return true;
 	}
 	

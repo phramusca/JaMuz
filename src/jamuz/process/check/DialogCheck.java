@@ -1141,59 +1141,53 @@ public final class DialogCheck extends javax.swing.JDialog {
 
         //Check that files are ordered in jTableCheck
         //and, if not, ask user if he wants to continue saving anyway
-
-		//FIXME !!!! Do not display popup if no changes to disc#full nor track#full (ie: no match tracks - only?)
 		
-        //discNo is often not set (-1), especially when there is only one disc
-        int discNoTheo=1;
-        ArrayList<String> discNos = FolderInfo.group(folder.getFilesAudioTableModel().getFiles(), "getDiscNo");  //NOI18N
-        if(discNos.size()==1) {
-            if(discNos.contains("-1")) { //NOI18N
-                discNoTheo=-1;
-            }
-        }
-
-        int discNo;
-        int trackNoTheo=1;
-        int trackNo;
-        boolean doSave=true;
-        for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {
-            if(file.isAudioFile) {
-				
-                if(!file.discNoFullDisplay.getValue().contains("/") || !file.trackNoFullDisplay.getValue().contains("/")) { //NOI18N
-                    //TODO: Try getting trackNo from filename
-                    doSave=false;
-                    break; //No need to check further
-                }
-
-                discNo = Integer.valueOf(file.discNoFullDisplay.getValue().split("/")[0]); //NOI18N
-                trackNo = Integer.valueOf(file.trackNoFullDisplay.getValue().split("/")[0]); //NOI18N
-
-                //Check disc ordering
-                if(discNo==discNoTheo) {
-                    //OK
-                }
-                else if(discNo==discNoTheo+1) {
-                    //OK
-                    discNoTheo+=1;
-                    trackNoTheo=1;
-                }
-                else {
-                    doSave=false;
-                    break; //No need to check further
-                }
-
-                //Check track ordering
-                if(trackNo==trackNoTheo) {
-                    //OK
-                    trackNoTheo+=1;
-                }
-                else {
-                    doSave=false;
-                    break; //No need to check further
-                }
-            }
-        }
+		boolean doSave=true;
+		ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());
+		if(match!=null && match.getTracks(progressBar).size()>0) { //No need to check ordering if match has no tracks
+			//discNo is often not set (-1), especially when there is only one disc
+			int discNoTheo=1;
+			ArrayList<String> discNos = FolderInfo.group(folder.getFilesAudioTableModel().getFiles(), "getDiscNo");  //NOI18N
+			if(discNos.size()==1) {
+				if(discNos.contains("-1")) { //NOI18N
+					discNoTheo=-1;
+				}
+			}
+			int discNo;
+			int trackNoTheo=1;
+			int trackNo;
+			for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {
+				if(file.isAudioFile) {
+					if(!file.discNoFullDisplay.getValue().contains("/") 
+							|| !file.trackNoFullDisplay.getValue().contains("/")) { //NOI18N
+						doSave=false;
+						break; //No need to check further
+					}
+					discNo = Integer.valueOf(file.discNoFullDisplay.getValue().split("/")[0]); //NOI18N
+					trackNo = Integer.valueOf(file.trackNoFullDisplay.getValue().split("/")[0]); //NOI18N
+					if(discNo==discNoTheo) {
+						//OK
+					}
+					else if(discNo==discNoTheo+1) {
+						//OK
+						discNoTheo+=1;
+						trackNoTheo=1;
+					}
+					else {
+						doSave=false;
+						break; //No need to check further
+					}
+					if(trackNo==trackNoTheo) {
+						//OK
+						trackNoTheo+=1;
+					}
+					else {
+						doSave=false;
+						break; //No need to check further
+					}
+				}
+			}
+		}
 
         if(!doSave) {
             int n = JOptionPane.showConfirmDialog(

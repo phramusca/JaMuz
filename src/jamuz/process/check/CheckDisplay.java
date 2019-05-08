@@ -461,9 +461,6 @@ public class CheckDisplay {
         ReleaseMatch match = folder.getMatch(matchId);//TODO: support match==null (should not happen)
         Map<String, FolderInfoResult> results = folder.getResults(); 
         folder.analyseMatch(matchId, progressBar);
-        FolderInfoResult result = folder.getResults().get("nbFiles");  //NOI18N
-        jLabelCheckNbFiles.setText(result.getDisplayText());
-        jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());
 
     //DUPLICATES
         jComboBoxCheckDuplicates.removeAllItems();
@@ -485,7 +482,7 @@ public class CheckDisplay {
 		
 		//TRACKS (ARTIST, TITLE, ...)
         //Number of files vs tracks
-        result = results.get("nbFiles");  //NOI18N
+        FolderInfoResult result = results.get("nbFiles");  //NOI18N
         jLabelCheckNbFiles.setText(result.getDisplayText());
         jLabelCheckNbFiles.setToolTipText(result.getDisplayToolTip());
         if(match!=null) {
