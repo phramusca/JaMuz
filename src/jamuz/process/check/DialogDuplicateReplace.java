@@ -22,6 +22,7 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableCellListener;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableValue;
+import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import java.awt.Dimension;
@@ -75,22 +76,15 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 		this.callback = callback;
 		
 		model = new TableModelReplace();
-		
 		ProgressBar progressBar = (ProgressBar)jProgressBarCheckDialog;
-		
-		
-		
         jTableCheck.setModel(model);
-        
 		columnModel = new TableColumnModel();
 		
 		//Assigning XTableColumnModel to allow show/hide columns
 		jTableCheck.setColumnModel(columnModel);
-		//Adding columns from model
 		jTableCheck.createDefaultColumnsFromModel();
 		
 		TableColumn column;
-
 		//	  "Filename" (new)
 		//	  "Filename"
 		column = columnModel.getColumn(0);
@@ -333,14 +327,14 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 					File sourceFile = new File(pair.getKey());
 					File destinationFile = new File(pair.getValue());
 					FileUtils.moveFile(sourceFile, destinationFile);
-				//FIXME !!! What to do next ? refresh duplicate, or folder ?
-			callback.replaced();
-			this.dispose();
 				}
 				catch (IOException ex) {
 					Logger.getLogger(DialogDuplicateReplace.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
+			duplicateInfo.getFolderInfo().updateInDb(CheckedFlag.UNCHECKED);
+			callback.replaced();
+			this.dispose();			
         }
     }//GEN-LAST:event_jButtonReplaceActionPerformed
 
