@@ -59,17 +59,20 @@ public final class DialogCheck extends javax.swing.JDialog {
      */
     protected ProgressBar progressBar;
     private final ProgressBar progressBarCover;
+	private final ICallBackCheckPanel callback;
     
     /**
      * Creates new form PanelDialogCheck
      * @param parent
      * @param modal
      * @param folder
+	 * @param callback
      */
-    public DialogCheck(java.awt.Frame parent, boolean modal, FolderInfo folder) {
+    public DialogCheck(java.awt.Frame parent, boolean modal, FolderInfo folder, ICallBackCheckPanel callback) {
         super(parent, modal);
         initComponents();
 		this.folder=folder;
+		this.callback = callback;
 		progressBar = (ProgressBar)jProgressBarCheckDialog;
         progressBarCover = (ProgressBar) jProgressBarCover;
 		
@@ -88,8 +91,9 @@ public final class DialogCheck extends javax.swing.JDialog {
 
      /**
      * @param folder 
+	 * @param callback 
 	 */
-	public static void main(FolderInfo folder) {
+	public static void main(FolderInfo folder, ICallBackCheckPanel callback) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -107,7 +111,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 		}
 		//</editor-fold>
 
-        DialogCheck dialog = new DialogCheck(new JFrame(), true, folder);
+        DialogCheck dialog = new DialogCheck(new JFrame(), true, folder, callback);
 		
 		Dimension parentSize = (Dimension) PanelMain.getDimension().clone();
 		
@@ -1111,14 +1115,14 @@ public final class DialogCheck extends javax.swing.JDialog {
         }
         ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());
         folder.setMbId(match.getId());
-        PanelCheck.addToActionQueue(folder);
         this.dispose();
+		callback.addToQueueAction(folder);
     }//GEN-LAST:event_jButtonCheckOKActionPerformed
 
     private void jButtonCheckKOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckKOActionPerformed
         folder.action = ProcessCheck.Action.KO;
-        PanelCheck.addToActionQueue(folder);
         this.dispose();
+		callback.addToQueueAction(folder);
     }//GEN-LAST:event_jButtonCheckKOActionPerformed
 
     private void jButtonCheckDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckDeleteActionPerformed
@@ -1132,8 +1136,8 @@ public final class DialogCheck extends javax.swing.JDialog {
 					JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			folder.action = ProcessCheck.Action.DEL;
-            PanelCheck.addToActionQueue(folder);
             this.dispose();
+			callback.addToQueueAction(folder);
 		}
 	}
 	
@@ -1218,9 +1222,8 @@ public final class DialogCheck extends javax.swing.JDialog {
 				image=coverImg.getImage();
 			}
 			folder.setNewImage(image);
-
-			PanelCheck.addToActionQueue(folder);
 			this.dispose();
+			callback.addToQueueAction(folder);
         }
     }//GEN-LAST:event_jButtonCheckSaveTagsActionPerformed
 
@@ -1366,8 +1369,8 @@ public final class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonCheckKOLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckKOLibraryActionPerformed
         folder.action = ProcessCheck.Action.KO_LIBRARY;
-        PanelCheck.addToActionQueue(folder);
         this.dispose();
+		callback.addToQueueAction(folder);
     }//GEN-LAST:event_jButtonCheckKOLibraryActionPerformed
 
     private void jButtonSelectOriginalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectOriginalActionPerformed
@@ -1427,8 +1430,8 @@ public final class DialogCheck extends javax.swing.JDialog {
 			ReleaseMatch match = folder.getMatch(jComboBoxCheckMatches.getSelectedIndex());
 			folder.setMbId(match.getId());
 			folder.action = ProcessCheck.Action.WARNING_LIBRARY;
-			PanelCheck.addToActionQueue(folder);
 			this.dispose();
+			callback.addToQueueAction(folder);
         }
     }//GEN-LAST:event_jButtonCheckOKLibraryActionPerformed
 
@@ -1450,7 +1453,7 @@ public final class DialogCheck extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonCheckNoneDuplicatesActionPerformed
 
-	private class CallBackDuplicate implements ICallBackCheck {
+	private class CallBackDuplicate implements ICallBackDuplicateDialog {
 
 		@Override
 		public void notAduplicate() {

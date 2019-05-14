@@ -33,7 +33,6 @@ import jamuz.utils.Benchmark;
 import jamuz.utils.StringManager;
 import java.awt.Color;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -84,6 +83,11 @@ public class ProcessCheck {
 	public DoActions doActions;
     private final Object lockScan = new Object();
     private int maxActionQueueSize=30; //TODO: Make this an option (save value automatically when changed, and do the same for nbSan et nbAnalysis spinners)
+	private final ICallBackCheckPanel callback;
+
+	public ProcessCheck(ICallBackCheckPanel callback) {
+		this.callback = callback;
+	}
 
 	/**
 	 *
@@ -788,7 +792,7 @@ public class ProcessCheck {
 			PanelCheck.tableModelActionQueue.addRow(folder);
 			enableRowSorter(PanelCheck.tableModelActionQueue.getRowCount()>0);
 			PanelCheck.progressBarListAnalysisDequeue.get(progressBarId).reset();
-			PanelCheck.addToActionQueue(folder);
+			callback.addToQueueAction(folder);
         }
     }
     

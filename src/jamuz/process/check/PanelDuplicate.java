@@ -38,7 +38,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
 		progressBar = (ProgressBar)jProgressBarCheckDialog;
     }
     
-	void init(FolderInfo folderInfo, DuplicateInfo diToSelect, ICallBackDuplicate callback) {
+	void init(FolderInfo folderInfo, DuplicateInfo diToSelect, ICallBackDuplicatePanel callback) {
 		this.duplicateInfo = diToSelect;
 		jComboBoxCheckDuplicates.addActionListener((java.awt.event.ActionEvent evt) -> {
 			if(checkDisplay.enableCombo) {
@@ -53,7 +53,7 @@ public class PanelDuplicate extends javax.swing.JPanel {
 		}.start();
 	}
 	
-	void reCheck(FolderInfo folderInfo, ICallBackDuplicate callback) {
+	void reCheck(FolderInfo folderInfo, ICallBackDuplicatePanel callback) {
 		folderInfo.reCheck(new ICallBackReCheck() {
 			@Override
 			public void reChecked() {
