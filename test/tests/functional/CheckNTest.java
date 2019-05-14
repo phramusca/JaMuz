@@ -68,7 +68,7 @@ public class CheckNTest extends TestCase {
             folder.setNewGenre("Reggae");
             folder.setNewImage(Settings.getTestCover());
             folder.action=Action.SAVE;
-            PanelCheck.addToActionQueue(folder);
+//            PanelCheck.addToActionQueue(folder);//FIXME TEST !!!
             TestProcessHelper.applyChanges();
         }
 

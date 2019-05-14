@@ -20,6 +20,8 @@ package test.helpers;
 import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.process.check.FolderInfo;
+import jamuz.process.check.ICallBackCheckPanel;
 import jamuz.process.sync.Device;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.sync.ProcessSync;
@@ -116,7 +118,13 @@ public class TestProcessHelper {
         PanelCheck.enableRowSorter(false);
         PanelCheck.stopActions(enableDoActions);
         
-        processCheck = new ProcessCheck();
+        processCheck = new ProcessCheck(new ICallBackCheckPanel() {
+			@Override
+			public void addToQueueAction(FolderInfo folder) {
+				//FIXME TEST !!!
+				throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+			}
+		});
         
         //Starting process finally
         PanelCheck.tableModelActionQueue.clear();

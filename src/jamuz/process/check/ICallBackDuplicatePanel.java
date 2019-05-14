@@ -9,7 +9,6 @@ package jamuz.process.check;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public interface ICallBackCheck {
-	public void notAduplicate();
-	public void delete();
+public interface ICallBackDuplicatePanel {
+	public void duplicate(DuplicateInfo duplicateInfo);
 }

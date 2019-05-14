@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 public class DialogDuplicate extends javax.swing.JDialog {
 
 	private final DuplicateInfo duplicateInfo;
-	private final ICallBackCheck callback;
+	private final ICallBackDuplicateDialog callback;
 	private final FolderInfo folder;
 	
 	/**
@@ -41,7 +41,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
 	 * @param callback
 	 */
 	public DialogDuplicate(java.awt.Frame parent, boolean modal, 
-			FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackCheck callback) {
+			FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackDuplicateDialog callback) {
 		super(parent, modal);
 		initComponents();
 		this.callback = callback;
@@ -440,7 +440,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
 	 * @param callback
 	 */
 	public static void main(Dimension parentSize, FolderInfo folder, 
-			DuplicateInfo duplicateInfo, ICallBackCheck callback) {
+			DuplicateInfo duplicateInfo, ICallBackDuplicateDialog callback) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

@@ -35,13 +35,16 @@ public class ButtonCheck extends DefaultCellEditor {
     private JButton button = null;
     private FolderInfo folder = null;
     private boolean isClicked;
+	private ICallBackCheckPanel callback;
 
     /**
 	 * Create a new button cell editor
+	 * @param callback
 	 */
-	public ButtonCheck() {
+	ButtonCheck(ICallBackCheckPanel callback) {
         super(new JCheckBox());
-        button = new JButton();
+        this.callback = callback;
+		button = new JButton();
         button.setOpaque(true);
         button.addActionListener((ActionEvent e) -> {
 			fireEditingStopped();
@@ -83,7 +86,7 @@ public class ButtonCheck extends DefaultCellEditor {
     @Override
     public Object getCellEditorValue() {
         if (isClicked) {
-            DialogCheck.main(folder);
+            DialogCheck.main(folder, callback);
         }
         isClicked = false;
         return folder;

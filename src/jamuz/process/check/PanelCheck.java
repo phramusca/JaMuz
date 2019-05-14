@@ -105,7 +105,12 @@ public class PanelCheck extends javax.swing.JPanel {
 		jSpinnerCheckScanNbThreads.setModel(new javax.swing.SpinnerNumberModel(coresValue, 1, coresMax, 1));
 		jSpinnerCheckAnalysisNbThreads.setModel(new javax.swing.SpinnerNumberModel(coresValue, 1, coresMax, 1));
 		
-        processCheck = new ProcessCheck();
+        processCheck = new ProcessCheck(new ICallBackCheckPanel() {
+			@Override
+			public void addToQueueAction(FolderInfo folder) {
+				addToActionQueue(folder);
+			}
+		});
         jSpinnerCheckMaxActionsInQueue.setValue(processCheck.getMaxActionQueueSize());
         //Set table model
         jTableCheck.setModel(tableModelActionQueue);
@@ -129,7 +134,12 @@ public class PanelCheck extends javax.swing.JPanel {
 			jButtonActionInJList.setBackground(folder.action.getColor());
 			return jButtonActionInJList;
 		});  
-		column.setCellEditor(new ButtonCheck());
+		column.setCellEditor(new ButtonCheck(new ICallBackCheckPanel() {
+			@Override
+			public void addToQueueAction(FolderInfo folder) {
+				addToActionQueue(folder);
+			}
+		}));
         
 		//	0:  Folder
 		column = jTableCheck.getColumnModel().getColumn(0);
@@ -222,7 +232,7 @@ public class PanelCheck extends javax.swing.JPanel {
      * Add folder to actions queue
      * @param folder
      */
-    public static void addToActionQueue(FolderInfo folder) {
+    public void addToActionQueue(FolderInfo folder) {
         Jamuz.getLogger().log(Level.FINEST, "addToActionQueue({0})", folder.getRelativePath());
        //Add to action queue if not already inside (when pressing a button (OK, KO. ..) on DialogCheck and doActions did not ran through folder yet)
         if(!processCheck.actionQueue.contains(folder)) {
