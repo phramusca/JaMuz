@@ -162,7 +162,8 @@ public class ReplayGain {
 			}
 		}
 		catch (IOException 
-				| NegativeArraySizeException ex) {
+				| NegativeArraySizeException 
+				| NullPointerException ex) {
 			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
 		}
 		return gv;
@@ -226,7 +227,9 @@ public class ReplayGain {
 				| IOException 
 				| TagException 
 				| ReadOnlyFileException 
-				| InvalidAudioFrameException ex) {
+				| InvalidAudioFrameException 
+				| OutOfMemoryError 
+				| IllegalArgumentException ex) {
 			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
 		}
 		return gv;

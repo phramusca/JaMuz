@@ -481,9 +481,8 @@ public class DialogScanner extends javax.swing.JDialog {
                 Logger.getLogger(DialogScanner.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        callback.completed(pattern);
         this.dispose();
+		callback.completed(pattern);
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
     private void applyPattern() {

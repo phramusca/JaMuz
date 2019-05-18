@@ -164,16 +164,16 @@ public class DialogVideoExport extends javax.swing.JDialog {
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         setOptions();
-        Jamuz.getOptions().save();
 		this.dispose();
+		Jamuz.getOptions().save();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
 		//TODO: Check options validity
         setOptions();
         if(Jamuz.getOptions().save()) {
-            PanelVideo.export();
             this.dispose();
+			PanelVideo.export();
         }
     }//GEN-LAST:event_jButtonSaveActionPerformed
 

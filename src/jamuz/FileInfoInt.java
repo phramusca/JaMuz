@@ -638,7 +638,8 @@ public class FileInfoInt extends FileInfo {
 			}
 			return true;
 		} catch (IllegalArgumentException | CannotReadException | IOException 
-                | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
+                | TagException | ReadOnlyFileException | InvalidAudioFrameException 
+				| OutOfMemoryError ex) {
 			//TODO: Find a better way of displaying error
 			//Usefull to return sthg then ?
 			this.comment="ERROR: "+ex.toString();  //NOI18N
@@ -830,7 +831,7 @@ public class FileInfoInt extends FileInfo {
                 Jamuz.getDb().setFileSaved(idFile);
             }
 			return true;
-		} catch (CannotWriteException | CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
+		} catch (CannotWriteException | CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException | IllegalArgumentException ex) {
 			Popup.error("Error writing tags to \""+getFullPath()+"\"", ex);  //NOI18N
 			return false;
 		} 
@@ -1408,7 +1409,7 @@ public class FileInfoInt extends FileInfo {
 				setCustomID3Tag(mp3file, "REPLAYGAIN_TRACK_PEAK", String.format(Locale.ROOT, "%.6f", gv.trackPeak));
 				setCustomID3Tag(mp3file, "REPLAYGAIN_ALBUM_GAIN", String.format(Locale.ROOT, "%.2f", gv.getAlbumGain())+" dB");
 				setCustomID3Tag(mp3file, "REPLAYGAIN_ALBUM_PEAK", String.format(Locale.ROOT, "%.6f", gv.albumPeak));
-			} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
+			} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException  | IllegalArgumentException ex) {
 				Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}

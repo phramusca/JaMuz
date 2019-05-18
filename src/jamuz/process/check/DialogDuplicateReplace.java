@@ -333,8 +333,8 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 				}
 			}
 			duplicateInfo.getFolderInfo().updateInDb(CheckedFlag.UNCHECKED);
+			this.dispose();	
 			callback.replaced();
-			this.dispose();			
         }
     }//GEN-LAST:event_jButtonReplaceActionPerformed
 

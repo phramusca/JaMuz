@@ -381,8 +381,8 @@ public class DialogDuplicate extends javax.swing.JDialog {
             Inter.get("Label.Confirm"),  //NOI18N
             JOptionPane.YES_NO_OPTION);
         if (n == JOptionPane.YES_OPTION) {
-			callback.notAduplicate();
 			this.dispose();
+			callback.notAduplicate();
         }
     }//GEN-LAST:event_jButtonNoDuplicateActionPerformed
 
@@ -394,14 +394,14 @@ public class DialogDuplicate extends javax.swing.JDialog {
         if (n == JOptionPane.YES_OPTION) {
             duplicateInfo.getFolderInfo().delete(panelDuplicate2.getProgressBar());
 			panelDuplicate2.init(duplicateInfo.getFolderInfo(), null, (DuplicateInfo di) -> {});
-			callback.notAduplicate();
             this.dispose();
+			callback.notAduplicate();
         }
     }//GEN-LAST:event_jButtonCheckDeleteActionPerformed
 
     private void jButtonCheckDelete1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckDelete1ActionPerformed
-        callback.delete();
 		this.dispose();
+		callback.delete();
     }//GEN-LAST:event_jButtonCheckDelete1ActionPerformed
 
     private void jButtonReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReplaceActionPerformed
