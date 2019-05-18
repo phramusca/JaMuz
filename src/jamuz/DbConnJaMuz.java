@@ -327,8 +327,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                         return false;
                     }
                 }
-				//TODO DB TEST: Remove the line below if rollback and finally tests are 
-				//successfull
+				//TODO DB TEST: Remove the line below if rollback and finally tests are successfull
 				dbConn.connection.setAutoCommit(true);
                 return true;
             } else {

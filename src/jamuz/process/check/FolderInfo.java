@@ -1604,7 +1604,6 @@ public class FolderInfo implements java.lang.Comparable {
                     moveToLibrary(progressBar, CheckedFlag.OK_WARNING, true);
                     break;
                 case KO:
-					//FIXME Z CHECK Rename too, if on library
                     KO(progressBar);
                     break;
                 case KO_LIBRARY:

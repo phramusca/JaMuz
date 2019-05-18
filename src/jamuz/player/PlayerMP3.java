@@ -150,16 +150,12 @@ public class PlayerMP3 extends PlaybackListener implements Runnable
 	private void play() {
 		try {
 			this.goNext=true;
-			
-			//TODO: Move the following to play(String filePath)
-			//Warning: not that easy ... !
 			FileInputStream fis = new FileInputStream(this.filePath);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			this.device = new JavaSoundAudioDevice();
 			this.player = new AdvancedPlayer(bis, device);
 			this.player.setPlayBackListener(this);		
 			this.playerThread = new Thread(this, "Thread.PlayerMP3.play");  //NOI18N
-			//End of move TODO
 			this.playerThread.start();
 		} catch (FileNotFoundException | JavaLayerException ex) {
 			Popup.error(Inter.get("Error.Play")+" \""+filePath+"\"", ex);  //NOI18N
