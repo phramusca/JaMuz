@@ -594,7 +594,7 @@ public class FolderInfo implements java.lang.Comparable {
                 source.delete();
 
 			} catch (IllegalArgumentException | EncoderException ex) {
-				Popup.error(ex);
+				Jamuz.getLogger().severe(ex.toString());
 			}
 		}
 		progressBar.reset();

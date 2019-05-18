@@ -212,6 +212,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
 	private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
+		this.dispose();
 		//TODO: Add a "From file" button
         int coverId = jListSelectCover.getSelectedIndex();
         if(coverId>=0) {
@@ -219,8 +220,6 @@ public class DialogCoverSelect extends javax.swing.JDialog {
             BufferedImage image = myCover.getImage();
             callback.setImage(image);
         }
-
-		this.dispose();
 	}//GEN-LAST:event_jButtonOKActionPerformed
 	
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
@@ -234,16 +233,16 @@ public class DialogCoverSelect extends javax.swing.JDialog {
     private void jButtonClipboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClipboardActionPerformed
         BufferedImage image = (BufferedImage) ClipboardImage.getImageFromClipboard();
 		if(image!=null) {
-			callback.setImage(image);
 			this.dispose();
+			callback.setImage(image);
 		} else {
 			Popup.warning("No image found on clipboard");
 		}
     }//GEN-LAST:event_jButtonClipboardActionPerformed
 
     private void jButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveActionPerformed
-        callback.setImage(null);
 		this.dispose();
+		callback.setImage(null);
     }//GEN-LAST:event_jButtonRemoveActionPerformed
     
 	/**
