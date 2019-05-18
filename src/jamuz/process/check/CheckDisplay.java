@@ -144,7 +144,7 @@ public class CheckDisplay {
 		column = columnModel.getColumn(0);
 		column.setMinWidth(100);
 
-		//FIXME Z CHECK Display "Disc # (new)" and "Track # (new)" ONLY if related result it not OK (Same as tristate check boxes - artitst and title)
+		//TODO CHECK Display "Disc # (new)" and "Track # (new)" ONLY if related result is not OK (Same as tristate check boxes - artitst and title)
 		
 		//	1:  "Disc # (new)"
 		//	2:  "Disc #"

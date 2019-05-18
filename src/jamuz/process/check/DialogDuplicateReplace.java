@@ -131,8 +131,8 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 		 //Set Rating column width
         column = columnModel.getColumn(0);
         column.setMinWidth(50);
-        column.setMaxWidth(200);
-        column.setPreferredWidth(100);
+        column.setMaxWidth(50);
+        column.setPreferredWidth(50);
 		
 		//need to change jScrollPane's header height, NOT jTableTags's if not bug !
 		Dimension d = jTableCheck.getTableHeader().getPreferredSize();

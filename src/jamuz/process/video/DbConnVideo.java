@@ -253,14 +253,14 @@ public class DbConnVideo extends DbConn {
 			PreparedStatement stSelectAllTvShows = connection.prepareStatement("SELECT T.idShow, "
                     + "T.c00 AS title, " //NOI18N
                     + "T.c01 AS synopsis, "
-                    + "T.c02 AS status, " //NOI18N //TODO
+                    + "T.c02 AS status, " //NOI18N
                     + "T.c03 AS ratingVotes, "
                     + "T.c04 AS rating, " //NOI18N
                     + "T.c05 AS year, "
                     + "T.c06 AS thumbnails, " //NOI18N
                     + "T.c08 AS genre, " //NOI18N
                     + "T.c09 AS titleOri, "
-                    + "T.c10 AS episodeguideURL, " //TODO
+                    + "T.c10 AS episodeguideURL, "
                     + "T.c11 as fanartURLs, " //NOI18N
                     + "T.c13 AS mppaRating, " //NOI18N
                     + "T.c14 AS studio, "
