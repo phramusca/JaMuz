@@ -1609,7 +1609,7 @@ public class FolderInfo implements java.lang.Comparable {
                 case KO_LIBRARY:
 					//FIXME Z CHECK Rename too, but need to insure that filename and path are valid
 					//=> Move to an "Issues" folder and replace bad tags by "Missing artist", "Empty album" ...
-                    moveToLibrary(progressBar, CheckedFlag.KO, false);
+                    moveToLibrary(progressBar, CheckedFlag.KO, true);
                     break;
                 case MANUAL:
                     isActionDone = Manual(progressBar);
@@ -1675,8 +1675,14 @@ public class FolderInfo implements java.lang.Comparable {
     
     private String getDestination(FileInfoInt fileInfo, boolean useMask) {
 		if(useMask) {
+			String albumArtist = results.get("albumArtist").value.equals("")?"{Empty}":results.get("albumArtist").value;
+			String album = results.get("album").value.equals("")?"{Empty}":results.get("album").value;
+			String genre = results.get("genre").value.equals("")?"{Empty}":results.get("genre").value;
 			String destination = fileInfo.computeMask(
-					Jamuz.getMachine().getOptionValue("location.mask"));  //NOI18N
+					Jamuz.getMachine().getOptionValue("location.mask"),
+					albumArtist,
+					album,
+					genre);  //NOI18N		
 			if(destination.length()>150) {
 				destination=StringManager.Left(destination, 150)+"(_)";  //NOI18N
 			}

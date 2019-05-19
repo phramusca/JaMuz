@@ -1078,29 +1078,35 @@ public class FileInfoInt extends FileInfo {
 	/**
 	 * Replaces %artist%, %albumGain%, ... by their actual values
 	 * @param mask
+	 * @param albumArtist
+	 * @param album
+	 * @param genre
 	 * @return
 	 */
-	public String computeMask(String mask) {
+	public String computeMask(String mask, String albumArtist, String album, String genre) {
 		String strResult=mask;
 		
-		strResult=strResult.replace("%artist%", StringManager.removeIllegal(this.artist));  //NOI18N
-		strResult=strResult.replace("%albumartist%", StringManager.removeIllegal(this.albumArtist));  //NOI18N
-		strResult=strResult.replace("%album%", StringManager.removeIllegal(this.album));  //NOI18N
-		strResult=strResult.replace("%genre%", StringManager.removeIllegal(this.genre));  //NOI18N
+		String artistName = artist.equals("")?"{Empty}":artist;
+		String titleName = title.equals("")?"{Empty}":title;
+		
+		strResult=strResult.replace("%artist%", StringManager.removeIllegal(artistName));  //NOI18N
+		strResult=strResult.replace("%albumartist%", StringManager.removeIllegal(albumArtist));  //NOI18N
+		strResult=strResult.replace("%album%", StringManager.removeIllegal(album));  //NOI18N
+		strResult=strResult.replace("%genre%", StringManager.removeIllegal(genre));  //NOI18N
 
 		String titleStr="";  //NOI18N
-		if(!this.artist.equals(this.albumArtist)) {
-			titleStr=this.artist + " - ";  //NOI18N
+		if(!artistName.equals(albumArtist)) {
+			titleStr=artistName + " - ";  //NOI18N
 		}
-		titleStr+=this.title;
+		titleStr+=titleName;
 		strResult=strResult.replace("%title%", StringManager.removeIllegal(titleStr));  //NOI18N
 		
 		String trackStr="";  //NOI18N
-		if(this.discTotal>1 && this.discNo>0) {
-			trackStr="["+this.discNo+"-"+this.discTotal+"] - ";  //NOI18N
+		if(discTotal>1 && discNo>0) {
+			trackStr="["+discNo+"-"+discTotal+"] - ";  //NOI18N
 		}
 		if(this.trackNo>0) {
-			trackStr=trackStr+FolderInfoResult.formatNumber(this.trackNo);
+			trackStr=trackStr+FolderInfoResult.formatNumber(trackNo);
 		}
 		strResult=strResult.replace("%track%", trackStr);  //NOI18N
 		
