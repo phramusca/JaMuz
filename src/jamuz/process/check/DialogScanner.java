@@ -32,7 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.event.DocumentEvent;
@@ -53,15 +55,13 @@ public class DialogScanner extends javax.swing.JDialog {
      * Creates new form NewJFrame
      * @param parent
      * @param modal
-     * @param path
+	 * @param paths
 	 * @param callback
      */
-    public DialogScanner(java.awt.Frame parent, boolean modal, String path, ICallBackScanner callback) {
+    public DialogScanner(java.awt.Frame parent, boolean modal, List<String> paths, ICallBackScanner callback) {
         super(parent, modal);
         initComponents();
-		
 		this.callback = callback;
-        jTextFieldPath.setText(path);
 		jLabelAlbum.setText("%b : "+Inter.get("Tag.Album"));
 		jLabelAlbumArtist.setText("%z : "+Inter.get("Tag.AlbumArtist"));
 		jLabelArtist.setText("%a : "+Inter.get("Tag.Artist"));
@@ -159,29 +159,52 @@ public class DialogScanner extends javax.swing.JDialog {
 				applyPattern(); 	  //NOI18N
 			}
 		});
-        
-        for(String pattern : patterns) {
-            Map<String, String> extracted = PatternProcessor.getMap(path, pattern);
-			addRow(extracted);
-        }
-        
-        //Enable row tableSorter (cannot be done if model is empty)
-		if(tableModel.getRowCount()>0) {
-			//Enable auto sorter
-			jTableScanner.setAutoCreateRowSorter(true);
-			//Sort by action, result
-			TableRowSorter<TableModel> tableSorter = new TableRowSorter<>(tableModel);
-			jTableScanner.setRowSorter(tableSorter);
-			List <RowSorter.SortKey> sortKeys = new ArrayList<>();
-			sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
-//			sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
-			tableSorter.setSortKeys(sortKeys);
-			jTableScanner.getSelectionModel().setSelectionInterval(0, 0);
+        		
+		((JTextField)jComboBoxPaths.getEditor().getEditorComponent()).setEditable(false);
+		DefaultComboBoxModel model = (DefaultComboBoxModel) jComboBoxPaths.getModel();
+		model.removeAllElements();
+		for(String path : paths) {
+			model.addElement(path);
+		}
+    }
+	
+	private void setupList() {
+		String selectedItem = (String) jComboBoxPaths.getSelectedItem();
+		if(selectedItem!=null) {
+			enableRowSorter(false);
+			tableModel.clear();
+			for(String pattern : patterns) {
+				Map<String, String> extracted = PatternProcessor.getMap(selectedItem, pattern);
+				addRow(extracted);
+			}
+			enableRowSorter(true);
+		}
+	}
+	
+	public static void enableRowSorter(boolean enable) {
+		if(enable) {
+			//Enable row tableSorter (cannot be done if model is empty)
+			if(tableModel.getRowCount()>0) {
+				//Enable auto sorter
+				jTableScanner.setAutoCreateRowSorter(true);
+				//Sort by action, result
+				TableRowSorter<TableModel> tableSorter = new TableRowSorter<>(tableModel);
+				jTableScanner.setRowSorter(tableSorter);
+				List <RowSorter.SortKey> sortKeys = new ArrayList<>();
+				sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
+	//			sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
+				tableSorter.setSortKeys(sortKeys);
+				jTableScanner.getSelectionModel().setSelectionInterval(0, 0);
+			}
+			else {
+				jTableScanner.setAutoCreateRowSorter(false);
+			}
 		}
 		else {
 			jTableScanner.setAutoCreateRowSorter(false);
+			jTableScanner.setRowSorter(null);
 		}
-    }
+   }
     
     private static void addRow(Map<String, String> extracted) {
         
@@ -218,7 +241,6 @@ public class DialogScanner extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextFieldPath = new javax.swing.JTextField();
         jScrollPaneCheckTags3 = new javax.swing.JScrollPane();
         jTableScanner = new jamuz.gui.swing.TableHorizontal();
         jTextFieldPattern = new javax.swing.JTextField();
@@ -248,10 +270,9 @@ public class DialogScanner extends javax.swing.JDialog {
         jLabelTitleValue = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jComboBoxPaths = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jTextFieldPath.setEditable(false);
 
         jTableScanner.setAutoCreateColumnsFromModel(false);
         jTableScanner.setModel(new jamuz.gui.swing.TableModel());
@@ -426,6 +447,14 @@ public class DialogScanner extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jComboBoxPaths.setEditable(true);
+        jComboBoxPaths.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxPaths.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxPathsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -433,7 +462,6 @@ public class DialogScanner extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldPath)
                     .addComponent(jTextFieldPattern)
                     .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 1151, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -441,13 +469,16 @@ public class DialogScanner extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jComboBoxPaths, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextFieldPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboBoxPaths, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldPattern, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -457,7 +488,7 @@ public class DialogScanner extends javax.swing.JDialog {
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
+                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
         );
 
         pack();
@@ -485,8 +516,12 @@ public class DialogScanner extends javax.swing.JDialog {
 		callback.completed(pattern);
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
+    private void jComboBoxPathsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPathsActionPerformed
+		setupList();
+    }//GEN-LAST:event_jComboBoxPathsActionPerformed
+
     private void applyPattern() {
-		Map<String, String> extracted = PatternProcessor.getMap(jTextFieldPath.getText(), jTextFieldPattern.getText());
+		Map<String, String> extracted = PatternProcessor.getMap((String) jComboBoxPaths.getSelectedItem(), jTextFieldPattern.getText());
 		jLabelAlbumValue.setText(bold(extracted, "%b"));
         jLabelAlbumArtistValue.setText(bold(extracted, "%z"));
         jLabelArtistValue.setText(bold(extracted, "%a"));
@@ -523,10 +558,10 @@ public class DialogScanner extends javax.swing.JDialog {
 
     /**
      * @param args the command line arguments
-     * @param path
+	 * @param paths
 	 * @param callback
      */
-    public static void main(String args[], String path, ICallBackScanner callback) {
+    public static void main(String args[], List<String> paths, ICallBackScanner callback) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -544,7 +579,7 @@ public class DialogScanner extends javax.swing.JDialog {
         }
         //</editor-fold>
 
-        DialogScanner dialog = new DialogScanner(new JFrame(), true, path, callback);
+        DialogScanner dialog = new DialogScanner(new JFrame(), true, paths, callback);
         dialog.setLocationRelativeTo(dialog.getParent());
         dialog.setVisible(true);
     }
@@ -552,6 +587,7 @@ public class DialogScanner extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
+    private javax.swing.JComboBox<String> jComboBoxPaths;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelAlbum;
     private javax.swing.JLabel jLabelAlbumArtist;
@@ -578,7 +614,6 @@ public class DialogScanner extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel3;
     private static javax.swing.JScrollPane jScrollPaneCheckTags3;
     private static javax.swing.JTable jTableScanner;
-    private javax.swing.JTextField jTextFieldPath;
     private javax.swing.JTextField jTextFieldPattern;
     // End of variables declaration//GEN-END:variables
 }

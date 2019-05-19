@@ -35,7 +35,7 @@ public class ButtonCheck extends DefaultCellEditor {
     private JButton button = null;
     private FolderInfo folder = null;
     private boolean isClicked;
-	private ICallBackCheckPanel callback;
+	private final ICallBackCheckPanel callback;
 
     /**
 	 * Create a new button cell editor
