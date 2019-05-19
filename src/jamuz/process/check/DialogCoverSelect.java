@@ -18,7 +18,6 @@
 package jamuz.process.check;
 
 import jamuz.Jamuz;
-import jamuz.gui.PanelCover;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.MouseInfo;
@@ -61,26 +60,21 @@ public class DialogCoverSelect extends javax.swing.JDialog {
 			ICallBackCover callback) {
 		super(parent, modal);
 		initComponents();
+		this.callback = callback;
 		if(myFolderInfo.getFilesAudio().size()>0) {
 			FileInfoDisplay file = myFolderInfo.getFilesAudio().get(0);
 			String artist = file.getAlbumArtist().equals("")?file.getArtist():file.getAlbumArtist();
 			searchGoogle = artist+" "+file.getAlbum();
 		}
-		
 		coverList=myFolderInfo.getCoverList();
-
         //Add a list renderer to display albums covers
         jListSelectCover.setBackground(Color.WHITE);
         ListRendererCover renderer = new ListRendererCover();
         jListSelectCover.setCellRenderer(renderer);
-        
         model = (SortedListModel<Cover>) jListSelectCover.getModel();
         model.clear();
-        
         progressBar = (ProgressBar)jProgressBar;
-        
         listCovers();
-		this.callback = callback;
 	}
     
     private final SortedListModel<Cover> model;
@@ -91,11 +85,12 @@ public class DialogCoverSelect extends javax.swing.JDialog {
             public void run() {
                 progressBar.setup(coverList.size());
                 for(final Cover myCover : coverList) {
+					progressBar.progress(Inter.get("Msg.Select.RetrievingCovers")); //NOI18N
                     if(myCover.getImage()!=null) {
                         model.add(myCover);
                     }
-                    progressBar.progress(Inter.get("Msg.Select.RetrievingCovers")); //NOI18N
                 }
+				model.fire();
 //                jListSelectCover.setSelectedIndex(0); //Would be nice but it messes with the display, so better not selecting (no real need anyway)
                 progressBar.reset();
             }
@@ -271,12 +266,9 @@ public class DialogCoverSelect extends javax.swing.JDialog {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(() -> {
 			DialogCoverSelect dialog = new DialogCoverSelect(new javax.swing.JFrame(), true, myFolderInfo, callback );
-			//Center the dialog
-//			dialog.setLocationRelativeTo(dialog.getParent());
 			//Set dialog to mouse location
 			PointerInfo a = MouseInfo.getPointerInfo();
 			Point b  = a.getLocation();
-			//                int x = (int)b.getX();
 			int y = (int)b.getY();
 			int newX=x-dialog.getWidth();
 			//size of the screen
