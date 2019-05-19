@@ -1386,9 +1386,15 @@ public final class DialogCheck extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonPlayerPreviousActionPerformed
 
     private void jButtonCheckScannerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckScannerActionPerformed
-        if(folder.getFilesAudio().size()>-1) {
-            FileInfoDisplay file = folder.getFilesAudio().get(0);
-            DialogScanner.main(null, folder.getRelativePath()+file.getFilename(), new ICallBackScanner() {
+        int[] selectedRows = jTableCheck.getSelectedRows();
+		List<String> paths = new ArrayList<>();
+		for(int i=0; i<selectedRows.length; i++) {
+			int indexSelected = selectedRows[i];
+			FileInfoDisplay file = folder.getFilesAudioTableModel().getFiles().get(indexSelected);
+			paths.add(folder.getRelativePath()+file.getFilename());
+		}
+		if(paths.size()>0) {
+            DialogScanner.main(null, paths, new ICallBackScanner() {
 				@Override
 				public void completed(String pattern) {
 					applyPattern(pattern);
@@ -1516,9 +1522,11 @@ public final class DialogCheck extends javax.swing.JDialog {
 	 */
 	public void applyPattern(String pattern) {
 
+		int[] selectedRows = jTableCheck.getSelectedRows();
         String entryValue;
-        for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {            
-            for (Map.Entry<String, String> entry : PatternProcessor.getMap(folder.getRelativePath()+file.getFilename(), pattern).entrySet()) {
+        for(int i=0; i<selectedRows.length; i++) {
+			FileInfoDisplay file = folder.getFilesAudioTableModel().getFiles().get(selectedRows[i]);
+			for (Map.Entry<String, String> entry : PatternProcessor.getMap(folder.getRelativePath()+file.getFilename(), pattern).entrySet()) {
                 entryValue = entry.getValue();
                 switch(entry.getKey()) {
                     case "%b": //album
@@ -1560,7 +1568,6 @@ public final class DialogCheck extends javax.swing.JDialog {
         checkDisplay.displayMatchTracks();
         //TODO: Is this not done yet ? >> Re-calculate differences and check AlbumArtist, album, artist, title accordingly
         folder.getFilesAudioTableModel().fireTableDataChanged();
-        
     }
 	
     /**

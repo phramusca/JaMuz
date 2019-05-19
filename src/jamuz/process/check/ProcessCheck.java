@@ -881,9 +881,9 @@ public class ProcessCheck {
          */
         WARNING(Inter.get("Check.OK.Warning"), 1, "accept.png", Color.ORANGE), //NOI18N
 		/**
-         * Delete
+         * KO
          */
-        DEL(Inter.get("Label.Delete"), 2, "bin.png", Color.DARK_GRAY), //NOI18N
+        KO(Inter.get("Check.KO"), 2, "cancel.png", Color.RED),
 		/**
          * Save tags
          */
@@ -893,9 +893,9 @@ public class ProcessCheck {
          */
         OK(Inter.get("Check.OK"), 4, "accept.png", new Color(0, 128, 0)), //NOI18N
 		/**
-         * KO
+         * Delete
          */
-        KO(Inter.get("Check.KO"), 5, "cancel.png", Color.RED),
+        DEL(Inter.get("Label.Delete"), 5, "bin.png", Color.DARK_GRAY), //NOI18N
 		/**
 		 * KO in library
 		 */
