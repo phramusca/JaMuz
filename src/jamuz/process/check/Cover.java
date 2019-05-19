@@ -27,9 +27,6 @@ import jamuz.utils.ImageUtils;
 import jamuz.utils.Popup;
 import jamuz.utils.Inter;
 import jamuz.utils.Utils;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +50,9 @@ public class Cover implements java.lang.Comparable {
 	private BufferedImage image;
     private String hash=""; //NOI18N
     private List<MbImage> coverArtArchiveList;
+	
+	//FIXME Z CHECK Make maxSize an option
+	private static final int sizeMax = 1000;
 
     /**
      * Type of cover (MB, tag, file or url (lastfm))
@@ -102,7 +102,7 @@ public class Cover implements java.lang.Comparable {
 	public Cover(String name, BufferedImage image, String hash) {
 		this.type = CoverType.TAG;  //NOI18N
 		this.name = name;
-		this.image = image;
+		this.image = ImageUtils.shrinkImage(image, sizeMax);
         this.hash = hash;
         coverArtArchiveList=new ArrayList<>();
 	}
@@ -113,13 +113,10 @@ public class Cover implements java.lang.Comparable {
 	 */
 	public BufferedImage getImage() {
         if(image==null) {
-			//FIXME !!! Scale image within boudaries
-			image = ImageUtils.scaleImage(readImage(), 1000, 1000);
+			image = ImageUtils.shrinkImage(readImage(), sizeMax); //TODO: make it an option
 		}
 		return image;
 	}
-
-	
 	
     /**
      * Set cover image
@@ -310,7 +307,7 @@ public class Cover implements java.lang.Comparable {
         int otherHeight=other.getImage().getHeight();
         int otherSize=otherWidth*otherHeight; 
         
-        int maxSize=600; //TODO: make it an option
+        int maxSize=this.sizeMax;
         maxSize=maxSize*maxSize;
         
         if(size>maxSize) return 1;

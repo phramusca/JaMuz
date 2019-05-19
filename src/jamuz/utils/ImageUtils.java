@@ -179,13 +179,13 @@ public class ImageUtils {
         return newImage;
     }
 	
-//	Dimension getScaledDimension(Dimension imageSize, Dimension boundary) {
-//		double widthRatio = boundary.getWidth() / imageSize.getWidth();
-//		double heightRatio = boundary.getHeight() / imageSize.getHeight();
-//		double ratio = Math.min(widthRatio, heightRatio);
-//		return new Dimension((int) (imageSize.width * ratio), (int) (imageSize.height * ratio));
-//	}
-
+	public static BufferedImage shrinkImage(BufferedImage image, int maxIconSize) {
+		if(image !=null && (image.getWidth()>maxIconSize || image.getHeight()>maxIconSize)) {
+			return scaleImage(image, maxIconSize, maxIconSize);
+		}
+		return image;
+	}
+	
 	public static BufferedImage getEmptyCover() {
 		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 40);
 		BufferedImage coverImage = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
