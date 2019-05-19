@@ -61,6 +61,7 @@ import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
 import org.jaudiotagger.tag.id3.ID3v1Tag;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
 import jamuz.utils.DateTime;
+import jamuz.utils.ImageUtils;
 import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
 import java.security.NoSuchAlgorithmException;
@@ -522,7 +523,7 @@ public class FileInfoInt extends FileInfo {
                     if(tag!=null) {
                         //Check presence of a cover
                         if(tag.getFirstArtwork()!=null) {
-                            this.readCover(tag);
+                            readCover(tag);
                         }
                     }
                 }
@@ -540,14 +541,14 @@ public class FileInfoInt extends FileInfo {
 	}
     
     private void readCoverHash() throws NoSuchAlgorithmException, IOException {
-        if(this.coverImage!=null) {
+        if(coverImage!=null) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ImageIO.write(this.coverImage, "png", outputStream); //NOI18N
+            ImageIO.write(coverImage, "png", outputStream); //NOI18N
             byte[] data = outputStream.toByteArray();
             MessageDigest md = MessageDigest.getInstance("MD5"); //NOI18N
             md.update(data);
             byte[] hash = md.digest();
-            this.coverHash=returnHex(hash);
+            coverHash=returnHex(hash);
         }
     }
     
@@ -697,20 +698,7 @@ public class FileInfoInt extends FileInfo {
 	}
 	
 	private void setEmptyCover() {
-		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 40);
-		this.coverImage = new BufferedImage(500, 500, BufferedImage.TYPE_3BYTE_BGR);
-		Graphics2D g = this.coverImage.createGraphics();
-		FontMetrics fm = g.getFontMetrics(f);
-		g.setBackground(Color.LIGHT_GRAY);
-		g.clearRect(0, 0, this.coverImage.getWidth(), this.coverImage.getHeight());
-		g.setFont(f);
-		g.setColor(Color.DARK_GRAY);
-		
-		//TODO: Translate
-		String text = "No Cover";
-		
-		g.drawString(text, (this.coverImage.getWidth()/2)-(text.length()*12),
-				(this.coverImage.getHeight()/2)+20);  //NOI18N
+		coverImage=ImageUtils.getEmptyCover();
 	}
 	
 	private int getInt(String value) {

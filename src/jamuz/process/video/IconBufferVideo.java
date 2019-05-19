@@ -18,24 +18,16 @@
 package jamuz.process.video;
 
 import jamuz.Jamuz;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import jamuz.utils.ImageUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
-import jamuz.utils.Utils;
 
-/**
- *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
- */
 
 
 public class IconBufferVideo {
@@ -67,7 +59,7 @@ public class IconBufferVideo {
         if(readIfNotFound) {
             icon= readIconFromCache(url);
             if(icon==null) {
-				icon= readIconFromInternet(url);
+				icon= ImageUtils.readIconFromInternet(url, ICON_HEIGHT, getCacheFile(url));
 			} 
         }
 		if(icon!=null) {
@@ -94,31 +86,5 @@ public class IconBufferVideo {
         return Jamuz.getFile(
 				StringManager.removeIllegal(url)+".png", 
 				"data", "cache", "video");
-    }
-
-    private static ImageIcon readIconFromInternet(String url) {
-        ImageIcon icon=null;
-        try {
-            BufferedImage myImage = ImageIO.read(Utils.getFinalURL(url));
-            icon = new ImageIcon(((new ImageIcon(myImage).getImage())
-					.getScaledInstance(-1, IconBufferVideo.ICON_HEIGHT, 
-							java.awt.Image.SCALE_SMOOTH)));
-            //Write to cache
-            BufferedImage bi = new BufferedImage(
-					icon.getImage().getWidth(null),
-					icon.getImage().getHeight(null),
-					BufferedImage.TYPE_3BYTE_BGR);
-            Graphics2D g2 = bi.createGraphics();
-            g2.drawImage(icon.getImage(), 0, 0, null);
-            g2.dispose();
-            ImageIO.write(bi, "png", getCacheFile(url)); //NOI18N
-            
-		} catch (IIOException ex) {
-            Jamuz.getLogger().log(Level.FINEST, url, ex);
-        }
-        catch (IOException | NullPointerException ex) {
-			Jamuz.getLogger().log(Level.FINEST, url, ex);
-		}
-        return icon;
     }
 }
