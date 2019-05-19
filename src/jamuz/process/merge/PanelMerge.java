@@ -86,8 +86,8 @@ public class PanelMerge extends javax.swing.JPanel {
 		//Set Rating column width
 		column = jTableMerge.getColumnModel().getColumn(3);
 		column.setMinWidth(50);
-		column.setMaxWidth(100);
-		column.setPreferredWidth(50);
+        column.setMaxWidth(200);
+        column.setPreferredWidth(100);
 		//Set Added column width
 		column = jTableMerge.getColumnModel().getColumn(4);
 		column.setMinWidth(150);

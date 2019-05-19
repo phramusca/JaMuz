@@ -89,8 +89,10 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 		//	  "Filename"
 		column = columnModel.getColumn(0);
 		column.setMinWidth(100);
+		column.setPreferredWidth(200);
 		column = columnModel.getColumn(1);
 		column.setMinWidth(100);
+		column.setPreferredWidth(200);
 
 		//	  "Disc # (new)"
 		//	  "Disc #"
@@ -129,10 +131,10 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 		column.setPreferredWidth(100);
 		
 		 //Set Rating column width
-        column = columnModel.getColumn(0);
+        column = columnModel.getColumn(10);
         column.setMinWidth(50);
-        column.setMaxWidth(50);
-        column.setPreferredWidth(50);
+        column.setMaxWidth(200);
+        column.setPreferredWidth(100);
 		
 		//need to change jScrollPane's header height, NOT jTableTags's if not bug !
 		Dimension d = jTableCheck.getTableHeader().getPreferredSize();
