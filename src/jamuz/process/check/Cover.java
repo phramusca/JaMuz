@@ -23,24 +23,21 @@ import fm.last.musicbrainz.coverart.CoverArtException;
 import fm.last.musicbrainz.coverart.CoverArtImage;
 import fm.last.musicbrainz.coverart.impl.DefaultCoverArtArchiveClient;
 import jamuz.Jamuz;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
+import jamuz.utils.ImageUtils;
 import jamuz.utils.Popup;
 import jamuz.utils.Inter;
 import jamuz.utils.Utils;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Level;
 import javax.imageio.ImageIO;
-import org.apache.http.HttpHost;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 //TODO: Make some sub-classes (mb, lastfm, file,...)
@@ -115,12 +112,15 @@ public class Cover implements java.lang.Comparable {
 	 * @return
 	 */
 	public BufferedImage getImage() {
-        if(this.image==null) {
-			this.image = readImage();
+        if(image==null) {
+			//FIXME !!! Scale image within boudaries
+			image = ImageUtils.scaleImage(readImage(), 1000, 1000);
 		}
-		return this.image;
+		return image;
 	}
 
+	
+	
     /**
      * Set cover image
      * @param image
@@ -359,12 +359,6 @@ public class Cover implements java.lang.Comparable {
         msg+="</html>";
         return msg;
     }
-    
-//    public String getSize() {
-//        int width=image.getWidth();
-//        int height=image.getHeight();
-//        return width+"x"+height; //NOI18N
-//    }
     
     private String getSizeDisplay() {
         String msg="";

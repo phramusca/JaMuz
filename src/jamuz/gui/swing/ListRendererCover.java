@@ -18,12 +18,9 @@
 package jamuz.gui.swing;
 
 import jamuz.process.check.Cover;
-import java.awt.BasicStroke;
-import java.awt.Color;
+import jamuz.utils.ImageUtils;
 import java.awt.Component;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -41,9 +38,7 @@ public class ListRendererCover extends JLabel implements ListCellRenderer {
 	public ListRendererCover() {
 		setOpaque(true);
         setHorizontalAlignment(SwingConstants.CENTER);
-        // Text below image
         this.setVerticalTextPosition(SwingConstants.BOTTOM);
-        // And centered
         this.setHorizontalTextPosition(SwingConstants.CENTER); 
     }
 
@@ -54,7 +49,6 @@ public class ListRendererCover extends JLabel implements ListCellRenderer {
     */
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-
         if (isSelected) {
             setBackground(list.getSelectionBackground());
             setForeground(list.getSelectionForeground());
@@ -62,37 +56,10 @@ public class ListRendererCover extends JLabel implements ListCellRenderer {
             setBackground(list.getBackground());
             setForeground(list.getForeground());
         }
-
          Cover cellValue = (Cover) value;
-        
-        //Set the icon.
          BufferedImage image = cellValue.getImage();
-         ImageIcon icon = new ImageIcon(((new ImageIcon(image).getImage())));
-         //Shrink icon if too big
-         int maxIconSize=500;
-         if(image.getWidth()>maxIconSize || image.getHeight()>maxIconSize) {
-             icon = new ImageIcon(((icon.getImage()).getScaledInstance(maxIconSize, maxIconSize, java.awt.Image.SCALE_SMOOTH)));
-             
-             //The following is to create a border => shows user that image is bigger than displayed
-            int borderWidth = 20;
-            int spaceAroundIcon = 0;
-            Color borderColor = Color.GRAY;
-            BufferedImage bi = new BufferedImage(maxIconSize + (2 * borderWidth + 2 * spaceAroundIcon),maxIconSize + (2 * borderWidth + 2 * spaceAroundIcon), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = bi.createGraphics();
-            g.setColor(borderColor);
-            g.drawImage(icon.getImage(), borderWidth + spaceAroundIcon, borderWidth + spaceAroundIcon, null);
-            BasicStroke stroke = new BasicStroke(borderWidth*2); //5 pixels wide (thickness of the border)
-            g.setStroke(stroke);
-            g.drawRect(0, 0, bi.getWidth() - 1, bi.getHeight() - 1);
-            g.dispose();
-            icon = new ImageIcon(bi);
-         }
-             
-         setIcon(icon);
-         
-         //Set text
-         setText(cellValue.toString());
-        
+         setIcon(ImageUtils.getBorderedIfTooBig(image));
+         setText(cellValue.toString());       
         return this;
     }
 }

@@ -21,11 +21,6 @@ import jamuz.Jamuz;
 import jamuz.Option;
 import jamuz.process.merge.StatSource;
 import jamuz.gui.PanelMain;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
@@ -79,27 +74,7 @@ public class Settings {
 		return appPath.substring(0, appPath.length() - 1) 
 				+ "testenv" + File.separator + folderName + File.separator;
 	}
-    
-	/**
-	 *
-	 * @return
-	 */
-	public static BufferedImage getTestCover() {
-        Font f = new Font(Font.SANS_SERIF, Font.BOLD, 50);
-        BufferedImage image = new BufferedImage(400, 400, BufferedImage.TYPE_3BYTE_BGR);
-        Graphics2D g = image.createGraphics();
-        FontMetrics fm = g.getFontMetrics(f);
-        g.setBackground(Color.YELLOW);
-        g.clearRect(0, 0, image.getWidth(), image.getHeight());
-        g.setBackground(Color.WHITE);
-        g.clearRect(20, 20, image.getWidth() -40, image.getHeight()-40);
-        g.setFont(f);
-        g.setColor(Color.BLUE);
-        g.drawString("TEST COVER", 40, 180); 
         
-        return image;
-    }
-    
     /**
      * Sets up application and options
      * @throws Exception
