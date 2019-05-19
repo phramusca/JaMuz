@@ -519,6 +519,7 @@ public class FolderInfo implements java.lang.Comparable {
 				}
 				if(!isValid || recalculateGain) {
 					//Compute replaygain for MP3 files (if any)
+					progressBar.setIndeterminate("Computing ReplayGain for MP3 ...");
 					MP3gain mP3gain = new MP3gain(recalculateGain, rootPath, 
 							relativePath, progressBar);
 					if(mP3gain.process()) {
@@ -874,10 +875,12 @@ public class FolderInfo implements java.lang.Comparable {
 				else {
 					BufferedImage myImage=filesAudio.get(0).getCoverImage();
 					results.get("cover").value = Inter.get("Label.All")+" "+myImage.getWidth()+"x"+myImage.getHeight(); //NOI18N
-					if(myImage.getWidth()<200 || myImage.getHeight()<200) {
+					if(myImage.getWidth()<200 || myImage.getHeight()<200
+							|| myImage.getWidth()>1000 || myImage.getHeight()>1000) {
 						results.get("cover").setWarning(); //NOI18N
 					}
-					else if(myImage.getWidth()<100 || myImage.getHeight()<100) {
+					if(myImage.getWidth()<100 || myImage.getHeight()<100
+							|| myImage.getWidth()>2000 || myImage.getHeight()>2000) {
 						results.get("cover").setKO(); //NOI18N
 					}
 				}
@@ -1071,7 +1074,7 @@ public class FolderInfo implements java.lang.Comparable {
 			results.get("bitRate").value=String.valueOf(meanBitRate);  //NOI18N
 			
 			//Searching matches on MusicBrainz and Last.fm
-			//(Only if a valid artistDisplay could be retrieved)
+			//(Only if a valid artist could be retrieved)
 			if(!searchArtist.equals("")) {  //NOI18N
 				int discNo=1;
 				int discTotal=1;
@@ -1083,7 +1086,9 @@ public class FolderInfo implements java.lang.Comparable {
 				if(!discTotalList.contains("") && discTotalList.size()==1){
 					discTotal=Integer.valueOf(discTotalList.get(0));
 				}
-				searchMatches(searchAlbum, searchArtist, discNo, discTotal, progressBar);
+				if(!(searchArtist.equals("Various Artists") && searchAlbum.equals("Various Albums"))) {
+					searchMatches(searchAlbum, searchArtist, discNo, discTotal, progressBar);
+				}
 			}
 			progressBar.setIndeterminate(Inter.get("Msg.Check.AnalyzingFolder")); //NOI18N
             
@@ -1096,6 +1101,7 @@ public class FolderInfo implements java.lang.Comparable {
 			for (String myRelease : releaseList) {
 				String[] split = myRelease.split("X7IzQsi3");  //NOI18N //TODO: Use something nicer than this bad coding
 				addToOriginals(Inter.get("Label.original")+i, split[0], split[1], split[2], Integer.parseInt(split[3]), idPath);  //NOI18N
+				i++;
 			}
 			
 			//Add path parts to originals list (may be usefull when no tags are available)
@@ -1447,21 +1453,26 @@ public class FolderInfo implements java.lang.Comparable {
 							.equals("true")) {  //NOI18N
                 updateDatabase=true;
             }
-            checkDestination=true;
+            
+			String albumArtist = getResultField("albumArtist");
+			String album = getResultField("album");
+			boolean isSingles = albumArtist.equals("Various Artists") && album.equals("Various Albums");
+			
+			checkDestination=!isSingles;
         }
-        //TODO: We can end up with duplicate strPath in path table
-        //(at least) when a folder is renamed manually, then scan, and move to OK that renames the folder back:
-        //need to check if file exist before inserting it !!
-        moveList(filesAudio, 
+		//TODO: We can end up with duplicate strPath in path table
+		//(at least) when a folder is renamed manually, then scan, and move to OK that renames the folder back:
+		//need to check if file exist before inserting it !!
+		boolean moved = moveList(filesAudio, 
 				useMask, 
 				MessageFormat.format(
-						Inter.get("Msg.Check.MovingToOK"), 
-						ProcessCheck.getDestinationLocation().getValue()), 
-                ProcessCheck.getDestinationLocation().getValue(), 
-				checkDestination, 
-				progressBar);  //NOI18N
+						Inter.get("Msg.Check.MovingToOK"),
+						ProcessCheck.getDestinationLocation().getValue()),
+				ProcessCheck.getDestinationLocation().getValue(),
+				checkDestination,
+				progressBar); //NOI18N
 
-        if(updateDatabase) {
+        if(updateDatabase && moved) {
 			//Change folder path
 			//TODO: Find a better way (using getDestination on path only)
 			String rootPathOri = getRootPath();
@@ -1549,7 +1560,7 @@ public class FolderInfo implements java.lang.Comparable {
 		return merged;
 	}
 	
-    private void moveList(
+    private boolean moveList(
 			List<? extends FileInfoInt> myList, 
 			boolean useMask, 
 			String msg, 
@@ -1586,6 +1597,7 @@ public class FolderInfo implements java.lang.Comparable {
 			}
 			progressBar.reset();
 		}
+		return doMove;
 	}
     
 	/**
@@ -1658,26 +1670,31 @@ public class FolderInfo implements java.lang.Comparable {
     private boolean checkDestination(List<? extends FileInfoInt> myList, 
 			boolean useMask, String destination, ProgressBar progressBar) {
 		File destinationFile;
-		progressBar.setIndeterminate(
-				Inter.get("Msg.Check.CheckingDestinationFiles"));  //NOI18N
+		progressBar.setup(myList.size());
 		for (FileInfoInt myFileInfo : myList) {
+			String destinationReplaced = getDestination(myFileInfo, useMask);
 			destinationFile = new File(FilenameUtils.concat(
-					destination, getDestination(myFileInfo, useMask))); 
+					destination, destinationReplaced)); 
 			if (destinationFile.exists()) {
                 Popup.warning(MessageFormat.format(
 						Inter.get("Error.DestinationExist"), 
 						destinationFile.toString()));  //NOI18N
 				return false;
 			}
+			progressBar.progress(Inter.get("Msg.Check.CheckingDestinationFiles"));  //NOI18N
 		}
 		return true;
 	}
     
+	private String getResultField(String field) {
+		return results.get(field).value.equals("")?"{Empty}":results.get(field).value;
+	}
+	
     private String getDestination(FileInfoInt fileInfo, boolean useMask) {
 		if(useMask) {
-			String albumArtist = results.get("albumArtist").value.equals("")?"{Empty}":results.get("albumArtist").value;
-			String album = results.get("album").value.equals("")?"{Empty}":results.get("album").value;
-			String genre = results.get("genre").value.equals("")?"{Empty}":results.get("genre").value;
+			String albumArtist = getResultField("albumArtist");
+			String album = getResultField("album");
+			String genre = getResultField("genre");
 			String destination = fileInfo.computeMask(
 					Jamuz.getMachine().getOptionValue("location.mask"),
 					albumArtist,
