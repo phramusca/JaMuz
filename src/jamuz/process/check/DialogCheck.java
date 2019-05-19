@@ -314,7 +314,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 
         jButtonCheckOKLibrary.setBackground(java.awt.Color.orange);
         jButtonCheckOKLibrary.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/document_insert.png"))); // NOI18N
-        jButtonCheckOKLibrary.setText(bundle.getString("Check.OK.Warning")); // NOI18N
+        jButtonCheckOKLibrary.setText(bundle.getString("Check.OK")); // NOI18N
         jButtonCheckOKLibrary.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCheckOKLibraryActionPerformed(evt);
@@ -848,12 +848,12 @@ public final class DialogCheck extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanelCheckTagsLayout.createSequentialGroup()
-                        .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanelCheckTagsLayout.createSequentialGroup()
                                 .addComponent(jButtonSelectOriginal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonCheckScanner, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButtonDuplicateCompare))
+                                .addComponent(jButtonCheckScanner))
+                            .addComponent(jButtonDuplicateCompare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelCheckTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBoxCheckMatches, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1387,6 +1387,10 @@ public final class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonCheckScannerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckScannerActionPerformed
         int[] selectedRows = jTableCheck.getSelectedRows();
+		if(selectedRows.length<1) { 
+			jTableCheck.selectAll();
+		}
+		selectedRows = jTableCheck.getSelectedRows();
 		List<String> paths = new ArrayList<>();
 		for(int i=0; i<selectedRows.length; i++) {
 			int indexSelected = selectedRows[i];
