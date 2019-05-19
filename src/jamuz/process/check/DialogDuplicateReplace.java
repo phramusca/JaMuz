@@ -328,7 +328,8 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 				try {
 					File sourceFile = new File(pair.getKey());
 					File destinationFile = new File(pair.getValue());
-					FileUtils.moveFile(sourceFile, destinationFile);
+					destinationFile.delete();
+					FileUtils.copyFile(sourceFile, destinationFile);
 				}
 				catch (IOException ex) {
 					Logger.getLogger(DialogDuplicateReplace.class.getName()).log(Level.SEVERE, null, ex);
