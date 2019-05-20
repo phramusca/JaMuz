@@ -63,7 +63,7 @@ public class ButtonCheck extends DefaultCellEditor {
         }
         folder = (FolderInfo) value;
         
-        if(folder.isActionDone) {
+        if(folder.actionResult.isPerformed) {
             isClicked = false;
             button.setIcon(null);
             button.setText("Done");

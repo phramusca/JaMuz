@@ -112,7 +112,7 @@ public class FolderInfo implements java.lang.Comparable {
 	/**
 	 *
 	 */
-	public boolean isActionDone;
+	public ActionResult actionResult;
 
 	/**
 	 *
@@ -163,7 +163,7 @@ public class FolderInfo implements java.lang.Comparable {
         coversInternet = new LinkedHashMap<>(); // Linked to preserver order
 		matches = new LinkedHashMap<>(); // Linked to preserver order
         action = Action.ANALYZING;
-        isActionDone=false;
+        actionResult = new ActionResult(false);
         results = new HashMap<>();
         this.isLast = isLast;
 	}
@@ -1434,14 +1434,12 @@ public class FolderInfo implements java.lang.Comparable {
     /**
 	 * Insert folder in database with given checkeFlag
 	 */
-	private void moveToLibrary(
+	private ActionResult moveToLibrary(
 			ProgressBar progressBar, 
-			CheckedFlag checkedFlag, 
-			boolean useMask) {
-        //TODO: Check duplicates at this point again, as a previous OK (resulting in db insertion) may have inserted a duplicate !
+			CheckedFlag checkedFlag) {
         
         boolean updateDatabase=false;
-        boolean checkDestination=false;
+        boolean checkDestination=true;
         if(isCheckingMasterLibrary()) {
             updateDatabase=true;
         }
@@ -1454,17 +1452,14 @@ public class FolderInfo implements java.lang.Comparable {
                 updateDatabase=true;
             }
             
+			//FIXME !!!! Manage this better => make a isSingles flag
 			String albumArtist = getResultField("albumArtist");
 			String album = getResultField("album");
 			boolean isSingles = albumArtist.equals("Various Artists") && album.equals("Various Albums");
 			
 			checkDestination=!isSingles;
         }
-		//TODO: We can end up with duplicate strPath in path table
-		//(at least) when a folder is renamed manually, then scan, and move to OK that renames the folder back:
-		//need to check if file exist before inserting it !!
-		boolean moved = moveList(filesAudio, 
-				useMask, 
+		ActionResult actionResult = moveList(filesAudio, true, 
 				MessageFormat.format(
 						Inter.get("Msg.Check.MovingToOK"),
 						ProcessCheck.getDestinationLocation().getValue()),
@@ -1472,7 +1467,7 @@ public class FolderInfo implements java.lang.Comparable {
 				checkDestination,
 				progressBar); //NOI18N
 
-        if(updateDatabase && moved) {
+        if(updateDatabase && actionResult.isPerformed) {
 			//Change folder path
 			//TODO: Find a better way (using getDestination on path only)
 			String rootPathOri = getRootPath();
@@ -1481,14 +1476,14 @@ public class FolderInfo implements java.lang.Comparable {
 			setPath(ProcessCheck.getDestinationLocation().getValue(), 
 				filesAudio.get(0).getRelativePath());
 		
-			//Prevent duplicate strPath
+			//Prevent duplicate strPath in database
 			int newIdPath = Jamuz.getDb().getIdPath(filesAudio.get(0).getRelativePath());
 			if(idPath>=0 && newIdPath>=0 && idPath!=newIdPath) {
 				if(Jamuz.getDb().setIdPath(idPath, newIdPath)) {
 					idPath=newIdPath;
 					checkedFlag=CheckedFlag.UNCHECKED;
 				} else {
-					return;
+					return new ActionResult("Error updating path in database.");
 				}
 			}
 			
@@ -1500,7 +1495,9 @@ public class FolderInfo implements java.lang.Comparable {
 				//=> Cannot move insertOrUpdateInDb(checkedFlag); here 
 				//   as isCheckingMasterLibrary() would always return true
             if(isCheckingMasterLibrary()) {
-                insertOrUpdateInDb(checkedFlag);
+                if(!insertOrUpdateInDb(checkedFlag)) {
+					return new ActionResult("Error updating database.");
+				}
                 progressBar.setup(filesAudio.size());
                 for(FileInfoInt fileInfo : filesAudio) {
                     fileInfo.updateInDb();
@@ -1510,7 +1507,9 @@ public class FolderInfo implements java.lang.Comparable {
                 }
             }
             else {
-                insertOrUpdateInDb(checkedFlag);
+                if(!insertOrUpdateInDb(checkedFlag)) {
+					return new ActionResult("Error updating database.");
+				}
                 //Scan files for insertion of new files
                 scan(true, progressBar);
             }
@@ -1518,6 +1517,7 @@ public class FolderInfo implements java.lang.Comparable {
 			setPath(rootPathOri, relativePathOri);
 			progressBar.reset();
         }
+		return actionResult;
 	}
     
 	private void KO(ProgressBar progressBar) {
@@ -1560,44 +1560,60 @@ public class FolderInfo implements java.lang.Comparable {
 		return merged;
 	}
 	
-    private boolean moveList(
+    private ActionResult moveList(
 			List<? extends FileInfoInt> myList, 
 			boolean useMask, 
 			String msg, 
 			String destination, 
-			boolean checkDest, 
+			boolean checkDestination, 
 			ProgressBar progressBar) {
 		File originalFile;
-		String destinationRelativePath;
+		String destinationRelativeFullPath;
 		File destinationFile;
 		
-		boolean doMove=true;
-		if(checkDest && !checkDestination(myList, useMask, destination, progressBar)) {
-			doMove=false;
+		if(checkDestination && !checkDestination(myList, useMask, destination, progressBar)) {
+			return new ActionResult(Inter.get("Error.DestinationExist"));
 		}
-		if(doMove) {
-			progressBar.setup(myList.size());
-			for (FileInfoInt fileInfo : myList) {
-				originalFile = new File(FilenameUtils.concat(
-						ProcessCheck.getRootLocation().getValue(), 
-						fileInfo.getRelativeFullPath())); 
-				destinationRelativePath = getDestination(fileInfo, useMask);
-				destinationFile = new File(FilenameUtils.concat(
-						destination, 
-						destinationRelativePath));
-				if(!FilenameUtils.equalsNormalizedOnSystem(
-						destinationFile.getAbsolutePath(), 
-						originalFile.getAbsolutePath())) {
-                    if(FileSystem.moveFile(originalFile, destinationFile)) {
-                        fileInfo.setRootPath(destination);
-                        fileInfo.setPath(destinationRelativePath);
-                    }
-                }
-				progressBar.progress(msg);
+		//Get destination paths and filenames
+		List<String> paths = new ArrayList<>();
+		List<String> filenames = new ArrayList<>();
+		for (FileInfoInt fileInfo : myList) {
+			destinationRelativeFullPath = getDestination(fileInfo, useMask);
+			paths.add(FilenameUtils.getPath(destinationRelativeFullPath));
+			filenames.add(FilenameUtils.getName(destinationRelativeFullPath));
+		}
+		//Check there is only one destination relative path (and not empty)
+		ArrayList<String> groupedPaths = group(paths, "toString");  //NOI18N
+		if(groupedPaths.contains("") || groupedPaths.size()!=1) {
+			return new ActionResult("Destination paths are wrong.");
+		}
+		//Check that all filenames are different
+		ArrayList<String> groupedFilenames = group(filenames, "toString");  //NOI18N
+		if(groupedFilenames.contains("") || groupedFilenames.size()!=filenames.size()) {
+			return new ActionResult("Destination filenames are wrong.");
+		}			
+		//Do move
+		progressBar.setup(myList.size());
+		for (FileInfoInt fileInfo : myList) {
+			originalFile = new File(FilenameUtils.concat(
+					ProcessCheck.getRootLocation().getValue(), 
+					fileInfo.getRelativeFullPath())); 
+			destinationRelativeFullPath = getDestination(fileInfo, useMask);
+			destinationFile = new File(FilenameUtils.concat(
+					destination, 
+					destinationRelativeFullPath));
+			if(!FilenameUtils.equalsNormalizedOnSystem(
+					destinationFile.getAbsolutePath(), 
+					originalFile.getAbsolutePath())) {
+				if(FileSystem.moveFile(originalFile, destinationFile)) {
+					fileInfo.setRootPath(destination);
+					fileInfo.setPath(destinationRelativeFullPath);
+				}
 			}
-			progressBar.reset();
+			progressBar.progress(msg);
 		}
-		return doMove;
+		progressBar.reset();
+		return new ActionResult(true);
 	}
     
 	/**
@@ -1605,26 +1621,24 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @param progressBar
 	 * @return
 	 */
-	public boolean doAction(ProgressBar progressBar) {
-        if(!isActionDone) {
+	public ActionResult doAction(ProgressBar progressBar) {
+        if(!actionResult.isPerformed) {
             switch(action) {
                 case OK:
-					moveToLibrary(progressBar, CheckedFlag.OK, true);
+					actionResult = moveToLibrary(progressBar, CheckedFlag.OK);
                     break;
                 case WARNING:
 				case WARNING_LIBRARY:
-                    moveToLibrary(progressBar, CheckedFlag.OK_WARNING, true);
+                    actionResult = moveToLibrary(progressBar, CheckedFlag.OK_WARNING);
                     break;
                 case KO:
                     KO(progressBar);
                     break;
                 case KO_LIBRARY:
-					//FIXME Z CHECK Rename too, but need to insure that filename and path are valid
-					//=> Move to an "Issues" folder and replace bad tags by "Missing artist", "Empty album" ...
-                    moveToLibrary(progressBar, CheckedFlag.KO, true);
+                    actionResult = moveToLibrary(progressBar, CheckedFlag.KO);
                     break;
                 case MANUAL:
-                    isActionDone = Manual(progressBar);
+                    actionResult = new ActionResult(Manual(progressBar));
                     break;
                 case DEL:
                     delete(progressBar);
@@ -1636,10 +1650,7 @@ public class FolderInfo implements java.lang.Comparable {
     //                case SEARCHING:
     //                    Nothing
             }
-            if(action!=Action.MANUAL) {
-                isActionDone=true;
-            }
-            if(isActionDone) {
+            if(actionResult.isPerformed) {
                 //Deleting potentially huge items, to prevent memory issues
                 coversInternet=null;
                 coversTag=null;
@@ -1656,7 +1667,7 @@ public class FolderInfo implements java.lang.Comparable {
 //                results=null; //Used in toString, cannot remove
             }
         }
-        return isActionDone;
+        return actionResult;
     }
 
 	/**
@@ -1676,9 +1687,6 @@ public class FolderInfo implements java.lang.Comparable {
 			destinationFile = new File(FilenameUtils.concat(
 					destination, destinationReplaced)); 
 			if (destinationFile.exists()) {
-                Popup.warning(MessageFormat.format(
-						Inter.get("Error.DestinationExist"), 
-						destinationFile.toString()));  //NOI18N
 				return false;
 			}
 			progressBar.progress(Inter.get("Msg.Check.CheckingDestinationFiles"));  //NOI18N
@@ -1806,6 +1814,9 @@ public class FolderInfo implements java.lang.Comparable {
         builder.append("<html><b>");
         builder.append(relativePath);
         builder.append("</b><BR/> | ");
+		if(!actionResult.isPerformed && !actionResult.status.equals("")) {
+			builder.append(actionResult.status).append("<BR/>");
+		}
         for (Map.Entry<String, FolderInfoResult> entry : results.entrySet()) {
             if(entry.getValue().errorLevel>0) {
                 result=entry.getKey();
