@@ -857,11 +857,11 @@ public class ProcessCheck {
                             || (folderInfo.action.equals(Action.WARNING) && !doWarning)
                             || (folderInfo.action.equals(Action.MANUAL) && !doManual)    )) {
                          
-                        if(folderInfo.doAction(PanelCheck.progressActionsDequeue)) {                           
+                        if(folderInfo.doAction(PanelCheck.progressActionsDequeue).isPerformed) {                           
                             enableRowSorter(PanelCheck.tableModelActionQueue.getRowCount()>1);
                             PanelCheck.tableModelActionQueue.removeRow(folderInfo);
                             PanelCheck.tableModelActionQueue.fireTableDataChanged();
-                        }
+                        } 
                     }
                 displayActionQueue();
            }
