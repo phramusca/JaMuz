@@ -1431,43 +1431,35 @@ public class FolderInfo implements java.lang.Comparable {
 						getOptionValue("library.isMaster").equals("true")); //NOI18N
     }
     
-    /**
-	 * Insert folder in database with given checkeFlag
+	private boolean isSingles() {
+		//FIXME Z CHECK Manage "Various Artists" and "Various Albums" better:
+		// - Inter ?
+		// - static field ...
+		String albumArtist = getResultField("albumArtist");
+		String album = getResultField("album");
+		return albumArtist.equals("Various Artists") && album.equals("Various Albums");
+	}
+
+	private boolean isDestinationLibrary() {
+		return FilenameUtils.equalsNormalizedOnSystem(
+						ProcessCheck.getDestinationLocation().getValue(), 
+						Jamuz.getMachine().getOptionValue("location.library"));
+	}
+	
+	/**
+	 * Move files to library folder and
+	 * Insert folder in database with given checkedFlag
 	 */
 	private ActionResult moveToLibrary(
 			ProgressBar progressBar, 
 			CheckedFlag checkedFlag) {
         
-        boolean updateDatabase=false;
-        boolean checkDestination=true;
-        if(isCheckingMasterLibrary()) {
-            updateDatabase=true;
-        }
-        else {
-            if(FilenameUtils.equalsNormalizedOnSystem(
-						ProcessCheck.getDestinationLocation().getValue(), 
-						Jamuz.getMachine().getOptionValue("location.library"))
-					&& Jamuz.getMachine().getOptionValue("library.isMaster")
-							.equals("true")) {  //NOI18N
-                updateDatabase=true;
-            }
-            
-			//FIXME !!!! Manage this better => make a isSingles flag
-			String albumArtist = getResultField("albumArtist");
-			String album = getResultField("album");
-			boolean isSingles = albumArtist.equals("Various Artists") && album.equals("Various Albums");
-			
-			checkDestination=!isSingles;
-        }
-		ActionResult actionResult = moveList(filesAudio, true, 
-				MessageFormat.format(
+		ActionResult result = moveList(filesAudio, ProcessCheck.getDestinationLocation().getValue(), true, 
+				progressBar, MessageFormat.format(
 						Inter.get("Msg.Check.MovingToOK"),
-						ProcessCheck.getDestinationLocation().getValue()),
-				ProcessCheck.getDestinationLocation().getValue(),
-				checkDestination,
-				progressBar); //NOI18N
+						ProcessCheck.getDestinationLocation().getValue())); //NOI18N
 
-        if(updateDatabase && actionResult.isPerformed) {
+        if(result.isPerformed && isDestinationLibrary()) {
 			//Change folder path
 			//TODO: Find a better way (using getDestination on path only)
 			String rootPathOri = getRootPath();
@@ -1517,7 +1509,7 @@ public class FolderInfo implements java.lang.Comparable {
 			setPath(rootPathOri, relativePathOri);
 			progressBar.reset();
         }
-		return actionResult;
+		return result;
 	}
     
 	private void KO(ProgressBar progressBar) {
@@ -1525,13 +1517,10 @@ public class FolderInfo implements java.lang.Comparable {
             Jamuz.getDb().setCheckedFlag(idPath, FolderInfo.CheckedFlag.KO);
         }
         else {
-            moveList(getAllFiles(), 
-					false, 
-					MessageFormat.format(
+            moveList(getAllFiles(), ProcessCheck.getKoLocation().getValue(), false, 
+					progressBar, MessageFormat.format(
 						Inter.get("Msg.Check.MovingToKO"), 
-						ProcessCheck.getKoLocation().getValue()), 
-					ProcessCheck.getKoLocation().getValue(), 
-					true, progressBar);	  //NOI18N
+						ProcessCheck.getKoLocation().getValue()));	  //NOI18N
         }
 	}
     
@@ -1541,13 +1530,10 @@ public class FolderInfo implements java.lang.Comparable {
             return false;
         }
         else {
-            moveList(getAllFiles(), 
-					false, 
-					MessageFormat.format(
+            moveList(getAllFiles(), ProcessCheck.getManualLocation().getValue(), false, 
+					progressBar, MessageFormat.format(
 						Inter.get("Msg.Check.MovingToManual"), 
-						ProcessCheck.getManualLocation().getValue()), 
-					ProcessCheck.getManualLocation().getValue(), 
-					true, progressBar);	  //NOI18N
+						ProcessCheck.getManualLocation().getValue()));	  //NOI18N
             return true;
         }
 	}
@@ -1562,30 +1548,46 @@ public class FolderInfo implements java.lang.Comparable {
 	
     private ActionResult moveList(
 			List<? extends FileInfoInt> myList, 
+			String destinationRoot, 
 			boolean useMask, 
-			String msg, 
-			String destination, 
-			boolean checkDestination, 
-			ProgressBar progressBar) {
+			ProgressBar progressBar,
+			String msgProgressBar) {
 		File originalFile;
 		String destinationRelativeFullPath;
 		File destinationFile;
-		
-		if(checkDestination && !checkDestination(myList, useMask, destination, progressBar)) {
-			return new ActionResult(Inter.get("Error.DestinationExist"));
-		}
-		//Get destination paths and filenames
+			
+		//Check destination paths and filenames
 		List<String> paths = new ArrayList<>();
 		List<String> filenames = new ArrayList<>();
 		for (FileInfoInt fileInfo : myList) {
 			destinationRelativeFullPath = getDestination(fileInfo, useMask);
 			paths.add(FilenameUtils.getPath(destinationRelativeFullPath));
 			filenames.add(FilenameUtils.getName(destinationRelativeFullPath));
+			
+			destinationFile = new File(FilenameUtils.concat(
+					destinationRoot, 
+					destinationRelativeFullPath));
+			originalFile = new File(FilenameUtils.concat(
+					ProcessCheck.getRootLocation().getValue(), 
+					fileInfo.getRelativeFullPath())); 
+			if (!isSingles() 
+					&& !FilenameUtils.equalsNormalizedOnSystem(
+						originalFile.getAbsolutePath(), 
+						destinationFile.getAbsolutePath())
+					&& destinationFile.exists()) {
+				return new ActionResult(Inter.get("Error.DestinationExist"));
+			}
 		}
+		
 		//Check there is only one destination relative path (and not empty)
 		ArrayList<String> groupedPaths = group(paths, "toString");  //NOI18N
 		if(groupedPaths.contains("") || groupedPaths.size()!=1) {
 			return new ActionResult("Destination paths are wrong.");
+		}
+		if(!isCheckingMasterLibrary() && new File(FilenameUtils.concat(
+					destinationRoot, 
+					groupedPaths.get(0))).exists()) {
+			return new ActionResult("Destination path already exists.");
 		}
 		//Check that all filenames are different
 		ArrayList<String> groupedFilenames = group(filenames, "toString");  //NOI18N
@@ -1594,23 +1596,23 @@ public class FolderInfo implements java.lang.Comparable {
 		}			
 		//Do move
 		progressBar.setup(myList.size());
-		for (FileInfoInt fileInfo : myList) {
+		for(FileInfoInt fileInfo : myList) {
 			originalFile = new File(FilenameUtils.concat(
 					ProcessCheck.getRootLocation().getValue(), 
 					fileInfo.getRelativeFullPath())); 
 			destinationRelativeFullPath = getDestination(fileInfo, useMask);
 			destinationFile = new File(FilenameUtils.concat(
-					destination, 
+					destinationRoot, 
 					destinationRelativeFullPath));
 			if(!FilenameUtils.equalsNormalizedOnSystem(
-					destinationFile.getAbsolutePath(), 
-					originalFile.getAbsolutePath())) {
+					originalFile.getAbsolutePath(), 
+					destinationFile.getAbsolutePath())) {
 				if(FileSystem.moveFile(originalFile, destinationFile)) {
-					fileInfo.setRootPath(destination);
+					fileInfo.setRootPath(destinationRoot);
 					fileInfo.setPath(destinationRelativeFullPath);
 				}
 			}
-			progressBar.progress(msg);
+			progressBar.progress(msgProgressBar);
 		}
 		progressBar.reset();
 		return new ActionResult(true);
@@ -1642,10 +1644,12 @@ public class FolderInfo implements java.lang.Comparable {
                     break;
                 case DEL:
                     delete(progressBar);
+					actionResult = new ActionResult(true);
                     break;
                 case SAVE:
                     //TODO: Add an option for "delete comment ?"
                     save(true, progressBar);
+					actionResult = new ActionResult(true);
                     break;
     //                case SEARCHING:
     //                    Nothing
@@ -1677,22 +1681,6 @@ public class FolderInfo implements java.lang.Comparable {
 	public void setIsReplayGainDone(boolean isReplayGainDone) {
         this.isReplayGainDone = isReplayGainDone;
     }
-    
-    private boolean checkDestination(List<? extends FileInfoInt> myList, 
-			boolean useMask, String destination, ProgressBar progressBar) {
-		File destinationFile;
-		progressBar.setup(myList.size());
-		for (FileInfoInt myFileInfo : myList) {
-			String destinationReplaced = getDestination(myFileInfo, useMask);
-			destinationFile = new File(FilenameUtils.concat(
-					destination, destinationReplaced)); 
-			if (destinationFile.exists()) {
-				return false;
-			}
-			progressBar.progress(Inter.get("Msg.Check.CheckingDestinationFiles"));  //NOI18N
-		}
-		return true;
-	}
     
 	private String getResultField(String field) {
 		return results.get(field).value.equals("")?"{Empty}":results.get(field).value;
