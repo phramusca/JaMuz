@@ -82,7 +82,10 @@ public class StringManager {
 	 * @return
 	 */
 	public static String secondsToMMSS(int seconds) {
-        return String.format("%02d:%02d", //NOI18N
+        if (seconds < 0) {
+            return "--:--";
+        }
+		return String.format("%02d:%02d", //NOI18N
                 TimeUnit.SECONDS.toMinutes(seconds),
                 TimeUnit.SECONDS.toSeconds(seconds) - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(seconds))
         );
@@ -94,6 +97,9 @@ public class StringManager {
 	 * @return
 	 */
 	public static String secondsToHHMM(int seconds) {
+		if (seconds < 0) {
+            return "--:--";
+        }
         return String.format("%02d h %02d", //NOI18N
                 TimeUnit.SECONDS.toHours(seconds),
                 TimeUnit.SECONDS.toMinutes(seconds) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(seconds))
@@ -141,24 +147,13 @@ public class StringManager {
 //            sb.append("ms");
 //        }
 
-        return sb.toString();
+        return sb.toString().trim();
     }
     
 	public static List<String> parseSlashList(String string) {
         return Arrays.asList(string.split(" / ")); //NOI18N
     }
     
-    //	public static String humanReadableMilliSeconds(long millis)
-//    {
-//        long hours = TimeUnit.MILLISECONDS.toHours(millis);
-//        millis -= TimeUnit.HOURS.toMillis(hours);
-//        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
-//        millis -= TimeUnit.MINUTES.toMillis(minutes);
-//        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
-//
-//        return String.format("%02dh %02dm %02ds", hours, minutes, seconds);
-//    }
-	
 	/**
 	 * Return left portion of a string
 	 * @param text
@@ -179,28 +174,5 @@ public class StringManager {
 	public static String Right(String text, int length)
     {
         return text.substring(text.length() - length, text.length());
-    }
-
-    /**
-	 * Return portion of a string
-	 * @param text
-	 * @param start
-	 * @param end
-	 * @return
-	 */
-	public static String Mid(String text, int start, int end)
-    {
-        return text.substring(start, end);
-    }
-
-    /**
-	 * Return portion of a string
-	 * @param text
-	 * @param start
-	 * @return
-	 */
-	public static String Mid(String text, int start)
-    {
-        return text.substring(start, text.length() - start);
     }
 }
