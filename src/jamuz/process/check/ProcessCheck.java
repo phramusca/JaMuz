@@ -270,8 +270,6 @@ public class ProcessCheck {
             long meanTmp = (Benchmark.mean(this.partialTimesScan)/1000);
             long meanEllpsedSeconds = meanTmp<= 0?1:meanTmp;
             String mean = StringManager.humanReadableSeconds(meanEllpsedSeconds);
-            //TODO:  Combien de threads va le plus vite => faire stats
-            //Voir stats dans DoScan-Stats-Threading.ods => appliquer nouveau calcul: utiliser un Benchmark global to replace all but mean in below display
             benchScan.setSize(nbScanned+scanQueue.size());
             msgScan="("+nbScanned+ " x " + mean + "). " + benchScan.get();
         }
@@ -285,22 +283,15 @@ public class ProcessCheck {
         if(analysisQueue.size()>PanelCheck.progressBarAnalysisSize.getMaximum()) {
             PanelCheck.progressBarAnalysisSize.setMaximum(analysisQueue.size());
         }
-//        String msg="";
         if(ellapsedTime>0) {
             this.partialTimesAnalysis.add(ellapsedTime);
             int nbAnalyzed = partialTimesAnalysis.size();
             long meanTmp = (Benchmark.mean(this.partialTimesAnalysis)/1000);
             long meanEllpsedSeconds = meanTmp<= 0?1:meanTmp;
             String mean = StringManager.humanReadableSeconds(meanEllpsedSeconds);
-            //TODO:  Combien de threads va le plus vite => faire stats
-            //Voir stats dans DoScan-Stats-Threading.ods => appliquer nouveau calcul: utiliser un Benchmark global to replace all but mean in below display
             benchAnalysis.setSize(nbAnalyzed+analysisQueue.size());
             msgAnalysis="("+nbAnalyzed+ " x " + mean + "). " + benchAnalysis.get();
-//            PanelCheck.progressBarAnalysisSize.progress(msgAnalysis, analysisQueue.size());
         }
-//        else {
-//            PanelCheck.progressBarAnalysisSize.setValue(analysisQueue.size());
-//        }
          PanelCheck.progressBarAnalysisSize.progress(msgAnalysis, analysisQueue.size());
     }
     
