@@ -54,10 +54,9 @@ public class DesktopTest {
 	@Test
 	public void testOpenBrowser() {
 		System.out.println("openBrowser");
-		String url = "";
-		Desktop.openBrowser(url);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		String url = "https://phramusca.github.io/JaMuz/";
+//		Desktop.openBrowser(url);
+		//Cannot assert, only manual test
 	}
 
 	/**
@@ -66,10 +65,9 @@ public class DesktopTest {
 	@Test
 	public void testOpenFile() {
 		System.out.println("openFile");
-		String path = "";
-		Desktop.openFile(path);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		String path = "";
+//		Desktop.openFile(path);
+		//Cannot assert, only manual test
 	}
 
 	/**
@@ -78,10 +76,9 @@ public class DesktopTest {
 	@Test
 	public void testOpenFolder() {
 		System.out.println("openFolder");
-		String path = "";
-		Desktop.openFolder(path);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		String path = "";
+//		Desktop.openFolder(path);
+		//Cannot assert, only manual test
 	}
 	
 }

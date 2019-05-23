@@ -56,25 +56,30 @@ public class ClipboardTextTest {
 	@Test
 	public void testLostOwnership() {
 		System.out.println("lostOwnership");
-		Clipboard aClipboard = null;
-		Transferable aContents = null;
-		ClipboardText instance = new ClipboardText();
-		instance.lostOwnership(aClipboard, aContents);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Not used, no need to test
 	}
 
+	/**
+	 * Test of setClipboardContents AND getClipboardContents 
+	 * methods, of class ClipboardText.
+	 */
+	@Test
+	public void testClipboardContents() {
+		System.out.println("setClipboardContents");
+		String aString = "the beautiful text I'm sending, wouah !";
+		ClipboardText instance = new ClipboardText();
+		instance.setClipboardContents(aString);
+		String result = instance.getClipboardContents();
+		assertEquals(aString, result);
+	}
+	
 	/**
 	 * Test of setClipboardContents method, of class ClipboardText.
 	 */
 	@Test
 	public void testSetClipboardContents() {
 		System.out.println("setClipboardContents");
-		String aString = "";
-		ClipboardText instance = new ClipboardText();
-		instance.setClipboardContents(aString);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Refer to testClipboardContents() above
 	}
 
 	/**
@@ -83,12 +88,7 @@ public class ClipboardTextTest {
 	@Test
 	public void testGetClipboardContents() {
 		System.out.println("getClipboardContents");
-		ClipboardText instance = new ClipboardText();
-		String expResult = "";
-		String result = instance.getClipboardContents();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Refer to testClipboardContents() above
 	}
 	
 }
