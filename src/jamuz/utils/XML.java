@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class XML {
+	
 	public static Document open(String filename) {
 		try {
 			File file = new File(filename);
@@ -84,7 +85,5 @@ public class XML {
 	
 	public static String getAttribute(Element element, String attribute) {
 		return element.getAttribute(attribute);
-	}
-			
-	
+	}	
 }
