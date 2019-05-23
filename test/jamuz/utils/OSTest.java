@@ -21,7 +21,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -54,11 +53,10 @@ public class OSTest {
 	@Test
 	public void testIsWindows() {
 		System.out.println("isWindows");
-		boolean expResult = false;
-		boolean result = OS.isWindows();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		boolean expResult = false;
+//		boolean result = OS.isWindows();
+//		assertEquals(expResult, result);
+		//Cannot test. Manually validated
 	}
 
 	/**
@@ -67,11 +65,10 @@ public class OSTest {
 	@Test
 	public void testIsUnix() {
 		System.out.println("isUnix");
-		boolean expResult = false;
-		boolean result = OS.isUnix();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		boolean expResult = false;
+//		boolean result = OS.isUnix();
+//		assertEquals(expResult, result);
+		//Cannot test. Manually validated
 	}
 
 	/**
@@ -80,11 +77,10 @@ public class OSTest {
 	@Test
 	public void testDetect() {
 		System.out.println("detect");
-		boolean expResult = false;
-		boolean result = OS.detect();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		boolean expResult = false;
+//		boolean result = OS.detect();
+//		assertEquals(expResult, result);
+		//Cannot test. Manually validated
 	}
 
 	/**
@@ -92,12 +88,11 @@ public class OSTest {
 	 */
 	@Test
 	public void testGetName() {
-		System.out.println("getName");
-		String expResult = "";
-		String result = OS.getName();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		System.out.println("getName");
+//		String expResult = "";
+//		String result = OS.getName();
+//		assertEquals(expResult, result);
+		//Cannot test. Manually validated
 	}
 	
 }

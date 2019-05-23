@@ -54,11 +54,11 @@ public class LogTextTest {
 	@Test
 	public void testCreateFile() {
 		System.out.println("createFile");
-		String LogFileName = "";
-		LogText instance = null;
-		boolean expResult = false;
-		boolean result = instance.createFile(LogFileName);
-		assertEquals(expResult, result);
+//		String LogFileName = "";
+//		LogText instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.createFile(LogFileName);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -69,9 +69,9 @@ public class LogTextTest {
 	@Test
 	public void testAdd() {
 		System.out.println("add");
-		String str = "";
-		LogText instance = null;
-		instance.add(str);
+//		String str = "";
+//		LogText instance = null;
+//		instance.add(str);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -82,8 +82,8 @@ public class LogTextTest {
 	@Test
 	public void testClose() {
 		System.out.println("close");
-		LogText instance = null;
-		instance.close();
+//		LogText instance = null;
+//		instance.close();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

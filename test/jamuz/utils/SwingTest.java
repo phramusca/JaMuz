@@ -16,15 +16,11 @@
  */
 package jamuz.utils;
 
-import java.awt.Container;
-import java.util.List;
-import javax.swing.JTabbedPane;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -57,11 +53,10 @@ public class SwingTest {
 	@Test
 	public void testEnableComponents() {
 		System.out.println("enableComponents");
-		Container container = null;
-		boolean enable = false;
-		Swing.enableComponents(container, enable);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		Container container = null;
+//		boolean enable = false;
+//		Swing.enableComponents(container, enable);
+		//GUI. Cannot test => Manually validated
 	}
 
 	/**
@@ -70,13 +65,12 @@ public class SwingTest {
 	@Test
 	public void testSelectFolder() {
 		System.out.println("selectFolder");
-		String defaultFolder = "";
-		String title = "";
-		String expResult = "";
-		String result = Swing.selectFolder(defaultFolder, title);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		String defaultFolder = "";
+//		String title = "";
+//		String expResult = "";
+//		String result = Swing.selectFolder(defaultFolder, title);
+//		assertEquals(expResult, result);
+		//GUI. Cannot test => Manually validated
 	}
 
 	/**
@@ -85,11 +79,10 @@ public class SwingTest {
 	@Test
 	public void testSelectTab() {
 		System.out.println("selectTab");
-		JTabbedPane tabbedPane = null;
-		String title = "";
-		Swing.selectTab(tabbedPane, title);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		JTabbedPane tabbedPane = null;
+//		String title = "";
+//		Swing.selectTab(tabbedPane, title);
+		//GUI. Cannot test => Manually validated
 	}
 
 	/**
@@ -98,12 +91,11 @@ public class SwingTest {
 	@Test
 	public void testSelectFile_String() {
 		System.out.println("selectFile");
-		String defaultFile = "";
-		String expResult = "";
-		String result = Swing.selectFile(defaultFile);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		String defaultFile = "";
+//		String expResult = "";
+//		String result = Swing.selectFile(defaultFile);
+//		assertEquals(expResult, result);
+		//GUI. Cannot test => Manually validated
 	}
 
 	/**
@@ -112,14 +104,13 @@ public class SwingTest {
 	@Test
 	public void testSelectFile_3args_1() {
 		System.out.println("selectFile");
-		String defaultFile = "";
-		Swing.FileType fileType = null;
-		String title = "";
-		String expResult = "";
-		String result = Swing.selectFile(defaultFile, fileType, title);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		String defaultFile = "";
+//		Swing.FileType fileType = null;
+//		String title = "";
+//		String expResult = "";
+//		String result = Swing.selectFile(defaultFile, fileType, title);
+//		assertEquals(expResult, result);
+		//GUI. Cannot test => Manually validated
 	}
 
 	/**
@@ -128,14 +119,13 @@ public class SwingTest {
 	@Test
 	public void testSelectFile_3args_2() {
 		System.out.println("selectFile");
-		String defaultFile = "";
-		List<Swing.FileType> fileTypes = null;
-		String title = "";
-		String expResult = "";
-		String result = Swing.selectFile(defaultFile, fileTypes, title);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		String defaultFile = "";
+//		List<Swing.FileType> fileTypes = null;
+//		String title = "";
+//		String expResult = "";
+//		String result = Swing.selectFile(defaultFile, fileTypes, title);
+//		assertEquals(expResult, result);
+		//GUI. Cannot test => Manually validated
 	}
 	
 }

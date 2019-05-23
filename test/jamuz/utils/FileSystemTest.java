@@ -17,19 +17,24 @@
 package jamuz.utils;
 
 import java.io.File;
-import java.nio.file.Path;
+import java.io.IOException;
+import org.apache.commons.io.FilenameUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import test.helpers.Settings;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class FileSystemTest {
+	
+	File source;
+	File destination;
 	
 	public FileSystemTest() {
 	}
@@ -44,38 +49,70 @@ public class FileSystemTest {
 	
 	@Before
 	public void setUp() {
+		source = new File(FilenameUtils.concat(Settings.getRessourcesPath(), 
+				FilenameUtils.concat("audioFiles", "1min.mp3")));
+		
+		destination = new File(FilenameUtils.concat(Settings.getAppFolder(), 
+				FilenameUtils.concat("temp-should_Be_DeletTED_Damned", "1min (copie).mp3")));
 	}
 	
 	@After
 	public void tearDown() {
+		destination.delete();
+		destination.getParentFile().delete();
 	}
 
+	
+	//TODO: Add negative cases
 	/**
 	 * Test of moveFile method, of class FileSystem.
+	 * @throws java.io.IOException
 	 */
 	@Test
-	public void testMoveFile() {
+	public void testMoveFile() throws IOException {
 		System.out.println("moveFile");
-		File sourceFile = null;
-		File destFile = null;
-		boolean expResult = false;
-		boolean result = FileSystem.moveFile(sourceFile, destFile);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Given
+		File moveSource = new File(FilenameUtils.concat(Settings.getAppFolder(), "tempShouldBeDeleted.mp3"));
+		FileSystem.copyFile(source, moveSource);
+        assertTrue(moveSource.exists());
+		assertTrue(moveSource.length()==961029);
+		assertTrue(!destination.getParentFile().exists());
+		assertTrue(!destination.exists());
+		
+		//When
+        FileSystem.moveFile(moveSource, destination);
+		
+		//Then
+		assertTrue(source.exists());
+		assertTrue(source.length()==961029);
+		assertTrue(destination.exists());
+		assertTrue(destination.length()==961029);
+		assertTrue(!moveSource.exists());
 	}
 
+	//TODO: Add negative cases
 	/**
 	 * Test of copyFile method, of class FileSystem.
+	 * @throws java.lang.Exception
 	 */
 	@Test
 	public void testCopyFile() throws Exception {
 		System.out.println("copyFile");
-		File sourceFile = null;
-		File destFile = null;
-		FileSystem.copyFile(sourceFile, destFile);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+
+		//Given
+        assertTrue(source.exists());
+		assertTrue(source.length()==961029);
+		assertTrue(!destination.getParentFile().exists());
+		assertTrue(!destination.exists());
+				
+		//When
+        FileSystem.copyFile(source, destination);
+		
+		//Then
+		assertTrue(source.exists());
+		assertTrue(source.length()==961029);
+		assertTrue(destination.exists());
+		assertTrue(destination.length()==961029);
 	}
 
 	/**
@@ -84,12 +121,10 @@ public class FileSystemTest {
 	@Test
 	public void testReplaceHome_File() {
 		System.out.println("replaceHome");
-		File file = null;
-		File expResult = null;
+		File file = new File("~/toto/~tem/oh~/top.mp9");
 		File result = FileSystem.replaceHome(file);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		assertTrue(result.getAbsolutePath().endsWith("/toto/~tem/oh~/top.mp9"));
+		assertTrue(result.getAbsolutePath().startsWith("/home/"));
 	}
 
 	/**
@@ -98,12 +133,13 @@ public class FileSystemTest {
 	@Test
 	public void testReplaceHome_String() {
 		System.out.println("replaceHome");
-		String fileURL = "";
-		File expResult = null;
-		File result = FileSystem.replaceHome(fileURL);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		File result = FileSystem.replaceHome("~/toto/~tem/oh~/top.mp9");
+		assertTrue(result.getAbsolutePath().endsWith("/toto/~tem/oh~/top.mp9"));
+		assertTrue(result.getAbsolutePath().startsWith("/home/"));
+		
+		String filename = "/tmp/toto/~tem/oh~/top.mp9";
+		result = FileSystem.replaceHome(filename);
+		assertEquals(new File(filename), result);
 	}
 
 	/**
@@ -112,12 +148,9 @@ public class FileSystemTest {
 	@Test
 	public void testSize() {
 		System.out.println("size");
-		Path path = null;
-		long expResult = 0L;
-		long result = FileSystem.size(path);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		File file = new File(FilenameUtils.concat(Settings.getRessourcesPath(), "audioFiles"));
+		long result = FileSystem.size(file.toPath());
+		assertEquals(7011134, result);
 	}
 	
 }
