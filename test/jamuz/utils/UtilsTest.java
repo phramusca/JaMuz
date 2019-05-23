@@ -71,10 +71,10 @@ public class UtilsTest {
 	@Test
 	public void testGetInteger() {
 		System.out.println("getInteger");
-		String entry = "";
-		int expResult = 0;
-		int result = Utils.getInteger(entry);
-		assertEquals(expResult, result);
+//		String entry = "";
+//		int expResult = 0;
+//		int result = Utils.getInteger(entry);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -85,10 +85,10 @@ public class UtilsTest {
 	@Test
 	public void testGetFinalURL() throws Exception {
 		System.out.println("getFinalURL");
-		String url = "";
-		URL expResult = null;
-		URL result = Utils.getFinalURL(url);
-		assertEquals(expResult, result);
+//		String url = "";
+//		URL expResult = null;
+//		URL result = Utils.getFinalURL(url);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

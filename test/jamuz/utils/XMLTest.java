@@ -57,10 +57,10 @@ public class XMLTest {
 	@Test
 	public void testOpen() {
 		System.out.println("open");
-		String filename = "";
-		Document expResult = null;
-		Document result = XML.open(filename);
-		assertEquals(expResult, result);
+//		String filename = "";
+//		Document expResult = null;
+//		Document result = XML.open(filename);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -71,12 +71,12 @@ public class XMLTest {
 	@Test
 	public void testGetNodeValue() {
 		System.out.println("getNodeValue");
-		Document doc = null;
-		String TagNameLev1 = "";
-		String TagNameLev2 = "";
-		String expResult = "";
-		String result = XML.getNodeValue(doc, TagNameLev1, TagNameLev2);
-		assertEquals(expResult, result);
+//		Document doc = null;
+//		String TagNameLev1 = "";
+//		String TagNameLev2 = "";
+//		String expResult = "";
+//		String result = XML.getNodeValue(doc, TagNameLev1, TagNameLev2);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -87,11 +87,11 @@ public class XMLTest {
 	@Test
 	public void testGetElements() {
 		System.out.println("getElements");
-		Document doc = null;
-		String tagName = "";
-		ArrayList<Element> expResult = null;
-		ArrayList<Element> result = XML.getElements(doc, tagName);
-		assertEquals(expResult, result);
+//		Document doc = null;
+//		String tagName = "";
+//		ArrayList<Element> expResult = null;
+//		ArrayList<Element> result = XML.getElements(doc, tagName);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -102,11 +102,11 @@ public class XMLTest {
 	@Test
 	public void testGetElement() {
 		System.out.println("getElement");
-		Element element = null;
-		String tagName = "";
-		Element expResult = null;
-		Element result = XML.getElement(element, tagName);
-		assertEquals(expResult, result);
+//		Element element = null;
+//		String tagName = "";
+//		Element expResult = null;
+//		Element result = XML.getElement(element, tagName);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -117,10 +117,10 @@ public class XMLTest {
 	@Test
 	public void testGetElementValue() {
 		System.out.println("getElementValue");
-		Element element = null;
-		String expResult = "";
-		String result = XML.getElementValue(element);
-		assertEquals(expResult, result);
+//		Element element = null;
+//		String expResult = "";
+//		String result = XML.getElementValue(element);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -131,11 +131,11 @@ public class XMLTest {
 	@Test
 	public void testGetAttribute() {
 		System.out.println("getAttribute");
-		Element element = null;
-		String attribute = "";
-		String expResult = "";
-		String result = XML.getAttribute(element, attribute);
-		assertEquals(expResult, result);
+//		Element element = null;
+//		String attribute = "";
+//		String expResult = "";
+//		String result = XML.getAttribute(element, attribute);
+//		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

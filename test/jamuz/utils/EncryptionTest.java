@@ -52,15 +52,22 @@ public class EncryptionTest {
 	 * Test of encrypt method, of class Encryption.
 	 */
 	@Test
+	public void testEncryptDecrypt() {
+		System.out.println("encrypt & decrypt");
+		String Data = "Oh the beautifull message I want to encrypt";
+		String secret = "Shush, don't tell my secret to anyone";
+		String encryptedData = Encryption.encrypt(Data, secret);
+		String result = Encryption.decrypt(encryptedData, secret);
+		assertEquals(Data, result);
+	}
+	
+	/**
+	 * Test of encrypt method, of class Encryption.
+	 */
+	@Test
 	public void testEncrypt() {
 		System.out.println("encrypt");
-		String Data = "";
-		String secret = "";
-		String expResult = "";
-		String result = Encryption.encrypt(Data, secret);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Refer to testEncryptDecrypt() above
 	}
 
 	/**
@@ -69,13 +76,7 @@ public class EncryptionTest {
 	@Test
 	public void testDecrypt() {
 		System.out.println("decrypt");
-		String encryptedData = "";
-		String secret = "";
-		String expResult = "";
-		String result = Encryption.decrypt(encryptedData, secret);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Refer to testEncryptDecrypt() above
 	}
 	
 }

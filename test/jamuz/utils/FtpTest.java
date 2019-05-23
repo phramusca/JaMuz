@@ -16,7 +16,6 @@
  */
 package jamuz.utils;
 
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -55,10 +54,7 @@ public class FtpTest {
 	@Test
 	public void testSetLogger() {
 		System.out.println("setLogger");
-		Logger logger = null;
-		Ftp.setLogger(logger);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Nothing to test here
 	}
 
 	/**
@@ -67,12 +63,11 @@ public class FtpTest {
 	@Test
 	public void testGetFile() {
 		System.out.println("getFile");
-		Ftp instance = null;
-		boolean expResult = false;
-		boolean result = instance.getFile();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		Ftp instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.getFile();
+//		assertEquals(expResult, result);
+		//No ftp server for test. Not used much and simply a wrapper, manually tested
 	}
 
 	/**
@@ -81,12 +76,11 @@ public class FtpTest {
 	@Test
 	public void testSendFile() {
 		System.out.println("sendFile");
-		Ftp instance = null;
-		boolean expResult = false;
-		boolean result = instance.sendFile();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+//		Ftp instance = null;
+//		boolean expResult = false;
+//		boolean result = instance.sendFile();
+//		assertEquals(expResult, result);
+		//No ftp server for test. Not used much and simply a wrapper, manually tested
 	}
 	
 }

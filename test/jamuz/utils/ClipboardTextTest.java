@@ -16,8 +16,6 @@
  */
 package jamuz.utils;
 
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.Transferable;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

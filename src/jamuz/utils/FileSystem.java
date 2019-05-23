@@ -82,7 +82,7 @@ public class FileSystem {
 	public static File replaceHome(String fileURL) {
 		//Replacing ~ by real home path, ONLY IF AT START !
 		if(fileURL.startsWith("~")) {  //NOI18N
-			fileURL=fileURL.replace("~", System.getProperty("user.home"));  //NOI18N
+			fileURL=System.getProperty("user.home").concat(fileURL.substring(1));  //NOI18N
 		}
 		return new File(fileURL);
 	}
