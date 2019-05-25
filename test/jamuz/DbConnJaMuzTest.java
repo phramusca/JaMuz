@@ -36,6 +36,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import test.helpers.Settings;
 
 /**
  *
@@ -43,11 +44,17 @@ import static org.junit.Assert.*;
  */
 public class DbConnJaMuzTest {
 	
+	// <editor-fold defaultstate="collapsed" desc="Setup">
+	
 	public DbConnJaMuzTest() {
 	}
 	
 	@BeforeClass
-	public static void setUpClass() {
+	public static void setUpClass() throws Exception {
+		Settings.setupApplication();
+
+		//Read created options
+        Jamuz.getMachine().read();
 	}
 	
 	@AfterClass
@@ -68,20 +75,23 @@ public class DbConnJaMuzTest {
 	@Test
 	public void testSetUp() {
 		System.out.println("setUp");
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.setUp();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//We would quickly know if this would not work. Not tested
 	}
 
+	// </editor-fold>
+	
+	// <editor-fold defaultstate="collapsed" desc="Genre">
+	
 	/**
 	 * Test of updateGenre method, of class DbConnJaMuz.
 	 */
 	@Test
 	public void testUpdateGenre_String_String() {
 		System.out.println("updateGenre");
+		
+		Jamuz.getDb().updateGenre("Reggae", "Toto");
+		
+		
 		String oldGenre = "";
 		String newGenre = "";
 		DbConnJaMuz instance = null;
@@ -92,6 +102,97 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 * Test of deleteGenre method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testDeleteGenre() {
+		System.out.println("deleteGenre");
+		String genre = "";
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.deleteGenre(genre);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+
+	/**
+	 * Test of insertGenre method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testInsertGenre() {
+		System.out.println("insertGenre");
+		String genre = "";
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.insertGenre(genre);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+/**
+	 * Test of checkGenre method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testCheckGenre() {
+		System.out.println("checkGenre");
+		String genre = "";
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.checkGenre(genre);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+
+	/**
+	 * Test of getGenreList method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testGetGenreList() {
+		System.out.println("getGenreList");
+		ArrayList<String> myList = null;
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.getGenreList(myList);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+	
+	/**
+	 * Test of updateGenre method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testUpdateGenre_FileInfoInt() {
+		System.out.println("updateGenre");
+		FileInfoInt fileInfo = null;
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.updateGenre(fileInfo);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+
+	/**
+	 * Test of getGenreListModel method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testGetGenreListModel() {
+		System.out.println("getGenreListModel");
+		DefaultListModel myListModel = null;
+		DbConnJaMuz instance = null;
+		instance.getGenreListModel(myListModel);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+	
+	// </editor-fold>
+	
+	// <editor-fold defaultstate="collapsed" desc="Others TODO FIXME">
+	
 	/**
 	 * Test of updateTag method, of class DbConnJaMuz.
 	 */
@@ -139,36 +240,7 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
-	/**
-	 * Test of deleteGenre method, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testDeleteGenre() {
-		System.out.println("deleteGenre");
-		String genre = "";
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.deleteGenre(genre);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of insertGenre method, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testInsertGenre() {
-		System.out.println("insertGenre");
-		String genre = "";
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.insertGenre(genre);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
+	
 	/**
 	 * Test of insertTag method, of class DbConnJaMuz.
 	 */
@@ -245,36 +317,7 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
-	/**
-	 * Test of checkGenre method, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testCheckGenre() {
-		System.out.println("checkGenre");
-		String genre = "";
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.checkGenre(genre);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of getGenreList method, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testGetGenreList() {
-		System.out.println("getGenreList");
-		ArrayList<String> myList = null;
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.getGenreList(myList);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
+	
 	/**
 	 * Test of insertPath method, of class DbConnJaMuz.
 	 */
@@ -437,21 +480,7 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
-	/**
-	 * Test of updateGenre method, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testUpdateGenre_FileInfoInt() {
-		System.out.println("updateGenre");
-		FileInfoInt fileInfo = null;
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.updateGenre(fileInfo);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
+	
 	/**
 	 * Test of updateRating method, of class DbConnJaMuz.
 	 */
@@ -879,18 +908,7 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
-	/**
-	 * Test of getGenreListModel method, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testGetGenreListModel() {
-		System.out.println("getGenreListModel");
-		DefaultListModel myListModel = null;
-		DbConnJaMuz instance = null;
-		instance.getGenreListModel(myListModel);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
+	
 
 	/**
 	 * Test of getTagListModel method, of class DbConnJaMuz.
@@ -1257,6 +1275,7 @@ public class DbConnJaMuzTest {
 
 	/**
 	 * Test of setUpdateStatisticsParameters method, of class DbConnJaMuz.
+	 * @throws java.lang.Exception
 	 */
 	@Test
 	public void testSetUpdateStatisticsParameters() throws Exception {
@@ -1409,5 +1428,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
+// </editor-fold>
 	
 }
