@@ -1,6 +1,6 @@
 CREATE TABLE "device" (
     "idDevice" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
     "source" TEXT NOT NULL,
     "destination" TEXT NOT NULL,
     "idPlaylist" INTEGER,
@@ -10,7 +10,7 @@ CREATE TABLE "device" (
 );
 CREATE TABLE "genre" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "value" TEXT NOT NULL
+    "value" TEXT NOT NULL UNIQUE
 );
 CREATE TABLE "optionType" (
     "idOptionType" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE "statSource" (
 );
 CREATE TABLE "path" (
     "idPath" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "strPath" TEXT NOT NULL,
+    "strPath" TEXT NOT NULL UNIQUE,
     "modifDate" TEXT NOT NULL,
     "deleted" INTEGER NOT NULL DEFAULT (0),
     "checked" INTEGER NOT NULL DEFAULT (0),
@@ -81,7 +81,7 @@ CREATE TABLE "path" (
 );
 CREATE TABLE "tag" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "value" TEXT NOT NULL
+    "value" TEXT NOT NULL UNIQUE
 );
 CREATE TABLE "tagfile" (
     "idFile" INTEGER NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE "tagfile" (
 );
 CREATE TABLE "playlist" (
     "idPlaylist" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
     "limitDo" INTEGER NOT NULL,
     "limitValue" INTEGER NOT NULL,
     "limitUnit" TEXT NOT NULL,
@@ -137,19 +137,18 @@ CREATE TABLE "file" (
 );
 CREATE TABLE "client" (
     "idClient" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
-    "login" TEXT NOT NULL,
+    "login" TEXT NOT NULL UNIQUE,
      "pwd" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "idDevice" INTEGER,
     "idStatSource" INTEGER,
     "enabled" BOOL,
-    CONSTRAINT name_unique UNIQUE ('login'),
     FOREIGN KEY(idStatSource) REFERENCES statSource(idStatSource) ON DELETE CASCADE,
     FOREIGN KEY(idDevice) REFERENCES device(idDevice) ON DELETE CASCADE
 );
 CREATE TABLE machine (
     "idMachine" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" TEXT NOT NULL UNIQUE,
     "description" TEXT,
     "hidden" INTEGER NOT NULL
 );
