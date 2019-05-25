@@ -20,7 +20,6 @@ package jamuz.process.check;
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
 import jamuz.gui.PanelMain;
-import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +46,14 @@ import javax.swing.JPanel;
  */
 public class PanelCheck extends javax.swing.JPanel {
 
+	//TODO CHECK Add a "Singles" button:
+	// - Set albumArtist and album to "Various Artstists"/"Various Albums"
+	// - Keep individual covers
+	// - Delete files with bad format, bitrate, size or length or any other issue
+	// - Set track# and disc# to -1/-1
+	// - Automagically set artist/title and/or keep path info somehow (in comments?)
+	// - MAY NEED to add a "Singles" boolean in FolderInfo to address specific behaviors
+	
     private static ProcessCheck processCheck;
 
     /**
@@ -171,10 +178,6 @@ public class PanelCheck extends javax.swing.JPanel {
 				(int) jSpinnerCheckAnalysisNbThreads.getValue(), 
 				progressBarListAnalysisDequeue, 80, true);
     }
-    
-//    private static void setThreadPanel(JPanel panel, int nbThread, List<ProgressBar> progressBarList) {
-//        setThreadPanel(panel, nbThread, progressBarList, 42, false);
-//    }
     
     private static void setThreadPanel(JPanel panel, int nbThread, List<ProgressBar> progressBarList, int progressBarWidth, boolean setStringPainted) {
         Dimension dim = new Dimension(progressBarWidth, 21);
@@ -608,14 +611,11 @@ public class PanelCheck extends javax.swing.JPanel {
     }
     
     private void jButtonCheckNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckNewActionPerformed
-//        jButton1.setFont(jButton1.getFont().deriveFont(Font.BOLD));
-        //TODO: Better derive ? Can it be for size ?
         jButtonCheckNew.setFont(new Font(jButtonCheckNew.getFont().getName(), Font.BOLD, 16));
         startProcess(true, CheckType.CHECK_NEW, -1);
     }//GEN-LAST:event_jButtonCheckNewActionPerformed
 
     private void jButtonCheckLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckLibraryActionPerformed
-//        jButton2.setFont(jButton2.getFont().deriveFont(Font.BOLD));
         jButtonCheckLibrary.setFont(new Font(jButtonCheckLibrary.getFont().getName(), Font.BOLD, 16));
         startProcess(true, CheckType.CHECK_DB, -1);
         jCheckBoxCheckManual.setEnabled(false);
@@ -623,13 +623,11 @@ public class PanelCheck extends javax.swing.JPanel {
 
     private void jButtonScanLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanLibraryActionPerformed
         CheckType checkedType=(jCheckBoxCheckFull.isSelected()?CheckType.SCAN_FULL:CheckType.SCAN_QUICK);
-//        jButton3.setFont(jButton3.getFont().deriveFont(Font.BOLD));
         jButtonScanLibrary.setFont(new Font(jButtonScanLibrary.getFont().getName(), Font.BOLD, 16));
         startProcess(false, checkedType, -1);  
     }//GEN-LAST:event_jButtonScanLibraryActionPerformed
 
     private void jButtonScanDeletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanDeletedActionPerformed
-//        jButton3.setFont(jButton3.getFont().deriveFont(Font.BOLD));
         jButtonScanDeleted.setFont(new Font(jButtonScanDeleted.getFont().getName(), Font.BOLD, 16));
         startProcess(false, CheckType.SCAN_DELETED, -1);  
     }//GEN-LAST:event_jButtonScanDeletedActionPerformed
@@ -691,11 +689,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jButtonScanLibrary.setEnabled(isMaster);
         jButtonScanDeleted.setEnabled(isMaster);
 	}
-    
-//    private static String boldHTML(String inStr) {
-//		return "<html><b>"+inStr+"</b></html>";  //NOI18N
-//	}
-    
+
     /**
 	 * Enable check
 	 * @param enable
@@ -708,10 +702,6 @@ public class PanelCheck extends javax.swing.JPanel {
             jPanelAnalysisMain.setVisible(true);
             jPanelActionsMain.setVisible(true);
             
-            
-//            jButton1.setFont(jButton1.getFont().deriveFont(Font.PLAIN));
-//            jButton2.setFont(jButton2.getFont().deriveFont(Font.PLAIN));
-//            jButton3.setFont(jButton3.getFont().deriveFont(Font.PLAIN));
             jButtonCheckNew.setFont(new Font(jButtonCheckNew.getFont().getName(), Font.PLAIN, 12));
             jButtonCheckLibrary.setFont(new Font(jButtonCheckLibrary.getFont().getName(), Font.PLAIN, 12));
             jButtonScanLibrary.setFont(new Font(jButtonScanLibrary.getFont().getName(), Font.PLAIN, 12));

@@ -18,11 +18,9 @@
 package jamuz.process.book;
 
 import jamuz.Jamuz;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
+import jamuz.utils.ImageUtils;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import jamuz.utils.Popup;
@@ -58,7 +56,7 @@ public class IconBufferBook {
     public static ImageIcon getCoverIcon(String key, String file, boolean readIfNotFound) {
         ImageIcon icon=readIconFromCache(key);
 		if(icon==null && readIfNotFound) {
-			icon = readIcon(key, file);
+			icon = ImageUtils.readIconFromFile(file, ICON_HEIGHT, getCacheFile(key));
         }
         return icon;
 	}
@@ -79,29 +77,5 @@ public class IconBufferBook {
     
     private static File getCacheFile(String key) {
         return Jamuz.getFile(StringManager.removeIllegal(key)+".png", "data", "cache", "book");
-    }
-
-    private static ImageIcon readIcon(String key, String file) {
-        ImageIcon icon=null;
-        try {
-			File iconFile = new File(file);
-			if(!iconFile.exists()) {
-                return icon;
-            }
-			
-			BufferedImage myImage = ImageIO.read(iconFile);
-            icon = new ImageIcon(((new ImageIcon(myImage).getImage()).getScaledInstance(-1, IconBufferBook.ICON_HEIGHT, java.awt.Image.SCALE_SMOOTH)));
-            
-            //Write to cache
-            BufferedImage bi = new BufferedImage(icon.getImage().getWidth(null),icon.getImage().getHeight(null),BufferedImage.TYPE_3BYTE_BGR);
-            Graphics2D g2 = bi.createGraphics();
-            g2.drawImage(icon.getImage(), 0, 0, null);
-            g2.dispose();
-            ImageIO.write(bi, "png", getCacheFile(key)); //NOI18N
-		} 
-        catch (IOException | OutOfMemoryError ex) {
-			Jamuz.getLogger().log(Level.SEVERE, "", ex);
-		}
-        return icon;
     }
 }

@@ -270,8 +270,6 @@ public class ProcessCheck {
             long meanTmp = (Benchmark.mean(this.partialTimesScan)/1000);
             long meanEllpsedSeconds = meanTmp<= 0?1:meanTmp;
             String mean = StringManager.humanReadableSeconds(meanEllpsedSeconds);
-            //TODO:  Combien de threads va le plus vite => faire stats
-            //Voir stats dans DoScan-Stats-Threading.ods => appliquer nouveau calcul: utiliser un Benchmark global to replace all but mean in below display
             benchScan.setSize(nbScanned+scanQueue.size());
             msgScan="("+nbScanned+ " x " + mean + "). " + benchScan.get();
         }
@@ -285,22 +283,15 @@ public class ProcessCheck {
         if(analysisQueue.size()>PanelCheck.progressBarAnalysisSize.getMaximum()) {
             PanelCheck.progressBarAnalysisSize.setMaximum(analysisQueue.size());
         }
-//        String msg="";
         if(ellapsedTime>0) {
             this.partialTimesAnalysis.add(ellapsedTime);
             int nbAnalyzed = partialTimesAnalysis.size();
             long meanTmp = (Benchmark.mean(this.partialTimesAnalysis)/1000);
             long meanEllpsedSeconds = meanTmp<= 0?1:meanTmp;
             String mean = StringManager.humanReadableSeconds(meanEllpsedSeconds);
-            //TODO:  Combien de threads va le plus vite => faire stats
-            //Voir stats dans DoScan-Stats-Threading.ods => appliquer nouveau calcul: utiliser un Benchmark global to replace all but mean in below display
             benchAnalysis.setSize(nbAnalyzed+analysisQueue.size());
             msgAnalysis="("+nbAnalyzed+ " x " + mean + "). " + benchAnalysis.get();
-//            PanelCheck.progressBarAnalysisSize.progress(msgAnalysis, analysisQueue.size());
         }
-//        else {
-//            PanelCheck.progressBarAnalysisSize.setValue(analysisQueue.size());
-//        }
          PanelCheck.progressBarAnalysisSize.progress(msgAnalysis, analysisQueue.size());
     }
     
@@ -857,11 +848,11 @@ public class ProcessCheck {
                             || (folderInfo.action.equals(Action.WARNING) && !doWarning)
                             || (folderInfo.action.equals(Action.MANUAL) && !doManual)    )) {
                          
-                        if(folderInfo.doAction(PanelCheck.progressActionsDequeue)) {                           
+                        if(folderInfo.doAction(PanelCheck.progressActionsDequeue).isPerformed) {                           
                             enableRowSorter(PanelCheck.tableModelActionQueue.getRowCount()>1);
                             PanelCheck.tableModelActionQueue.removeRow(folderInfo);
                             PanelCheck.tableModelActionQueue.fireTableDataChanged();
-                        }
+                        } 
                     }
                 displayActionQueue();
            }
@@ -881,9 +872,9 @@ public class ProcessCheck {
          */
         WARNING(Inter.get("Check.OK.Warning"), 1, "accept.png", Color.ORANGE), //NOI18N
 		/**
-         * Delete
+         * KO
          */
-        DEL(Inter.get("Label.Delete"), 2, "bin.png", Color.DARK_GRAY), //NOI18N
+        KO(Inter.get("Check.KO"), 2, "cancel.png", Color.RED),
 		/**
          * Save tags
          */
@@ -893,9 +884,9 @@ public class ProcessCheck {
          */
         OK(Inter.get("Check.OK"), 4, "accept.png", new Color(0, 128, 0)), //NOI18N
 		/**
-         * KO
+         * Delete
          */
-        KO(Inter.get("Check.KO"), 5, "cancel.png", Color.RED),
+        DEL(Inter.get("Label.Delete"), 5, "bin.png", Color.DARK_GRAY), //NOI18N
 		/**
 		 * KO in library
 		 */

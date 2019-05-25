@@ -78,7 +78,7 @@ public class Benchmark {
 	 * @return
 	 */
 	public static long mean(List<Long> numbers) {
-        return sum(numbers)/numbers.size();
+        return Math.round(sum(numbers)/(double)numbers.size());
     }
         
 	/**
@@ -87,7 +87,7 @@ public class Benchmark {
 	 * @return
 	 */
 	public static long sum(List<Long> numbers) {
-        long sum=0;
+        long sum=0L;
         for(long number : numbers) {
             sum+=number;
         }

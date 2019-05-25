@@ -59,11 +59,10 @@ public class SortedListModel<T> extends AbstractListModel<T> {
 	/**
 	 *
 	 * @param element
+	 * @return 
 	 */
-    public void add(Object element) {
-        if (model.add(element)) {
-            fireContentsChanged(this, 0, getSize());
-        }
+    public boolean add(Object element) {
+        return model.add(element);
     }
 
 	/**
@@ -73,15 +72,17 @@ public class SortedListModel<T> extends AbstractListModel<T> {
 	public void addAll(Object elements[]) {
         Collection c = Arrays.asList(elements);
         model.addAll(c);
-        fireContentsChanged(this, 0, getSize());
     }
 
+	public void fire() {
+		fireContentsChanged(this, 0, getSize()-1);
+	}
+	
 	/**
 	 *
 	 */
 	public void clear() {
         model.clear();
-        fireContentsChanged(this, 0, getSize());
     }
 
 	/**
@@ -125,11 +126,7 @@ public class SortedListModel<T> extends AbstractListModel<T> {
 	 * @return
 	 */
 	public boolean removeElement(Object element) {
-        boolean removed = model.remove(element);
-        if (removed) {
-            fireContentsChanged(this, 0, getSize());
-        }
-        return removed;
+        return model.remove(element);
     }
 
 }

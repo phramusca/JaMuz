@@ -14,11 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz.utils;
+package test.tools;
 
 import jamuz.DbConnJaMuz;
 import jamuz.DbInfo;
 import jamuz.FileInfoInt;
+import jamuz.utils.DateTime;
+import jamuz.utils.Desktop;
+import jamuz.utils.Inter;
+import jamuz.utils.LogText;
+import jamuz.utils.Popup;
+import jamuz.utils.Swing;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;

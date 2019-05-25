@@ -35,7 +35,7 @@ public class ButtonCheck extends DefaultCellEditor {
     private JButton button = null;
     private FolderInfo folder = null;
     private boolean isClicked;
-	private ICallBackCheckPanel callback;
+	private final ICallBackCheckPanel callback;
 
     /**
 	 * Create a new button cell editor
@@ -63,7 +63,7 @@ public class ButtonCheck extends DefaultCellEditor {
         }
         folder = (FolderInfo) value;
         
-        if(folder.isActionDone) {
+        if(folder.actionResult.isPerformed) {
             isClicked = false;
             button.setIcon(null);
             button.setText("Done");
