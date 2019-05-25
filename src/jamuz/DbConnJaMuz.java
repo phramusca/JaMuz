@@ -39,7 +39,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.DateTime;
@@ -67,7 +66,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     //Check that batches are used whenever possible and needed
     //http://stackoverflow.com/questions/2467125/reusing-a-preparedstatement-multiple-times
 	//Check that try/catch/return are all OK
-    
+    // - popup if exception (as it should not happen)
+	
 	//FIXME ZZZZZZ REVIEW: Internationalization
 	// ( !! Test at each step !! )
 	// 1 - Use BundleScanner to remove uneeded entries
@@ -75,7 +75,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// 3 - Use NetBeans internationalization tool
 	// 4 - Run and manually find missing translations (en / fre)
 	
-	//FIXME Z DB Do not popup in here, only log. If popup, it has to be on calling code
+	
 	
 	// <editor-fold defaultstate="collapsed" desc="Setup">
 	
@@ -292,36 +292,6 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
-    /**
-     * Returns list of supported genres
-     *
-     * @param myList
-     * @return
-     */
-    public boolean getGenreList(ArrayList<String> myList) {
-        ResultSet rs=null;
-        try {
-            PreparedStatement stSelectGenres = dbConn.connection.prepareStatement(
-					"SELECT value FROM genre");   //NOI18N
-            rs = stSelectGenres.executeQuery();
-            while (rs.next()) {
-                myList.add(dbConn.getStringValue(rs, "value"));   //NOI18N
-            }
-            return true;
-        } catch (SQLException ex) {
-            Popup.error("getGenreList", ex);   //NOI18N
-            return false;
-        }
-        finally {
-            try {
-                if (rs!=null) rs.close();
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            
-        }
-    }
-	
 	/**
 	 *
 	 * @param myListModel
@@ -372,7 +342,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 						"WHERE T.value=?)");  //NOI18N
             stUpdateTagsModifDate.setString(1, newTag);
             int nbRowsAffected = stUpdateTagsModifDate.executeUpdate();
-            if (nbRowsAffected == 1) {
+            if (nbRowsAffected>=0) {
                 return true;
             } else {
                 Jamuz.getLogger().log(Level.SEVERE, "stUpdateTagsModifDate, "
@@ -395,7 +365,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public synchronized boolean insertTag(String tag) {
         try {
             PreparedStatement stInsertTag = dbConn.connection.prepareStatement(
-					"INSERT INTO tag (value) VALUES (?)");   //NOI18N
+					"INSERT OR IGNORE INTO tag (value) VALUES (?) ");   //NOI18N
             stInsertTag.setString(1, tag);
             int nbRowsAffected = stInsertTag.executeUpdate();
             if (nbRowsAffected == 1) {
@@ -426,15 +396,9 @@ public class DbConnJaMuz extends StatSourceSQL {
 						"LEFT JOIN tagfile ON tag.id=tagfile.idTag \n" +
 						"WHERE value=? AND idFile IS NULL\n" +
 						")");  
-			
 			stDeleteTag.setString(1, tag);
             int nbRowsAffected = stDeleteTag.executeUpdate();
-            if (nbRowsAffected > 0) {
-                return true;
-            } else {
-                Popup.warning("Tag is applied to at least a track, so cannot delete it.");  //NOI18N
-                return false;
-            }
+			return nbRowsAffected > 0;
         } catch (SQLException ex) {
             Popup.error("deleteTag(" + tag + ")", ex);   //NOI18N
             return false;
@@ -473,33 +437,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return tags;
     }
     
-	/**
-	 *
-	 * @param tags
-	 * @param idFile
-	 * @return 
-	 */
-	public boolean getTags(ArrayList<String> tags, int idFile) {
-        try {
-            PreparedStatement stSelectTags = dbConn.connection.prepareStatement(
-                    "SELECT value FROM tag T JOIN tagFile F ON T.id=F.idTag "
-							+ "WHERE F.idFile=?");    //NOI18N
-            stSelectTags.setInt(1, idFile);
-            ResultSet rs = stSelectTags.executeQuery();
-            while (rs.next()) {
-                tags.add(dbConn.getStringValue(rs, "value"));
-            }
-			return true;
-        } catch (SQLException ex) {
-            Popup.error("getTags("+idFile+")", ex);   //NOI18N
-			return false;
-        }
-    }
 	
-	@Override
-	public boolean getTags(ArrayList<String> tags, FileInfo file) {
-		return getTags(tags, file.getIdFile());
-	}
 	
 	/**
 	 *
@@ -3370,6 +3308,34 @@ public class DbConnJaMuz extends StatSourceSQL {
             return false;
         }
     }
+	
+	/**
+	 *
+	 * @param tags
+	 * @param idFile
+	 * @return 
+	 */
+	public boolean getTags(ArrayList<String> tags, int idFile) {
+        try {
+            PreparedStatement stSelectTags = dbConn.connection.prepareStatement(
+                    "SELECT value FROM tag T JOIN tagFile F ON T.id=F.idTag "
+							+ "WHERE F.idFile=?");    //NOI18N
+            stSelectTags.setInt(1, idFile);
+            ResultSet rs = stSelectTags.executeQuery();
+            while (rs.next()) {
+                tags.add(dbConn.getStringValue(rs, "value"));
+            }
+			return true;
+        } catch (SQLException ex) {
+            Popup.error("getTags("+idFile+")", ex);   //NOI18N
+			return false;
+        }
+    }
+	
+	@Override
+	public boolean getTags(ArrayList<String> tags, FileInfo file) {
+		return getTags(tags, file.getIdFile());
+	}
 	
 	// </editor-fold>
 	

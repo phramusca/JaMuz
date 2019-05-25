@@ -672,8 +672,10 @@ public class PanelOptions extends javax.swing.JPanel {
                     Inter.get("Label.Confirm"), //NOI18N 
                     JOptionPane.YES_NO_OPTION); 
             if (n == JOptionPane.YES_OPTION) {
-                Jamuz.getDb().deleteTag((String) jListTags.getSelectedValue()); 
-                refreshListTagsModel();
+                if(Jamuz.getDb().deleteTag((String) jListTags.getSelectedValue())) {
+					Popup.warning("Problem deleting tag. It is probably applied to at least a track, so cannot delete it.");  //NOI18N
+					refreshListTagsModel();
+				}
             } 
         } 
     }//GEN-LAST:event_jButtonTagsDelActionPerformed

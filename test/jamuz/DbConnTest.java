@@ -17,13 +17,14 @@
 package jamuz;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
+import test.helpers.TestResultSet;
 
 /**
  *
@@ -54,6 +55,7 @@ public class DbConnTest {
 	 * Test of getConnnection method, of class DbConn.
 	 */
 	@Test
+	@Ignore //Simple getter
 	public void testGetConnnection() {
 		System.out.println("getConnnection");
 		DbConn instance = null;
@@ -68,6 +70,7 @@ public class DbConnTest {
 	 * Test of getInfo method, of class DbConn.
 	 */
 	@Test
+	@Ignore //Simple getter
 	public void testGetInfo() {
 		System.out.println("getInfo");
 		DbConn instance = null;
@@ -82,6 +85,7 @@ public class DbConnTest {
 	 * Test of connect method, of class DbConn.
 	 */
 	@Test
+	@Ignore //
 	public void testConnect() {
 		System.out.println("connect");
 		DbConn instance = null;
@@ -96,6 +100,7 @@ public class DbConnTest {
 	 * Test of disconnect method, of class DbConn.
 	 */
 	@Test
+	@Ignore //
 	public void testDisconnect() {
 		System.out.println("disconnect");
 		DbConn instance = null;
@@ -110,15 +115,23 @@ public class DbConnTest {
 	@Test
 	public void testGetStringValue_3args_1() {
 		System.out.println("getStringValue");
-		ResultSet rs = null;
-		String source = "";
-		String defaultValue = "";
-		DbConn instance = null;
-		String expResult = "";
-		String result = instance.getStringValue(rs, source, defaultValue);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		
+		DbConn instance = new DbConn(new DbInfo(DbInfo.LibType.Sqlite, "location", "user", "pwd"));
+
+		assertEquals("MyDefoltV@lue", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeEmpty", 
+				"MyDefoltV@lue"));
+		
+		assertEquals("MyDefoltV@lue", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeNull", 
+				"MyDefoltV@lue"));
+		
+		assertEquals("MailleNiouValiou", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeValue", 
+				"MyDefoltV@lue"));
 	}
 
 	/**
@@ -127,14 +140,20 @@ public class DbConnTest {
 	@Test
 	public void testGetStringValue_ResultSet_String() {
 		System.out.println("getStringValue");
-		ResultSet rs = null;
-		String source = "";
-		DbConn instance = null;
-		String expResult = "";
-		String result = instance.getStringValue(rs, source);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+
+		DbConn instance = new DbConn(new DbInfo(DbInfo.LibType.Sqlite, "location", "user", "pwd"));
+
+		assertEquals("{Empty}", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeEmpty"));
+		
+		assertEquals("{null}", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeNull"));
+		
+		assertEquals("MailleNiouValiou", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeValue"));
 	}
 
 	/**
@@ -143,15 +162,32 @@ public class DbConnTest {
 	@Test
 	public void testGetStringValue_3args_2() {
 		System.out.println("getStringValue");
-		ResultSet rs = null;
-		String source = "";
-		boolean replaceEmpty = false;
-		DbConn instance = null;
-		String expResult = "";
-		String result = instance.getStringValue(rs, source, replaceEmpty);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		
+		DbConn instance = new DbConn(new DbInfo(DbInfo.LibType.Sqlite, "location", "user", "pwd"));
+
+		assertEquals("{Empty}", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeEmpty", true));
+		
+		assertEquals("{null}", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeNull", true));
+		
+		assertEquals("MailleNiouValiou", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeValue", true));
+		
+		assertEquals("", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeEmpty", false));
+		
+		assertEquals("{null}", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeNull", false));
+		
+		assertEquals("MailleNiouValiou", instance.getStringValue(
+				TestResultSet.getResultSet("MailleNiouValiou"), 
+				"GimmeValue", false));
 	}
 	
 }

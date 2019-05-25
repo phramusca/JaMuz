@@ -121,10 +121,14 @@ public class DbConn {
 	}
 	
 	/**
-	 * Get string value from database, replacing empty string with {Empty}
+	 * Get string value from database
+	 * Returns {NoSource} if source is not empty.
+	 * Returns {null} if value is null.
+	 * Returns {Empty} if value is empty
+	 * Returns {ERROR} if an error occured
 	 * @param rs
 	 * @param source
-	 * @return
+	 * @return 
 	 */
 	public String getStringValue(ResultSet rs, String source) {
 		return getStringValue(rs, source, true);

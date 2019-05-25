@@ -58,7 +58,7 @@ public class UtilsTest {
 		System.out.println("equalLists");
 		List<String> one = null;
 		List<String> two = null;
-		boolean expResult = false;
+		boolean expResult = true;
 		boolean result = Utils.equalLists(one, two);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.

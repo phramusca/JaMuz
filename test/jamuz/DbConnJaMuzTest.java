@@ -106,9 +106,7 @@ public class DbConnJaMuzTest {
 	public void testGenre() {
 		
 		System.out.println("getGenreList");
-		ArrayList<String> actualList = new ArrayList<>();
-		boolean result = Jamuz.getDb().getGenreList(actualList);
-		assertTrue(result);
+
 		ArrayList<String> expectedGenres = new ArrayList<>();
 		expectedGenres.add("Blues");
 		expectedGenres.add("BO");
@@ -131,77 +129,47 @@ public class DbConnJaMuzTest {
 		expectedGenres.add("Ska");
 		expectedGenres.add("Ska Punk");
 		expectedGenres.add("Soul");
-		expectedGenres.add("Trip Hop");
-		assertArrayEquals(expectedGenres.toArray(), actualList.toArray());
+		expectedGenres.add("Trip Hop");	
+		checkGenreList(expectedGenres);
 		
-		System.out.println("updateGenre");
-		result = Jamuz.getDb().updateGenre("Reggae", "Toto");
-		assertTrue(result);
+		assertTrue("updateGenre", Jamuz.getDb().updateGenre("Reggae", "Toto"));
 		expectedGenres.set(13, "Toto");
-		actualList = new ArrayList<>();
-		result = Jamuz.getDb().getGenreList(actualList);
-		assertTrue(result);
-		assertArrayEquals(expectedGenres.toArray(), actualList.toArray());
+		checkGenreList(expectedGenres);
 		
-		System.out.println("updateGenre");
-		result = Jamuz.getDb().deleteGenre("Toto");
+		assertTrue("deleteGenre", Jamuz.getDb().deleteGenre("Toto"));
 		expectedGenres.remove("Toto");
-		assertTrue(result);
-		actualList = new ArrayList<>();
-		result = Jamuz.getDb().getGenreList(actualList);
-		assertTrue(result);
-		assertArrayEquals(expectedGenres.toArray(), actualList.toArray());
+		checkGenreList(expectedGenres);
 		
-		System.out.println("insertGenre");
-		result = Jamuz.getDb().insertGenre("Reggae");
+		assertTrue("insertGenre", Jamuz.getDb().insertGenre("Reggae"));
 		expectedGenres.add("Reggae");
-		assertTrue(result);
-		actualList = new ArrayList<>();
-		result = Jamuz.getDb().getGenreList(actualList);
-		assertTrue(result);
-		assertArrayEquals(expectedGenres.toArray(), actualList.toArray());
+		checkGenreList(expectedGenres);
 		
-		System.out.println("checkGenre");
-		assertTrue(Jamuz.getDb().checkGenre("Reggae"));
+		assertTrue("checkGenre", Jamuz.getDb().checkGenre("Reggae"));
 		
 		//Negative cases
-		System.out.println("updateGenre");
-		result = Jamuz.getDb().updateGenre("NoSuchWeirdGenre", "Toto");
-		assertFalse(result);
+		assertFalse("updateGenre negative", Jamuz.getDb().updateGenre("NoSuchWeirdGenre", "Toto"));
 		checkGenreList(expectedGenres);
 		
-		System.out.println("updateGenre");
-		result = Jamuz.getDb().deleteGenre("NoSuchWeirdGenre");
-		assertFalse(result);
+		assertFalse("deleteGenre negative", Jamuz.getDb().deleteGenre("NoSuchWeirdGenre"));
 		checkGenreList(expectedGenres);
 		
-		System.out.println("insertGenre");
-		result = Jamuz.getDb().insertGenre("Reggae");
-		assertFalse(result); //As duplicate
+		assertFalse("insertGenre negative", Jamuz.getDb().insertGenre("Reggae")); //As duplicate
 		checkGenreList(expectedGenres);
 		
-		System.out.println("checkGenre");
-		assertFalse(Jamuz.getDb().checkGenre("NoSuchWeirdGenre"));
+		assertFalse("checkGenre negative", Jamuz.getDb().checkGenre("NoSuchWeirdGenre"));
 		
-		//Done at the end as we sort the list
+		//FIXME TEST Check other constraints
+	}
+	
+	private void checkGenreList(ArrayList<String> expectedGenres) {
 		DefaultListModel myListModel = new DefaultListModel();
 		Jamuz.getDb().getGenreListModel(myListModel);
 		Collections.sort(expectedGenres);
 		assertArrayEquals(expectedGenres.toArray(), myListModel.toArray());
-		
 	}
 	
-	private void checkGenreList(ArrayList<String> expectedGenres) {
-		ArrayList<String> actualList = new ArrayList<>();
-		boolean result = Jamuz.getDb().getGenreList(actualList);
-		assertTrue(result);
-		assertArrayEquals(expectedGenres.toArray(), actualList.toArray());
-	}
-	
-	/** Refer to testGenre() above */
 	@Test
-	@Deprecated
-	@Ignore
+	@Ignore //Refer to testGenre() above
 	public void testUpdateGenre_String_String() {
 		System.out.println("updateGenre");
 		String oldGenre = "";
@@ -213,11 +181,8 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/** Refer to testGenre() above */
 	@Test
-	@Deprecated
-	@Ignore
+	@Ignore //Refer to testGenre() above
 	public void testDeleteGenre() {
 		System.out.println("deleteGenre");
 		String genre = "";
@@ -228,11 +193,8 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/** Refer to testGenre() above */
 	@Test
-	@Deprecated
-	@Ignore
+	@Ignore //Refer to testGenre() above
 	public void testInsertGenre() {
 		System.out.println("insertGenre");
 		String genre = "";
@@ -243,11 +205,8 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/** Refer to testGenre() above */
 	@Test
-	@Deprecated
-	@Ignore
+	@Ignore //Refer to testGenre() above
 	public void testCheckGenre() {
 		System.out.println("checkGenre");
 		String genre = "";
@@ -258,26 +217,8 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/** Refer to testGenre() above */
 	@Test
-	@Deprecated
-	@Ignore
-	public void testGetGenreList() {
-		System.out.println("getGenreList");
-		ArrayList<String> myList = null;
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.getGenreList(myList);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-	
-	/** Refer to testGenre() above */
-	@Test
-	@Deprecated
-	@Ignore
+	@Ignore //Refer to testGenre() above
 	public void testUpdateGenre_FileInfoInt() {
 		System.out.println("updateGenre");
 		FileInfoInt fileInfo = null;
@@ -288,11 +229,8 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/** Refer to testGenre() above */
 	@Test
-	@Deprecated
-	@Ignore
+	@Ignore //Refer to testGenre() above
 	public void testGetGenreListModel() {
 		System.out.println("getGenreListModel");
 		DefaultListModel myListModel = null;
@@ -303,112 +241,63 @@ public class DbConnJaMuzTest {
 	}
 	
 	// </editor-fold>
-	
-	//FIXME !!!! TEST Continue from here
-	
+		
 	// <editor-fold defaultstate="collapsed" desc="Tag">
 	
 	/**
-	 * Test of genre methods, of class DbConnJaMuz.
+	 * Test of tag methods, of class DbConnJaMuz.
 	 */
 	@Test
 	public void testTag() {
 		
 		System.out.println("getGenreList");
-		ArrayList<String> actualList = new ArrayList<>();
-		boolean result = Jamuz.getDb().getGenreList(actualList);
-		assertTrue(result);
+
 		ArrayList<String> expectedTags = new ArrayList<>();
-		expectedTags.add("Blues");
-		expectedTags.add("BO");
-		expectedTags.add("Chanson");
-		expectedTags.add("Dub");
-		expectedTags.add("Electro");
-		expectedTags.add("Folk");
-		expectedTags.add("Funk");
-		expectedTags.add("Jazz");
-		expectedTags.add("Latino");
-		expectedTags.add("Musical");
-		expectedTags.add("Pop");
-		expectedTags.add("Ragga");
-		expectedTags.add("Rap");
-		expectedTags.add("Reggae");
-		expectedTags.add("Reggaeton");
-		expectedTags.add("Rock");
-		expectedTags.add("Salsa");
-		expectedTags.add("Samba");
-		expectedTags.add("Ska");
-		expectedTags.add("Ska Punk");
-		expectedTags.add("Soul");
-		expectedTags.add("Trip Hop");
-		assertArrayEquals(expectedTags.toArray(), actualList.toArray());
-		
-		System.out.println("updateGenre");
-		result = Jamuz.getDb().updateGenre("Reggae", "Toto");
-		assertTrue(result);
-		expectedTags.set(13, "Toto");
-		actualList = new ArrayList<>();
-		result = Jamuz.getDb().getGenreList(actualList);
-		assertTrue(result);
-		assertArrayEquals(expectedTags.toArray(), actualList.toArray());
-		
-		System.out.println("updateGenre");
-		result = Jamuz.getDb().deleteGenre("Toto");
-		expectedTags.remove("Toto");
-		assertTrue(result);
-		actualList = new ArrayList<>();
-		result = Jamuz.getDb().getGenreList(actualList);
-		assertTrue(result);
-		assertArrayEquals(expectedTags.toArray(), actualList.toArray());
-		
-		System.out.println("insertGenre");
-		result = Jamuz.getDb().insertGenre("Reggae");
-		expectedTags.add("Reggae");
-		assertTrue(result);
-		actualList = new ArrayList<>();
-		result = Jamuz.getDb().getGenreList(actualList);
-		assertTrue(result);
-		assertArrayEquals(expectedTags.toArray(), actualList.toArray());
-		
-		System.out.println("checkGenre");
-		assertTrue(Jamuz.getDb().checkGenre("Reggae"));
-		
-		//Negative cases
-		System.out.println("updateGenre");
-		result = Jamuz.getDb().updateGenre("NoSuchWeirdGenre", "Toto");
-		assertFalse(result);
+		expectedTags.add("Calme");
+		expectedTags.add("Normal");
+		expectedTags.add("Joyeux");
+		for(String tag : expectedTags) {
+			assertTrue(Jamuz.getDb().insertTag(tag));
+		}
 		checkTagList(expectedTags);
 		
-		System.out.println("updateGenre");
-		result = Jamuz.getDb().deleteGenre("NoSuchWeirdGenre");
-		assertFalse(result);
-		checkTagList(expectedTags);
-		
-		System.out.println("insertGenre");
-		result = Jamuz.getDb().insertGenre("Reggae");
-		assertFalse(result); //As duplicate
-		checkTagList(expectedTags);
-		
-		System.out.println("checkGenre");
-		assertFalse(Jamuz.getDb().checkGenre("NoSuchWeirdGenre"));
-		
-		//Done at the end as we sort the list
 		DefaultListModel myListModel = new DefaultListModel();
-		Jamuz.getDb().getGenreListModel(myListModel);
-		Collections.sort(expectedTags);
+		Jamuz.getDb().getTagListModel(myListModel);
 		assertArrayEquals(expectedTags.toArray(), myListModel.toArray());
 		
+		assertTrue("updateTag", Jamuz.getDb().updateTag("Normal", "Tutu"));
+		expectedTags.set(2, "Tutu");
+		checkTagList(expectedTags);
+				
+		assertTrue("deleteTag", Jamuz.getDb().deleteTag("Tutu"));
+		expectedTags.remove("Tutu");
+		checkTagList(expectedTags);
+		
+		assertTrue("insertTag", Jamuz.getDb().insertTag("Normal"));
+		expectedTags.add("Normal");
+		checkTagList(expectedTags);
+		
+		//Negative cases
+		assertFalse("updateTag negative", Jamuz.getDb().updateTag("NoSuchWeirdGenre", "Toto"));
+		checkTagList(expectedTags);
+		
+		assertFalse("deleteTag negative", Jamuz.getDb().deleteTag("NoSuchWeirdGenre"));
+		checkTagList(expectedTags);
+		
+		assertFalse("insertTag negative", Jamuz.getDb().insertTag("Normal")); //As duplicate
+		checkTagList(expectedTags);
+		
+		//FIXME TEST Check other constraints
+		
 	}
 	
-	private void checkTagList(ArrayList<String> expectedGenres) {
+	private void checkTagList(ArrayList<String> expectedTags) {
 		ArrayList<String> actualList = Jamuz.getDb().getTags();
-		assertArrayEquals(expectedGenres.toArray(), actualList.toArray());
+		Collections.sort(expectedTags); // getTags() return sorted
+		assertArrayEquals(expectedTags.toArray(), actualList.toArray());
 	}
-	
-	/**
-	 * Test of updateTag method, of class DbConnJaMuz.
-	 */
 	@Test
+	@Ignore // Refer to testTag() above
 	public void testUpdateTag() {
 		System.out.println("updateTag");
 		String oldTag = "";
@@ -420,11 +309,8 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
-	/**
-	 * Test of insertTag method, of class DbConnJaMuz.
-	 */
 	@Test
+	@Ignore // Refer to testTag() above
 	public void testInsertTag() {
 		System.out.println("insertTag");
 		String tag = "";
@@ -435,11 +321,8 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/**
-	 * Test of deleteTag method, of class DbConnJaMuz.
-	 */
 	@Test
+	@Ignore // Refer to testTag() above
 	public void testDeleteTag() {
 		System.out.println("deleteTag");
 		String tag = "";
@@ -450,11 +333,8 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/**
-	 * Test of getTagListModel method, of class DbConnJaMuz.
-	 */
 	@Test
+	@Ignore // Refer to testTag() above
 	public void testGetTagListModel() {
 		System.out.println("getTagListModel");
 		DefaultListModel myListModel = null;
@@ -463,11 +343,8 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/**
-	 * Test of getTags method, of class DbConnJaMuz.
-	 */
 	@Test
+	@Ignore // Refer to testTag() above
 	public void testGetTags_0args() {
 		System.out.println("getTags");
 		DbConnJaMuz instance = null;
@@ -477,40 +354,10 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/**
-	 * Test of getTags method, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testGetTags_ArrayList_int() {
-		System.out.println("getTags");
-		ArrayList<String> tags = null;
-		int idFile = 0;
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.getTags(tags, idFile);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of getTags method, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testGetTags_ArrayList_FileInfo() {
-		System.out.println("getTags");
-		ArrayList<String> tags = null;
-		FileInfo file = null;
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.getTags(tags, file);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
 	
 	// </editor-fold>
+	
+	//FIXME !!!! TEST Continue from here
 	
 	// <editor-fold defaultstate="collapsed" desc="Machine">
 	
@@ -1662,6 +1509,38 @@ public class DbConnJaMuzTest {
 		int[] expResult = null;
 		int[] result = instance.setTags(files, results);
 		assertArrayEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+	
+	/**
+	 * Test of getTags method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testGetTags_ArrayList_int() {
+		System.out.println("getTags");
+		ArrayList<String> tags = null;
+		int idFile = 0;
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.getTags(tags, idFile);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+
+	/**
+	 * Test of getTags method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testGetTags_ArrayList_FileInfo() {
+		System.out.println("getTags");
+		ArrayList<String> tags = null;
+		FileInfo file = null;
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.getTags(tags, file);
+		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
