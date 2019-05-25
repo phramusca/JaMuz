@@ -23,24 +23,18 @@ import fm.last.musicbrainz.coverart.CoverArtException;
 import fm.last.musicbrainz.coverart.CoverArtImage;
 import fm.last.musicbrainz.coverart.impl.DefaultCoverArtArchiveClient;
 import jamuz.Jamuz;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
+import jamuz.utils.ImageUtils;
 import jamuz.utils.Popup;
 import jamuz.utils.Inter;
 import jamuz.utils.Utils;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Level;
 import javax.imageio.ImageIO;
-import org.apache.http.HttpHost;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 //TODO: Make some sub-classes (mb, lastfm, file,...)
@@ -56,6 +50,9 @@ public class Cover implements java.lang.Comparable {
 	private BufferedImage image;
     private String hash=""; //NOI18N
     private List<MbImage> coverArtArchiveList;
+	
+	//FIXME Z CHECK Make maxSize an option
+	private static final int sizeMax = 1000;
 
     /**
      * Type of cover (MB, tag, file or url (lastfm))
@@ -105,7 +102,7 @@ public class Cover implements java.lang.Comparable {
 	public Cover(String name, BufferedImage image, String hash) {
 		this.type = CoverType.TAG;  //NOI18N
 		this.name = name;
-		this.image = image;
+		this.image = ImageUtils.shrinkImage(image, sizeMax);
         this.hash = hash;
         coverArtArchiveList=new ArrayList<>();
 	}
@@ -115,12 +112,12 @@ public class Cover implements java.lang.Comparable {
 	 * @return
 	 */
 	public BufferedImage getImage() {
-        if(this.image==null) {
-			this.image = readImage();
+        if(image==null) {
+			image = ImageUtils.shrinkImage(readImage(), sizeMax); //TODO: make it an option
 		}
-		return this.image;
+		return image;
 	}
-
+	
     /**
      * Set cover image
      * @param image
@@ -310,7 +307,7 @@ public class Cover implements java.lang.Comparable {
         int otherHeight=other.getImage().getHeight();
         int otherSize=otherWidth*otherHeight; 
         
-        int maxSize=600; //TODO: make it an option
+        int maxSize=this.sizeMax;
         maxSize=maxSize*maxSize;
         
         if(size>maxSize) return 1;
@@ -359,12 +356,6 @@ public class Cover implements java.lang.Comparable {
         msg+="</html>";
         return msg;
     }
-    
-//    public String getSize() {
-//        int width=image.getWidth();
-//        int height=image.getHeight();
-//        return width+"x"+height; //NOI18N
-//    }
     
     private String getSizeDisplay() {
         String msg="";

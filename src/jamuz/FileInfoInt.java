@@ -61,6 +61,7 @@ import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
 import org.jaudiotagger.tag.id3.ID3v1Tag;
 import org.jaudiotagger.tag.id3.ID3v23Tag;
 import jamuz.utils.DateTime;
+import jamuz.utils.ImageUtils;
 import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
 import java.security.NoSuchAlgorithmException;
@@ -522,7 +523,7 @@ public class FileInfoInt extends FileInfo {
                     if(tag!=null) {
                         //Check presence of a cover
                         if(tag.getFirstArtwork()!=null) {
-                            this.readCover(tag);
+                            readCover(tag);
                         }
                     }
                 }
@@ -540,14 +541,14 @@ public class FileInfoInt extends FileInfo {
 	}
     
     private void readCoverHash() throws NoSuchAlgorithmException, IOException {
-        if(this.coverImage!=null) {
+        if(coverImage!=null) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ImageIO.write(this.coverImage, "png", outputStream); //NOI18N
+            ImageIO.write(coverImage, "png", outputStream); //NOI18N
             byte[] data = outputStream.toByteArray();
             MessageDigest md = MessageDigest.getInstance("MD5"); //NOI18N
             md.update(data);
             byte[] hash = md.digest();
-            this.coverHash=returnHex(hash);
+            coverHash=returnHex(hash);
         }
     }
     
@@ -697,20 +698,7 @@ public class FileInfoInt extends FileInfo {
 	}
 	
 	private void setEmptyCover() {
-		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 40);
-		this.coverImage = new BufferedImage(500, 500, BufferedImage.TYPE_3BYTE_BGR);
-		Graphics2D g = this.coverImage.createGraphics();
-		FontMetrics fm = g.getFontMetrics(f);
-		g.setBackground(Color.LIGHT_GRAY);
-		g.clearRect(0, 0, this.coverImage.getWidth(), this.coverImage.getHeight());
-		g.setFont(f);
-		g.setColor(Color.DARK_GRAY);
-		
-		//TODO: Translate
-		String text = "No Cover";
-		
-		g.drawString(text, (this.coverImage.getWidth()/2)-(text.length()*12),
-				(this.coverImage.getHeight()/2)+20);  //NOI18N
+		coverImage=ImageUtils.getEmptyCover();
 	}
 	
 	private int getInt(String value) {
@@ -1078,29 +1066,35 @@ public class FileInfoInt extends FileInfo {
 	/**
 	 * Replaces %artist%, %albumGain%, ... by their actual values
 	 * @param mask
+	 * @param albumArtist
+	 * @param album
+	 * @param genre
 	 * @return
 	 */
-	public String computeMask(String mask) {
+	public String computeMask(String mask, String albumArtist, String album, String genre) {
 		String strResult=mask;
 		
-		strResult=strResult.replace("%artist%", StringManager.removeIllegal(this.artist));  //NOI18N
-		strResult=strResult.replace("%albumartist%", StringManager.removeIllegal(this.albumArtist));  //NOI18N
-		strResult=strResult.replace("%album%", StringManager.removeIllegal(this.album));  //NOI18N
-		strResult=strResult.replace("%genre%", StringManager.removeIllegal(this.genre));  //NOI18N
+		String artistName = artist.equals("")?"{Empty}":artist;
+		String titleName = title.equals("")?"{Empty}":title;
+		
+		strResult=strResult.replace("%artist%", StringManager.removeIllegal(artistName));  //NOI18N
+		strResult=strResult.replace("%albumartist%", StringManager.removeIllegal(albumArtist));  //NOI18N
+		strResult=strResult.replace("%album%", StringManager.removeIllegal(album));  //NOI18N
+		strResult=strResult.replace("%genre%", StringManager.removeIllegal(genre));  //NOI18N
 
 		String titleStr="";  //NOI18N
-		if(!this.artist.equals(this.albumArtist)) {
-			titleStr=this.artist + " - ";  //NOI18N
+		if(!artistName.equals(albumArtist)) {
+			titleStr=artistName + " - ";  //NOI18N
 		}
-		titleStr+=this.title;
+		titleStr+=titleName;
 		strResult=strResult.replace("%title%", StringManager.removeIllegal(titleStr));  //NOI18N
 		
 		String trackStr="";  //NOI18N
-		if(this.discTotal>1 && this.discNo>0) {
-			trackStr="["+this.discNo+"-"+this.discTotal+"] - ";  //NOI18N
+		if(discTotal>1 && discNo>0) {
+			trackStr="["+discNo+"-"+discTotal+"] - ";  //NOI18N
 		}
 		if(this.trackNo>0) {
-			trackStr=trackStr+FolderInfoResult.formatNumber(this.trackNo);
+			trackStr=trackStr+FolderInfoResult.formatNumber(trackNo);
 		}
 		strResult=strResult.replace("%track%", trackStr);  //NOI18N
 		
@@ -1293,7 +1287,7 @@ public class FileInfoInt extends FileInfo {
 	 */
 	public String getRelease() {
 		String separator="X7IzQsi3";  //NOI18N
-		return this.artist + separator + this.album + separator + this.year + separator + this.trackTotal;
+		return this.albumArtist + separator + this.album + separator + this.year + separator + this.trackTotal;
 	}
 	
 	

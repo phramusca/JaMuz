@@ -19,6 +19,7 @@ import test.helpers.AlbumBuffer;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.PanelCheck;
 import jamuz.process.check.ProcessCheck.Action;
+import jamuz.utils.ImageUtils;
 import test.helpers.TestProcessHelper;
 import test.helpers.Settings;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class CheckNTest extends TestCase {
             FolderInfo folder = AlbumBuffer.getAlbum(mbId, "CheckTest1_KO")
 					.getCheckedFolder();
             folder.setNewGenre("Reggae");
-            folder.setNewImage(Settings.getTestCover());
+            folder.setNewImage(ImageUtils.getTestCover());
             folder.action=Action.SAVE;
 //            PanelCheck.addToActionQueue(folder);//FIXME TEST !!!
             TestProcessHelper.applyChanges();

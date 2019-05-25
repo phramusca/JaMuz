@@ -7,6 +7,7 @@ package jamuz.remote;
 
 import jamuz.FileInfoInt;
 import jamuz.IconBufferCover;
+import jamuz.utils.ImageUtils;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -185,7 +186,7 @@ public class Client {
         try {
             BufferedImage image = displayedFile.getCoverImage();
             int newWidth = image.getWidth()>maxWidth?maxWidth:image.getWidth();
-            ImageIO.write(IconBufferCover.toBufferedImage(displayedFile.getCoverImage()
+            ImageIO.write(ImageUtils.toBufferedImage(displayedFile.getCoverImage()
 					.getScaledInstance(newWidth, -1, java.awt.Image.SCALE_SMOOTH)),"png", outputStream);
             outputStream.flush();
 			return true;

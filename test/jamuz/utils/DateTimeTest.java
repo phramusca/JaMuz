@@ -50,51 +50,15 @@ public class DateTimeTest {
 	}
 	
 	/**
-	 *
-	 * @throws Exception
-	 */
-	@Test
-    public void testConversions() throws Exception {
-
-        assertEquals(new Date(0), DateTime.parseSqlUtc("1970-01-01 00:00:00"));
-        System.out.println(DateTime.parseSqlUtc("1970-01-01 00:00:00"));
-
-        assertEquals("1970-01-01 01:00:00", DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, true));
-        System.out.println(DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, true));
-        assertEquals("1970-01-01 00:00:00", DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, false));
-        System.out.println(DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, false));
-        
-        assertEquals("1970-01-01 01:00:00", DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", true));
-        System.out.println(DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", true));
-        assertEquals("1970-01-01 00:00:00", DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", false));
-        System.out.println(DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", false));
-        
-        assertEquals("1970-01-01 01:00:00", DateTime.formatUTCtoSqlLocal(new Date(0)));
-        System.out.println(DateTime.formatUTCtoSqlLocal(new Date(0)));
-        assertEquals("1970-01-01 00:00:00", DateTime.formatUTCtoSqlUTC(new Date(0)));
-        System.out.println(DateTime.formatUTCtoSqlUTC(new Date(0)));
-        
-        assertEquals(DateTime.formatUTCtoSqlUTC(new Date()), DateTime.getCurrentUtcSql());
-        System.out.println("DateTime.getCurrentUtcSql(): "+DateTime.getCurrentUtcSql());
-        assertEquals(DateTime.formatUTCtoSqlLocal(new Date()), DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL));
-        System.out.println("DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL):"+DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL));
-        
-    }
-
-	/**
 	 * Test of formatUTC method, of class DateTime.
 	 */
 	@Test
 	public void testFormatUTC_3args_1() {
 		System.out.println("formatUTC");
-		Date date = null;
-		String format = "";
-		boolean toLocal = false;
-		String expResult = "";
-		String result = DateTime.formatUTC(date, format, toLocal);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		assertEquals("1970-01-01 01:00:00", DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", true));
+        System.out.println(DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", true));
+        assertEquals("1970-01-01 00:00:00", DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", false));
+        System.out.println(DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", false));	
 	}
 
 	/**
@@ -103,14 +67,10 @@ public class DateTimeTest {
 	@Test
 	public void testFormatUTC_3args_2() {
 		System.out.println("formatUTC");
-		Date date = null;
-		DateTime.DateTimeFormat format = null;
-		boolean toLocal = false;
-		String expResult = "";
-		String result = DateTime.formatUTC(date, format, toLocal);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		assertEquals("1970-01-01 01:00:00", DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, true));
+        System.out.println(DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, true));
+        assertEquals("1970-01-01 00:00:00", DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, false));
+        System.out.println(DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, false));
 	}
 
 	/**
@@ -119,12 +79,7 @@ public class DateTimeTest {
 	@Test
 	public void testFormatUTCtoSqlUTC() {
 		System.out.println("formatUTCtoSqlUTC");
-		Date date = null;
-		String expResult = "";
-		String result = DateTime.formatUTCtoSqlUTC(date);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Refer to formatUtc() below
 	}
 
 	/**
@@ -133,13 +88,25 @@ public class DateTimeTest {
 	@Test
 	public void testFormatUTCtoSqlLocal() {
 		System.out.println("formatUTCtoSqlLocal");
-		Date date = null;
-		String expResult = "";
-		String result = DateTime.formatUTCtoSqlLocal(date);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Refer to formatUtc() below
 	}
+	
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Test
+    public void formatUtc() throws Exception {
+        assertEquals("1970-01-01 01:00:00", DateTime.formatUTCtoSqlLocal(new Date(0)));
+        System.out.println(DateTime.formatUTCtoSqlLocal(new Date(0)));
+        assertEquals("1970-01-01 00:00:00", DateTime.formatUTCtoSqlUTC(new Date(0)));
+        System.out.println(DateTime.formatUTCtoSqlUTC(new Date(0)));
+        
+        assertEquals(DateTime.formatUTCtoSqlUTC(new Date()), DateTime.getCurrentUtcSql());
+        System.out.println("DateTime.getCurrentUtcSql(): "+DateTime.getCurrentUtcSql());
+        assertEquals(DateTime.formatUTCtoSqlLocal(new Date()), DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL));
+        System.out.println("DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL):"+DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL));        
+    }
 
 	/**
 	 * Test of getCurrentLocal method, of class DateTime.
@@ -147,12 +114,7 @@ public class DateTimeTest {
 	@Test
 	public void testGetCurrentLocal() {
 		System.out.println("getCurrentLocal");
-		DateTime.DateTimeFormat format = null;
-		String expResult = "";
-		String result = DateTime.getCurrentLocal(format);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Subset of formatUTC with current date: already tested
 	}
 
 	/**
@@ -161,11 +123,7 @@ public class DateTimeTest {
 	@Test
 	public void testGetCurrentUtcSql() {
 		System.out.println("getCurrentUtcSql");
-		String expResult = "";
-		String result = DateTime.getCurrentUtcSql();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		//Subset of formatUTC with current date: already tested
 	}
 
 	/**
@@ -174,12 +132,9 @@ public class DateTimeTest {
 	@Test
 	public void testParseSqlUtc() {
 		System.out.println("parseSqlUtc");
-		String date = "";
-		Date expResult = null;
+		String date = "2019-05-23 11:04:38";
 		Date result = DateTime.parseSqlUtc(date);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
+		assertEquals(DateTime.formatUTCtoSqlUTC(result), date);
 	}
 	
 }

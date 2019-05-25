@@ -74,9 +74,11 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// 3 - Use NetBeans internationalization tool
 	// 4 - Run and manually find missing translations (en / fre)
 	
-    private PreparedStatement stSelectFilesStats4Source;
+	// <editor-fold defaultstate="collapsed" desc="Setup">
+	
+	private PreparedStatement stSelectFilesStats4Source;
     private PreparedStatement stSelectFilesStats4SourceAndDevice;
-    
+	
     /**
      * Creates a database dbConn.connection.
      *
@@ -137,6 +139,10 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	// </editor-fold>
+	
+	// <editor-fold defaultstate="collapsed" desc="Genre">
+	
     /**
      * Updates genre in genre table
      *
@@ -164,6 +170,155 @@ public class DbConnJaMuz extends StatSourceSQL {
             return false;
         }
     }
+	
+	/**
+     * Deletes genre from genre table
+     *
+     * @param genre
+     * @return
+     */
+    public synchronized boolean deleteGenre(String genre) {
+        try {
+            PreparedStatement stDeleteGenre = dbConn.connection.prepareStatement(
+					"DELETE FROM genre WHERE value=?");   //NOI18N
+            stDeleteGenre.setString(1, genre);
+            int nbRowsAffected = stDeleteGenre.executeUpdate();
+            if (nbRowsAffected > 0) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stDeleteGenre, "
+						+ "genre={0} # row(s) affected: +{1}", 
+						new Object[]{genre, nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("deleteGenre(" + genre + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+
+    /**
+     * Inserts a genre
+     *
+     * @param genre
+     * @return
+     */
+    public synchronized boolean insertGenre(String genre) {
+        try {
+            PreparedStatement stInsertGenre = dbConn.connection.prepareStatement(
+					"INSERT INTO genre (value) VALUES (?)");   //NOI18N
+            stInsertGenre.setString(1, genre);
+            int nbRowsAffected = stInsertGenre.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stInsertGenre, genre=\"{0}\" "
+						+ "# row(s) affected: +{1}", new Object[]{genre, nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("insertGenre(" + genre + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	/**
+     * Update genre
+     *
+     * @param fileInfo
+     * @return
+     */
+    public synchronized boolean updateGenre(FileInfoInt fileInfo) {
+        try {
+            PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement(
+					"UPDATE file set genre=?, "
+					+ "genreModifDate=datetime('now') "
+					+ "WHERE idFile=?");  //NOI18N
+            stUpdateFileGenre.setString(1, fileInfo.genre);
+            stUpdateFileGenre.setInt(2, fileInfo.idFile);
+            int nbRowsAffected = stUpdateFileGenre.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateFileGenre, "
+						+ "fileInfo={0} # row(s) affected: +{1}", 
+						new Object[]{fileInfo.toString(), nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("updateGenre(" + fileInfo.toString() + ")", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	/**
+     * Checks if genre is in supported list
+     *
+     * @param genre
+     * @return
+     */
+    public boolean checkGenre(String genre) {
+        ResultSet rs=null;
+        try {
+            PreparedStatement stCheckGenre = dbConn.connection.prepareStatement(
+					"SELECT COUNT(*) FROM genre WHERE value=?");   //NOI18N
+            stCheckGenre.setString(1, genre);
+            rs = stCheckGenre.executeQuery();
+            return rs.getInt(1) > 0;
+        } catch (SQLException ex) {
+            Popup.error("checkGenre(" + genre + ")", ex);   //NOI18N
+            return false;
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+        }
+    }
+
+    /**
+     * Returns list of supported genres
+     *
+     * @param myList
+     * @return
+     */
+    public boolean getGenreList(ArrayList<String> myList) {
+        ResultSet rs=null;
+        try {
+            PreparedStatement stSelectGenres = dbConn.connection.prepareStatement(
+					"SELECT value FROM genre");   //NOI18N
+            rs = stSelectGenres.executeQuery();
+            while (rs.next()) {
+                myList.add(dbConn.getStringValue(rs, "value"));   //NOI18N
+            }
+            return true;
+        } catch (SQLException ex) {
+            Popup.error("getGenreList", ex);   //NOI18N
+            return false;
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            
+        }
+    }
+	
+	/**
+	 *
+	 * @param myListModel
+	 */
+	public void getGenreListModel(DefaultListModel myListModel) {
+        getListModel(myListModel, "SELECT value FROM genre ORDER BY value", "value");
+    }
+	
+	// </editor-fold>
+	
+	// <editor-fold defaultstate="collapsed" desc="Others TODO FIXME">
 	
 	/**
      * Updates tag in tag table
@@ -356,56 +511,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 //		}
     }
 
-    /**
-     * Deletes genre from genre table
-     *
-     * @param genre
-     * @return
-     */
-    public synchronized boolean deleteGenre(String genre) {
-        try {
-            PreparedStatement stDeleteGenre = dbConn.connection.prepareStatement(
-					"DELETE FROM genre WHERE value=?");   //NOI18N
-            stDeleteGenre.setString(1, genre);
-            int nbRowsAffected = stDeleteGenre.executeUpdate();
-            if (nbRowsAffected > 0) {
-                return true;
-            } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stDeleteGenre, "
-						+ "genre={0} # row(s) affected: +{1}", 
-						new Object[]{genre, nbRowsAffected});   //NOI18N
-                return false;
-            }
-        } catch (SQLException ex) {
-            Popup.error("deleteGenre(" + genre + ")", ex);   //NOI18N
-            return false;
-        }
-    }
-
-    /**
-     * Inserts a genre
-     *
-     * @param genre
-     * @return
-     */
-    public synchronized boolean insertGenre(String genre) {
-        try {
-            PreparedStatement stInsertGenre = dbConn.connection.prepareStatement(
-					"INSERT INTO genre (value) VALUES (?)");   //NOI18N
-            stInsertGenre.setString(1, genre);
-            int nbRowsAffected = stInsertGenre.executeUpdate();
-            if (nbRowsAffected == 1) {
-                return true;
-            } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stInsertGenre, genre=\"{0}\" "
-						+ "# row(s) affected: +{1}", new Object[]{genre, nbRowsAffected});   //NOI18N
-                return false;
-            }
-        } catch (SQLException ex) {
-            Popup.error("insertGenre(" + genre + ")", ex);   //NOI18N
-            return false;
-        }
-    }
+    
 	
 	/**
      * Inserts a tag
@@ -560,62 +666,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
-    /**
-     * Checks if genre is in supported list
-     *
-     * @param genre
-     * @return
-     */
-    public boolean checkGenre(String genre) {
-        ResultSet rs=null;
-        try {
-            PreparedStatement stCheckGenre = dbConn.connection.prepareStatement(
-					"SELECT COUNT(*) FROM genre WHERE value=?");   //NOI18N
-            stCheckGenre.setString(1, genre);
-            rs = stCheckGenre.executeQuery();
-            return rs.getInt(1) > 0;
-        } catch (SQLException ex) {
-            Popup.error("checkGenre(" + genre + ")", ex);   //NOI18N
-            return false;
-        }
-        finally {
-            try {
-                if (rs!=null) rs.close();
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-        }
-    }
-
-    /**
-     * Returns list of supported genres
-     *
-     * @param myList
-     * @return
-     */
-    public boolean getGenreList(ArrayList<String> myList) {
-        ResultSet rs=null;
-        try {
-            PreparedStatement stSelectGenres = dbConn.connection.prepareStatement(
-					"SELECT value FROM genre");   //NOI18N
-            rs = stSelectGenres.executeQuery();
-            while (rs.next()) {
-                myList.add(dbConn.getStringValue(rs, "value"));   //NOI18N
-            }
-            return true;
-        } catch (SQLException ex) {
-            Popup.error("getGenreList", ex);   //NOI18N
-            return false;
-        }
-        finally {
-            try {
-                if (rs!=null) rs.close();
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            
-        }
-    }
+    
 
     /**
      * Insert a path in database
@@ -981,34 +1032,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
-    /**
-     * Update genre
-     *
-     * @param fileInfo
-     * @return
-     */
-    public synchronized boolean updateGenre(FileInfoInt fileInfo) {
-        try {
-            PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement(
-					"UPDATE file set genre=?, "
-					+ "genreModifDate=datetime('now') "
-					+ "WHERE idFile=?");  //NOI18N
-            stUpdateFileGenre.setString(1, fileInfo.genre);
-            stUpdateFileGenre.setInt(2, fileInfo.idFile);
-            int nbRowsAffected = stUpdateFileGenre.executeUpdate();
-            if (nbRowsAffected == 1) {
-                return true;
-            } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdateFileGenre, "
-						+ "fileInfo={0} # row(s) affected: +{1}", 
-						new Object[]{fileInfo.toString(), nbRowsAffected});   //NOI18N
-                return false;
-            }
-        } catch (SQLException ex) {
-            Popup.error("updateGenre(" + fileInfo.toString() + ")", ex);   //NOI18N
-            return false;
-        }
-    }
+    
 
     /**
      * Update rating
@@ -2129,13 +2153,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
-	/**
-	 *
-	 * @param myListModel
-	 */
-	public void getGenreListModel(DefaultListModel myListModel) {
-        getListModel(myListModel, "SELECT value FROM genre ORDER BY value", "value");
-    }
+	
     
 	/**
 	 *
@@ -3587,5 +3605,5 @@ Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
             }
         }
     }
-
+// </editor-fold>
 }

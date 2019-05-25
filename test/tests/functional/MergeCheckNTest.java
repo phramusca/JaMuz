@@ -28,6 +28,7 @@ import test.helpers.TestProcessHelper;
 import test.helpers.Settings;
 import static test.helpers.Settings.getMusicFolder;
 import jamuz.process.merge.StatSource;
+import jamuz.utils.ImageUtils;
 import java.io.File;
 import java.util.ArrayList;
 import org.junit.Assert;
@@ -176,7 +177,7 @@ public class MergeCheckNTest extends TestCase {
             //Note that MusiBrainz album should have been retrieved
             FolderInfo folder = AlbumBuffer.getAlbum(mbId, "MergeDevice7_KO").getCheckedFolder();
             folder.setNewGenre("Reggae");
-            folder.setNewImage(Settings.getTestCover());
+            folder.setNewImage(ImageUtils.getTestCover());
             folder.action=Action.SAVE;
 //            PanelCheck.addToActionQueue(folder);//FIXME TEST !!!
         }
