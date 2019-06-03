@@ -108,6 +108,10 @@ public final class Machine {
 		return options;
 	}
 
+	public void setOptions(ArrayList<Option> options) {
+		this.options = options;
+	}
+	
 	/**
 	 * Return Stat sources list
 	 * @return

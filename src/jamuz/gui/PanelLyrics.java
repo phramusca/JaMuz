@@ -62,9 +62,6 @@ public class PanelLyrics extends javax.swing.JPanel {
     }
 
     private void initExtended() {   
-        
-        
-
         //TODO: Make this an option
 //        jTextPaneLyrics.setFont(new java.awt.Font("DejaVu Sans", 1, 48)); // NOI18N
         
@@ -89,7 +86,6 @@ public class PanelLyrics extends javax.swing.JPanel {
         StyleConstants.setAlignment(style, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), doc.getStyle("centered"), false);
     }
-    
     
     /**
      * This method is called from within the constructor to initialize the form.

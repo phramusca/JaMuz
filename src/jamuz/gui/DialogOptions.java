@@ -67,9 +67,9 @@ public class DialogOptions extends javax.swing.JDialog {
 
 		// Close the dialog when Esc is pressed
 		String cancelName = "cancel";
-		InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelName);
-		ActionMap actionMap = getRootPane().getActionMap();
+		ActionMap actionMap = rootPane.getActionMap();
 		actionMap.put(cancelName, new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1130,18 +1130,9 @@ public class DialogOptions extends javax.swing.JDialog {
 					break;
 				}
 			}
-		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(DialogOptions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(DialogOptions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(DialogOptions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
 			java.util.logging.Logger.getLogger(DialogOptions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
-		//</editor-fold>
-		//</editor-fold>
-		//</editor-fold>
 		//</editor-fold>
 
 		/* Create and display the dialog */

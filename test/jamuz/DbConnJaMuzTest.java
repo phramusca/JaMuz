@@ -16,12 +16,14 @@
  */
 package jamuz;
 
+import jamuz.gui.swing.ListElement;
 import jamuz.process.check.DuplicateInfo;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
 import jamuz.remote.ClientInfo;
 import java.awt.Color;
+import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,8 +31,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import org.apache.commons.io.FilenameUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -296,6 +298,7 @@ public class DbConnJaMuzTest {
 		Collections.sort(expectedTags); // getTags() return sorted
 		assertArrayEquals(expectedTags.toArray(), actualList.toArray());
 	}
+	
 	@Test
 	@Ignore // Refer to testTag() above
 	public void testUpdateTag() {
@@ -356,15 +359,144 @@ public class DbConnJaMuzTest {
 	}
 	
 	// </editor-fold>
+			
+	// <editor-fold defaultstate="collapsed" desc="Machine & Option">
 	
-	//FIXME !!!! TEST Continue from here
+	/**
+	 * Test of machine and option methods, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testMachineAndOption() {
 	
-	// <editor-fold defaultstate="collapsed" desc="Machine">
+		//Create a new machine
+		StringBuilder zText = new StringBuilder ();
+		String machineName="000aaaa000"; //Hoping this this will be id 0 when sorted
+		assertTrue("isMachine", Jamuz.getDb().isMachine(machineName, zText, false));
+		
+		//Get machines
+		DefaultListModel defaultListModel = new DefaultListModel();
+		Jamuz.getDb().getMachineListModel(defaultListModel);
+		ListElement element = (ListElement) defaultListModel.get(0);
+		assertEquals(2, defaultListModel.size()); //The created one and current machine
+		assertEquals("<html><b>"+machineName+"</b><BR/><i>{null}</i></html>", element.toString());
+		assertEquals(machineName, element.getValue());
+		assertNull(element.getFile());
+		
+		//Get new machine options
+		ArrayList<Option> expectedOptions = new ArrayList<>();
+		int idMachine=2;
+		expectedOptions.add(new Option("location.library", "{Empty}", idMachine, 1, "path"));
+		expectedOptions.add(new Option("library.isMaster", "false", idMachine, 2, "bool"));
+		expectedOptions.add(new Option("location.add", "{Empty}", idMachine, 3, "path"));
+		expectedOptions.add(new Option("location.ok", "{Empty}", idMachine, 4, "path"));
+		expectedOptions.add(new Option("location.ko", "{Empty}", idMachine, 5, "path"));
+		expectedOptions.add(new Option("network.proxy", "{Empty}", idMachine, 6, "proxy"));
+		expectedOptions.add(new Option("location.mask", "%albumartist%/%album%/%track% %title%", idMachine, 7, "mask"));
+		expectedOptions.add(new Option("log.level", "INFO", idMachine, 8, "list"));
+		expectedOptions.add(new Option("log.limit", "5242880", idMachine, 9, "integer"));
+		expectedOptions.add(new Option("log.count", "20", idMachine, 10, "integer"));
+		expectedOptions.add(new Option("files.audio", "mp3,flac", idMachine, 11, "csv"));
+		expectedOptions.add(new Option("files.image", "png,jpg,jpeg,bmp,gif", idMachine, 12, "csv"));
+		expectedOptions.add(new Option("files.convert", "wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3", idMachine, 13, "csv"));
+		expectedOptions.add(new Option("files.delete", "db,ini,txt,m3u,pls,htm,html,doc,nfo,url,sfv,wpl,sfk", idMachine, 14, "csv"));
+		expectedOptions.add(new Option("location.manual", "{Empty}", idMachine, 15, "path"));
+		
+		checkOptionList(machineName, expectedOptions);
+						
+		//Set description
+		String description = "Waouh the great description!";
+		assertTrue(Jamuz.getDb().updateMachine(idMachine, description));
+		zText = new StringBuilder ();
+		assertTrue("isMachine updated", Jamuz.getDb().isMachine(machineName, zText, false));
+		assertEquals(description, zText.toString());
+		defaultListModel = new DefaultListModel();
+		Jamuz.getDb().getMachineListModel(defaultListModel);
+		element = (ListElement) defaultListModel.get(0);
+		assertEquals(2, defaultListModel.size()); //The created one and current machine
+		assertEquals("<html><b>"+machineName+"</b><BR/><i>"+description+"</i></html>", element.toString());
+		assertEquals(machineName, element.getValue());
+		assertNull(element.getFile());
+
+		//Set options (one by one)
+		int i=0; String newValue;
+		for(Option expectedOption : expectedOptions) {
+			newValue="New value "+i;
+			Jamuz.getDb().setOption(expectedOption, newValue);
+			if (expectedOption.getType().equals("path")) {   //NOI18N
+                newValue = FilenameUtils.normalizeNoEndSeparator(newValue.trim()) + File.separator;
+            }
+			expectedOption.setValue(newValue);
+		}
+		checkOptionList(machineName, expectedOptions);
+		
+		//Set options
+		i=0; 
+		for(Option expectedOption : expectedOptions) {
+			newValue="New New value "+(i+10);
+			expectedOption.setValue(newValue);
+		}
+		Machine machine = new Machine(machineName);
+		machine.setOptions(expectedOptions);
+		assertTrue(Jamuz.getDb().setOptions(machine));
+		for(Option expectedOption : expectedOptions) {
+			if (expectedOption.getType().equals("path")) {   //NOI18N
+                expectedOption.setValue(FilenameUtils.normalizeNoEndSeparator(expectedOption.getValue().trim()) + File.separator);
+            }
+		}
+		checkOptionList(machineName, expectedOptions);
+		
+		//Delete machine 
+		assertTrue(Jamuz.getDb().deleteMachine(machineName));
+		defaultListModel = new DefaultListModel();
+		Jamuz.getDb().getMachineListModel(defaultListModel);
+		assertEquals(1, defaultListModel.size()); //Only current machine left
+		element = (ListElement) defaultListModel.get(0);
+		assertNull(element.getFile());
+		assertNotEquals(machineName, element.getValue());
+				
+		//FIXME TEST Negative cases
+		//FIXME TEST Check other constraints
+	}
+	
+	private void checkOptionList(String machineName, ArrayList<Option> expectedOptions) {
+		ArrayList<Option> options = new ArrayList<>();
+		assertTrue("getOptions", Jamuz.getDb().getOptions(options, machineName));
+		Option actualOption; int i=0;
+		for(Option expectedOption : expectedOptions) {
+			actualOption = options.get(i); i++;
+			assertEquals(expectedOption.getComment(), actualOption.getComment());		
+			assertEquals(expectedOption.getIdOptionType(), actualOption.getIdOptionType());
+			assertEquals(expectedOption.getId(), actualOption.getId());
+			assertEquals(expectedOption.getIdMachine(), actualOption.getIdMachine());
+			assertEquals(expectedOption.getType(), actualOption.getType());
+			assertEquals(expectedOption.getValue(), actualOption.getValue());
+			assertEquals(expectedOption.toString(), actualOption.toString());
+		}
+	}
+	
+	/**
+	 * Test of isMachine method, of class DbConnJaMuz.
+	 */
+	@Test
+	@Ignore // Refer to testMachineAndOption() above
+	public void testIsMachine() {
+		System.out.println("isMachine");
+		String hostname = "";
+		StringBuilder description = null;
+		boolean hidden = false;
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.isMachine(hostname, description, hidden);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
 	
 	/**
 	 * Test of updateMachine method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testMachineAndOption() above
 	public void testUpdateMachine() {
 		System.out.println("updateMachine");
 		int idMachine = 0;
@@ -381,6 +513,7 @@ public class DbConnJaMuzTest {
 	 * Test of deleteMachine method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testMachineAndOption() above
 	public void testDeleteMachine() {
 		System.out.println("deleteMachine");
 		String machineName = "";
@@ -396,6 +529,7 @@ public class DbConnJaMuzTest {
 	 * Test of getMachineListModel method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testMachineAndOption() above
 	public void testGetMachineListModel() {
 		System.out.println("getMachineListModel");
 		DefaultListModel myListModel = null;
@@ -405,14 +539,11 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 	
-	// </editor-fold>
-	
-	// <editor-fold defaultstate="collapsed" desc="Option">
-	
 	/**
 	 * Test of setOptions method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testMachineAndOption() above
 	public void testSetOptions() {
 		System.out.println("setOptions");
 		Machine selOptions = null;
@@ -428,6 +559,7 @@ public class DbConnJaMuzTest {
 	 * Test of setOption method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testMachineAndOption() above
 	public void testSetOption() {
 		System.out.println("setOption");
 		Option myOption = null;
@@ -444,6 +576,7 @@ public class DbConnJaMuzTest {
 	 * Test of getOptions method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testMachineAndOption() above
 	public void testGetOptions() {
 		System.out.println("getOptions");
 		ArrayList<Option> myOptions = null;
@@ -455,33 +588,12 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	
-	// </editor-fold>
-	
-	// <editor-fold defaultstate="collapsed" desc="Machine & Option">
-	
-	/**
-	 * Test of isMachine method, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testIsMachine() {
-		System.out.println("isMachine");
-		String hostname = "";
-		StringBuilder description = null;
-		boolean hidden = false;
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.isMachine(hostname, description, hidden);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
 	
 	// </editor-fold>
 
+	//FIXME !!!! TEST Continue from here
 	// <editor-fold defaultstate="collapsed" desc="Playlist">
-
+	
 	/**
 	 * Test of updatePlaylist method, of class DbConnJaMuz.
 	 */

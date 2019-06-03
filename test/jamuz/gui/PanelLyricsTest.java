@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -52,6 +53,7 @@ public class PanelLyricsTest {
 	 * Test of setText method, of class PanelLyrics.
 	 */
 	@Test
+	@Ignore //Cannot test gui
 	public void testSetText() {
 		System.out.println("setText");
 		String lyrics = "";
@@ -64,6 +66,7 @@ public class PanelLyricsTest {
 	 * Test of setPosition method, of class PanelLyrics.
 	 */
 	@Test
+	@Ignore //Cannot test gui
 	public void testSetPosition() {
 		System.out.println("setPosition");
 		int currentPosition = 0;
