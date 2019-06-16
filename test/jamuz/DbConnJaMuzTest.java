@@ -594,6 +594,53 @@ public class DbConnJaMuzTest {
 	//FIXME !!!! TEST Continue from here
 	// <editor-fold defaultstate="collapsed" desc="Playlist">
 	
+		/**
+		 * Test of tag methods, of class DbConnJaMuz.
+		 */
+		@Test
+		public void testPlaylists() {
+		
+//		System.out.println("getGenreList");
+//
+//		ArrayList<String> expectedTags = new ArrayList<>();
+//		expectedTags.add("Calme");
+//		expectedTags.add("Normal");
+//		expectedTags.add("Joyeux");
+//		for(String tag : expectedTags) {
+//			assertTrue(Jamuz.getDb().insertTag(tag));
+//		}
+//		checkTagList(expectedTags);
+//		
+//		DefaultListModel myListModel = new DefaultListModel();
+//		Jamuz.getDb().getTagListModel(myListModel);
+//		assertArrayEquals(expectedTags.toArray(), myListModel.toArray());
+//		
+//		assertTrue("updateTag", Jamuz.getDb().updateTag("Normal", "Tutu"));
+//		expectedTags.set(2, "Tutu");
+//		checkTagList(expectedTags);
+//				
+//		assertTrue("deleteTag", Jamuz.getDb().deleteTag("Tutu"));
+//		expectedTags.remove("Tutu");
+//		checkTagList(expectedTags);
+//		
+//		assertTrue("insertTag", Jamuz.getDb().insertTag("Normal"));
+//		expectedTags.add("Normal");
+//		checkTagList(expectedTags);
+//		
+//		//Negative cases
+//		assertFalse("updateTag negative", Jamuz.getDb().updateTag("NoSuchWeirdGenre", "Toto"));
+//		checkTagList(expectedTags);
+//		
+//		assertFalse("deleteTag negative", Jamuz.getDb().deleteTag("NoSuchWeirdGenre"));
+//		checkTagList(expectedTags);
+//		
+//		assertFalse("insertTag negative", Jamuz.getDb().insertTag("Normal")); //As duplicate
+//		checkTagList(expectedTags);
+		
+		//FIXME TEST Check other constraints
+		
+	}
+	
 	/**
 	 * Test of updatePlaylist method, of class DbConnJaMuz.
 	 */
