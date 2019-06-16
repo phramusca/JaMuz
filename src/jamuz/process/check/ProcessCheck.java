@@ -415,8 +415,9 @@ public class ProcessCheck {
                
                 //Start the processes
                 boolean full=(!checkType.equals(CheckType.SCAN_QUICK));
-//                boolean scan = (!(checkType.equals(CheckType.CHECK_NEW) || checkType.equals(CheckType.SCAN_DELETED)));
-				boolean analyze=(!(checkType.equals(CheckType.SCAN_QUICK) || checkType.equals(CheckType.SCAN_FULL) || checkType.equals(CheckType.SCAN_DELETED)));
+				boolean analyze=(!(checkType.equals(CheckType.SCAN_QUICK) 
+						|| checkType.equals(CheckType.SCAN_FULL) 
+						|| checkType.equals(CheckType.SCAN_DELETED)));
                 
                 if(analyze) {
 					partialTimesAnalysis.clear();
@@ -479,6 +480,9 @@ public class ProcessCheck {
         private boolean sendFoldersDbToScanQueue(ScanType scanType) throws InterruptedException {
 			checkAbort();
             PanelCheck.progressBarFolders.setup(foldersDb.size());
+			//FIXME CHECK Set min selected number of Scan and Analysis to 2 (though user can decrease to 1)
+			//So that big/huge folders do not block others, assuming there aren't too many
+			// => Various Artists/Various Albums is 4000+ and takes far too long
 			for(FolderInfo folder : foldersDb.values()) {
 				checkAbort();
                 folder.setScanType(scanType);

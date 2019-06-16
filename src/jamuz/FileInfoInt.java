@@ -1287,7 +1287,7 @@ public class FileInfoInt extends FileInfo {
 	 */
 	public String getRelease() {
 		String separator="X7IzQsi3";  //NOI18N
-		return this.albumArtist + separator + this.album + separator + this.year + separator + this.trackTotal;
+		return this.albumArtist + separator + this.album;
 	}
 	
 	

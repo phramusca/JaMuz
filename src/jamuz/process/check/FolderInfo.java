@@ -509,9 +509,11 @@ public class FolderInfo implements java.lang.Comparable {
 				
 				//Get ReplayGain values from files
 				boolean isValid=true;
+				
+				progressBar.setup(filesAudio.size());
 				for(FileInfoDisplay fileInfoDisplay : filesAudio) {
+					progressBar.progress("Reading ReplayGain from \""+fileInfoDisplay.getRelativeFullPath()+"\"");
 					GainValues gv = fileInfoDisplay.getReplayGain(false);
-					System.out.println("ReplayGain: "+gv+" // "+gv.isValid()+" // " + fileInfoDisplay.getFullPath());
 					if(!gv.isValid()) {
 						isValid=false;
 						break; //No need to read others
@@ -523,9 +525,10 @@ public class FolderInfo implements java.lang.Comparable {
 					MP3gain mP3gain = new MP3gain(recalculateGain, rootPath, 
 							relativePath, progressBar);
 					if(mP3gain.process()) {
+						progressBar.setup(filesAudio.size());
 						filesAudio.stream().forEach((fileInfoDisplay) -> {
+							progressBar.progress("Reading ReplayGain from \""+fileInfoDisplay.getRelativeFullPath()+"\"");
 							GainValues gv = fileInfoDisplay.getReplayGain(true);
-							System.out.println("ReplayGain: "+gv+" // "+gv.isValid()+" // " + fileInfoDisplay.getFullPath());
 							fileInfoDisplay.saveReplayGainToID3(gv);
 						});
 					}
@@ -1092,15 +1095,18 @@ public class FolderInfo implements java.lang.Comparable {
 			}
 			progressBar.setIndeterminate(Inter.get("Msg.Check.AnalyzingFolder")); //NOI18N
             
-			//Add original(s) artistDisplay/album/year to originals list
+			//Add original(s) artistDisplay/album to originals list
 			ArrayList<String> releaseList = group(filesAudio, "getRelease");  //NOI18N
 			if(releaseList.size()>1) {
-				addToOriginals(Inter.get("Label.original")+0, "Various Artists", searchAlbum.equals("")?"Various Albums":searchAlbum, year, filesAudio.size(), idPath);
+				addToOriginals(Inter.get("Label.original")+0, "Various Artists", 
+						searchAlbum.equals("")?"Various Albums":searchAlbum, 
+						year, filesAudio.size(), idPath);
 			}
 			int i=1;
 			for (String myRelease : releaseList) {
 				String[] split = myRelease.split("X7IzQsi3");  //NOI18N //TODO: Use something nicer than this bad coding
-				addToOriginals(Inter.get("Label.original")+i, split[0], split[1], split[2], Integer.parseInt(split[3]), idPath);  //NOI18N
+				addToOriginals(Inter.get("Label.original")+i, 
+						split[0], split[1], year, filesAudio.size(), idPath);  //NOI18N
 				i++;
 			}
 			
@@ -1110,14 +1116,18 @@ public class FolderInfo implements java.lang.Comparable {
 			
 			if(file.getPath().contains(File.separator)) {
 				if(file.getParent().equals("")) {  //NOI18N
-					addToOriginals(Inter.get("Label.File"), file.getName(), "", "", 0, idPath);  //NOI18N
+					addToOriginals(Inter.get("Label.File"), file.getName(), "", 
+							year, filesAudio.size(), idPath);  //NOI18N
 				}
 				else {
-					addToOriginals(Inter.get("Label.File"), file.getParentFile().getPath(), file.getName(), "", 0, idPath);  //NOI18N
+					addToOriginals(Inter.get("Label.File"), 
+							file.getParentFile().getPath(), file.getName(), 
+							year, filesAudio.size(), idPath);  //NOI18N
 				}
 			}
 			else {
-				addToOriginals(Inter.get("Label.File"), file.getPath(), "", "", 0, idPath);  //NOI18N
+				addToOriginals(Inter.get("Label.File"), file.getPath(), "", 
+						year, filesAudio.size(), idPath);  //NOI18N
 			}
 			
 		}
@@ -1363,8 +1373,6 @@ public class FolderInfo implements java.lang.Comparable {
         }
 	}
 	
-	//Used in :
-	//analyse()
 	private void addToOriginals(String source, String artist, String album, String year, int trackTotal, int idPath) {
 		ReleaseMatch myMatch = new ReleaseMatch(-1, source, artist, album, year, trackTotal, idPath);
 		originals.add(myMatch);
@@ -1582,7 +1590,7 @@ public class FolderInfo implements java.lang.Comparable {
 		//Check there is only one destination relative path (and not empty)
 		ArrayList<String> groupedPaths = group(paths, "toString");  //NOI18N
 		if(groupedPaths.contains("") || groupedPaths.size()!=1) {
-			return new ActionResult("Destination paths are wrong.");
+			return new ActionResult("Multiple destination paths !!??");
 		}
 		if(!isCheckingMasterLibrary() && new File(FilenameUtils.concat(
 					destinationRoot, 

@@ -638,15 +638,13 @@ public class CheckDisplay {
 				triStateCheckBox=jCheckBoxCheckArtistDisplay; 
 				jLabel=jLabelArtist;
 				break;
-//				checkbox=jCheckBoxCheckArtistDisplay; break;
 			case 7: 
 				triStateCheckBox=jCheckCheckTitleDisplay; 
 				jLabel=jLabelTitle;
 				break;
-//				checkbox=jCheckCheckTitleDisplay; break;
 			case 9: checkbox=jCheckBoxCheckGenreDisplay; break;
 			case 11: checkbox=jCheckBoxCheckAlbumDisplay; break; 
-			case 13: checkbox=jCheckBoxCheckYearDisplay; select=false; break;
+			case 13: checkbox=jCheckBoxCheckYearDisplay; break;
 			case 19: checkbox=jCheckBoxCheckAlbumArtistDisplay; break;
 			case 21: checkbox=jCheckBoxCheckCommentDisplay; select=false; break;
 			case 24: checkbox=jCheckBoxCheckBPMDisplay; break;
