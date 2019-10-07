@@ -22,10 +22,6 @@ import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.process.check.ReplayGain;
 import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.Popup;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -64,6 +60,7 @@ import jamuz.utils.DateTime;
 import jamuz.utils.ImageUtils;
 import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
+import static jamuz.utils.StringManager.removeIllegal;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -1076,7 +1073,6 @@ public class FileInfoInt extends FileInfo {
 		
 		String artistName = artist.equals("")?"{Empty}":artist;
 		String titleName = title.equals("")?"{Empty}":title;
-		
 		strResult=strResult.replace("%artist%", StringManager.removeIllegal(artistName));  //NOI18N
 		strResult=strResult.replace("%albumartist%", StringManager.removeIllegal(albumArtist));  //NOI18N
 		strResult=strResult.replace("%album%", StringManager.removeIllegal(album));  //NOI18N
@@ -1102,6 +1098,8 @@ public class FileInfoInt extends FileInfo {
 		
 		return strResult;
 	}
+	
+	
 
 	@Override
 	public int compareTo(Object o) {

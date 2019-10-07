@@ -1486,10 +1486,6 @@ public final class DialogCheck extends javax.swing.JDialog {
 		enableButtons();
 	}
 	
-       /**
-	 *
-	 * @param enable
-	 */
 	private void enableAddOptions(boolean enable) {
 		jTextFieldCheckAlbum.setEnabled(enable);
 		jTextFieldCheckAlbumArtist.setEnabled(enable);
