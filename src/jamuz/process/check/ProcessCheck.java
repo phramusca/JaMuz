@@ -938,7 +938,7 @@ public class ProcessCheck {
 	};
 	
 	/**
-	 *
+	 * Type of check (Scan quick, Check new,...)
 	 */
 	public enum CheckType {
 

@@ -1464,7 +1464,7 @@ public class FolderInfo implements java.lang.Comparable {
         
 		ActionResult result = moveList(filesAudio, ProcessCheck.getDestinationLocation().getValue(), true, 
 				progressBar, MessageFormat.format(
-						Inter.get("Msg.Check.MovingToOK"),
+						Inter.get("Msg.Check.MovingToOK"), //FIXME: Not always to OK now
 						ProcessCheck.getDestinationLocation().getValue())); //NOI18N
 
         if(result.isPerformed && isDestinationLibrary()) {
@@ -1600,7 +1600,7 @@ public class FolderInfo implements java.lang.Comparable {
 		//Check that all filenames are different
 		ArrayList<String> groupedFilenames = group(filenames, "toString");  //NOI18N
 		if(groupedFilenames.contains("") || groupedFilenames.size()!=filenames.size()) {
-			return new ActionResult("Destination filenames are wrong.");
+			return new ActionResult("Identical filenames in destination.");
 		}			
 		//Do move
 		progressBar.setup(myList.size());
@@ -1703,12 +1703,14 @@ public class FolderInfo implements java.lang.Comparable {
 					Jamuz.getMachine().getOptionValue("location.mask"),
 					albumArtist,
 					album,
-					genre);  //NOI18N		
-			if(destination.length()>150) {
-				destination=StringManager.Left(destination, 150)+"(_)";  //NOI18N
-			}
-			destination=destination+"."+fileInfo.getExt();  //NOI18N
-			return destination; 
+					genre);  //NOI18N	
+			String path = FilenameUtils.getPath(destination);
+			//TODO: truncate each element of path
+			String filename = FilenameUtils.getName(destination);					
+			filename=StringManager.truncate(filename);
+			filename=filename+"."+fileInfo.getExt();  //NOI18N
+			
+			return FilenameUtils.concat(path, filename); 
 		}
 		else {
 			return fileInfo.getRelativeFullPath();
@@ -1809,10 +1811,11 @@ public class FolderInfo implements java.lang.Comparable {
         String result;
         builder.append("<html><b>");
         builder.append(relativePath);
-        builder.append("</b><BR/> | ");
+        builder.append("</b><BR/>");
 		if(!actionResult.isPerformed && !actionResult.status.equals("")) {
-			builder.append(actionResult.status).append("<BR/>");
-		}
+			builder.append("<b>").append(FolderInfoResult.colorField(actionResult.status.toUpperCase(), 2, false)).append("</b>");
+		} 
+		builder.append(" | ");
         for (Map.Entry<String, FolderInfoResult> entry : results.entrySet()) {
             if(entry.getValue().errorLevel>0) {
                 result=entry.getKey();

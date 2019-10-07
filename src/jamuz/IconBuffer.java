@@ -34,6 +34,9 @@ import java.awt.Image;
 import javax.swing.GrayFilter;
 import javax.swing.Icon;
 
+//FIXME: Looks like there is only one repo for both tags and genre => Split
+// So that "Classique" and "Musical" are no more mixed
+
 /**
  *
  * @author raph

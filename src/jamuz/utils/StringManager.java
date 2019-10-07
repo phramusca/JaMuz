@@ -41,6 +41,14 @@ public class StringManager {
         return str.replaceAll(pattern, "_"); //NOI18N
     }
     
+	public static String truncate(String text) {
+		text=removeIllegal(text);
+		if(text.length()>150) {
+			text=StringManager.Left(text, 150)+"(_)";  //NOI18N
+		}
+		return text;
+	}
+	
 	/**
 	 *
 	 * @param text
