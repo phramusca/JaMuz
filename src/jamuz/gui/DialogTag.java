@@ -242,7 +242,8 @@ public class DialogTag extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        cancel();
+        //FIXME: This does not seem to cancel anything !!?
+		cancel();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
 	private void cancel() {

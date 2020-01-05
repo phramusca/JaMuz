@@ -60,7 +60,6 @@ import jamuz.utils.DateTime;
 import jamuz.utils.ImageUtils;
 import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
-import static jamuz.utils.StringManager.removeIllegal;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -714,12 +713,8 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public boolean restoreTags(String destExt) {
-		//Change file extension
 		this.ext=destExt;
         this.setFilename(FilenameUtils.getBaseName(this.getFilename())+"."+this.ext);
-		this.relativeFullPath=this.relativePath+this.getFilename();
-		this.relativePath=FilenameUtils.getFullPath(this.relativeFullPath);
-		//Save tags
 		return saveTags(true);
 	}
 
