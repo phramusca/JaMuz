@@ -186,6 +186,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	public void setFilename(String filename) {
         this.filename = filename;
+		this.relativeFullPath=this.relativePath+this.filename;
     }
     
 	/**
