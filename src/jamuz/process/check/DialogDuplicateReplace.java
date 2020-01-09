@@ -55,7 +55,7 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 	private final TableColumnModel columnModel;
 	private final FolderInfo folder;
 	private final DuplicateInfo duplicateInfo;
-		
+	private final ProgressBar progressBar;
 	private final ICallBackReplace callback;
 	private Map<String, FolderInfoResult> results;
 	
@@ -74,9 +74,9 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 		this.duplicateInfo=duplicateInfo;
 		this.folder=folder;
 		this.callback = callback;
+		this.progressBar=(ProgressBar)jProgressBarCheckDialog;
 		
 		model = new TableModelReplace();
-		ProgressBar progressBar = (ProgressBar)jProgressBarCheckDialog;
         jTableCheck.setModel(model);
 		columnModel = new TableColumnModel();
 		
@@ -153,7 +153,7 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 		};
 		TableCellListener tcl = new TableCellListener(jTableCheck, action);	
 		
-		analyseMatch(progressBar);
+		analyseMatch();
 	}
 	
 	/**
@@ -292,53 +292,63 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
+	private void enableGUI(boolean enable) {
+		jButtonReplace.setEnabled(enable);
+		jButtonCancel.setEnabled(enable);
+	}
+	
     private void jButtonReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReplaceActionPerformed
- 
-		String sourceFullPath = folder.getFullPath();
-		String destinationFullPath = duplicateInfo.getFolderInfo().getFullPath();
-		List<FileInfoDuplicateReplace> files = model.getFiles();
-		StringBuilder builder = new StringBuilder("<html>");
-		builder.append("Do you want to move the following: ").append("<br/><br/>");
-		int[] selectedRows = jTableCheck.getSelectedRows();
-        int selectedRow;
-		List<SimpleEntry<String, String>> pairs = new ArrayList<>();
-        for(int i=0; i<selectedRows.length; i++) {
-            selectedRow = selectedRows[i];
-			FileInfoDuplicateReplace duplicateReplace = files.get(selectedRow);
-			if(duplicateReplace.isAudioFile) {
-				String sourceFile = FilenameUtils.concat(sourceFullPath, duplicateReplace.getFilename());
-				String destinationFile = FilenameUtils.concat(destinationFullPath, 
-						duplicateReplace.filenameDisplay.getValue().equals(TableValue.na)
-							?duplicateReplace.getFilename()
-							:duplicateReplace.filenameDisplay.getValue());
-				pairs.add(new SimpleEntry<>(sourceFile, destinationFile));
-				builder.append("from: ").append(sourceFile).append("<br/>")
-						.append("to : ").append(destinationFile).append("<br/>")
-						.append("<br/>");
-			}
-        }
-		builder.append("</html>");
-		int n = JOptionPane.showConfirmDialog(
-                null, builder.toString(), //NOI18N
-                Inter.get("Label.Confirm"),  //NOI18N
-                JOptionPane.YES_NO_OPTION);
+		new Thread(() -> {
+			enableGUI(false);
+			String sourceFullPath = folder.getFullPath();
+			String destinationFullPath = duplicateInfo.getFolderInfo().getFullPath();
+			List<FileInfoDuplicateReplace> files = model.getFiles();
 
-        if((n == JOptionPane.YES_OPTION)) {
-			for(SimpleEntry<String, String> pair : pairs) {
-				try {
-					File sourceFile = new File(pair.getKey());
-					File destinationFile = new File(pair.getValue());
-					destinationFile.delete();
-					FileUtils.copyFile(sourceFile, destinationFile);
+			int[] selectedRows = jTableCheck.getSelectedRows();
+			int selectedRow;
+
+			StringBuilder builder = new StringBuilder("<html>");
+			builder.append("Do you want to replace selected files ").append("<br/>")
+					.append("from: ").append(sourceFullPath).append("<br/>")
+					.append("to : ").append(destinationFullPath).append(" ?")
+					.append("</html>");
+			int n = JOptionPane.showConfirmDialog(
+					null, builder.toString(), //NOI18N
+					Inter.get("Label.Confirm"),  //NOI18N
+					JOptionPane.YES_NO_OPTION);
+			if((n == JOptionPane.YES_OPTION)) {
+				progressBar.setup(selectedRows.length);
+				for(int i=0; i<selectedRows.length; i++) {
+					selectedRow = selectedRows[i];
+					FileInfoDuplicateReplace duplicateReplace = files.get(selectedRow);
+					if(duplicateReplace.isAudioFile) {
+						File sourceFile = new File(FilenameUtils.concat(sourceFullPath, duplicateReplace.getFilename()));
+						File destinationFile = new File(FilenameUtils.concat(destinationFullPath, duplicateReplace.getFilename()));
+						File replacedFile = null;
+						if(!duplicateReplace.filenameDisplay.getValue().equals(TableValue.na)) {
+							replacedFile=new File(FilenameUtils.concat(destinationFullPath, duplicateReplace.filenameDisplay.getValue()));
+						}
+						try {
+							if(replacedFile!=null) {
+								replacedFile.delete();
+							}
+							FileUtils.copyFile(sourceFile, destinationFile);
+							if(replacedFile!=null) {
+								duplicateReplace.updateInDb();
+							}
+						}
+						catch (IOException ex) {
+							Logger.getLogger(DialogDuplicateReplace.class.getName()).log(Level.SEVERE, null, ex);
+						}
+					}
+					progressBar.progress(duplicateReplace.getFilename());
 				}
-				catch (IOException ex) {
-					Logger.getLogger(DialogDuplicateReplace.class.getName()).log(Level.SEVERE, null, ex);
-				}
+				duplicateInfo.getFolderInfo().updateInDb(CheckedFlag.UNCHECKED);
+				this.dispose();	
+				callback.replaced();
 			}
-			duplicateInfo.getFolderInfo().updateInDb(CheckedFlag.UNCHECKED);
-			this.dispose();	
-			callback.replaced();
-        }
+			enableGUI(true);
+		}).start();
     }//GEN-LAST:event_jButtonReplaceActionPerformed
 
 	private void moveCheckRow(int fromIndex, int toIndex) {
@@ -365,10 +375,10 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 	 * Analyse duplicate againts folder information
      * @param progressBar
 	 */
-	private void analyseMatch(ProgressBar progressBar) {
-	
+	private void analyseMatch() {
+		new Thread(() -> {
+			enableGUI(false);
 		results = new HashMap<>();
-
 		results.put("filename", new FolderInfoResult());  //NOI18N
         results.put("discNoFull", new FolderInfoResult());  //NOI18N
 		results.put("trackNoFull", new FolderInfoResult());  //NOI18N
@@ -416,6 +426,8 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
         }
 		progressBar.reset();
 		displayMatchTracks();
+		enableGUI(true);
+		}).start();
 	}
 	
 	/**

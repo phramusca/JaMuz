@@ -31,6 +31,8 @@ public final class FileInfoDuplicateReplace extends FileInfoInt {
 	 */
 	public boolean isAudioFile=false;
 
+	private FileInfoInt fileInfoInt;
+	
 	/**
 	 *
 	 */
@@ -64,6 +66,7 @@ public final class FileInfoDuplicateReplace extends FileInfoInt {
 	 */
 	public FileInfoDuplicateReplace(FileInfoDisplay fileInfoDisplay) {
         super("", ""); //NOI18N
+		this.fileInfoInt=fileInfoDisplay;
 		discNoFullDisplay=new TableValue(fileInfoDisplay.getDiscNoFull());
 		trackNoFullDisplay=new TableValue(fileInfoDisplay.getTrackNoFull());
 		artistDisplay=new TableValue(fileInfoDisplay.getArtist());
@@ -82,6 +85,7 @@ public final class FileInfoDuplicateReplace extends FileInfoInt {
 		titleDisplay=new TableValue(fileInfoDuplicateReplace.titleDisplay.getValue());
 		filenameDisplay=new TableValue(fileInfoDuplicateReplace.filenameDisplay.getValue());
 		rating=fileInfoDuplicateReplace.getRating();
+		fileInfoInt=fileInfoDuplicateReplace.fileInfoInt;
 	}
 	
 	/**
@@ -98,31 +102,15 @@ public final class FileInfoDuplicateReplace extends FileInfoInt {
 		this.filename=fileInfoInt.getFilename();
 	}
 
-	/**
-	 * Return filename
-	 * @return
-	 */
 	@Override
-	public String getFilename() {
-        return filename;
-    }
+	public boolean updateInDb() {
+		if(fileInfoInt!=null) {
+			fileInfoInt.setFilename(filename);
+			return fileInfoInt.updateInDb();
+		}
+		return false;
+	}
 	
-	/**
-	 * Set artist 
-	 * @param artist
-	 */
-	public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-	/**
-	 * Set title
-	 * @param title
-	 */
-	public void setTitle(String title) {
-        this.title = title;
-    }
-
 	/**
 	 * Clone object instance
 	 * @return
