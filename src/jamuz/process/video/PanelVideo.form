@@ -36,7 +36,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="281" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="381" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Component id="jPanelVideo" alignment="0" max="32767" attributes="0"/>
           </Group>
@@ -58,7 +58,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jSplitPane1" alignment="1" max="32767" attributes="0"/>
+              <Component id="jSplitPane1" alignment="1" pref="381" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -92,11 +92,11 @@
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="jLabelVideoStatus" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPaneSelectGenre1" pref="73" max="32767" attributes="2"/>
+                          <Component id="jScrollPaneSelectGenre1" pref="106" max="32767" attributes="2"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPaneSelectGenre2" pref="73" max="32767" attributes="2"/>
+                          <Component id="jScrollPaneSelectGenre2" pref="107" max="32767" attributes="2"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPaneSelectGenre4" pref="74" max="32767" attributes="2"/>
+                          <Component id="jScrollPaneSelectGenre4" pref="107" max="32767" attributes="2"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -300,7 +300,7 @@
                                       <Component id="jButtonRefresh" alignment="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="jScrollPaneCheckTags1" pref="177" max="32767" attributes="2"/>
+                                  <Component id="jScrollPaneCheckTags1" pref="274" max="32767" attributes="2"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
