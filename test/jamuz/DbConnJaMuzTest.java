@@ -1412,9 +1412,10 @@ public class DbConnJaMuzTest {
 		float bpmFrom = 0.0F;
 		float bpmTo = 0.0F;
 		int copyRight = 0;
+		String searchValue = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getFiles(myFileInfoList, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+		boolean result = instance.getFiles(myFileInfoList, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, searchValue);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1436,9 +1437,10 @@ public class DbConnJaMuzTest {
 		float bpmFrom = 0.0F;
 		float bpmTo = 0.0F;
 		int copyRight = 0;
+		String searchValue = "";
 		DbConnJaMuz instance = null;
 		String expResult = "";
-		String result = instance.getFilesStats(selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+		String result = instance.getFilesStats(selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, searchValue);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1493,8 +1495,9 @@ public class DbConnJaMuzTest {
 		float bpmTo = 0.0F;
 		int copyRight = 0;
 		String sqlOrder = "";
+		String searchValue = "";
 		DbConnJaMuz instance = null;
-		instance.fillSelectorList(myListModel, field, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, sqlOrder);
+		instance.fillSelectorList(myListModel, field, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, sqlOrder, searchValue);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

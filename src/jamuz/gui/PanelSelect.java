@@ -374,6 +374,7 @@ public class PanelSelect extends javax.swing.JPanel {
         jLabelPreviewDisplay = new javax.swing.JLabel();
         jComboBoxSoundCard = new javax.swing.JComboBox<>();
         jButtonPreviewStop = new javax.swing.JButton();
+        jTextFieldSearch = new javax.swing.JTextField();
         jPanelSelectTracks = new javax.swing.JPanel();
         jScrollPaneSelect = new javax.swing.JScrollPane();
         jTableSelect = new javax.swing.JTable();
@@ -498,7 +499,7 @@ public class PanelSelect extends javax.swing.JPanel {
                     .addComponent(jRadioSelectArtistName)
                     .addComponent(jRadioSelectArtistRating))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSelectArtist, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE))
+                .addComponent(jScrollPaneSelectArtist, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE))
         );
 
         jSplitPaneSelectArtistAlbum.setLeftComponent(jPanelSelectArtist);
@@ -788,14 +789,17 @@ public class PanelSelect extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelSelectSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanelSelectFilters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldSearch)))
         );
         jPanelSelectSelectorLayout.setVerticalGroup(
             jPanelSelectSelectorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPaneSelectGenre)
-            .addComponent(jSplitPaneSelectArtistAlbum, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jSplitPaneSelectArtistAlbum)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSelectSelectorLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTextFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelSelectFilters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1166,9 +1170,11 @@ public class PanelSelect extends javax.swing.JPanel {
                 float bpmTo = ((Integer) jSpinnerSelectBpmTo.getValue()).floatValue();
                 
                 int copyRight = jComboBoxBestOfCopyRight.getSelectedIndex() -1;
+				
+				String searchValue = jTextFieldSearch.getText().trim();
                 
                 jLabelSelectedSummary.setText(Jamuz.getDb().getFilesStats(selGenre, selArtist.getValue(), selAlbum.getValue(), selRatings, selCheckedFlag, 
-                        yearFrom, yearTo, bpmFrom, bpmTo, copyRight));
+                        yearFrom, yearTo, bpmFrom, bpmTo, copyRight, searchValue));
                 
                 if(selAlbum.getValue().equals("%") && selArtist.getValue().equals("%") && selGenre.equals("%")) {
                     //Not really usefull, take a lot of ressources for too little so exiting
@@ -1176,7 +1182,7 @@ public class PanelSelect extends javax.swing.JPanel {
                 }
                 
                 Jamuz.getDb().getFiles(fileInfoList, selGenre, selArtist.getValue(), selAlbum.getValue(), selRatings, selCheckedFlag, 
-                        yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+                        yearFrom, yearTo, bpmFrom, bpmTo, copyRight, searchValue);
 
                 for (FileInfoInt myFileInfoInt : fileInfoList) {
                     this.checkAbort();
@@ -1272,10 +1278,12 @@ public class PanelSelect extends javax.swing.JPanel {
         
         int copyRight = jComboBoxBestOfCopyRight.getSelectedIndex() -1;
         
+		String searchValue = jTextFieldSearch.getText().trim();
+		
 		Jamuz.getDb().fillSelectorList(myListModel, field, 
                 selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, 
                 yearFrom, yearTo, bpmFrom, bpmTo, 
-                copyRight, sqlOrder);
+                copyRight, sqlOrder, searchValue);
 	}
     
     private static Object fillSelectorlistGenre(JList list, Object selection, String field, String selGenre, String selArtist, String selAlbum) {
@@ -1539,6 +1547,7 @@ public class PanelSelect extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPaneSelect;
     private javax.swing.JSplitPane jSplitPaneSelectArtistAlbum;
     private static javax.swing.JTable jTableSelect;
+    private static javax.swing.JTextField jTextFieldSearch;
     private static javax.swing.JToggleButton jToggleButtonSelectShowBasic;
     private javax.swing.JToggleButton jToggleButtonSelectShowExtra;
     private javax.swing.JToggleButton jToggleButtonSelectShowFile;
