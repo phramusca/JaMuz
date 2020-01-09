@@ -90,32 +90,6 @@ public class FileInfoDuplicateReplaceTest {
 	}
 
 	/**
-	 * Test of setArtist method, of class FileInfoDuplicateReplace.
-	 */
-	@Test
-	public void testSetArtist() {
-		System.out.println("setArtist");
-		String artist = "";
-		FileInfoDuplicateReplace instance = null;
-		instance.setArtist(artist);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of setTitle method, of class FileInfoDuplicateReplace.
-	 */
-	@Test
-	public void testSetTitle() {
-		System.out.println("setTitle");
-		String title = "";
-		FileInfoDuplicateReplace instance = null;
-		instance.setTitle(title);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of clone method, of class FileInfoDuplicateReplace.
 	 */
 	@Test

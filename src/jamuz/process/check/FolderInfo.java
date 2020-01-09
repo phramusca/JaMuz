@@ -1105,8 +1105,9 @@ public class FolderInfo implements java.lang.Comparable {
 			int i=1;
 			for (String myRelease : releaseList) {
 				String[] split = myRelease.split("X7IzQsi3");  //NOI18N //TODO: Use something nicer than this bad coding
-				addToOriginals(Inter.get("Label.original")+i, 
-						split[0], split[1], year, filesAudio.size(), idPath);  //NOI18N
+				String artist = split.length>0?split[0]:"{Empty}";
+				String album = split.length>1?split[1]:"{Empty}";
+				addToOriginals(Inter.get("Label.original")+i, artist, album, year, filesAudio.size(), idPath);  //NOI18N
 				i++;
 			}
 			
@@ -1586,16 +1587,10 @@ public class FolderInfo implements java.lang.Comparable {
 				return new ActionResult(Inter.get("Error.DestinationExist"));
 			}
 		}
-		
 		//Check there is only one destination relative path (and not empty)
 		ArrayList<String> groupedPaths = group(paths, "toString");  //NOI18N
 		if(groupedPaths.contains("") || groupedPaths.size()!=1) {
 			return new ActionResult("Multiple destination paths !!??");
-		}
-		if(!isCheckingMasterLibrary() && new File(FilenameUtils.concat(
-					destinationRoot, 
-					groupedPaths.get(0))).exists()) {
-			return new ActionResult("Destination path already exists.");
 		}
 		//Check that all filenames are different
 		ArrayList<String> groupedFilenames = group(filenames, "toString");  //NOI18N
