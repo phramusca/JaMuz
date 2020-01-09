@@ -2492,7 +2492,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String selGenre, 
 			String selArtist, String selAlbum, 
             boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo, 
-			float bpmFrom, float bpmTo, int copyRight) {
+			float bpmFrom, float bpmTo, int copyRight, String searchValue) {
 
         selGenre = getSelected(selGenre);
         selArtist = getSelected(selArtist);
@@ -2501,7 +2501,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, "
 				+ "0 AS percentRated "  //NOI18N
                 + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, 
-						selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+						selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, searchValue);
 
         return getFiles(myFileInfoList, sql);
     }
@@ -2663,7 +2663,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public String getFilesStats(String selGenre, String selArtist, String selAlbum, 
             boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo, 
-			float bpmFrom, float bpmTo, int copyRight) {
+			float bpmFrom, float bpmTo, int copyRight, String searchValue) {
 
         selGenre = getSelected(selGenre);
         selArtist = getSelected(selArtist);
@@ -2673,7 +2673,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				+ "SUM(F.length) AS totalLength "  //NOI18N
                 + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, 
 						selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, 
-						copyRight);
+						copyRight, searchValue);
 
         return getFilesStats(sql);
         
@@ -2740,7 +2740,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public void fillSelectorList(DefaultListModel myListModel, String field, 
 			String selGenre, String selArtist, String selAlbum, boolean[] selRatings, 
             boolean[] selCheckedFlag, int yearFrom, int yearTo, float bpmFrom, 
-			float bpmTo, int copyRight, String sqlOrder) {
+			float bpmTo, int copyRight, String sqlOrder, String searchValue) {
 
         selGenre = getSelected(selGenre);
         selArtist = getSelected(selArtist);
@@ -2757,7 +2757,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 							//ex: Album "Charango" is either from Morcheeba or Yannick Noah
 							//BUT files from both album are displayed in both cases
 							//(WAS seen as only one album in Select tab, before group by idPath)
-                        + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+                        + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, searchValue);
                 sql += " GROUP BY P.idPath ";
                 sql += " HAVING (sum(case when rating IN "+getCSVlist(selRatings)+" then 1 end))>0 ";
                 sql += " ORDER BY " + sqlOrder;
@@ -2766,13 +2766,13 @@ public class DbConnJaMuz extends StatSourceSQL {
                 sql = "SELECT albumArtist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles, COUNT(DISTINCT F.idPath) AS nbPaths, 'albumArtist' AS source, "
                         + "ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, " +  //NOI18N
                         "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"  //NOI18N
-                        + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight)  //NOI18N
+                        + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, searchValue)  //NOI18N
                         + " GROUP BY albumArtist HAVING (sum(case when rating IN "+getCSVlist(selRatings)+" then 1 end))>0 ";  //NOI18N
                 sql += " UNION ";  //NOI18N
                 sql += "SELECT artist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles, COUNT(DISTINCT F.idPath) AS nbPaths, 'artist', "  //NOI18N
                         + "ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, " +  //NOI18N
                         "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"  //NOI18N
-                        + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight)
+                        + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, searchValue)
                         + " AND albumArtist='' GROUP BY " + field + " HAVING (sum(case when rating IN "+getCSVlist(selRatings)+" then 1 end))>0 "
                         + "ORDER BY " + sqlOrder;  //NOI18N
                 myListModel.addElement(new ListElement("%", field));   //NOI18N
@@ -2780,7 +2780,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 break;
             default:
                 sql = "SELECT " + field + " "  //NOI18N
-                        + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight)
+                        + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, searchValue)
                         + " GROUP BY " + field + " ORDER BY " + field;   //NOI18N //NOI18N
                 myListModel.addElement("%");   //NOI18N
                 break;
@@ -2794,7 +2794,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	
 	private String getSqlWHERE(String selGenre, String selArtist, String selAlbum, 
 			boolean[] selRatings, boolean[] selCheckedFlag, 
-            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) {
+            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight, String searchValue) {
         String sql = " \nFROM file F " +  //NOI18N
                 " \nINNER JOIN `path` P ON P.idPath=F.idPath " +   //NOI18N
                 " \nWHERE F.deleted=0 AND P.deleted=0 "    //NOI18N
@@ -2810,14 +2810,19 @@ public class DbConnJaMuz extends StatSourceSQL {
 
         if (!selGenre.equals("%")) {  //NOI18N
             sql += " \nAND genre=\"" + selGenre + "\""; //NOI18N
-        }  
-        if (!selArtist.equals("%")) {  //NOI18N
-            sql += " \nAND (artist=\"" + escapeDoubleQuote(selArtist) + "\" "
-					+ "OR albumArtist=\"" + escapeDoubleQuote(selArtist) + "\")";  //NOI18N
         }
-        if (!selAlbum.equals("%")) {  //NOI18N
-            sql += " \nAND album=\"" + escapeDoubleQuote(selAlbum) + "\""; //NOI18N
-        }  
+		if (!selArtist.equals("%")) {  //NOI18N
+			sql += " \nAND (artist=\"" + escapeDoubleQuote(selArtist) + "\" "
+					+ "OR albumArtist=\"" + escapeDoubleQuote(selArtist) + "\")";  //NOI18N
+		} else if(!searchValue.equals("")) {
+			sql += " \nAND (artist LIKE \"%" + escapeDoubleQuote(searchValue) + "%\" "
+						+ "OR albumArtist LIKE \"%" + escapeDoubleQuote(searchValue) + "%\")";  //NOI18N
+		}
+		if (!selAlbum.equals("%")) {  //NOI18N
+			sql += " \nAND album=\"" + escapeDoubleQuote(selAlbum) + "\""; //NOI18N
+		} else if(!searchValue.equals("")) {
+			sql += " \nAND album LIKE \"%" + escapeDoubleQuote(searchValue) + "%\"";  //NOI18N
+		} 
         if (copyRight >= 0) {
             sql += " \nAND copyRight=" + copyRight + " ";//NOI18N;
         }
