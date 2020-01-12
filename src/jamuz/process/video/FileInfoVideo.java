@@ -100,7 +100,7 @@ public class FileInfoVideo extends FileInfo {
 	 *
 	 */
 	public FileInfoVideo() {
-        super("");
+        super("", "");
     }
     
 	/**

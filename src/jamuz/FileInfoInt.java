@@ -409,15 +409,11 @@ public class FileInfoInt extends FileInfo {
 			boolean deleted, String coverHash, CheckedFlag checkedFlag, 
 			int copyRight, double albumRating, int percentRated, String rootPath) {
 		
-		super("file");  //NOI18N
+		super("file", FilenameUtils.separatorsToSystem(relativePath)+filename);  //NOI18N
         this.fromLibrary=true;
 		this.idFile=idFile;
 		this.idPath = idPath;
-		this.relativePath=FilenameUtils.separatorsToSystem(relativePath);
-		this.filename = filename;
-		this.relativeFullPath=this.relativePath+this.filename;
-		this.rootPath = rootPath;  //NOI18N
-        this.ext=FilenameUtils.getExtension(this.filename).toLowerCase(Locale.ENGLISH);
+		this.rootPath=rootPath;
 		
 		//Set File (tags) Info
 		this.length=length;
