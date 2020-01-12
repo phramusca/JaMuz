@@ -473,9 +473,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 * Used for scan statistics purposes 
 	 * (default values for one-side only file)
 	 * @param sourceName 
+	 * @param relativeFullPath 
 	 */
-	public FileInfo(String sourceName) {
-		this(-1, -1, "", 0, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 
+	public FileInfo(String sourceName, String relativeFullPath) {
+		this(-1, -1, relativeFullPath, 0, "1970-01-01 00:00:00", "1970-01-01 00:00:00", 
 				0, sourceName, 0, 0, "", "", "", "");  //NOI18N
 	}
 	
@@ -485,8 +486,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 * @param file
 	 */
 	public FileInfo(String sourceName, JSONObject file) {
-		this(sourceName);
-		relativeFullPath = (String) file.get("path");
+		this(sourceName, (String) file.get("path"));
 		rating = (int) (long) file.get("rating");
 		addedDate = getDate(file, "addedDate");
 		lastPlayed = getDate(file, "lastPlayed");
