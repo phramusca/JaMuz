@@ -128,7 +128,7 @@ public class PanelRemoteTest {
 		System.out.println("send");
 		String clientId = "";
 		ArrayList<FileInfo> mergeListDbSelected = null;
-		PanelRemote.send(clientId, mergeListDbSelected);
+		PanelRemote.send(clientId, mergeListDbSelected, true);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

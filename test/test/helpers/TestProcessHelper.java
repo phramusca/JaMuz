@@ -175,7 +175,7 @@ public class TestProcessHelper {
 			public void refresh() {
 				Jamuz.getLogger().info("Sync callback: refresh");
 			}
-		});
+		}, true);
         processMerge.start();
         processMerge.join();
     }

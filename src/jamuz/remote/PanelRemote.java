@@ -146,9 +146,10 @@ public class PanelRemote extends javax.swing.JPanel {
 		return false;
     }
 	
-	public static void send(String clientId, ArrayList<FileInfo> mergeListDbSelected) {
+	public static void send(String clientId, ArrayList<FileInfo> mergeListDbSelected, boolean stop) {
 		JSONObject obj = new JSONObject();
 		obj.put("type", "mergeListDbSelected");
+		obj.put("stop", stop);
 		JSONArray jsonArray = new JSONArray();
 		for (int i=0; i < mergeListDbSelected.size(); i++) {
 				jsonArray.add(mergeListDbSelected.get(i).toMap());
