@@ -215,6 +215,7 @@ public class Server {
 								setStatus(login, "Received files to merge");
 								ArrayList<FileInfo> newTracks = new ArrayList<>();
 								JSONArray files = (JSONArray) jsonObject.get("files");
+								boolean stop = (boolean) jsonObject.get("stop");
 								for(int i=0; i<files.size(); i++) {
 									JSONObject obj = (JSONObject) files.get(i);
 									FileInfo file = new FileInfo(login, obj);
@@ -223,10 +224,10 @@ public class Server {
 								List<StatSource> sources = new ArrayList();
 								sources.add(tableModel.getClient(login).getStatSource());
 								setStatus(login, "Starting merge");
-								new ProcessMerge("Thread.Server.ProcessMerge."+clientId, 
+							new ProcessMerge("Thread.Server.ProcessMerge."+clientId, 
 									sources, false, false, newTracks, 
 										tableModel.getClient(login).getProgressBar(), 
-										new CallBackMerge(login))
+										new CallBackMerge(login), stop)
 								.start();
 								break;
 						}
@@ -397,10 +398,17 @@ public class Server {
 		File file = Jamuz.getFile(login, "data", "devices");
 		if(file.exists()) {
 			try {
-				setStatus(login, "Sending new list of files to retrieve");
-				String json = new String(Files.readAllBytes(file.toPath()));
-				send(clientId, "JSON_"+json);
-				file.delete();
+				Device device = tableModel.getClient(login).getDevice();
+				if(device!=null) {
+					setStatus(login, "Delete in deviceFile table ...");
+					Jamuz.getDb().deleteDeviceFiles(device.getId());
+					setStatus(login, "Sending new list of files to retrieve");
+					String json = new String(Files.readAllBytes(file.toPath()));
+					send(clientId, "JSON_"+json);
+					file.delete();
+				} else {
+					setStatus(login, "Should not happen (idDevice not found) or you're stuck");
+				}
 			} catch (IOException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
 			}
