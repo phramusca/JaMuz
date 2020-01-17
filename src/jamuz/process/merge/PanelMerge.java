@@ -361,7 +361,7 @@ public class PanelMerge extends javax.swing.JPanel {
 					jCheckBoxMergeSimulate.isSelected(), 
 					jCheckBoxMergeForce.isSelected(), 
 					null, progressBar, 
-					new CallBackMerge(), true);
+					new CallBackMerge());
             processMerge.start();
 			jButtonMergeStart.setEnabled(true);
         }

@@ -215,7 +215,6 @@ public class Server {
 								setStatus(login, "Received files to merge");
 								ArrayList<FileInfo> newTracks = new ArrayList<>();
 								JSONArray files = (JSONArray) jsonObject.get("files");
-								boolean stop = (boolean) jsonObject.get("stop");
 								for(int i=0; i<files.size(); i++) {
 									JSONObject obj = (JSONObject) files.get(i);
 									FileInfo file = new FileInfo(login, obj);
@@ -227,7 +226,7 @@ public class Server {
 							new ProcessMerge("Thread.Server.ProcessMerge."+clientId, 
 									sources, false, false, newTracks, 
 										tableModel.getClient(login).getProgressBar(), 
-										new CallBackMerge(login), stop)
+										new CallBackMerge(login))
 								.start();
 								break;
 						}

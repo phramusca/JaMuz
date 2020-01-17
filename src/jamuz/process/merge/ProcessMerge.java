@@ -88,7 +88,6 @@ public class ProcessMerge extends ProcessAbstract {
 	private ArrayList<FileInfo> completedList;
 	private int nbSteps;
 	private final ICallBackMerge callback;
-	private final boolean stop;
 	
 	/**
 	 * Creates a new merge process instance
@@ -99,11 +98,10 @@ public class ProcessMerge extends ProcessAbstract {
 	 * @param files  
 	 * @param progressBar  
 	 * @param callback  
-	 * @param stop  
 	 */
 	public ProcessMerge(String name, List<StatSource> sources, 
 			boolean simulate, boolean forceJaMuz, ArrayList<FileInfo> files,
-			ProgressBar progressBar, ICallBackMerge callback, boolean stop) {
+			ProgressBar progressBar, ICallBackMerge callback) {
         super(name);
 		this.sources = sources;
 		this.simulate = simulate;
@@ -117,7 +115,6 @@ public class ProcessMerge extends ProcessAbstract {
 		isRemote=files!=null;
 		this.progressBar = progressBar;
 		this.callback = callback;
-		this.stop = stop;
 	}
 	
 	/**
@@ -261,7 +258,7 @@ public class ProcessMerge extends ProcessAbstract {
 		if(!simulate) {
 			if(isRemote) {
 				PanelRemote.send(selectedStatSource.getMachineName()+"-sync",
-						mergeListDbSelected, stop);
+						mergeListDbSelected);
 			} else {
 				for (StatSource statSource : sources) {
 					checkAbort();
