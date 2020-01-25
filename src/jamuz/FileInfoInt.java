@@ -1370,6 +1370,7 @@ public class FileInfoInt extends FileInfo {
 	public Map toMap() {
 		Map jsonAsMap = super.toMap();
 		jsonAsMap.put("size", size);
+		jsonAsMap.put("length", length);
 		return jsonAsMap;
 	}
 	
