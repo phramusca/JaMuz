@@ -6,7 +6,6 @@
 package jamuz.remote;
 
 import jamuz.FileInfoInt;
-import jamuz.IconBufferCover;
 import jamuz.utils.ImageUtils;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;

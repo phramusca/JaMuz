@@ -180,10 +180,12 @@ public class Server {
 									JSONArray list = new JSONArray();
 									JSONArray idFiles = (JSONArray) jsonObject.get("idFiles");
 									FileInfoInt file;
-									ArrayList<FileInfoInt> toInsertInDeviceFiles
-											 = new ArrayList<>();
+									ArrayList<FileInfoInt> toInsertInDeviceFiles = new ArrayList<>();
 									for(int i=0; i<idFiles.size(); i++) {
 										idFile = (int) (long) idFiles.get(i);
+										//FIXME: Do we really need to get relativeFullPath ??
+										//I don't think so since remote merge is based on file ids
+										//If not, no need to getDb().getFile => speeds up operation
 										file = Jamuz.getDb().getFile(idFile);
 										toInsertInDeviceFiles.add(file);
 									}
@@ -201,7 +203,7 @@ public class Server {
 											list.add(ins.toMap());
 										}
 										
-									}//FIXME Z SERVER else { Manage potential error => Send STOP to remote with error msg }
+									}//FIXME SERVER else { Manage potential error => Send STOP to remote with error msg }
 									setStatus(login, "Sending list of ack. files");
 									JSONObject obj = new JSONObject();
 									obj.put("type", "insertDeviceFileSAck");
