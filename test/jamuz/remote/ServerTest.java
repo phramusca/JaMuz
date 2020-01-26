@@ -145,21 +145,6 @@ public class ServerTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
-	/**
-	 * Test of send method, of class Server.
-	 */
-	@Test
-	public void testSend_Map_boolean() {
-		System.out.println("send");
-		Map jsonAsMap = null;
-		boolean isRemote = false;
-		Server instance = null;
-		instance.send(jsonAsMap, isRemote);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
 	/**
 	 * Test of isConnected method, of class Server.
 	 */

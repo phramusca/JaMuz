@@ -83,9 +83,12 @@ public class PanelRemote extends javax.swing.JPanel {
 		jTableRemote.createDefaultColumnsFromModel();
 		setColumn(0, 60);
 		setColumn(1, 60);
-		setColumn(2, 200);
-		setColumn(3, 300);
-		TableColumn column = jTableRemote.getColumnModel().getColumn(4);
+		setColumn(2, 60);
+		setColumn(3, 60);
+		setColumn(4, 60);
+		setColumn(5, 200);
+		setColumn(6, 300);
+		TableColumn column = jTableRemote.getColumnModel().getColumn(7);
 		column.setCellRenderer(new ProgressCellRender());
 		
         addMenuItem(Inter.get("Button.Edit")); //NOI18N
@@ -124,7 +127,7 @@ public class PanelRemote extends javax.swing.JPanel {
         jsonAsMap.put("album", fileInfo.getAlbum());
         jsonAsMap.put("artist", fileInfo.getArtist());
 		jsonAsMap.put("genre", fileInfo.getGenre());
-        send(jsonAsMap, true);
+        send(jsonAsMap);
     }
 	
 	public static void sendCover(String clientId, FileInfoInt displayedFile, int maxWidth) {
@@ -133,9 +136,9 @@ public class PanelRemote extends javax.swing.JPanel {
 		}
 	}
 	
-	public static void send(Map jsonAsMap, boolean isRemote) {
+	public static void send(Map jsonAsMap) {
         if(server!=null) {
-            server.send(jsonAsMap, isRemote);
+            server.send(jsonAsMap);
         }
     }
 	

@@ -42,21 +42,12 @@ public class Client {
 	private Reception reception;
 	private final ICallBackReception callback;
 	private ClientInfo info;
+	private ClientCanal canal;
     private String address;
     private PrintWriter printWriter;
     private OutputStream outputStream;
 	private InputStream inputStream;
 	private String path;
-	private Canal canal;
-
-	public enum Canal {
-		REMOTE,
-		SYNC,
-		DOWN1,
-		DOWN2,
-		DOWN3, 
-		NONE;
-	}
 	
 	/**
 	 * Set the value of locationWork
@@ -115,14 +106,14 @@ public class Client {
 				JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
 				String login =  (String) jsonObject.get("login");
 				String password = (String) jsonObject.get("password");
-				canal = Canal.valueOf((String) jsonObject.get("canal"));
+				ClientCanal newCanal = ClientCanal.valueOf((String) jsonObject.get("canal"));
 				String appId = (String) jsonObject.get("appId");
 				String rootPath = (String) jsonObject.get("rootPath");
 				reception = new Reception(bufferedReader, callback, Client.this);
 				reception.start();
 				info = new ClientInfo(login+"-"+appId, password, rootPath);
-				info.setRemoteConnected(canal.equals(Canal.REMOTE));
-				info.setSyncConnected(canal.equals(Canal.SYNC));
+				info.setConnected(newCanal, true);
+				canal = newCanal;
 				callback.connected(Client.this);
 			} catch (IOException | ParseException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);

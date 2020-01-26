@@ -17,7 +17,7 @@
 
 package jamuz;
 
-import jamuz.remote.Client.Canal;
+import jamuz.remote.ClientCanal;
 import jamuz.remote.PanelRemote;
 import java.io.BufferedReader;
 import java.io.File;
@@ -68,7 +68,7 @@ public class DbInfo {
 	 */
 	protected final String pwd;
 	
-	private Canal canal;
+	private ClientCanal canal;
 	
     /**
      *
@@ -78,8 +78,8 @@ public class DbInfo {
      * @param pwd
 	 * @param canal
      */
-    public DbInfo(LibType libType, String location, String user, String pwd, Canal canal) {
-		this.canal = Canal.NONE;
+    public DbInfo(LibType libType, String location, String user, String pwd, ClientCanal canal) {
+		this.canal = ClientCanal.NONE;
         this.libType = libType;
         this.locationOri = location;
         this.locationWork = location;
@@ -111,7 +111,7 @@ public class DbInfo {
      * @param pwd
      */
     public DbInfo(LibType libType, String location, String user, String pwd) {
-		this(libType, location, user, pwd, Canal.NONE);
+		this(libType, location, user, pwd, ClientCanal.NONE);
 	}
 
     /**
@@ -134,7 +134,7 @@ public class DbInfo {
                 if (locationOri.startsWith("ftp://")) {  //NOI18N
                     //TODO: Check FTP connect (and file ?)
                     return true;
-                } else if (!canal.equals(Canal.NONE)) { //For JaMuz Remote merge
+                } else if (!canal.equals(ClientCanal.NONE)) { //For JaMuz Remote merge
 					String clientId = this.locationOri+"-"+this.canal.name();
 					if(!PanelRemote.isConnected(clientId)) {
 						Popup.warning(java.text.MessageFormat.format(

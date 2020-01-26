@@ -1648,7 +1648,7 @@ public class PanelMain extends javax.swing.JFrame {
             jsonAsMap.put("type", "currentPosition");
             jsonAsMap.put("currentPosition", currentPosition);
             jsonAsMap.put("total", displayedFile.getLength());
-            PanelRemote.send(jsonAsMap, true);
+            PanelRemote.send(jsonAsMap);
             startTime=System.currentTimeMillis();
         }
     }
