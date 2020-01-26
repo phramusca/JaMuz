@@ -20,6 +20,7 @@ import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
+import jamuz.process.check.FolderInfo;
 import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.merge.StatSource;
@@ -37,6 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -173,46 +175,6 @@ public class Server {
 							case "requestFile":
 								idFile = (int) (long) jsonObject.get("idFile");
 								sendFile(clientId, login, idFile);
-								break;
-							case "ackFileSReception":
-								setStatus(login, "Received list of files to ack");
-								Device device = tableModel.getClient(login).getDevice();
-								if(device!=null) {
-									JSONArray list = new JSONArray();
-									JSONArray idFiles = (JSONArray) jsonObject.get("idFiles");
-									FileInfoInt file;
-									ArrayList<FileInfoInt> toInsertInDeviceFiles = new ArrayList<>();
-									for(int i=0; i<idFiles.size(); i++) {
-										idFile = (int) (long) idFiles.get(i);
-										//FIXME: Do we really need to get relativeFullPath ??
-										//I don't think so since remote merge is based on file ids
-										//If not, no need to getDb().getFile => speeds up operation
-										file = Jamuz.getDb().getFile(idFile);
-										toInsertInDeviceFiles.add(file);
-									}
-									//FIXME Z SERVER Insert in devicefile at export
-									//as using db results in timeouts when using PanelCheck meantime for instance
-									//+it will speed up as no need for double-ack
-									//-> need to merge first before sending new list of files to download
-									setStatus(login, "Inserting into device file list");
-									ArrayList<FileInfoInt> inserted= Jamuz.getDb().
-											insertDeviceFiles(toInsertInDeviceFiles, device.getId());
-									StatSource source = tableModel.getClient(login).getStatSource();
-									if(source!=null && Jamuz.getDb()
-											.setPreviousPlayCounter(inserted, source.getId())) {
-										for (FileInfoInt ins : inserted) {
-											list.add(ins.toMap());
-										}
-										
-									}//FIXME SERVER else { Manage potential error => Send STOP to remote with error msg }
-									setStatus(login, "Sending list of ack. files");
-									JSONObject obj = new JSONObject();
-									obj.put("type", "insertDeviceFileSAck");
-									obj.put("filesAcked", list);
-									send(clientId, obj);
-								} else {
-									setStatus(login, "Should not happen (idDevice not found) or you're stuck");
-								}
 								break;
 							case "FilesToMerge":
 								setStatus(login, "Received files to merge");
@@ -404,8 +366,31 @@ public class Server {
 				if(device!=null) {
 					setStatus(login, "Delete in deviceFile table ...");
 					Jamuz.getDb().deleteDeviceFiles(device.getId());
-					setStatus(login, "Sending new list of files to retrieve");
+					setStatus(login, "Inserting into device file list");
 					String json = new String(Files.readAllBytes(file.toPath()));
+					JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
+					JSONArray idFiles = (JSONArray) jsonObject.get("files");
+					FileInfoInt fileInfoInt;
+					JSONObject fileObject;
+					ArrayList<FileInfoInt> toInsertInDeviceFiles = new ArrayList<>();
+					for(int i=0; i<idFiles.size(); i++) {
+						fileObject = (JSONObject)idFiles.get(i);
+						String relativeFullPath = (String) fileObject.get("path");
+						fileInfoInt = new FileInfoInt((int)(long)fileObject.get("idFile"), 
+								-1, FilenameUtils.getPath(relativeFullPath), 
+								FilenameUtils.getName(relativeFullPath), -1, "", "", -1, -1, 
+								"", "", "", "", -1, -1, "", -1, "", -1, -1, "", -1, -1, 
+								"", "", "", false, "", FolderInfo.CheckedFlag.UNCHECKED, -1, -1, -1, "");
+						toInsertInDeviceFiles.add(fileInfoInt);
+					}
+					ArrayList<FileInfoInt> inserted= Jamuz.getDb().
+							insertDeviceFiles(toInsertInDeviceFiles, device.getId());
+					StatSource source = tableModel.getClient(login).getStatSource();
+					if(source==null || !Jamuz.getDb()
+							.setPreviousPlayCounter(inserted, source.getId())) {
+						//FIXME { Manage potential error => Send STOP to remote with error msg }
+					}
+					setStatus(login, "Sending new list of files to retrieve");
 					send(clientId, "JSON_"+json);
 					file.delete();
 				} else {
@@ -413,6 +398,8 @@ public class Server {
 				}
 			} catch (IOException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (ParseException ex) {
+				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		} else {
 			setStatus(login, "Sync will start soon");
