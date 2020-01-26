@@ -47,8 +47,17 @@ public class Client {
     private OutputStream outputStream;
 	private InputStream inputStream;
 	private String path;
-	private boolean isRemote;
+	private Canal canal;
 
+	public enum Canal {
+		REMOTE,
+		SYNC,
+		DOWN1,
+		DOWN2,
+		DOWN3, 
+		NONE;
+	}
+	
 	/**
 	 * Set the value of locationWork
 	 *
@@ -106,15 +115,14 @@ public class Client {
 				JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
 				String login =  (String) jsonObject.get("login");
 				String password = (String) jsonObject.get("password");
-				boolean isRemoteR = (Boolean) jsonObject.get("isRemote");
+				canal = Canal.valueOf((String) jsonObject.get("canal"));
 				String appId = (String) jsonObject.get("appId");
 				String rootPath = (String) jsonObject.get("rootPath");
 				reception = new Reception(bufferedReader, callback, Client.this);
 				reception.start();
 				info = new ClientInfo(login+"-"+appId, password, rootPath);
-				info.setRemoteConnected(isRemoteR);
-				info.setSyncConnected(!isRemoteR);
-				isRemote = isRemoteR;
+				info.setRemoteConnected(canal.equals(Canal.REMOTE));
+				info.setSyncConnected(canal.equals(Canal.SYNC));
 				callback.connected(Client.this);
 			} catch (IOException | ParseException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -254,6 +262,6 @@ public class Client {
 	}
 	
 	public String getClientId() {
-		return info.getLogin()+"-"+(isRemote?"remote":"sync");
+		return info.getLogin()+"-"+(canal.name());
 	}
 }
