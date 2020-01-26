@@ -22,8 +22,7 @@ import jamuz.process.sync.Device;
 import jamuz.Jamuz;
 import jamuz.DbInfo;
 import jamuz.DbInfo.LibType;
-import jamuz.remote.Client;
-import jamuz.remote.Client.Canal;
+import jamuz.remote.ClientCanal;
 import java.util.Date;
 import jamuz.utils.DateTime;
 
@@ -105,7 +104,7 @@ public class StatSource {
                 this.source = new StatSourceMyTunes(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
                 break;
 			case 6: // JaMuz Remote 	(Android)
-                this.source = new StatSourceJaMuzRemote(new DbInfo(LibType.Sqlite, location, user, pwd, Canal.SYNC), name, rootPath); 
+                this.source = new StatSourceJaMuzRemote(new DbInfo(LibType.Sqlite, location, user, pwd, ClientCanal.SYNC), name, rootPath); 
                 break;
             default:
                 this.source = null;

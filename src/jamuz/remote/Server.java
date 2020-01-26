@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -65,7 +66,7 @@ public class Server {
 	 */
 	public Server(int port, ICallBackServer callback) {
 		this.port = port;
-		clientMap = new HashMap();
+		clientMap = new ConcurrentHashMap();
 		tableModel = new TableModelRemote();
 		tableModel.setColumnNames();
 		this.callback = callback;
@@ -283,12 +284,16 @@ public class Server {
 				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getLogin());
 				clientMap.put(client.getClientId(), client);
 				client.send("MSG_CONNECTED");
-				if(client.getInfo().isSyncConnected()) {
-					clientInfoModel.setSyncConnected(true);
+				for(ClientCanal canal : ClientCanal.values()) {
+					if(!canal.equals(ClientCanal.NONE)
+							&& client.getInfo().isConnected(canal)) {
+						clientInfoModel.setConnected(canal, true);
+					}
+				}
+				if(client.getInfo().isConnected(ClientCanal.SYNC)) {
 					clientInfoModel.setStatus("Connected");
 				}
-				if(client.getInfo().isRemoteConnected()) {
-					clientInfoModel.setRemoteConnected(true);
+				if(client.getInfo().isConnected(ClientCanal.REMOTE)) {
 					callback.connectedRemote(client.getClientId());
 				} 
             } else {
@@ -306,11 +311,13 @@ public class Server {
 			}
 			if(tableModel.contains(clientInfo.getLogin())) {
 				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getLogin());
-				if(clientInfo.isRemoteConnected()) {
-					clientInfoModel.setRemoteConnected(false);
-				} 
-				if(clientInfo.isSyncConnected()) {
-					clientInfoModel.setSyncConnected(false);
+				for(ClientCanal canal : ClientCanal.values()) {
+					if(!canal.equals(ClientCanal.NONE)
+							&& clientInfo.isConnected(canal)) {
+						clientInfoModel.setConnected(canal, false);
+					}
+				}			
+				if(clientInfo.isConnected(ClientCanal.SYNC)) {
 					clientInfoModel.setStatus("Disconnected");
 				}
 				tableModel.fireTableDataChanged();
@@ -352,13 +359,7 @@ public class Server {
 	
 	private Map<String, Client> getRemoteClients() {
 		return clientMap.entrySet().stream()
-			.filter((client) -> client.getValue().getInfo().isRemoteConnected())
-			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
-	}
-	
-	private Map<String, Client> getDataClients() {
-		return clientMap.entrySet().stream()
-			.filter((client) -> client.getValue().getInfo().isSyncConnected())
+			.filter((client) -> client.getValue().getInfo().isConnected(ClientCanal.REMOTE))
 			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 	}
 	
@@ -444,14 +445,11 @@ public class Server {
 	}
 	
 	/**
-     * Sends a message to all clients
+     * Sends a message to all remote clients
 	 * @param jsonAsMap
-	 * @param isRemote
      */
-    public void send(Map jsonAsMap, boolean isRemote) {
-		Map<String, Client> clientsToSend = isRemote?
-				getRemoteClients():getDataClients();
-        for(Client client : clientsToSend.values()) {
+    public void send(Map jsonAsMap) {
+        for(Client client : getRemoteClients().values()) {
             client.send(jsonAsMap);
         }
 	}

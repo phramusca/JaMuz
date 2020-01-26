@@ -22,6 +22,8 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
 import jamuz.utils.DateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -35,8 +37,7 @@ public class ClientInfo {
 	private Device device;
 	private StatSource statSource;
 	private boolean enabled;
-	private boolean remoteConnected;
-	private boolean syncConnected;
+	private Map<ClientCanal, Boolean> canals;
 	private String status="";
 	private final ProgressBar progressBar;
 	private final String rootPath;
@@ -47,6 +48,12 @@ public class ClientInfo {
 //	private boolean allow...;
 
 	public ClientInfo(String login, String pwd, String rootPath) {
+		this.canals = new HashMap<>();
+		for(ClientCanal canal : ClientCanal.values()) {
+			if(!canal.equals(ClientCanal.NONE)) {
+				canals.put(canal, false);
+			}
+		}
 		this.progressBar = new ProgressBar();
 		this.login = login;
 		this.pwd = pwd;
@@ -66,7 +73,7 @@ public class ClientInfo {
 		this.statSource = statSource;
 		this.enabled = enabled;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -79,20 +86,12 @@ public class ClientInfo {
 		this.name = name;
 	}
 
-	public boolean isRemoteConnected() {
-		return remoteConnected;
+	public boolean isConnected(ClientCanal canal) {
+		return canals.get(canal);
 	}
-
-	public void setRemoteConnected(boolean remoteConnected) {
-		this.remoteConnected = remoteConnected;
-	}
-
-	public boolean isSyncConnected() {
-		return syncConnected;
-	}
-
-	public void setSyncConnected(boolean syncConnected) {
-		this.syncConnected = syncConnected;
+	
+	public void setConnected(ClientCanal canal, boolean connected) {
+		canals.put(canal, connected);
 	}
 
 	public String getStatus() {

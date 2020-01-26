@@ -94,60 +94,6 @@ public class ClientInfoTest {
 	}
 
 	/**
-	 * Test of isRemoteConnected method, of class ClientInfo.
-	 */
-	@Test
-	public void testIsRemoteConnected() {
-		System.out.println("isRemoteConnected");
-		ClientInfo instance = null;
-		boolean expResult = false;
-		boolean result = instance.isRemoteConnected();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of setRemoteConnected method, of class ClientInfo.
-	 */
-	@Test
-	public void testSetRemoteConnected() {
-		System.out.println("setRemoteConnected");
-		boolean remoteConnected = false;
-		ClientInfo instance = null;
-		instance.setRemoteConnected(remoteConnected);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of isSyncConnected method, of class ClientInfo.
-	 */
-	@Test
-	public void testIsSyncConnected() {
-		System.out.println("isSyncConnected");
-		ClientInfo instance = null;
-		boolean expResult = false;
-		boolean result = instance.isSyncConnected();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of setSyncConnected method, of class ClientInfo.
-	 */
-	@Test
-	public void testSetSyncConnected() {
-		System.out.println("setSyncConnected");
-		boolean syncConnected = false;
-		ClientInfo instance = null;
-		instance.setSyncConnected(syncConnected);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of getStatus method, of class ClientInfo.
 	 */
 	@Test
