@@ -20,11 +20,8 @@ package jamuz.remote;
  *
  * @author phramusca ( https://github.com/phramusca/ )
  */
-public enum ClientCanal {
-	REMOTE,
-	SYNC,
-	DOWN1,
-	DOWN2,
-	DOWN3, 
-	NONE;
+public class ClientCanal {
+	public static final int REMOTE=1;
+	public static final int SYNC=2;
+	//Then canals, starting 100 are for download process
 }

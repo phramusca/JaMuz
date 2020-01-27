@@ -84,11 +84,9 @@ public class PanelRemote extends javax.swing.JPanel {
 		setColumn(0, 60);
 		setColumn(1, 60);
 		setColumn(2, 60);
-		setColumn(3, 60);
-		setColumn(4, 60);
-		setColumn(5, 200);
-		setColumn(6, 300);
-		TableColumn column = jTableRemote.getColumnModel().getColumn(7);
+		setColumn(3, 200);
+		setColumn(4, 300);
+		TableColumn column = jTableRemote.getColumnModel().getColumn(5);
 		column.setCellRenderer(new ProgressCellRender());
 		
         addMenuItem(Inter.get("Button.Edit")); //NOI18N
