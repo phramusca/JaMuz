@@ -37,7 +37,7 @@ public class ClientInfo {
 	private Device device;
 	private StatSource statSource;
 	private boolean enabled;
-	private Map<ClientCanal, Boolean> canals;
+	private Map<Integer, Boolean> canals;
 	private String status="";
 	private final ProgressBar progressBar;
 	private final String rootPath;
@@ -49,11 +49,9 @@ public class ClientInfo {
 
 	public ClientInfo(String login, String pwd, String rootPath) {
 		this.canals = new HashMap<>();
-		for(ClientCanal canal : ClientCanal.values()) {
-			if(!canal.equals(ClientCanal.NONE)) {
-				canals.put(canal, false);
-			}
-		}
+		canals.put(ClientCanal.REMOTE, false);
+		canals.put(ClientCanal.SYNC, false);
+		
 		this.progressBar = new ProgressBar();
 		this.login = login;
 		this.pwd = pwd;
@@ -86,11 +84,15 @@ public class ClientInfo {
 		this.name = name;
 	}
 
-	public boolean isConnected(ClientCanal canal) {
+	public long getNumberOfConnectedDownloads() {
+		return canals.entrySet().stream().filter(e -> (e.getKey()>99 && e.getValue())).count();
+	}
+	
+	public boolean isConnected(int canal) {
 		return canals.get(canal);
 	}
 	
-	public void setConnected(ClientCanal canal, boolean connected) {
+	public void setConnected(int canal, boolean connected) {
 		canals.put(canal, connected);
 	}
 
@@ -158,4 +160,10 @@ public class ClientInfo {
 	void setId(int id) {
 		this.id=id;
 	}
+
+	Map<Integer, Boolean> getCanals() {
+		return canals;
+	}
+
+	
 }

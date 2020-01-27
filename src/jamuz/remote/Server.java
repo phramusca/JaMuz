@@ -30,7 +30,6 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,10 +245,9 @@ public class Server {
 				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getLogin());
 				clientMap.put(client.getClientId(), client);
 				client.send("MSG_CONNECTED");
-				for(ClientCanal canal : ClientCanal.values()) {
-					if(!canal.equals(ClientCanal.NONE)
-							&& client.getInfo().isConnected(canal)) {
-						clientInfoModel.setConnected(canal, true);
+				for(Map.Entry<Integer, Boolean> entry : client.getInfo().getCanals().entrySet()) {
+					if(entry.getValue()) {
+						clientInfoModel.setConnected(entry.getKey(), true);
 					}
 				}
 				if(client.getInfo().isConnected(ClientCanal.SYNC)) {
@@ -257,7 +255,7 @@ public class Server {
 				}
 				if(client.getInfo().isConnected(ClientCanal.REMOTE)) {
 					callback.connectedRemote(client.getClientId());
-				} 
+				}
             } else {
 				//FIXME Z SERVER Make this disconnect client AND NOT RECONNECT ("Authentication failed." in android notif)
 				client.send("MSG_ERROR_CONNECTION"); 
@@ -273,12 +271,11 @@ public class Server {
 			}
 			if(tableModel.contains(clientInfo.getLogin())) {
 				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getLogin());
-				for(ClientCanal canal : ClientCanal.values()) {
-					if(!canal.equals(ClientCanal.NONE)
-							&& clientInfo.isConnected(canal)) {
-						clientInfoModel.setConnected(canal, false);
+				for(Map.Entry<Integer, Boolean> entry : clientInfo.getCanals().entrySet()) {
+					if(entry.getValue()) {
+						clientInfoModel.setConnected(entry.getKey(), false);
 					}
-				}			
+				}
 				if(clientInfo.isConnected(ClientCanal.SYNC)) {
 					clientInfoModel.setStatus("Disconnected");
 				}

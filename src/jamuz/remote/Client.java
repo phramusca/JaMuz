@@ -42,7 +42,7 @@ public class Client {
 	private Reception reception;
 	private final ICallBackReception callback;
 	private ClientInfo info;
-	private ClientCanal canal;
+	private int canal;
     private String address;
     private PrintWriter printWriter;
     private OutputStream outputStream;
@@ -106,7 +106,7 @@ public class Client {
 				JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
 				String login =  (String) jsonObject.get("login");
 				String password = (String) jsonObject.get("password");
-				ClientCanal newCanal = ClientCanal.valueOf((String) jsonObject.get("canal"));
+				int newCanal = (int) (long) jsonObject.get("canal");
 				String appId = (String) jsonObject.get("appId");
 				String rootPath = (String) jsonObject.get("rootPath");
 				reception = new Reception(bufferedReader, callback, Client.this);
@@ -253,6 +253,6 @@ public class Client {
 	}
 	
 	public String getClientId() {
-		return info.getLogin()+"-"+(canal.name());
+		return info.getLogin()+"-"+(canal);
 	}
 }
