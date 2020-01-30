@@ -138,12 +138,7 @@ public class ProcessSync extends ProcessAbstract {
 			callback.refresh();
 		}
 		jsonAsMap.put("files", filesToGet);		
-		progressBar.reset();
-		progressBar.setIndeterminate("Delete in deviceFile table ..."); //NOI18N
-		callback.refresh();
 		callback.enableButton(false);
-		Jamuz.getDb().deleteDeviceFiles(device.getId());
-		
 		progressBar.setIndeterminate("Saving list ..."); //NOI18N
 		callback.refresh();
 		String json = JSONValue.toJSONString(jsonAsMap);

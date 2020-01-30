@@ -6,7 +6,6 @@
 package jamuz.remote;
 
 import jamuz.FileInfoInt;
-import jamuz.IconBufferCover;
 import jamuz.utils.ImageUtils;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
@@ -43,13 +42,13 @@ public class Client {
 	private Reception reception;
 	private final ICallBackReception callback;
 	private ClientInfo info;
+	private int canal;
     private String address;
     private PrintWriter printWriter;
     private OutputStream outputStream;
 	private InputStream inputStream;
 	private String path;
-	private boolean isRemote;
-
+	
 	/**
 	 * Set the value of locationWork
 	 *
@@ -107,15 +106,14 @@ public class Client {
 				JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
 				String login =  (String) jsonObject.get("login");
 				String password = (String) jsonObject.get("password");
-				boolean isRemoteR = (Boolean) jsonObject.get("isRemote");
+				int newCanal = (int) (long) jsonObject.get("canal");
 				String appId = (String) jsonObject.get("appId");
 				String rootPath = (String) jsonObject.get("rootPath");
 				reception = new Reception(bufferedReader, callback, Client.this);
 				reception.start();
 				info = new ClientInfo(login+"-"+appId, password, rootPath);
-				info.setRemoteConnected(isRemoteR);
-				info.setSyncConnected(!isRemoteR);
-				isRemote = isRemoteR;
+				info.setConnected(newCanal, true);
+				canal = newCanal;
 				callback.connected(Client.this);
 			} catch (IOException | ParseException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -255,6 +253,6 @@ public class Client {
 	}
 	
 	public String getClientId() {
-		return info.getLogin()+"-"+(isRemote?"remote":"sync");
+		return info.getLogin()+"-"+(canal);
 	}
 }

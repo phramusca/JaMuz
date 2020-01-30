@@ -17,6 +17,7 @@
 
 package jamuz;
 
+import jamuz.remote.ClientCanal;
 import jamuz.remote.PanelRemote;
 import java.io.BufferedReader;
 import java.io.File;
@@ -67,7 +68,7 @@ public class DbInfo {
 	 */
 	protected final String pwd;
 	
-	private boolean remote;
+	private int canal;
 	
     /**
      *
@@ -75,15 +76,15 @@ public class DbInfo {
      * @param location
      * @param user
      * @param pwd
-	 * @param remote
+	 * @param canal
      */
-    public DbInfo(LibType libType, String location, String user, String pwd, boolean remote) {
-		this.remote = false;
+    public DbInfo(LibType libType, String location, String user, String pwd, int canal) {
         this.libType = libType;
         this.locationOri = location;
         this.locationWork = location;
         this.user = user;
         this.pwd = pwd;
+		this.canal = canal;
         
         //Parse FTP information
 		if (this.locationOri.startsWith("ftp://")) {  //NOI18N
@@ -98,8 +99,7 @@ public class DbInfo {
 			this.ftpServer = split3[1].substring(0, firstDelim);
 			this.ftpRemoteFolder = split3[1].substring(firstDelim, lastDelim);
 			this.ftpFileName = split3[1].substring(lastDelim + 1, split3[1].length());
-		}
-		this.remote = remote;
+		}		
     }
 	
 	/**
@@ -110,7 +110,7 @@ public class DbInfo {
      * @param pwd
      */
     public DbInfo(LibType libType, String location, String user, String pwd) {
-		this(libType, location, user, pwd, false);
+		this(libType, location, user, pwd, -1);
 	}
 
     /**
@@ -133,12 +133,12 @@ public class DbInfo {
                 if (locationOri.startsWith("ftp://")) {  //NOI18N
                     //TODO: Check FTP connect (and file ?)
                     return true;
-                } else if (remote) {  //NOI18N //For JaMuz Remote merge
-					String clientId = this.locationOri+"-sync";
+                } else if (canal==ClientCanal.SYNC) { //For JaMuz Remote merge
+					String clientId = this.locationOri+"-"+this.canal;
 					if(!PanelRemote.isConnected(clientId)) {
 						Popup.warning(java.text.MessageFormat.format(
 								"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
-								new Object[] {this.locationOri}));  //NOI18N
+								new Object[] {clientId}));  //NOI18N
 						return false;
 					}
                     return true;
