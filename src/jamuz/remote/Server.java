@@ -20,6 +20,7 @@ import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
+import jamuz.process.check.FolderInfo;
 import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.merge.StatSource;
@@ -29,13 +30,14 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -65,7 +67,7 @@ public class Server {
 	 */
 	public Server(int port, ICallBackServer callback) {
 		this.port = port;
-		clientMap = new HashMap();
+		clientMap = new ConcurrentHashMap();
 		tableModel = new TableModelRemote();
 		tableModel.setColumnNames();
 		this.callback = callback;
@@ -173,44 +175,6 @@ public class Server {
 								idFile = (int) (long) jsonObject.get("idFile");
 								sendFile(clientId, login, idFile);
 								break;
-							case "ackFileSReception":
-								setStatus(login, "Received list of files to ack");
-								Device device = tableModel.getClient(login).getDevice();
-								if(device!=null) {
-									JSONArray list = new JSONArray();
-									JSONArray idFiles = (JSONArray) jsonObject.get("idFiles");
-									FileInfoInt file;
-									ArrayList<FileInfoInt> toInsertInDeviceFiles
-											 = new ArrayList<>();
-									for(int i=0; i<idFiles.size(); i++) {
-										idFile = (int) (long) idFiles.get(i);
-										file = Jamuz.getDb().getFile(idFile);
-										toInsertInDeviceFiles.add(file);
-									}
-									//FIXME Z SERVER Insert in devicefile at export
-									//as using db results in timeouts when using PanelCheck meantime for instance
-									//+it will speed up as no need for double-ack
-									//-> need to merge first before sending new list of files to download
-									setStatus(login, "Inserting into device file list");
-									ArrayList<FileInfoInt> inserted= Jamuz.getDb().
-											insertDeviceFiles(toInsertInDeviceFiles, device.getId());
-									StatSource source = tableModel.getClient(login).getStatSource();
-									if(source!=null && Jamuz.getDb()
-											.setPreviousPlayCounter(inserted, source.getId())) {
-										for (FileInfoInt ins : inserted) {
-											list.add(ins.toMap());
-										}
-										
-									}//FIXME Z SERVER else { Manage potential error => Send STOP to remote with error msg }
-									setStatus(login, "Sending list of ack. files");
-									JSONObject obj = new JSONObject();
-									obj.put("type", "insertDeviceFileSAck");
-									obj.put("filesAcked", list);
-									send(clientId, obj);
-								} else {
-									setStatus(login, "Should not happen (idDevice not found) or you're stuck");
-								}
-								break;
 							case "FilesToMerge":
 								setStatus(login, "Received files to merge");
 								ArrayList<FileInfo> newTracks = new ArrayList<>();
@@ -223,7 +187,7 @@ public class Server {
 								List<StatSource> sources = new ArrayList();
 								sources.add(tableModel.getClient(login).getStatSource());
 								setStatus(login, "Starting merge");
-								new ProcessMerge("Thread.Server.ProcessMerge."+clientId, 
+							new ProcessMerge("Thread.Server.ProcessMerge."+clientId, 
 									sources, false, false, newTracks, 
 										tableModel.getClient(login).getProgressBar(), 
 										new CallBackMerge(login))
@@ -281,14 +245,17 @@ public class Server {
 				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getLogin());
 				clientMap.put(client.getClientId(), client);
 				client.send("MSG_CONNECTED");
-				if(client.getInfo().isSyncConnected()) {
-					clientInfoModel.setSyncConnected(true);
+				for(Map.Entry<Integer, Boolean> entry : client.getInfo().getCanals().entrySet()) {
+					if(entry.getValue()) {
+						clientInfoModel.setConnected(entry.getKey(), true);
+					}
+				}
+				if(client.getInfo().isConnected(ClientCanal.SYNC)) {
 					clientInfoModel.setStatus("Connected");
 				}
-				if(client.getInfo().isRemoteConnected()) {
-					clientInfoModel.setRemoteConnected(true);
+				if(client.getInfo().isConnected(ClientCanal.REMOTE)) {
 					callback.connectedRemote(client.getClientId());
-				} 
+				}
             } else {
 				//FIXME Z SERVER Make this disconnect client AND NOT RECONNECT ("Authentication failed." in android notif)
 				client.send("MSG_ERROR_CONNECTION"); 
@@ -304,11 +271,12 @@ public class Server {
 			}
 			if(tableModel.contains(clientInfo.getLogin())) {
 				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getLogin());
-				if(clientInfo.isRemoteConnected()) {
-					clientInfoModel.setRemoteConnected(false);
-				} 
-				if(clientInfo.isSyncConnected()) {
-					clientInfoModel.setSyncConnected(false);
+				for(Map.Entry<Integer, Boolean> entry : clientInfo.getCanals().entrySet()) {
+					if(entry.getValue()) {
+						clientInfoModel.setConnected(entry.getKey(), false);
+					}
+				}
+				if(clientInfo.isConnected(ClientCanal.SYNC)) {
 					clientInfoModel.setStatus("Disconnected");
 				}
 				tableModel.fireTableDataChanged();
@@ -350,13 +318,7 @@ public class Server {
 	
 	private Map<String, Client> getRemoteClients() {
 		return clientMap.entrySet().stream()
-			.filter((client) -> client.getValue().getInfo().isRemoteConnected())
-			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
-	}
-	
-	private Map<String, Client> getDataClients() {
-		return clientMap.entrySet().stream()
-			.filter((client) -> client.getValue().getInfo().isSyncConnected())
+			.filter((client) -> client.getValue().getInfo().isConnected(ClientCanal.REMOTE))
 			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 	}
 	
@@ -397,12 +359,44 @@ public class Server {
 		File file = Jamuz.getFile(login, "data", "devices");
 		if(file.exists()) {
 			try {
-				setStatus(login, "Sending new list of files to retrieve");
-				String json = new String(Files.readAllBytes(file.toPath()));
-				send(clientId, "JSON_"+json);
-				file.delete();
+				Device device = tableModel.getClient(login).getDevice();
+				if(device!=null) {
+					setStatus(login, "Delete in deviceFile table ...");
+					Jamuz.getDb().deleteDeviceFiles(device.getId());
+					setStatus(login, "Inserting into device file list");
+					String json = new String(Files.readAllBytes(file.toPath()));
+					JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
+					JSONArray idFiles = (JSONArray) jsonObject.get("files");
+					FileInfoInt fileInfoInt;
+					JSONObject fileObject;
+					ArrayList<FileInfoInt> toInsertInDeviceFiles = new ArrayList<>();
+					for(int i=0; i<idFiles.size(); i++) {
+						fileObject = (JSONObject)idFiles.get(i);
+						String relativeFullPath = (String) fileObject.get("path");
+						fileInfoInt = new FileInfoInt((int)(long)fileObject.get("idFile"), 
+								-1, FilenameUtils.getPath(relativeFullPath), 
+								FilenameUtils.getName(relativeFullPath), -1, "", "", -1, -1, 
+								"", "", "", "", -1, -1, "", -1, "", -1, -1, "", -1, -1, 
+								"", "", "", false, "", FolderInfo.CheckedFlag.UNCHECKED, -1, -1, -1, "");
+						toInsertInDeviceFiles.add(fileInfoInt);
+					}
+					ArrayList<FileInfoInt> inserted= Jamuz.getDb().
+							insertDeviceFiles(toInsertInDeviceFiles, device.getId());
+					StatSource source = tableModel.getClient(login).getStatSource();
+					if(source==null || !Jamuz.getDb()
+							.setPreviousPlayCounter(inserted, source.getId())) {
+						//FIXME { Manage potential error => Send STOP to remote with error msg }
+					}
+					setStatus(login, "Sending new list of files to retrieve");
+					send(clientId, "JSON_"+json);
+					file.delete();
+				} else {
+					setStatus(login, "Should not happen (idDevice not found) or you're stuck");
+				}
 			} catch (IOException ex) {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (ParseException ex) {
+				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		} else {
 			setStatus(login, "Sync will start soon");
@@ -435,14 +429,11 @@ public class Server {
 	}
 	
 	/**
-     * Sends a message to all clients
+     * Sends a message to all remote clients
 	 * @param jsonAsMap
-	 * @param isRemote
      */
-    public void send(Map jsonAsMap, boolean isRemote) {
-		Map<String, Client> clientsToSend = isRemote?
-				getRemoteClients():getDataClients();
-        for(Client client : clientsToSend.values()) {
+    public void send(Map jsonAsMap) {
+        for(Client client : getRemoteClients().values()) {
             client.send(jsonAsMap);
         }
 	}

@@ -33,6 +33,7 @@ import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.remote.ClientCanal;
 import jamuz.remote.PanelRemote;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.Popup;
@@ -257,7 +258,7 @@ public class ProcessMerge extends ProcessAbstract {
 		//Copy back databases back 
 		if(!simulate) {
 			if(isRemote) {
-				PanelRemote.send(selectedStatSource.getMachineName()+"-sync",
+				PanelRemote.send(selectedStatSource.getMachineName()+"-"+ClientCanal.SYNC,
 						mergeListDbSelected);
 			} else {
 				for (StatSource statSource : sources) {

@@ -96,19 +96,6 @@ public class PanelRemoteTest {
 	 * Test of send method, of class PanelRemote.
 	 */
 	@Test
-	public void testSend_Map_boolean() {
-		System.out.println("send");
-		Map jsonAsMap = null;
-		boolean isRemote = false;
-		PanelRemote.send(jsonAsMap, isRemote);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of send method, of class PanelRemote.
-	 */
-	@Test
 	public void testSend_String_JSONObject() {
 		System.out.println("send");
 		String clientId = "";
