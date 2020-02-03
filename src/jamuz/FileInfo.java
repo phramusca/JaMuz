@@ -701,6 +701,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		});
 		jsonAsMap.put("tags", tagsAsMap);
 		jsonAsMap.put("size", -1);
+		jsonAsMap.put("length", -1);
 		return jsonAsMap;
 	}
 	

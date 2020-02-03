@@ -373,10 +373,11 @@ public class Server {
 					for(int i=0; i<idFiles.size(); i++) {
 						fileObject = (JSONObject)idFiles.get(i);
 						String relativeFullPath = (String) fileObject.get("path");
+						int playCounter = (int)(long) fileObject.get("playCounter");
 						fileInfoInt = new FileInfoInt((int)(long)fileObject.get("idFile"), 
 								-1, FilenameUtils.getPath(relativeFullPath), 
 								FilenameUtils.getName(relativeFullPath), -1, "", "", -1, -1, 
-								"", "", "", "", -1, -1, "", -1, "", -1, -1, "", -1, -1, 
+								"", "", "", "", -1, -1, "", -1, "", -1, -1, "", playCounter, -1, 
 								"", "", "", false, "", FolderInfo.CheckedFlag.UNCHECKED, -1, -1, -1, "");
 						toInsertInDeviceFiles.add(fileInfoInt);
 					}
