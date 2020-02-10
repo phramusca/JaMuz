@@ -16,6 +16,7 @@
  */
 package jamuz.remote;
 
+import express.Express;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
@@ -52,6 +53,7 @@ public class Server {
 	/**
 	 *
 	 */
+	private Express app;
 	public static ServerSocket serverSocket = null;
 	private int port;
 	private HandleLogin handleLogin;
@@ -89,6 +91,22 @@ public class Server {
 			handleLogin = new HandleLogin(serverSocket);
 			handleLogin.start();
 			
+			//Start REST Server, currently only for file downloads
+			//FIXME: Move all sync exchanges from socket to Express app
+			app = new Express();
+			app.get("/download", (req, res) -> {
+				int idFile = Integer.valueOf(req.getQuery("id"));
+				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
+				File file = fileInfoInt.getFullPath();
+				if(file.exists()&&file.isFile()) {	
+					String msg=" #"+fileInfoInt.getIdFile()+" ("+file.length()+"o) "+file.getAbsolutePath();
+					System.out.println("Sending"+msg);
+					res.sendAttachment(file.toPath());
+					System.out.println("Sent"+msg);
+				}				
+			});
+			app.listen(port+1); //Temp using port+1. Use port once all moved to Express
+			
 			return true;
 		} catch (IOException ex) {
 			Popup.error("Cannot start JaMuz Remote Server", ex);
@@ -108,6 +126,8 @@ public class Server {
 			handleLogin.abort();
 //			handleLogin.join(); //cannot join as serverSocket.accept(); blocks
 			serverSocket.close();
+			
+			app.stop();
 		} catch (IOException ex) {
 			Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
 		}
