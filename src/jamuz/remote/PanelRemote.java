@@ -34,6 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -65,7 +66,7 @@ public class PanelRemote extends javax.swing.JPanel {
 	 */
 	public PanelRemote() {
 		initComponents();
-		setIpText();
+//		setIpText();
 	}
 
 	public void initExtended(ICallBackServer callback) {
@@ -165,81 +166,63 @@ public class PanelRemote extends javax.swing.JPanel {
 		return false;
 	}
 	
-	/**
-	* Returns an <code>InetAddress</code> object encapsulating what is most likely the machine's LAN IP address.
-	* <p/>
-	* This method is intended for use as a replacement of JDK method <code>InetAddress.getLocalHost</code>, because
-	* that method is ambiguous on Linux systems. Linux systems enumerate the loopback network interface the same
-	* way as regular LAN network interfaces, but the JDK <code>InetAddress.getLocalHost</code> method does not
-	* specify the algorithm used to select the address returned under such circumstances, and will often return the
-	* loopback address, which is not valid for network communication. Details
-	* <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4665037">here</a>.
-	* <p/>
-	* This method will scan all IP addresses on all network interfaces on the host machine to determine the IP address
-	* most likely to be the machine's LAN address. If the machine has multiple IP addresses, this method will prefer
-	* a site-local IP address (e.g. 192.168.x.x or 10.10.x.x, usually IPv4) if the machine has one (and will return the
-	* first site-local address if the machine has more than one), but if the machine does not hold a site-local
-	* address, this method will return simply the first non-loopback address found (IPv4 or IPv6).
-	* <p/>
-	* If this method cannot find a non-loopback address using this selection algorithm, it will fall back to
-	* calling and returning the result of JDK method <code>InetAddress.getLocalHost</code>.
-	* <p/>
-	*
-	* @throws UnknownHostException If the LAN address of the machine cannot be found.
-	*/
-   private static InetAddress getLocalHostLANAddress() throws UnknownHostException {
-	   try {
-		   InetAddress candidateAddress = null;
-		   // Iterate all NICs (network interface cards)...
-		   for (Enumeration ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();) {
-			   NetworkInterface iface = (NetworkInterface) ifaces.nextElement();
-			   // Iterate all IP addresses assigned to each card...
-			   for (Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
-				   InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
-				   if (!inetAddr.isLoopbackAddress()) {
-
-					   if (inetAddr.isSiteLocalAddress()) {
-						   // Found non-loopback site-local address. Return it immediately...
-						   return inetAddr;
-					   }
-					   else if (candidateAddress == null) {
-						   // Found non-loopback address, but not necessarily site-local.
-						   // Store it as a candidate to be returned if site-local address is not subsequently found...
-						   candidateAddress = inetAddr;
-						   // Note that we don't repeatedly assign non-loopback non-site-local addresses as candidates,
-						   // only the first. For subsequent iterations, candidate will be non-null.
-					   }
-				   }
-			   }
-		   }
-		   if (candidateAddress != null) {
-			   // We did not find a site-local address, but we found some other non-loopback address.
-			   // Server might have a non-site-local address assigned to its NIC (or it might be running
-			   // IPv6 which deprecates the "site-local" concept).
-			   // Return this non-loopback candidate address...
-			   return candidateAddress;
-		   }
-		   // At this point, we did not find a non-loopback address.
-		   // Fall back to returning whatever InetAddress.getLocalHost() returns...
-		   InetAddress jdkSuppliedAddress = InetAddress.getLocalHost();
-		   if (jdkSuppliedAddress == null) {
-			   throw new UnknownHostException("The JDK InetAddress.getLocalHost() method unexpectedly returned null.");
-		   }
-		   return jdkSuppliedAddress;
-	   }
-	   catch (SocketException | UnknownHostException e) {
+	private static InetAddress getLocalHostLANAddress() throws UnknownHostException {
+		try {
+			InetAddress candidateAddress = null;
+			//First try using this method
+			//https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+			try(final DatagramSocket socket = new DatagramSocket()){
+				socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+				System.out.println("Socket trick: "+socket.getLocalAddress().getHostAddress());
+				candidateAddress = socket.getLocalAddress();
+			}
+			//TODO: Support MacOS:
+//			Socket socket = new Socket();
+//			socket.connect(new InetSocketAddress("google.com", 80));
+//			System.out.println(socket.getLocalAddress());
+		   
+			//Then, loop on network interfaces but hard to determine which one is best (includes wifi, lan and docker)
+			System.out.println("Listing interfaces:");
+			for (Enumeration ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();) {
+				NetworkInterface iface = (NetworkInterface) ifaces.nextElement();	   
+				for (Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements();) {
+					InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
+					if (!inetAddr.isLoopbackAddress() && inetAddr.isSiteLocalAddress()) {
+						System.out.println("\t"+iface.getDisplayName()+": "+inetAddr.getHostAddress());
+						if (candidateAddress == null) {
+							candidateAddress = inetAddr;
+						}
+					}
+				}
+			}
+		   
+			//Finally, get the IP provided by java but it usually returns loopback ip so useless
+			InetAddress jdkSuppliedAddress = InetAddress.getLocalHost();
+			System.out.println("JDK supplied: "+jdkSuppliedAddress.getHostAddress());
+			if (candidateAddress == null) {
+				candidateAddress = jdkSuppliedAddress;
+			}
+		   
+			//Return whatever ip was found or throw an exception
+			if (candidateAddress == null) {
+				throw new UnknownHostException("The JDK InetAddress.getLocalHost() method unexpectedly returned null.");
+			}
+			else {
+				return candidateAddress;
+			}
+		}
+		catch (SocketException | UnknownHostException e) {
 		   UnknownHostException unknownHostException = new UnknownHostException("Failed to determine LAN address: " + e);
 		   unknownHostException.initCause(e);
 		   throw unknownHostException;
-	   }
-   }
+		}
+	}
 
-   private void enableConfig(boolean enable) {
-//	   Swing.enableComponents(jPanelRemote, enable);
+	private void enableConfig(boolean enable) {
 		jSpinnerPort.setEnabled(enable);
-   }
+	}
    
-   private void setIpText() {
+	private void setIpText() {
 	   StringBuilder IP = new StringBuilder();
 		IP.append("<html>Set \"<B>");
 		try {
@@ -249,9 +232,9 @@ public class PanelRemote extends javax.swing.JPanel {
 		}
 		IP.append("\"</B> in JaMuz Remote as <B>\"&lt;IP&gt;:&lt;Port&gt;\"</B> or read QR code with your Android phone.</html>");
 		jLabelIP.setText(IP.toString());
-   }
+	}
    
-   private void startStopRemoteServer() {
+	private void startStopRemoteServer() {
 		enableConfig(false);
 		if(server!=null) {
 			server.closeClients();
@@ -295,6 +278,7 @@ public class PanelRemote extends javax.swing.JPanel {
         jButtonQRcode = new javax.swing.JButton();
         jScrollPaneCheckTags1 = new javax.swing.JScrollPane();
         jTableRemote = new javax.swing.JTable();
+        jButtonRefreshIP = new javax.swing.JButton();
 
         jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder("Jamuz Remote Server"));
 
@@ -343,6 +327,13 @@ public class PanelRemote extends javax.swing.JPanel {
         });
         jScrollPaneCheckTags1.setViewportView(jTableRemote);
 
+        jButtonRefreshIP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/update.png"))); // NOI18N
+        jButtonRefreshIP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRefreshIPActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
@@ -350,35 +341,38 @@ public class PanelRemote extends javax.swing.JPanel {
             .addGroup(jPanelRemoteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addComponent(jLabelIP)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jCheckBoxServerStartOnStartup))
-                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonQRcode)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonStart)))
+                        .addComponent(jButtonStart))
+                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addComponent(jButtonRefreshIP)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelIP)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jCheckBoxServerStartOnStartup)))
                 .addContainerGap())
         );
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRemoteLayout.createSequentialGroup()
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonStart)
-                    .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(jButtonQRcode))
+                    .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonQRcode)
+                    .addComponent(jButtonStart))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelIP)
-                    .addComponent(jCheckBoxServerStartOnStartup))
+                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonRefreshIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jCheckBoxServerStartOnStartup)
+                    .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -401,6 +395,7 @@ public class PanelRemote extends javax.swing.JPanel {
 
     private void jButtonQRcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQRcodeActionPerformed
         try {
+			setIpText();
             String ip = getLocalHostLANAddress().getHostAddress();
             int port = (Integer) jSpinnerPort.getValue();
             String encrypted = Encryption.encrypt(ip+":"+port, "NOTeBrrhzrtestSecretK");
@@ -435,6 +430,10 @@ public class PanelRemote extends javax.swing.JPanel {
         Jamuz.getOptions().set("server.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
 		Jamuz.getOptions().save();
     }//GEN-LAST:event_jCheckBoxServerStartOnStartupItemStateChanged
+
+    private void jButtonRefreshIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshIPActionPerformed
+        setIpText();
+    }//GEN-LAST:event_jButtonRefreshIPActionPerformed
 
 	private ClientInfo getSelected() {
 		int selectedRow = jTableRemote.getSelectedRow(); 			
@@ -516,6 +515,7 @@ public class PanelRemote extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonQRcode;
+    private javax.swing.JButton jButtonRefreshIP;
     private javax.swing.JButton jButtonStart;
     private javax.swing.JCheckBox jCheckBoxServerStartOnStartup;
     private javax.swing.JLabel jLabel1;
