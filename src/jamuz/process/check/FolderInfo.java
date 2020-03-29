@@ -589,12 +589,9 @@ public class FolderInfo implements java.lang.Comparable {
 				}
 				target = new File(FilenameUtils.concat(basePath, FilenameUtils.getBaseName(file.getFilename())+"."+destExt));  //NOI18N
 				attrs.setAudioAttributes(audio);
-				//Encode
 				Encoder encoder = new Encoder();
 				encoder.encode(source, target, attrs);
-				//Apply previously read tags to new 
 				file.restoreTags(destExt);
-                //Delete source now that it hs been transcoded
                 source.delete();
 
 			} catch (IllegalArgumentException | EncoderException ex) {
