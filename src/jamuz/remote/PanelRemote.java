@@ -66,7 +66,6 @@ public class PanelRemote extends javax.swing.JPanel {
 	 */
 	public PanelRemote() {
 		initComponents();
-//		setIpText();
 	}
 
 	public void initExtended(ICallBackServer callback) {
@@ -503,8 +502,6 @@ public class PanelRemote extends javax.swing.JPanel {
 
 		@Override
 		public void addRow(String file, String msg) {}
-
-		
 	}
 	
 	static void refreshList() {
@@ -512,7 +509,6 @@ public class PanelRemote extends javax.swing.JPanel {
 		server.getTableModel().fireTableDataChanged();
 	}
 	
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonQRcode;
     private javax.swing.JButton jButtonRefreshIP;
