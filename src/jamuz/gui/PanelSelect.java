@@ -17,7 +17,6 @@
 
 package jamuz.gui;
 
-import jamuz.process.check.PanelCheck;
 import jamuz.FileInfoInt;
 import jamuz.process.check.FolderInfo;
 import jamuz.IconBufferCover;
@@ -27,14 +26,10 @@ import jamuz.gui.swing.ListElement;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.JMenuItem;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.ListSelectionModel;
@@ -46,25 +41,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.ListModelSelector;
 import jamuz.gui.swing.ListCellRendererSelector;
-import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
-import jamuz.player.Mplayer.AudioCard;
-import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.Swing;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.logging.Level;
-import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JMenu;
 
 /**
  *
@@ -96,6 +80,7 @@ public class PanelSelect extends javax.swing.JPanel {
     public static ArrayList<FileInfoInt> getFileInfoList() {
         return fileInfoList;
     }
+	private PopupMenu myPopupMenu;
     
     /**
      * Creates new form PanelSelect
@@ -176,71 +161,6 @@ public class PanelSelect extends javax.swing.JPanel {
         jSpinnerSelectBpmFrom.setModel(bpmModel);
         bpmModel = new SpinnerNumberModel(220, 0, 5000, 20); 
         jSpinnerSelectBpmTo.setModel(bpmModel);
-        
-        
-        //Menu listener
-        ActionListener menuListener = (ActionEvent e) -> {
-			JMenuItem source = (JMenuItem)(e.getSource());
-			String sourceTxt=source.getText();
-			if(sourceTxt.equals(Inter.get("Button.Edit"))) { //NOI18N
-				menuEdit();
-			}
-			else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueue.text"))) { //NOI18N
-				menuQueue();
-			}
-			else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueueAll.text"))) { //NOI18N
-				menuQueueAll();
-			}
-			else if(sourceTxt.equals("Preview")) { //NOI18N
-				menuPreview();
-			}
-			else if(sourceTxt.equals(Inter.get("Label.Check"))) { //NOI18N
-				menuCheck();
-			}
-			else {
-				Popup.error(Inter.get("UNKNOWN MENU ITEM"));
-			}
-		};
-        
-        JMenuItem  menuItem = new JMenuItem(Inter.get("MainGUI.jButtonSelectQueue.text")); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
-        menuItem = new JMenuItem(Inter.get("MainGUI.jButtonSelectQueueAll.text")); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
-		menuItem = new JMenuItem("Preview"); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
-        menuItem = new JMenuItem(Inter.get("Label.Check")); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
-		//Add links menu items
-        File f = Jamuz.getFile("AudioLinks.txt", "data");
-        if(f.exists()) {
-            JMenu menuLinks = new JMenu(Inter.get("Label.Links")); //NOI18N
-            List<String> lines;
-            try {
-                lines = Files.readAllLines(Paths.get(f.getAbsolutePath()), Charset.defaultCharset());
-                for(String line : lines) {
-                    if(line.contains("|")) {
-                        String[] splitted = line.split("\\|");
-                        JMenuItem menuItem1 = new JMenuItem(new OpenUrlAction(splitted[0], splitted[1]));
-                        menuLinks.add(menuItem1);
-                    }
-                }
-                jPopupMenu1.add(menuLinks);
-            } catch (IOException ex) {
-                Jamuz.getLogger().log(Level.SEVERE, null, ex);
-            }
-        }
-		//TODO: Add " (external)" to menu name
-		menuItem = new JMenuItem(Inter.get("Button.Edit")); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
- 
-        //Add listener to components that can bring up popup menus.
-        MouseListener popupListener = new PopupListener(jPopupMenu1);
-        jTableSelect.addMouseListener(popupListener);
 
         //Add a list renderer to display albums covers
         jListSelectAlbum.setBackground(Color.WHITE);
@@ -259,8 +179,6 @@ public class PanelSelect extends javax.swing.JPanel {
         ListCellRendererGenre rendererGenre = new ListCellRendererGenre();
         rendererGenre.setPreferredSize(new Dimension(0, IconBuffer.iconSize));
         jListSelectGenre.setCellRenderer(rendererGenre);
-
-		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
 		
         //Get table model
 		tableModel = (TableModel) jTableSelect.getModel();
@@ -273,30 +191,9 @@ public class PanelSelect extends javax.swing.JPanel {
         setYearSpinners(); 
 		refreshTable();
 		
+		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
+		myPopupMenu = new PopupMenu(jPopupMenu1, jTableSelect, fileInfoList, mplayer);
 	}
-    
-	class OpenUrlAction extends AbstractAction {
-        
-        private final String url;
-        
-        public OpenUrlAction(String text, String url) {
-            super(text, null);
-            this.url = url;
-        }
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int selectedRow = jTableSelect.getSelectedRow(); 		
-			if(selectedRow>=0) { 	
-				//convert to model index (as sortable model) 		
-				selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-				FileInfoInt myFileInfo = fileInfoList.get(selectedRow);
-
-				Desktop.openBrowser(url.replaceAll("<album>", 
-						myFileInfo.getAlbumArtist().concat(" ")
-								.concat(myFileInfo.getAlbum())));			 		
-			}
-        }
-    }
 	
     private static void setYearSpinners() {
         double minYear = Jamuz.getDb().getYear("MIN"); //NOI18N
@@ -933,29 +830,8 @@ public class PanelSelect extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void menuCheck() {
-        int selectedRow = jTableSelect.getSelectedRow(); 		
-		if(selectedRow>=0) { 	
-			//convert to model index (as sortable model) 		
-			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			FileInfoInt myFileInfo = fileInfoList.get(selectedRow);
-
-            PanelCheck.check(myFileInfo.getIdPath());			 		
-		}
-    }
+   
     private static final Mplayer mplayer= new Mplayer();
-	private void menuPreview() {
-		//Getting selected File 		
-		int selectedRow = jTableSelect.getSelectedRow(); 			
-		if(selectedRow>=0) { 	
-			//convert to model index (as sortable model) 		
-			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			FileInfoInt fileInfoInt = fileInfoList.get(selectedRow); 	
-			mplayer.setAudioCard((AudioCard)jComboBoxSoundCard.getSelectedItem());
-			jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
-			mplayer.play(fileInfoInt.getFullPath().getAbsolutePath(), false);
-		}
-	}
 	
 	/**
 	 *
@@ -964,42 +840,6 @@ public class PanelSelect extends javax.swing.JPanel {
 		mplayer.stop();
 		jLabelPreviewDisplay.setText("");
 	}
-	
-    private void menuQueue() {
-        //Getting selected File 		
-		int selectedRow = jTableSelect.getSelectedRow(); 			
-		if(selectedRow>=0) { 	
-			//convert to model index (as sortable model) 		
-			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			FileInfoInt myFileInfo = fileInfoList.get(selectedRow); 	
-            
-            //TODO: Bug when adding to queue. JList is not refreshed
-            //Something's wrong b/w model and JList
-			PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 		
-		}
-    }
-    
-    private void menuQueueAll() {
-        //Getting selected File 		
-		int selectedRow = jTableSelect.getSelectedRow(); 			
-		if(selectedRow>=0) {	
-            PanelMain.getQueueModel().clear();
-            for(FileInfoInt myFileInfo : fileInfoList) {
-                PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 	
-            }
-		}
-    }
-    
-    private void menuEdit() {
-        //Getting selected File 		
-		int selectedRow = jTableSelect.getSelectedRow(); 		
-		if(selectedRow>=0) { 	
-			//convert to model index (as sortable model) 		
-			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			FileInfoInt myFileInfo = fileInfoList.get(selectedRow);
-			PanelMain.editLocation(Jamuz.getDb().getRootPath()+myFileInfo.getRelativeFullPath());	  			 		
-		}
-    }
     
 	/**
 	 *
