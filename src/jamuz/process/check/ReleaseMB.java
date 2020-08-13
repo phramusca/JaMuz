@@ -87,11 +87,15 @@ public class ReleaseMB {
 			artist = removeIllegal(artist);
 			if(!album.equals("")) {  //NOI18N
 				album = removeIllegal(album);
-				release.search("'"+album+"' AND artist:'"+artist+"'"); //same as above ?  //NOI18N
+				if(!artist.equals("")) {  //NOI18N
+					release.search("'"+album+"' AND artist:'"+artist+"'");
+				}
+				else {
+					release.search("'"+album+"'");
+				}
 			}
 			else {
 				release.search("artist:'"+artist+"'");  //NOI18N
-
 			}
             List<ReleaseResultWs2> releaseResultsWs2List = release.getFirstSearchResultPage();
 			for (ReleaseResultWs2 releaseResultWs2 : releaseResultsWs2List) {
