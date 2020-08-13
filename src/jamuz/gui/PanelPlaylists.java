@@ -39,6 +39,9 @@ import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
+import java.awt.Point;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -50,6 +53,8 @@ public class PanelPlaylists extends javax.swing.JPanel {
     private static TableModel tableModelPlaylist;
     private static final TableColumnModel columnModelPlaylist = new TableColumnModel();
     private boolean enableComboListner=false;
+	private PopupMenu myPopupMenu;
+	private static ArrayList<FileInfoInt> fileInfoList;
 	
     /**
      * Creates new form PanelPlaylists
@@ -73,7 +78,9 @@ public class PanelPlaylists extends javax.swing.JPanel {
         //clear the table
         jTablePlaylist.setRowSorter(null);
         tableModelPlaylist.clear();
+		fileInfoList=new ArrayList<>();
 		
+		myPopupMenu = new PopupMenu(jPopupMenu1, jTablePlaylist, fileInfoList, null);
 		enableComboListner=true;
     }
     
@@ -86,6 +93,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jSplitPanePlaylist = new javax.swing.JSplitPane();
         jPanelSelectTracks1 = new javax.swing.JPanel();
         jScrollPaneSelect1 = new javax.swing.JScrollPane();
@@ -133,6 +141,11 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jTablePlaylist.setAutoCreateColumnsFromModel(false);
         jTablePlaylist.setModel(new jamuz.gui.swing.TableModel());
         jTablePlaylist.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jTablePlaylist.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTablePlaylistMousePressed(evt);
+            }
+        });
         jScrollPaneSelect1.setViewportView(jTablePlaylist);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -800,6 +813,18 @@ public class PanelPlaylists extends javax.swing.JPanel {
         PanelMain.setRightsVisible(columnModelPlaylist, jToggleButtonSelectShowRights.isSelected());
     }//GEN-LAST:event_jToggleButtonSelectShowRightsActionPerformed
 
+    private void jTablePlaylistMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePlaylistMousePressed
+		// If Right mouse click, select the line under mouse
+        if ( SwingUtilities.isRightMouseButton( evt ) )
+        {
+            Point p = evt.getPoint();
+            int rowNumber = jTablePlaylist.rowAtPoint( p );
+            ListSelectionModel model = jTablePlaylist.getSelectionModel();
+            model.setSelectionInterval( rowNumber, rowNumber );
+        }
+        //TODO: Use a better listner (onChange) to handle selections using keyboard !
+    }//GEN-LAST:event_jTablePlaylistMousePressed
+
 	/**
 	 *
 	 */
@@ -843,18 +868,18 @@ public class PanelPlaylists extends javax.swing.JPanel {
                 tableModelPlaylist.clear();
                 //Get playlist's files
                 Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-                ArrayList<FileInfoInt> fileInfoSourceList = new ArrayList<>();
+                fileInfoList.clear();
 				this.checkAbort();
-                playlist.getFiles(fileInfoSourceList);
+                playlist.getFiles(fileInfoList);
                 this.checkAbort();
-                long totalLength = fileInfoSourceList.stream().mapToLong(o -> o.getLength()).sum();
-                long totalSize = fileInfoSourceList.stream().mapToLong(o -> o.getSize()).sum();
+                long totalLength = fileInfoList.stream().mapToLong(o -> o.getLength()).sum();
+                long totalSize = fileInfoList.stream().mapToLong(o -> o.getSize()).sum();
                 
-                 jLabelSelectedSummary.setText(fileInfoSourceList.size()+" file(s)"
+                 jLabelSelectedSummary.setText(fileInfoList.size()+" file(s)"
                         +" ; "+StringManager.humanReadableSeconds(totalLength)
                         +" ; "+StringManager.humanReadableByteCount(totalSize, false));
                 
-                for (FileInfoInt myFileInfoInt : fileInfoSourceList) {
+                for (FileInfoInt myFileInfoInt : fileInfoList) {
                     this.checkAbort();
                     PanelMain.addRowSelect(tableModelPlaylist, myFileInfoInt);
                 }
@@ -978,6 +1003,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
     private javax.swing.JPanel jPanelPlaylistOrders;
     private javax.swing.JPanel jPanelSelectDisplay1;
     private javax.swing.JPanel jPanelSelectTracks1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneSelect1;
