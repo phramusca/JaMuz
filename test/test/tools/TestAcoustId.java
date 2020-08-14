@@ -19,6 +19,7 @@ package test.tools;
 import jamuz.Keys;
 import jamuz.acoustid.AcoustID;
 import jamuz.acoustid.AcoustIdResult;
+import jamuz.acoustid.Result;
 import jamuz.utils.Popup;
 import java.util.ArrayList;
 
@@ -43,10 +44,10 @@ public class TestAcoustId {
 		filenames.add("/home/raph/Musique/Archive/Various Artists/Various Albums/05 Jive Bunny & The Mastermixer - Swing The Mood.mp3");
 		filenames.add("/home/raph/Musique/Archive/Various Artists/Various Albums/(Jive Bunny and the Master Mix - Let's twist again.mp3");
 		 
-//		filenames.add("/home/raph/Bureau/TEST_SHAZAM/[1-25] - 08 Léo Ferré - Cette blessure.mp3");
-//		filenames.add("/home/raph/Bureau/TEST_SHAZAM/01 Bad.mp3");
-//		filenames.add("/home/raph/Bureau/TEST_SHAZAM/03 I Shot the Sheriff.mp3");
-//		filenames.add("/home/raph/Bureau/TEST_SHAZAM/WhatIsThis.mp3");
+		filenames.add("/home/raph/Bureau/TEST_SHAZAM/[1-25] - 08 Léo Ferré - Cette blessure.mp3");
+		filenames.add("/home/raph/Bureau/TEST_SHAZAM/01 Bad.mp3");
+		filenames.add("/home/raph/Bureau/TEST_SHAZAM/03 I Shot the Sheriff.mp3");
+		filenames.add("/home/raph/Bureau/TEST_SHAZAM/WhatIsThis.mp3");
 		
 		ArrayList<AcoustIdResult> results = new ArrayList<>();
 		for(String filename : filenames) {

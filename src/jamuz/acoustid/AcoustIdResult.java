@@ -21,14 +21,25 @@ package jamuz.acoustid;
  * @author raph
  */
 public class AcoustIdResult {
-	private final String artist;
-	private final String title;
+	
+	private String filename;
+	String score;
+	private String artist;
+	private String title;
 
 	public AcoustIdResult(String artist, String title) {
 		this.artist = artist;
 		this.title = title;
 	}
 
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public void setScore(String score) {
+		this.score = score;
+	}	
+	
 	public String getArtist() {
 		return artist;
 	}
