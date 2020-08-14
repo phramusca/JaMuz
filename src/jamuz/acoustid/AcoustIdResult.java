@@ -22,7 +22,6 @@ package jamuz.acoustid;
  */
 public class AcoustIdResult {
 	
-	private String filename;
 	String score;
 	private String artist;
 	private String title;
@@ -30,10 +29,6 @@ public class AcoustIdResult {
 	public AcoustIdResult(String artist, String title) {
 		this.artist = artist;
 		this.title = title;
-	}
-
-	public void setFilename(String filename) {
-		this.filename = filename;
 	}
 
 	public void setScore(String score) {
