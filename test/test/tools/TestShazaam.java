@@ -60,12 +60,6 @@ public class TestShazaam {
 	 */
 	public static void main(String[] args) {
 		try {
-			//	Encrypted base64 string of byte[] that generated
-			//	from raw data less than 500KB (3-5 seconds sample are good enough for detection).
-			//	The raw sound data must be 44100Hz, 1 channel (Mono), signed 16 bit PCM little endian.
-			//	Other types of media are NOT supported, such as : mp3, wav, etc…
-			//	or need to be converted to uncompressed raw data.
-			//	If the result is empty, your request data must be in wrong format in most case.
 
 			Keys keys = new Keys("/jamuz/keys.properties");
 			if(!keys.read()) {
@@ -73,18 +67,13 @@ public class TestShazaam {
 				return;
 			}
 			
+			//The raw sound data must be 44100Hz, 1 channel (Mono), signed 16 bit PCM little endian.
 			File source;
 			File target;
-//			String basePath="/home/raph/Musique/Archive/Various Artists/25 ans de Radio Nova/";
-//			String filename="[1-25] - 08 Léo Ferré - Cette blessure.mp3";
-
 			String basePath="/home/raph/Bureau/TEST_SHAZAM/";
-			String filename="[1-25] - 08 Léo Ferré - Cette blessure.mp3";
-
+			String filename="01 Bad.mp3";
 			source = new File(FilenameUtils.concat(basePath, filename));
 			target = new File(FilenameUtils.concat(basePath, FilenameUtils.getBaseName(filename)+".raw"));  //NOI18N
-
-			//Take 3s, starting at 30s and convert to 44100Hz, 1 channel (Mono), signed 16 bit PCM little endian wav file
 			AudioAttributes audio = new AudioAttributes();
 //			audio.setBitRate(192000); //What is required value for shazam ?
 			audio.setChannels(1);
@@ -92,39 +81,34 @@ public class TestShazaam {
 			EncodingAttributes attrs = new EncodingAttributes();
 			audio.setCodec("pcm_s16le");  //NOI18N
 			attrs.setFormat("s16le");  //NOI18N
-		
 			attrs.setOffset(30f); //TODO: half duration
 			attrs.setDuration(3f); //3-5 seconds => 500KB max
 			attrs.setAudioAttributes(audio);
 			Encoder encoder = new Encoder();
-			
 			encoder.encode(source, target, attrs);
 			
+			//ffmpeg -i input.mp3 -f s16le -acodec pcm_s16le -t 3 -ac 1 -ar 44100 -ss 30 output.raw
 //			target = new File("/home/raph/Bureau/TEST_SHAZAM/output.raw");
 			
+			//	Encrypted base64 string of byte[] that generated
+			//	from raw data less than 500KB (3-5 seconds sample are good enough for detection).
+			//	The raw sound data must be 44100Hz, 1 channel (Mono), signed 16 bit PCM little endian.
+			//	Other types of media are NOT supported, such as : mp3, wav, etc…
+			//	or need to be converted to uncompressed raw data.
+			//	If the result is empty, your request data must be in wrong format in most case.
+
 			//Convert wav file to byte[]
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			BufferedInputStream in = new BufferedInputStream(new FileInputStream(target));
-
 			copyStream(in, out);
-			
-//			int read;
-//			byte[] buff = new byte[1024];
-//			while ((read = in.read(buff)) > 0)
-//			{
-//				out.write(buff, 0, read);
-//			}
-//			out.flush();
 			byte[] audioBytes = out.toByteArray();
-			
-			
 			
 			//Encode to base64
 			String encoded = Base64.getEncoder().encodeToString(audioBytes);
 			System.out.println("Base64: "+encoded);
 			
+			//Call shazam.p.rapidapi.com
 			OkHttpClient client = new OkHttpClient();
-
 			MediaType mediaType = MediaType.parse("text/plain");
 //			RequestBody body = RequestBody.create(mediaType, "\""+encoded+"\"");
 			RequestBody body = RequestBody.create(mediaType, encoded);
@@ -136,19 +120,14 @@ public class TestShazaam {
 				.addHeader("content-type", "text/plain")
 				.addHeader("accept", "text/plain")
 				.build();
-
 			Response response = client.newCall(request).execute();
-			//FIXME !!!!!!! Why 403 Forbidden ?????
-			
 			if(response.isSuccessful()) {
-				System.out.println("Result: ");
+				System.out.println("Result: "+response.body().string());
 			} else {
-				System.out.println("FAILED");
+				System.out.println("FAILED: "+response.message());
 			}
 			
-		} catch (IllegalArgumentException | IOException ex) {
-			Logger.getLogger(TestShazaam.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (EncoderException ex) {
+		} catch (IllegalArgumentException | IOException | EncoderException ex) {
 			Logger.getLogger(TestShazaam.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
