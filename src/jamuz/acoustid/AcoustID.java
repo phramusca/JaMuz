@@ -9,7 +9,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import org.apache.http.client.ClientProtocolException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.musicbrainz.MBWS2Exception;
+import org.musicbrainz.controller.Recording;
+import org.musicbrainz.model.entity.RecordingWs2;
 
 /**
  * simple wrapper for AcoustID
@@ -17,6 +21,22 @@ import org.apache.http.client.ClientProtocolException;
  * @author tom
  */
 public class AcoustID {
+	
+	public static AcoustIdResult analyze(String filename, String key) {
+		try {	
+			ChromaPrint chromaprint = chromaprint(new File(filename), "fpcalc");		
+			String bestResultRecordingId = lookup(chromaprint, key);
+			if(bestResultRecordingId!=null) {
+				Recording recording = new Recording();
+				RecordingWs2 lookUp = recording.lookUp(bestResultRecordingId);
+				System.out.println("BEST RESULT: \""+lookUp.getTitle()+"\" by "+lookUp.getArtistCreditString());
+				return new AcoustIdResult(lookUp.getArtistCreditString(), lookUp.getTitle());	
+			}
+		} catch (IOException | MBWS2Exception ex) {
+			Logger.getLogger(AcoustID.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return null;
+	}
 	
    /**
     * Chromaprint the file passed in
@@ -45,42 +65,13 @@ public class AcoustID {
    }
 
    /**
-    * get the highest rated result
-    */
-   private static Result getBestResult(Results results) {
-      if (results.results.size() > 0) {
-         Result bestResult = results.results.get(0);
-         double currentScore = Double.parseDouble(bestResult.score);
-         for (final Result result : results.results) {
-            final double score = Double.parseDouble(result.score);
-            if (score > currentScore) {
-               bestResult = result;
-               currentScore = score;
-            }
-         }
-         return bestResult;
-      } else {
-         return null;
-      }
-   }
-
-   /**
-    * get the Results object from JSON
-    */
-   private static Results getResults(String json) {
-		final Gson gson = new Gson();
-		final Results results = gson.fromJson(json, Results.class);
-		return results;
-   }
-   
-   /**
     * do a ChromaPrint lookup and result a musicbrainz id
 	 * @param chromaprint
 	 * @param key
 	 * @return 
-	 * @throws org.apache.http.client.ClientProtocolException
+	 * @throws java.io.IOException
     */
-	public static String lookup(ChromaPrint chromaprint, String key) throws ClientProtocolException, IOException {
+	public static String lookup(ChromaPrint chromaprint, String key) throws IOException {
 		OkHttpClient client = new OkHttpClient();		
 		HttpUrl.Builder urlBuilder = HttpUrl.parse("http://api.acoustid.org/v2/lookup").newBuilder();
 		urlBuilder.addQueryParameter("client", key);
@@ -92,28 +83,40 @@ public class AcoustID {
 		Response response = client.newCall(request).execute();
 
 		final Results results = getResults(response.body().string());
-		/*
-		 * check status
-		 */
 		if (results.status.compareTo("ok") == 0) {
-		   /*
-			* get the best match
-			*/
 		   final Result bestResult = getBestResult(results);
-		   if (null != bestResult) {
-			  /*
-			   * return the id
-			   */
-			  if (bestResult.recordings.size() > 0) {
-				 return bestResult.recordings.get(0).id;
-			  } else {
-				 return null;
-			  }
-		   } else {
-			  return null;
+		   if (bestResult !=null && bestResult.recordings.size() > 0) {
+			  return bestResult.recordings.get(0).getId();
 		   }
-		} else {
-		   return null;
 		}
+		return null;
+	}
+	
+	/**
+    * get the Results object from JSON
+    */
+   private static Results getResults(String json) {
+		final Gson gson = new Gson();
+		final Results results = gson.fromJson(json, Results.class);
+		return results;
    }
+   
+   /**
+    * get the highest rated result
+    */
+   private static Result getBestResult(Results results) {
+	   Result bestResult = null;
+		if (results.results.size() > 0) {
+			bestResult = results.results.get(0);
+			double currentScore = Double.parseDouble(bestResult.score);
+			for (final Result result : results.results) {
+				final double score = Double.parseDouble(result.score);
+				if (score > currentScore) {
+				   bestResult = result;
+				   currentScore = score;
+				}
+			}
+		}
+		return bestResult;
+	}
 }

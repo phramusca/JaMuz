@@ -4,7 +4,7 @@ package jamuz.acoustid;
  * recording
  */
 class Recording {
-   final String id;
+   private final String id;
 
    public Recording(String id) {
       this.id = id;
