@@ -18,15 +18,9 @@ package test.tools;
 
 import jamuz.Keys;
 import jamuz.acoustid.AcoustID;
-import jamuz.acoustid.ChromaPrint;
+import jamuz.acoustid.AcoustIdResult;
 import jamuz.utils.Popup;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.musicbrainz.MBWS2Exception;
-import org.musicbrainz.controller.Recording;
-import org.musicbrainz.model.entity.RecordingWs2;
+import java.util.ArrayList;
 
 /**
  *
@@ -39,32 +33,26 @@ public class TestAcoustId {
 	 */
 	public static void main(String[] args) {
 		
-		try {
-			
-			Keys keys = new Keys("/jamuz/keys.properties");
-			if(!keys.read()) {
-				Popup.error("Missing keys.properties file from jar package.");
-				return;
-			}
-			
-//			String filename = "/home/raph/Bureau/TEST_SHAZAM/[1-25] - 08 Léo Ferré - Cette blessure.mp3";
-//			String filename = "/home/raph/Bureau/TEST_SHAZAM/01 Bad.mp3";
-//			String filename = "/home/raph/Bureau/TEST_SHAZAM/03 I Shot the Sheriff.mp3";
-			String filename = "/home/raph/Bureau/TEST_SHAZAM/WhatIsThis.mp3";
-			
-			
-			ChromaPrint chromaprint = AcoustID.chromaprint(new File(filename), "fpcalc");		
-			String bestResultRecordingId = AcoustID.lookup(chromaprint, keys.get("AcoustId"));
-					
-			Recording recording = new Recording();
-			RecordingWs2 lookUp = recording.lookUp(bestResultRecordingId);
-			
-			System.out.println("BEST RESULT: \""+lookUp.getTitle()+"\" by "+lookUp.getArtistCreditString());
-			
-		} catch (IOException ex) {
-			Logger.getLogger(TestAcoustId.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (MBWS2Exception ex) {
-			Logger.getLogger(TestAcoustId.class.getName()).log(Level.SEVERE, null, ex);
+		Keys keys = new Keys("/jamuz/keys.properties");
+		if(!keys.read()) {
+			Popup.error("Missing keys.properties file from jar package.");
+			return;
 		}
+		
+		ArrayList<String> filenames = new ArrayList<>();
+		filenames.add("/home/raph/Musique/Archive/Various Artists/Various Albums/05 Jive Bunny & The Mastermixer - Swing The Mood.mp3");
+		filenames.add("/home/raph/Musique/Archive/Various Artists/Various Albums/(Jive Bunny and the Master Mix - Let's twist again.mp3");
+		 
+//		filenames.add("/home/raph/Bureau/TEST_SHAZAM/[1-25] - 08 Léo Ferré - Cette blessure.mp3");
+//		filenames.add("/home/raph/Bureau/TEST_SHAZAM/01 Bad.mp3");
+//		filenames.add("/home/raph/Bureau/TEST_SHAZAM/03 I Shot the Sheriff.mp3");
+//		filenames.add("/home/raph/Bureau/TEST_SHAZAM/WhatIsThis.mp3");
+		
+		ArrayList<AcoustIdResult> results = new ArrayList<>();
+		for(String filename : filenames) {
+			results.add(AcoustID.analyze(filename, keys.get("AcoustId")));
+		}
+		
+		Popup.info("AcoustId analysis complete");
 	}
 }
