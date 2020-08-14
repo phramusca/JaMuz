@@ -18,8 +18,7 @@ package test.tools;
 
 import jamuz.Keys;
 import jamuz.acoustid.AcoustID;
-import jamuz.acoustid.AcoustIdResult;
-import jamuz.acoustid.Result;
+import jamuz.acoustid.Results;
 import jamuz.utils.Popup;
 import java.util.ArrayList;
 
@@ -49,7 +48,7 @@ public class TestAcoustId {
 		filenames.add("/home/raph/Bureau/TEST_SHAZAM/03 I Shot the Sheriff.mp3");
 		filenames.add("/home/raph/Bureau/TEST_SHAZAM/WhatIsThis.mp3");
 		
-		ArrayList<AcoustIdResult> results = new ArrayList<>();
+		ArrayList<Results> results = new ArrayList<>();
 		for(String filename : filenames) {
 			results.add(AcoustID.analyze(filename, keys.get("AcoustId")));
 		}

@@ -33,7 +33,7 @@ public class Result {
 		return Double.parseDouble(score);
 	}
    
-	public AcoustIdResult getMeta() {
+	public AcoustIdResult getFirst() {
 		Recording firstRecording = recordings.stream().findFirst().orElseThrow(NoSuchElementException::new);
 		AcoustIdResult meta = firstRecording.getMeta();
 		meta.setScore(score);
