@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
  */
 public class Result {
 	String id;
-	List<Recording> recordings = new ArrayList<>();
+	private List<Recording> recordings = new ArrayList<>();
 	String score;
    
 	public double getScore() {
@@ -39,4 +39,11 @@ public class Result {
 		meta.setScore(score);
 		return meta;
 	}	
+	
+	public AcoustIdResult get(int index) {
+		Recording recording = recordings.get(index);
+		AcoustIdResult meta = recording.getMeta();
+		meta.setScore(score);
+		return meta;
+	}
 }
