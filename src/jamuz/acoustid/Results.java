@@ -7,6 +7,7 @@ import java.util.List;
 public class Results {
 	String status;
 	List<Result> results = new ArrayList<>();
+	ChromaPrint chromaprint;
    
 	public AcoustIdResult getBest() {
 		if (status.compareTo("ok") == 0) {
@@ -14,5 +15,9 @@ public class Results {
 			return best.getFirst();
 		}
 		return null;
-   }
+	}
+
+	public ChromaPrint getChromaprint() {
+		return chromaprint;
+	}
 }

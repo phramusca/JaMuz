@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +29,7 @@ public class AcoustID {
 		return null;
 	}
 	
-   /**
+	/**
     * Chromaprint the file passed in
 	 * @param file
 	 * @param fpcalc
@@ -74,6 +73,8 @@ public class AcoustID {
 		Request request = new Request.Builder().url(url).build();
 		Response response = client.newCall(request).execute();
 		final Gson gson = new Gson();
-		return gson.fromJson(response.body().string(), Results.class);
+		Results fromJson = gson.fromJson(response.body().string(), Results.class);
+		fromJson.chromaprint=chromaprint;
+		return fromJson;
 	}
 }
