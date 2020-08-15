@@ -20,7 +20,7 @@ manifest.mf
 
 build/*
 logs/*
-!/lib/*.jar
+!/lib/**/*.jar
 
 data/cache/*
 data/Patterns.txt
