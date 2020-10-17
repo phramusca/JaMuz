@@ -77,7 +77,19 @@ public class PanelPlaylists extends javax.swing.JPanel {
         tableModelPlaylist.clear();
 		fileInfoList=new ArrayList<>();
 		
-		myPopupMenu = new PopupMenu(jPopupMenu1, jTablePlaylist, tableModelPlaylist, fileInfoList, null);
+		myPopupMenu = new PopupMenu(jPopupMenu1, jTablePlaylist, tableModelPlaylist, fileInfoList, null, new PopupMenuListener() {
+			@Override
+			public boolean deleteStarted() {
+				enablePlaylistEdit(false);
+				enablePlaylist(false);
+				return true;
+			}
+
+			@Override
+			public void deleteEnded() {
+				enablePlaylist(true);
+			}
+		});
 		enableComboListner=true;
     }
     
@@ -872,14 +884,23 @@ public class PanelPlaylists extends javax.swing.JPanel {
 
         }
     }
-    
+	
+	private void enablePlaylist(boolean enable) {
+        jComboBoxPlaylist.setEnabled(enable);
+        jButtonPlaylistNew.setEnabled(enable);
+        jButtonPlaylistEdit.setEnabled(enable);
+        jButtonPlaylistDelete.setEnabled(enable);
+        jButtonPlaylistSave.setEnabled(enable);
+        jButtonPlaylistCancel.setEnabled(enable);
+		jTablePlaylist.setEnabled(enable);
+		jButtonPlaylistShow.setEnabled(enable);
+    }
+	
     private void enablePlaylistEdit(boolean enable) {
-        //Buttons
         jComboBoxPlaylist.setEnabled(!enable);
         jTextFieldPlaylistName.setEnabled(enable);
         jComboBoxPlaylist.setVisible(!enable);
         jTextFieldPlaylistName.setVisible(enable);
-        
         jButtonPlaylistNew.setEnabled(!enable);
         jButtonPlaylistNew.setVisible(!enable);
         jButtonPlaylistEdit.setEnabled(!enable);
