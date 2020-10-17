@@ -25,19 +25,11 @@ import jamuz.gui.swing.ProgressBar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import jamuz.process.check.ReleaseMatch.Track;
 import java.util.logging.Level;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.musicbrainz.controller.Artist;
-import org.musicbrainz.controller.Release;
-import org.musicbrainz.model.MediumListWs2;
-import org.musicbrainz.model.MediumWs2;
-import org.musicbrainz.model.TrackListWs2;
-import org.musicbrainz.model.TrackWs2;
 import org.musicbrainz.model.entity.ArtistWs2;
-import org.musicbrainz.model.entity.RecordingWs2;
 import org.musicbrainz.model.entity.ReleaseGroupWs2;
-import org.musicbrainz.model.entity.ReleaseWs2;
 import org.musicbrainz.model.searchresult.ArtistResultWs2;
 import org.musicbrainz.webservice.impl.HttpClientWebServiceWs2;
 
@@ -64,6 +56,7 @@ public class ArtistMB {
 	 * @return
 	 */
 	public List<ReleaseMatch> search(String artist) {
+		artist = ReleaseMB.removeIllegal(artist);
 		List<ReleaseMatch> matches = new ArrayList<>();
 		covers = new ArrayList<>();
 		try {
@@ -118,105 +111,6 @@ public class ArtistMB {
 			artistController.setQueryWs(new HttpClientWebServiceWs2(httpclient));
 		}
 		return artistController;
-	}
-	
-	private String removeIllegal(String str) {
-		//+ - && || ! ( ) { } [ ] ^ " ~ * ? : \
-		//TODO: Escape above list of chars instead of removing them
-		//http://tickets.musicbrainz.org/browse/MBS-3988?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
-		String pattern = "[\\\\/:\"*?|\\+\\-\\&\\!\\(\\)\\[\\]^{}~]+";  //NOI18N
-        return str.replaceAll(pattern, " ").trim();  //NOI18N
-	}
-    
-	/**
-	 * Get list of tracks for given album
-	 * @param mbId
-	 * @param discPart
-	 * @param discNb
-	 * @param discTotal
-	 * @return
-	 */
-	public List<Track> lookup(String mbId, boolean discPart, int discNb, int discTotal) {
-		List<Track> tracks = new ArrayList<>();
-        
-		try {
-            Release release = new Release();
-			DefaultHttpClient httpclient = Jamuz.getHttpClient();
-            if(httpclient!=null) {
-                release.setQueryWs(new HttpClientWebServiceWs2(httpclient));
-            }
-			//TODO: Only include useful relations
-//			release.getIncludes().setReleaseRelations(true);
-//			release.getIncludes().setUrlRelations(true);
-//			release.getIncludes().setReleaseGroupRelations(true);
-//			release.getIncludes().setArtistRelations(true);
-//			release.getIncludes().setLabelRelations(true);
-//			release.getIncludes().setRecordingLevelRelations(true);
-//			release.getIncludes().setRecordingRelations(true);
-//			release.getIncludes().setWorkRelations(true);
-//			release.getIncludes().setWorkLevelRelations(true);
-
-			//TODO: Getting 403 Forbidden with musicbrainzws2-java-v.3.0.0 (though search works)
-			//No such issue with musicbrainzws2-java_1.01r31_20120103.rar
-			ReleaseWs2 releaseWs2Full= release.lookUp(mbId);
-			//Get relations
-//			RelationListWs2 relationListWs2 = releaseWs2Full.getRelationList();
-//			List<RelationWs2> relationWs2List = relationListWs2.getRelations();
-//			for (RelationWs2 relationWs2 : relationWs2List) {
-//				myMatch.addRelation(relationWs2.getDirection(), relationWs2.getTargetId(), relationWs2.getTargetType(),relationWs2.getType());
-//			}
-				
-//			RatingsWs2 ratingsWs2 = releaseWs2Full.getRating();
-//			System.out.println("\t getRating():"+ratingsWs2.getAverageRating()+" ("+ratingsWs2.getVotesCount()+")");
-//			List<TagWs2> tagWs2List = releaseWs2Full.getTags();
-//			for (TagWs2 tagWs2 : tagWs2List) {
-//				System.out.println("\t getTags():"+tagWs2.getName()+" ("+tagWs2.getCount()+")");
-//			}
-				
-			//Get tracks
-			MediumListWs2 mediumListWs2 = releaseWs2Full.getMediumList();
-			List<TrackWs2> trackWs2List;
-			
-			if(discPart) {
-				//Getting tracks for a given discNb
-				List<MediumWs2> mediums = mediumListWs2.getMedia();
-				MediumWs2 medium = mediums.get(discNb-1);
-				TrackListWs2 trackListWs2 = medium.getTrackList();
-				trackWs2List = trackListWs2.getTracks();
-				
-				addTracks(tracks, trackWs2List, discNb, discTotal);
-			}
-			else {
-				//Getting tracks for all discs
-				List<MediumWs2> mediums = mediumListWs2.getMedia();
-				for(MediumWs2 medium : mediums) {
-					TrackListWs2 trackListWs2 = medium.getTrackList();
-					trackWs2List = trackListWs2.getTracks();
-					addTracks(tracks, trackWs2List, discNb, discTotal);
-					discNb++;
-				}
-			}
-			return tracks;
-		}
-		catch (Exception ex) {
-            Jamuz.getLogger().log(Level.SEVERE, "", ex);
-			return null;
-		}
-    }
-
-	private void addTracks(List<Track> tracks, List<TrackWs2> trackWs2List, int discNo, int discTotal) {
-		for (TrackWs2 trackWs2 : trackWs2List) {
-				RecordingWs2 recordingWs2 = trackWs2.getRecording();
-				tracks.add(new Track(discNo, discTotal, trackWs2.getPosition(), trackWs2List.size(), recordingWs2.getArtistCreditString(), recordingWs2.getTitle(), recordingWs2.getDurationInMillis(), trackWs2.getMediumStr()));
-				
-                //TODO: Get tags
-//				RatingsWs2 ratingsWs2Track = recordingWs2.getRating();
-//				System.out.println("\t\tgetRating():"+ratingsWs2Track.getAverageRating()+" ("+ratingsWs2Track.getVotesCount()+")");
-//				List<TagWs2> tagWs2ListTrack = recordingWs2.getTags();
-//				for (TagWs2 tagWs2 : tagWs2ListTrack) {
-//					System.out.println("\t\t\tgetTags():"+tagWs2.getName()+" ("+tagWs2.getCount()+")");
-//				}
-			}
 	}
 	
 	/**

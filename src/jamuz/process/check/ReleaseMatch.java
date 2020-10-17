@@ -99,15 +99,11 @@ public class ReleaseMatch implements java.lang.Comparable {
 	 * @param idPath  
 	 */
 	public ReleaseMatch(ReleaseWs2 releaseWs2, int score, int discTotal, int idPath) {
-
 		this(releaseWs2.getArtistCreditString(), releaseWs2.getTitle(), releaseWs2.getYear(), idPath);
 		this.trackTotal = releaseWs2.getTracksCount();
-		
-		//Specific to MusicBrainz:
 		String[] mbidStr = releaseWs2.getIdUri().split("/");  //NOI18N
 		this.format = releaseWs2.getFormat();
 		this.discTotal = discTotal;
-
 		try {
 			Locale l = new Locale(releaseWs2.getTextLanguage(), releaseWs2.getCountryId());
 			this.countryId = l.getDisplayCountry();
@@ -117,7 +113,6 @@ public class ReleaseMatch implements java.lang.Comparable {
 			this.countryId = releaseWs2.getCountryId() != null ? releaseWs2.getCountryId() : "";
             this.textLanguage = releaseWs2.getTextLanguage() != null ? releaseWs2.getTextLanguage() : "";
 		}
-		
 		this.quality = releaseWs2.getQualityStr();
 		this.id = mbidStr[mbidStr.length-1];
 //		this.relations = new ArrayList<Relation>();
@@ -165,9 +160,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 	 * @param idPath
 	 */
 	public ReleaseMatch(Album album, int score, int idPath) {
-		
 		this(album.getArtist(), album.getName(), "", idPath);  //NOI18N
-		
 		String myYear;
 		if(album.getReleaseDate()!=null) {
 			myYear=DateTime.formatUTC(album.getReleaseDate(), "yyyy", false);  //NOI18N
@@ -175,7 +168,6 @@ public class ReleaseMatch implements java.lang.Comparable {
 		else {
 			myYear="";  //NOI18N
 		}
-		
 		this.year = myYear;
 		this.id = album.getMbid();
 		this.source=LASTFM;
@@ -194,14 +186,11 @@ public class ReleaseMatch implements java.lang.Comparable {
 	 */
 	public ReleaseMatch(int score, String source, String artist, String album, String year, 
 			int trackTotal, int idPath) {
-		
 		this(artist, album, year, idPath);
-		
 		this.score = score; //-1 for originals;
 		if(score<0) {
 			this.isOriginal = true;
 		}
-		
 		this.source = source;
 		this.trackTotal = trackTotal;
 	}

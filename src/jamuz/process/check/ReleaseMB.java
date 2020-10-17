@@ -34,6 +34,7 @@ import org.musicbrainz.model.MediumWs2;
 import org.musicbrainz.model.TrackListWs2;
 import org.musicbrainz.model.TrackWs2;
 import org.musicbrainz.model.entity.RecordingWs2;
+import org.musicbrainz.model.entity.ReleaseGroupWs2;
 import org.musicbrainz.model.entity.ReleaseWs2;
 import org.musicbrainz.model.searchresult.ReleaseResultWs2;
 import org.musicbrainz.webservice.impl.HttpClientWebServiceWs2;
@@ -102,6 +103,11 @@ public class ReleaseMB {
 				try {
 					ReleaseWs2 releaseWs2;
 					releaseWs2 = releaseResultWs2.getRelease();
+					
+					//TODO: Get Release Group and get first release date from that.
+					//FIXME: Store mbId from ReleaseGroup instead of Release in database to match with Discography
+//					ReleaseGroupWs2 releaseGroup = releaseWs2.getReleaseGroup();
+					
 					int score;
 					//TODO: Order by medium (reel-to-reel, vinyl, k7, CD), BUT before or after year order ?
 					ReleaseMatch myMatch;
@@ -158,8 +164,8 @@ public class ReleaseMB {
 		}
 	}
     
-	private String removeIllegal(String str) {
-		//+ - && || ! ( ) { } [ ] ^ " ~ * ? : \
+	public static String removeIllegal(String str) {
+		// + - && || ! ( ) { } [ ] ^ " ~ * ? : \ 
 		//TODO: Escape above list of chars instead of removing them
 		//http://tickets.musicbrainz.org/browse/MBS-3988?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
 		String pattern = "[\\\\/:\"*?|\\+\\-\\&\\!\\(\\)\\[\\]^{}~]+";  //NOI18N

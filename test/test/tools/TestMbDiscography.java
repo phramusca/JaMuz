@@ -31,7 +31,7 @@ public class TestMbDiscography {
 	 */
 	public static void main(String[] args) {
 		ArtistMB artistMB = new ArtistMB(new ProgressBar());
-		List<ReleaseMatch> search = artistMB.search("Tash Sultana");
+		List<ReleaseMatch> search = artistMB.search("Au p'tit Bonheur");
 		System.out.println("------------------------------");
 		System.out.println("Type\tYear\tAlbum\tArtist\tScore\tStatus");
 		search.forEach(m -> System.out.println(m.getFormat()+"\t"+m.getYear()+"\t"+m.getAlbum()+"\t"+m.getArtist()+"\t"+m.getScore()));	
