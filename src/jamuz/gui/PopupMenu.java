@@ -18,6 +18,11 @@ package jamuz.gui;
 
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
+import jamuz.Keys;
+import jamuz.acoustid.AcoustID;
+import jamuz.acoustid.AcoustIdResult;
+import jamuz.acoustid.Results;
+import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
 import jamuz.process.check.PanelCheck;
 import jamuz.utils.Desktop;
@@ -115,6 +120,7 @@ public class PopupMenu {
 			addMenu("Preview");
 		}
 		addMenu(Inter.get("Label.Check"));
+		addMenu("AcoustID");
 		//Add links menu items
         File f = Jamuz.getFile("AudioLinks.txt", "data");
         if(f.exists()) {
