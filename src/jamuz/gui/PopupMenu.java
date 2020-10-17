@@ -18,7 +18,6 @@ package jamuz.gui;
 
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.Keys;
 import jamuz.acoustid.AcoustID;
 import jamuz.acoustid.AcoustIdResult;
 import jamuz.acoustid.Results;
@@ -31,6 +30,7 @@ import jamuz.utils.Popup;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
@@ -59,13 +59,15 @@ public class PopupMenu {
 	
 	JPopupMenu jPopupMenu1;
 	JTable jTableSelect;
+	TableModel tableModel;
 	ArrayList<FileInfoInt> fileInfoList;
 	Mplayer mplayer;
 	ActionListener menuListener;
 
-	public PopupMenu(JPopupMenu jPopupMenu1, JTable jTableSelect, ArrayList<FileInfoInt> fileInfoList, Mplayer mplayer) {
+	public PopupMenu(JPopupMenu jPopupMenu1, JTable jTableSelect, TableModel tableModel, ArrayList<FileInfoInt> fileInfoList, Mplayer mplayer) {
 		this.jPopupMenu1 = jPopupMenu1;
 		this.jTableSelect = jTableSelect;
+		this.tableModel = tableModel;
 		this.fileInfoList = fileInfoList;
 		this.mplayer = mplayer;
 		setup();
@@ -74,8 +76,11 @@ public class PopupMenu {
 	private void setup() {
 		
         menuListener = (ActionEvent e) -> {
-			FileInfoInt selected = getSelected(); 		
-			if(selected!=null) {
+			int selectedRow = jTableSelect.getSelectedRow(); 		
+			if(selectedRow>=0) { 	
+				//convert to model index (in case of sortable model) 		
+				final int selectedIndex = jTableSelect.convertRowIndexToModel(selectedRow); 
+				final FileInfoInt selected = fileInfoList.get(selectedIndex);
 				JMenuItem source = (JMenuItem)(e.getSource());
 				String sourceTxt=source.getText();
 				if(sourceTxt.equals(Inter.get("Button.Edit"))) { //NOI18N
@@ -102,6 +107,33 @@ public class PopupMenu {
 				}
 				else if(sourceTxt.equals(Inter.get("Label.Check"))) { //NOI18N
 					PanelCheck.check(selected.getIdPath());	
+				} else if(sourceTxt.equals("Delete Selected")) {
+					int n = JOptionPane.showConfirmDialog( 
+                        null, "Are you sure you want to delete \""+selected.getRelativeFullPath()+"\" FROM FILESYSTEM ?", //NOI18N 
+                        Inter.get("Label.Confirm"), //NOI18N 
+                        JOptionPane.YES_NO_OPTION); 
+					if (n == JOptionPane.YES_OPTION) { 					
+						delete(selected, selectedIndex);
+					}
+				} else if(sourceTxt.equals("Delete All")) {
+					int n = JOptionPane.showConfirmDialog( 
+                        null, "Are you sure that you want to delete ALL playlist files FROM FILESYSTEM ?", //NOI18N 
+                        Inter.get("Label.Confirm"), //NOI18N 
+                        JOptionPane.YES_NO_OPTION); 
+					if (n == JOptionPane.YES_OPTION) { 
+						n = JOptionPane.showConfirmDialog( 
+						null, "Are you sure you REALLY SURE that you want to delete ALL playlist files FROM FILESYSTEM ?", //NOI18N 
+						Inter.get("Label.Confirm"), //NOI18N 
+						JOptionPane.YES_NO_OPTION); 
+						if (n == JOptionPane.YES_OPTION) { 
+							//FIXME !!! Disable buttons while deleting !!! OR IT CAN MESS EVERYTHING UP
+							new Thread(() -> {
+								for(FileInfoInt file : fileInfoList) {
+									delete(file, 0);
+								}
+							}).start();
+						}
+					}
 				} else if(sourceTxt.equals("AcoustID")) { //NOI18N
 					Results analyzed = AcoustID.analyze(selected.getFullPath().getAbsolutePath(), Jamuz.getKeys().get("AcoustId"));
 					AcoustIdResult best = analyzed.getBest();
@@ -140,48 +172,31 @@ public class PopupMenu {
                 Jamuz.getLogger().log(Level.SEVERE, null, ex);
             }
         }
+		
+		JMenu menuDelete = new JMenu("Delete"); //NOI18N
+		JMenuItem menuItem1 = new JMenuItem("Delete Selected");
+		menuItem1.addActionListener(menuListener);
+		menuDelete.add(menuItem1);
+		menuItem1 = new JMenuItem("Delete All");
+		menuItem1.addActionListener(menuListener);
+		menuDelete.add(menuItem1);
+		jPopupMenu1.add(menuDelete);
+		
 		addMenu(Inter.get("Button.Edit")); //TODO: Add " (external)" to menu name	
-		jTableSelect.addMouseListener(new java.awt.event.MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				selectOnRightClick(e);
-				maybeShowPopup(e);
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				maybeShowPopup(e);
-			}
-
-			private void maybeShowPopup(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					jPopupMenu1.show(e.getComponent(),
-							   e.getX(), e.getY());
-				}
-			}
+		jTableSelect.addMouseListener(new PopupListener() {
+			
         });
 	}
 	
-	private void addMenu(String title) {
-		JMenuItem  menuItem = new JMenuItem(title); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
+	private void delete(FileInfoInt selected, int selectedIndex) {
+		File currentFile = selected.getFullPath();
+		if(currentFile.exists() 
+				&& selected.getFullPath().delete()
+				&& Jamuz.getDb().setFileDeleted(selected.getIdFile())) {
+			tableModel.removeRow(selectedIndex);
+			fileInfoList.remove(selectedIndex);
+		}
 	}
-	
-	private void selectOnRightClick(java.awt.event.MouseEvent evt) {                                          
-		// If Right mouse click, select the line under mouse
-        if ( SwingUtilities.isRightMouseButton( evt ) )
-        {
-            Point p = evt.getPoint();
-            int rowNumber = jTableSelect.rowAtPoint( p );
-            ListSelectionModel model = jTableSelect.getSelectionModel();
-            model.setSelectionInterval( rowNumber, rowNumber );
-        }
-        
-		
-        //TODO: Use a better listener (onChange) to handle selections using keyboard !
-        //Example: http://www.developpez.net/forums/d1141644/java/interfaces-graphiques-java/awt-swing/jtable-lancer-traitement-moment-selection-ligne/
-    } 
 	
 	class OpenUrlAction extends AbstractAction {
         
@@ -206,14 +221,47 @@ public class PopupMenu {
 			}
         }
     }
-
-	private FileInfoInt getSelected() {
-		int selectedRow = jTableSelect.getSelectedRow(); 		
-		if(selectedRow>=0) { 	
-			//convert to model index (in case of sortable model) 		
-			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			return fileInfoList.get(selectedRow);
-		}
-		return null;
+	
+	private void addMenu(String title) {
+		JMenuItem  menuItem = new JMenuItem(title); //NOI18N
+        menuItem.addActionListener(menuListener);
+        jPopupMenu1.add(menuItem);
 	}
+	
+	class PopupListener extends MouseAdapter {
+		@Override
+		public void mousePressed(MouseEvent e) {
+			selectOnRightClick(e);
+			maybeShowPopup(e);
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			maybeShowPopup(e);
+		}
+
+		private void maybeShowPopup(MouseEvent e) {
+			if (e.isPopupTrigger()) {
+				jPopupMenu1.show(e.getComponent(),
+						   e.getX(), e.getY());
+			}
+		}
+	}
+	
+	private void selectOnRightClick(java.awt.event.MouseEvent evt) {                                          
+		// If Right mouse click, select the line under mouse
+        if ( SwingUtilities.isRightMouseButton( evt ) )
+        {
+            Point p = evt.getPoint();
+            int rowNumber = jTableSelect.rowAtPoint( p );
+            ListSelectionModel model = jTableSelect.getSelectionModel();
+            model.setSelectionInterval( rowNumber, rowNumber );
+        }
+        //TODO: Use a better listener (onChange) to handle selections using keyboard !
+        //Example: http://www.developpez.net/forums/d1141644/java/interfaces-graphiques-java/awt-swing/jtable-lancer-traitement-moment-selection-ligne/
+    } 
+	
+	
+
+	
 }

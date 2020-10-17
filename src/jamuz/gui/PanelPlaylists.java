@@ -39,9 +39,6 @@ import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
-import java.awt.Point;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -80,7 +77,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
         tableModelPlaylist.clear();
 		fileInfoList=new ArrayList<>();
 		
-		myPopupMenu = new PopupMenu(jPopupMenu1, jTablePlaylist, fileInfoList, null);
+		myPopupMenu = new PopupMenu(jPopupMenu1, jTablePlaylist, tableModelPlaylist, fileInfoList, null);
 		enableComboListner=true;
     }
     
