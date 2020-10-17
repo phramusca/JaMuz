@@ -18,15 +18,20 @@ package jamuz.gui;
 
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.gui.swing.PopupListener;
+import jamuz.Keys;
+import jamuz.acoustid.AcoustID;
+import jamuz.acoustid.AcoustIdResult;
+import jamuz.acoustid.Results;
+import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
 import jamuz.process.check.PanelCheck;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -38,8 +43,13 @@ import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+
+//TODO: Generalize, and replace PopupListener Or even better extend JPopupMenu
 
 /**
  *
@@ -51,6 +61,7 @@ public class PopupMenu {
 	JTable jTableSelect;
 	ArrayList<FileInfoInt> fileInfoList;
 	Mplayer mplayer;
+	ActionListener menuListener;
 
 	public PopupMenu(JPopupMenu jPopupMenu1, JTable jTableSelect, ArrayList<FileInfoInt> fileInfoList, Mplayer mplayer) {
 		this.jPopupMenu1 = jPopupMenu1;
@@ -61,44 +72,55 @@ public class PopupMenu {
 	}
 		
 	private void setup() {
-		//Menu listener
-        ActionListener menuListener = (ActionEvent e) -> {
-			JMenuItem source = (JMenuItem)(e.getSource());
-			String sourceTxt=source.getText();
-			if(sourceTxt.equals(Inter.get("Button.Edit"))) { //NOI18N
-				menuEdit();
-			}
-			else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueue.text"))) { //NOI18N
-				menuQueue();
-			}
-			else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueueAll.text"))) { //NOI18N
-				menuQueueAll();
-			}
-			else if(sourceTxt.equals("Preview")) { //NOI18N
-				menuPreview();
-			}
-			else if(sourceTxt.equals(Inter.get("Label.Check"))) { //NOI18N
-				menuCheck();
-			}
-			else {
-				Popup.error(Inter.get("UNKNOWN MENU ITEM"));
+		
+        menuListener = (ActionEvent e) -> {
+			FileInfoInt selected = getSelected(); 		
+			if(selected!=null) {
+				JMenuItem source = (JMenuItem)(e.getSource());
+				String sourceTxt=source.getText();
+				if(sourceTxt.equals(Inter.get("Button.Edit"))) { //NOI18N
+					PanelMain.editLocation(Jamuz.getDb().getRootPath()+selected.getRelativeFullPath());
+				}
+				else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueue.text"))) { //NOI18N
+					//TODO: Bug when adding to queue. JList is not refreshed
+					//Something's wrong b/w model and JList
+					PanelMain.addToQueue(selected, Jamuz.getDb().getRootPath());
+				}
+				else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueueAll.text"))) { //NOI18N
+					PanelMain.getQueueModel().clear();
+					for(FileInfoInt myFileInfo : fileInfoList) {
+						PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 	
+					}
+				}
+				else if(sourceTxt.equals("Preview")) { //NOI18N
+					//FIXME: Uncomment 2 below lines
+					//	mplayer.setAudioCard((Mplayer.AudioCard)jComboBoxSoundCard.getSelectedItem());
+					//	jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
+					if(mplayer!=null) {
+						mplayer.play(selected.getFullPath().getAbsolutePath(), false);
+					}
+				}
+				else if(sourceTxt.equals(Inter.get("Label.Check"))) { //NOI18N
+					PanelCheck.check(selected.getIdPath());	
+				} else if(sourceTxt.equals("AcoustID")) { //NOI18N
+					Results analyzed = AcoustID.analyze(selected.getFullPath().getAbsolutePath(), Jamuz.getKeys().get("AcoustId"));
+					AcoustIdResult best = analyzed.getBest();
+					String msg = best==null?"Not found":best.getScore()+": \""+best.getTitle()+"\" by "+best.getArtist();
+					Popup.info(msg);
+				}
+				else {
+					Popup.error(Inter.get("UNKNOWN MENU ITEM"));
+				}
 			}
 		};
         
-        JMenuItem  menuItem = new JMenuItem(Inter.get("MainGUI.jButtonSelectQueue.text")); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
-        menuItem = new JMenuItem(Inter.get("MainGUI.jButtonSelectQueueAll.text")); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
+		addMenu(Inter.get("MainGUI.jButtonSelectQueue.text"));
+		addMenu(Inter.get("MainGUI.jButtonSelectQueueAll.text"));
 		if(mplayer!=null) {
-			menuItem = new JMenuItem("Preview"); //NOI18N
-			menuItem.addActionListener(menuListener);
-			jPopupMenu1.add(menuItem);
+			addMenu("Preview");
 		}
-        menuItem = new JMenuItem(Inter.get("Label.Check")); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
+		addMenu(Inter.get("Label.Check"));
+		addMenu("AcoustID");
 		//Add links menu items
         File f = Jamuz.getFile("AudioLinks.txt", "data");
         if(f.exists()) {
@@ -118,15 +140,48 @@ public class PopupMenu {
                 Jamuz.getLogger().log(Level.SEVERE, null, ex);
             }
         }
-		//TODO: Add " (external)" to menu name
-		menuItem = new JMenuItem(Inter.get("Button.Edit")); //NOI18N
+		addMenu(Inter.get("Button.Edit")); //TODO: Add " (external)" to menu name	
+		jTableSelect.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				selectOnRightClick(e);
+				maybeShowPopup(e);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				maybeShowPopup(e);
+			}
+
+			private void maybeShowPopup(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					jPopupMenu1.show(e.getComponent(),
+							   e.getX(), e.getY());
+				}
+			}
+        });
+	}
+	
+	private void addMenu(String title) {
+		JMenuItem  menuItem = new JMenuItem(title); //NOI18N
         menuItem.addActionListener(menuListener);
         jPopupMenu1.add(menuItem);
- 
-        //Add listener to components that can bring up popup menus.
-        MouseListener popupListener = new PopupListener(jPopupMenu1);
-        jTableSelect.addMouseListener(popupListener);
 	}
+	
+	private void selectOnRightClick(java.awt.event.MouseEvent evt) {                                          
+		// If Right mouse click, select the line under mouse
+        if ( SwingUtilities.isRightMouseButton( evt ) )
+        {
+            Point p = evt.getPoint();
+            int rowNumber = jTableSelect.rowAtPoint( p );
+            ListSelectionModel model = jTableSelect.getSelectionModel();
+            model.setSelectionInterval( rowNumber, rowNumber );
+        }
+        
+		
+        //TODO: Use a better listener (onChange) to handle selections using keyboard !
+        //Example: http://www.developpez.net/forums/d1141644/java/interfaces-graphiques-java/awt-swing/jtable-lancer-traitement-moment-selection-ligne/
+    } 
 	
 	class OpenUrlAction extends AbstractAction {
         
@@ -136,6 +191,7 @@ public class PopupMenu {
             super(text, null);
             this.url = url;
         }
+		
         @Override
         public void actionPerformed(ActionEvent e) {
             int selectedRow = jTableSelect.getSelectedRow(); 		
@@ -150,68 +206,14 @@ public class PopupMenu {
 			}
         }
     }
-	
-	private void menuQueue() {
-        //Getting selected File 		
-		int selectedRow = jTableSelect.getSelectedRow(); 			
-		if(selectedRow>=0) { 	
-			//convert to model index (as sortable model) 		
-			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			FileInfoInt myFileInfo = fileInfoList.get(selectedRow); 	
-            
-            //TODO: Bug when adding to queue. JList is not refreshed
-            //Something's wrong b/w model and JList
-			PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 		
-		}
-    }
-    
-    private void menuQueueAll() {
-        //Getting selected File 		
-		int selectedRow = jTableSelect.getSelectedRow(); 			
-		if(selectedRow>=0) {	
-            PanelMain.getQueueModel().clear();
-            for(FileInfoInt myFileInfo : fileInfoList) {
-                PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 	
-            }
-		}
-    }
-    
-    private void menuEdit() {
-        //Getting selected File 		
+
+	private FileInfoInt getSelected() {
 		int selectedRow = jTableSelect.getSelectedRow(); 		
 		if(selectedRow>=0) { 	
-			//convert to model index (as sortable model) 		
+			//convert to model index (in case of sortable model) 		
 			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			FileInfoInt myFileInfo = fileInfoList.get(selectedRow);
-			PanelMain.editLocation(Jamuz.getDb().getRootPath()+myFileInfo.getRelativeFullPath());	  			 		
+			return fileInfoList.get(selectedRow);
 		}
-    }
-	
-	private void menuPreview() {
-		//Getting selected File 		
-		int selectedRow = jTableSelect.getSelectedRow(); 			
-		if(selectedRow>=0) { 	
-			//convert to model index (as sortable model) 		
-			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			FileInfoInt fileInfoInt = fileInfoList.get(selectedRow); 	
-			//FIXME: Uncomment 2 below lines
-//			mplayer.setAudioCard((Mplayer.AudioCard)jComboBoxSoundCard.getSelectedItem());
-//			jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
-			if(mplayer!=null) {
-				mplayer.play(fileInfoInt.getFullPath().getAbsolutePath(), false);
-			}
-		}
+		return null;
 	}
-	
-	 private void menuCheck() {
-        int selectedRow = jTableSelect.getSelectedRow(); 		
-		if(selectedRow>=0) { 	
-			//convert to model index (as sortable model) 		
-			selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-			FileInfoInt myFileInfo = fileInfoList.get(selectedRow);
-
-            PanelCheck.check(myFileInfo.getIdPath());			 		
-		}
-    }
-	
 }

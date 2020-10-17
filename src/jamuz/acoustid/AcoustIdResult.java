@@ -22,7 +22,7 @@ package jamuz.acoustid;
  */
 public class AcoustIdResult {
 	
-	String score;
+	private String score;
 	private String artist;
 	private String title;
 
@@ -31,10 +31,14 @@ public class AcoustIdResult {
 		this.title = title;
 	}
 
-	public void setScore(String score) {
+	protected void setScore(String score) {
 		this.score = score;
 	}	
-	
+
+	public String getScore() {
+		return score;
+	}
+		
 	public String getArtist() {
 		return artist;
 	}
