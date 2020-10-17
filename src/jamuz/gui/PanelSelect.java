@@ -25,19 +25,16 @@ import jamuz.Jamuz;
 import jamuz.gui.swing.ListElement;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
-import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
 import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.ListModelSelector;
 import jamuz.gui.swing.ListCellRendererSelector;
@@ -193,7 +190,19 @@ public class PanelSelect extends javax.swing.JPanel {
 		refreshTable();
 		
 		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
-		myPopupMenu = new PopupMenu(jPopupMenu1, jTableSelect, fileInfoList, mplayer);
+		myPopupMenu = new PopupMenu(jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, new PopupMenuListener() {
+			@Override
+			public boolean deleteStarted() {
+				jTableSelect.setRowSorter(null);
+				enableSelect(false);
+				return true;
+			}
+
+			@Override
+			public void deleteEnded() {
+				enableSelect(true);
+			}
+		});
 	}
 	
     private static void setYearSpinners() {
@@ -1165,7 +1174,6 @@ public class PanelSelect extends javax.swing.JPanel {
     private static boolean isSelectAdjusting=false;
     
     private static void enableSelect(boolean enable) {
-
         Swing.enableComponents(jPanelSelectRating, enable);
         Swing.enableComponents(jPanelSelectStatus, enable);
 //        jCheckBoxSelectUp.setEnabled(enable);
@@ -1173,7 +1181,6 @@ public class PanelSelect extends javax.swing.JPanel {
 		jListSelectArtist.setEnabled(enable);
 		jListSelectAlbum.setEnabled(enable);
 		jTableSelect.setEnabled(enable);
-		
 		isSelectAdjusting=!enable;
 	}
     
