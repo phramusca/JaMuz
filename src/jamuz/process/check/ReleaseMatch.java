@@ -28,6 +28,7 @@ import org.musicbrainz.controller.Release;
 import org.musicbrainz.model.entity.ReleaseWs2;
 import jamuz.utils.DateTime;
 import org.musicbrainz.model.RatingsWs2;
+import org.musicbrainz.model.entity.ReleaseGroupWs2;
 
 /**
  * Match release class. Can be Last.fm, MusicBrainz or Original
@@ -120,6 +121,20 @@ public class ReleaseMatch implements java.lang.Comparable {
 		this.quality = releaseWs2.getQualityStr();
 		this.id = mbidStr[mbidStr.length-1];
 //		this.relations = new ArrayList<Relation>();
+		this.score = score;
+		this.source=MUSICBRAINZ;
+	}
+	
+	public ReleaseMatch(ReleaseGroupWs2 releaseWs2, int score) {
+		this(releaseWs2.getArtistCreditString(), releaseWs2.getTitle(), releaseWs2.getYear(), -1);
+		this.trackTotal = -1;
+		this.discTotal = -1;
+		String[] mbidStr = releaseWs2.getIdUri().split("/");  //NOI18N
+		this.format = releaseWs2.getTypeString();
+		this.countryId = "?";
+		this.textLanguage = "?";
+		this.quality = "?";
+		this.id = mbidStr[mbidStr.length-1];
 		this.score = score;
 		this.source=MUSICBRAINZ;
 	}
