@@ -705,11 +705,6 @@ public class PanelSelect extends javax.swing.JPanel {
         jTableSelect.setModel(new jamuz.gui.swing.TableModel());
         jTableSelect.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jTableSelect.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jTableSelect.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jTableSelectMousePressed(evt);
-            }
-        });
         jScrollPaneSelect.setViewportView(jTableSelect);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -1224,33 +1219,6 @@ public class PanelSelect extends javax.swing.JPanel {
             fillListsInThread("genre"); 	  //NOI18N
         }
     }//GEN-LAST:event_jListSelectGenreValueChanged
-
-    private void jTableSelectMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableSelectMousePressed
-
-        // If Right mouse click, select the line under mouse
-        if ( SwingUtilities.isRightMouseButton( evt ) )
-        {
-            Point p = evt.getPoint();
-            int rowNumber = jTableSelect.rowAtPoint( p );
-            ListSelectionModel model = jTableSelect.getSelectionModel();
-            model.setSelectionInterval( rowNumber, rowNumber );
-        }
-        //In all cases, display selected file
-        //TODO: Use a better listner (onChange) to handle selections using keyboard !
-        //Example: http://www.developpez.net/forums/d1141644/java/interfaces-graphiques-java/awt-swing/jtable-lancer-traitement-moment-selection-ligne/
-        //Getting selected File
-//        int selectedRow = jTableSelect.getSelectedRow();
-//        //convert to model index (as sortable model)
-//        selectedRow = jTableSelect.convertRowIndexToModel(selectedRow);
-//        if(selectedRow>=0) {
-//            FileInfoInt myFileInfo = fileInfoList.get(selectedRow);
-//            PanelMain.displayFileInfo(myFileInfo, false);
-//        }
-//        else {
-//            Popup.info(Inter.get("Error.YouMustSelectArow")); 		  //NOI18N
-//        }
-
-    }//GEN-LAST:event_jTableSelectMousePressed
 
     private void jToggleButtonSelectShowBasicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonSelectShowBasicActionPerformed
         PanelMain.setBasicVisible(TABLE_COLUMN_MODEL, jToggleButtonSelectShowBasic.isSelected());
