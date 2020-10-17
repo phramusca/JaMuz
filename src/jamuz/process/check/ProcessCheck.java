@@ -606,6 +606,7 @@ public class ProcessCheck {
          * @param full
          * @param analyze
          * @param progressBarId
+		 * @param recalculateGain
          */
         public DoScan(boolean full, boolean analyze, int progressBarId) {
             super("Thread.ProcessCheck.DoScan.#"+progressBarId);
@@ -663,7 +664,7 @@ public class ProcessCheck {
                         break;
                     case SCAN:
                         Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+").scanAndBrowse({0})", folder.getRelativePath());
-                        scanAndBrowse(folder, progressBar);
+                        scanAndBrowse(analyze, folder, progressBar);
                         break;
                     case CHECK_NEW:
                         Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folderInfo.browse({0})", folder.getRelativePath());
@@ -680,7 +681,7 @@ public class ProcessCheck {
            }
         }
             
-        private boolean scanAndBrowse(FolderInfo folderFS, ProgressBar progressBar) throws InterruptedException {
+        private boolean scanAndBrowse(boolean recalculateGain, FolderInfo folderFS, ProgressBar progressBar) throws InterruptedException {
             this.checkAbort();
             progressBar.reset();
             boolean scanFiles=true;
@@ -712,7 +713,7 @@ public class ProcessCheck {
             //Scan and update folder's files
             if(scanFiles) {
                 //Get list of files from filesystem, reading tags as will be displayed
-                if(folderFS.browse(false, true, progressBar)) {
+                if(folderFS.browse(recalculateGain, true, progressBar)) {
                     if(!folderFS.scan(true, progressBar)) {
                         return false;
                     }

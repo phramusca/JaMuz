@@ -45,19 +45,22 @@ public class MP3gain {
     private final String relativePath;
 	private final ProgressBar progressBar;
 	private final boolean recalculate;
+	private final boolean trackGain;
 	
     /**
      *
+	 * @param trackGain
 	 * @param recalculate
      * @param rootPath
      * @param relativePath
      * @param progressBar
      */  
-    public MP3gain(boolean recalculate, String rootPath, String relativePath, ProgressBar progressBar) {
+    public MP3gain(boolean trackGain, boolean recalculate, String rootPath, String relativePath, ProgressBar progressBar) {
         this.relativePath = relativePath;
         this.path = rootPath + relativePath;
         this.progressBar = progressBar;
 		this.recalculate = recalculate;
+		this.trackGain=trackGain;
     }
 
 	/**
@@ -92,16 +95,21 @@ public class MP3gain {
 			cmdArray.add("-k");  //-k - automatically lower Track/Album gain to not clip audio  //NOI18N
 			//If you specify -r and -a, only the second one will work
 			//TODO: mp3gain : make album/track an option
-//			cmdArray.add("-r");	 //-r - apply Track gain automatically (all files set to equal loudness)
-			cmdArray.add("-a"); //-a - apply Album gain automatically (files are all from the same  //NOI18N
+			
+			if(trackGain) {
+				cmdArray.add("-r");	 //-r - apply Track gain automatically (all files set to equal loudness)
+			} else {
+				cmdArray.add("-a"); //-a - apply Album gain automatically (files are all from the same  //NOI18N
 						  //album: a single gain change is applied to all files, so
 						  //their loudness relative to each other remains unchanged,
 						  //but the average album loudness is normalized)
+			}
+
 //			cmdArray.add("-d"); //-d <n> - modify suggested dB gain by floating-point n
 //			cmdArray.add("2.0"); // -d 2.0: makes it 91.0 dB (defaults to 89.0)
 //			cmdArray.add(""); // -s i - use ID3v2 tag for MP3 gain info (bugged)
 //			cmdArray.add(""); // -s a - use APE tag for MP3 gain info (default)
-								// => DO NOT STORE TAG IN ID3 AS IT MESS IT UP !
+								// => !!! DO NOT STORE TAG IN ID3 AS IT MESS IT UP !!!!
 			
 			if(recalculate) {
 				cmdArray.add("-s");// -s r - force re-calculation (do not read tag info)
