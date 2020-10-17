@@ -141,11 +141,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
         jTablePlaylist.setAutoCreateColumnsFromModel(false);
         jTablePlaylist.setModel(new jamuz.gui.swing.TableModel());
         jTablePlaylist.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jTablePlaylist.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jTablePlaylistMousePressed(evt);
-            }
-        });
+        jTablePlaylist.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPaneSelect1.setViewportView(jTablePlaylist);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -812,18 +808,6 @@ public class PanelPlaylists extends javax.swing.JPanel {
     private void jToggleButtonSelectShowRightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonSelectShowRightsActionPerformed
         PanelMain.setRightsVisible(columnModelPlaylist, jToggleButtonSelectShowRights.isSelected());
     }//GEN-LAST:event_jToggleButtonSelectShowRightsActionPerformed
-
-    private void jTablePlaylistMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePlaylistMousePressed
-		// If Right mouse click, select the line under mouse
-        if ( SwingUtilities.isRightMouseButton( evt ) )
-        {
-            Point p = evt.getPoint();
-            int rowNumber = jTablePlaylist.rowAtPoint( p );
-            ListSelectionModel model = jTablePlaylist.getSelectionModel();
-            model.setSelectionInterval( rowNumber, rowNumber );
-        }
-        //TODO: Use a better listner (onChange) to handle selections using keyboard !
-    }//GEN-LAST:event_jTablePlaylistMousePressed
 
 	/**
 	 *

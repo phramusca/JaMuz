@@ -35,23 +35,23 @@ public class PopupListener extends MouseAdapter {
      * @param popupMenu
      */
     public PopupListener(JPopupMenu popupMenu) {
-            this.popupMenu = popupMenu;
-        }
+		this.popupMenu = popupMenu;
+	}
         
-        @Override
-        public void mousePressed(MouseEvent e) {
-            maybeShowPopup(e);
-        }
+	@Override
+	public void mousePressed(MouseEvent e) {
+		maybeShowPopup(e);
+	}
 
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            maybeShowPopup(e);
-        }
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		maybeShowPopup(e);
+	}
 
-        private void maybeShowPopup(MouseEvent e) {
-            if (e.isPopupTrigger()) {
-                popupMenu.show(e.getComponent(),
-                           e.getX(), e.getY());
-            }
-        }
+	private void maybeShowPopup(MouseEvent e) {
+		if (e.isPopupTrigger()) {
+			popupMenu.show(e.getComponent(),
+					   e.getX(), e.getY());
+		}
+	}
 }
