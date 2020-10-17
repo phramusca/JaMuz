@@ -99,7 +99,7 @@ public class PanelSelect extends javax.swing.JPanel {
 		tableModel.clear();
         jLabelSelectedSummary.setText("");
 		//Fill selection lists (genre, album, artist)
-		fileInfoList= new ArrayList<>();
+		fileInfoList.clear();
 		fillListsInThread("all");  //NOI18N
         
         //TODO: This clears user year selection (though used) so it is confusing.
@@ -189,6 +189,7 @@ public class PanelSelect extends javax.swing.JPanel {
 		selAlbum = new ListElement("%", "album"); //NOI18N
         
         setYearSpinners(); 
+		fileInfoList= new ArrayList<>();
 		refreshTable();
 		
 		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));

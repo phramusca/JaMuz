@@ -855,7 +855,9 @@ public class FileInfoInt extends FileInfo {
 			tag.setField(myArt);
 			this.nbCovers = 1;
 		}
-		if(!deleteComment && !comment.equals("")) { //NOI18N
+		if(deleteComment) { //NOI18N
+			tag.setField(FieldKey.COMMENT, "");
+		} else if(!comment.equals("")) { //NOI18N
 			tag.setField(FieldKey.COMMENT, comment);
 		}
 		if(bpm>0) {  //NOI18N

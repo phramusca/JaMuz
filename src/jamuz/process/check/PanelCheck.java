@@ -47,7 +47,7 @@ import javax.swing.JPanel;
 public class PanelCheck extends javax.swing.JPanel {
 
 	//TODO CHECK Add a "Singles" button:
-	// - Set albumArtist and album to "Various Artstists"/"Various Albums"
+	// - Set albumArtist and album to "Various Artists"/"Various Albums"
 	// - Keep individual covers
 	// - Delete files with bad format, bitrate, size or length or any other issue
 	// - Set track# and disc# to -1/-1
