@@ -1185,17 +1185,17 @@ public class FolderInfo implements java.lang.Comparable {
 		List<Track> tracks=match.getTracks(progressBar);
 		if(match.isOriginal()) {
 			results.get("nbFiles").tooltip=Inter.get("Tooltip.OriginalMatch");  //NOI18N
-			results.get("nbFiles").setWarning();  //NOI18N
+			results.get("nbFiles").setWarning(true);  //NOI18N
 		}
 		else {
 			if(tracks.size()<=0) {
 				results.get("nbFiles").tooltip=Inter.get("Tooltip.MatchHasNoTracks");  //NOI18N
-				results.get("nbFiles").setWarning();  //NOI18N
+				results.get("nbFiles").setWarning(true);  //NOI18N
 			}
 			else {
 				if(tracks.size() != filesAudio.size()) {
 					results.get("nbFiles").tooltip=Inter.get("Tooltip.NumberOfTracksDiffer");  //NOI18N
-					results.get("nbFiles").setKO();  //NOI18N
+					results.get("nbFiles").setKO(true);  //NOI18N
 				}
 				else {
 					//Note: If "nbFiles" has errorlevel set >0 during folder analysis

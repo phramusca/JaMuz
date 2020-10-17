@@ -21,7 +21,6 @@ package jamuz.player;
 
 import jamuz.Jamuz;
 import jamuz.gui.PanelLyrics;
-import jamuz.process.check.MP3gain;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
 import java.io.IOException;
@@ -222,7 +221,7 @@ public class Mplayer implements Runnable {
 							try {
 								iputBufferedReader.close();
 							} catch (IOException ex) {
-								Logger.getLogger(MP3gain.class.getName()).log(Level.SEVERE, null, ex);
+								Logger.getLogger(Mplayer.class.getName()).log(Level.SEVERE, null, ex);
 							}
 						}
 					}
@@ -291,7 +290,7 @@ public class Mplayer implements Runnable {
 							try {
 								errorReader.close();
 							} catch (IOException ex) {
-								Logger.getLogger(MP3gain.class.getName()).log(Level.SEVERE, null, ex);
+								Logger.getLogger(Mplayer.class.getName()).log(Level.SEVERE, null, ex);
 							}
 						}
 					}
