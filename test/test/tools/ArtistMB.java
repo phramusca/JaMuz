@@ -55,9 +55,9 @@ public class ArtistMB {
 	 * @param artist
 	 * @return
 	 */
-	public List<ReleaseMatch> search(String artist) {
+	public List<ArtistResultWs2> search(String artist) {
 		artist = ReleaseMB.removeIllegal(artist);
-		List<ReleaseMatch> matches = new ArrayList<>();
+		List<ArtistResultWs2> matches = new ArrayList<>();
 		covers = new ArrayList<>();
 		try {
 			Artist artistController=getArtistController();
@@ -65,8 +65,37 @@ public class ArtistMB {
 			List<ArtistResultWs2> firstSearchResultPage = artistController.getFirstSearchResultPage();
 			for (ArtistResultWs2 artistResult : firstSearchResultPage) {
 				try {
+					matches.add(artistResult);
+				}
+				catch (Exception ex) {
+					Jamuz.getLogger().log(Level.SEVERE, "", ex);
+					//Get next releaseWs2, no need to exit yet
+				}
+			}
+			
+//			//ORDER BY score DESC
+//			Collections.sort(matches);
+            
+            return matches;
+		}
+		catch (Exception ex) {
+			Jamuz.getLogger().log(Level.SEVERE, "", ex);
+			return null;
+		}
+	}
+	
+		/**
+	 * Search artist albums
+	 * @param artistResult
+	 * @return
+	 */
+	public List<ReleaseMatch> getReleaseGroups(ArtistResultWs2 artistResult) {
+		List<ReleaseMatch> matches = new ArrayList<>();
+		covers = new ArrayList<>();
+		try {
+			try {
 					ArtistWs2 artist1 = artistResult.getArtist();
-					artistController=getArtistController();
+					Artist artistController=getArtistController();
 					artistController.lookUp(artist1.getId());
 					List<ReleaseGroupWs2> fullReleaseGroupList = artistController.getFullReleaseGroupList();
 					if(fullReleaseGroupList!=null) {
@@ -89,7 +118,6 @@ public class ArtistMB {
 					Jamuz.getLogger().log(Level.SEVERE, "", ex);
 					//Get next releaseWs2, no need to exit yet
 				}
-			}
 			
 			//ORDER BY score DESC
 			Collections.sort(matches);
