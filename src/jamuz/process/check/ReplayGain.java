@@ -163,7 +163,8 @@ public class ReplayGain {
 		}
 		catch (IOException 
 				| NegativeArraySizeException 
-				| NullPointerException ex) {
+				| NullPointerException
+				| ArrayIndexOutOfBoundsException ex) {
 			Logger.getLogger(ReplayGain.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
 		}
 		return gv;

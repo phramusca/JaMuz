@@ -522,8 +522,9 @@ public class FolderInfo implements java.lang.Comparable {
 				if(!isValid || recalculateGain) {
 					//Compute replaygain for MP3 files (if any)
 					progressBar.setIndeterminate("Computing ReplayGain for MP3 ...");
-					MP3gain mP3gain = new MP3gain(recalculateGain, rootPath, 
-							relativePath, progressBar);
+					ArrayList<String> albumList = group(filesAudio, "getAlbum");  //NOI18N
+					boolean trackGain=albumList.size()==1 && albumList.get(0).equals("Various Albums");				
+					MP3gain mP3gain = new MP3gain(trackGain, true, rootPath, relativePath, progressBar);
 					if(mP3gain.process()) {
 						progressBar.setup(filesAudio.size());
 						filesAudio.stream().forEach((fileInfoDisplay) -> {
@@ -1441,9 +1442,7 @@ public class FolderInfo implements java.lang.Comparable {
 		//FIXME Z CHECK Manage "Various Artists" and "Various Albums" better:
 		// - Inter ?
 		// - static field ...
-		String albumArtist = getResultField("albumArtist");
-		String album = getResultField("album");
-		return albumArtist.equals("Various Artists") && album.equals("Various Albums");
+		return getResultField("album").equals("Various Albums");
 	}
 
 	private boolean isDestinationLibrary() {
