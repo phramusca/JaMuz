@@ -190,7 +190,19 @@ public class PanelSelect extends javax.swing.JPanel {
 		refreshTable();
 		
 		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
-		myPopupMenu = new PopupMenu(jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer);
+		myPopupMenu = new PopupMenu(jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, new PopupMenuListener() {
+			@Override
+			public boolean deleteStarted() {
+				jTableSelect.setRowSorter(null);
+				enableSelect(false);
+				return true;
+			}
+
+			@Override
+			public void deleteEnded() {
+				enableSelect(true);
+			}
+		});
 	}
 	
     private static void setYearSpinners() {
@@ -1162,7 +1174,6 @@ public class PanelSelect extends javax.swing.JPanel {
     private static boolean isSelectAdjusting=false;
     
     private static void enableSelect(boolean enable) {
-
         Swing.enableComponents(jPanelSelectRating, enable);
         Swing.enableComponents(jPanelSelectStatus, enable);
 //        jCheckBoxSelectUp.setEnabled(enable);
@@ -1170,7 +1181,6 @@ public class PanelSelect extends javax.swing.JPanel {
 		jListSelectArtist.setEnabled(enable);
 		jListSelectAlbum.setEnabled(enable);
 		jTableSelect.setEnabled(enable);
-		
 		isSelectAdjusting=!enable;
 	}
     

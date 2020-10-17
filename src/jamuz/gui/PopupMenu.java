@@ -38,6 +38,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import javax.swing.AbstractAction;
@@ -63,14 +64,16 @@ public class PopupMenu {
 	ArrayList<FileInfoInt> fileInfoList;
 	Mplayer mplayer;
 	ActionListener menuListener;
+	private final PopupMenuListener popupMenuListener;
 
-	public PopupMenu(JPopupMenu jPopupMenu1, JTable jTableSelect, TableModel tableModel, ArrayList<FileInfoInt> fileInfoList, Mplayer mplayer) {
+	public PopupMenu(JPopupMenu jPopupMenu1, JTable jTableSelect, TableModel tableModel, ArrayList<FileInfoInt> fileInfoList, Mplayer mplayer, PopupMenuListener popupMenuListener) {
 		this.jPopupMenu1 = jPopupMenu1;
 		this.jTableSelect = jTableSelect;
 		this.tableModel = tableModel;
 		this.fileInfoList = fileInfoList;
 		this.mplayer = mplayer;
 		setup();
+		this.popupMenuListener = popupMenuListener;
 	}
 		
 	private void setup() {
@@ -113,25 +116,34 @@ public class PopupMenu {
                         Inter.get("Label.Confirm"), //NOI18N 
                         JOptionPane.YES_NO_OPTION); 
 					if (n == JOptionPane.YES_OPTION) { 					
-						delete(selected, selectedIndex);
+						if(delete(selected, selectedIndex)) {
+							fileInfoList.remove(selectedIndex);
+						}
 					}
 				} else if(sourceTxt.equals("Delete All")) {
 					int n = JOptionPane.showConfirmDialog( 
-                        null, "Are you sure that you want to delete ALL playlist files FROM FILESYSTEM ?", //NOI18N 
+                        null, "Are you sure that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
                         Inter.get("Label.Confirm"), //NOI18N 
                         JOptionPane.YES_NO_OPTION); 
 					if (n == JOptionPane.YES_OPTION) { 
 						n = JOptionPane.showConfirmDialog( 
-						null, "Are you sure you REALLY SURE that you want to delete ALL playlist files FROM FILESYSTEM ?", //NOI18N 
+						null, "Are you REALLY SURE that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION); 
-						if (n == JOptionPane.YES_OPTION) { 
-							//FIXME !!! Disable buttons while deleting !!! OR IT CAN MESS EVERYTHING UP
-							new Thread(() -> {
-								for(FileInfoInt file : fileInfoList) {
-									delete(file, 0);
-								}
-							}).start();
+						if (n == JOptionPane.YES_OPTION) {
+							enableMenu=false;
+							if(popupMenuListener.deleteStarted()) {
+								new Thread(() -> {
+									for (Iterator<FileInfoInt> it = fileInfoList.iterator(); it.hasNext();) {
+										FileInfoInt file = it.next();
+										if(delete(file, 0)) {
+											it.remove();
+										}
+									}
+									popupMenuListener.deleteEnded();
+									enableMenu=true;
+								}).start();
+							}
 						}
 					}
 				} else if(sourceTxt.equals("AcoustID")) { //NOI18N
@@ -188,14 +200,20 @@ public class PopupMenu {
         });
 	}
 	
-	private void delete(FileInfoInt selected, int selectedIndex) {
+	private boolean delete(FileInfoInt selected, int selectedIndex) {
 		File currentFile = selected.getFullPath();
 		if(currentFile.exists() 
 				&& selected.getFullPath().delete()
 				&& Jamuz.getDb().setFileDeleted(selected.getIdFile())) {
 			tableModel.removeRow(selectedIndex);
-			fileInfoList.remove(selectedIndex);
+			return true;
 		}
+		return false;
+	}
+
+	private boolean enableMenu=true;
+	void setEnable(boolean enable) {
+		enableMenu=enable;
 	}
 	
 	class OpenUrlAction extends AbstractAction {
@@ -241,7 +259,7 @@ public class PopupMenu {
 		}
 
 		private void maybeShowPopup(MouseEvent e) {
-			if (e.isPopupTrigger()) {
+			if (e.isPopupTrigger() && enableMenu) {
 				jPopupMenu1.show(e.getComponent(),
 						   e.getX(), e.getY());
 			}
@@ -250,7 +268,7 @@ public class PopupMenu {
 	
 	private void selectOnRightClick(java.awt.event.MouseEvent evt) {                                          
 		// If Right mouse click, select the line under mouse
-        if ( SwingUtilities.isRightMouseButton( evt ) )
+        if ( SwingUtilities.isRightMouseButton( evt ) && enableMenu)
         {
             Point p = evt.getPoint();
             int rowNumber = jTableSelect.rowAtPoint( p );
@@ -259,9 +277,5 @@ public class PopupMenu {
         }
         //TODO: Use a better listener (onChange) to handle selections using keyboard !
         //Example: http://www.developpez.net/forums/d1141644/java/interfaces-graphiques-java/awt-swing/jtable-lancer-traitement-moment-selection-ligne/
-    } 
-	
-	
-
-	
+    }
 }
