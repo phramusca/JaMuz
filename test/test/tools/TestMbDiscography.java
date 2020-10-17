@@ -19,6 +19,7 @@ package test.tools;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.ReleaseMatch;
 import java.util.List;
+import org.musicbrainz.model.searchresult.ArtistResultWs2;
 
 /**
  *
@@ -31,9 +32,14 @@ public class TestMbDiscography {
 	 */
 	public static void main(String[] args) {
 		ArtistMB artistMB = new ArtistMB(new ProgressBar());
-		List<ReleaseMatch> search = artistMB.search("Au p'tit Bonheur");
-		System.out.println("------------------------------");
-		System.out.println("Type\tYear\tAlbum\tArtist\tScore\tStatus");
-		search.forEach(m -> System.out.println(m.getFormat()+"\t"+m.getYear()+"\t"+m.getAlbum()+"\t"+m.getArtist()+"\t"+m.getScore()));	
+		List<ArtistResultWs2> artistResults = artistMB.search("10 Ft. Ganja Plant");
+		if(artistResults.size()>0) {
+			List<ReleaseMatch> releaseGroups = artistMB.getReleaseGroups(artistResults.get(0));	
+			System.out.println("------------------------------");
+			System.out.println("Type\tYear\tAlbum\tArtist\tScore\tStatus");
+			releaseGroups.forEach(rg -> System.out.println(rg.getFormat()+"\t"+rg.getYear()+"\t"+rg.getAlbum()+"\t"+rg.getArtist()+"\t"+rg.getScore()));	
+		} else {
+			System.out.println("No arist match found :(");
+		}
 	}
 }
