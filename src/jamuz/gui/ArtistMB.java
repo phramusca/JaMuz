@@ -17,7 +17,7 @@
 
 // http://code.google.com/p/musicbrainzws2-java/wiki/TableOfContents
 
-package test.tools;
+package jamuz.gui;
 
 import jamuz.process.check.*;
 import jamuz.Jamuz;

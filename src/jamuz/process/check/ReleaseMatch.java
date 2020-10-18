@@ -195,9 +195,9 @@ public class ReleaseMatch implements java.lang.Comparable {
 		this.trackTotal = trackTotal;
 	}
 
-	private boolean checkExactAlbum() {
+	private boolean checkExactAlbum(int errorlevel) {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
-		Jamuz.getDb().checkAlbumExact(myList, album, idPath);
+		Jamuz.getDb().checkAlbumExact(myList, album, idPath, errorlevel);
 		if(myList.size()>0) {
 			this.duplicates.addAll(myList);
 			return true;
@@ -235,9 +235,9 @@ public class ReleaseMatch implements java.lang.Comparable {
 		return false;
 	}
 	
-	private boolean checkSimilarAlbumArtist() {
+	private boolean checkSimilarAlbumArtist(int errorlevel) {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
-		Jamuz.getDb().checkAlbumDuplicate(myList, artist, album, idPath);
+		Jamuz.getDb().checkAlbumDuplicate(myList, artist, album, idPath, errorlevel);
 		if(myList.size()>0) {
 			duplicates.addAll(myList);
 			return true;
@@ -256,13 +256,32 @@ public class ReleaseMatch implements java.lang.Comparable {
 			duplicates = new ArrayList<>();
 			if(		checkDuplicateMbId() 
 					|| (isDiscPart && checkDuplicateAlbumArtistNumber())
-					|| (!isDiscPart && checkSimilarAlbumArtist())) {
+					|| (!isDiscPart && checkSimilarAlbumArtist(1))) {
 				isErrorDuplicate=true;
 			} else if( 
-					(isDiscPart && checkSimilarAlbumArtist())
+					(isDiscPart && checkSimilarAlbumArtist(1))
 					|| checkSimilarAlbum()
-					|| checkExactAlbum()) {
+					|| checkExactAlbum(1)) {
 				isWarningDuplicate=true;
+			}
+		}
+		return duplicates;
+	}
+	
+	/**
+	 * Return list of duplicates
+	 * @return
+	 */
+	public List<DuplicateInfo> getDuplicatesForDisco() {
+		if(duplicates==null) {
+			//Search for duplicates
+
+			duplicates = new ArrayList<>();
+			if(	checkDuplicateMbId()				//errorlevel=2  //FIXME: MbId must match but we have a Release on one side and a ReleaseGroup on the other one
+					|| checkSimilarAlbumArtist(2)	//errorlevel=2
+					|| checkSimilarAlbum()			//errorlevel=1
+					|| checkExactAlbum(1))			//errorlevel=1
+			{ 
 			}
 		}
 		return duplicates;

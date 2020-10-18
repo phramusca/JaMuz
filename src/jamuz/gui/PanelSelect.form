@@ -28,7 +28,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="1053" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="1141" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Component id="jPanelSelect" alignment="0" max="32767" attributes="0"/>
           </Group>
@@ -232,7 +232,8 @@
                                   <Component id="jRadioSelectArtistName" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jRadioSelectArtistRating" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <EmptySpace pref="43" max="32767" attributes="0"/>
+                                  <Component id="jButtonDiscography" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -240,11 +241,14 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jRadioSelectArtistName" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jRadioSelectArtistRating" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jButtonDiscography" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                                          <Component id="jRadioSelectArtistName" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jRadioSelectArtistRating" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="jScrollPaneSelectArtist" pref="351" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jScrollPaneSelectArtist" pref="343" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -297,6 +301,14 @@
                           </Properties>
                           <Events>
                             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jRadioSelectArtistRatingItemStateChanged"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JButton" name="jButtonDiscography">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Disco"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDiscographyActionPerformed"/>
                           </Events>
                         </Component>
                       </SubComponents>
@@ -901,7 +913,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jScrollPaneSelect" alignment="0" pref="1053" max="32767" attributes="0"/>
+                      <Component id="jScrollPaneSelect" alignment="0" pref="1141" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
