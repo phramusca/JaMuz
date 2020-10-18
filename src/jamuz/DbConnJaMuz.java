@@ -2941,7 +2941,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @return
      */
     public boolean checkAlbumExact(ArrayList<DuplicateInfo> myList, String album, 
-			int idPath) {
+			int idPath, int errorlevel) {
 		if(!album.equals("")) {
 			try {
 				PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(
@@ -2951,7 +2951,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 				stSelectAlbumExact.setString(1, album);
 				stSelectAlbumExact.setInt(2, idPath);
-				getDuplicates(myList, stSelectAlbumExact, 1);
+				getDuplicates(myList, stSelectAlbumExact, errorlevel);
 				return true;
 			} catch (SQLException ex) {
 				Popup.error("checkExactAlbum(" + album + ")", ex);   //NOI18N
@@ -3039,7 +3039,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @return
      */
     public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList, 
-			String albumArtist, String album, int idPath) {
+			String albumArtist, String album, int idPath, int errorlevel) {
 		
         if (!albumArtist.equals("") && !album.equals("")) {    //NOI18N
             try {
@@ -3052,7 +3052,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 stSelectDuplicates.setString(1, albumArtist);
                 stSelectDuplicates.setString(2, album);
                 stSelectDuplicates.setInt(3, idPath);
-                getDuplicates(myList, stSelectDuplicates, 1);
+                getDuplicates(myList, stSelectDuplicates, errorlevel);
                 return true;
             } catch (SQLException ex) {
                 Popup.error("checkDuplicate(" + albumArtist + "," + album + ")", ex);   //NOI18N

@@ -38,9 +38,12 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.ListModelSelector;
 import jamuz.gui.swing.ListCellRendererSelector;
+import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
+import jamuz.process.check.DuplicateInfo;
+import jamuz.process.check.ReleaseMatch;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
@@ -247,6 +250,7 @@ public class PanelSelect extends javax.swing.JPanel {
         jListSelectArtist = new javax.swing.JList();
         jRadioSelectArtistName = new javax.swing.JRadioButton();
         jRadioSelectArtistRating = new javax.swing.JRadioButton();
+        jButtonDiscography = new javax.swing.JButton();
         jScrollPaneSelectGenre = new javax.swing.JScrollPane();
         jListSelectGenre = new javax.swing.JList();
         jPanelSelectFilters = new javax.swing.JPanel();
@@ -385,6 +389,13 @@ public class PanelSelect extends javax.swing.JPanel {
             }
         });
 
+        jButtonDiscography.setText("Disco");
+        jButtonDiscography.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDiscographyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelSelectArtistLayout = new javax.swing.GroupLayout(jPanelSelectArtist);
         jPanelSelectArtist.setLayout(jPanelSelectArtistLayout);
         jPanelSelectArtistLayout.setHorizontalGroup(
@@ -394,16 +405,19 @@ public class PanelSelect extends javax.swing.JPanel {
                 .addComponent(jRadioSelectArtistName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioSelectArtistRating)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addComponent(jButtonDiscography))
         );
         jPanelSelectArtistLayout.setVerticalGroup(
             jPanelSelectArtistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSelectArtistLayout.createSequentialGroup()
                 .addGroup(jPanelSelectArtistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioSelectArtistName)
-                    .addComponent(jRadioSelectArtistRating))
+                    .addComponent(jButtonDiscography)
+                    .addGroup(jPanelSelectArtistLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jRadioSelectArtistName)
+                        .addComponent(jRadioSelectArtistRating)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSelectArtist, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE))
+                .addComponent(jScrollPaneSelectArtist, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
         );
 
         jSplitPaneSelectArtistAlbum.setLeftComponent(jPanelSelectArtist);
@@ -782,7 +796,7 @@ public class PanelSelect extends javax.swing.JPanel {
                         .addComponent(jLabelSelectedSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jLabelSelected, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 1053, Short.MAX_VALUE)
+            .addComponent(jScrollPaneSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 1141, Short.MAX_VALUE)
         );
         jPanelSelectTracksLayout.setVerticalGroup(
             jPanelSelectTracksLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -819,7 +833,7 @@ public class PanelSelect extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1053, Short.MAX_VALUE)
+            .addGap(0, 1141, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelSelect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1295,10 +1309,32 @@ public class PanelSelect extends javax.swing.JPanel {
 		PanelMain.setRightsVisible(TABLE_COLUMN_MODEL, jToggleButtonSelectShowRights.isSelected());
     }//GEN-LAST:event_jToggleButtonSelectShowRightsActionPerformed
 
+    private void jButtonDiscographyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDiscographyActionPerformed
+        ArtistMB artistMB = new ArtistMB(new ProgressBar());
+		List<ArtistResultWs2> artistResults = artistMB.search(((ListElement) jListSelectArtist.getSelectedValue()).getValue());
+		if(artistResults.size()>0) {
+			List<ReleaseMatch> releaseGroups = artistMB.getReleaseGroups(artistResults.get(0));	
+			System.out.println("------------------------------");
+			System.out.println("Type\tYear\tAlbum\tArtist\tScore\tMatch\tStatus\tRating\tAlbum\tArtist\tDiscNo");
+			releaseGroups.forEach(rg -> {
+				List<DuplicateInfo> duplicates = rg.getDuplicatesForDisco();
+				String duplicateInfo="";
+				if(duplicates.size()>0) {
+					DuplicateInfo duplicate = duplicates.get(0);
+					duplicateInfo="\t"+duplicate.getErrorLevel()+"/2\t"+duplicate.getCheckedFlag()+"\t"+duplicate.getRating()+"\t"+duplicate.getAlbum()+"\t"+duplicate.getAlbumArtist()+"\t"+duplicate.getDiscNo()+"/"+duplicate.getDiscTotal();
+				}
+				System.out.println(rg.getFormat()+"\t"+rg.getYear()+"\t"+rg.getAlbum()+"\t"+rg.getArtist()+"\t"+rg.getScore()+duplicateInfo);
+			});	
+		} else {
+			System.out.println("No arist match found :(");
+		}
+    }//GEN-LAST:event_jButtonDiscographyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JButton jButtonDiscography;
     private javax.swing.JButton jButtonPreviewStop;
     private static javax.swing.JCheckBox jCheckBoxSelectCheckedFlag0;
     private static javax.swing.JCheckBox jCheckBoxSelectCheckedFlag1;

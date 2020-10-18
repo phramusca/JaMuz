@@ -16,6 +16,7 @@
  */
 package test.tools;
 
+import jamuz.gui.ArtistMB;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.ReleaseMatch;
 import java.util.List;

@@ -1592,7 +1592,7 @@ public class DbConnJaMuzTest {
 		int idPath = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.checkAlbumExact(myList, album, idPath);
+		boolean result = instance.checkAlbumExact(myList, album, idPath, 1);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1646,7 +1646,7 @@ public class DbConnJaMuzTest {
 		int idPath = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.checkAlbumDuplicate(myList, albumArtist, album, idPath);
+		boolean result = instance.checkAlbumDuplicate(myList, albumArtist, album, idPath, 1);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
