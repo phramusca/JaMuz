@@ -2137,4 +2137,33 @@ public class FolderInfo implements java.lang.Comparable {
             return color;
         }
 	}
+	
+	public enum CopyRight {
+
+		UNDEFINED(Inter.get("Label.BestOf.NotDefined"), 0),  //NOI18N
+        OWN_PHYSICAL(Inter.get("Label.BestOf.OwnPhysical"), 1), //NOI18N
+        OWN_DIGITAL(Inter.get("Label.BestOf.OwnDigital"), 2), //NOI18N
+        CONTRIBUTED(Inter.get("Label.BestOf.Contributed"), 3),  //NOI18N
+		NO_SUPPORT(Inter.get("Label.BestOf.NoSupport"), 4);  //NOI18N
+
+		private final String display;
+		private final int value;
+        
+		private CopyRight(String display, int value) {
+			this.display = display;
+			this.value = value;
+		}
+		@Override
+		public String toString() {
+			return display;
+		}
+
+		/**
+		 * Return value
+		 * @return
+		 */
+		public int getValue() {
+			return value;
+		}
+	}
 }

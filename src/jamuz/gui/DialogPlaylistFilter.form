@@ -29,7 +29,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jComboBoxPlaylistFilter" alignment="1" max="32767" attributes="0"/>
                   <Component id="jTextFieldPlayslitValue" alignment="1" max="32767" attributes="0"/>
@@ -46,8 +46,9 @@
                   </Group>
                   <Component id="jSpinnerPlaylistFilter" alignment="1" max="32767" attributes="0"/>
                   <Component id="jComboBoxCheckedFlagFilter" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jComboBoxCopyRightFilter" alignment="1" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -66,13 +67,15 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jComboBoxCheckedFlagFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="jComboBoxCopyRightFilter" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
               <Component id="jSpinnerPlaylistFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButtonSave" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonCancel" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jButtonSave" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonCancel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -156,6 +159,20 @@
       </AuxValues>
     </Component>
     <Component class="javax.swing.JComboBox" name="jComboBoxCheckedFlagFilter">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="6">
+            <StringItem index="0" value="-1"/>
+            <StringItem index="1" value="0"/>
+            <StringItem index="2" value="1"/>
+            <StringItem index="3" value="2"/>
+            <StringItem index="4" value="3"/>
+            <StringItem index="5" value="4"/>
+          </StringArray>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="jComboBoxCopyRightFilter">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="6">

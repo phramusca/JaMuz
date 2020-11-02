@@ -18,6 +18,7 @@
 package jamuz;
 
 import jamuz.process.check.FolderInfo.CheckedFlag;
+import jamuz.process.check.FolderInfo.CopyRight;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -764,7 +765,9 @@ public class Playlist implements Comparable {
 		 * Checked flag
 		 */
 		
-        CHECKEDFLAG(Inter.get("Stat.Checked"), "P.checked");
+        CHECKEDFLAG(Inter.get("Stat.Checked"), "P.checked"),
+		
+		COPYRIGHT(Inter.get("Label.BestOf.Ownership"), "P.copyRight");
 
         //TODO: Store lyrics in DB. to be able to filter in playlists.
 		//Still need to read before saving and before playing as it may have changed
@@ -1081,6 +1084,9 @@ public class Playlist implements Comparable {
 			}
 			if(this.field.equals(Field.CHECKEDFLAG)) {
 				valueToReturn = CheckedFlag.values()[Integer.valueOf(this.value)].toString();
+			}
+			if(this.field.equals(Field.COPYRIGHT)) {
+				valueToReturn = CopyRight.values()[Integer.valueOf(this.value)].toString();
 			}
             switch(field) {
                 case ALBUMRATING:

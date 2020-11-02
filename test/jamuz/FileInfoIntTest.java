@@ -242,7 +242,7 @@ public class FileInfoIntTest {
 		System.out.println("getCopyRight");
 		FileInfoInt instance = null;
 		int expResult = 0;
-		int result = instance.getCopyRight();
+		FolderInfo.CopyRight result = instance.getCopyRight();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

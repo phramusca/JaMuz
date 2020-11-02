@@ -73,6 +73,7 @@ import javax.swing.JSpinner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import jamuz.player.MPlaybackListener;
+import jamuz.process.check.FolderInfo;
 import jamuz.remote.ICallBackServer;
 
 /**
@@ -660,7 +661,7 @@ public class PanelMain extends javax.swing.JFrame {
         
         // 21: Combobox
         column = jTable.getColumnModel().getColumn(21);
-        final JComboBox comboBox = new JComboBox(PanelSelect.comboCopyRights);
+        final JComboBox comboBox = new JComboBox(FolderInfo.CopyRight.values());
         column.setCellEditor(new DefaultCellEditor(comboBox));
         //set its width
         column.setMinWidth(130);
@@ -672,9 +673,9 @@ public class PanelMain extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 TableCellListener tcl = (TableCellListener) e.getSource();
                 if (tcl.getColumn() == 21) { //ComboBox is here
-                    int copyRight = Arrays.<String>asList(PanelSelect.comboCopyRights).indexOf(tcl.getNewValue());
+					FolderInfo.CopyRight copyRight = (FolderInfo.CopyRight)tcl.getNewValue();
                     FileInfoInt myFileInfo = PanelSelect.getFileInfoList().get(tcl.getRow());
-                    Jamuz.getDb().updateCopyRight(myFileInfo.getIdPath(), copyRight);
+                    Jamuz.getDb().updateCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
                     PanelSelect.refreshTable();
                 }
             }
@@ -1400,7 +1401,7 @@ public class PanelMain extends javax.swing.JFrame {
             myFileInfo.getBPM(), myFileInfo.getAlbumArtist(),
             myFileInfo.getComment(), myFileInfo.getDiscNoFull(), coverIcon,
             myFileInfo.getPlayCounter(), rating, myFileInfo.getAddedDateLocalTime(),
-            myFileInfo.getLastPlayedLocalTime(), myFileInfo.getCheckedFlag().toString(), PanelSelect.comboCopyRights[myFileInfo.getCopyRight()],
+            myFileInfo.getLastPlayedLocalTime(), myFileInfo.getCheckedFlag().toString(), myFileInfo.getCopyRight().toString(),
             "http://www.amazon.fr/gp/search?ie=UTF8&camp=1642&creative=6746&index=aps&linkCode=ur2&tag=ja097-21&keywords=" + (myFileInfo.getArtist() + " " + myFileInfo.getAlbum()).replaceAll(" ", "+")};
             //TODO: Support other amazon locations (.com, .co.uk,...)
             //TODO: Support more vendors

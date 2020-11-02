@@ -398,7 +398,7 @@ public class Server {
 								-1, FilenameUtils.getPath(relativeFullPath), 
 								FilenameUtils.getName(relativeFullPath), -1, "", "", -1, -1, 
 								"", "", "", "", -1, -1, "", -1, "", -1, -1, "", playCounter, -1, 
-								"", "", "", false, "", FolderInfo.CheckedFlag.UNCHECKED, -1, -1, -1, "");
+								"", "", "", false, "", FolderInfo.CheckedFlag.UNCHECKED, FolderInfo.CopyRight.UNDEFINED, -1, -1, "");
 						toInsertInDeviceFiles.add(fileInfoInt);
 					}
 					ArrayList<FileInfoInt> inserted= Jamuz.getDb().
