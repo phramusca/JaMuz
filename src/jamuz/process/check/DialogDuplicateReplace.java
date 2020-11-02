@@ -172,6 +172,7 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
         jProgressBarCheckDialog = new jamuz.gui.swing.ProgressBar();
         jButtonCancel = new javax.swing.JButton();
         jButtonReplace = new javax.swing.JButton();
+        jButtonSelectAll = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -211,6 +212,13 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
             }
         });
 
+        jButtonSelectAll.setText("Select All");
+        jButtonSelectAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSelectAllActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -225,6 +233,8 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
                     .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonSelectAll)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonReplace)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCancel)
@@ -236,7 +246,8 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel)
-                    .addComponent(jButtonReplace))
+                    .addComponent(jButtonReplace)
+                    .addComponent(jButtonSelectAll))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarCheckDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -295,6 +306,10 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 	private void enableGUI(boolean enable) {
 		jButtonReplace.setEnabled(enable);
 		jButtonCancel.setEnabled(enable);
+		jButtonSelectAll.setEnabled(enable);
+		jButtonCheckDown.setEnabled(enable);
+		jButtonCheckUp.setEnabled(enable);
+		jTableCheck.setEnabled(enable);
 	}
 	
     private void jButtonReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReplaceActionPerformed
@@ -350,6 +365,10 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 			enableGUI(true);
 		}).start();
     }//GEN-LAST:event_jButtonReplaceActionPerformed
+
+    private void jButtonSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectAllActionPerformed
+        jTableCheck.selectAll();
+    }//GEN-LAST:event_jButtonSelectAllActionPerformed
 
 	private void moveCheckRow(int fromIndex, int toIndex) {
 		try {
@@ -534,7 +553,7 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 				duplicateInfo, callback);
 		Dimension dimension=new Dimension(
 				parentSize.width * 95/100, 
-				parentSize.height * 85/100/2);
+				parentSize.height * 95/100/2);
         dialog.setSize(dimension);
 		dialog.setLocation(
 				parentLocation.x+(parentSize.width-dimension.width)/2, 
@@ -547,6 +566,7 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCheckDown;
     private javax.swing.JButton jButtonCheckUp;
     private javax.swing.JButton jButtonReplace;
+    private javax.swing.JButton jButtonSelectAll;
     private javax.swing.JProgressBar jProgressBarCheckDialog;
     private javax.swing.JScrollPane jScrollPaneCheckTags;
     private javax.swing.JTable jTableCheck;
