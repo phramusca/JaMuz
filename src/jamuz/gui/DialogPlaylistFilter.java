@@ -33,6 +33,7 @@ import static jamuz.Playlist.Field.TITLE;
 import static jamuz.Playlist.Field.TRACKNO;
 import static jamuz.Playlist.Field.YEAR;
 import jamuz.Playlist.Filter;
+import jamuz.process.check.FolderInfo.CopyRight;
 import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -74,6 +75,7 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
         jComboBoxPlaylistFilter.setVisible(false);
         jSpinnerPlaylistFilter.setVisible(false);
         jComboBoxCheckedFlagFilter.setVisible(false);
+		jComboBoxCopyRightFilter.setVisible(false);
         
         this.playlist = playlist;
 		this.filterIndex = filterIndex;
@@ -94,6 +96,8 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
         jComboBoxPlaylistField.setModel(modelField);
 
 		jComboBoxCheckedFlagFilter.setModel(new DefaultComboBoxModel(CheckedFlag.values()));
+		
+		jComboBoxCopyRightFilter.setModel(new DefaultComboBoxModel(CopyRight.values()));
 		
 		//Set field
 //		int indexField = Arrays.asList(Field.values()).indexOf(this.filter.getFieldName());
@@ -133,6 +137,10 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
 			case CHECKEDFLAG:
 				jComboBoxCheckedFlagFilter.setSelectedIndex(Integer.valueOf(this.filter.getValue()));
 				break;
+				
+			case COPYRIGHT:
+				jComboBoxCopyRightFilter.setSelectedIndex(Integer.valueOf(this.filter.getValue()));
+				break;
         }
     }
 
@@ -154,6 +162,7 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
         jComboBoxPlaylistOperator = new javax.swing.JComboBox();
         jComboBoxPlaylistField = new javax.swing.JComboBox();
         jComboBoxCheckedFlagFilter = new javax.swing.JComboBox();
+        jComboBoxCopyRightFilter = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -192,6 +201,8 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
 
         jComboBoxCheckedFlagFilter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-1", "0", "1", "2", "3", "4" }));
 
+        jComboBoxCopyRightFilter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-1", "0", "1", "2", "3", "4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -211,7 +222,8 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSave))
                     .addComponent(jSpinnerPlaylistFilter, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jComboBoxCheckedFlagFilter, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jComboBoxCheckedFlagFilter, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxCopyRightFilter, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -228,12 +240,14 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBoxCheckedFlagFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxCopyRightFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
                 .addComponent(jSpinnerPlaylistFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonSave)
                     .addComponent(jButtonCancel))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -279,6 +293,11 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
             case CHECKEDFLAG:
 				CheckedFlag checkedFlag = (CheckedFlag) jComboBoxCheckedFlagFilter.getSelectedItem();
 				value = String.valueOf(checkedFlag.getValue());
+				break;
+				
+			case COPYRIGHT:
+				CopyRight copyRight = (CopyRight) jComboBoxCopyRightFilter.getSelectedItem();
+				value = String.valueOf(copyRight.getValue());
 				break;
 		}
 
@@ -329,6 +348,12 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
                     jSpinnerPlaylistFilter.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
                     break;
             }
+			
+			jTextFieldPlayslitValue.setVisible(false);    
+			jSpinnerPlaylistFilter.setVisible(false);
+			jComboBoxCheckedFlagFilter.setVisible(false);
+			jComboBoxCopyRightFilter.setVisible(false);
+			jComboBoxPlaylistFilter.setVisible(false);
             
             switch (field) {
                 case GENRE:
@@ -339,9 +364,6 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
 				case TAG:
                     //String values
                     jTextFieldPlayslitValue.setVisible(true);
-                    jComboBoxPlaylistFilter.setVisible(false);
-                    jSpinnerPlaylistFilter.setVisible(false);
-                    jComboBoxCheckedFlagFilter.setVisible(false);
                     operatorsToDisplay = new Playlist.Operator[]{
                         Playlist.Operator.CONTAINS,
                         Playlist.Operator.DOESNOTCONTAIN,
@@ -354,9 +376,6 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
 
                 case YEAR: //TODO: Use a Formatted text field (YYYY format) or a validator
                     jTextFieldPlayslitValue.setVisible(true);
-                    jComboBoxPlaylistFilter.setVisible(false);
-                    jSpinnerPlaylistFilter.setVisible(false);
-                    jComboBoxCheckedFlagFilter.setVisible(false);
                     operatorsToDisplay = new Playlist.Operator[]{
                         Playlist.Operator.IS,
                         Playlist.Operator.ISNOT,
@@ -370,9 +389,6 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
                 case LASTPLAYED: //TODO: Use a date picker
                 case ADDEDDATE:
                     jTextFieldPlayslitValue.setVisible(true);
-                    jComboBoxPlaylistFilter.setVisible(false);
-                    jSpinnerPlaylistFilter.setVisible(false);
-                    jComboBoxCheckedFlagFilter.setVisible(false);
                     operatorsToDisplay = new Playlist.Operator[]{
                         Playlist.Operator.IS,
                         Playlist.Operator.ISNOT,
@@ -391,6 +407,7 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
                     jComboBoxPlaylistFilter.setVisible(false);
                     jSpinnerPlaylistFilter.setVisible(true);
                     jComboBoxCheckedFlagFilter.setVisible(false);
+					jComboBoxCopyRightFilter.setVisible(false);
                     operatorsToDisplay = new Playlist.Operator[]{
                         Playlist.Operator.NUMIS,
                         Playlist.Operator.NUMISNOT,
@@ -400,11 +417,7 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
                     break;
 
                 case PLAYLIST:
-                    //Playlist special, as comboBox
-                    jTextFieldPlayslitValue.setVisible(false);
-                    jComboBoxPlaylistFilter.setVisible(true);
-                    jSpinnerPlaylistFilter.setVisible(false);
-                    jComboBoxCheckedFlagFilter.setVisible(false);
+					jComboBoxPlaylistFilter.setVisible(true);
                     operatorsToDisplay = new Playlist.Operator[]{
                         Playlist.Operator.IS,
                         Playlist.Operator.ISNOT
@@ -412,15 +425,20 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
                     break;
 
                 case CHECKEDFLAG:
-                    jTextFieldPlayslitValue.setVisible(false);
-                    jComboBoxPlaylistFilter.setVisible(false);
-                    jSpinnerPlaylistFilter.setVisible(false);
                     jComboBoxCheckedFlagFilter.setVisible(true);
                     operatorsToDisplay = new Playlist.Operator[]{
                         Playlist.Operator.IS,
                         Playlist.Operator.ISNOT,
                         Playlist.Operator.LESSTHAN,
                         Playlist.Operator.GREATERTHAN
+                    };
+                    break;
+					
+				case COPYRIGHT:
+					jComboBoxCopyRightFilter.setVisible(true);
+                    operatorsToDisplay = new Playlist.Operator[]{
+                        Playlist.Operator.IS,
+                        Playlist.Operator.ISNOT
                     };
                     break;
             }
@@ -472,6 +490,7 @@ public class DialogPlaylistFilter extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JComboBox jComboBoxCheckedFlagFilter;
+    private javax.swing.JComboBox jComboBoxCopyRightFilter;
     private static javax.swing.JComboBox jComboBoxPlaylistField;
     private javax.swing.JComboBox jComboBoxPlaylistFilter;
     private javax.swing.JComboBox jComboBoxPlaylistOperator;

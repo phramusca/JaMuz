@@ -2568,7 +2568,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         String modifDate;
         boolean deleted;
         CheckedFlag checkedFlag;
-        int copyRight;
+        FolderInfo.CopyRight copyRight;
         double albumRating;
         int percentRated;
         
@@ -2583,7 +2583,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 idFile = rs.getInt("idFile");   //NOI18N
                 idPath = rs.getInt("idPath");   //NOI18N
                 checkedFlag = CheckedFlag.values()[rs.getInt("checked")];  //NOI18N
-                copyRight = rs.getInt("copyRight");
+                copyRight = FolderInfo.CopyRight.values()[rs.getInt("copyRight")];
 
                 //Path can be empty if file is on root folder
                 relativePath = dbConn.getStringValue(rs, "strPath", false);   //NOI18N

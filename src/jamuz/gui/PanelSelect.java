@@ -44,8 +44,18 @@ import jamuz.player.Mplayer;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
+import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jopendocument.dom.OOUtils;
+import org.jopendocument.dom.spreadsheet.SpreadSheet;
+import org.musicbrainz.model.searchresult.ArtistResultWs2;
 
 /**
  *
@@ -64,11 +74,6 @@ public class PanelSelect extends javax.swing.JPanel {
     private static String selGenre; //TODO: Deriver ListElement et l'appliquer a selGenre (pour affichage icone de la même façon)
 	private static ListElement selArtist;
 	private static ListElement selAlbum; 
-	
-	/**
-	 *
-	 */
-    public static String[] comboCopyRights;
 
     /**
      * Return file list
@@ -138,17 +143,10 @@ public class PanelSelect extends javax.swing.JPanel {
 				getColor(FolderInfo.CheckedFlag.OK_WARNING));
         jCheckBoxSelectCheckedFlag3.setBackground(
 				getColor(FolderInfo.CheckedFlag.OK));
-        
-        comboCopyRights = new String[5];
-        comboCopyRights[0] = Inter.get("Label.BestOf.NotDefined");  //NOI18N
-        comboCopyRights[1] = Inter.get("Label.BestOf.OwnPhysical");  //NOI18N
-        comboCopyRights[2] = Inter.get("Label.BestOf.OwnDigital");  //NOI18N
-        comboCopyRights[3] = Inter.get("Label.BestOf.Contributed");  //NOI18N
-        comboCopyRights[4] = Inter.get("Label.BestOf.NoSupport");  //NOI18N
-        
+                
         jComboBoxBestOfCopyRight.removeAllItems();
         jComboBoxBestOfCopyRight.addItem(Inter.get("Label.All"));  //NOI18N
-        for (String copyRight : comboCopyRights) {
+        for (FolderInfo.CopyRight copyRight : FolderInfo.CopyRight.values()) {
             jComboBoxBestOfCopyRight.addItem(copyRight);
         }
 

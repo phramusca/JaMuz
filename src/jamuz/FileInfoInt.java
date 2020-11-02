@@ -17,6 +17,7 @@
 
 package jamuz;
 
+import jamuz.process.check.FolderInfo;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.process.check.ReplayGain;
@@ -294,13 +295,13 @@ public class FileInfoInt extends FileInfo {
         return fromLibrary;
     }
     
-    private final int copyRight;
+    private final FolderInfo.CopyRight copyRight; //TODO: Move to FolderInfo (as CheckedFlag)
 
 	/**
 	 *
 	 * @return
 	 */
-	public int getCopyRight() {
+	public FolderInfo.CopyRight getCopyRight() {
         return copyRight;
     }
 
@@ -323,7 +324,7 @@ public class FileInfoInt extends FileInfo {
 				bpm, genre, file.getFormattedRatingModifDate(), 
 				file.getFormattedTagsModifDate(),
 				file.getFormattedGenreModifDate());
-        copyRight=-1;
+        copyRight=FolderInfo.CopyRight.UNDEFINED;
         this.rootPath = Jamuz.getMachine().getOptionValue("location.library");  //NOI18N
     }
 
@@ -338,7 +339,7 @@ public class FileInfoInt extends FileInfo {
 				"1970-01-01 00:00:00", 0, "file", 0, 0, "", "", "", "");  //NOI18N
 		this.rootPath=rootPath;
 		this.modifDate = new Date(getFullPath().lastModified());
-        copyRight=-1;
+        copyRight=FolderInfo.CopyRight.UNDEFINED;
 	}
 	
     private double albumRating = 0.0;
@@ -407,7 +408,7 @@ public class FileInfoInt extends FileInfo {
 			int trackTotal, String year, int playCounter, int rating, 
 			String addedDate, String lastPlayed, String modifDate, 
 			boolean deleted, String coverHash, CheckedFlag checkedFlag, 
-			int copyRight, double albumRating, int percentRated, String rootPath) {
+			FolderInfo.CopyRight copyRight, double albumRating, int percentRated, String rootPath) {
 		
 		super("file", FilenameUtils.separatorsToSystem(relativePath)+filename);  //NOI18N
         this.fromLibrary=true;
