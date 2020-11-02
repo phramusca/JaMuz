@@ -1313,23 +1313,146 @@ public class PanelSelect extends javax.swing.JPanel {
         ArtistMB artistMB = new ArtistMB(new ProgressBar());
 		List<ArtistResultWs2> artistResults = artistMB.search(((ListElement) jListSelectArtist.getSelectedValue()).getValue());
 		if(artistResults.size()>0) {
-			List<ReleaseMatch> releaseGroups = artistMB.getReleaseGroups(artistResults.get(0));	
+			List<ReleaseMatch> releaseGroups = artistMB.getReleaseGroups(artistResults.get(0));
 			System.out.println("------------------------------");
 			System.out.println("Type\tYear\tAlbum\tArtist\tScore\tMatch\tStatus\tRating\tAlbum\tArtist\tDiscNo");
+
+			ArrayList<Pair<ReleaseMatch, DuplicateInfo>> matches = new ArrayList<>();
+
 			releaseGroups.forEach(rg -> {
 				List<DuplicateInfo> duplicates = rg.getDuplicatesForDisco();
 				String duplicateInfo="";
+				DuplicateInfo duplicate=null;
 				if(duplicates.size()>0) {
-					DuplicateInfo duplicate = duplicates.get(0);
+					duplicate = duplicates.get(0);
 					duplicateInfo="\t"+duplicate.getErrorLevel()+"/2\t"+duplicate.getCheckedFlag()+"\t"+duplicate.getRating()+"\t"+duplicate.getAlbum()+"\t"+duplicate.getAlbumArtist()+"\t"+duplicate.getDiscNo()+"/"+duplicate.getDiscTotal();
 				}
 				System.out.println(rg.getFormat()+"\t"+rg.getYear()+"\t"+rg.getAlbum()+"\t"+rg.getArtist()+"\t"+rg.getScore()+duplicateInfo);
-			});	
+				matches.add(Pair.of(rg, duplicate));
+			});
+			saveToOpenDoc(matches, artistResults.get(0).getArtist().getUniqueName());
 		} else {
-			System.out.println("No arist match found :(");
+			Popup.warning("No artist match found in MusicBrainz :(");
 		}
     }//GEN-LAST:event_jButtonDiscographyActionPerformed
 
+	private void saveToOpenDoc(ArrayList<Pair<ReleaseMatch, DuplicateInfo>> matches, String artist) {
+		try {
+			
+			File file = new File("/home/raph/Documents/04-Creations/Dev/ReposSides/JaMuz/TEMP_DISCOS/"+StringManager.removeIllegal(artist)+".ods");
+			if(!file.exists()) {
+				//Write to openDocument
+				int i=0;
+				String[] columns = new String[11];
+				columns[i++] = "Type";
+				columns[i++] = "Year";
+				columns[i++] = "Album";
+				columns[i++] = "Artist";
+				columns[i++] = "Score";
+				columns[i++] = "Match";
+				columns[i++] = "Status";
+				columns[i++] = "Rating";
+				columns[i++] = "Album";
+				columns[i++] = "Artist";
+				columns[i++] = "DiscNo";
+
+				i=0;
+				final Object[][] data = new Object[matches.size()][columns.length];
+				for(Pair<ReleaseMatch, DuplicateInfo> match : matches) {
+					ReleaseMatch rg = match.getLeft();
+					DuplicateInfo duplicate = match.getRight();
+					data[i++] = new Object[] {
+						rg.getFormat(),                    //0
+						rg.getYear(),          //1
+						rg.getAlbum(),          //2
+						rg.getArtist(),           //3
+						rg.getScore(),           //4
+						duplicate==null?"":duplicate.getErrorLevel(),                //5
+						duplicate==null?"":duplicate.getCheckedFlag(),          //6
+						duplicate==null?"":duplicate.getRating(),       //7
+						duplicate==null?"":duplicate.getAlbum(),         //8
+						duplicate==null?"":duplicate.getAlbumArtist(),      //9
+						duplicate==null?"":duplicate.getDiscNo(),            //10
+						duplicate==null?"":duplicate.getDiscTotal(),                         //11
+					};
+				}
+
+				javax.swing.table.TableModel model = new DefaultTableModel(data, columns);
+				SpreadSheet spreadSheet = SpreadSheet.createEmpty(model);
+				spreadSheet.getFirstSheet().setName(artist); //TODO: Protect this sheet (original data)
+				spreadSheet.saveAs(file);
+			}
+			if(file.exists()) {
+				OOUtils.open(file);
+			}
+		} catch (IOException ex) {
+			Logger.getLogger(PanelSelect.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
+	
+	private static Object[][] getData(ReleaseMatch match) {
+		int i=0;
+        final Object[][] data = new Object[match.getTracks(null).size()+25][21];
+        String trackSource="1min.mp3";
+        //Add tracks information
+        for(ReleaseMatch.Track track : match.getTracks(null)) {
+            data[i++] = new Object[] { 
+                "track",                    //0
+                track.getArtist(),          //1
+                match.getArtist(),          //2
+                match.getAlbum(),           //3
+                track.getTitle(),           //4
+                trackSource,                //5: sourceFile
+                track.getDiscNo(),          //6
+                track.getDiscTotal(),       //7
+                track.getTrackNo(),         //8
+                track.getTrackTotal(),      //9
+                match.getYear(),            //10
+                "",                         //11: genre
+                "0",                        //12: BPM
+                "0",                        //13: nbCovers
+                "",                         //14: comment
+                "0",                        //15: deleted
+                "UNCHECKED",                //16: checkedFlag
+                "0",                        //17: playCounter
+                "-1",                       //18: rating
+                "1970-01-01 00:00:00",      //19: addedDate
+                "1970-01-01 00:00:00",      //20: lastPlayed
+            };
+        }
+        data[i++] = new Object[] { "", "key", "result", "value" };
+        
+        //Add expected results
+        data[i++] = new Object[] { "result", "nbFiles", "ok", match.getTracks(null).size() };
+        data[i++] = new Object[] { "result", "hasID3v1", "ok", Inter.get("Label.No") };
+        data[i++] = new Object[] { "result", "isReplayGainDone", "ok", Inter.get("Label.Yes") };
+        data[i++] = new Object[] { "result", "cover", "ko", "{IGNORE}" }; //TODO TEST Set expected value
+        data[i++] = new Object[] { "result", "bitRate", "ok", "{IGNORE}" }; //TODO TEST Set expected value (mean bitRate)
+        data[i++] = new Object[] { "result", "length", "ok", "{N/A}" };
+        data[i++] = new Object[] { "result", "size", "ok", "{N/A}" }; 
+        data[i++] = new Object[] { "result", "format", "ok", "{N/A}" };
+        data[i++] = new Object[] { "result", "discNoFull", "ok", "{N/A}" };
+        data[i++] = new Object[] { "result", "trackNoFull", "ok", "{N/A}" };
+        data[i++] = new Object[] { "result", "comment", "ok", "{N/A}" };
+        data[i++] = new Object[] { "result", "artist", "ok", "{N/A}" };
+        data[i++] = new Object[] { "result", "title", "ok", "{N/A}" };
+        data[i++] = new Object[] { "result", "bpm", "ok", "{N/A}" };
+        data[i++] = new Object[] { "result", "year", "ok", match.getYear() }; //May not be ok though, but mostly
+        data[i++] = new Object[] { "result", "genre", "ko", "" };
+        data[i++] = new Object[] { "result", "albumArtist", "ok", match.getArtist() };
+        data[i++] = new Object[] { "result", "album", "ok", match.getAlbum() };
+        data[i++] = new Object[] { "result", "duplicates", "ok" };
+
+        data[i++] = new Object[] { "", "key", "value" };
+        data[i++] = new Object[] { "process", "index", "-1" };
+        data[i++] = new Object[] { "process", "idPath", "-1" };
+        data[i++] = new Object[] { "process", "idFirstFile", "-1" };
+        data[i++] = new Object[] { "process", "location", "location.add" };
+		
+		return data;
+	}
+	
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
