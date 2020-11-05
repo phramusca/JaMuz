@@ -625,8 +625,14 @@ public class PanelOptions extends javax.swing.JPanel {
 		//messes up with the syncing if not used with extra care 
 		//TODO: Add a reset "saved" field in file table, as done for CheckedFlag 
 
-		SaveTags saveTags = new SaveTags(); 
-		saveTags.start(); 
+		int n = JOptionPane.showConfirmDialog( 
+                    this, "Save all files ?", //NOI18N 
+                    Inter.get("Label.Confirm"), //NOI18N 
+                    JOptionPane.YES_NO_OPTION); 
+		if (n == JOptionPane.YES_OPTION) { 
+			SaveTags saveTags = new SaveTags(); 
+			saveTags.start(); 
+		}
     }//GEN-LAST:event_jButtonRetagAllFilesActionPerformed
 
     private void jButtonResetCheckedFlagWarningActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetCheckedFlagWarningActionPerformed
