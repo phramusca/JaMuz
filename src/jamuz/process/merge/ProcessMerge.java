@@ -258,6 +258,7 @@ public class ProcessMerge extends ProcessAbstract {
 		//Copy back databases back 
 		if(!simulate) {
 			if(isRemote) {
+				selectedStatSource.updateLastMergeDate();
 				PanelRemote.send(selectedStatSource.getMachineName()+"-"+ClientCanal.SYNC,
 						mergeListDbSelected);
 			} else {
@@ -266,11 +267,11 @@ public class ProcessMerge extends ProcessAbstract {
 					if(!copyDB(statSource.getSource(), false)) {
 						return false;
 					}
+					statSource.updateLastMergeDate();
 				}
 			}
+			
 		}
-        
-		//Too late for a potential abort: job has been done !
 		return true;
 	}
 	
@@ -354,9 +355,9 @@ public class ProcessMerge extends ProcessAbstract {
         msgJaMuz+=displayStatus((mergeListDbJaMuz.size()-nbFilesErrorJaMuz), Inter.get("Label.Updated"));
         msgJaMuz+=displayStatus(nbFilesNotFoundSelected, Inter.get("Label.NotFound"));//Yes, inverted, this is OK
         msgJaMuz+=displayStatus(nbFilesErrorJaMuz, Inter.get("Label.Updated"));
-        mergeReport+=msgJaMuz.equals("")?" --- ":msgJaMuz;
         msgJaMuz+="</td></tr>";  //NOI18N
-
+		mergeReport+=msgJaMuz.equals("")?" --- ":msgJaMuz;
+		
 		return true;
 	}
 
@@ -370,14 +371,11 @@ public class ProcessMerge extends ProcessAbstract {
     }
 	
 	private void compareLists(String run) throws InterruptedException, CloneNotSupportedException {
-
 		mergeListDbSelected = new ArrayList<>();
 		mergeListDbJaMuz = new ArrayList<>();
         mergeListDbJaMuzFileTags=new ArrayList<>();
-                
 		FileInfo fileDbSelected; 
 		FileInfo fileInfoDbJaMuz;
-
 		progressBar.progress(
 				MessageFormat.format(Inter.get("Msg.Merge.ComparingStats"), 
 				selectedStatSource.getSource().getName(), 
@@ -409,17 +407,10 @@ public class ProcessMerge extends ProcessAbstract {
                 fileDbSelected.setSourceName(run+"-"+dBJaMuz.getName()
 						+":\t"+Inter.get("Label.NotFound"));
                 errorList.add((FileInfo) fileDbSelected.clone());
-//                if(fileDbSelected.getRating()>0) {
-                    if(doLogText) {
-                        addToLog(fileDbSelected.getRating()+","
-								+fileDbSelected.getFormattedLastPlayed()+","
-								+fileDbSelected.getRelativeFullPath(), ""); //NOI18N
-                    }
-//                }
+				addToLog(fileDbSelected, null);
 				nbFilesNotFoundSelected+=1;
 			}
         }
-		
 		//Add remaining from Merge.statsListDbJaMuz to ErrorList
 		progressBar.progress(MessageFormat.format(
 				Inter.get("Msg.Merge.SetRemainingNotFound"), 
@@ -427,18 +418,11 @@ public class ProcessMerge extends ProcessAbstract {
         callback.refresh();
 		for (FileInfo file : statsListDbJaMuz) {
             fileInfoDbJaMuz = file;
-            //Add to ErrorList
             fileInfoDbJaMuz.setSourceName(run+"-"
 					+selectedStatSource.getSource().getName()
 					+":\t"+Inter.get("Label.NotFound"));
             errorList.add((FileInfo) fileInfoDbJaMuz.clone());
-//            if(fileInfoDbJaMuz.getRating()>0) {
-                if(doLogText) {
-                    addToLog("", fileInfoDbJaMuz.getRating()+","
-							+fileInfoDbJaMuz.getFormattedLastPlayed()+","
-							+fileInfoDbJaMuz.getRelativeFullPath()); 
-                }
-//            }
+			addToLog(null, fileInfoDbJaMuz);
             nbFilesNotFoundJaMuz+=1;
         }
 	}
@@ -849,10 +833,15 @@ public class ProcessMerge extends ProcessAbstract {
 		Jamuz.getLogger().log(Level.FINEST, "NEW:<BR/>{0}", myFileInfoNew.toString());  //NOI18N
 	}
     
-    private void addToLog(String selected, String jamuz) {
-		logDbSelected.add(selected);
-		logDbJaMuz.add(jamuz);
-//		logDbNew.add("Item missing on some side.");
+    private void addToLog(FileInfo selected, FileInfo jamuz) {
+		if(doLogText) {
+			logDbSelected.add(selected==null?"":selected.getRelativeFullPath()+","
+							+selected.getFormattedLastPlayed()+","
+							+selected.getSourceName());
+			logDbJaMuz.add(jamuz==null?"":jamuz.getRelativeFullPath()+","
+							+jamuz.getFormattedLastPlayed()+","
+							+jamuz.getSourceName());
+		}
 	}
 	
 	private boolean copyDB(StatSourceAbstract dbStats, boolean receive) throws InterruptedException {
@@ -928,6 +917,7 @@ public class ProcessMerge extends ProcessAbstract {
 						//					fileInfo.sourceName="!!! ERROR updating "+fileInfo.sourceName;  //NOI18N
 						fileInfo.setSourceName(run+"-"+fileInfo.getSourceName()+":\t"
 								+"!!! ERROR updating !!!");
+						addToLog(fileInfo, null);
 						errorList.add((FileInfo) fileInfo.clone());
 						nbFilesErrorSelected+=1;
 					}
@@ -960,6 +950,7 @@ public class ProcessMerge extends ProcessAbstract {
                     fileInfo.setSourceName(run+"-"+fileInfo.getSourceName()+":\t"
 							+"!!! ERROR updating !!!");
 					errorList.add((FileInfo) fileInfo.clone());
+					addToLog(null, fileInfo);
 					nbFilesErrorJaMuz+=1;
 				}
 				else {
@@ -1007,8 +998,6 @@ public class ProcessMerge extends ProcessAbstract {
 					return false;
 				}
 			}
-
-			selectedStatSource.updateLastMergeDate();
 		}
 
 		return true;

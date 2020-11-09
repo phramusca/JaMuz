@@ -65,19 +65,7 @@ public class StatSource {
 	public StatSource(String machineName) {
 		this(-1, "", "", "", "", "", machineName, true, 0, 1, "");  //NOI18N
 	}
-
-	/**
-	 *
-	 */
-	public void updateLastMergeDate() {
-        //TODO: No need to update lastMerge date during merge (really ?), do them all at the end of 
-        //merge process and only if not a simulation and merge OK
-        //Then, read options again 
-        //(better: Generate String date = DateUtil.getFormattedCurrentSql and update
-        //both database (statource table for merged ids) and StatSource instances with this value)
-        Jamuz.getDb().updateLastMergeDate(this.getId());
-    }
-    
+   
 	private StatSource(int id, String name, String location, String user, String pwd, String rootPath, 
 			String machineName, boolean isSelected, int idDevice, int idStatement, String lastMergeDate) {
 		this.id=id;
@@ -154,6 +142,13 @@ public class StatSource {
      */
     protected Date lastMergeDate;
 
+	/**
+	 *
+	 */
+	public void updateLastMergeDate() {
+		lastMergeDate=DateTime.parseSqlUtc(Jamuz.getDb().updateLastMergeDate(this.getId()));
+    }
+	
 	/**
 	 * Machine name
 	 */
