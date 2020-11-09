@@ -207,7 +207,7 @@ public class Server {
 								List<StatSource> sources = new ArrayList();
 								sources.add(tableModel.getClient(login).getStatSource());
 								setStatus(login, "Starting merge");
-							new ProcessMerge("Thread.Server.ProcessMerge."+clientId, 
+								new ProcessMerge("Thread.Server.ProcessMerge."+clientId, 
 									sources, false, false, newTracks, 
 										tableModel.getClient(login).getProgressBar(), 
 										new CallBackMerge(login))
@@ -317,9 +317,6 @@ public class Server {
 				String mergeReport) {
             Jamuz.getLogger().info(popupMsg);
 			setStatus(login, popupMsg);
-            //TODO: Read options again (only to read lastMergeDate !! Still needed ? here and elsewhere)
-            //TODO MERGE Use listeners !!
-            PanelMain.setOptions(); 
 		}
 
 		@Override

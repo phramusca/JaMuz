@@ -411,9 +411,6 @@ public class PanelMerge extends javax.swing.JPanel {
                 Popup.info(popupMsg);
             }
 			progressBar.reset();
-            //Read options again (only to read lastMergeDate !!)
-            //TODO MERGE Use listeners !!
-            PanelMain.setOptions(); 
 			
 			PanelOptions.refreshListTagsModel();
             enableMerge(true);

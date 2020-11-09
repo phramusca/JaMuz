@@ -1140,22 +1140,34 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @param idStatSource
 	 * @return
 	 */
-	public synchronized boolean updateLastMergeDate(int idStatSource) {
-        try {
+	public synchronized String updateLastMergeDate(int idStatSource) {
+        ResultSet rs=null;
+		
+		try {
             PreparedStatement stUpdateStatSourceLastMergeDate = dbConn.connection.prepareStatement("UPDATE statsource "
                     + "SET lastMergeDate=datetime('now') WHERE idStatSource=?");    
             stUpdateStatSourceLastMergeDate.setInt(1, idStatSource);
             int nbRowsAffected = stUpdateStatSourceLastMergeDate.executeUpdate();
             if (nbRowsAffected > 0) {
-                return true;
+				PreparedStatement stGetLastMergeDate = dbConn.connection.prepareStatement("SELECT lastMergeDate FROM statsource  WHERE idStatSource=?"); 
+				stGetLastMergeDate.setInt(1, idStatSource);
+				rs = stGetLastMergeDate.executeQuery();
+				String temp = dbConn.getStringValue(rs, "lastMergeDate", "1970-01-01 00:00:00");
+				return temp;
             } else {
                 Jamuz.getLogger().log(Level.SEVERE, "stUpdateStatSourceLastMergeDate, # row(s) affected: +{0}", new Object[]{nbRowsAffected});   //NOI18N
-                return false;
             }
         } catch (SQLException ex) {
             Popup.error("updateLastMergeDate(" + idStatSource + ")", ex);   //NOI18N
-            return false;
         }
+		finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+        }
+		return "1970-01-01 00:00:00";
     }
 	
 	// </editor-fold>
@@ -3170,14 +3182,14 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return results;
 	}
 	
-	private boolean setTags(ArrayList<String> tags, int idFile) {
+	private synchronized  boolean setTags(ArrayList<String> tags, int idFile) {
 		if(!deleteTagFiles(idFile)) {
 			return false;
 		}
 		return insertTagFiles(tags, idFile);
 	}
 	
-	private boolean insertTagFiles(ArrayList<String> tags, int idFile) {
+	private synchronized boolean insertTagFiles(ArrayList<String> tags, int idFile) {
         try {
             if (tags.size() > 0) {
                 dbConn.getConnnection().setAutoCommit(false);
@@ -3255,7 +3267,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 		
-	private boolean deleteTagFiles(int idFile) {
+	private synchronized boolean deleteTagFiles(int idFile) {
         try {
             PreparedStatement stDeleteTagFiles = dbConn.getConnnection()
 					.prepareStatement(
