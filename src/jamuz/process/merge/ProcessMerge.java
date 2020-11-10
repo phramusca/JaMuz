@@ -259,8 +259,7 @@ public class ProcessMerge extends ProcessAbstract {
 		if(!simulate) {
 			if(isRemote) {
 				selectedStatSource.updateLastMergeDate();
-				PanelRemote.send(selectedStatSource.getMachineName()+"-"+ClientCanal.SYNC,
-						mergeListDbSelected);
+				PanelRemote.send(selectedStatSource.getMachineName()+"-"+ClientCanal.SYNC, mergeListDbSelected);
 			} else {
 				for (StatSource statSource : sources) {
 					checkAbort();
@@ -312,7 +311,6 @@ public class ProcessMerge extends ProcessAbstract {
 				return false;
 			}
 		}
-		
 		checkAbort();
 		
 		//Get statistics from JaMuz database
@@ -323,10 +321,9 @@ public class ProcessMerge extends ProcessAbstract {
 			return false;
 		}
 		checkAbort();
-		
+	
 		//Compare both statistics lists
-
-		compareLists(run); //Several checkAbort() inside
+		compareLists(run);
 		
 		//Merge
 		if(!merge(run)) {
@@ -750,7 +747,7 @@ public class ProcessMerge extends ProcessAbstract {
 		
 		if(!fileSelectedDb.equalsStats(fileNew)) {
 			fileNew.setSourceName(run+"-"+fileSelectedDb.getSourceName());
-			//myFileInfoNew is a clone of myFileInfoDbJaMuz at first
+			//fileNew is a clone of fileJaMuz at first
 			//so path is in linux style whereas on selected, it may be in Windows format
 			fileNew.setRelativeFullPath(fileSelectedDb.getRelativeFullPath());
 			fileNew.setRelativePath(fileSelectedDb.getRelativePath());
@@ -767,10 +764,6 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 
 	//Adding to LOGs
-		//TODO: Make a single text LOG, instead of the current 3 text files, tab separated (for Excel/LibreCalc viewing)
-		//And including all compared files, NOT only when updated somewhere (bigger file but easier for debugging)
-		//"File"	"ProcessStep"	"RatingDB1"	"RatingDB2"	"RatingNew"	...
-		//"Alain Souchon\(Collection) 1984-2001\04 Portbail.mp3"	"TBD"	"0"	"1"	"1"	...
 		if(doLogText && isOneDbUpdated) {
 			//Those are N/A on fileNew & fileSelectedDb
 			fileNew.setRatingModifDate(fileJaMuz.getRatingModifDate());
@@ -845,9 +838,7 @@ public class ProcessMerge extends ProcessAbstract {
 	}
 	
 	private boolean copyDB(StatSourceAbstract dbStats, boolean receive) throws InterruptedException {
-		//Checking if process got interrupted
 		checkAbort();
-
 		if(receive) {
 			progressBar.progress(MessageFormat.format(
 					Inter.get("Msg.Merge.Retrieving"), dbStats.getName())); //NOI18N
@@ -863,7 +854,6 @@ public class ProcessMerge extends ProcessAbstract {
 	}
 	
 	private boolean backupDB(StatSourceAbstract dbStats) throws InterruptedException {
-		//Checking if process got interrupted
 		checkAbort();
         progressBar.progress(MessageFormat.format(
 				Inter.get("Msg.Merge.DatabaseBackup"), dbStats.getName())); //NOI18N
@@ -914,7 +904,6 @@ public class ProcessMerge extends ProcessAbstract {
 					}
 					else {
 						//TODO: Insert statistics (AmaroK only for now)
-						//					fileInfo.sourceName="!!! ERROR updating "+fileInfo.sourceName;  //NOI18N
 						fileInfo.setSourceName(run+"-"+fileInfo.getSourceName()+":\t"
 								+"!!! ERROR updating !!!");
 						addToLog(fileInfo, null);
