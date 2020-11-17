@@ -69,9 +69,9 @@ public class FramePlayerInfo extends javax.swing.JFrame {
             }
         });
 
-        jPanelPlayer.setBackground(java.awt.Color.white);
+        jPanelPlayer.setBackground(java.awt.Color.darkGray);
 
-        jPanelPlayerCover.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelPlayerCover.setBackground(java.awt.Color.darkGray);
         jPanelPlayerCover.setMaximumSize(new java.awt.Dimension(150, 150));
         jPanelPlayerCover.setMinimumSize(new java.awt.Dimension(150, 150));
         jPanelPlayerCover.setPreferredSize(new java.awt.Dimension(300, 300));
@@ -95,9 +95,10 @@ public class FramePlayerInfo extends javax.swing.JFrame {
         jLabelPlayerTimeTotal.setText("00:00"); // NOI18N
 
         jSliderPlayerLength.setValue(0);
-        jSliderPlayerLength.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        jSliderPlayerLength.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jSliderPlayerLength.setEnabled(false);
 
+        jListPlayerQueue.setBackground(java.awt.Color.darkGray);
         jListPlayerQueue.setFont(new java.awt.Font("DejaVu Sans", 0, 36)); // NOI18N
         jListPlayerQueue.setModel(new DefaultListModel());
         jListPlayerQueue.setAutoscrolls(false);
@@ -115,7 +116,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
                     .addGroup(jPanelPlayerLayout.createSequentialGroup()
                         .addComponent(jLabelPlayerTimeEllapsed)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                        .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelPlayerTimeTotal))
                     .addComponent(jPanelPlayerCover, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE))
