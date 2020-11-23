@@ -61,6 +61,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
         jPanelPlayerCover = new jamuz.gui.PanelCover();
         jLabelPlayerTimeTotal = new javax.swing.JLabel();
         jSliderPlayerLength = new javax.swing.JSlider();
+        jScrollPane1 = new javax.swing.JScrollPane();
         jListPlayerQueue = new javax.swing.JList();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -84,7 +85,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
         );
         jPanelPlayerCoverLayout.setVerticalGroup(
             jPanelPlayerCoverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 354, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jLabelPlayerTimeEllapsed.setFont(new java.awt.Font("DejaVu Sans", 0, 48)); // NOI18N
@@ -98,58 +99,58 @@ public class FramePlayerInfo extends javax.swing.JFrame {
         jSliderPlayerLength.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jSliderPlayerLength.setEnabled(false);
 
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         jListPlayerQueue.setBackground(java.awt.Color.darkGray);
         jListPlayerQueue.setFont(new java.awt.Font("DejaVu Sans", 0, 36)); // NOI18N
         jListPlayerQueue.setModel(new DefaultListModel());
         jListPlayerQueue.setAutoscrolls(false);
         jListPlayerQueue.setEnabled(false);
         jListPlayerQueue.setSelectionBackground(java.awt.Color.lightGray);
+        jScrollPane1.setViewportView(jListPlayerQueue);
 
         javax.swing.GroupLayout jPanelPlayerLayout = new javax.swing.GroupLayout(jPanelPlayer);
         jPanelPlayer.setLayout(jPanelPlayerLayout);
         jPanelPlayerLayout.setHorizontalGroup(
             jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPlayerLayout.createSequentialGroup()
-                .addComponent(jListPlayerQueue, javax.swing.GroupLayout.PREFERRED_SIZE, 624, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelPlayerLayout.createSequentialGroup()
                         .addComponent(jLabelPlayerTimeEllapsed)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                        .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelPlayerTimeTotal))
-                    .addComponent(jPanelPlayerCover, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE))
+                    .addComponent(jPanelPlayerCover, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelPlayerLayout.setVerticalGroup(
             jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPlayerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelPlayerCover, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
-                .addGap(6, 6, 6)
+                .addComponent(jPanelPlayerCover, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabelPlayerTimeEllapsed)
                         .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabelPlayerTimeTotal, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
-            .addComponent(jListPlayerQueue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanelPlayer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanelPlayer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanelPlayer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanelPlayer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -205,6 +206,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
     private static javax.swing.JList jListPlayerQueue;
     private javax.swing.JPanel jPanelPlayer;
     public static javax.swing.JPanel jPanelPlayerCover;
+    private javax.swing.JScrollPane jScrollPane1;
     private static javax.swing.JSlider jSliderPlayerLength;
     // End of variables declaration//GEN-END:variables
 }
