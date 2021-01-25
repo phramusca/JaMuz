@@ -486,6 +486,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
         });
 
         jSpinnerLimitValue.setModel(new javax.swing.SpinnerNumberModel(10, 1, null, 1));
+        jSpinnerLimitValue.setEditor(new javax.swing.JSpinner.NumberEditor(jSpinnerLimitValue, ""));
         jSpinnerLimitValue.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerLimitValueStateChanged(evt);
