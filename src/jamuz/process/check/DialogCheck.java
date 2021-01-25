@@ -41,6 +41,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.util.Collections;
+import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -255,6 +256,7 @@ public final class DialogCheck extends javax.swing.JDialog {
         jButtonCheckPreview = new javax.swing.JButton();
         jButtonPlayerForward = new javax.swing.JButton();
         jButtonPlayerNext = new javax.swing.JButton();
+        jButtonSetNumbers = new javax.swing.JButton();
         jButtonDelete = new javax.swing.JButton();
 
         jLabel4.setText("jLabel4");
@@ -356,8 +358,6 @@ public final class DialogCheck extends javax.swing.JDialog {
                     .addComponent(jButtonCheckOKLibrary))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-
-        jPanelCheckTags.setBorder(null);
 
         jPanelCheckCoverThumb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanelCheckCoverThumb.setMaximumSize(new java.awt.Dimension(150, 150));
@@ -697,7 +697,7 @@ public final class DialogCheck extends javax.swing.JDialog {
             .addGroup(jPanelGenreLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jCheckBoxCheckGenreDisplay)
-                .addContainerGap(726, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelGenreLayout.setVerticalGroup(
             jPanelGenreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1026,6 +1026,13 @@ public final class DialogCheck extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jButtonSetNumbers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/page_number.png"))); // NOI18N
+        jButtonSetNumbers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSetNumbersActionPerformed(evt);
+            }
+        });
+
         jButtonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/delete.png"))); // NOI18N
         jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1038,12 +1045,13 @@ public final class DialogCheck extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonCheckDown)
-                    .addComponent(jButtonCheckUp)
-                    .addComponent(jButtonDelete, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonCheckDown, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonCheckUp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonSetNumbers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.DEFAULT_SIZE, 1154, Short.MAX_VALUE))
+                .addComponent(jScrollPaneCheckTags))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1064,9 +1072,11 @@ public final class DialogCheck extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonCheckUp, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                        .addComponent(jButtonSetNumbers)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonCheckDown, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                        .addComponent(jButtonCheckUp, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonCheckDown, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonDelete))
                     .addComponent(jScrollPaneCheckTags, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
@@ -1077,7 +1087,7 @@ public final class DialogCheck extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(3, 3, 3)
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -1463,6 +1473,23 @@ public final class DialogCheck extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonCheckNoneDuplicatesActionPerformed
 
+    private void jButtonSetNumbersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSetNumbersActionPerformed
+		int trackNb=1;
+		int trackTotal=folder.getFilesAudioTableModel().getFiles().stream().filter(f->f.isAudioFile).collect(Collectors.toList()).size();
+		int discNb=1; //FIXME: Make discNb and discTotal configurable
+		int discTotal=1;
+		
+		for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {
+			if(file.isAudioFile) {
+				file.setTrackNo(trackNb++);
+				file.setTrackTotal(trackTotal);
+				file.setDiscNo(discNb);
+				file.setDiscTotal(discTotal);
+			}
+		}
+		checkDisplay.displayMatchTracks();
+    }//GEN-LAST:event_jButtonSetNumbersActionPerformed
+
 	private class CallBackDuplicate implements ICallBackDuplicateDialog {
 
 		@Override
@@ -1822,6 +1849,7 @@ public final class DialogCheck extends javax.swing.JDialog {
     private javax.swing.JButton jButtonPlayerNext;
     private javax.swing.JButton jButtonPlayerPrevious;
     private javax.swing.JButton jButtonSelectOriginal;
+    private javax.swing.JButton jButtonSetNumbers;
     private javax.swing.JButton jButtonVAlbum;
     private javax.swing.JButton jButtonVArtist;
     private javax.swing.JCheckBox jCheckBoxCheckAlbumArtistDisplay;
