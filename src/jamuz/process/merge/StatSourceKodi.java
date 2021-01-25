@@ -48,8 +48,10 @@ public class StatSourceKodi extends StatSourceSQL {
         try {
             this.dbConn.connect();
 
+			String ratingField = "userrating"; //TODO: When did it changed from rating to userrating AND from /5 to /10 ? Need to maange all cases (do we ? why not only latest ?)
+			
             this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement("SELECT (P.strPath || S.strFileName) AS fullPath, "
-                    + "S.rating, S.lastplayed, S.iTimesPlayed AS playCounter, "
+                    + "S."+ratingField+"/2 AS rating, S.lastplayed, S.iTimesPlayed AS playCounter, "
 					+ "'1970-01-01 00:00:00' AS addedDate, '' AS genre "
                     + "FROM song S, path P WHERE S.idPath=P.idPath "
                     + "ORDER BY P.strPath, S.strFileName");
@@ -58,7 +60,7 @@ public class StatSourceKodi extends StatSourceSQL {
             //identical except case strPath, old ones now having strHash=''
             //so "SELECT idPath" returns more than 1 result (as a like st), first one being sadly the wrong old one
             //=> changed LIKE in select idPath into an =, but kept "strHash!=''" as such folders are kind of marked as deleted
-            this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement("UPDATE song SET rating=?, lastplayed=?, iTimesPlayed=? "
+            this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement("UPDATE song SET "+ratingField+"=2*?, lastplayed=?, iTimesPlayed=? "
                     + "WHERE idPath=(SELECT idPath FROM path WHERE strPath=? AND strHash!='') AND strFileName=?");  //NOI18N
 
              return true;
