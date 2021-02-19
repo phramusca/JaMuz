@@ -591,6 +591,11 @@ public class DbConnJaMuzTest {
 	
 	// </editor-fold>
 
+	//FIXME !!!!!! WHY DUPLICATES IN DB ??? => Track this using a query launched frequently
+	//One example: L'Africain de Tiken Jah. L'Africain avec 2 ' différents => après suppression d'un des 2 et renommage de l'autre comme le premier:
+	// => 2 versions de chaque fichier, mais les 2 avec le même idPath.
+	// Du coup un problème car l'ancienne version aurait juste du passer de deleted=1 a 0 et vice-versa
+	
 	//FIXME !!!! TEST Continue from here
 	// <editor-fold defaultstate="collapsed" desc="Playlist">
 	
