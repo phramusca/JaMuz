@@ -33,8 +33,6 @@ import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.remote.ClientCanal;
-import jamuz.remote.PanelRemote;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.Popup;
 import jamuz.utils.Inter;
@@ -175,14 +173,16 @@ public class ProcessMerge extends ProcessAbstract {
 		// warn user only at the end (some sources will be merged if so)
 		
 		//Check all selected databases
-		for (StatSource statSource : sources) {
-			progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Checking"), 
-					statSource.getSource().getName())); //NOI18N
-            callback.refresh();
-			if(!statSource.getSource().check()) {
-				return false;
+		if(!isRemote) {
+			for (StatSource statSource : sources) {
+				progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.Checking"), 
+						statSource.getSource().getName())); //NOI18N
+				callback.refresh();
+				if(!statSource.getSource().check()) {
+					return false;
+				}
+				checkAbort();
 			}
-			checkAbort();
 		}
 		
 		//Get and backup all selected databases
@@ -259,7 +259,6 @@ public class ProcessMerge extends ProcessAbstract {
 		if(!simulate) {
 			if(isRemote) {
 				selectedStatSource.updateLastMergeDate();
-				PanelRemote.send(selectedStatSource.getMachineName()+"-"+ClientCanal.SYNC, mergeListDbSelected);
 			} else {
 				for (StatSource statSource : sources) {
 					checkAbort();
@@ -269,7 +268,6 @@ public class ProcessMerge extends ProcessAbstract {
 					statSource.updateLastMergeDate();
 				}
 			}
-			
 		}
 		return true;
 	}

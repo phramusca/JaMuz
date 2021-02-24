@@ -17,8 +17,6 @@
 
 package jamuz;
 
-import jamuz.remote.ClientCanal;
-import jamuz.remote.PanelRemote;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -67,9 +65,7 @@ public class DbInfo {
 	 * Database password, if applicable
 	 */
 	protected final String pwd;
-	
-	private int canal;
-	
+		
     /**
      *
      * @param libType
@@ -78,13 +74,12 @@ public class DbInfo {
      * @param pwd
 	 * @param canal
      */
-    public DbInfo(LibType libType, String location, String user, String pwd, int canal) {
+    public DbInfo(LibType libType, String location, String user, String pwd) {
         this.libType = libType;
         this.locationOri = location;
         this.locationWork = location;
         this.user = user;
         this.pwd = pwd;
-		this.canal = canal;
         
         //Parse FTP information
 		if (this.locationOri.startsWith("ftp://")) {  //NOI18N
@@ -101,17 +96,6 @@ public class DbInfo {
 			this.ftpFileName = split3[1].substring(lastDelim + 1, split3[1].length());
 		}		
     }
-	
-	/**
-     *
-     * @param libType
-     * @param location
-     * @param user
-     * @param pwd
-     */
-    public DbInfo(LibType libType, String location, String user, String pwd) {
-		this(libType, location, user, pwd, -1);
-	}
 
     /**
 	 * Return Ftp instance
@@ -133,16 +117,7 @@ public class DbInfo {
                 if (locationOri.startsWith("ftp://")) {  //NOI18N
                     //TODO: Check FTP connect (and file ?)
                     return true;
-                } else if (canal==ClientCanal.SYNC) { //For JaMuz Remote merge
-					String clientId = this.locationOri+"-"+this.canal;
-					if(!PanelRemote.isConnected(clientId)) {
-						Popup.warning(java.text.MessageFormat.format(
-								"<html>"+Inter.get("Msg.Sync.DestinationDoesNotExist")+"</html>", 
-								new Object[] {clientId}));  //NOI18N
-						return false;
-					}
-                    return true;
-				}
+                }
                 else {
                     //Checking if file exists
                     File myFile = FileSystem.replaceHome(locationOri);
