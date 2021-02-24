@@ -82,11 +82,9 @@ public class PanelRemote extends javax.swing.JPanel {
 		// as done, in initComponents, before setColumnModel which removes the columns ...
 		jTableRemote.createDefaultColumnsFromModel();
 		setColumn(0, 60);
-		setColumn(1, 60);
-		setColumn(2, 60);
-		setColumn(3, 200);
-		setColumn(4, 300);
-		TableColumn column = jTableRemote.getColumnModel().getColumn(5);
+		setColumn(1, 200);
+		setColumn(2, 300);
+		TableColumn column = jTableRemote.getColumnModel().getColumn(3);
 		column.setCellRenderer(new ProgressCellRender());
 		
         addMenuItem(Inter.get("Button.Edit")); //NOI18N
@@ -146,17 +144,6 @@ public class PanelRemote extends javax.swing.JPanel {
         }
 		return false;
     }
-	
-	public static void send(String clientId, ArrayList<FileInfo> mergeListDbSelected) {
-		JSONObject obj = new JSONObject();
-		obj.put("type", "mergeListDbSelected");
-		JSONArray jsonArray = new JSONArray();
-		for (int i=0; i < mergeListDbSelected.size(); i++) {
-				jsonArray.add(mergeListDbSelected.get(i).toMap());
-		}
-		obj.put("files", jsonArray);
-		send(clientId, obj);
-	}
 	
 	public static boolean isConnected(String clientId) {
 		if(server!=null) {
