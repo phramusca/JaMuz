@@ -168,17 +168,14 @@ public class Server {
 							tableModel.getClient(login).getProgressBar(),
 							new ICallBackMerge() {
 								@Override
-								public void completed(ArrayList<FileInfo> errorList, ArrayList<FileInfo> completedList, String popupMsg, String mergeReport) {
+								public void completed(ArrayList<FileInfo> errorList, ArrayList<FileInfo> mergeListDbSelected, String popupMsg, String mergeReport) {
 									Jamuz.getLogger().info(popupMsg);
 									setStatus(login, popupMsg);
-									
-									//FIXME: Is completedList  really the same as mergeListDbSelected ??
-									
 									JSONObject obj = new JSONObject();
 									obj.put("type", "mergeListDbSelected");
 									JSONArray jsonArray = new JSONArray();
-									for (int i=0; i < completedList.size(); i++) {
-										jsonArray.add(completedList.get(i).toMap());
+									for (int i=0; i < mergeListDbSelected.size(); i++) {
+										jsonArray.add(mergeListDbSelected.get(i).toMap());
 									}
 									obj.put("files", jsonArray);
 									res.send(obj.toJSONString());
