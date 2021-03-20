@@ -1374,6 +1374,9 @@ public class FileInfoInt extends FileInfo {
 		Map jsonAsMap = super.toMap();
 		jsonAsMap.put("size", size);
 		jsonAsMap.put("length", length);
+		jsonAsMap.put("album", album);
+		jsonAsMap.put("artist", artist);
+		jsonAsMap.put("title", title);
 		return jsonAsMap;
 	}
 	
