@@ -86,7 +86,6 @@ public class Server {
             //TODO: Secure connections
             //http://www.java2s.com/Code/Java/Network-Protocol/SecureCommunicationwithJSSE.htm
 
-			
 			//Socket connection, for the remote
 			//Create the server socket
 			serverSocket = new ServerSocket(port);
@@ -96,11 +95,11 @@ public class Server {
 			
 			//Start REST Server Express, for Sync process
 			app = new Express();
-			
-			app.post("/login", (req, res) -> {
-				//FIXME: Make a login and use a token
+
+			app.get("/version", (req, res) -> {
+				res.send("1");
 			});
-			
+						
 			app.get("/download", (req, res) -> {
 				int idFile = Integer.valueOf(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
