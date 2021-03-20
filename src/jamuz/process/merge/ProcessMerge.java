@@ -154,7 +154,7 @@ public class ProcessMerge extends ProcessAbstract {
 					DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)
 					+" | "+popupMsg+" "+completedList.size()
 					+" change(s). " + errorList.size() + " error(s).");
-			callback.completed(errorList, completedList, popupMsg, mergeReport);
+			callback.completed(errorList, isRemote?mergeListDbSelected:completedList, popupMsg, mergeReport);
         }
 	} 
 
