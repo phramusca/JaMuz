@@ -32,6 +32,7 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -98,6 +101,19 @@ public class Server {
 
 			app.get("/version", (req, res) -> {
 				res.send("1");
+			});
+			
+			app.get("/files/maxId", (req, res) -> {
+				
+				String login=""; //FIXMe: get login !!!
+				setStatus(login, "Sending maxId");
+				
+				Pair<Integer, Integer> filesInfos = Jamuz.getDb().getFilesInfos();
+				
+				JSONObject obj = new JSONObject();
+				obj.put("max", filesInfos.getKey());
+				obj.put("count", filesInfos.getValue());
+				res.send(obj.toJSONString());
 			});
 						
 			app.get("/download", (req, res) -> {
@@ -192,6 +208,31 @@ public class Server {
 			});
 			
 			app.get("/files", (req, res) -> {
+				String login=req.getHeader("login").get(0);	
+					
+				int idFrom = Integer.valueOf(req.getQuery("idFrom"));
+				int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
+
+				ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
+				String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
+						+ " FROM file F JOIN path P ON F.idPath=P.idPath WHERE F.deleted=0 AND P.deleted=0 AND saved=0 "
+						+ " ORDER BY idFile"
+						+ " LIMIT "+idFrom+", "+nbFilesInBatch;
+				Jamuz.getDb().getFiles(filesToSend, sql);
+
+				Map jsonAsMap = new HashMap();
+				JSONArray jSONArray = new JSONArray();
+				for (FileInfoInt fileInfo : filesToSend) {
+					fileInfo.getTags();
+					jSONArray.add(fileInfo.toMap());
+				}
+				jsonAsMap.put("files", jSONArray);		
+				String json = JSONValue.toJSONString(jsonAsMap);
+				setStatus(login, "Sending list of files (LIMIT "+idFrom+","+nbFilesInBatch+")");
+				res.send(json);
+			});
+			
+			app.get("/new-files", (req, res) -> {
 				try {
 					String login=req.getHeader("login").get(0);				
 					File file = Jamuz.getFile(login, "data", "devices");

@@ -49,6 +49,8 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Creates a new dbConn.connection to JaMuz database
@@ -1659,6 +1661,32 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// </editor-fold>
 	
 	// <editor-fold defaultstate="collapsed" desc="File">
+	
+    public Pair<Integer, Integer> getFilesInfos() {
+        Statement st=null;
+        ResultSet rs=null;
+        try {
+            st = dbConn.connection.createStatement();
+            rs = st.executeQuery("SELECT MAX(idFile), count(idFile) FROM file"); 
+            return new ImmutablePair<>(rs.getInt(1),rs.getInt(2));
+
+        } catch (SQLException ex) {
+            Popup.error("getIdFileMax()", ex);   //NOI18N
+            return null;
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            try {
+                if (st!=null) st.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close Statement");
+            }
+        }
+    }
 	
 	/**
      * Gets MIN or MAX year from audio files
