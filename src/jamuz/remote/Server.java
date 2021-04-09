@@ -231,7 +231,8 @@ public class Server {
 				setStatus(login, "Sending list of files (LIMIT "+idFrom+","+nbFilesInBatch+")");
 				res.send(json);
 			});
-			
+
+			//FIXMe: This should not be needed and should be removed once sure it is not called
 			app.get("/new-files", (req, res) -> {
 				try {
 					String login=req.getHeader("login").get(0);				
