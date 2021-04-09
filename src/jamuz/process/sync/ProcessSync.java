@@ -143,7 +143,7 @@ public class ProcessSync extends ProcessAbstract {
 		for (Iterator<FileInfoInt> it = fileInfoSourceList.iterator(); it.hasNext();) {
 			FileInfoInt fileTable = it.next();
 			if(filesDevicePlaylist.contains(fileTable)) {
-				Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.INCL, fileTable.getIdFile(), device.getId());
+				Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.NEW, fileTable.getIdFile(), device.getId());
 				filesDevicePlaylist.remove(fileTable);
 			} else {
 				Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.DEL, fileTable.getIdFile(), device.getId());

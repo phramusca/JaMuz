@@ -18,6 +18,7 @@ package jamuz.remote;
 
 import express.Express;
 import express.utils.Status;
+import jamuz.DbConnJaMuz;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
@@ -209,27 +210,35 @@ public class Server {
 			
 			app.get("/files", (req, res) -> {
 				String login=req.getHeader("login").get(0);	
+				Device device = tableModel.getClient(login).getDevice();
+				if(device!=null) {
+					//GET list of files in deviceFile
+					int idFrom = Integer.valueOf(req.getQuery("idFrom"));
+					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
+					ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
+					String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
+							+ " FROM file F "
+							+ " LEFT OUTER JOIN (SELECT * FROM deviceFile WHERE idDevice="+device.getId()+") DF ON DF.idFile=F.idFile "
+							+ " JOIN path P ON F.idPath=P.idPath "
+							+ " WHERE F.deleted=0 AND P.deleted=0 AND saved=0 "
+							+ " ORDER BY idFile "
+							+ " LIMIT "+idFrom+", "+nbFilesInBatch;
+					Jamuz.getDb().getFiles(filesToSend, sql);
 					
-				int idFrom = Integer.valueOf(req.getQuery("idFrom"));
-				int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
-
-				ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
-				String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
-						+ " FROM file F JOIN path P ON F.idPath=P.idPath WHERE F.deleted=0 AND P.deleted=0 AND saved=0 "
-						+ " ORDER BY idFile"
-						+ " LIMIT "+idFrom+", "+nbFilesInBatch;
-				Jamuz.getDb().getFiles(filesToSend, sql);
-
-				Map jsonAsMap = new HashMap();
-				JSONArray jSONArray = new JSONArray();
-				for (FileInfoInt fileInfo : filesToSend) {
-					fileInfo.getTags();
-					jSONArray.add(fileInfo.toMap());
+					Map jsonAsMap = new HashMap();
+					JSONArray jSONArray = new JSONArray();
+					for (FileInfoInt fileInfo : filesToSend) {
+						fileInfo.getTags();
+						jSONArray.add(fileInfo.toMap());
+					}
+					jsonAsMap.put("files", jSONArray);		
+					String json = JSONValue.toJSONString(jsonAsMap);
+					setStatus(login, "Sending list of files (LIMIT "+idFrom+","+nbFilesInBatch+")");
+					res.send(json);
+				} else {
+					setStatus(login, "GET /files | Should not happen (login not found) or you're stuck");
+					res.sendStatus(Status._401);
 				}
-				jsonAsMap.put("files", jSONArray);		
-				String json = JSONValue.toJSONString(jsonAsMap);
-				setStatus(login, "Sending list of files (LIMIT "+idFrom+","+nbFilesInBatch+")");
-				res.send(json);
 			});
 
 			//FIXMe: This should not be needed and should be removed once sure it is not called
@@ -257,7 +266,7 @@ public class Server {
 										-1, FilenameUtils.getPath(relativeFullPath),
 										FilenameUtils.getName(relativeFullPath), -1, "", "", -1, -1,
 										"", "", "", "", -1, -1, "", -1, "", -1, -1, "", playCounter, -1,
-										"", "", "", false, "", FolderInfo.CheckedFlag.UNCHECKED, FolderInfo.CopyRight.UNDEFINED, -1, -1, "");
+										"", "", "", false, "", FolderInfo.CheckedFlag.UNCHECKED, FolderInfo.CopyRight.UNDEFINED, -1, -1, "", DbConnJaMuz.SyncStatus.NEW);
 								toInsertInDeviceFiles.add(fileInfoInt);
 							}
 							ArrayList<FileInfoInt> inserted= Jamuz.getDb().
@@ -272,6 +281,7 @@ public class Server {
 							file.delete();
 						} else {
 							setStatus(login, "Should not happen (idDevice not found) or you're stuck");
+							res.sendStatus(Status._401);
 						}
 					} else {
 						setStatus(login, "Sync will start soon");

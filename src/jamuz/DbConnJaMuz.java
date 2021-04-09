@@ -1370,7 +1370,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     }
 	
 	public enum SyncStatus {
-		INCL,
+		NEW,
 		DEL,
 		INFO
 	}
@@ -2575,7 +2575,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         selAlbum = getSelected(selAlbum);
 
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, "
-				+ "0 AS percentRated "  //NOI18N
+				+ "0 AS percentRated, 'INFO' AS status "  //NOI18N
                 + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, 
 						selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
 
@@ -2647,6 +2647,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         FolderInfo.CopyRight copyRight;
         double albumRating;
         int percentRated;
+		SyncStatus status;
         
         myFileInfoList.clear();
         Statement st = null;
@@ -2691,17 +2692,17 @@ public class DbConnJaMuz extends StatSourceSQL {
                 deleted = rs.getBoolean("deleted");   //NOI18N
                 albumRating = rs.getDouble("albumRating");
                 percentRated = rs.getInt("percentRated");
+				status = SyncStatus.valueOf(dbConn.getStringValue(rs, "status", "INFO"));
 
                 myFileInfoList.add(
                         new FileInfoInt(idFile, idPath, relativePath, filename, 
-								length, format, bitRate, 
-								size, BPM, album, albumArtist, artist, comment,
-                                discNo, discTotal, genre, nbCovers, title, 
-								trackNo, trackTotal, year, 
-								playCounter, rating,
-                                addedDate, lastPlayed, modifDate, deleted, 
-								coverHash, checkedFlag, 
-								copyRight, albumRating, percentRated, rootPath)
+								length, format, bitRate, size, BPM, album, 
+								albumArtist, artist, comment, discNo, discTotal,
+								genre, nbCovers, title, trackNo, trackTotal, 
+								year, playCounter, rating, addedDate, 
+								lastPlayed, modifDate, deleted, coverHash, 
+								checkedFlag, copyRight, albumRating, 
+								percentRated, rootPath, status)
                 );
             }
             return true;
@@ -2959,7 +2960,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean getFiles(ArrayList<FileInfoInt> files, int idPath, 
 			boolean getDeleted) {
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
-				+ "0 AS albumRating, 0 AS percentRated FROM file F, path P "
+				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status "
+				+ "FROM file F, path P "
                 + "WHERE F.idPath=P.idPath ";    //NOI18N
         if (!getDeleted) {
             sql += " AND F.deleted=0 ";   //NOI18N
