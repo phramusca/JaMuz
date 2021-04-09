@@ -17,6 +17,7 @@
 
 package jamuz;
 
+import jamuz.DbConnJaMuz.SyncStatus;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.process.check.FolderInfo.CheckedFlag;
@@ -101,6 +102,8 @@ public class FileInfoInt extends FileInfo {
 	 * Song trackGain #
 	 */
 	protected int trackNo=-1;
+	
+	protected SyncStatus status;
 
 	/**
 	 *
@@ -399,6 +402,7 @@ public class FileInfoInt extends FileInfo {
      * @param albumRating  
      * @param percentRated  
 	 * @param rootPath  
+	 * @param status  
 	 */
 	public FileInfoInt(int idFile, int idPath, String relativePath, 
 			String filename, int length, String format, String bitRate, 
@@ -408,7 +412,8 @@ public class FileInfoInt extends FileInfo {
 			int trackTotal, String year, int playCounter, int rating, 
 			String addedDate, String lastPlayed, String modifDate, 
 			boolean deleted, String coverHash, CheckedFlag checkedFlag, 
-			FolderInfo.CopyRight copyRight, double albumRating, int percentRated, String rootPath) {
+			FolderInfo.CopyRight copyRight, double albumRating, 
+			int percentRated, String rootPath, SyncStatus status) {
 		
 		super("file", FilenameUtils.separatorsToSystem(relativePath)+filename);  //NOI18N
         this.fromLibrary=true;
@@ -455,6 +460,7 @@ public class FileInfoInt extends FileInfo {
         this.copyRight = copyRight;
         this.albumRating = albumRating;
         this.percentRated = percentRated;
+		this.status = status;
 	
 	}
 	
@@ -1377,6 +1383,7 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("album", album);
 		jsonAsMap.put("artist", artist);
 		jsonAsMap.put("title", title);
+		jsonAsMap.put("status", status);
 		return jsonAsMap;
 	}
 	
