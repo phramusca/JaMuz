@@ -1267,8 +1267,8 @@ public class DbConnJaMuz extends StatSourceSQL {
                 int[] results;
                 PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
 						"INSERT OR IGNORE INTO deviceFile "
-                    + "(idFile, idDevice, oriRelativeFullPath) "    //NOI18N
-                    + "VALUES (?, ?, ?)");   //NOI18N
+                    + "(idFile, idDevice, oriRelativeFullPath, status) "    //NOI18N
+                    + "VALUES (?, ?, ?, \"INCL\")");   //NOI18N
                 for (FileInfoInt file : files) {
                     stInsertDeviceFile.setInt(1, file.idFile);
                     stInsertDeviceFile.setInt(2, idDevice);
@@ -1365,6 +1365,42 @@ public class DbConnJaMuz extends StatSourceSQL {
 
         } catch (SQLException ex) {
             Popup.error("deleteDeviceFiles()", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	public enum SyncStatus {
+		INCL,
+		DEL,
+		INFO
+	}
+	
+	/**
+     * Resets the check flag to UNCHECKED on path table for given checked flag
+     *
+     * @param status
+	 * @param idFile
+	 * @param idDevice
+     * @return
+     */
+    public synchronized boolean setDeviceFileStatus(SyncStatus status, int idFile, int idDevice) {
+        try {
+            PreparedStatement stUpdateCheckedFlagReset
+                    = dbConn.connection.prepareStatement(
+							"UPDATE deviceFile SET status=? "
+									+ "WHERE idFile=? AND idDevice=?");   //NOI18N
+            stUpdateCheckedFlagReset.setString(1, status.name());
+			stUpdateCheckedFlagReset.setInt(2, idFile);
+			stUpdateCheckedFlagReset.setInt(3, idDevice);
+            int nbRowsAffected = stUpdateCheckedFlagReset.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} # row(s) affected: +{1}", new Object[]{idFile, nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} : {1}", new Object[]{idFile, ex});   //NOI18N
             return false;
         }
     }

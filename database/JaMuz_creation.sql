@@ -53,6 +53,7 @@ CREATE TABLE "deviceFile" (
     "idFile" INTEGER NOT NULL,
     "idDevice" INTEGER NOT NULL,
     "oriRelativeFullPath" TEXT NOT NULL,
+	"status" TEXT NOT NULL,
 	PRIMARY KEY ("idFile", "idDevice", "oriRelativeFullPath"),
 	FOREIGN KEY(idFile) REFERENCES file(idFile),
 	FOREIGN KEY(idDevice) REFERENCES device(idDevice) ON DELETE CASCADE
