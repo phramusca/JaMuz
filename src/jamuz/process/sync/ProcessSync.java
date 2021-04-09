@@ -24,7 +24,6 @@ import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.process.check.FolderInfo;
 import jamuz.utils.ProcessAbstract;
 import java.io.File;
 import java.io.IOException;
@@ -146,7 +145,7 @@ public class ProcessSync extends ProcessAbstract {
 				Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.NEW, fileTable.getIdFile(), device.getId());
 				filesDevicePlaylist.remove(fileTable);
 			} else {
-				Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.DEL, fileTable.getIdFile(), device.getId());
+				Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.INFO, fileTable.getIdFile(), device.getId());
 				it.remove();
 			}
 			callback.addRow(fileTable.getRelativeFullPath(), 1); //NOI18N

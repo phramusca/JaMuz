@@ -1371,7 +1371,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 	
 	public enum SyncStatus {
 		NEW,
-		DEL,
 		INFO
 	}
 	
@@ -2585,7 +2584,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	public FileInfoInt getFile(int idFile) {
 		ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
-				+ "0 AS albumRating, 0 AS percentRated "
+				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status "
 				+ "FROM file F, path P "
                 + "WHERE F.idPath=P.idPath AND F.idFile="+idFile;    //NOI18N
         getFiles(myFileInfoList, sql);
