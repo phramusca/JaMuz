@@ -240,58 +240,6 @@ public class Server {
 					res.sendStatus(Status._401);
 				}
 			});
-
-			//FIXMe: This should not be needed and should be removed once sure it is not called
-			app.get("/new-files", (req, res) -> {
-				try {
-					String login=req.getHeader("login").get(0);				
-					File file = Jamuz.getFile(login, "data", "devices");
-					if(file.exists()) {
-						Device device = tableModel.getClient(login).getDevice();
-						if(device!=null) {
-							setStatus(login, "Delete in deviceFile table ...");
-							Jamuz.getDb().deleteDeviceFiles(device.getId());
-							setStatus(login, "Inserting into device file list");
-							String json = new String(Files.readAllBytes(file.toPath()));
-							JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-							JSONArray idFiles = (JSONArray) jsonObject.get("files");
-							FileInfoInt fileInfoInt;
-							JSONObject fileObject;
-							ArrayList<FileInfoInt> toInsertInDeviceFiles = new ArrayList<>();
-							for(int i=0; i<idFiles.size(); i++) {
-								fileObject = (JSONObject)idFiles.get(i);
-								String relativeFullPath = (String) fileObject.get("path");
-								int playCounter = (int)(long) fileObject.get("playCounter");
-								fileInfoInt = new FileInfoInt((int)(long)fileObject.get("idFile"),
-										-1, FilenameUtils.getPath(relativeFullPath),
-										FilenameUtils.getName(relativeFullPath), -1, "", "", -1, -1,
-										"", "", "", "", -1, -1, "", -1, "", -1, -1, "", playCounter, -1,
-										"", "", "", false, "", FolderInfo.CheckedFlag.UNCHECKED, FolderInfo.CopyRight.UNDEFINED, -1, -1, "", DbConnJaMuz.SyncStatus.NEW);
-								toInsertInDeviceFiles.add(fileInfoInt);
-							}
-							ArrayList<FileInfoInt> inserted= Jamuz.getDb().
-									insertDeviceFiles(toInsertInDeviceFiles, device.getId());
-							StatSource source = tableModel.getClient(login).getStatSource();
-							if(source==null || !Jamuz.getDb()
-									.setPreviousPlayCounter(inserted, source.getId())) {
-								//FIXME { Manage potential error => Send STOP to remote with error msg }
-							}
-							setStatus(login, "Sending new list of files to retrieve");
-							res.send(json);
-							file.delete();
-						} else {
-							setStatus(login, "Should not happen (idDevice not found) or you're stuck");
-							res.sendStatus(Status._401);
-						}
-					} else {
-						setStatus(login, "Sync will start soon");
-						res.sendStatus(Status._404);
-					}
-				} catch (IOException | ParseException ex) {
-					Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-					res.sendStatus(Status._500); //FIXME: Return proper error
-				}
-			});
 			
 			app.listen(port+1); // port is already used by remote
 			
