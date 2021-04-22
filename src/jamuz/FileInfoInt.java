@@ -1383,7 +1383,7 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("album", album);
 		jsonAsMap.put("artist", artist);
 		jsonAsMap.put("title", title);
-		jsonAsMap.put("status", status);
+		jsonAsMap.put("status", status.name());
 		return jsonAsMap;
 	}
 	

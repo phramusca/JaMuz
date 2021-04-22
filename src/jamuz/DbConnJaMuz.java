@@ -1268,7 +1268,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
 						"INSERT OR IGNORE INTO deviceFile "
                     + "(idFile, idDevice, oriRelativeFullPath, status) "    //NOI18N
-                    + "VALUES (?, ?, ?, \"INCL\")");   //NOI18N
+                    + "VALUES (?, ?, ?, \"NEW\")");   //NOI18N
                 for (FileInfoInt file : files) {
                     stInsertDeviceFile.setInt(1, file.idFile);
                     stInsertDeviceFile.setInt(2, idDevice);
