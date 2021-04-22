@@ -152,7 +152,7 @@ public class ProcessSync extends ProcessAbstract {
 			progressBar.progress(fileTable.getTitle());
 			callback.refresh();
 		}
-		//Insert the remaining as INCL
+		//Insert the remaining as NEW
 		progressBar.setIndeterminate("Inserting new files to deviceFile"); //NOI18N
 		callback.refresh();
 		Jamuz.getDb().insertDeviceFiles(filesDevicePlaylist, device.getId());
