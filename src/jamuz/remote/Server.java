@@ -98,16 +98,20 @@ public class Server {
 			app = new Express();
 
 			app.get("/version", (req, res) -> {
+				String login=req.getHeader("login").get(0);
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
 				res.send("1");
 			});
 			
 			app.get("/files/maxId", (req, res) -> {
-				
-				String login=""; //FIXMe: get login !!!
+				String login=req.getHeader("login").get(0);	
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
 				setStatus(login, "Sending maxId");
-				
-				Pair<Integer, Integer> filesInfos = Jamuz.getDb().getFilesInfos();
-				
+				Pair<Integer, Integer> filesInfos = Jamuz.getDb().getFilesInfos();			
 				JSONObject obj = new JSONObject();
 				obj.put("max", filesInfos.getKey());
 				obj.put("count", filesInfos.getValue());
@@ -115,7 +119,10 @@ public class Server {
 			});
 						
 			app.get("/download", (req, res) -> {
-				String login=req.getHeader("login").get(0);	
+				String login=req.getHeader("login").get(0);
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
 				Device device = tableModel.getClient(login).getDevice();
 				int idFile = Integer.valueOf(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
@@ -130,9 +137,10 @@ public class Server {
 			});
 			
 			app.get("/tags", (req, res) -> {
-				
-				String login=""; //FIXMe: get login !!!
-				
+				String login=req.getHeader("login").get(0);	
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
 				setStatus(login, "Sending tags");
 				JSONArray list = new JSONArray();
 				for(String tag : Jamuz.getTags()) {
@@ -145,9 +153,10 @@ public class Server {
 			});
 			
 			app.get("/genres", (req, res) -> {
-				
-				String login=""; //FIXMe: get login !!!
-				
+				String login=req.getHeader("login").get(0);	
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
 				setStatus(login, "Sending genres");
 				JSONArray list = new JSONArray();
 				for(String genre : Jamuz.getGenres()) {
@@ -163,10 +172,12 @@ public class Server {
 			//Merge statistics
 			app.post("/files", (req, res) -> {
 				try {
+					String login=req.getHeader("login").get(0);
+					if(!validateLogin(login)) {
+						res.sendStatus(Status._401);
+					}
 					String body = getBody(req.getBody());
 					JSONObject jsonObject = (JSONObject) new JSONParser().parse(body);
-					JSONObject user = (JSONObject) jsonObject.get("user");
-					String login=user.get("login")+"-"+user.get("appId");
 					
 					setStatus(login, "Received files to merge");
 					ArrayList<FileInfo> newTracks = new ArrayList<>();				
@@ -209,8 +220,10 @@ public class Server {
 			});
 			
 			app.get("/files", (req, res) -> {
-				//FIXME: Get login as the following for other endpoints + Check authorized
-				String login=req.getHeader("login").get(0);	
+				String login=req.getHeader("login").get(0);
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
 				Device device = tableModel.getClient(login).getDevice();
 				if(device!=null) {
 					//GET list of files in deviceFile
@@ -249,6 +262,16 @@ public class Server {
 			Popup.error("Cannot start JaMuz Remote Server", ex);
 			return false;
 		}
+	}
+	
+	private boolean validateLogin(String login) {
+		return tableModel.contains(login) && tableModel.getClient(login).isEnabled();
+//		if(tableModel.contains(login)) {
+//			if(tableModel.getClient(login).isEnabled()) {
+//				return true;
+//			}
+//		}
+//		return false;
 	}
 
 	private String getBody(InputStream stream) throws IOException {
