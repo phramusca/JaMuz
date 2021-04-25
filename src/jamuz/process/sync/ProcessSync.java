@@ -124,14 +124,16 @@ public class ProcessSync extends ProcessAbstract {
 		ArrayList<FileInfoInt> filesDevicePlaylist = new ArrayList<>();
 		Playlist playlist = device.getPlaylist();
 		playlist.getFiles(filesDevicePlaylist);
-			
+		
+		//FIXME: Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
+		
 		//GET list of files in deviceFile
 		fileInfoSourceList = new ArrayList<>();
 		String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
 				+ " FROM deviceFile DF "
 				+ " JOIN file F ON DF.idFile=F.idFile "
 				+ " JOIN path P ON F.idPath=P.idPath "
-				+ " WHERE F.deleted=0 AND P.deleted=0 AND saved=0 "
+				//+ " WHERE F.deleted=0 AND P.deleted=0 AND saved=0 "
 				+ " AND DF.idDevice="+device.getId()+" "
 				+ " ORDER BY idFile ";
 		Jamuz.getDb().getFiles(fileInfoSourceList, sql);
@@ -139,24 +141,22 @@ public class ProcessSync extends ProcessAbstract {
 		//Set statuses in deviceFile
 		progressBar.setup(fileInfoSourceList.size());
 		callback.refresh();
+		ArrayList<FileInfoInt> filesToInsertOrUpdate = new ArrayList<>();
 		for (Iterator<FileInfoInt> it = fileInfoSourceList.iterator(); it.hasNext();) {
 			FileInfoInt fileTable = it.next();
 			if(filesDevicePlaylist.contains(fileTable)) {
-				Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.NEW, fileTable.getIdFile(), device.getId());
 				filesDevicePlaylist.remove(fileTable);
+				fileTable.setStatus(DbConnJaMuz.SyncStatus.NEW);
 			} else {
-				Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.INFO, fileTable.getIdFile(), device.getId());
-				it.remove();
+				fileTable.setStatus(DbConnJaMuz.SyncStatus.INFO);
 			}
+			filesToInsertOrUpdate.add(fileTable);
 			callback.addRow(fileTable.getRelativeFullPath(), 1); //NOI18N
 			progressBar.progress(fileTable.getTitle());
 			callback.refresh();
 		}
-		//Insert the remaining as NEW
-		progressBar.setIndeterminate("Inserting new files to deviceFile"); //NOI18N
-		callback.refresh();
-		Jamuz.getDb().insertDeviceFiles(filesDevicePlaylist, device.getId());
-		
+		filesToInsertOrUpdate.addAll(filesDevicePlaylist);
+		Jamuz.getDb().insertOrUpdateDeviceFiles(filesToInsertOrUpdate, device.getId());	
 		return true;
 	}
 	

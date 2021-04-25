@@ -105,6 +105,10 @@ public class FileInfoInt extends FileInfo {
 	
 	protected SyncStatus status;
 
+	public void setStatus(SyncStatus status) {
+		this.status = status;
+	}
+	
 	/**
 	 *
 	 * @return

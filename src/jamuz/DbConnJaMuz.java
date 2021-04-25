@@ -1259,10 +1259,60 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param idDevice
      * @return
      */
+    public synchronized ArrayList<FileInfoInt> insertOrUpdateDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
+        ArrayList<FileInfoInt> inserted=new ArrayList<>();
+		try {
+            if (files.size() > 0) {
+				long startTime = System.currentTimeMillis();
+                dbConn.connection.setAutoCommit(false);
+                int[] results;
+                //FIXME: Use this ON CONFLICT syntax for other insertOrUpdateXXX methods, if applicable
+                PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
+						"INSERT INTO deviceFile "
+                    + " (idFile, idDevice, oriRelativeFullPath, status) "    //NOI18N
+                    + " VALUES (?, ?, ?, \"NEW\") "
+					+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?");   //NOI18N
+                for (FileInfoInt file : files) {
+                    stInsertDeviceFile.setInt(1, file.idFile);
+                    stInsertDeviceFile.setInt(2, idDevice);
+                    stInsertDeviceFile.setString(3, file.relativeFullPath);
+					stInsertDeviceFile.setString(4, file.status.name());
+                    stInsertDeviceFile.addBatch();
+                }
+                results = stInsertDeviceFile.executeBatch();
+                dbConn.connection.commit();
+				//Check results
+				int result;
+                for (int i = 0; i < results.length; i++) {
+                    result = results[i];
+                    if (result >= 0) {
+                        inserted.add(files.get(i));
+                    }
+                }
+				dbConn.connection.setAutoCommit(true);
+				long endTime = System.currentTimeMillis();
+				Jamuz.getLogger().log(Level.FINEST, "insertDeviceFiles // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
+            }
+           
+            return inserted;
+        } catch (SQLException ex) {
+            Popup.error("insertDeviceFile(" + idDevice + ")", ex);   //NOI18N
+            return inserted;
+        }
+    }
+	
+	/**
+     * Insert in deviceFile table
+     *
+     * @param files
+     * @param idDevice
+     * @return
+     */
     public synchronized ArrayList<FileInfoInt> insertDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
         ArrayList<FileInfoInt> inserted=new ArrayList<>();
 		try {
             if (files.size() > 0) {
+				long startTime = System.currentTimeMillis();
                 dbConn.connection.setAutoCommit(false);
                 int[] results;
                 PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
@@ -1275,12 +1325,8 @@ public class DbConnJaMuz extends StatSourceSQL {
                     stInsertDeviceFile.setString(3, file.relativeFullPath);
                     stInsertDeviceFile.addBatch();
                 }
-                long startTime = System.currentTimeMillis();
                 results = stInsertDeviceFile.executeBatch();
                 dbConn.connection.commit();
-                long endTime = System.currentTimeMillis();
-                Jamuz.getLogger().log(Level.FINEST, "insertDeviceFile UPDATE // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
-				
 				//Check results
 				int result;
                 for (int i = 0; i < results.length; i++) {
@@ -1289,8 +1335,11 @@ public class DbConnJaMuz extends StatSourceSQL {
                         inserted.add(files.get(i));
                     }
                 }
+				dbConn.connection.setAutoCommit(true);
+				long endTime = System.currentTimeMillis();
+				Jamuz.getLogger().log(Level.FINEST, "insertDeviceFiles // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
             }
-            dbConn.connection.setAutoCommit(true);
+           
             return inserted;
         } catch (SQLException ex) {
             Popup.error("insertDeviceFile(" + idDevice + ")", ex);   //NOI18N
@@ -2651,8 +2700,10 @@ public class DbConnJaMuz extends StatSourceSQL {
         myFileInfoList.clear();
         Statement st = null;
         ResultSet rs=null;
+		long startTime = System.currentTimeMillis();
         try {
             //Execute query
+			
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -2720,6 +2771,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close Statement");
             }
+			long endTime = System.currentTimeMillis();
+			Jamuz.getLogger().log(Level.FINEST, "getFiles // Total execution time: {0}ms", new Object[]{endTime - startTime});    //NOI18N
         }
     }
 		
