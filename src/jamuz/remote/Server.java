@@ -22,7 +22,6 @@ import jamuz.DbConnJaMuz;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.process.check.FolderInfo;
 import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.merge.StatSource;
@@ -31,7 +30,6 @@ import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -41,7 +39,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.simple.JSONArray;
@@ -118,6 +115,8 @@ public class Server {
 			});
 						
 			app.get("/download", (req, res) -> {
+				String login=req.getHeader("login").get(0);	
+				Device device = tableModel.getClient(login).getDevice();
 				int idFile = Integer.valueOf(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
 				File file = fileInfoInt.getFullPath();
@@ -126,6 +125,7 @@ public class Server {
 					System.out.println("Sending"+msg);
 					res.sendAttachment(file.toPath());
 					System.out.println("Sent"+msg);
+					Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.NEW, idFile, device.getId());
 				}				
 			});
 			
@@ -209,6 +209,7 @@ public class Server {
 			});
 			
 			app.get("/files", (req, res) -> {
+				//FIXME: Get login as the following for other endpoints + Check authorized
 				String login=req.getHeader("login").get(0);	
 				Device device = tableModel.getClient(login).getDevice();
 				if(device!=null) {
