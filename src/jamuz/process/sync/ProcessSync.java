@@ -133,7 +133,7 @@ public class ProcessSync extends ProcessAbstract {
 				+ " FROM deviceFile DF "
 				+ " JOIN file F ON DF.idFile=F.idFile "
 				+ " JOIN path P ON F.idPath=P.idPath "
-				//+ " WHERE F.deleted=0 AND P.deleted=0 AND saved=0 "
+				//+ " WHERE F.deleted=0 AND P.deleted=0 "
 				+ " AND DF.idDevice="+device.getId()+" "
 				+ " ORDER BY idFile ";
 		Jamuz.getDb().getFiles(fileInfoSourceList, sql);
