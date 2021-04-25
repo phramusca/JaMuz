@@ -104,20 +104,7 @@ public class Server {
 				}
 				res.send("1");
 			});
-			
-			app.get("/files/maxId", (req, res) -> {
-				String login=req.getHeader("login").get(0);	
-				if(!validateLogin(login)) {
-					res.sendStatus(Status._401);
-				}
-				setStatus(login, "Sending maxId");
-				Pair<Integer, Integer> filesInfos = Jamuz.getDb().getFilesInfos();			
-				JSONObject obj = new JSONObject();
-				obj.put("max", filesInfos.getKey());
-				obj.put("count", filesInfos.getValue());
-				res.send(obj.toJSONString());
-			});
-						
+								
 			app.get("/download", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				if(!validateLogin(login)) {
@@ -219,6 +206,19 @@ public class Server {
 				}
 			});
 			
+			app.get("/files/maxId", (req, res) -> {
+				String login=req.getHeader("login").get(0);	
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
+				setStatus(login, "Sending maxId");
+				Pair<Integer, Integer> filesInfos = Jamuz.getDb().getFilesInfos();			
+				JSONObject obj = new JSONObject();
+				obj.put("max", filesInfos.getKey());
+				obj.put("count", filesInfos.getValue());
+				res.send(obj.toJSONString());
+			});
+			
 			app.get("/files", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				if(!validateLogin(login)) {
@@ -232,7 +232,7 @@ public class Server {
 						+ " FROM file F "
 						+ " LEFT OUTER JOIN (SELECT * FROM deviceFile WHERE idDevice="+device.getId()+") DF ON DF.idFile=F.idFile "
 						+ " JOIN path P ON F.idPath=P.idPath "
-						+ " WHERE F.deleted=0 AND P.deleted=0 AND saved=0 "
+						+ " WHERE F.deleted=0 AND P.deleted=0 "
 						+ " ORDER BY idFile "
 						+ " LIMIT "+idFrom+", "+nbFilesInBatch;
 				Jamuz.getDb().getFiles(filesToSend, sql);

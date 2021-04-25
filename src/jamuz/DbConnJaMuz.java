@@ -1751,7 +1751,9 @@ public class DbConnJaMuz extends StatSourceSQL {
         ResultSet rs=null;
         try {
             st = dbConn.connection.createStatement();
-            rs = st.executeQuery("SELECT MAX(idFile), count(idFile) FROM file"); 
+            rs = st.executeQuery("SELECT MAX(idFile), count(idFile) FROM file F "
+					+ " JOIN path P ON F.idPath=P.idPath "
+					+ " WHERE F.deleted=0 AND P.deleted=0 "); 
             return new ImmutablePair<>(rs.getInt(1),rs.getInt(2));
 
         } catch (SQLException ex) {
