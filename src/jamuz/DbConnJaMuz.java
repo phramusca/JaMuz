@@ -115,7 +115,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 + "JOIN devicefile D ON D.idFile=F.idFile "
                 + "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
 					+ "ON F.idFile=C.idFile "  //NOI18N //NOI18N
-                + "WHERE D.idDevice=?");
+                + "WHERE D.idDevice=? AND F.deleted=0");
             stSelectFilesStats4Source = dbConn.getConnnection().prepareStatement(
 					"SELECT "
                 + "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
