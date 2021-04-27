@@ -119,8 +119,9 @@ public class Server {
 					System.out.println("Sending"+msg);
 					res.sendAttachment(file.toPath());
 					System.out.println("Sent"+msg);
-					//FIXME: Need to insert as needed !!
-					Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.NEW, idFile, device.getId());
+					ArrayList<FileInfoInt> insert = new ArrayList<FileInfoInt>();
+					insert.add(fileInfoInt);
+					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
 				}				
 			});
 			
