@@ -1746,15 +1746,13 @@ public class DbConnJaMuz extends StatSourceSQL {
 	
 	// <editor-fold defaultstate="collapsed" desc="File">
 	
-    public Pair<Integer, Integer> getFilesInfos() {
+    public Integer getFilesCount(String sql) {
         Statement st=null;
         ResultSet rs=null;
         try {
             st = dbConn.connection.createStatement();
-            rs = st.executeQuery("SELECT MAX(idFile), count(idFile) FROM file F "
-					+ " JOIN path P ON F.idPath=P.idPath "
-					+ " WHERE F.deleted=0 AND P.deleted=0 "); 
-            return new ImmutablePair<>(rs.getInt(1),rs.getInt(2));
+            rs = st.executeQuery(sql); 
+            return rs.getInt(1);
 
         } catch (SQLException ex) {
             Popup.error("getIdFileMax()", ex);   //NOI18N
