@@ -119,6 +119,7 @@ public class Server {
 					System.out.println("Sending"+msg);
 					res.sendAttachment(file.toPath());
 					System.out.println("Sent"+msg);
+					//FIXME: Need to insert as needed !!
 					Jamuz.getDb().setDeviceFileStatus(DbConnJaMuz.SyncStatus.NEW, idFile, device.getId());
 				}				
 			});
@@ -206,47 +207,63 @@ public class Server {
 				}
 			});
 			
-			app.get("/files/maxId", (req, res) -> {
-				String login=req.getHeader("login").get(0);	
-				if(!validateLogin(login)) {
-					res.sendStatus(Status._401);
-				}
-				setStatus(login, "Sending maxId");
-				Pair<Integer, Integer> filesInfos = Jamuz.getDb().getFilesInfos();			
-				JSONObject obj = new JSONObject();
-				obj.put("max", filesInfos.getKey());
-				obj.put("count", filesInfos.getValue());
-				res.send(obj.toJSONString());
-			});
-			
-			app.get("/files", (req, res) -> {
+			app.get("/files/new", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				if(!validateLogin(login)) {
 					res.sendStatus(Status._401);
 				}
 				Device device = tableModel.getClient(login).getDevice();
-				int idFrom = Integer.valueOf(req.getQuery("idFrom"));
-				int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
-				ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
-				String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
-						+ " FROM file F "
-						+ " LEFT OUTER JOIN (SELECT * FROM deviceFile WHERE idDevice="+device.getId()+") DF ON DF.idFile=F.idFile "
-						+ " JOIN path P ON F.idPath=P.idPath "
-						+ " WHERE F.deleted=0 AND P.deleted=0 "
-						+ " ORDER BY idFile "
-						+ " LIMIT "+idFrom+", "+nbFilesInBatch;
-				Jamuz.getDb().getFiles(filesToSend, sql);
-
-				Map jsonAsMap = new HashMap();
-				JSONArray jSONArray = new JSONArray();
-				for (FileInfoInt fileInfo : filesToSend) {
-					fileInfo.getTags();
-					jSONArray.add(fileInfo.toMap());
+				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
+				String limit="";
+				if(!getCount) {
+					int idFrom = Integer.valueOf(req.getQuery("idFrom"));
+					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
+					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
 				}
-				jsonAsMap.put("files", jSONArray);		
-				String json = JSONValue.toJSONString(jsonAsMap);
-				setStatus(login, "Sending list of files (LIMIT "+idFrom+","+nbFilesInBatch+")");
-				res.send(json);
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated ")
+				+ " FROM file F "
+				+ " JOIN deviceFile DF ON DF.idFile=F.idFile "
+				+ " JOIN path P ON F.idPath=P.idPath "
+				+ " WHERE F.deleted=0 AND P.deleted=0 "
+				+ " AND DF.idDevice="+device.getId()+" AND DF.status=\""+DbConnJaMuz.SyncStatus.NEW+"\""
+				+ " ORDER BY F.idFile "
+				+ limit;
+				setStatus(login, "Sending "+(getCount?"count":"list") + " of NEW files");
+				if(getCount) {
+					res.send(Jamuz.getDb().getFilesCount(sql).toString());
+				} else {
+					res.send(getFiles(sql));
+				}
+				setStatus(login, "Sent "+(getCount?"count":"list") + " of NEW files");
+			});
+			
+			app.get("/files/info", (req, res) -> {
+				String login=req.getHeader("login").get(0);
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
+				Device device = tableModel.getClient(login).getDevice();
+				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
+				String limit="";
+				if(!getCount) {
+					int idFrom = Integer.valueOf(req.getQuery("idFrom"));
+					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
+					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
+				}
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" 'INFO' AS status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated ")
+				+ " FROM file F "
+				+ " JOIN path P ON F.idPath=P.idPath "
+				+ " WHERE F.deleted=0 AND P.deleted=0 "
+				+ " AND F.idFile NOT IN (SELECT idFile FROM deviceFile WHERE idDevice="+device.getId()+" AND status=\""+DbConnJaMuz.SyncStatus.NEW+"\") "
+				+ " ORDER BY F.idFile "
+				+ limit;
+				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files");
+				if(getCount) {
+					res.send(Jamuz.getDb().getFilesCount(sql).toString());
+				} else {
+					res.send(getFiles(sql));
+				}
+				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files");
 			});
 			
 			app.listen(port+1); // port is already used by remote
@@ -256,6 +273,20 @@ public class Server {
 			Popup.error("Cannot start JaMuz Remote Server", ex);
 			return false;
 		}
+	}
+	
+	private String getFiles(String sql) {
+		//DbConnJaMuz.SyncStatus status = DbConnJaMuz.SyncStatus.valueOf(req.getQuery("status"));
+		ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
+		Jamuz.getDb().getFiles(filesToSend, sql);
+		Map jsonAsMap = new HashMap();
+		JSONArray jSONArray = new JSONArray();
+		for (FileInfoInt fileInfo : filesToSend) {
+			fileInfo.getTags();
+			jSONArray.add(fileInfo.toMap());
+		}
+		jsonAsMap.put("files", jSONArray);		
+		return JSONValue.toJSONString(jsonAsMap);
 	}
 	
 	private boolean validateLogin(String login) {
