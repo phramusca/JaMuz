@@ -49,8 +49,6 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Creates a new dbConn.connection to JaMuz database
@@ -115,7 +113,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 + "JOIN devicefile D ON D.idFile=F.idFile "
                 + "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
 					+ "ON F.idFile=C.idFile "  //NOI18N //NOI18N
-                + "WHERE D.idDevice=? AND F.deleted=0");
+                + "WHERE D.idDevice=? AND F.deleted=0 AND D.status!='INFO'");
             stSelectFilesStats4Source = dbConn.getConnnection().prepareStatement(
 					"SELECT "
                 + "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
