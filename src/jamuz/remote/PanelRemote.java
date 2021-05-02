@@ -16,7 +16,6 @@
  */
 package jamuz.remote;
 
-import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.DialogQRcode;
@@ -39,7 +38,6 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +48,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
@@ -82,11 +79,9 @@ public class PanelRemote extends javax.swing.JPanel {
 		// as done, in initComponents, before setColumnModel which removes the columns ...
 		jTableRemote.createDefaultColumnsFromModel();
 		setColumn(0, 60);
-		setColumn(1, 60);
-		setColumn(2, 60);
-		setColumn(3, 200);
-		setColumn(4, 300);
-		TableColumn column = jTableRemote.getColumnModel().getColumn(5);
+		setColumn(1, 200);
+		setColumn(2, 300);
+		TableColumn column = jTableRemote.getColumnModel().getColumn(3);
 		column.setCellRenderer(new ProgressCellRender());
 		
         addMenuItem(Inter.get("Button.Edit")); //NOI18N
@@ -146,17 +141,6 @@ public class PanelRemote extends javax.swing.JPanel {
         }
 		return false;
     }
-	
-	public static void send(String clientId, ArrayList<FileInfo> mergeListDbSelected) {
-		JSONObject obj = new JSONObject();
-		obj.put("type", "mergeListDbSelected");
-		JSONArray jsonArray = new JSONArray();
-		for (int i=0; i < mergeListDbSelected.size(); i++) {
-				jsonArray.add(mergeListDbSelected.get(i).toMap());
-		}
-		obj.put("files", jsonArray);
-		send(clientId, obj);
-	}
 	
 	public static boolean isConnected(String clientId) {
 		if(server!=null) {

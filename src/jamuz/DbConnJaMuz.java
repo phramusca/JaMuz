@@ -113,7 +113,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                 + "JOIN devicefile D ON D.idFile=F.idFile "
                 + "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
 					+ "ON F.idFile=C.idFile "  //NOI18N //NOI18N
-                + "WHERE D.idDevice=?");
+                + "WHERE D.idDevice=? AND F.deleted=0 AND D.status!='INFO'");
             stSelectFilesStats4Source = dbConn.getConnnection().prepareStatement(
 					"SELECT "
                 + "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
@@ -1257,28 +1257,28 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param idDevice
      * @return
      */
-    public synchronized ArrayList<FileInfoInt> insertDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
+    public synchronized ArrayList<FileInfoInt> insertOrUpdateDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
         ArrayList<FileInfoInt> inserted=new ArrayList<>();
 		try {
             if (files.size() > 0) {
+				long startTime = System.currentTimeMillis();
                 dbConn.connection.setAutoCommit(false);
                 int[] results;
+                //FIXME: Use this ON CONFLICT syntax for other insertOrUpdateXXX methods, if applicable
                 PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
-						"INSERT OR IGNORE INTO deviceFile "
-                    + "(idFile, idDevice, oriRelativeFullPath) "    //NOI18N
-                    + "VALUES (?, ?, ?)");   //NOI18N
+						"INSERT INTO deviceFile "
+                    + " (idFile, idDevice, oriRelativeFullPath, status) "    //NOI18N
+                    + " VALUES (?, ?, ?, \"NEW\") "
+					+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?");   //NOI18N
                 for (FileInfoInt file : files) {
                     stInsertDeviceFile.setInt(1, file.idFile);
                     stInsertDeviceFile.setInt(2, idDevice);
                     stInsertDeviceFile.setString(3, file.relativeFullPath);
+					stInsertDeviceFile.setString(4, file.status.name());
                     stInsertDeviceFile.addBatch();
                 }
-                long startTime = System.currentTimeMillis();
                 results = stInsertDeviceFile.executeBatch();
                 dbConn.connection.commit();
-                long endTime = System.currentTimeMillis();
-                Jamuz.getLogger().log(Level.FINEST, "insertDeviceFile UPDATE // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
-				
 				//Check results
 				int result;
                 for (int i = 0; i < results.length; i++) {
@@ -1287,8 +1287,57 @@ public class DbConnJaMuz extends StatSourceSQL {
                         inserted.add(files.get(i));
                     }
                 }
+				dbConn.connection.setAutoCommit(true);
+				long endTime = System.currentTimeMillis();
+				Jamuz.getLogger().log(Level.FINEST, "insertDeviceFiles // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
             }
-            dbConn.connection.setAutoCommit(true);
+           
+            return inserted;
+        } catch (SQLException ex) {
+            Popup.error("insertDeviceFile(" + idDevice + ")", ex);   //NOI18N
+            return inserted;
+        }
+    }
+	
+	/**
+     * Insert in deviceFile table
+     *
+     * @param files
+     * @param idDevice
+     * @return
+     */
+    public synchronized ArrayList<FileInfoInt> insertDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
+        ArrayList<FileInfoInt> inserted=new ArrayList<>();
+		try {
+            if (files.size() > 0) {
+				long startTime = System.currentTimeMillis();
+                dbConn.connection.setAutoCommit(false);
+                int[] results;
+                PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
+						"INSERT OR IGNORE INTO deviceFile "
+                    + "(idFile, idDevice, oriRelativeFullPath, status) "    //NOI18N
+                    + "VALUES (?, ?, ?, \"NEW\")");   //NOI18N
+                for (FileInfoInt file : files) {
+                    stInsertDeviceFile.setInt(1, file.idFile);
+                    stInsertDeviceFile.setInt(2, idDevice);
+                    stInsertDeviceFile.setString(3, file.relativeFullPath);
+                    stInsertDeviceFile.addBatch();
+                }
+                results = stInsertDeviceFile.executeBatch();
+                dbConn.connection.commit();
+				//Check results
+				int result;
+                for (int i = 0; i < results.length; i++) {
+                    result = results[i];
+                    if (result >= 0) {
+                        inserted.add(files.get(i));
+                    }
+                }
+				dbConn.connection.setAutoCommit(true);
+				long endTime = System.currentTimeMillis();
+				Jamuz.getLogger().log(Level.FINEST, "insertDeviceFiles // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
+            }
+           
             return inserted;
         } catch (SQLException ex) {
             Popup.error("insertDeviceFile(" + idDevice + ")", ex);   //NOI18N
@@ -1363,6 +1412,41 @@ public class DbConnJaMuz extends StatSourceSQL {
 
         } catch (SQLException ex) {
             Popup.error("deleteDeviceFiles()", ex);   //NOI18N
+            return false;
+        }
+    }
+	
+	public enum SyncStatus {
+		NEW,
+		INFO
+	}
+	
+	/**
+     * Resets the check flag to UNCHECKED on path table for given checked flag
+     *
+     * @param status
+	 * @param idFile
+	 * @param idDevice
+     * @return
+     */
+    public synchronized boolean setDeviceFileStatus(SyncStatus status, int idFile, int idDevice) {
+        try {
+            PreparedStatement stUpdateCheckedFlagReset
+                    = dbConn.connection.prepareStatement(
+							"UPDATE deviceFile SET status=? "
+									+ "WHERE idFile=? AND idDevice=?");   //NOI18N
+            stUpdateCheckedFlagReset.setString(1, status.name());
+			stUpdateCheckedFlagReset.setInt(2, idFile);
+			stUpdateCheckedFlagReset.setInt(3, idDevice);
+            int nbRowsAffected = stUpdateCheckedFlagReset.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} # row(s) affected: +{1}", new Object[]{idFile, nbRowsAffected});   //NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} : {1}", new Object[]{idFile, ex});   //NOI18N
             return false;
         }
     }
@@ -1659,6 +1743,32 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// </editor-fold>
 	
 	// <editor-fold defaultstate="collapsed" desc="File">
+	
+    public Integer getFilesCount(String sql) {
+        Statement st=null;
+        ResultSet rs=null;
+        try {
+            st = dbConn.connection.createStatement();
+            rs = st.executeQuery(sql); 
+            return rs.getInt(1);
+
+        } catch (SQLException ex) {
+            Popup.error("getIdFileMax()", ex);   //NOI18N
+            return null;
+        }
+        finally {
+            try {
+                if (rs!=null) rs.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+            try {
+                if (st!=null) st.close();
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close Statement");
+            }
+        }
+    }
 	
 	/**
      * Gets MIN or MAX year from audio files
@@ -2511,7 +2621,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         selAlbum = getSelected(selAlbum);
 
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, "
-				+ "0 AS percentRated "  //NOI18N
+				+ "0 AS percentRated, 'INFO' AS status "  //NOI18N
                 + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, 
 						selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
 
@@ -2521,7 +2631,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	public FileInfoInt getFile(int idFile) {
 		ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
-				+ "0 AS albumRating, 0 AS percentRated "
+				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status "
 				+ "FROM file F, path P "
                 + "WHERE F.idPath=P.idPath AND F.idFile="+idFile;    //NOI18N
         getFiles(myFileInfoList, sql);
@@ -2583,12 +2693,15 @@ public class DbConnJaMuz extends StatSourceSQL {
         FolderInfo.CopyRight copyRight;
         double albumRating;
         int percentRated;
+		SyncStatus status;
         
         myFileInfoList.clear();
         Statement st = null;
         ResultSet rs=null;
+		long startTime = System.currentTimeMillis();
         try {
             //Execute query
+			
             st = dbConn.connection.createStatement();
             rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -2627,17 +2740,17 @@ public class DbConnJaMuz extends StatSourceSQL {
                 deleted = rs.getBoolean("deleted");   //NOI18N
                 albumRating = rs.getDouble("albumRating");
                 percentRated = rs.getInt("percentRated");
+				status = SyncStatus.valueOf(dbConn.getStringValue(rs, "status", "INFO"));
 
                 myFileInfoList.add(
                         new FileInfoInt(idFile, idPath, relativePath, filename, 
-								length, format, bitRate, 
-								size, BPM, album, albumArtist, artist, comment,
-                                discNo, discTotal, genre, nbCovers, title, 
-								trackNo, trackTotal, year, 
-								playCounter, rating,
-                                addedDate, lastPlayed, modifDate, deleted, 
-								coverHash, checkedFlag, 
-								copyRight, albumRating, percentRated, rootPath)
+								length, format, bitRate, size, BPM, album, 
+								albumArtist, artist, comment, discNo, discTotal,
+								genre, nbCovers, title, trackNo, trackTotal, 
+								year, playCounter, rating, addedDate, 
+								lastPlayed, modifDate, deleted, coverHash, 
+								checkedFlag, copyRight, albumRating, 
+								percentRated, rootPath, status)
                 );
             }
             return true;
@@ -2656,6 +2769,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close Statement");
             }
+			long endTime = System.currentTimeMillis();
+			Jamuz.getLogger().log(Level.FINEST, "getFiles // Total execution time: {0}ms", new Object[]{endTime - startTime});    //NOI18N
         }
     }
 		
@@ -2895,7 +3010,8 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean getFiles(ArrayList<FileInfoInt> files, int idPath, 
 			boolean getDeleted) {
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
-				+ "0 AS albumRating, 0 AS percentRated FROM file F, path P "
+				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status "
+				+ "FROM file F, path P "
                 + "WHERE F.idPath=P.idPath ";    //NOI18N
         if (!getDeleted) {
             sql += " AND F.deleted=0 ";   //NOI18N

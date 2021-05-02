@@ -19,6 +19,7 @@ package jamuz.process.sync;
 //FIXME Z SYNC If file missing in source, it blocks transfert
 //FIXME Z SYNC If tag issue (genre, only?), it blocks transfert (errors)
 //FIXME Z SYNC Export file scrollabr freeze => threaded ?
+import jamuz.DbConnJaMuz;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
@@ -34,14 +35,10 @@ import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Benchmark;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
-import jamuz.utils.LogText;
 import jamuz.utils.StringManager;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONValue;
 
 /**
  * Sync process class
@@ -111,53 +108,56 @@ public class ProcessSync extends ProcessAbstract {
 	
 	private boolean sync() throws InterruptedException {
 		if(this.device.isHidden()) {
-			String login = this.device.getDestination();
-			return syncRemote(login);
+			return syncRemote();
 		} else {
 			return syncFS();
 		}
 	}
 	
-	private boolean syncRemote(String login) throws InterruptedException {
+	private boolean syncRemote() throws InterruptedException {
         callback.enableButton(true);
         progressBar.reset();
         progressBar.setIndeterminate(Inter.get("Msg.Process.RetrievingList")); //NOI18N
 		callback.refresh();
-		fileInfoSourceList = new ArrayList<>();
+		
+		//Get list of files to export
+		ArrayList<FileInfoInt> filesDevicePlaylist = new ArrayList<>();
 		Playlist playlist = device.getPlaylist();
-		playlist.getFiles(fileInfoSourceList);
+		playlist.getFiles(filesDevicePlaylist);
+		
+		//FIXME: Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
+		
+		//GET list of files in deviceFile
+		fileInfoSourceList = new ArrayList<>();
+		String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated "
+				+ " FROM deviceFile DF "
+				+ " JOIN file F ON DF.idFile=F.idFile "
+				+ " JOIN path P ON F.idPath=P.idPath "
+				//+ " WHERE F.deleted=0 AND P.deleted=0 "
+				+ " AND DF.idDevice="+device.getId()+" "
+				+ " ORDER BY idFile ";
+		Jamuz.getDb().getFiles(fileInfoSourceList, sql);
+
+		//Set statuses in deviceFile
 		progressBar.setup(fileInfoSourceList.size());
 		callback.refresh();
-		Map jsonAsMap = new HashMap();
-		jsonAsMap.put("type", "FilesToGet");
-		JSONArray filesToGet = new JSONArray();
-		for (FileInfoInt fileInfo : fileInfoSourceList) {
-			filesToGet.add(fileInfo.toMap());
-			callback.addRow(fileInfo.getRelativeFullPath(), 1); //NOI18N
-            progressBar.progress(fileInfo.getTitle());
+		ArrayList<FileInfoInt> filesToInsertOrUpdate = new ArrayList<>();
+		for (Iterator<FileInfoInt> it = fileInfoSourceList.iterator(); it.hasNext();) {
+			FileInfoInt fileTable = it.next();
+			if(filesDevicePlaylist.contains(fileTable)) {
+				filesDevicePlaylist.remove(fileTable);
+				fileTable.setStatus(DbConnJaMuz.SyncStatus.NEW);
+			} else {
+				fileTable.setStatus(DbConnJaMuz.SyncStatus.INFO);
+			}
+			filesToInsertOrUpdate.add(fileTable);
+			callback.addRow(fileTable.getRelativeFullPath(), 1); //NOI18N
+			progressBar.progress(fileTable.getTitle());
 			callback.refresh();
 		}
-		jsonAsMap.put("files", filesToGet);		
-		callback.enableButton(false);
-		progressBar.setIndeterminate("Saving list ..."); //NOI18N
-		callback.refresh();
-		String json = JSONValue.toJSONString(jsonAsMap);
-		File file = Jamuz.getFile(login, "data", "devices");
-		try {
-			File folder = new File(FilenameUtils.getFullPath(file.getAbsolutePath()));
-			if(!folder.exists()) {
-				FileUtils.forceMkdir(folder);
-			}
-			LogText logText = new LogText(folder.getAbsolutePath());
-			if(logText.createFile(login)) {
-				logText.add(json);
-				logText.close();
-				return true;
-			}
-		} catch (IOException ex) {
-			Logger.getLogger(ProcessSync.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		return false;
+		filesToInsertOrUpdate.addAll(filesDevicePlaylist);
+		Jamuz.getDb().insertOrUpdateDeviceFiles(filesToInsertOrUpdate, device.getId());	
+		return true;
 	}
 	
 	private boolean syncFS() throws InterruptedException {

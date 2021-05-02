@@ -112,7 +112,7 @@ public class Client {
 				reception = new Reception(bufferedReader, callback, Client.this);
 				reception.start();
 				info = new ClientInfo(login+"-"+appId, password, rootPath);
-				info.setConnected(newCanal, true);
+				info.setConnected(true);
 				canal = newCanal;
 				callback.connected(Client.this);
 			} catch (IOException | ParseException ex) {

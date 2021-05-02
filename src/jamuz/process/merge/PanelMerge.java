@@ -21,7 +21,6 @@ import jamuz.gui.swing.CheckBoxListItem;
 import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
-import jamuz.gui.PanelMain;
 import jamuz.gui.PanelOptions;
 import java.util.ArrayList;
 import java.util.List;
