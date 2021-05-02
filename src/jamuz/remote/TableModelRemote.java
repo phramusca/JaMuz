@@ -45,8 +45,6 @@ public class TableModelRemote extends TableModelGeneric {
 		// -use "Status" & "Progress" columns accordingly
         this.setColumnNames(new String [] {
             "Remote",
-			"Sync",
-			"Down",
 			"Name",
 			"Status",
 			"Progress"
@@ -58,12 +56,10 @@ public class TableModelRemote extends TableModelGeneric {
     public Object getValueAt(int rowIndex, int columnIndex) {
 		ClientInfo clientInfo = (new ArrayList<>(clients.values())).get(rowIndex);
         switch (columnIndex) {
-            case 0: return clientInfo.isConnected(ClientCanal.REMOTE);
-			case 1: return clientInfo.isConnected(ClientCanal.SYNC);
-			case 2: return clientInfo.getNumberOfConnectedDownloads();
-			case 3: return clientInfo.getName();
-			case 4: return clientInfo.getStatus();
-			case 5: return clientInfo.getProgressBar();
+            case 0: return clientInfo.isConnected();
+			case 1: return clientInfo.getName();
+			case 2: return clientInfo.getStatus();
+			case 3: return clientInfo.getProgressBar();
 		}
         return null;
     }

@@ -17,11 +17,11 @@
 package jamuz.remote;
 
 import express.Express;
+import express.utils.Status;
+import jamuz.DbConnJaMuz;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.gui.PanelMain;
-import jamuz.process.check.FolderInfo;
 import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.merge.StatSource;
@@ -29,8 +29,9 @@ import jamuz.process.sync.Device;
 import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +39,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -81,20 +84,33 @@ public class Server {
 	 */
 	public boolean connect() {
 		try {
-            //TODO: Secure connexion
+            //TODO: Secure connections
             //http://www.java2s.com/Code/Java/Network-Protocol/SecureCommunicationwithJSSE.htm
-            
+
+			//Socket connection, for the remote
 			//Create the server socket
 			serverSocket = new ServerSocket(port);
-
 			//Start login handling thread
 			handleLogin = new HandleLogin(serverSocket);
 			handleLogin.start();
 			
-			//Start REST Server, currently only for file downloads
-			//FIXME: Move all sync exchanges from socket to Express app
+			//Start REST Server Express, for Sync process
 			app = new Express();
+
+			app.get("/version", (req, res) -> {
+				String login=req.getHeader("login").get(0);
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
+				res.send("1");
+			});
+								
 			app.get("/download", (req, res) -> {
+				String login=req.getHeader("login").get(0);
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
+				Device device = tableModel.getClient(login).getDevice();
 				int idFile = Integer.valueOf(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
 				File file = fileInfoInt.getFullPath();
@@ -103,9 +119,155 @@ public class Server {
 					System.out.println("Sending"+msg);
 					res.sendAttachment(file.toPath());
 					System.out.println("Sent"+msg);
+					ArrayList<FileInfoInt> insert = new ArrayList<FileInfoInt>();
+					insert.add(fileInfoInt);
+					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
 				}				
 			});
-			app.listen(port+1); //Temp using port+1. Use port once all moved to Express
+			
+			app.get("/tags", (req, res) -> {
+				String login=req.getHeader("login").get(0);	
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
+				setStatus(login, "Sending tags");
+				JSONArray list = new JSONArray();
+				for(String tag : Jamuz.getTags()) {
+					list.add(tag);
+				}
+				JSONObject obj = new JSONObject();
+				obj.put("type", "tags");
+				obj.put("tags", list);
+				res.send(obj.toJSONString());
+			});
+			
+			app.get("/genres", (req, res) -> {
+				String login=req.getHeader("login").get(0);	
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
+				setStatus(login, "Sending genres");
+				JSONArray list = new JSONArray();
+				for(String genre : Jamuz.getGenres()) {
+					list.add(genre);
+				}
+				JSONObject obj = new JSONObject();
+				obj.put("type", "genres");
+				obj.put("genres", list);
+				res.send(obj.toJSONString());
+			});
+	
+			
+			//Merge statistics
+			app.post("/files", (req, res) -> {
+				try {
+					String login=req.getHeader("login").get(0);
+					if(!validateLogin(login)) {
+						res.sendStatus(Status._401);
+					}
+					String body = getBody(req.getBody());
+					JSONObject jsonObject = (JSONObject) new JSONParser().parse(body);
+					
+					setStatus(login, "Received files to merge");
+					ArrayList<FileInfo> newTracks = new ArrayList<>();				
+					JSONArray files = (JSONArray) jsonObject.get("files");
+					for(int i=0; i<files.size(); i++) {
+						JSONObject obj = (JSONObject) files.get(i);
+						FileInfo file = new FileInfo(login, obj);
+						newTracks.add(file);
+					}
+					List<StatSource> sources = new ArrayList();
+					sources.add(tableModel.getClient(login).getStatSource());
+					setStatus(login, "Starting merge");
+					new ProcessMerge("Thread.Server.ProcessMerge."+login,
+							sources, false, false, newTracks,
+							tableModel.getClient(login).getProgressBar(),
+							new ICallBackMerge() {
+								@Override
+								public void completed(ArrayList<FileInfo> errorList, ArrayList<FileInfo> mergeListDbSelected, String popupMsg, String mergeReport) {
+									Jamuz.getLogger().info(popupMsg);
+									setStatus(login, popupMsg);
+									JSONObject obj = new JSONObject();
+									obj.put("type", "mergeListDbSelected");
+									JSONArray jsonArray = new JSONArray();
+									for (int i=0; i < mergeListDbSelected.size(); i++) {
+										jsonArray.add(mergeListDbSelected.get(i).toMap());
+									}
+									obj.put("files", jsonArray);
+									res.send(obj.toJSONString());
+								}
+
+								@Override
+								public void refresh() {
+									tableModel.fireTableDataChanged();
+								}
+					}).start();
+				} catch (IOException | ParseException ex) {
+					Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+					res.sendStatus(Status._500); //FIXME: Return proper error
+				}
+			});
+			
+			app.get("/files/new", (req, res) -> {
+				String login=req.getHeader("login").get(0);
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
+				Device device = tableModel.getClient(login).getDevice();
+				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
+				String limit="";
+				if(!getCount) {
+					int idFrom = Integer.valueOf(req.getQuery("idFrom"));
+					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
+					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
+				}
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated ")
+				+ " FROM file F "
+				+ " JOIN deviceFile DF ON DF.idFile=F.idFile "
+				+ " JOIN path P ON F.idPath=P.idPath "
+				+ " WHERE F.deleted=0 AND P.deleted=0 "
+				+ " AND DF.idDevice="+device.getId()+" AND DF.status=\""+DbConnJaMuz.SyncStatus.NEW+"\""
+				+ " ORDER BY F.idFile "
+				+ limit;
+				setStatus(login, "Sending "+(getCount?"count":"list") + " of NEW files ("+limit+")");
+				if(getCount) {
+					res.send(Jamuz.getDb().getFilesCount(sql).toString());
+				} else {
+					res.send(getFiles(sql));
+				}
+				setStatus(login, "Sent "+(getCount?"count":"list") + " of NEW files ("+limit+")");
+			});
+			
+			app.get("/files/info", (req, res) -> {
+				String login=req.getHeader("login").get(0);
+				if(!validateLogin(login)) {
+					res.sendStatus(Status._401);
+				}
+				Device device = tableModel.getClient(login).getDevice();
+				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
+				String limit="";
+				if(!getCount) {
+					int idFrom = Integer.valueOf(req.getQuery("idFrom"));
+					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
+					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
+				}
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" 'INFO' AS status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated ")
+				+ " FROM file F "
+				+ " JOIN path P ON F.idPath=P.idPath "
+				+ " WHERE F.deleted=0 AND P.deleted=0 "
+				+ " AND F.idFile NOT IN (SELECT idFile FROM deviceFile WHERE idDevice="+device.getId()+" AND status=\""+DbConnJaMuz.SyncStatus.NEW+"\") "
+				+ " ORDER BY F.idFile "
+				+ limit;
+				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files ("+limit+")");
+				if(getCount) {
+					res.send(Jamuz.getDb().getFilesCount(sql).toString());
+				} else {
+					res.send(getFiles(sql));
+				}
+				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files ("+limit+")");
+			});
+			
+			app.listen(port+1); // port is already used by remote
 			
 			return true;
 		} catch (IOException ex) {
@@ -113,7 +275,38 @@ public class Server {
 			return false;
 		}
 	}
+	
+	private String getFiles(String sql) {
+		//DbConnJaMuz.SyncStatus status = DbConnJaMuz.SyncStatus.valueOf(req.getQuery("status"));
+		ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
+		Jamuz.getDb().getFiles(filesToSend, sql);
+		Map jsonAsMap = new HashMap();
+		JSONArray jSONArray = new JSONArray();
+		for (FileInfoInt fileInfo : filesToSend) {
+			fileInfo.getTags();
+			jSONArray.add(fileInfo.toMap());
+		}
+		jsonAsMap.put("files", jSONArray);		
+		return JSONValue.toJSONString(jsonAsMap);
+	}
+	
+	private boolean validateLogin(String login) {
+		return tableModel.contains(login) && tableModel.getClient(login).isEnabled();
+//		if(tableModel.contains(login)) {
+//			if(tableModel.getClient(login).isEnabled()) {
+//				return true;
+//			}
+//		}
+//		return false;
+	}
 
+	private String getBody(InputStream stream) throws IOException {
+		//read body
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(stream, writer, StandardCharsets.UTF_8.name());
+		return writer.toString();
+	}
+	
 	public void setPort(int port) {
 		this.port = port;
 	}
@@ -172,54 +365,7 @@ public class Server {
         @Override
         public void received(String clientId, String login, String msg) {
             if(clientMap.containsKey(clientId)) {
-				if(msg.startsWith("JSON_")) {
-					String json = msg.substring(5);
-					JSONObject jsonObject;
-					try {
-						jsonObject = (JSONObject) new JSONParser().parse(json);
-						String type = (String) jsonObject.get("type");
-						int idFile;
-						switch(type) {
-							case "requestTags":
-								setStatus(login, "Sending tags");
-								sendTags(clientId);
-								break;
-							case "requestGenres":
-								setStatus(login, "Sending genres");
-								sendGenres(clientId);
-								break;
-							case "requestNewFiles":
-								sendFilesToGet(login, clientId);
-								break;
-							case "requestFile":
-								idFile = (int) (long) jsonObject.get("idFile");
-								sendFile(clientId, login, idFile);
-								break;
-							case "FilesToMerge":
-								setStatus(login, "Received files to merge");
-								ArrayList<FileInfo> newTracks = new ArrayList<>();
-								JSONArray files = (JSONArray) jsonObject.get("files");
-								for(int i=0; i<files.size(); i++) {
-									JSONObject obj = (JSONObject) files.get(i);
-									FileInfo file = new FileInfo(login, obj);
-									newTracks.add(file);
-								}
-								List<StatSource> sources = new ArrayList();
-								sources.add(tableModel.getClient(login).getStatSource());
-								setStatus(login, "Starting merge");
-								new ProcessMerge("Thread.Server.ProcessMerge."+clientId, 
-									sources, false, false, newTracks, 
-										tableModel.getClient(login).getProgressBar(), 
-										new CallBackMerge(login))
-								.start();
-								break;
-						}
-					} catch (ParseException ex) {
-						Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
-					}				
-				} else {
-					callback.received(clientId, msg);
-				}
+				callback.received(clientId, msg);
             }
         }
 		
@@ -265,15 +411,8 @@ public class Server {
 				ClientInfo clientInfoModel = tableModel.getClient(client.getInfo().getLogin());
 				clientMap.put(client.getClientId(), client);
 				client.send("MSG_CONNECTED");
-				for(Map.Entry<Integer, Boolean> entry : client.getInfo().getCanals().entrySet()) {
-					if(entry.getValue()) {
-						clientInfoModel.setConnected(entry.getKey(), true);
-					}
-				}
-				if(client.getInfo().isConnected(ClientCanal.SYNC)) {
-					clientInfoModel.setStatus("Connected");
-				}
-				if(client.getInfo().isConnected(ClientCanal.REMOTE)) {
+				if(client.getInfo().isConnected()) {
+					clientInfoModel.setConnected(true);
 					callback.connectedRemote(client.getClientId());
 				}
             } else {
@@ -291,39 +430,11 @@ public class Server {
 			}
 			if(tableModel.contains(clientInfo.getLogin())) {
 				ClientInfo clientInfoModel = tableModel.getClient(clientInfo.getLogin());
-				for(Map.Entry<Integer, Boolean> entry : clientInfo.getCanals().entrySet()) {
-					if(entry.getValue()) {
-						clientInfoModel.setConnected(entry.getKey(), false);
-					}
-				}
-				if(clientInfo.isConnected(ClientCanal.SYNC)) {
-					clientInfoModel.setStatus("Disconnected");
-				}
+				clientInfoModel.setConnected(false);
 				tableModel.fireTableDataChanged();
 			} 
 		}
     }
-	
-	class CallBackMerge implements ICallBackMerge {
-		private final String login;
-
-		public CallBackMerge(String login) {
-			this.login = login;
-		}
-		
-		@Override
-		public void completed(ArrayList<FileInfo> errorList, 
-				ArrayList<FileInfo> completedList, String popupMsg, 
-				String mergeReport) {
-            Jamuz.getLogger().info(popupMsg);
-			setStatus(login, popupMsg);
-		}
-
-		@Override
-		public void refresh() {
-			tableModel.fireTableDataChanged();
-		}
-	}
 	
 	private void setStatus(String login, String status) {
 		if(tableModel.contains(login)) {
@@ -335,7 +446,7 @@ public class Server {
 	
 	private Map<String, Client> getRemoteClients() {
 		return clientMap.entrySet().stream()
-			.filter((client) -> client.getValue().getInfo().isConnected(ClientCanal.REMOTE))
+			.filter((client) -> client.getValue().getInfo().isConnected())
 			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 	}
 	
@@ -372,79 +483,6 @@ public class Server {
 		return true;
 	}
     
-	private void sendFilesToGet(String login, String clientId) {
-		File file = Jamuz.getFile(login, "data", "devices");
-		if(file.exists()) {
-			try {
-				Device device = tableModel.getClient(login).getDevice();
-				if(device!=null) {
-					setStatus(login, "Delete in deviceFile table ...");
-					Jamuz.getDb().deleteDeviceFiles(device.getId());
-					setStatus(login, "Inserting into device file list");
-					String json = new String(Files.readAllBytes(file.toPath()));
-					JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
-					JSONArray idFiles = (JSONArray) jsonObject.get("files");
-					FileInfoInt fileInfoInt;
-					JSONObject fileObject;
-					ArrayList<FileInfoInt> toInsertInDeviceFiles = new ArrayList<>();
-					for(int i=0; i<idFiles.size(); i++) {
-						fileObject = (JSONObject)idFiles.get(i);
-						String relativeFullPath = (String) fileObject.get("path");
-						int playCounter = (int)(long) fileObject.get("playCounter");
-						fileInfoInt = new FileInfoInt((int)(long)fileObject.get("idFile"), 
-								-1, FilenameUtils.getPath(relativeFullPath), 
-								FilenameUtils.getName(relativeFullPath), -1, "", "", -1, -1, 
-								"", "", "", "", -1, -1, "", -1, "", -1, -1, "", playCounter, -1, 
-								"", "", "", false, "", FolderInfo.CheckedFlag.UNCHECKED, FolderInfo.CopyRight.UNDEFINED, -1, -1, "");
-						toInsertInDeviceFiles.add(fileInfoInt);
-					}
-					ArrayList<FileInfoInt> inserted= Jamuz.getDb().
-							insertDeviceFiles(toInsertInDeviceFiles, device.getId());
-					StatSource source = tableModel.getClient(login).getStatSource();
-					if(source==null || !Jamuz.getDb()
-							.setPreviousPlayCounter(inserted, source.getId())) {
-						//FIXME { Manage potential error => Send STOP to remote with error msg }
-					}
-					setStatus(login, "Sending new list of files to retrieve");
-					send(clientId, "JSON_"+json);
-					file.delete();
-				} else {
-					setStatus(login, "Should not happen (idDevice not found) or you're stuck");
-				}
-			} catch (IOException ex) {
-				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-			} catch (ParseException ex) {
-				Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		} else {
-			setStatus(login, "Sync will start soon");
-			JSONObject obj = new JSONObject();
-			obj.put("type", "StartSync");
-			send(clientId, obj);
-		}
-	}
-
-	private void sendGenres(String clientId) {
-		JSONArray list = new JSONArray();
-		for(String genre : Jamuz.getGenres()) {
-			list.add(genre);
-		}
-		JSONObject obj = new JSONObject();
-		obj.put("type", "genres");
-		obj.put("genres", list);
-		send(clientId, obj);
-	}
-
-	private void sendTags(String clientId) {
-		JSONArray list = new JSONArray();
-		for(String tag : Jamuz.getTags()) {
-			list.add(tag);
-		}
-		JSONObject obj = new JSONObject();
-		obj.put("type", "tags");
-		obj.put("tags", list);
-		send(clientId, obj);
-	}
 	
 	/**
      * Sends a message to all remote clients
