@@ -119,7 +119,8 @@ public class Server {
 					System.out.println("Sending"+msg);
 					res.sendAttachment(file.toPath());
 					System.out.println("Sent"+msg);
-					ArrayList<FileInfoInt> insert = new ArrayList<FileInfoInt>();
+					ArrayList<FileInfoInt> insert = new ArrayList<>();
+					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
 					insert.add(fileInfoInt);
 					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
 				}				
