@@ -20,7 +20,9 @@ import com.beaglebuddy.ape.APETag;
 import com.beaglebuddy.mp3.MP3;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -93,6 +95,13 @@ public class ReplayGain {
 
 		public float getTrackGain() {
 			return trackGain;
+		}
+		
+		public Map toMap() {
+			Map jsonAsMap = new HashMap();
+			jsonAsMap.put("albumGain", albumGain);
+			jsonAsMap.put("trackGain", trackGain);
+			return jsonAsMap;
 		}
 	}
 	
