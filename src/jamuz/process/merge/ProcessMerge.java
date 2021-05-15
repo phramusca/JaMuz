@@ -752,7 +752,7 @@ public class ProcessMerge extends ProcessAbstract {
 			fileNew.setRelativePath(fileSelectedDb.getRelativePath());
 			fileNew.setFilename(fileSelectedDb.getFilename()); //This is not really usefull, though
 			
-			//FIXME: Seems that there is a problem when a file changed its name (ex: from mp3 to flac)
+			//FIXME !! 0.5.0 Seems that there is a problem when a file changed its name (ex: from mp3 to flac)
 			//=> To be tested.
 			// Note that path/filename is updated on remote after merge
 			

@@ -179,7 +179,7 @@ public class FileInfoInt extends FileInfo {
      */
     private CheckedFlag checkedFlag = CheckedFlag.UNCHECKED;
 
-	//FIXME: Set those 2 new fields, from database
+	//FIXME !! 0.5.0 Set those 2 new fields, from database
 	protected Date pathModifDate=new Date();
 	protected String pathMbid;
 	
@@ -215,7 +215,7 @@ public class FileInfoInt extends FileInfo {
 	 * File format
 	 */
 	private String format="";  //NOI18N
-//FIXME: Allow convert flac (and other formats) to mp3, as a sync option by device
+	//FIXME !! 0.5.0 Allow convert flac (and other formats) to mp3, as a sync option by device
 	/**
 	 *
 	 * @return
