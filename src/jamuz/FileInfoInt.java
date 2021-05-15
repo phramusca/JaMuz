@@ -185,6 +185,10 @@ public class FileInfoInt extends FileInfo {
      */
     private CheckedFlag checkedFlag = CheckedFlag.UNCHECKED;
 
+	//FIXME: Set those 2 new fields, from database
+	protected Date pathModifDate=new Date();
+	protected String pathMbid;
+	
 	/**
 	 *
 	 * @return
@@ -217,7 +221,7 @@ public class FileInfoInt extends FileInfo {
 	 * File format
 	 */
 	private String format="";  //NOI18N
-
+//FIXME: Allow convert flac (and other formats) to mp3, as a sync option by device
 	/**
 	 *
 	 * @return
@@ -424,16 +428,17 @@ public class FileInfoInt extends FileInfo {
 		this.idFile=idFile;
 		this.idPath = idPath;
 		this.rootPath=rootPath;
-		
-		//Set File (tags) Info
+		this.deleted = deleted;
+		//Set File info
 		this.length=length;
 		this.lengthDisplay=String.valueOf(this.length);
 		this.format=format;
 		this.bitRate=bitRate;
+		this.modifDate=DateTime.parseSqlUtc(modifDate); 
 		this.size=size;
 		this.sizeDisplay=String.valueOf(this.size);
-		//Set tags
 		this.BPM = BPM;
+		//Set file metadata
 		this.album=album;
 		this.albumArtist=albumArtist;
 		this.artist=artist;
@@ -447,25 +452,22 @@ public class FileInfoInt extends FileInfo {
 		this.trackNo=trackNo;
 		this.trackTotal=trackTotal;
 		this.year=year;
-		
 		//Set statistics
 		this.playCounter=playCounter;
 		this.rating=rating;
 		this.addedDate=DateTime.parseSqlUtc(addedDate);
 		this.lastPlayed=DateTime.parseSqlUtc(lastPlayed);
-
-		this.modifDate=DateTime.parseSqlUtc(modifDate); 
-		this.deleted = deleted;
-		this.checkedFlag = checkedFlag;
 		//NOT needed here:
 //		this.sourceName
 //		this.hash
 //		this.index
+
+		//From path table
+		this.checkedFlag = checkedFlag;
         this.copyRight = copyRight;
         this.albumRating = albumRating;
         this.percentRated = percentRated;
 		this.status = status;
-	
 	}
 	
 	/**
@@ -1388,6 +1390,25 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("artist", artist);
 		jsonAsMap.put("title", title);
 		jsonAsMap.put("status", status.name());
+		jsonAsMap.put("idPath", idPath);
+		jsonAsMap.put("albumArtist", albumArtist);
+		jsonAsMap.put("bitRate", bitRate);
+		jsonAsMap.put("comment", comment);
+		jsonAsMap.put("discNo", discNo);
+		jsonAsMap.put("discTotal", discTotal);
+		jsonAsMap.put("format", format);
+		jsonAsMap.put("lyrics", lyrics);
+		jsonAsMap.put("trackNo", trackNo);
+		jsonAsMap.put("trackTotal", trackTotal);
+		jsonAsMap.put("year", year);
+		jsonAsMap.put("BPM", BPM);
+		jsonAsMap.put("checkedFlag", checkedFlag.name());
+		jsonAsMap.put("copyRight", copyRight.name());
+		jsonAsMap.put("coverHash", coverHash);
+		jsonAsMap.put("modifDate", DateTime.formatUTCtoSqlUTC(modifDate));	
+		jsonAsMap.put("replaygain", replaygain.toMap());
+		jsonAsMap.put("pathModifDate", DateTime.formatUTCtoSqlUTC(pathModifDate));	
+		jsonAsMap.put("pathMbid", pathMbid);			
 		return jsonAsMap;
 	}
 	

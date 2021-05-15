@@ -387,7 +387,7 @@ public class FolderInfo implements java.lang.Comparable {
 	 * @return
 	 */
 	public boolean insertInDb(CheckedFlag checkedFlag) {
-		int [] key = new int[1]; //Hint: Using a int table a cannot pass a simple integer by reference
+		int [] key = new int[1]; //Hint: Using a int table as cannot pass a simple integer by reference
 		boolean result = Jamuz.getDb().insertPath(relativePath, modifDate, checkedFlag, mbId, key);
 		idPath=key[0]; //Get insertion key
 		return result;

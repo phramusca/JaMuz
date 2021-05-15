@@ -694,7 +694,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		jsonAsMap.put("lastPlayed", getFormattedLastPlayed());
 		jsonAsMap.put("playCounter", playCounter);
 		jsonAsMap.put("genre", genre);
-
 		JSONArray tagsAsMap = new JSONArray();
 		readTags().stream().forEach((tag) -> {
 			tagsAsMap.add(tag);
@@ -702,8 +701,11 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		jsonAsMap.put("tags", tagsAsMap);
 		jsonAsMap.put("size", -1);
 		jsonAsMap.put("length", -1);
+		jsonAsMap.put("deleted", deleted);
+		jsonAsMap.put("genreModifDate", DateTime.formatUTCtoSqlUTC(genreModifDate));
+		jsonAsMap.put("previousPlayCounter", previousPlayCounter);
+		jsonAsMap.put("ratingModifDate", DateTime.formatUTCtoSqlUTC(ratingModifDate));
+		jsonAsMap.put("tagsModifDate", DateTime.formatUTCtoSqlUTC(tagsModifDate));
 		return jsonAsMap;
 	}
-	
-	
 }
