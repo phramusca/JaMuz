@@ -699,8 +699,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 			tagsAsMap.add(tag);
 		});
 		jsonAsMap.put("tags", tagsAsMap);
-		jsonAsMap.put("size", -1);
-		jsonAsMap.put("length", -1);
 		jsonAsMap.put("deleted", deleted);
 		jsonAsMap.put("genreModifDate", DateTime.formatUTCtoSqlUTC(genreModifDate));
 		jsonAsMap.put("previousPlayCounter", previousPlayCounter);
