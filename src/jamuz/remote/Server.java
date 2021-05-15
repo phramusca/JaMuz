@@ -96,19 +96,28 @@ public class Server {
 			//Start REST Server Express, for Sync process
 			app = new Express();
 
-			app.get("/version", (req, res) -> {
+			app.use((req, res) -> {
 				String login=req.getHeader("login").get(0);
 				if(!validateLogin(login)) {
 					res.sendStatus(Status._401);
 				}
-				res.send("1");
+				String apiVersion=req.getHeader("api-version").get(0);
+				if(!apiVersion.equals("1.0")) {
+					res.setStatus(Status._301); // 301 Moved Permanently
+					JSONArray list = new JSONArray();
+					list.add("1.0");
+					JSONObject obj = new JSONObject();
+					obj.put("supported-versions", list);
+					res.send(obj.toJSONString());
+				}
+			});
+			
+			app.get("/connect", (req, res) -> {
+				res.sendStatus(Status._200);
 			});
 								
 			app.get("/download", (req, res) -> {
 				String login=req.getHeader("login").get(0);
-				if(!validateLogin(login)) {
-					res.sendStatus(Status._401);
-				}
 				Device device = tableModel.getClient(login).getDevice();
 				int idFile = Integer.valueOf(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
@@ -127,9 +136,6 @@ public class Server {
 			
 			app.get("/tags", (req, res) -> {
 				String login=req.getHeader("login").get(0);	
-				if(!validateLogin(login)) {
-					res.sendStatus(Status._401);
-				}
 				setStatus(login, "Sending tags");
 				JSONArray list = new JSONArray();
 				for(String tag : Jamuz.getTags()) {
@@ -142,10 +148,7 @@ public class Server {
 			});
 			
 			app.get("/genres", (req, res) -> {
-				String login=req.getHeader("login").get(0);	
-				if(!validateLogin(login)) {
-					res.sendStatus(Status._401);
-				}
+				String login=req.getHeader("login").get(0);
 				setStatus(login, "Sending genres");
 				JSONArray list = new JSONArray();
 				for(String genre : Jamuz.getGenres()) {
@@ -162,9 +165,6 @@ public class Server {
 			app.post("/files", (req, res) -> {
 				try {
 					String login=req.getHeader("login").get(0);
-					if(!validateLogin(login)) {
-						res.sendStatus(Status._401);
-					}
 					String body = getBody(req.getBody());
 					JSONObject jsonObject = (JSONObject) new JSONParser().parse(body);
 					
@@ -210,9 +210,6 @@ public class Server {
 			
 			app.get("/files/new", (req, res) -> {
 				String login=req.getHeader("login").get(0);
-				if(!validateLogin(login)) {
-					res.sendStatus(Status._401);
-				}
 				Device device = tableModel.getClient(login).getDevice();
 				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
 				String limit="";
@@ -240,9 +237,6 @@ public class Server {
 			
 			app.get("/files/info", (req, res) -> {
 				String login=req.getHeader("login").get(0);
-				if(!validateLogin(login)) {
-					res.sendStatus(Status._401);
-				}
 				Device device = tableModel.getClient(login).getDevice();
 				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
 				String limit="";
