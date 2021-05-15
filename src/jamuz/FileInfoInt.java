@@ -80,29 +80,23 @@ import org.json.simple.JSONValue;
 public class FileInfoInt extends FileInfo {
 //Tag information
 	//TODO: Eventually support some more tags
+	
 	/**
 	 * Artist name
 	 */
 	protected String artist="";  //NOI18N
+	
 	/**
 	 * Album name
 	 */
 	protected String album="";  //NOI18N
-    
+	
 	/**
 	 * Album Artist name
 	 */
 	protected String albumArtist="";  //NOI18N
-	/**
-	 * Song title
-	 */
 	protected String title="";  //NOI18N
-    
-	/**
-	 * Song trackGain #
-	 */
-	protected int trackNo=-1;
-	
+	protected int trackNo=-1;	
 	protected SyncStatus status;
 
 	public void setStatus(SyncStatus status) {
@@ -1027,7 +1021,7 @@ public class FileInfoInt extends FileInfo {
 	}
 
     /**
-    * Return trackGain number in "xx/yy" format
+    * Return track number in "xx/yy" format
     * @return
     */
     public String getTrackNoFull() {
