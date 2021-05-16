@@ -26,6 +26,7 @@ import jamuz.Jamuz;
 import jamuz.gui.swing.ListElement;
 import jamuz.Main;
 import jamuz.Playlist;
+import static jamuz.gui.DialogTag.getHighlightedTags;
 import jamuz.gui.swing.ComboBoxRenderer;
 import jamuz.utils.OS;
 import jamuz.utils.Popup;
@@ -236,6 +237,17 @@ public class PanelMain extends javax.swing.JFrame {
 			}
 			else if(msg.startsWith("setGenre")) {
 				setGenre(msg.substring("setGenre".length()));
+			}
+			else if(msg.startsWith("toggleTag")) {
+				if(displayedFile.isFromLibrary()) {
+					String tag = msg.substring("toggleTag".length());
+					displayedFile.toggleTag(tag);
+					ArrayList<FileInfoInt> temp = new ArrayList<>();
+					temp.add(displayedFile);
+					Jamuz.getDb().setTags(temp, null);
+					displayTags();
+					PanelRemote.send(displayedFile);
+				}
 			}
 			else {
 				switch(msg) { 
@@ -1617,12 +1629,9 @@ public class PanelMain extends javax.swing.JFrame {
 //                jButtonDisplayCurrent.setForeground(Color.red);
                 jSliderPlayerLength.setEnabled(false);
             }
-            StringBuilder builder = new StringBuilder();
+            
 			displayedFile.readTags(); //In case of merge change
-            for(String tag : displayedFile.getTags()) {
-                builder.append(tag).append(" ");
-            }
-            jLabelTags.setText(toHTML(builder.toString()));
+            displayTags();
             
             jLabelPlayerTitle.setText(toHTML(fileInfo.getTitle()));
             jLabelPlayerAlbum.setText(toHTML(fileInfo.getAlbum()));
@@ -1650,6 +1659,14 @@ public class PanelMain extends javax.swing.JFrame {
             Popup.error(ex);
         }
     }
+	
+	static void displayTags() {
+		StringBuilder builder = new StringBuilder();
+		for(String tag : displayedFile.getTags()) {
+			builder.append(tag).append(" ");
+		}
+		jLabelTags.setText(toHTML(builder.toString()));
+	}
 
     private static long startTime=System.currentTimeMillis();
     private static void sendPosition(int currentPosition) {

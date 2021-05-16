@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import jamuz.gui.swing.WrapLayout;
+import jamuz.remote.PanelRemote;
 import jamuz.utils.Inter;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -252,8 +253,9 @@ public class DialogTag extends javax.swing.JDialog {
 	}
 	
 	private void displayAndDispose() {
-		PanelMain.displayFileInfo();
-        //Close this GUI
+		PanelMain.displayTags();
+		PanelRemote.send(file);
+		//Close this GUI
         this.dispose();
 	}
 	
