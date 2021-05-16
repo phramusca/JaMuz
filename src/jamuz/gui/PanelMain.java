@@ -234,6 +234,9 @@ public class PanelMain extends javax.swing.JFrame {
 			else if(msg.startsWith("setPlaylist")) {
 				setPlaylist(msg.substring("setPlaylist".length()));
 			}
+			else if(msg.startsWith("setGenre")) {
+				setGenre(msg.substring("setGenre".length()));
+			}
 			else {
 				switch(msg) { 
 					//TODO: Say rating as an option 
@@ -494,6 +497,13 @@ public class PanelMain extends javax.swing.JFrame {
 		if(displayedFile.isFromLibrary()) {
             jComboBoxPlayerRating.setSelectedIndex(rating);
             displayedFile.sayRating(sayRated);
+            PanelRemote.send(displayedFile);
+        }
+    }
+	
+	private void setGenre(String genre) {
+		if(displayedFile.isFromLibrary()) {
+			jComboBoxPlayerGenre.setSelectedItem(genre);
             PanelRemote.send(displayedFile);
         }
     }
