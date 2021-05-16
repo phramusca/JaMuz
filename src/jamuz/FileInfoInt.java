@@ -179,8 +179,7 @@ public class FileInfoInt extends FileInfo {
      */
     private CheckedFlag checkedFlag = CheckedFlag.UNCHECKED;
 
-	//FIXME !! 0.5.0 Set those 2 new fields, from database
-	protected Date pathModifDate=new Date();
+	protected Date pathModifDate=new Date(0);
 	protected String pathMbid;
 	
 	/**
@@ -406,6 +405,8 @@ public class FileInfoInt extends FileInfo {
      * @param percentRated  
 	 * @param rootPath  
 	 * @param status  
+	 * @param pathModifDate  
+	 * @param pathMbid  
 	 */
 	public FileInfoInt(int idFile, int idPath, String relativePath, 
 			String filename, int length, String format, String bitRate, 
@@ -416,7 +417,8 @@ public class FileInfoInt extends FileInfo {
 			String addedDate, String lastPlayed, String modifDate, 
 			boolean deleted, String coverHash, CheckedFlag checkedFlag, 
 			FolderInfo.CopyRight copyRight, double albumRating, 
-			int percentRated, String rootPath, SyncStatus status) {
+			int percentRated, String rootPath, SyncStatus status, 
+			String pathModifDate, String pathMbid) {
 		
 		super("file", FilenameUtils.separatorsToSystem(relativePath)+filename);  //NOI18N
         this.fromLibrary=true;
@@ -463,6 +465,8 @@ public class FileInfoInt extends FileInfo {
         this.albumRating = albumRating;
         this.percentRated = percentRated;
 		this.status = status;
+		this.pathModifDate=DateTime.parseSqlUtc(pathModifDate);
+		this.pathMbid=pathMbid;
 	}
 	
 	/**
@@ -1401,7 +1405,7 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("modifDate", DateTime.formatUTCtoSqlUTC(modifDate));	
 		
 		//String lyrics = getLyrics();
-		jsonAsMap.put("lyrics", lyrics);
+		jsonAsMap.put("lyrics", lyrics); //FIXME !!! 0.5.0 : Remove from sync and read value on remote from file metadata as for cover
 		jsonAsMap.put("pathModifDate", DateTime.formatUTCtoSqlUTC(pathModifDate));	
 		jsonAsMap.put("pathMbid", pathMbid);
 		jsonAsMap.put("comment", comment);

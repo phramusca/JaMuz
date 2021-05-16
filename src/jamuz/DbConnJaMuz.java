@@ -2621,7 +2621,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         selAlbum = getSelected(selAlbum);
 
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, "
-				+ "0 AS percentRated, 'INFO' AS status "  //NOI18N
+				+ "0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate, P.mbId AS pathMbId, P.modifDate AS pathModifDate "  //NOI18N
                 + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, 
 						selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
 
@@ -2694,6 +2694,8 @@ public class DbConnJaMuz extends StatSourceSQL {
         double albumRating;
         int percentRated;
 		SyncStatus status;
+		String pathModifDate; 
+		String pathMbid;
         
         myFileInfoList.clear();
         Statement st = null;
@@ -2741,6 +2743,8 @@ public class DbConnJaMuz extends StatSourceSQL {
                 albumRating = rs.getDouble("albumRating");
                 percentRated = rs.getInt("percentRated");
 				status = SyncStatus.valueOf(dbConn.getStringValue(rs, "status", "INFO"));
+				pathModifDate = dbConn.getStringValue(rs, "pathModifDate"); 
+				pathMbid = dbConn.getStringValue(rs, "pathMbid");
 
                 myFileInfoList.add(
                         new FileInfoInt(idFile, idPath, relativePath, filename, 
@@ -2750,7 +2754,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 								year, playCounter, rating, addedDate, 
 								lastPlayed, modifDate, deleted, coverHash, 
 								checkedFlag, copyRight, albumRating, 
-								percentRated, rootPath, status)
+								percentRated, rootPath, status, pathModifDate, pathMbid)
                 );
             }
             return true;
@@ -3010,7 +3014,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean getFiles(ArrayList<FileInfoInt> files, int idPath, 
 			boolean getDeleted) {
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
-				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status "
+				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
 				+ "FROM file F, path P "
                 + "WHERE F.idPath=P.idPath ";    //NOI18N
         if (!getDeleted) {

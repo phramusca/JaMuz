@@ -52,3 +52,11 @@ JaMuz\.xml\.bak
 testenv/Musique/
 
 logs\.bak/
+
+.vscode/settings.json
+
+Prod Remote.session.sql
+
+Test Remote.session.sql
+
+Test.session.sql

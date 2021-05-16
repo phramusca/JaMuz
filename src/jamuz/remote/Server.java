@@ -218,7 +218,7 @@ public class Server {
 					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
 				}
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated ")
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, P.modifDate AS pathModifDate ")
 				+ " FROM file F "
 				+ " JOIN deviceFile DF ON DF.idFile=F.idFile "
 				+ " JOIN path P ON F.idPath=P.idPath "
@@ -245,7 +245,7 @@ public class Server {
 					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
 				}
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" 'INFO' AS status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated ")
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" 'INFO' AS status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, P.modifDate AS pathModifDate ")
 				+ " FROM file F "
 				+ " JOIN path P ON F.idPath=P.idPath "
 				+ " WHERE F.deleted=0 AND P.deleted=0 "

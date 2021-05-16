@@ -421,7 +421,7 @@ public class Playlist implements Comparable {
             
         }
         else {
-            String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, P.albumRating, P.percentRated, 'INFO' AS status "
+            String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, P.albumRating, P.percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
             + "FROM file F " //NOI18N //NOI18N
             + "JOIN (" +
                 "	SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n" +
