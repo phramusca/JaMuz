@@ -310,8 +310,9 @@ public class FileInfoInt extends FileInfo {
         return copyRight;
     }
 
+	//FIXME !!! store lyrics to db and not re-read file tag
 	/**
-	 *
+	 * 
 	 */
 	protected String lyrics="";
     
@@ -1387,11 +1388,9 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("idPath", idPath);
 		jsonAsMap.put("albumArtist", albumArtist);
 		jsonAsMap.put("bitRate", bitRate);
-		jsonAsMap.put("comment", comment);
 		jsonAsMap.put("discNo", discNo);
 		jsonAsMap.put("discTotal", discTotal);
 		jsonAsMap.put("format", format);
-		jsonAsMap.put("lyrics", lyrics);
 		jsonAsMap.put("trackNo", trackNo);
 		jsonAsMap.put("trackTotal", trackTotal);
 		jsonAsMap.put("year", year);
@@ -1400,9 +1399,13 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("copyRight", copyRight.name());
 		jsonAsMap.put("coverHash", coverHash);
 		jsonAsMap.put("modifDate", DateTime.formatUTCtoSqlUTC(modifDate));	
-		jsonAsMap.put("replaygain", replaygain.toMap());
+		
+		//String lyrics = getLyrics();
+		jsonAsMap.put("lyrics", lyrics);
 		jsonAsMap.put("pathModifDate", DateTime.formatUTCtoSqlUTC(pathModifDate));	
-		jsonAsMap.put("pathMbid", pathMbid);			
+		jsonAsMap.put("pathMbid", pathMbid);
+		jsonAsMap.put("comment", comment);
+		jsonAsMap.put("replaygain", replaygain.toMap());
 		return jsonAsMap;
 	}
 	
