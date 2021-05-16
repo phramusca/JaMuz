@@ -82,7 +82,7 @@ public class CompareDB {
         //Getting list of files from databases
         ArrayList<FileInfoInt> filesDb1 = new ArrayList<>();
         ArrayList<FileInfoInt> filesDb2 = new ArrayList<>();
-        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, 'INFO' AS status "
+        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
                 + " FROM file F JOIN path P ON F.idPath=P.idPath ";
         db1.getFiles(filesDb1, sql, "");
         db2.getFiles(filesDb2, sql, "");
