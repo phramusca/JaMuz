@@ -97,7 +97,7 @@ public class FileInfoInt extends FileInfo {
 	protected String albumArtist="";  //NOI18N
 	protected String title="";  //NOI18N
 	protected int trackNo=-1;	
-	protected SyncStatus status;
+	protected SyncStatus status=SyncStatus.INFO;
 
 	public void setStatus(SyncStatus status) {
 		this.status = status;

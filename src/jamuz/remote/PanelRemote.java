@@ -23,6 +23,7 @@ import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.sync.ICallBackSync;
 import jamuz.process.sync.ProcessSync;
+import jamuz.utils.DateTime;
 import jamuz.utils.QRCode;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
@@ -48,7 +49,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  *
@@ -111,15 +114,10 @@ public class PanelRemote extends javax.swing.JPanel {
         column.setMaxWidth(width*3);
     }
 		
-	public static void send(FileInfoInt fileInfo) {    
-        Map jsonAsMap = new HashMap();
+	public static void send(FileInfoInt fileInfo) {		
+		fileInfo.getTags();
+		Map jsonAsMap = fileInfo.toMap();
         jsonAsMap.put("type", "fileInfoInt");
-		jsonAsMap.put("coverHash", fileInfo.getCoverHash());
-        jsonAsMap.put("rating", fileInfo.getRating());
-        jsonAsMap.put("title", fileInfo.getTitle());
-        jsonAsMap.put("album", fileInfo.getAlbum());
-        jsonAsMap.put("artist", fileInfo.getArtist());
-		jsonAsMap.put("genre", fileInfo.getGenre());
         send(jsonAsMap);
     }
 	
