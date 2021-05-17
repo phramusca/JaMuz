@@ -36,6 +36,7 @@ import jamuz.utils.Inter;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -101,8 +102,9 @@ public class PanelCheck extends javax.swing.JPanel {
        
     /**
      * Creates new form PanelCheck
+	 * @param parent
      */
-    public PanelCheck() {
+    public PanelCheck(Frame parent) {
         initComponents();
 		
 		int cores = Runtime.getRuntime().availableProcessors();
@@ -146,7 +148,7 @@ public class PanelCheck extends javax.swing.JPanel {
 			public void addToQueueAction(FolderInfo folder) {
 				addToActionQueue(folder);
 			}
-		}));
+		}, parent));
         
 		//	0:  Folder
 		column = jTableCheck.getColumnModel().getColumn(0);

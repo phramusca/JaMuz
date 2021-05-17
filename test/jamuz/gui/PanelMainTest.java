@@ -266,19 +266,6 @@ public class PanelMainTest {
 	}
 
 	/**
-	 * Test of getDimension method, of class PanelMain.
-	 */
-	@Test
-	public void testGetDimension() {
-		System.out.println("getDimension");
-		Dimension expResult = null;
-		Dimension result = PanelMain.getDimension();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of forward method, of class PanelMain.
 	 */
 	@Test

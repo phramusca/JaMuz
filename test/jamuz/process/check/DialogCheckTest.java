@@ -17,6 +17,14 @@
 package jamuz.process.check;
 
 import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.image.ColorModel;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -57,7 +65,7 @@ public class DialogCheckTest {
 		System.out.println("main");
 		FolderInfo folder = null;
 		ICallBackCheckPanel callback = null;
-		DialogCheck.main(folder, callback);
+		DialogCheck.main(new JFrame(), folder, callback);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
