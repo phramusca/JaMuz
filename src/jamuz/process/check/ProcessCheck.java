@@ -606,7 +606,6 @@ public class ProcessCheck {
          * @param full
          * @param analyze
          * @param progressBarId
-		 * @param recalculateGain
          */
         public DoScan(boolean full, boolean analyze, int progressBarId) {
             super("Thread.ProcessCheck.DoScan.#"+progressBarId);

@@ -134,6 +134,8 @@ CREATE TABLE "file" (
     "tagsModifDate" TEXT NOT NULL  DEFAULT "1970-01-01 00:00:00",
     "genreModifDate" TEXT NOT NULL  DEFAULT "1970-01-01 00:00:00",
     "saved" INTEGER NOT NULL DEFAULT (0),
+	"trackGain" REAL,
+	"albumGain" REAL,
 	FOREIGN KEY(idPath) REFERENCES path(idPath)
 );
 CREATE TABLE "client" (

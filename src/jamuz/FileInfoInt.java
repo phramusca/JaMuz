@@ -407,6 +407,7 @@ public class FileInfoInt extends FileInfo {
 	 * @param status  
 	 * @param pathModifDate  
 	 * @param pathMbid  
+	 * @param replaygain  
 	 */
 	public FileInfoInt(int idFile, int idPath, String relativePath, 
 			String filename, int length, String format, String bitRate, 
@@ -418,7 +419,7 @@ public class FileInfoInt extends FileInfo {
 			boolean deleted, String coverHash, CheckedFlag checkedFlag, 
 			FolderInfo.CopyRight copyRight, double albumRating, 
 			int percentRated, String rootPath, SyncStatus status, 
-			String pathModifDate, String pathMbid) {
+			String pathModifDate, String pathMbid, GainValues replaygain) {
 		
 		super("file", FilenameUtils.separatorsToSystem(relativePath)+filename);  //NOI18N
         this.fromLibrary=true;
@@ -467,6 +468,7 @@ public class FileInfoInt extends FileInfo {
 		this.status = status;
 		this.pathModifDate=DateTime.parseSqlUtc(pathModifDate);
 		this.pathMbid=pathMbid;
+		this.replaygain = replaygain;
 	}
 	
 	/**
