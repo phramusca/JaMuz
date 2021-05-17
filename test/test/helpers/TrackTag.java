@@ -17,9 +17,11 @@
 
 package test.helpers;
 
+import jamuz.DbConnJaMuz;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.process.check.FolderInfo;
+import jamuz.process.check.ReplayGain.GainValues;
 import java.io.IOException;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -27,6 +29,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
+import java.util.Date;
 
 /**
  *
@@ -79,7 +82,8 @@ public class TrackTag extends FileInfoInt {
         super(-1, -1, relativePath, filename, TrackSourceRepo.get(sourceFile).length, TrackSourceRepo.get(sourceFile).format, 
                 TrackSourceRepo.get(sourceFile).bitRate, (int) TrackSourceRepo.get(sourceFile).size, BPM, album, albumArtist, artist, comment, 
                 discNo, discTotal, genre, nbCovers, title, trackNo, trackTotal, year, playCounter, rating, addedDate, lastPlayed, 
-                TrackSourceRepo.get(sourceFile).modifDate, deleted, "", checkedFlag, FolderInfo.CopyRight.UNDEFINED, 0, 0, "");
+                TrackSourceRepo.get(sourceFile).modifDate, deleted, "", checkedFlag, FolderInfo.CopyRight.UNDEFINED, 0, 0, "", DbConnJaMuz.SyncStatus.INFO, 
+				DateTime.formatUTCtoSqlUTC(new Date(0)), "", new GainValues());
 
         oriAddedDate=addedDate;
         oriLastPlayed=lastPlayed;

@@ -108,19 +108,6 @@ public class PanelRemoteTest {
 	}
 
 	/**
-	 * Test of send method, of class PanelRemote.
-	 */
-	@Test
-	public void testSend_String_ArrayList() {
-		System.out.println("send");
-		String clientId = "";
-		ArrayList<FileInfo> mergeListDbSelected = null;
-		PanelRemote.send(clientId, mergeListDbSelected);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of isConnected method, of class PanelRemote.
 	 */
 	@Test

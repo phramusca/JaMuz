@@ -27,6 +27,7 @@ import jamuz.Playlist.Filter;
 import jamuz.Playlist.Operator;
 import jamuz.Playlist.Order;
 import jamuz.process.check.DuplicateInfo;
+import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.remote.ClientInfo;
 import java.io.File;
 import java.sql.PreparedStatement;
@@ -1874,9 +1875,9 @@ public class DbConnJaMuz extends StatSourceSQL {
             PreparedStatement stInsertFileTag = dbConn.connection.prepareStatement("INSERT INTO file (name, idPath, "
                     + "format, title, artist, album, albumArtist, genre, discNo, trackNo, year, comment, "    //NOI18N
                     + "length, bitRate, size, modifDate, trackTotal, discTotal, BPM, nbCovers, "
-                    + "rating, lastPlayed, playCounter, addedDate, deleted, coverHash) "    //NOI18N
+                    + "rating, lastPlayed, playCounter, addedDate, deleted, coverHash, trackGain, albumGain) "    //NOI18N
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-                    + "0, \"1970-01-01 00:00:00\", 0, datetime('now'), 0, ?)");      //NOI18N
+                    + "0, \"1970-01-01 00:00:00\", 0, datetime('now'), 0, ?, ?, ?)");      //NOI18N
             stInsertFileTag.setString(1, fileInfo.getFilename());
             stInsertFileTag.setInt(2, fileInfo.getIdPath());
             stInsertFileTag.setString(3, fileInfo.getFormat());
@@ -1898,6 +1899,9 @@ public class DbConnJaMuz extends StatSourceSQL {
             stInsertFileTag.setFloat(19, fileInfo.getBPM());
             stInsertFileTag.setInt(20, fileInfo.nbCovers);
             stInsertFileTag.setString(21, fileInfo.getCoverHash());
+			GainValues gainValues = fileInfo.getReplayGain(false);
+			stInsertFileTag.setFloat(22, gainValues.getTrackGain());
+			stInsertFileTag.setFloat(23, gainValues.getAlbumGain());
             int nbRowsAffected = stInsertFileTag.executeUpdate();
 
             if (nbRowsAffected == 1) {
@@ -1930,7 +1934,7 @@ public class DbConnJaMuz extends StatSourceSQL {
                     + "trackNo=?, year=?, comment=?, "  //NOI18N
                     + "length=?, bitRate=?, size=?, modifDate=?, trackTotal=?, "
 					+ "discTotal=?, BPM=?, "
-                    + "nbCovers=?, deleted=0, coverHash=? "    //NOI18N
+                    + "nbCovers=?, deleted=0, coverHash=?, trackGain=?, albumGain=? "    //NOI18N
                     + "WHERE idPath=? AND idFile=?");   //NOI18N
             
             
@@ -1953,9 +1957,12 @@ public class DbConnJaMuz extends StatSourceSQL {
             stUpdateFileTag.setFloat(17, fileInfo.getBPM());
             stUpdateFileTag.setInt(18, fileInfo.nbCovers);
             stUpdateFileTag.setString(19, fileInfo.getCoverHash());
+			GainValues gainValues = fileInfo.getReplayGain(false);
+			stUpdateFileTag.setFloat(20, gainValues.getTrackGain());
+			stUpdateFileTag.setFloat(21, gainValues.getAlbumGain());
             //WHERE:
-            stUpdateFileTag.setInt(20, fileInfo.getIdPath());
-            stUpdateFileTag.setInt(21, fileInfo.idFile);
+            stUpdateFileTag.setInt(22, fileInfo.getIdPath());
+            stUpdateFileTag.setInt(23, fileInfo.idFile);
             int nbRowsAffected = stUpdateFileTag.executeUpdate();
             if (nbRowsAffected == 1) {
                 return true;
@@ -2631,7 +2638,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	public FileInfoInt getFile(int idFile) {
 		ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();
         String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
-				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status "
+				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
 				+ "FROM file F, path P "
                 + "WHERE F.idPath=P.idPath AND F.idFile="+idFile;    //NOI18N
         getFiles(myFileInfoList, sql);
@@ -2696,6 +2703,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		SyncStatus status;
 		String pathModifDate; 
 		String pathMbid;
+		GainValues replayGain;
         
         myFileInfoList.clear();
         Statement st = null;
@@ -2745,7 +2753,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 				status = SyncStatus.valueOf(dbConn.getStringValue(rs, "status", "INFO"));
 				pathModifDate = dbConn.getStringValue(rs, "pathModifDate"); 
 				pathMbid = dbConn.getStringValue(rs, "pathMbid");
-
+				replayGain = new GainValues(rs.getFloat("trackGain"), rs.getFloat("albumGain"));
+				
                 myFileInfoList.add(
                         new FileInfoInt(idFile, idPath, relativePath, filename, 
 								length, format, bitRate, size, BPM, album, 
@@ -2754,7 +2763,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 								year, playCounter, rating, addedDate, 
 								lastPlayed, modifDate, deleted, coverHash, 
 								checkedFlag, copyRight, albumRating, 
-								percentRated, rootPath, status, pathModifDate, pathMbid)
+								percentRated, rootPath, status, pathModifDate, 
+								pathMbid, replayGain)
                 );
             }
             return true;
