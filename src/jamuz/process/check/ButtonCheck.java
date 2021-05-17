@@ -20,6 +20,7 @@ package jamuz.process.check;
 import jamuz.process.check.ProcessCheck.Action;
 import java.awt.Color;
 import java.awt.Component;  
+import java.awt.Frame;
 import java.awt.event.ActionEvent;  
 import javax.swing.DefaultCellEditor;  
 import javax.swing.JButton;  
@@ -36,14 +37,16 @@ public class ButtonCheck extends DefaultCellEditor {
     private FolderInfo folder = null;
     private boolean isClicked;
 	private final ICallBackCheckPanel callback;
+	private final Frame parent;
 
     /**
 	 * Create a new button cell editor
 	 * @param callback
 	 */
-	ButtonCheck(ICallBackCheckPanel callback) {
+	ButtonCheck(ICallBackCheckPanel callback, Frame parent) {
         super(new JCheckBox());
         this.callback = callback;
+		this.parent = parent;
 		button = new JButton();
         button.setOpaque(true);
         button.addActionListener((ActionEvent e) -> {
@@ -86,7 +89,7 @@ public class ButtonCheck extends DefaultCellEditor {
     @Override
     public Object getCellEditorValue() {
         if (isClicked) {
-            DialogCheck.main(folder, callback);
+            DialogCheck.main(parent, folder, callback);
         }
         isClicked = false;
         return folder;

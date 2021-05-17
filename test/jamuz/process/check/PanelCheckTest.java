@@ -16,6 +16,7 @@
  */
 package jamuz.process.check;
 
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -79,7 +80,7 @@ public class PanelCheckTest {
 	public void testAddToActionQueue() {
 		System.out.println("addToActionQueue");
 		FolderInfo folder = null;
-		PanelCheck instance = new PanelCheck();
+		PanelCheck instance = new PanelCheck(new JFrame());
 		instance.addToActionQueue(folder);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

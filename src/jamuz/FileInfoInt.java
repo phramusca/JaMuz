@@ -309,13 +309,11 @@ public class FileInfoInt extends FileInfo {
         return copyRight;
     }
 
-	//FIXME !!! store lyrics to db and not re-read file tag
 	/**
 	 * 
 	 */
 	protected String lyrics="";
     
-	
     /**
      * Used to merge BPM
      * @param file
@@ -1407,7 +1405,7 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("modifDate", DateTime.formatUTCtoSqlUTC(modifDate));	
 		
 		//String lyrics = getLyrics();
-		jsonAsMap.put("lyrics", lyrics); //FIXME !!! 0.5.0 : Remove from sync and read value on remote from file metadata as for cover
+		jsonAsMap.put("lyrics", lyrics); //FIXME !! 0.5.0 Remove lyrics from sync and db on both sides => read value on remote from file metadata as for cover
 		jsonAsMap.put("pathModifDate", DateTime.formatUTCtoSqlUTC(pathModifDate));	
 		jsonAsMap.put("pathMbid", pathMbid);
 		jsonAsMap.put("comment", comment);

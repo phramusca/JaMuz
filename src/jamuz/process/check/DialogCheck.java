@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.WrapLayout;
@@ -39,6 +38,7 @@ import jamuz.utils.Swing;
 import jamuz.utils.Utils;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -64,13 +64,14 @@ public final class DialogCheck extends javax.swing.JDialog {
     
     /**
      * Creates new form PanelDialogCheck
-     * @param parent
+	 * @param parent
+	 * @param title
      * @param modal
      * @param folder
 	 * @param callback
      */
-    public DialogCheck(java.awt.Frame parent, boolean modal, FolderInfo folder, ICallBackCheckPanel callback) {
-        super(parent, modal);
+    public DialogCheck(Frame parent, String title, boolean modal, FolderInfo folder, ICallBackCheckPanel callback) {
+        super(parent, title, modal);
         initComponents();
 		this.folder=folder;
 		this.callback = callback;
@@ -91,10 +92,11 @@ public final class DialogCheck extends javax.swing.JDialog {
     }
 
      /**
+	 * @param parent
      * @param folder 
 	 * @param callback 
 	 */
-	public static void main(FolderInfo folder, ICallBackCheckPanel callback) {
+	public static void main(Frame parent, FolderInfo folder, ICallBackCheckPanel callback) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -111,21 +113,13 @@ public final class DialogCheck extends javax.swing.JDialog {
 			Jamuz.getLogger().severe(ex.toString());
 		}
 		//</editor-fold>
-
-        DialogCheck dialog = new DialogCheck(new JFrame(), true, folder, callback);
-		
-		Dimension parentSize = (Dimension) PanelMain.getDimension().clone();
-		
-        //Set dialog size to x% of screen size
+        DialogCheck dialog = new DialogCheck(parent, folder.getRelativePath(), true, folder, callback);
+		Dimension parentSize = (Dimension) parent.getSize().clone();
         parentSize.height = parentSize.height * 85/100;
         parentSize.width = parentSize.width * 95/100;
         dialog.setSize(parentSize);
-        //Center the dialog on screen
-        dialog.setLocationRelativeTo(dialog.getParent());
-        //Change title
-        //TODO: Color in red words not found in match and in green the ones found 
-        dialog.setTitle(folder.getRelativePath());
-        //Display
+		//FIXME !! 0.5.0 !!  DO CENTER AS THIS for all other dialogs (works on multi-screen !! + real parent for modality)  (instead of dialog.setLocationRelativeTo(dialog.getParent());)
+		dialog.setLocationRelativeTo(parent);		
         dialog.setVisible(true);
 	}
     
