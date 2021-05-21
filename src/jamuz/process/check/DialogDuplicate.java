@@ -16,10 +16,9 @@
  */
 package jamuz.process.check;
 
-import jamuz.gui.PanelMain;
 import jamuz.utils.Inter;
+import java.awt.Dialog;
 import java.awt.Dimension;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -40,7 +39,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
 	 * @param duplicateInfo
 	 * @param callback
 	 */
-	public DialogDuplicate(java.awt.Frame parent, boolean modal, 
+	public DialogDuplicate(Dialog parent, boolean modal, 
 			FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackDuplicateDialog callback) {
 		super(parent, modal);
 		initComponents();
@@ -402,7 +401,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCheckDelete1ActionPerformed
 
     private void jButtonReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReplaceActionPerformed
-		DialogDuplicateReplace.main(getSize(), getLocationOnScreen(), folder, duplicateInfo, new ICallBackReplace() {
+		DialogDuplicateReplace.main(this, folder, duplicateInfo, new ICallBackReplace() {
 			@Override
 			public void replaced() {
 				panelDuplicate2.init(duplicateInfo);
@@ -431,12 +430,12 @@ public class DialogDuplicate extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCheckSingleFolder1ActionPerformed
 
 	/**
-	 * @param parentSize
+	 * @param parent
 	 * @param folder
 	 * @param duplicateInfo
 	 * @param callback
 	 */
-	public static void main(Dimension parentSize, FolderInfo folder, 
+	public static void main(Dialog parent, FolderInfo folder, 
 			DuplicateInfo duplicateInfo, ICallBackDuplicateDialog callback) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -456,17 +455,16 @@ public class DialogDuplicate extends javax.swing.JDialog {
 		//</editor-fold>
 		
 		//</editor-fold>
-
-		DialogDuplicate dialog = new DialogDuplicate(new JFrame(), true, folder, 
+	
+		DialogDuplicate dialog = new DialogDuplicate(parent, true, folder, 
 				duplicateInfo, callback);
-				
-        //Set dialog size to x% of parent size
+		Dimension parentSize = (Dimension) parent.getSize().clone();
         parentSize.height = parentSize.height * 85/100;
         parentSize.width = parentSize.width * 95/100;
         dialog.setSize(parentSize);
-        //Center the dialog on screen
-        dialog.setLocationRelativeTo(dialog.getParent());
-        //Display
+		//FIXME !! 0.5.0 !!  DO CENTER AS THIS for all other dialogs (works on multi-screen !! + real parent for modality)  (instead of dialog.setLocationRelativeTo(dialog.getParent());)
+		dialog.setLocationRelativeTo(parent);		
+		
         dialog.setVisible(true);
 	}
 

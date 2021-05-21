@@ -125,7 +125,7 @@ public class ProcessSync extends ProcessAbstract {
 		Playlist playlist = device.getPlaylist();
 		playlist.getFiles(filesDevicePlaylist);
 		
-		//FIXME: Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
+		//FIXME Z Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
 		
 		//GET list of files in deviceFile
 		fileInfoSourceList = new ArrayList<>();

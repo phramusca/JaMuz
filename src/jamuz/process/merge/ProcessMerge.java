@@ -661,7 +661,7 @@ public class ProcessMerge extends ProcessAbstract {
 				}
 			}
 			
-			//FIXME: Do not update files if "Forcer JaMuz" option selected
+			//FIXME Z Do not update files if "Forcer JaMuz" option selected
 			if(!genre.equals("") || BPM>=0) {
 				//TODO: Better use inheritance !!
 				mergeListDbJaMuzFileTags.add(new FileInfoInt(fileJaMuz, 

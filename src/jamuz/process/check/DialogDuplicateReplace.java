@@ -25,12 +25,12 @@ import jamuz.gui.swing.TableValue;
 import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +39,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumn;
 import org.apache.commons.io.FileUtils;
@@ -67,7 +66,7 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 	 * @param duplicateInfo
 	 * @param callback
 	 */
-	public DialogDuplicateReplace(java.awt.Frame parent, boolean modal, 
+	public DialogDuplicateReplace(Dialog parent, boolean modal, 
 			FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackReplace callback) {
 		super(parent, modal);
 		initComponents();
@@ -524,13 +523,12 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 	}
 	
 	/**
-	 * @param parentSize
-	 * @param parentLocation
+	 * @param parent
 	 * @param folder
 	 * @param duplicateInfo
 	 * @param callback
 	 */
-	public static void main(Dimension parentSize, Point parentLocation,
+	public static void main(Dialog parent,
 			FolderInfo folder, DuplicateInfo duplicateInfo, ICallBackReplace callback) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -549,12 +547,14 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 		}
 		//</editor-fold>
 
-		DialogDuplicateReplace dialog = new DialogDuplicateReplace(new JFrame(), true, folder, 
+		DialogDuplicateReplace dialog = new DialogDuplicateReplace(parent, true, folder, 
 				duplicateInfo, callback);
+		Dimension parentSize = parent.getSize();
 		Dimension dimension=new Dimension(
 				parentSize.width * 95/100, 
 				parentSize.height * 95/100/2);
         dialog.setSize(dimension);
+		Point parentLocation = parent.getLocation();
 		dialog.setLocation(
 				parentLocation.x+(parentSize.width-dimension.width)/2, 
 				parentLocation.y+parentSize.height-dimension.height-10);

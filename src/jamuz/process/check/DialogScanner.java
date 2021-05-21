@@ -19,6 +19,7 @@ package jamuz.process.check;
 import jamuz.Jamuz;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Inter;
+import java.awt.Dialog;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -33,7 +34,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -58,7 +58,7 @@ public class DialogScanner extends javax.swing.JDialog {
 	 * @param paths
 	 * @param callback
      */
-    public DialogScanner(java.awt.Frame parent, boolean modal, List<String> paths, ICallBackScanner callback) {
+    public DialogScanner(Dialog parent, boolean modal, List<String> paths, ICallBackScanner callback) {
         super(parent, modal);
         initComponents();
 		this.callback = callback;
@@ -557,11 +557,11 @@ public class DialogScanner extends javax.swing.JDialog {
 	}
 
     /**
-     * @param args the command line arguments
+	 * @param parent
 	 * @param paths
 	 * @param callback
      */
-    public static void main(String args[], List<String> paths, ICallBackScanner callback) {
+    public static void main(Dialog parent, List<String> paths, ICallBackScanner callback) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -579,8 +579,8 @@ public class DialogScanner extends javax.swing.JDialog {
         }
         //</editor-fold>
 
-        DialogScanner dialog = new DialogScanner(new JFrame(), true, paths, callback);
-        dialog.setLocationRelativeTo(dialog.getParent());
+        DialogScanner dialog = new DialogScanner(parent, true, paths, callback);
+        dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
     }
 

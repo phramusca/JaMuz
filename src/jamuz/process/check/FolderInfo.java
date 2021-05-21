@@ -1461,7 +1461,7 @@ public class FolderInfo implements java.lang.Comparable {
         
 		ActionResult result = moveList(filesAudio, ProcessCheck.getDestinationLocation().getValue(), true, 
 				progressBar, MessageFormat.format(
-						Inter.get("Msg.Check.MovingToOK"), //FIXME: Not always to OK now
+						Inter.get("Msg.Check.MovingToOK"), //FIXME Z Not always to OK now
 						ProcessCheck.getDestinationLocation().getValue())); //NOI18N
 
         if(result.isPerformed && isDestinationLibrary()) {
