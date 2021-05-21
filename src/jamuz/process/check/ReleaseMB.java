@@ -162,7 +162,8 @@ public class ReleaseMB {
 		//+ - && || ! ( ) { } [ ] ^ " ~ * ? : \
 		//TODO: Escape above list of chars instead of removing them
 		//http://tickets.musicbrainz.org/browse/MBS-3988?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
-		String pattern = "[\\\\/:\"*?|\\+\\-\\&\\!\\(\\)\\[\\]^{}~]+";  //NOI18N
+		//Added the simple quote to that list based on usage
+		String pattern = "[\\\\/:\"*?|\\+\\-\\&\\!\\(\\)\\[\\]^{}~']+";  //NOI18N
         return str.replaceAll(pattern, " ").trim();  //NOI18N
 	}
     

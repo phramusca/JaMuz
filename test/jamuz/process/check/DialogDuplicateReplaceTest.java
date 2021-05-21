@@ -18,6 +18,7 @@ package jamuz.process.check;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import javax.swing.JDialog;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -125,7 +126,7 @@ public class DialogDuplicateReplaceTest {
 		FolderInfo folder = null;
 		DuplicateInfo duplicateInfo = null;
 		ICallBackReplace callback = null;
-		DialogDuplicateReplace.main(parentSize, parentLocation, folder, duplicateInfo, callback);
+		DialogDuplicateReplace.main(new JDialog(), folder, duplicateInfo, callback);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

@@ -429,7 +429,7 @@ public class Playlist implements Comparable {
                 "	FROM path JOIN file ON path.idPath=file.idPath WHERE file.deleted=0 AND path.deleted=0 GROUP BY path.idPath \n" +
                 ") P ON F.idPath=P.idPath "
             + "WHERE F.deleted=0 ";  //NOI18N //NOI18N
-			//FIXME: SQL error on playlists involving a sub-playlist that is an Inde playlist
+			//FIXME Z SQL error on playlists involving a sub-playlist that is an Inde playlist
             sql += this.getSqlWhere(); //NOI18N
             Jamuz.getLogger().finest(sql);
             

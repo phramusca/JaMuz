@@ -204,7 +204,7 @@ public class Server {
 					}).start();
 				} catch (IOException | ParseException ex) {
 					Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-					res.sendStatus(Status._500); //FIXME: Return proper error
+					res.sendStatus(Status._500); //FIXME Z Return proper error
 				}
 			});
 			

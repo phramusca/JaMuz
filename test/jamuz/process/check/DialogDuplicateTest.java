@@ -17,6 +17,8 @@
 package jamuz.process.check;
 
 import java.awt.Dimension;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -59,7 +61,7 @@ public class DialogDuplicateTest {
 		FolderInfo folder = null;
 		DuplicateInfo duplicateInfo = null;
 		ICallBackDuplicateDialog callback = null;
-		DialogDuplicate.main(parentSize, folder, duplicateInfo, callback);
+		DialogDuplicate.main(new JDialog(), folder, duplicateInfo, callback);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

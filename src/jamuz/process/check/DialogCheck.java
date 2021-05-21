@@ -1402,7 +1402,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 			paths.add(folder.getRelativePath()+file.getFilename());
 		}
 		if(paths.size()>0) {
-            DialogScanner.main(null, paths, new ICallBackScanner() {
+            DialogScanner.main(this, paths, new ICallBackScanner() {
 				@Override
 				public void completed(String pattern) {
 					applyPattern(pattern);
@@ -1451,7 +1451,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonDuplicateCompareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDuplicateCompareActionPerformed
         DuplicateInfo duplicateInfo = (DuplicateInfo) jComboBoxCheckDuplicates.getSelectedItem();
-		DialogDuplicate.main(getSize(), folder, duplicateInfo, new CallBackDuplicate());
+		DialogDuplicate.main(this, folder, duplicateInfo, new CallBackDuplicate());
     }//GEN-LAST:event_jButtonDuplicateCompareActionPerformed
 
     private void jButtonCheckNoneDuplicatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckNoneDuplicatesActionPerformed
@@ -1470,7 +1470,7 @@ public final class DialogCheck extends javax.swing.JDialog {
     private void jButtonSetNumbersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSetNumbersActionPerformed
 		int trackNb=1;
 		int trackTotal=folder.getFilesAudioTableModel().getFiles().stream().filter(f->f.isAudioFile).collect(Collectors.toList()).size();
-		int discNb=1; //FIXME: Make discNb and discTotal configurable
+		int discNb=1; //FIXME Z Make discNb and discTotal configurable
 		int discTotal=1;
 		
 		for(FileInfoDisplay file : folder.getFilesAudioTableModel().getFiles()) {

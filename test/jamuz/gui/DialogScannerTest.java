@@ -19,6 +19,7 @@ package jamuz.gui;
 import jamuz.process.check.ICallBackScanner;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JDialog;
 
 /**
  *
@@ -37,7 +38,7 @@ public class DialogScannerTest {
 		paths.add("the Grey CAT - SnaKee 1865/001.toto - INTRO.mp3");
 		paths.add("the Grey CAT - SnaKee 1865/toto - INTRO.mp3");
 		
-		jamuz.process.check.DialogScanner.main(null, paths, new ICallBackScanner() {
+		jamuz.process.check.DialogScanner.main(new JDialog(), paths, new ICallBackScanner() {
 			@Override
 			public void completed(String pattern) {
 				System.out.println(".completed("+pattern+")");
