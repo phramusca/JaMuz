@@ -122,7 +122,7 @@ public class Server {
 				int idFile = Integer.valueOf(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
 				File file = fileInfoInt.getFullPath();
-				if(file.exists()&&file.isFile()) {	
+				if(!fileInfoInt.isDeleted() && file.exists() && file.isFile()) {	
 					String msg=" #"+fileInfoInt.getIdFile()+" ("+file.length()+"o) "+file.getAbsolutePath();
 					System.out.println("Sending"+msg);
 					res.sendAttachment(file.toPath());
@@ -131,7 +131,9 @@ public class Server {
 					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
 					insert.add(fileInfoInt);
 					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
-				}				
+				} else {
+					res.setStatus(Status._404);
+				}			
 			});
 			
 			app.get("/tags", (req, res) -> {

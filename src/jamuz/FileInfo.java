@@ -487,6 +487,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	public FileInfo(String sourceName, JSONObject file) {
 		this(sourceName, (String) file.get("path"));
+		idFile = (int) (long) file.get("idFile");
 		rating = (int) (long) file.get("rating");
 		addedDate = getDate(file, "addedDate");
 		lastPlayed = getDate(file, "lastPlayed");
