@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.logging.Level;
 import jamuz.utils.DateTime;
 import jamuz.utils.Utils;
+import java.util.Optional;
 
 /**
  *
@@ -385,17 +386,20 @@ public class ProcessMerge extends ProcessAbstract {
 //			String relativeFullPath = FilenameUtils.separatorsToUnix(myFileInfoDbSelected.relativeFullPath);
             
             //Get item from JaMuz DB
-            int idSecond;
+			Optional<FileInfo> optionalFileInfo;
 			if(isRemote) {
-				idSecond = searchInStatsListDbJaMuz(fileDbSelected.getIdFile());
+				int idFile  = fileDbSelected.getIdFile();
+				optionalFileInfo = statsListDbJaMuz.stream().filter(f->f.getIdFile()==idFile).findFirst();
 			} else {
-				idSecond = searchInStatsListDbJaMuz(fileDbSelected.getRelativeFullPath());
+				//Searching ignoring case because of windows, but that may not be a good way 
+				//TODO: What if it changes to case-sensitive equals() ?
+				String relativeFullPath = fileDbSelected.getRelativeFullPath();
+				optionalFileInfo = statsListDbJaMuz.stream().filter(f->f.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)).findFirst();
 			}
-            if(idSecond>=0) {
-                fileInfoDbJaMuz = statsListDbJaMuz.get(idSecond);
+            if(optionalFileInfo.isPresent()) {
+				fileInfoDbJaMuz=optionalFileInfo.get();
                 compareStats(run, fileDbSelected,fileInfoDbJaMuz);
-                //Removing so that next searches are even faster
-                statsListDbJaMuz.remove(idSecond);
+                statsListDbJaMuz.remove(fileInfoDbJaMuz);
             }
             else {
                 Jamuz.getLogger().warning(MessageFormat.format(
@@ -1031,29 +1035,6 @@ public class ProcessMerge extends ProcessAbstract {
         return true;
     }
 	
-    //TODO: Use a Map instead ...
-	private int searchInStatsListDbJaMuz(String relativeFullPath) {
-		for(int i = 0; i < statsListDbJaMuz.size(); i++) {
-			FileInfo myFileInfo = statsListDbJaMuz.get(i);
-            //Searching ignoring case because of windows, but that may not be a good way 
-            //TODO: What if it changes to case-sensitive equals() ?
-			if(myFileInfo.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)) { 
-				return i; 
-			}
-		}
-		return -1;
-	}
-	
-	private int searchInStatsListDbJaMuz(int idFile) {
-		for(int i = 0; i < statsListDbJaMuz.size(); i++) {
-			FileInfo myFileInfo = statsListDbJaMuz.get(i);
-			if(myFileInfo.getIdFile()==idFile) { 
-				return i; 
-			}
-		}
-		return -1;
-	}
-
 	public ArrayList<FileInfo> getErrorList() {
         return errorList;
     }
