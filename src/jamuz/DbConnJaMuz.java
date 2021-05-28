@@ -1208,7 +1208,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             FileInfo file;
             boolean doInsertBatch = false;
             PreparedStatement stInsertPlayCounter = dbConn.connection.
-					prepareStatement("INSERT INTO playcounter "
+					prepareStatement("INSERT OR IGNORE INTO playcounter "
                     + "(idFile, idStatSource, playCounter) "    //NOI18N
                     + "VALUES (?, ?, ?)");   //NOI18N
             for (int i = 0; i < results.length; i++) {
@@ -1270,12 +1270,13 @@ public class DbConnJaMuz extends StatSourceSQL {
 						"INSERT INTO deviceFile "
                     + " (idFile, idDevice, oriRelativeFullPath, status) "    //NOI18N
                     + " VALUES (?, ?, ?, \"NEW\") "
-					+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?");   //NOI18N
+					+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?, oriRelativeFullPath=?");   //NOI18N
                 for (FileInfoInt file : files) {
                     stInsertDeviceFile.setInt(1, file.idFile);
                     stInsertDeviceFile.setInt(2, idDevice);
                     stInsertDeviceFile.setString(3, file.relativeFullPath);
 					stInsertDeviceFile.setString(4, file.status.name());
+					stInsertDeviceFile.setString(5, file.relativeFullPath);
                     stInsertDeviceFile.addBatch();
                 }
                 results = stInsertDeviceFile.executeBatch();

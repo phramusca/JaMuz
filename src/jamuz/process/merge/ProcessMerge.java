@@ -385,7 +385,12 @@ public class ProcessMerge extends ProcessAbstract {
 //			String relativeFullPath = FilenameUtils.separatorsToUnix(myFileInfoDbSelected.relativeFullPath);
             
             //Get item from JaMuz DB
-            int idSecond = searchInStatsListDbJaMuz(fileDbSelected.getRelativeFullPath());
+            int idSecond;
+			if(isRemote) {
+				idSecond = searchInStatsListDbJaMuz(fileDbSelected.getIdFile());
+			} else {
+				idSecond = searchInStatsListDbJaMuz(fileDbSelected.getRelativeFullPath());
+			}
             if(idSecond>=0) {
                 fileInfoDbJaMuz = statsListDbJaMuz.get(idSecond);
                 compareStats(run, fileDbSelected,fileInfoDbJaMuz);
@@ -1033,6 +1038,16 @@ public class ProcessMerge extends ProcessAbstract {
             //Searching ignoring case because of windows, but that may not be a good way 
             //TODO: What if it changes to case-sensitive equals() ?
 			if(myFileInfo.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)) { 
+				return i; 
+			}
+		}
+		return -1;
+	}
+	
+	private int searchInStatsListDbJaMuz(int idFile) {
+		for(int i = 0; i < statsListDbJaMuz.size(); i++) {
+			FileInfo myFileInfo = statsListDbJaMuz.get(i);
+			if(myFileInfo.getIdFile()==idFile) { 
 				return i; 
 			}
 		}
