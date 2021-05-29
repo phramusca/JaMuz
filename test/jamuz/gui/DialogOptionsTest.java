@@ -16,6 +16,7 @@
  */
 package jamuz.gui;
 
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -102,7 +103,7 @@ public class DialogOptionsTest {
 	public void testMain() {
 		System.out.println("main");
 		String machineName = "";
-		DialogOptions.main(machineName);
+		DialogOptions.main(new JFrame(), machineName);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

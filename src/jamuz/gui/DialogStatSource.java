@@ -30,6 +30,7 @@ import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
 import jamuz.utils.XML;
+import java.awt.Dialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 	 * @param modal
 	 * @param statSource  
 	 */
-    public DialogStatSource(java.awt.Frame parent, boolean modal, StatSource statSource) {
+    public DialogStatSource(Dialog parent, boolean modal, StatSource statSource) {
         super(parent, modal);
         initComponents();
 		this.statSource = statSource;
@@ -424,13 +425,13 @@ public class DialogStatSource extends javax.swing.JDialog {
 
     /**
 	 * Open the GUI
+	 * @param parent
 	 * @param myStatSource 
 	 */
-    public static void main(final StatSource myStatSource) {
+    public static void main(Dialog parent, final StatSource myStatSource) {
         java.awt.EventQueue.invokeLater(() -> {
-			DialogStatSource dialog = new DialogStatSource(new javax.swing.JFrame(), true, myStatSource);
-			//Center the dialog
-			dialog.setLocationRelativeTo(dialog.getParent());
+			DialogStatSource dialog = new DialogStatSource(parent, true, myStatSource);
+			dialog.setLocationRelativeTo(parent);
 			dialog.setVisible(true);
 		});
     }

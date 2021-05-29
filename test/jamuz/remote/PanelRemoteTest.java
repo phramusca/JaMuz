@@ -20,6 +20,7 @@ import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import java.util.ArrayList;
 import java.util.Map;
+import javax.swing.JFrame;
 import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -60,7 +61,7 @@ public class PanelRemoteTest {
 	public void testInitExtended() {
 		System.out.println("initExtended");
 		ICallBackServer callback = null;
-		PanelRemote instance = new PanelRemote();
+		PanelRemote instance = new PanelRemote(new JFrame());
 		instance.initExtended(callback);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

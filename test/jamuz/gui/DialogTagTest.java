@@ -18,6 +18,7 @@ package jamuz.gui;
 
 import jamuz.FileInfoInt;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -57,7 +58,7 @@ public class DialogTagTest {
 	public void testMain() {
 		System.out.println("main");
 		FileInfoInt file = null;
-		DialogTag.main(file);
+		DialogTag.main(new JFrame(), file);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

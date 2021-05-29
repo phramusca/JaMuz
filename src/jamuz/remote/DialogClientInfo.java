@@ -22,6 +22,7 @@ import jamuz.Playlist;
 import jamuz.utils.Popup;
 import javax.swing.DefaultComboBoxModel;
 import jamuz.utils.Inter;
+import java.awt.Frame;
 
 /**
  * JDialog extension to add/modify Stat source
@@ -220,13 +221,13 @@ public class DialogClientInfo extends javax.swing.JDialog {
 
     /**
 	 * Open the GUI
+	 * @param parent
 	 * @param clientInfo 
 	 */
-    public static void main(final ClientInfo clientInfo) {
+    public static void main(Frame parent, final ClientInfo clientInfo) {
         java.awt.EventQueue.invokeLater(() -> {
-			DialogClientInfo dialog = new DialogClientInfo(new javax.swing.JFrame(), true, clientInfo);
-			//Center the dialog
-			dialog.setLocationRelativeTo(dialog.getParent());
+			DialogClientInfo dialog = new DialogClientInfo(parent, true, clientInfo);
+			dialog.setLocationRelativeTo(parent);
 			dialog.setVisible(true);
 		});
     }

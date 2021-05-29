@@ -17,6 +17,7 @@
 package jamuz.gui;
 
 import java.awt.image.BufferedImage;
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class DialogQRcodeTest {
 	public void testMain() {
 		System.out.println("main");
 		BufferedImage bufferedImage = null;
-		DialogQRcode.main(bufferedImage);
+		DialogQRcode.main(new JFrame(), bufferedImage);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

@@ -22,6 +22,7 @@ import jamuz.gui.swing.TableModel;
 import java.awt.Dimension;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -451,8 +452,7 @@ public class PanelMainTest {
 	@Test
 	public void testMain() {
 		System.out.println("main");
-		String[] args = null;
-		PanelMain.main(args);
+		PanelMain.main();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

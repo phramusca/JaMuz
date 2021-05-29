@@ -20,6 +20,7 @@ import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 	 * @param keepEnded
 	 * @param keepCanceled
 	 */
-	public DialogVideoCleanupConfirm(java.awt.Frame parent, boolean modal, 
+	public DialogVideoCleanupConfirm(Dialog parent, boolean modal, 
 			List<VideoAbstract> filesToAnalyze, int nbSeasonToKeep, 
 			int nbEpisodeToKeep, boolean keepEnded, boolean keepCanceled) {
 		super(parent, modal);
@@ -242,13 +243,14 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonVideoDoCleanupActionPerformed
 
 	/**
+	 * @param parent
 	 * @param filesToanalyze
 	 * @param nbSeasonToKeep
 	 * @param nbEpisodeToKeep
 	 * @param keepEnded
 	 * @param keepCanceled
 	 */
-	public static void main(List<VideoAbstract> filesToanalyze, int nbSeasonToKeep, int nbEpisodeToKeep,
+	public static void main(Dialog parent, List<VideoAbstract> filesToanalyze, int nbSeasonToKeep, int nbEpisodeToKeep,
 			boolean keepEnded, boolean keepCanceled) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -266,15 +268,12 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 			java.util.logging.Logger.getLogger(DialogVideoCleanupConfirm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		//</editor-fold>
-		//</editor-fold>
 
-		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(() -> {
 			DialogVideoCleanupConfirm dialog = new DialogVideoCleanupConfirm(
-					new javax.swing.JFrame(), true, filesToanalyze, 
+					parent, true, filesToanalyze, 
 					nbSeasonToKeep, nbEpisodeToKeep, keepEnded, keepCanceled);
-			//Center the dialog
-			dialog.setLocationRelativeTo(dialog.getParent());
+			dialog.setLocationRelativeTo(parent);
 			dialog.setVisible(true);
 		});
 	}

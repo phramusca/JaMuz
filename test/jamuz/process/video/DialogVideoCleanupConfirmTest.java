@@ -17,6 +17,8 @@
 package jamuz.process.video;
 
 import java.util.List;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -60,7 +62,7 @@ public class DialogVideoCleanupConfirmTest {
 		int nbEpisodeToKeep = 0;
 		boolean keepEnded = false;
 		boolean keepCanceled = false;
-		DialogVideoCleanupConfirm.main(filesToanalyze, nbSeasonToKeep, nbEpisodeToKeep, keepEnded, keepCanceled);
+		DialogVideoCleanupConfirm.main(new JDialog(), filesToanalyze, nbSeasonToKeep, nbEpisodeToKeep, keepEnded, keepCanceled);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

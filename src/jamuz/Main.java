@@ -124,7 +124,7 @@ public class Main {
 				}
 			});
 
-			PanelMain.main(null);
+			PanelMain.main();
 		}
 		catch(Exception ex) {
 			Popup.error(ex);

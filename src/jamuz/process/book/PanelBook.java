@@ -61,6 +61,7 @@ import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
+import java.awt.Frame;
 import java.util.stream.Collectors;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -82,13 +83,16 @@ public class PanelBook extends javax.swing.JPanel {
 	 *
 	 */
 	protected static ProgressBar progressBarTimer;
+	private final Frame parent;
 
     /**
      * Creates new form PanelVideo
+	 * @param parent
      */
-    public PanelBook() {
+    public PanelBook(Frame parent) {
         initComponents();
         initExtended();
+		this.parent = parent;
     }
     
 	/**
@@ -606,7 +610,7 @@ public class PanelBook extends javax.swing.JPanel {
 
     private void jButtonBookExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBookExportActionPerformed
 
-        DialogBookExport.main(null);
+        DialogBookExport.main(parent);
     }//GEN-LAST:event_jButtonBookExportActionPerformed
 
 	/**
@@ -674,7 +678,7 @@ public class PanelBook extends javax.swing.JPanel {
     }//GEN-LAST:event_jTableBookMousePressed
 
     private void jButtonVideoOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoOptionsActionPerformed
-        DialogBookOption.main(null);
+        DialogBookOption.main(parent);
     }//GEN-LAST:event_jButtonVideoOptionsActionPerformed
 
     private void triStateSelectedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_triStateSelectedStateChanged
