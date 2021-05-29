@@ -118,7 +118,6 @@ public final class DialogCheck extends javax.swing.JDialog {
         parentSize.height = parentSize.height * 85/100;
         parentSize.width = parentSize.width * 95/100;
         dialog.setSize(parentSize);
-		//FIXME !! 0.5.0 !!  DO CENTER AS THIS for all other dialogs (works on multi-screen !! + real parent for modality)  (instead of dialog.setLocationRelativeTo(dialog.getParent());)
 		dialog.setLocationRelativeTo(parent);		
         dialog.setVisible(true);
 	}

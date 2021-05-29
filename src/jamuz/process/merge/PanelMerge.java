@@ -34,6 +34,7 @@ import jamuz.gui.swing.TableModel;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
+import java.awt.Frame;
 import java.text.MessageFormat;
 //TODO: Display lastMergeDate in jListMerge: <Source name> (<lastMergeDate or BETTER formatted interval ex: a week ago, 3 hours ago, ...)>)
 /**
@@ -45,9 +46,11 @@ public class PanelMerge extends javax.swing.JPanel {
     private static ProcessMerge processMerge;
     private static TableModel tableModel;
     private static ProgressBar progressBar;
+	private final Frame parent;
     
-    public PanelMerge() {
+    public PanelMerge(Frame parent) {
         initComponents();
+		this.parent = parent;
     }
 
     public void initExtended() {
@@ -425,7 +428,7 @@ public class PanelMerge extends javax.swing.JPanel {
 	}
 	
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed
-        DialogOptions.main(Jamuz.getMachine().getName());
+        DialogOptions.main(parent, Jamuz.getMachine().getName());
     }//GEN-LAST:event_jButtonMergeSourcesActionPerformed
 
     private void jButtonMergeLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeLogActionPerformed

@@ -16,6 +16,7 @@
  */
 package jamuz.process.video;
 
+import java.awt.Frame;
 import java.util.List;
 import javax.swing.JSpinner;
 
@@ -33,7 +34,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 	 * @param modal
 	 * @param files
 	 */
-	public DialogVideoCleanup(java.awt.Frame parent, boolean modal, List<VideoAbstract> files) {
+	public DialogVideoCleanup(Frame parent, boolean modal, List<VideoAbstract> files) {
 		super(parent, modal);
 		initComponents();
 		
@@ -231,7 +232,7 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 		if(jCheckBoxCleanupAllMovies.isSelected() && jCheckBoxCleanupAllTvShows.isSelected()) {
 			dispose();
 		} else if(!jCheckBoxCleanupAllTvShows.isSelected()) {
-			DialogVideoCleanupConfirm.main(files, 
+			DialogVideoCleanupConfirm.main(this, files, 
 					(Integer)jSpinnerVideoCleanupNbSeasonToKeep.getValue(),
 					(Integer)jSpinnerVideoCleanupNbEpisodeToKeep.getValue(),
 					jCheckBoxCleanupKeepEnded.isSelected(), jCheckBoxCleanupKeepCanceled.isSelected());
@@ -257,9 +258,10 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
     }//GEN-LAST:event_jSpinnerVideoCleanupNbSeasonToKeepStateChanged
 
 	/**
+	 * @param parent
 	 * @param files
 	 */
-	public static void main(List<VideoAbstract> files) {
+	public static void main(Frame parent, List<VideoAbstract> files) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -277,12 +279,10 @@ public class DialogVideoCleanup extends javax.swing.JDialog {
 		}
 		//</editor-fold>
 		
-		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(() -> {
 			DialogVideoCleanup dialog = new DialogVideoCleanup(
-					new javax.swing.JFrame(), true, files);
-			//Center the dialog
-			dialog.setLocationRelativeTo(dialog.getParent());
+					parent, true, files);
+			dialog.setLocationRelativeTo(parent);
 			dialog.setVisible(true);
 		});
 	}

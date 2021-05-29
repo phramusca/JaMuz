@@ -168,7 +168,7 @@ public class Settings {
 	 * @throws InterruptedException
 	 */
 	public static void startGUI(String tab) throws InterruptedException {
-        PanelMain.main(null); 
+        PanelMain.main(); 
         //Need to wait for GUI to load
         //TODO: should not have to do this: need to use some kind of delegates to call back GUI from model
         //BUT it allows to see test progress and eventually to test GUI ...

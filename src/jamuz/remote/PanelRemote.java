@@ -23,12 +23,12 @@ import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.sync.ICallBackSync;
 import jamuz.process.sync.ProcessSync;
-import jamuz.utils.DateTime;
 import jamuz.utils.QRCode;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +40,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
@@ -49,9 +48,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 /**
  *
@@ -60,12 +57,15 @@ import org.json.simple.JSONValue;
 public class PanelRemote extends javax.swing.JPanel {
 
 	private static Server server;
+	private final Frame parent;
 
 	/**
 	 * Creates new form PanelRemote
+	 * @param parent
 	 */
-	public PanelRemote() {
+	public PanelRemote(Frame parent) {
 		initComponents();
+		this.parent = parent;
 	}
 
 	public void initExtended(ICallBackServer callback) {
@@ -383,7 +383,7 @@ public class PanelRemote extends javax.swing.JPanel {
             String url = "jamuzremote://"+encrypted;
 			//http://stackoverflow.com/questions/10258633/android-start-application-from-qr-code-with-params
             BufferedImage bufferedImage = QRCode.create(url, 250);
-            DialogQRcode.main(bufferedImage);
+            DialogQRcode.main(parent, bufferedImage);
         } catch (UnknownHostException ex) {
         }
     }//GEN-LAST:event_jButtonQRcodeActionPerformed
@@ -449,7 +449,7 @@ public class PanelRemote extends javax.swing.JPanel {
 	private void menuEdit() {
         ClientInfo clientInfo = getSelected();
         if(clientInfo!=null) {
-			DialogClientInfo.main(clientInfo);
+			DialogClientInfo.main(parent, clientInfo);
         }
     }
 	

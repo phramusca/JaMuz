@@ -65,6 +65,7 @@ import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
+import java.awt.Frame;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
 
@@ -80,13 +81,16 @@ public class PanelVideo extends javax.swing.JPanel {
 	 *
 	 */
 	protected static ProgressBar progressBar;
+	private final Frame parent;
 
     /**
      * Creates new form PanelVideo
+	 * @param parent
      */
-    public PanelVideo() {
+    public PanelVideo(Frame parent) {
         initComponents();
         initExtended();
+		this.parent = parent;
     }
     
 	/**
@@ -934,7 +938,7 @@ public class PanelVideo extends javax.swing.JPanel {
 
     private void jButtonVideoExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoExportActionPerformed
 
-        DialogVideoExport.main(null);
+        DialogVideoExport.main(parent);
     }//GEN-LAST:event_jButtonVideoExportActionPerformed
 
 	/**
@@ -1022,7 +1026,7 @@ public class PanelVideo extends javax.swing.JPanel {
     }//GEN-LAST:event_jTableVideoMousePressed
 
     private void jButtonVideoOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoOptionsActionPerformed
-        DialogVideoOption.main(null);
+        DialogVideoOption.main(parent);
     }//GEN-LAST:event_jButtonVideoOptionsActionPerformed
 
     private void jListVideoMppaRatingValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListVideoMppaRatingValueChanged
@@ -1179,7 +1183,7 @@ public class PanelVideo extends javax.swing.JPanel {
     }//GEN-LAST:event_jCheckBoxVideoGetItemStateChanged
 
     private void jButtonVideoCleanupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVideoCleanupActionPerformed
-        DialogVideoCleanup.main(processVideo.getTableModel().getFiles());
+        DialogVideoCleanup.main(parent, processVideo.getTableModel().getFiles());
     }//GEN-LAST:event_jButtonVideoCleanupActionPerformed
 
     private static long getSpaceLeft(String pathOrFile) {

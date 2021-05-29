@@ -16,6 +16,7 @@
  */
 package jamuz.remote;
 
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -55,7 +56,7 @@ public class DialogClientInfoTest {
 	public void testMain() {
 		System.out.println("main");
 		ClientInfo clientInfo = null;
-		DialogClientInfo.main(clientInfo);
+		DialogClientInfo.main(new JFrame(), clientInfo);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

@@ -99,6 +99,7 @@ public class PanelCheck extends javax.swing.JPanel {
 	 *
 	 */
 	public static TableModelCheck tableModelActionQueue = new TableModelCheck();
+	private final Frame parent;
        
     /**
      * Creates new form PanelCheck
@@ -165,6 +166,7 @@ public class PanelCheck extends javax.swing.JPanel {
         
         progressActionsSize         = (ProgressBar)jProgressBarCheckActionsSize;
         progressActionsDequeue      = (ProgressBar)jProgressBarCheckActionsDequeue;
+		this.parent = parent;
     }
     	
     public static void setThreadPanels(ProcessCheck.CheckType checkType) {
@@ -571,7 +573,7 @@ public class PanelCheck extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonCheckAbortActionPerformed
 
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed
-        DialogOptions.main(Jamuz.getMachine().getName());
+        DialogOptions.main(parent, Jamuz.getMachine().getName());
     }//GEN-LAST:event_jButtonMergeSourcesActionPerformed
 
     private void jCheckBoxDoActionsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxDoActionsItemStateChanged

@@ -26,6 +26,7 @@ import javax.swing.table.TableColumn;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Inter;
+import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -43,12 +44,15 @@ public class PanelSync extends javax.swing.JPanel {
      * progress bar
      */
     private static ProgressBar progressBar;
+	private final Frame parent;
     
     /**
      * Creates new form PanelSync
+	 * @param parent
      */
-    public PanelSync() {
+    public PanelSync(Frame parent) {
         initComponents();
+		this.parent = parent;
     }
 
     /**
@@ -318,7 +322,7 @@ public class PanelSync extends javax.swing.JPanel {
 	}
 	
     private void jButtonMergeSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMergeSourcesActionPerformed
-        DialogOptions.main(Jamuz.getMachine().getName());
+        DialogOptions.main(parent, Jamuz.getMachine().getName());
     }//GEN-LAST:event_jButtonMergeSourcesActionPerformed
 
 

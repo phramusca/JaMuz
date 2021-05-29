@@ -17,6 +17,8 @@
 package jamuz.gui;
 
 import jamuz.process.sync.Device;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -56,7 +58,7 @@ public class DialogDeviceTest {
 	public void testMain() {
 		System.out.println("main");
 		Device device = null;
-		DialogDevice.main(device);
+		DialogDevice.main(new JDialog(), device);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

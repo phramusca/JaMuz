@@ -16,6 +16,7 @@
  */
 package jamuz.process.sync;
 
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -54,7 +55,7 @@ public class PanelSyncTest {
 	@Test
 	public void testInitExtended() {
 		System.out.println("initExtended");
-		PanelSync instance = new PanelSync();
+		PanelSync instance = new PanelSync(new JFrame());
 		instance.initExtended();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

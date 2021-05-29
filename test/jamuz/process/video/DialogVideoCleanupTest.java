@@ -17,6 +17,7 @@
 package jamuz.process.video;
 
 import java.util.List;
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class DialogVideoCleanupTest {
 	public void testMain() {
 		System.out.println("main");
 		List<VideoAbstract> files = null;
-		DialogVideoCleanup.main(files);
+		DialogVideoCleanup.main(new JFrame(), files);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

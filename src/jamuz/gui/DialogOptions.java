@@ -23,6 +23,7 @@ import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
 import jamuz.utils.Inter;
 import jamuz.utils.Swing;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
@@ -1055,13 +1056,13 @@ public class DialogOptions extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonOptionSelectFolderKOActionPerformed
 
     private void jButtonStatSouceAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStatSouceAddActionPerformed
-        DialogStatSource.main(new StatSource(machineName));
+        DialogStatSource.main(this, new StatSource(machineName));
     }//GEN-LAST:event_jButtonStatSouceAddActionPerformed
 
     private void jButtonStatSouceEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStatSouceEditActionPerformed
         if(jListStatSources.getSelectedIndex()>-1) {
             StatSource statSource = (StatSource) jListStatSources.getSelectedValue();
-            DialogStatSource.main(statSource);
+            DialogStatSource.main(this, statSource);
         }
     }//GEN-LAST:event_jButtonStatSouceEditActionPerformed
 
@@ -1080,13 +1081,13 @@ public class DialogOptions extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonStatSouceDelActionPerformed
 
     private void jButtonDeviceAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeviceAddActionPerformed
-        DialogDevice.main(new Device(machineName));
+        DialogDevice.main(this, new Device(machineName));
     }//GEN-LAST:event_jButtonDeviceAddActionPerformed
 
     private void jButtonDeviceEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeviceEditActionPerformed
         if(jListDevices.getSelectedIndex()>-1) {
             Device device = (Device) jListDevices.getSelectedValue();
-            DialogDevice.main(device);
+            DialogDevice.main(this, device);
         }
     }//GEN-LAST:event_jButtonDeviceEditActionPerformed
 
@@ -1115,9 +1116,10 @@ public class DialogOptions extends javax.swing.JDialog {
 	}
 
 	/**
+	 * @param parent
 	 * @param machineName
 	 */
-	public static void main(final String machineName) {
+	public static void main(Frame parent, final String machineName) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1137,10 +1139,9 @@ public class DialogOptions extends javax.swing.JDialog {
 
 		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(() -> {
-			DialogOptions dialog = new DialogOptions(new javax.swing.JFrame(), true, machineName);
+			DialogOptions dialog = new DialogOptions(parent, true, machineName);
 			dialog.setTitle(Inter.get("Label.Options") + " - " + machineName);  //NOI18N
-			//Center the dialog
-			dialog.setLocationRelativeTo(dialog.getParent());
+			dialog.setLocationRelativeTo(parent);
 			dialog.setVisible(true);
 		});
 	}

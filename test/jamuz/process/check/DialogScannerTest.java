@@ -17,6 +17,7 @@
 package jamuz.process.check;
 
 import java.util.List;
+import javax.swing.JDialog;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -70,7 +71,7 @@ public class DialogScannerTest {
 		String[] args = null;
 		List<String> paths = null;
 		ICallBackScanner callback = null;
-		DialogScanner.main(args, paths, callback);
+		DialogScanner.main(new JDialog(), paths, callback);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

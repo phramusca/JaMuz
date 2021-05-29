@@ -75,6 +75,7 @@ import org.json.simple.JSONObject;
 import jamuz.player.MPlaybackListener;
 import jamuz.process.check.FolderInfo;
 import jamuz.remote.ICallBackServer;
+import java.awt.Frame;
 
 /**
  * Main JaMuz GUI class
@@ -758,15 +759,15 @@ public class PanelMain extends javax.swing.JFrame {
         jSplitPaneMain = new javax.swing.JSplitPane();
         jTabbedPane = new javax.swing.JTabbedPane();
         panelSelect = new jamuz.gui.PanelSelect();
-        panelMerge = new jamuz.process.merge.PanelMerge();
-        panelSync = new jamuz.process.sync.PanelSync();
+        panelMerge = new jamuz.process.merge.PanelMerge(this);
+        panelSync = new jamuz.process.sync.PanelSync(this);
         panelPlaylists = new jamuz.gui.PanelPlaylists();
         panelLyrics = new jamuz.gui.PanelLyrics();
         panelStats = new jamuz.gui.PanelStats();
-        panelRemote = new jamuz.remote.PanelRemote();
-        panelOptions = new jamuz.gui.PanelOptions();
-        panelVideo = new jamuz.process.video.PanelVideo();
-        panelBook = new jamuz.process.book.PanelBook();
+        panelRemote = new jamuz.remote.PanelRemote(this);
+        panelOptions = new jamuz.gui.PanelOptions(this);
+        panelVideo = new jamuz.process.video.PanelVideo(this);
+        panelBook = new jamuz.process.book.PanelBook(this);
         jPanelPlayer = new javax.swing.JPanel();
         jLabelPlayerTitle = new javax.swing.JLabel();
         jLabelPlayerAlbum = new javax.swing.JLabel();
@@ -1538,7 +1539,7 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonRefreshHiddenQueueActionPerformed
 
     private void jButtonTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsActionPerformed
-        DialogTag.main(displayedFile);
+        DialogTag.main(this, displayedFile);
     }//GEN-LAST:event_jButtonTagsActionPerformed
 
     private void jSpinnerVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVolumeStateChanged
@@ -1793,9 +1794,9 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
     /**
-     * @param args the command line arguments
+	 * @param parent
      */
-    public static void main(String args[]) {
+    public static void main() {
         /* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         	/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1813,14 +1814,10 @@ public class PanelMain extends javax.swing.JFrame {
         }
 		//</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
 			PanelMain panel = new PanelMain();
-			//Center
 			panel.setLocationRelativeTo(null);
-			//Maximize
 			panel.setExtendedState(PanelMain.MAXIMIZED_BOTH);
-			//Set titleDisplay with version and JaMuz database location
 			String version = Main.class.getPackage().getImplementationVersion();
 			String title1 = panel.getTitle() + " " + version; //NOI18N
 			panel.setTitle(title1 + " [" + Jamuz.getDb().getDbConn().getInfo().getLocationOri() + "]"); //NOI18N

@@ -26,6 +26,7 @@ import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
+import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -46,12 +47,15 @@ import org.apache.commons.io.FileUtils;
 public class PanelOptions extends javax.swing.JPanel {
 
 	protected static ProgressBar progressBarCheckedFlag;
+	private final Frame parent;
 	
 	/**
 	 * Creates new form PanelOptions
+	 * @param parent
 	 */
-	public PanelOptions() {
+	public PanelOptions(Frame parent) {
 		initComponents();
+		this.parent = parent;
 	}
 
 	/**
@@ -552,7 +556,7 @@ public class PanelOptions extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonResetCheckedFlagKOActionPerformed
 
     private void jButtonMachinesEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMachinesEditActionPerformed
-         DialogOptions.main(((ListElement) jListMachines.getSelectedValue()).getValue()); 
+         DialogOptions.main(parent, ((ListElement) jListMachines.getSelectedValue()).getValue()); 
     }//GEN-LAST:event_jButtonMachinesEditActionPerformed
 
     private void jButtonMachinesDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMachinesDelActionPerformed

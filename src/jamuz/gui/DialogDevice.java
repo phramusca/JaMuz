@@ -26,6 +26,7 @@ import javax.swing.DefaultComboBoxModel;
 import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Inter;
 import jamuz.utils.Swing;
+import java.awt.Dialog;
 
 /**
  * JDialog extension to add/modify Stat source
@@ -41,7 +42,7 @@ public class DialogDevice extends javax.swing.JDialog {
 	 * @param modal
 	 * @param device  
 	 */
-    public DialogDevice(java.awt.Frame parent, boolean modal, Device device) {
+    public DialogDevice(Dialog parent, boolean modal, Device device) {
         super(parent, modal);
         initComponents();
 		
@@ -245,13 +246,13 @@ public class DialogDevice extends javax.swing.JDialog {
 
     /**
 	 * Open the GUI
+	 * @param parent
 	 * @param device 
 	 */
-    public static void main(final Device device) {
+    public static void main(Dialog parent, final Device device) {
         java.awt.EventQueue.invokeLater(() -> {
-			DialogDevice dialog = new DialogDevice(new javax.swing.JFrame(), true, device);
-			//Center the dialog
-			dialog.setLocationRelativeTo(dialog.getParent());
+			DialogDevice dialog = new DialogDevice(parent, true, device);
+			dialog.setLocationRelativeTo(parent);
 			dialog.setVisible(true);
 		});
     }

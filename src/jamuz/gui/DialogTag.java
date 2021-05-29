@@ -28,6 +28,7 @@ import jamuz.remote.PanelRemote;
 import jamuz.utils.Inter;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -64,9 +65,10 @@ public class DialogTag extends javax.swing.JDialog {
     }
 
      /**
+	 * @param parent
      * @param file 
 	 */
-	public static void main(FileInfoInt file) {
+	public static void main(Frame parent, FileInfoInt file) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -84,12 +86,9 @@ public class DialogTag extends javax.swing.JDialog {
 		}
 		//</editor-fold>
 
-        DialogTag dialog = new DialogTag(new JFrame(), true, file);
-        //Center the dialog on screen
-        dialog.setLocationRelativeTo(dialog.getParent());
-        //Change title
+        DialogTag dialog = new DialogTag(parent, true, file);
+        dialog.setLocationRelativeTo(parent);
         dialog.setTitle(file.getArtist().concat(" | ").concat(file.getTitle()).concat(" | (").concat(file.getAlbum()).concat(")"));
-        //Display
         dialog.setVisible(true);
 	}
     

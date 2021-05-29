@@ -18,11 +18,7 @@
 package jamuz.gui;
 
 import jamuz.Jamuz;
-import java.awt.Dimension;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.PointerInfo;
-import java.awt.Toolkit;
+import java.awt.Frame;
 import java.awt.image.BufferedImage;
 
 /**
@@ -40,7 +36,7 @@ public class DialogQRcode extends javax.swing.JDialog {
 	 * @param image
 	 * @param modal  
 	 */
-	public DialogQRcode(java.awt.Frame parent, boolean modal, BufferedImage image) {
+	public DialogQRcode(Frame parent, boolean modal, BufferedImage image) {
 		super(parent, modal);
 		initComponents();
 		
@@ -138,9 +134,10 @@ public class DialogQRcode extends javax.swing.JDialog {
 	
 	/**
 	 * 
+	 * @param parent
 	 * @param bufferedImage 
 	 */
-	public static void main(final BufferedImage bufferedImage) {
+	public static void main(Frame parent, final BufferedImage bufferedImage) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -163,10 +160,8 @@ public class DialogQRcode extends javax.swing.JDialog {
 			@Override
 			public void run() {
 				if(bufferedImage!=null) {
-					DialogQRcode dialog = new DialogQRcode(new javax.swing.JFrame(), true, bufferedImage );
-
-					//Center the dialog
-					dialog.setLocationRelativeTo(dialog.getParent());
+					DialogQRcode dialog = new DialogQRcode(parent, true, bufferedImage );
+					dialog.setLocationRelativeTo(parent);
 					dialog.setVisible(true);
 				}
 			}

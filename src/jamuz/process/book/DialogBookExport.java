@@ -22,6 +22,7 @@ import java.io.File;
 import javax.swing.JTextField;
 import jamuz.utils.Inter;
 import jamuz.utils.Swing;
+import java.awt.Frame;
 
 /**
  *
@@ -175,9 +176,9 @@ public class DialogBookExport extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
     /**
-     * @param args the command line arguments
+	 * @param parent
      */
-    public static void main(String args[]) {
+    public static void main(Frame parent) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -195,12 +196,9 @@ public class DialogBookExport extends javax.swing.JDialog {
         }
         //</editor-fold>
 
-        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
-			DialogBookExport dialog = new DialogBookExport(new javax.swing.JFrame(), true);
-			//Center the dialog on screen
-			dialog.setLocationRelativeTo(dialog.getParent());
-			//Display
+			DialogBookExport dialog = new DialogBookExport(parent, true);
+			dialog.setLocationRelativeTo(parent);
 			dialog.setVisible(true);
 		});
     }
