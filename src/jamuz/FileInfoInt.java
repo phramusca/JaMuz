@@ -1403,9 +1403,6 @@ public class FileInfoInt extends FileInfo {
 		jsonAsMap.put("copyRight", copyRight.name());
 		jsonAsMap.put("coverHash", coverHash);
 		jsonAsMap.put("modifDate", DateTime.formatUTCtoSqlUTC(modifDate));	
-		
-		//String lyrics = getLyrics();
-		jsonAsMap.put("lyrics", lyrics); //FIXME !! 0.5.0 Remove lyrics from sync and db on both sides => read value on remote from file metadata as for cover
 		jsonAsMap.put("pathModifDate", DateTime.formatUTCtoSqlUTC(pathModifDate));	
 		jsonAsMap.put("pathMbid", pathMbid);
 		jsonAsMap.put("comment", comment);
