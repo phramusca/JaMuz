@@ -72,6 +72,11 @@ import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 import org.json.simple.JSONValue;
+import ws.schild.jave.Encoder;
+import ws.schild.jave.EncoderException;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.encode.AudioAttributes;
+import ws.schild.jave.encode.EncodingAttributes;
 
 /**
  *
@@ -214,7 +219,7 @@ public class FileInfoInt extends FileInfo {
 	 * File format
 	 */
 	private String format="";  //NOI18N
-	//FIXME !! 0.5.0 Allow convert flac (and other formats) to mp3, as a sync option by device
+
 	/**
 	 *
 	 * @return
@@ -569,7 +574,7 @@ public class FileInfoInt extends FileInfo {
 	 * @param readCover
 	 * @return
 	 */
-	public boolean readTags(boolean readCover) {
+	public boolean readMetadata(boolean readCover) {
 		try {
 			File currentFile = getFullPath();
 			
@@ -732,7 +737,7 @@ public class FileInfoInt extends FileInfo {
      * @return
      */
     public boolean saveTags(boolean deleteComment) {
-        return this.saveTags(this.artist, this.albumArtist, this.album, this.trackNo, this.trackTotal, this.discNo, this.discTotal, 
+        return this.saveMetadata(this.artist, this.albumArtist, this.album, this.trackNo, this.trackTotal, this.discNo, this.discTotal, 
 			this.genre, this.year, this.coverImage, deleteComment, this.comment, this.title, this.BPM, this.lyrics);  //NOI18N
     }
     
@@ -784,7 +789,7 @@ public class FileInfoInt extends FileInfo {
 	 * @param lyrics
 	 * @return
 	 */
-	protected boolean saveTags(String artist, String albumArtist, String album, 
+	protected boolean saveMetadata(String artist, String albumArtist, String album, 
 			int trackNo, int trackTotal, int discNo, int discTotal,
 			String genre, String year, BufferedImage image, boolean deleteComment, String comment, String title, float bpm, String lyrics) {
 		try {           
@@ -802,14 +807,14 @@ public class FileInfoInt extends FileInfo {
 					//Create brand new ID3v2 tags
 					AbstractID3v2Tag v2tag = new ID3v23Tag();
 					MP3File.setID3v2Tag(v2tag);
-					this.setTags(v2tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, 
+					this.setMetadata(v2tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, 
 							artwork, deleteComment, comment, title, bpm, lyrics);
 					MP3File.commit();
 					break;
 				default:
 					AudioFile audioFile = AudioFileIO.read(file);
 					Tag tag = audioFile.getTag();
-					this.setTags(tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, 
+					this.setMetadata(tag, artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, 
 							artwork, deleteComment, comment, title, bpm, lyrics);
 					audioFile.commit();
 					break;
@@ -825,7 +830,7 @@ public class FileInfoInt extends FileInfo {
 		} 
 	}
     
-	private void setTags (Tag tag, String artist, String albumArtist, String album, int trackNo, int trackTotal, int discNo, int discTotal,
+	private void setMetadata(Tag tag, String artist, String albumArtist, String album, int trackNo, int trackTotal, int discNo, int discTotal,
 			String genre, String year, Artwork myArt, boolean deleteComment, String comment, String title, float bpm, String lyrics) throws KeyNotFoundException, FieldDataInvalidException {
 		
 		//Note: Since we are overwritting all tags, we are only inserting non-empty ones
@@ -1453,5 +1458,38 @@ public class FileInfoInt extends FileInfo {
 			Logger.getLogger(FileInfoInt.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return true;
+	}
+
+	public File transcode(String destExt) throws IllegalArgumentException, EncoderException {
+		AudioAttributes audio = new AudioAttributes();
+		audio.setBitRate(192000);
+		audio.setChannels(2);
+		audio.setSamplingRate(44100);
+		EncodingAttributes attrs = new EncodingAttributes();			
+		switch (destExt) {
+			case "ogg": //NOI18N
+				//libvorbis works on windows but fails on linux mint
+				//vorbis works on both :)
+				audio.setCodec("vorbis");  //NOI18N
+				//attrs.setFormat("ogg");  //NOI18N
+				break;
+			case "mp3": //NOI18N
+			default: //Encoding to MP3 by default
+				destExt="mp3"; //NOI18N
+				audio.setCodec("libmp3lame");  //NOI18N
+				//attrs.setFormat("mp3");  //NOI18N
+				break;
+		}
+		attrs.setAudioAttributes(audio);
+
+		File target = new File(FilenameUtils.concat(FilenameUtils.getFullPath(getFullPath().getAbsolutePath()), 
+				FilenameUtils.getBaseName(getFilename())+"."+destExt));  //NOI18N
+
+		Encoder encoder = new Encoder();
+		encoder.encode(new MultimediaObject(getFullPath()), target, attrs);
+		restoreTags(destExt);
+		
+		return new File(FilenameUtils.concat(FilenameUtils.getFullPath(getRelativePath()), 
+				FilenameUtils.getBaseName(getFilename())+"."+destExt));
 	}
 }

@@ -340,7 +340,7 @@ public class FileInfoIntTest {
 		boolean readCover = false;
 		FileInfoInt instance = null;
 		boolean expResult = false;
-		boolean result = instance.readTags(readCover);
+		boolean result = instance.readMetadata(readCover);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -399,7 +399,7 @@ public class FileInfoIntTest {
 		String lyrics = "";
 		FileInfoInt instance = null;
 		boolean expResult = false;
-		boolean result = instance.saveTags(artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, image, deleteComment, comment, title, bpm, lyrics);
+		boolean result = instance.saveMetadata(artist, albumArtist, album, trackNo, trackTotal, discNo, discTotal, genre, year, image, deleteComment, comment, title, bpm, lyrics);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

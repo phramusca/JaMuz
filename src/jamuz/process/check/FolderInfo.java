@@ -290,7 +290,7 @@ public class FolderInfo implements java.lang.Comparable {
 				//Date comparison may not work: compare formatted strings instead 
 				//to compare with same formatDisplay as within database
 				if(fileDb.isDeleted() || full || !fileFS.getFormattedModifDate().equals(fileDb.getFormattedModifDate())) {
-					fileFS.readTags(true); //TODO: Use returned boolean ! (shall we ?)
+					fileFS.readMetadata(true); //TODO: Use returned boolean ! (shall we ?)
 					fileFS.setIdFile(fileDb.getIdFile());
 					fileFS.setIdPath(fileDb.getIdPath());
 					fileFS.setRating(fileDb.getRating());
@@ -304,7 +304,7 @@ public class FolderInfo implements java.lang.Comparable {
 			}
 			else {
                 scanDeletedFiles=false; //No need to search for deleted files if path is a new insertion
-				fileFS.readTags(true); //TODO: Use returned boolean ! (shall we ?)
+				fileFS.readMetadata(true); //TODO: Use returned boolean ! (shall we ?)
 				fileFS.setIdPath(idPath);
 				if(!fileFS.insertTagsInDb()) {
 					fileFS.unsetCover(); //To prevent memory errors
@@ -458,7 +458,7 @@ public class FolderInfo implements java.lang.Comparable {
 					FileInfoInt myFileInfoNew = new FileInfoDisplay(relativeFullPath, rootPath);
 					if(filesAudioExtensions.contains(myFileInfoNew.getExt())) {
 						if(readTags) {
-							myFileInfoNew.readTags(false);//TODO: Use returned boolean ! (shall we ?)
+							myFileInfoNew.readMetadata(false);//TODO: Use returned boolean ! (shall we ?)
 						} 
                         FileInfoDisplay fileInfoDisplay = (FileInfoDisplay) myFileInfoNew;
                         fileInfoDisplay.initDisplay();
@@ -469,7 +469,7 @@ public class FolderInfo implements java.lang.Comparable {
 					}
 					else if(filesConvertibleExtensions.containsKey(myFileInfoNew.getExt())) {
 						if(readTags) {
-							myFileInfoNew.readTags(false);
+							myFileInfoNew.readMetadata(false);
 						}
 						filesConvertible.add(myFileInfoNew);
 					}
@@ -554,7 +554,7 @@ public class FolderInfo implements java.lang.Comparable {
 		}
 	}
     
-	//FIXME Z Test with JAVE 2 !! 
+	//FIXME Z JAVE 2 !! 
 	//https://github.com/a-schild/jave2
 	//Why does all-deps does not include all as documented
 	//Why attrs.setFormat("ogg"); not available though documented
@@ -566,40 +566,11 @@ public class FolderInfo implements java.lang.Comparable {
 	public void transcode(ProgressBar progressBar) {
 		progressBar.setup(filesConvertible.size());
 		for (FileInfoInt file : filesConvertible) {
-			try {							
+			try {
 				String destExt=filesConvertibleExtensions.get(file.getExt());
 				progressBar.progress(MessageFormat.format(Inter.get("Msg.Check.Transcoding"), destExt));  //NOI18N
-				
-				AudioAttributes audio = new AudioAttributes();
-				audio.setBitRate(192000);
-				audio.setChannels(2);
-				audio.setSamplingRate(44100);
-				EncodingAttributes attrs = new EncodingAttributes();			
-				switch (destExt) {
-					case "ogg": //NOI18N
-						//libvorbis works on windows but fails on linux mint
-						//vorbis works on both :)
-						audio.setCodec("vorbis");  //NOI18N
-						//attrs.setFormat("ogg");  //NOI18N
-						break;
-					case "mp3": //NOI18N
-					default: //Encoding to MP3 by default
-						destExt="mp3"; //NOI18N
-						audio.setCodec("libmp3lame");  //NOI18N
-						//attrs.setFormat("mp3");  //NOI18N
-						break;
-				}
-				attrs.setAudioAttributes(audio);
-
-				File source = file.getFullPath();				
-				String basePath=FilenameUtils.getFullPath(file.getFullPath().getAbsolutePath());
-				File target = new File(FilenameUtils.concat(basePath, FilenameUtils.getBaseName(file.getFilename())+"."+destExt));  //NOI18N
-				
-				Encoder encoder = new Encoder();
-				encoder.encode(new MultimediaObject(source), target, attrs);
-				file.restoreTags(destExt);
-                source.delete();
-
+				file.transcode(destExt);
+				file.getFullPath().delete();
 			} catch (IllegalArgumentException | EncoderException ex) {
 				Jamuz.getLogger().severe(ex.toString());
 			}
