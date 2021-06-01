@@ -373,7 +373,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
 
     private void jButtonNoDuplicateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNoDuplicateActionPerformed
         int n = JOptionPane.showConfirmDialog(
-            null, Inter.get("Question.Check.CleanDuplicate"),  //NOI18N
+            this, Inter.get("Question.Check.CleanDuplicate"),  //NOI18N
             Inter.get("Label.Confirm"),  //NOI18N
             JOptionPane.YES_NO_OPTION);
         if (n == JOptionPane.YES_OPTION) {
@@ -384,7 +384,7 @@ public class DialogDuplicate extends javax.swing.JDialog {
 
     private void jButtonCheckDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckDeleteActionPerformed
         int n = JOptionPane.showConfirmDialog(
-            null, Inter.get("Question.Check.DeleteFolderContent"),  //NOI18N
+            this, Inter.get("Question.Check.DeleteFolderContent"),  //NOI18N
             Inter.get("Label.Confirm"),  //NOI18N
             JOptionPane.YES_NO_OPTION);
         if (n == JOptionPane.YES_OPTION) {

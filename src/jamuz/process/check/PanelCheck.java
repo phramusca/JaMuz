@@ -33,6 +33,7 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.WrapLayout;
 import jamuz.process.check.ProcessCheck.CheckType;
 import jamuz.utils.Inter;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -616,24 +617,24 @@ public class PanelCheck extends javax.swing.JPanel {
     
     private void jButtonCheckNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckNewActionPerformed
         jButtonCheckNew.setFont(new Font(jButtonCheckNew.getFont().getName(), Font.BOLD, 16));
-        startProcess(true, CheckType.CHECK_NEW, -1);
+        startProcess(this, true, CheckType.CHECK_NEW, -1);
     }//GEN-LAST:event_jButtonCheckNewActionPerformed
 
     private void jButtonCheckLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckLibraryActionPerformed
         jButtonCheckLibrary.setFont(new Font(jButtonCheckLibrary.getFont().getName(), Font.BOLD, 16));
-        startProcess(true, CheckType.CHECK_DB, -1);
+        startProcess(this, true, CheckType.CHECK_DB, -1);
         jCheckBoxCheckManual.setEnabled(false);
     }//GEN-LAST:event_jButtonCheckLibraryActionPerformed
 
     private void jButtonScanLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanLibraryActionPerformed
         CheckType checkedType=(jCheckBoxCheckFull.isSelected()?CheckType.SCAN_FULL:CheckType.SCAN_QUICK);
         jButtonScanLibrary.setFont(new Font(jButtonScanLibrary.getFont().getName(), Font.BOLD, 16));
-        startProcess(false, checkedType, -1);  
+        startProcess(this, false, checkedType, -1);  
     }//GEN-LAST:event_jButtonScanLibraryActionPerformed
 
     private void jButtonScanDeletedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonScanDeletedActionPerformed
         jButtonScanDeleted.setFont(new Font(jButtonScanDeleted.getFont().getName(), Font.BOLD, 16));
-        startProcess(false, CheckType.SCAN_DELETED, -1);  
+        startProcess(this, false, CheckType.SCAN_DELETED, -1);  
     }//GEN-LAST:event_jButtonScanDeletedActionPerformed
 
     private void jSpinnerCheckMaxActionsInQueueStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerCheckMaxActionsInQueueStateChanged
@@ -644,21 +645,21 @@ public class PanelCheck extends javax.swing.JPanel {
      * Check given path
      * @param idPath
      */
-    public static void check(int idPath) {
+    public static void check(Component parent, int idPath) {
         if(!processCheck.isCheckAlive()) {
-            startProcess(true, CheckType.CHECK_FOLDER, idPath);
+            startProcess(parent, true, CheckType.CHECK_FOLDER, idPath);
             //Select Check tab
             PanelMain.selectTab(Inter.get("Label.Check")); //NOI18N
         }
     }
     
-    private static void startProcess(boolean enableDoActions, ProcessCheck.CheckType checkType, int idPath) {
+    private static void startProcess(Component parent, boolean enableDoActions, ProcessCheck.CheckType checkType, int idPath) {
         enableCheck(false);
         enableRowSorter(false);
         stopActions(enableDoActions);
         if(tableModelActionQueue.getRowCount()>0) {
             int n = JOptionPane.showConfirmDialog(
-					null, Inter.get("Question.Check.RemainingActions"),
+					parent, Inter.get("Question.Check.RemainingActions"),
 					Inter.get("Label.Confirm"),  //NOI18N
 					JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.NO_OPTION) {

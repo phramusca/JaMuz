@@ -109,10 +109,10 @@ public class PopupMenu {
 					}
 				}
 				else if(sourceTxt.equals(Inter.get("Label.Check"))) { //NOI18N
-					PanelCheck.check(selected.getIdPath());	
+					PanelCheck.check(jTableSelect, selected.getIdPath());	
 				} else if(sourceTxt.equals("Delete Selected")) {
 					int n = JOptionPane.showConfirmDialog( 
-                        null, "Are you sure you want to delete \""+selected.getRelativeFullPath()+"\" FROM FILESYSTEM ?", //NOI18N 
+                        jTableSelect, "Are you sure you want to delete \""+selected.getRelativeFullPath()+"\" FROM FILESYSTEM ?", //NOI18N 
                         Inter.get("Label.Confirm"), //NOI18N 
                         JOptionPane.YES_NO_OPTION); 
 					if (n == JOptionPane.YES_OPTION) { 					
@@ -127,7 +127,7 @@ public class PopupMenu {
                         JOptionPane.YES_NO_OPTION); 
 					if (n == JOptionPane.YES_OPTION) { 
 						n = JOptionPane.showConfirmDialog( 
-						null, "Are you REALLY SURE that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
+						jTableSelect, "Are you REALLY SURE that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION); 
 						if (n == JOptionPane.YES_OPTION) {
