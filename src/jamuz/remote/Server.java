@@ -39,12 +39,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import ws.schild.jave.EncoderException;
 
 /**
  *
@@ -121,6 +123,30 @@ public class Server {
 				Device device = tableModel.getClient(login).getDevice();
 				int idFile = Integer.valueOf(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
+				
+				// FIXME !! 0.5.0 Make destExt an option (server or client side or both ?)
+				String destExt = "mp3";
+				File transcoded = null;
+				res.setHeader("oriExt", fileInfoInt.getExt());
+				res.setHeader("destExt", destExt);
+				if(!fileInfoInt.getExt().equals(destExt)) {
+					try {
+						fileInfoInt.readMetadata(true);
+						fileInfoInt.getLyrics();
+						//FIXME !! 0.5.0 Transcode to a temp folder to avoid library issues if for any reason transcoded file is not deleted
+						//		+ it does change the folder modified date so it forces folder to be checked in "MAJ Librarie"
+						//FIXME !! 0.5.0 Replaygain is wrong for transcoded files on remote
+						//FIXME !! 0.5.0 Size differs a lot from flac to mp3 so playlist size to export is wrong :(
+						transcoded = fileInfoInt.transcode(destExt);
+						fileInfoInt.setPath(transcoded.getPath());
+						res.setHeader("size", String.valueOf(fileInfoInt.getFullPath().length()));
+					} catch (IllegalArgumentException | EncoderException ex) {
+						Jamuz.getLogger().severe(ex.toString());
+						res.setStatus(Status._500);
+						res.send(ex.getLocalizedMessage());
+					}
+				}
+				
 				File file = fileInfoInt.getFullPath();
 				if(!fileInfoInt.isDeleted() && file.exists() && file.isFile()) {	
 					String msg=" #"+fileInfoInt.getIdFile()+" ("+file.length()+"o) "+file.getAbsolutePath();
@@ -131,8 +157,11 @@ public class Server {
 					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
 					insert.add(fileInfoInt);
 					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
+					if(transcoded!=null) {
+						fileInfoInt.getFullPath().delete();
+					}
 				} else {
-					res.setStatus(Status._404);
+					res.sendStatus(Status._404);
 				}			
 			});
 			
@@ -273,13 +302,17 @@ public class Server {
 	}
 	
 	private String getFiles(String sql) {
-		//DbConnJaMuz.SyncStatus status = DbConnJaMuz.SyncStatus.valueOf(req.getQuery("status"));
 		ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
 		Jamuz.getDb().getFiles(filesToSend, sql);
 		Map jsonAsMap = new HashMap();
 		JSONArray jSONArray = new JSONArray();
 		for (FileInfoInt fileInfo : filesToSend) {
 			fileInfo.getTags();
+			//FIXME !! 0.5.0 Better handle this for transcoding to mp3
+			String destExt = "mp3";
+			if(!fileInfo.getExt().equals(destExt)) {
+				fileInfo.setPath(FilenameUtils.concat(fileInfo.getRelativePath(), FilenameUtils.getBaseName(fileInfo.getFilename())+"."+destExt));
+			}			
 			jSONArray.add(fileInfo.toMap());
 		}
 		jsonAsMap.put("files", jSONArray);		

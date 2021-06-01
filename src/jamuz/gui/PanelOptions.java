@@ -126,7 +126,7 @@ public class PanelOptions extends javax.swing.JPanel {
 					//TODO: Maybe offer not to read tags. 
 					//This would be speed up the process but needs a scan library first
 					//Can also be useful (why is that?) so we can modify tags in dB and save that to tags.
-					file.readTags(true);
+					file.readMetadata(true);
 //					file.getCoverImage(); //NOTE: This is needed if above not done
 					file.getLyrics();
 					file.saveTags(true);
