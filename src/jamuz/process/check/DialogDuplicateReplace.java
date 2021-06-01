@@ -327,7 +327,7 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 					.append("to : ").append(destinationFullPath).append(" ?")
 					.append("</html>");
 			int n = JOptionPane.showConfirmDialog(
-					null, builder.toString(), //NOI18N
+					this, builder.toString(), //NOI18N
 					Inter.get("Label.Confirm"),  //NOI18N
 					JOptionPane.YES_NO_OPTION);
 			if((n == JOptionPane.YES_OPTION)) {

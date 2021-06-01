@@ -1134,7 +1134,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 
 	private void deleteFolder() {
 		int n = JOptionPane.showConfirmDialog(
-					null, Inter.get("Question.Check.DeleteFolderContent"),  //NOI18N
+					this, Inter.get("Question.Check.DeleteFolderContent"),  //NOI18N
 					Inter.get("Label.Confirm"),  //NOI18N
 					JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
@@ -1198,7 +1198,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 
         if(!doSave) {
             int n = JOptionPane.showConfirmDialog(
-                null, Inter.get("Question.Check.TrackOrder"), //NOI18N
+                this, Inter.get("Question.Check.TrackOrder"), //NOI18N
                 Inter.get("Label.Confirm"),  //NOI18N
                 JOptionPane.YES_NO_OPTION);
             doSave = (n == JOptionPane.YES_OPTION);
@@ -1412,7 +1412,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 	
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
         
-        if((JOptionPane.showConfirmDialog(null, Inter.get("Msg.Check.DeleteFilesQuestion"), 
+        if((JOptionPane.showConfirmDialog(this, Inter.get("Msg.Check.DeleteFilesQuestion"), 
                 Inter.get("Label.Confirm"),  //NOI18N
                 JOptionPane.YES_NO_OPTION) 
                     == JOptionPane.YES_OPTION)) {
@@ -1455,7 +1455,7 @@ public final class DialogCheck extends javax.swing.JDialog {
 
     private void jButtonCheckNoneDuplicatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckNoneDuplicatesActionPerformed
         int n = JOptionPane.showConfirmDialog(
-            null, Inter.get("Question.Check.CleanAllDuplicates"),  //NOI18N
+            this, Inter.get("Question.Check.CleanAllDuplicates"),  //NOI18N
             Inter.get("Label.Confirm"),  //NOI18N
             JOptionPane.YES_NO_OPTION);
         if (n == JOptionPane.YES_OPTION) {

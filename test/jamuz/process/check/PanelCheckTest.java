@@ -105,7 +105,7 @@ public class PanelCheckTest {
 	public void testCheck() {
 		System.out.println("check");
 		int idPath = 0;
-		PanelCheck.check(idPath);
+		PanelCheck.check(null, idPath);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
