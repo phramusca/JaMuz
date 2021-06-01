@@ -22,10 +22,6 @@ import jamuz.gui.PanelMain;
 import jamuz.utils.Popup;
 import jamuz.utils.Inter;
 import de.umass.lastfm.Caller;
-import it.sauronsoftware.jave.AudioAttributes;
-import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.EncoderException;
-import it.sauronsoftware.jave.EncodingAttributes;
 import jamuz.FileInfo;
 import jamuz.process.check.Cover.CoverType;
 import jamuz.FileInfoInt;
@@ -55,6 +51,12 @@ import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import jamuz.utils.StringManager;
 import java.awt.Color;
+import java.util.logging.Logger;
+import ws.schild.jave.Encoder;
+import ws.schild.jave.EncoderException;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.encode.AudioAttributes;
+import ws.schild.jave.encode.EncodingAttributes;
 
 /**
  * Folder information
@@ -552,46 +554,49 @@ public class FolderInfo implements java.lang.Comparable {
 		}
 	}
     
+	//FIXME Z Test with JAVE 2 !! 
+	//https://github.com/a-schild/jave2
+	//Why does all-deps does not include all as documented
+	//Why attrs.setFormat("ogg"); not available though documented
+	
 	/**
 	 * Transcode convertible files  
      * @param progressBar
 	 */
 	public void transcode(ProgressBar progressBar) {
-		File source;
-		File target;
-		String basePath;
 		progressBar.setup(filesConvertible.size());
 		for (FileInfoInt file : filesConvertible) {
 			try {							
 				String destExt=filesConvertibleExtensions.get(file.getExt());
 				progressBar.progress(MessageFormat.format(Inter.get("Msg.Check.Transcoding"), destExt));  //NOI18N
 				
-				basePath=file.getFullPath().getAbsolutePath();
-				source = new File(FilenameUtils.concat(basePath, file.getFilename()));
-				
 				AudioAttributes audio = new AudioAttributes();
 				audio.setBitRate(192000);
 				audio.setChannels(2);
 				audio.setSamplingRate(44100);
-				EncodingAttributes attrs = new EncodingAttributes();
+				EncodingAttributes attrs = new EncodingAttributes();			
 				switch (destExt) {
 					case "ogg": //NOI18N
 						//libvorbis works on windows but fails on linux mint
 						//vorbis works on both :)
 						audio.setCodec("vorbis");  //NOI18N
-						attrs.setFormat("ogg");  //NOI18N
+						//attrs.setFormat("ogg");  //NOI18N
 						break;
 					case "mp3": //NOI18N
 					default: //Encoding to MP3 by default
 						destExt="mp3"; //NOI18N
 						audio.setCodec("libmp3lame");  //NOI18N
-						attrs.setFormat("mp3");  //NOI18N
+						//attrs.setFormat("mp3");  //NOI18N
 						break;
 				}
-				target = new File(FilenameUtils.concat(basePath, FilenameUtils.getBaseName(file.getFilename())+"."+destExt));  //NOI18N
 				attrs.setAudioAttributes(audio);
+
+				File source = file.getFullPath();				
+				String basePath=FilenameUtils.getFullPath(file.getFullPath().getAbsolutePath());
+				File target = new File(FilenameUtils.concat(basePath, FilenameUtils.getBaseName(file.getFilename())+"."+destExt));  //NOI18N
+				
 				Encoder encoder = new Encoder();
-				encoder.encode(source, target, attrs);
+				encoder.encode(new MultimediaObject(source), target, attrs);
 				file.restoreTags(destExt);
                 source.delete();
 
