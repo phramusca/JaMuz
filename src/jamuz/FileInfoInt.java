@@ -511,7 +511,7 @@ public class FileInfoInt extends FileInfo {
 	/**
 	 * Read cover from tag
 	 */
-	private void readCoverFromTag() {
+	private void readCoverFromMetadata() {
 		try {
 			if(this.nbCovers>0) {
 				File currentFile = getFullPath();
@@ -583,7 +583,7 @@ public class FileInfoInt extends FileInfo {
 			this.size = currentFile.length();
 			this.sizeDisplay=String.valueOf(this.size);
 			
-			//Read tags, depending on file extension
+			//Read metadata, depending on file extension
 			AudioHeader myHeader;
 			Tag tag;
 			switch (this.ext) {
@@ -720,17 +720,6 @@ public class FileInfoInt extends FileInfo {
 		return castValue;
 	}
 	
-	/**
-	 * Restore tags 
-	 * @param destExt
-	 * @return
-	 */
-	public boolean restoreTags(String destExt) {
-		this.ext=destExt;
-        this.setFilename(FilenameUtils.getBaseName(this.getFilename())+"."+this.ext);
-		return saveTags(true);
-	}
-
     /**
      * Save tags to file
      * @param deleteComment
@@ -1185,7 +1174,7 @@ public class FileInfoInt extends FileInfo {
 	public BufferedImage getCoverImage() {
 		if(coverImage==null) {
 			//First, try reading from file
-			this.readCoverFromTag();
+			this.readCoverFromMetadata();
 			if(coverImage==null) {
 				this.setEmptyCover();
 			}
@@ -1460,7 +1449,11 @@ public class FileInfoInt extends FileInfo {
 		return true;
 	}
 
-	public File transcode(String destExt) throws IllegalArgumentException, EncoderException {
+	public void transcode(String destExt) throws IllegalArgumentException, EncoderException {
+		transcode(destExt, rootPath);
+	}
+	
+	public void transcode(String destExt, String destPath) throws IllegalArgumentException, EncoderException {
 		AudioAttributes audio = new AudioAttributes();
 		audio.setBitRate(192000);
 		audio.setChannels(2);
@@ -1481,15 +1474,13 @@ public class FileInfoInt extends FileInfo {
 				break;
 		}
 		attrs.setAudioAttributes(audio);
-
-		File target = new File(FilenameUtils.concat(FilenameUtils.getFullPath(getFullPath().getAbsolutePath()), 
+		File target = new File(FilenameUtils.concat(FilenameUtils.getFullPath(FilenameUtils.concat(destPath, this.relativeFullPath)), 
 				FilenameUtils.getBaseName(getFilename())+"."+destExt));  //NOI18N
-
 		Encoder encoder = new Encoder();
 		encoder.encode(new MultimediaObject(getFullPath()), target, attrs);
-		restoreTags(destExt);
-		
-		return new File(FilenameUtils.concat(FilenameUtils.getFullPath(getRelativePath()), 
-				FilenameUtils.getBaseName(getFilename())+"."+destExt));
+		setRootPath(destPath);
+		setPath(new File(FilenameUtils.concat(FilenameUtils.getFullPath(getRelativePath()), 
+				FilenameUtils.getBaseName(getFilename())+"."+destExt)).getPath());
+		saveTags(true);
 	}
 }

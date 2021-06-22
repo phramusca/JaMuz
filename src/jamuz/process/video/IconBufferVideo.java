@@ -83,8 +83,6 @@ public class IconBufferVideo {
     }
     
     private static File getCacheFile(String url) {
-        return Jamuz.getFile(
-				StringManager.removeIllegal(url)+".png", 
-				"data", "cache", "video");
+        return Jamuz.getFile(StringManager.removeIllegal(url)+".png", "data", "cache", "video");
     }
 }

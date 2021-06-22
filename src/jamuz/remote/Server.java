@@ -126,19 +126,19 @@ public class Server {
 				
 				// FIXME !! 0.5.0 Make destExt an option (server or client side or both ?)
 				String destExt = "mp3";
-				File transcoded = null;
 				res.setHeader("oriExt", fileInfoInt.getExt());
 				res.setHeader("destExt", destExt);
+				boolean transcoded=false;
 				if(!fileInfoInt.getExt().equals(destExt)) {
 					try {
 						fileInfoInt.readMetadata(true);
 						fileInfoInt.getLyrics();
-						//FIXME !! 0.5.0 Transcode to a temp folder to avoid library issues if for any reason transcoded file is not deleted
-						//		+ it does change the folder modified date so it forces folder to be checked in "MAJ Librarie"
 						//FIXME !! 0.5.0 Replaygain is wrong for transcoded files on remote
 						//FIXME !! 0.5.0 Size differs a lot from flac to mp3 so playlist size to export is wrong :(
-						transcoded = fileInfoInt.transcode(destExt);
-						fileInfoInt.setPath(transcoded.getPath());
+						File f = Jamuz.getFile("void", "data", "temp", login, "transcoding");
+						String destPath = FilenameUtils.getFullPath(f.getAbsolutePath());
+						fileInfoInt.transcode(destExt, destPath);
+						transcoded=true;
 						res.setHeader("size", String.valueOf(fileInfoInt.getFullPath().length()));
 					} catch (IllegalArgumentException | EncoderException ex) {
 						Jamuz.getLogger().severe(ex.toString());
@@ -157,7 +157,7 @@ public class Server {
 					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
 					insert.add(fileInfoInt);
 					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
-					if(transcoded!=null) {
+					if(transcoded) {
 						fileInfoInt.getFullPath().delete();
 					}
 				} else {

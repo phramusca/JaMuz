@@ -34,6 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.UncheckedIOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -208,7 +209,7 @@ public class PanelRemote extends javax.swing.JPanel {
 		IP.append("<html>Set \"<B>");
 		try {
 			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append((Integer) jSpinnerPort.getValue()); 
-		} catch (UnknownHostException ex) {
+		} catch (UncheckedIOException | UnknownHostException ex) {
 			IP.append("Undetermined !");
 		}
 		IP.append("\"</B> in JaMuz Remote as <B>\"&lt;IP&gt;:&lt;Port&gt;\"</B> or read QR code with your Android phone.</html>");
