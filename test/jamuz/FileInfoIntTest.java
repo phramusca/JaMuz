@@ -347,21 +347,6 @@ public class FileInfoIntTest {
 	}
 
 	/**
-	 * Test of restoreTags method, of class FileInfoInt.
-	 */
-	@Test
-	public void testRestoreTags() {
-		System.out.println("restoreTags");
-		String destExt = "";
-		FileInfoInt instance = null;
-		boolean expResult = false;
-		boolean result = instance.restoreTags(destExt);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of saveTags method, of class FileInfoInt.
 	 */
 	@Test
