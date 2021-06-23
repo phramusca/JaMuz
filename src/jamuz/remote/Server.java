@@ -222,7 +222,13 @@ public class Server {
 									obj.put("type", "mergeListDbSelected");
 									JSONArray jsonArray = new JSONArray();
 									for (int i=0; i < mergeListDbSelected.size(); i++) {
-										jsonArray.add(mergeListDbSelected.get(i).toMap());
+										String destExt = "mp3";
+										FileInfo fileInfo = mergeListDbSelected.get(i);
+										//FIXME !! 0.5.0 Better handle this for transcoding to mp3
+										if(!fileInfo.getExt().equals(destExt)) {
+											fileInfo.setPath(FilenameUtils.concat(fileInfo.getRelativePath(), FilenameUtils.getBaseName(fileInfo.getFilename())+"."+destExt));
+										}
+										jsonArray.add(fileInfo.toMap());
 									}
 									obj.put("files", jsonArray);
 									res.send(obj.toJSONString());
