@@ -263,13 +263,13 @@ public class Server {
 				+ " AND DF.idDevice="+device.getId()+" AND DF.status=\""+DbConnJaMuz.SyncStatus.NEW+"\""
 				+ " ORDER BY F.idFile "
 				+ limit;
-				setStatus(login, "Sending "+(getCount?"count":"list") + " of NEW files ("+limit+")");
+				setStatus(login, "Sending "+(getCount?"count":"list") + " of NEW files ("+limit+" )");
 				if(getCount) {
 					res.send(Jamuz.getDb().getFilesCount(sql).toString());
 				} else {
 					res.send(getFiles(sql));
 				}
-				setStatus(login, "Sent "+(getCount?"count":"list") + " of NEW files ("+limit+")");
+				setStatus(login, "Sent "+(getCount?"count":"list") + " of NEW files ("+limit+" )");
 			});
 			
 			app.get("/files/info", (req, res) -> {
@@ -289,13 +289,13 @@ public class Server {
 				+ " AND F.idFile NOT IN (SELECT idFile FROM deviceFile WHERE idDevice="+device.getId()+" AND status=\""+DbConnJaMuz.SyncStatus.NEW+"\") "
 				+ " ORDER BY F.idFile "
 				+ limit;
-				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files ("+limit+")");
+				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files ("+limit+" )");
 				if(getCount) {
 					res.send(Jamuz.getDb().getFilesCount(sql).toString());
 				} else {
 					res.send(getFiles(sql));
 				}
-				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files ("+limit+")");
+				setStatus(login, "Sent "+(getCount?"count":"list") + " of INFO files ("+limit+" )");
 			});
 			
 			app.listen(port+1); // port is already used by remote
