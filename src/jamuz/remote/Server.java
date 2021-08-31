@@ -129,7 +129,8 @@ public class Server {
 				res.setHeader("oriExt", fileInfoInt.getExt());
 				res.setHeader("destExt", destExt);
 				boolean transcoded=false;
-				if(!fileInfoInt.getExt().equals(destExt)) {
+				String oriExt = fileInfoInt.getExt();
+				if(!oriExt.equals(destExt)) {
 					try {
 						fileInfoInt.readMetadata(true);
 						fileInfoInt.getLyrics();
@@ -155,11 +156,12 @@ public class Server {
 					System.out.println("Sent"+msg);
 					ArrayList<FileInfoInt> insert = new ArrayList<>();
 					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
-					insert.add(fileInfoInt);
-					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
 					if(transcoded) {
 						fileInfoInt.getFullPath().delete();
+						fileInfoInt.setExt(oriExt);
 					}
+					insert.add(fileInfoInt);
+					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
 				} else {
 					res.sendStatus(Status._404);
 				}			
@@ -190,17 +192,15 @@ public class Server {
 				obj.put("genres", list);
 				res.send(obj.toJSONString());
 			});
-	
-			
+
 			//Merge statistics
 			app.post("/files", (req, res) -> {
 				try {
 					String login=req.getHeader("login").get(0);
 					String body = getBody(req.getBody());
 					JSONObject jsonObject = (JSONObject) new JSONParser().parse(body);
-					
 					setStatus(login, "Received files to merge");
-					ArrayList<FileInfo> newTracks = new ArrayList<>();				
+					ArrayList<FileInfo> newTracks = new ArrayList<>();
 					JSONArray files = (JSONArray) jsonObject.get("files");
 					for(int i=0; i<files.size(); i++) {
 						JSONObject obj = (JSONObject) files.get(i);
@@ -226,7 +226,7 @@ public class Server {
 										FileInfo fileInfo = mergeListDbSelected.get(i);
 										//FIXME !! 0.5.0 Better handle this for transcoding to mp3
 										if(!fileInfo.getExt().equals(destExt)) {
-											fileInfo.setPath(FilenameUtils.concat(fileInfo.getRelativePath(), FilenameUtils.getBaseName(fileInfo.getFilename())+"."+destExt));
+											fileInfo.setExt(destExt);
 										}
 										jsonArray.add(fileInfo.toMap());
 									}
@@ -317,7 +317,7 @@ public class Server {
 			//FIXME !! 0.5.0 Better handle this for transcoding to mp3
 			String destExt = "mp3";
 			if(!fileInfo.getExt().equals(destExt)) {
-				fileInfo.setPath(FilenameUtils.concat(fileInfo.getRelativePath(), FilenameUtils.getBaseName(fileInfo.getFilename())+"."+destExt));
+				fileInfo.setExt(destExt);
 			}			
 			jSONArray.add(fileInfo.toMap());
 		}

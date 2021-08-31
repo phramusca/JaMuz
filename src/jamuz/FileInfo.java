@@ -523,6 +523,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		this.ext=FilenameUtils.getExtension(this.filename).toLowerCase(Locale.ENGLISH);
 	}
 
+	public void setExt(String destExt) {
+		setPath(FilenameUtils.concat(getRelativePath(), FilenameUtils.getBaseName(getFilename())+"."+destExt));
+	}
+	
 	/**
 	 * Get the relative full path
 	 * @return

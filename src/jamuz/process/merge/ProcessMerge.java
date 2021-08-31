@@ -672,9 +672,7 @@ public class ProcessMerge extends ProcessAbstract {
 			
 			//FIXME Z Do not update files if "Forcer JaMuz" option selected
 			if(!genre.equals("") || BPM>=0) {
-				//TODO: Better use inheritance !!
-				mergeListDbJaMuzFileTags.add(new FileInfoInt(fileJaMuz, 
-						BPM, genre));
+				mergeListDbJaMuzFileTags.add(new FileInfoInt(fileJaMuz, BPM, genre));
 			}
 			
 			//Comparing Tags
@@ -966,7 +964,7 @@ public class ProcessMerge extends ProcessAbstract {
 					if(!fileInfoInt.getGenre().equals("") ) {
 						fileInfoInt.updateGenre(fileInfoInt.getGenre());
 					}
-					else if(fileInfoInt.getBPM()>=0) {
+					if(fileInfoInt.getBPM()>=0) {
 						fileInfoInt.saveBPMtoFileTags();
 					}
 					//FIXME TEST MERGE Are we updating *modifDate 

@@ -64,6 +64,7 @@ import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
@@ -909,25 +910,27 @@ public class FileInfoInt extends FileInfo {
     }
     
 	private boolean saveTag(FieldKey key, String value) {
+		return saveTag(new HashMap<FieldKey,String>() {{ put(key, value); }});
+	}
+	
+	private boolean saveTag(Map<FieldKey,String> keyValues) {
 		try {
 			File testFile = getFullPath();
 			switch (this.ext) {
 				case "mp3": //NOI18N
-					//Get current tags
 					MP3File MP3File = (MP3File)AudioFileIO.read(testFile);
 					AbstractID3v2Tag v2tag = MP3File.getID3v2Tag();
-					//Set new tag
-					v2tag.setField(key, value);
-					//Commit
+					for (Map.Entry<FieldKey,String> entry : keyValues.entrySet()) {
+						v2tag.setField(entry.getKey(), entry.getValue());
+					}
 					MP3File.commit();
 					break;
 				default:
-					//Get current tags
 					AudioFile audioFile = AudioFileIO.read(testFile);
 					Tag tag = audioFile.getTag();
-					//Set new tag
-					tag.setField(key, value);
-					//Commit
+					for (Map.Entry<FieldKey,String> entry : keyValues.entrySet()) {
+						tag.setField(entry.getKey(), entry.getValue());
+					}
 					audioFile.commit();
 					break;
 			}
@@ -935,7 +938,7 @@ public class FileInfoInt extends FileInfo {
 		} catch (CannotReadException | IOException | TagException 
 				| ReadOnlyFileException | InvalidAudioFrameException 
 				| CannotWriteException ex) {
-			Popup.error("Error writing \""+key.toString()+"\" to \""+getFullPath()+"\"", ex);  //NOI18N
+			Popup.error("Error writing \""+keyValues.toString()+"\" to \""+getFullPath()+"\"", ex);  //NOI18N
 			return false;
 		}
 
@@ -1479,8 +1482,7 @@ public class FileInfoInt extends FileInfo {
 		Encoder encoder = new Encoder();
 		encoder.encode(new MultimediaObject(getFullPath()), target, attrs);
 		setRootPath(destPath);
-		setPath(new File(FilenameUtils.concat(FilenameUtils.getFullPath(getRelativePath()), 
-				FilenameUtils.getBaseName(getFilename())+"."+destExt)).getPath());
+		setExt(destExt);
 		saveTags(true);
 	}
 }
