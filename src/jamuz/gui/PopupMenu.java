@@ -122,7 +122,7 @@ public class PopupMenu {
 					}
 				} else if(sourceTxt.equals("Delete All")) {
 					int n = JOptionPane.showConfirmDialog( 
-                        null, "Are you sure that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
+                        jTableSelect, "Are you sure that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
                         Inter.get("Label.Confirm"), //NOI18N 
                         JOptionPane.YES_NO_OPTION); 
 					if (n == JOptionPane.YES_OPTION) { 

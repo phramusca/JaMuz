@@ -44,18 +44,8 @@ import jamuz.player.Mplayer;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
-import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.table.DefaultTableModel;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jopendocument.dom.OOUtils;
-import org.jopendocument.dom.spreadsheet.SpreadSheet;
-import org.musicbrainz.model.searchresult.ArtistResultWs2;
 
 /**
  *
@@ -63,6 +53,7 @@ import org.musicbrainz.model.searchresult.ArtistResultWs2;
  */
 public class PanelSelect extends javax.swing.JPanel {
 
+	//FIXME: When no cover, it messes up the list: cannot sort or display "Extra" columns
     private static TableModel tableModel;
     private static final TableColumnModel TABLE_COLUMN_MODEL = new TableColumnModel();
     

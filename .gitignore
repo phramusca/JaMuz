@@ -22,6 +22,8 @@ build/*
 logs/*
 !/lib/**/*.jar
 
+data/devices/
+data/temp/*
 data/cache/*
 data/Patterns.txt
 data/VideoLinks.txt
@@ -32,6 +34,9 @@ database/*_for_comparison.sql
 
 /JaMuz.xml
 /JaMuz.properties
+JaMuz\.db
+JaMuz\.xml\.bak
+logs\.bak/
 keys.properties
 myMovieDb.db
 yGuard.log
@@ -39,26 +44,14 @@ yGuard.log
 testenv/AppFolder/data/cache/
 testenv/AppFolder/logs/
 testenv/AppFolder/JaMuz\.db
+testenv/Musique/
 testenv/Musique/Archive/
 testenv/Musique/TestDevice/
 testenv/Ressources/albumFiles_MergeNTest/
 testenv/StatSources/
-data/devices/
-/src/jamuz/TinyTool-JsonFormat.json
-JaMuz\.db
-
-JaMuz\.xml\.bak
-
-testenv/Musique/
-
-logs\.bak/
 
 .vscode/settings.json
-
 Prod Remote.session.sql
-
 Test Remote.session.sql
-
 Test.session.sql
-
 Prod.session.sql

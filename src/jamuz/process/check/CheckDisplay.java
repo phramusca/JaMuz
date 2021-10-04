@@ -287,6 +287,13 @@ public class CheckDisplay {
 		column.setMinWidth(40);
 		column.setPreferredWidth(40);
 		
+		//FIXME: Display rating in check panel
+		// 26: "Rating"
+        // column = columnModel.getColumn(17);
+        // column.setMinWidth(50);
+        // column.setMaxWidth(200);
+        // column.setPreferredWidth(100);
+		
 		//Hide all columns except permanent ones (filename, track#, trackTotal, disc#, discTotal)
 		PanelMain.setColumnVisible(columnModel, 5, 25, false);
 		
