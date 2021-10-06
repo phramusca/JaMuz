@@ -372,14 +372,23 @@ public class Playlist implements Comparable {
     }
     
 	/**
-	 * Get files for that playlist
+	 * Get files for that playlist.
 	 * @param fileInfoList
 	 * @return
 	 */
 	public boolean getFiles(ArrayList<FileInfoInt> fileInfoList) {
-
-        ArrayList<FileInfoInt> fileInfoListTemp = new ArrayList<>();
-        
+		return getFiles(fileInfoList, "");
+	}
+	
+	/**
+	 * Get files for that playlist, with transcoded info for given file extension.
+	 * @param fileInfoList FileInfoInt list to be returned.
+	 * @param ext File extension.
+	 * @return false if an error occured with database.
+	 */
+	public boolean getFiles(ArrayList<FileInfoInt> fileInfoList, String ext) {
+		
+        ArrayList<FileInfoInt> fileInfoListTemp = new ArrayList<>();       
         if(this.match.equals(Match.Inde)) { //Allows each sub-playlist to be limited (in "OR" mode limit is not performed in sub_playlists)
             ArrayList<Playlist> nonRandomLists = new ArrayList<>();
             ArrayList<Playlist> randomLists = new ArrayList<>();
@@ -421,14 +430,38 @@ public class Playlist implements Comparable {
             
         }
         else {
-            String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, P.albumRating, P.percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
-            + "FROM file F " //NOI18N //NOI18N
-            + "JOIN (" +
-                "	SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n" +
-                "	ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n" +
-                "	FROM path JOIN file ON path.idPath=file.idPath WHERE file.deleted=0 AND path.deleted=0 GROUP BY path.idPath \n" +
-                ") P ON F.idPath=P.idPath "
-            + "WHERE F.deleted=0 ";  //NOI18N //NOI18N
+			String sql;
+			if(ext.isBlank()) {
+				sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
+						+ "P.albumRating, P.percentRated, 'INFO' AS status, "
+						+ "P.mbId AS pathMbId, P.modifDate AS pathModifDate "
+					+ "FROM file F ";
+			} else {
+				sql = "SELECT F.idFile, F.idPath, F.name, F.rating, "
+					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
+					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" +
+				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
+					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
+					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" +
+				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" +
+				"ifnull(T.format, F.format) AS format, \n" +
+				"ifnull(T.length, F.length) AS length, \n" +
+				"ifnull(T.size, F.size) AS size, \n" +
+				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" +
+				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" +
+				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" +
+				"P.strPath, P.checked, P.copyRight, P.albumRating, P.percentRated, "
+					+ "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate \n" +
+				"FROM file F \n" +
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+ext+"\" \n";
+			}
+			sql += "JOIN (\n" +
+				"		SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n" +
+				"		ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n" +
+				"		FROM path JOIN file ON path.idPath=file.idPath WHERE file.deleted=0 AND path.deleted=0 GROUP BY path.idPath \n" +
+				"	) P ON F.idPath=P.idPath \n" +
+				"WHERE F.deleted=0";
+			
 			//FIXME Z SQL error on playlists involving a sub-playlist that is an Inde playlist
             sql += this.getSqlWhere(); //NOI18N
             Jamuz.getLogger().finest(sql);
@@ -445,7 +478,6 @@ public class Playlist implements Comparable {
             if(max>fileInfoListTemp.size()) {
                 max = fileInfoListTemp.size();
             }
-            
             fileInfoList.addAll(fileInfoListTemp.subList(0, max));
             return true;
         }

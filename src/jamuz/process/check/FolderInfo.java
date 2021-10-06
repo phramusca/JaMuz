@@ -692,7 +692,7 @@ public class FolderInfo implements java.lang.Comparable {
         PanelMain.playSelected(false);
 	}
     
-	//TODO: Move this to a dedicated class
+	//TODO: Use stream() instead !!
 	/**
 	 *
 	 * @param list

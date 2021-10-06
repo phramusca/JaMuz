@@ -19,11 +19,13 @@ package jamuz.process.sync;
 //FIXME Z SYNC If file missing in source, it blocks transfert
 //FIXME Z SYNC If tag issue (genre, only?), it blocks transfert (errors)
 //FIXME Z SYNC Export file scrollabr freeze => threaded ?
+import com.sun.tools.javac.util.List;
 import jamuz.DbConnJaMuz;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.process.check.MP3gain;
 import jamuz.utils.ProcessAbstract;
 import java.io.File;
 import java.io.IOException;
@@ -37,8 +39,10 @@ import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import ws.schild.jave.EncoderException;
 
 /**
  * Sync process class
@@ -72,13 +76,11 @@ public class ProcessSync extends ProcessAbstract {
 	}
 	
 	/**
-	 * Starts file synchronisation process in a new thread
-	 * Called by MainGUI
+	 * Starts file export process in a new thread
 	 */
     @Override
 	public void run() {
 		this.resetAbort();
-
         try {
             sync();
         } catch (InterruptedException ex) {
@@ -98,7 +100,7 @@ public class ProcessSync extends ProcessAbstract {
             if(toInsertInDeviceFiles.size()>0) {
                 Jamuz.getDb().deleteDeviceFiles(device.getId());
                 Jamuz.getDb().insertDeviceFiles(toInsertInDeviceFiles, device.getId());
-            }	
+            }
 			progressBar.setup(fileInfoSourceList.size());
 			progressBar.progress("Export complete.", fileInfoSourceList.size());
 			callback.refresh();
@@ -123,13 +125,15 @@ public class ProcessSync extends ProcessAbstract {
 		//Get list of files to export
 		ArrayList<FileInfoInt> filesDevicePlaylist = new ArrayList<>();
 		Playlist playlist = device.getPlaylist();
-		playlist.getFiles(filesDevicePlaylist);
+		playlist.getFiles(filesDevicePlaylist, "mp3"); //FIXME !! 0.5.0 Parametrize destExt in device table
 		
 		//FIXME Z Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
 		
 		//GET list of files in deviceFile
 		fileInfoSourceList = new ArrayList<>();
-		String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
+		String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, "
+				+ " 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, "
+				+ " P.modifDate AS pathModifDate "
 				+ " FROM deviceFile DF "
 				+ " JOIN file F ON DF.idFile=F.idFile "
 				+ " JOIN path P ON F.idPath=P.idPath "
@@ -138,6 +142,38 @@ public class ProcessSync extends ProcessAbstract {
 				+ " ORDER BY idFile ";
 		Jamuz.getDb().getFiles(fileInfoSourceList, sql);
 
+		//Transcode files
+		
+		// FIXME !! 0.5.0 Use a location.xxx instead of data cache as folder could contain a lot of data
+		File file = Jamuz.getFile("void", "data", "cache", "transcoded");
+		String destPath = FilenameUtils.getFullPath(file.getAbsolutePath());
+		
+		List<FileInfoInt> filesToMaybeTranscode = filesDevicePlaylist.stream()
+				.filter(f -> !f.getExt().equals("mp3"))
+				.collect(List.collector());
+		
+		LinkedHashSet<String> pathsForReplayGain = new LinkedHashSet<>();
+		progressBar.setup(filesToMaybeTranscode.size());
+		filesToMaybeTranscode.forEach(fileInfoInt -> {
+			// FIXME !! 0.5.0 Make destExt an option (server or client side or both ?)
+			String destExt = "mp3";				
+			try {
+				if(fileInfoInt.transcodeIfNeeded(destPath, destExt)) {
+					pathsForReplayGain.add(fileInfoInt.getRelativePath());
+				}
+				progressBar.progress("Transcoded: "+fileInfoInt.getRelativePath());
+			} catch (IllegalArgumentException | EncoderException | IOException ex) {
+				Jamuz.getLogger().severe(ex.toString());
+			}
+		});
+
+		//Compute replayGain
+		pathsForReplayGain.forEach(relativePath -> {
+			boolean trackGain=false;  //  albumList.size()==1 && albumList.get(0).equals("Various Albums");	 // FIXME !! 0.5.0 			
+			MP3gain mP3gain = new MP3gain(trackGain, true, destPath, relativePath, progressBar);
+			mP3gain.process();
+		});		
+		
 		//Set statuses in deviceFile
 		progressBar.setup(fileInfoSourceList.size());
 		callback.refresh();

@@ -39,14 +39,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import ws.schild.jave.EncoderException;
 
 /**
  *
@@ -122,32 +120,8 @@ public class Server {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
 				int idFile = Integer.valueOf(req.getQuery("id"));
-				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
-				
-				// FIXME !! 0.5.0 Make destExt an option (server or client side or both ?)
-				String destExt = "mp3";
-				res.setHeader("oriExt", fileInfoInt.getExt());
-				res.setHeader("destExt", destExt);
-				boolean transcoded=false;
-				String oriExt = fileInfoInt.getExt();
-				if(!oriExt.equals(destExt)) {
-					try {
-						fileInfoInt.readMetadata(true);
-						fileInfoInt.getLyrics();
-						//FIXME !! 0.5.0 Replaygain is wrong for transcoded files on remote
-						//FIXME !! 0.5.0 Size differs a lot from flac to mp3 so playlist size to export is wrong :(
-						File f = Jamuz.getFile("void", "data", "temp", login, "transcoding");
-						String destPath = FilenameUtils.getFullPath(f.getAbsolutePath());
-						fileInfoInt.transcode(destExt, destPath);
-						transcoded=true;
-						res.setHeader("size", String.valueOf(fileInfoInt.getFullPath().length()));
-					} catch (IllegalArgumentException | EncoderException ex) {
-						Jamuz.getLogger().severe(ex.toString());
-						res.setStatus(Status._500);
-						res.send(ex.getLocalizedMessage());
-					}
-				}
-				
+				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile); // FIXME !! 0.5.0  JOIN fileTranscoded table !!!
+				// FIXME !! 0.5.0 Send the transcoded file !
 				File file = fileInfoInt.getFullPath();
 				if(!fileInfoInt.isDeleted() && file.exists() && file.isFile()) {	
 					String msg=" #"+fileInfoInt.getIdFile()+" ("+file.length()+"o) "+file.getAbsolutePath();
@@ -156,10 +130,6 @@ public class Server {
 					System.out.println("Sent"+msg);
 					ArrayList<FileInfoInt> insert = new ArrayList<>();
 					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
-					if(transcoded) {
-						fileInfoInt.getFullPath().delete();
-						fileInfoInt.setExt(oriExt);
-					}
 					insert.add(fileInfoInt);
 					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
 				} else {

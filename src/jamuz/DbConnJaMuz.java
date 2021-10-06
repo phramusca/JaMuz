@@ -1268,9 +1268,9 @@ public class DbConnJaMuz extends StatSourceSQL {
                 //FIXME Z Use this ON CONFLICT syntax for other insertOrUpdateXXX methods, if applicable
                 PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
 						"INSERT INTO deviceFile "
-                    + " (idFile, idDevice, oriRelativeFullPath, status) "    //NOI18N
-                    + " VALUES (?, ?, ?, \"NEW\") "
-					+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?, oriRelativeFullPath=?");   //NOI18N
+                    + " (idFile, idDevice, oriRelativeFullPath, status, updated) "    //NOI18N
+                    + " VALUES (?, ?, ?, \"NEW\", 0) " //FIXME !! 0.5.0 Set updated column to proper value
+					+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?, oriRelativeFullPath=?");   //NOI18N //FIXME !! 0.5.0 Set updated column to proper value
                 for (FileInfoInt file : files) {
                     stInsertDeviceFile.setInt(1, file.idFile);
                     stInsertDeviceFile.setInt(2, idDevice);

@@ -1456,6 +1456,26 @@ public class FileInfoInt extends FileInfo {
 		transcode(destExt, rootPath);
 	}
 	
+	public boolean transcodeIfNeeded(String destPath, String destExt) throws IllegalArgumentException, EncoderException, IOException {
+		if(!getExt().equals(destExt)) {
+			File transcodedFile = getTranscodedFile(destExt, destPath);
+			if(transcodedFile.exists()) {				
+//				if(sizeOri!=getSize()) { //FIXME !! 0.5.0 Check path too ? other ?
+//					transcode(destExt, destPath);	
+//					return true;
+//				}
+				setRootPath(destPath);
+				setExt(destExt);
+			} else {
+				readMetadata(true);
+				getLyrics();
+				transcode(destExt, destPath);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void transcode(String destExt, String destPath) throws IllegalArgumentException, EncoderException {
 		AudioAttributes audio = new AudioAttributes();
 		audio.setBitRate(192000);
@@ -1477,12 +1497,16 @@ public class FileInfoInt extends FileInfo {
 				break;
 		}
 		attrs.setAudioAttributes(audio);
-		File target = new File(FilenameUtils.concat(FilenameUtils.getFullPath(FilenameUtils.concat(destPath, this.relativeFullPath)), 
-				FilenameUtils.getBaseName(getFilename())+"."+destExt));  //NOI18N
+		File target = getTranscodedFile(destExt, destPath);  //NOI18N
 		Encoder encoder = new Encoder();
 		encoder.encode(new MultimediaObject(getFullPath()), target, attrs);
 		setRootPath(destPath);
 		setExt(destExt);
 		saveTags(true);
+	}
+	
+	private File getTranscodedFile(String destExt, String destPath) {
+		return new File(FilenameUtils.concat(FilenameUtils.getFullPath(FilenameUtils.concat(destPath, this.relativeFullPath)), 
+				FilenameUtils.getBaseName(getFilename())+"."+destExt));
 	}
 }
