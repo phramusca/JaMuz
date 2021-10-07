@@ -104,15 +104,16 @@ CREATE TABLE "playlist" (
     "hidden" INTEGER NOT NULL
 );
 CREATE TABLE "fileTranscoded" (
-    "idFile" INTEGER NOT NULL,
-    "ext" TEXT NOT NULL,
-    "bitRate" TEXT NOT NULL,
-    "format" TEXT NOT NULL,
-    "length" INTEGER NOT NULL,
-    "size" INTEGER NOT NULL,
-    "trackGain" REAL,
-	"albumGain" REAL,
-    "modifDate" TEXT NOT NULL
+	"idFile"	INTEGER NOT NULL,
+	"ext"	TEXT NOT NULL,
+	"bitRate"	TEXT NOT NULL,
+	"format"	TEXT NOT NULL,
+	"length"	INTEGER NOT NULL,
+	"size"	INTEGER NOT NULL,
+	"trackGain"	REAL,
+	"albumGain"	REAL,
+	"modifDate"	TEXT NOT NULL,
+	PRIMARY KEY("idFile","ext")
 );
 CREATE TABLE "file" (
     "idFile" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

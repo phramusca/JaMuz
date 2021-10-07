@@ -39,6 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -120,9 +121,17 @@ public class Server {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
 				int idFile = Integer.valueOf(req.getQuery("id"));
-				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile); // FIXME !! 0.5.0  JOIN fileTranscoded table !!!
-				// FIXME !! 0.5.0 Send the transcoded file !
+				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
 				File file = fileInfoInt.getFullPath();
+				
+				String destExt = "mp3"; // FIXME !!! 0.5.0 destExt option
+				if(!fileInfoInt.getExt().equals(destExt)) {
+					File destPathFile = Jamuz.getFile("void", "data", "cache", "transcoded");
+					String destPath = FilenameUtils.getFullPath(destPathFile.getAbsolutePath());
+					file = fileInfoInt.getTranscodedFile(destExt, destPath);
+					// FIXME ! 0.5.0 when requested from remote, If file has not been transcoded at export, it will return 404
+				}
+				
 				if(!fileInfoInt.isDeleted() && file.exists() && file.isFile()) {	
 					String msg=" #"+fileInfoInt.getIdFile()+" ("+file.length()+"o) "+file.getAbsolutePath();
 					System.out.println("Sending"+msg);
@@ -192,15 +201,15 @@ public class Server {
 									obj.put("type", "mergeListDbSelected");
 									JSONArray jsonArray = new JSONArray();
 									for (int i=0; i < mergeListDbSelected.size(); i++) {
-										String destExt = "mp3";
+										String destExt = "mp3"; //FIXME !!! destExt option
 										FileInfo fileInfo = mergeListDbSelected.get(i);
-										//FIXME !! 0.5.0 Better handle this for transcoding to mp3
 										if(!fileInfo.getExt().equals(destExt)) {
+											//Note: No need to get info from fileTranscoded table since only stats are updated on remote
 											fileInfo.setExt(destExt);
 										}
 										jsonArray.add(fileInfo.toMap());
 									}
-									obj.put("files", jsonArray);
+									obj.put("files", jsonArray); 
 									res.send(obj.toJSONString());
 								}
 
@@ -215,6 +224,8 @@ public class Server {
 				}
 			});
 			
+			String ext = "mp3"; //FIXME !!! destExt option
+			
 			app.get("/files/new", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
@@ -225,14 +236,30 @@ public class Server {
 					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
 				}
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, P.modifDate AS pathModifDate ")
-				+ " FROM file F "
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " : " F.idFile, F.idPath, F.name, F.rating, "
+					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
+					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" +
+				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
+					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
+					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" +
+				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" +
+				"ifnull(T.format, F.format) AS format, \n" +
+				"ifnull(T.length, F.length) AS length, \n" +
+				"ifnull(T.size, F.size) AS size, \n" +
+				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" +
+				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" +
+				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" +
+				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
+					+ "P.mbId AS pathMbId, P.modifDate AS pathModifDate, DF.status \n") +
+				"FROM file F \n" +
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+ext+"\" \n"
 				+ " JOIN deviceFile DF ON DF.idFile=F.idFile "
 				+ " JOIN path P ON F.idPath=P.idPath "
 				+ " WHERE F.deleted=0 AND P.deleted=0 "
 				+ " AND DF.idDevice="+device.getId()+" AND DF.status=\""+DbConnJaMuz.SyncStatus.NEW+"\""
 				+ " ORDER BY F.idFile "
 				+ limit;
+				
 				setStatus(login, "Sending "+(getCount?"count":"list") + " of NEW files ("+limit+" )");
 				if(getCount) {
 					res.send(Jamuz.getDb().getFilesCount(sql).toString());
@@ -252,13 +279,29 @@ public class Server {
 					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
 				}
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" 'INFO' AS status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, P.modifDate AS pathModifDate ")
-				+ " FROM file F "
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " : " F.idFile, F.idPath, F.name, F.rating, "
+					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
+					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" +
+				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
+					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
+					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" +
+				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" +
+				"ifnull(T.format, F.format) AS format, \n" +
+				"ifnull(T.length, F.length) AS length, \n" +
+				"ifnull(T.size, F.size) AS size, \n" +
+				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" +
+				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" +
+				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" +
+				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
+					+ "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate, 'INFO' AS status \n") +
+				"FROM file F \n" +
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+ext+"\" \n"
 				+ " JOIN path P ON F.idPath=P.idPath "
 				+ " WHERE F.deleted=0 AND P.deleted=0 "
 				+ " AND F.idFile NOT IN (SELECT idFile FROM deviceFile WHERE idDevice="+device.getId()+" AND status=\""+DbConnJaMuz.SyncStatus.NEW+"\") "
 				+ " ORDER BY F.idFile "
 				+ limit;
+				
 				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files ("+limit+" )");
 				if(getCount) {
 					res.send(Jamuz.getDb().getFilesCount(sql).toString());
@@ -284,8 +327,7 @@ public class Server {
 		JSONArray jSONArray = new JSONArray();
 		for (FileInfoInt fileInfo : filesToSend) {
 			fileInfo.getTags();
-			//FIXME !! 0.5.0 Better handle this for transcoding to mp3
-			String destExt = "mp3";
+			String destExt = "mp3";//FIXME !!! 0.5.0 destExt option
 			if(!fileInfo.getExt().equals(destExt)) {
 				fileInfo.setExt(destExt);
 			}			

@@ -26,6 +26,7 @@ import jamuz.Jamuz;
 import jamuz.Playlist;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.MP3gain;
+import jamuz.process.check.ReplayGain;
 import jamuz.utils.ProcessAbstract;
 import java.io.File;
 import java.io.IOException;
@@ -125,9 +126,15 @@ public class ProcessSync extends ProcessAbstract {
 		//Get list of files to export
 		ArrayList<FileInfoInt> filesDevicePlaylist = new ArrayList<>();
 		Playlist playlist = device.getPlaylist();
-		playlist.getFiles(filesDevicePlaylist, "mp3"); //FIXME !! 0.5.0 Parametrize destExt in device table
+		playlist.getFiles(filesDevicePlaylist, "mp3"); //FIXME !!! destExt option
 		
 		//FIXME Z Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
+		//In a general manner better handle deleted=1 in file or path table:
+		//	- may cause duplicates in db (still under monitoring, )
+		//	- should be included in duplicate search in check process
+		//		- to reject duplicates with same mbId and low rating when deleted
+		//		- to accept and replace duplicates with same mbId and high rating when deleted
+		//		- think of the status: why would a OK with good rating be deleted ? why ... ?
 		
 		//GET list of files in deviceFile
 		fileInfoSourceList = new ArrayList<>();
@@ -144,24 +151,27 @@ public class ProcessSync extends ProcessAbstract {
 
 		//Transcode files
 		
-		// FIXME !! 0.5.0 Use a location.xxx instead of data cache as folder could contain a lot of data
+		// FIXME ! 0.5.0 Use a location.xxx instead of data cache as folder could contain a lot of data
 		File file = Jamuz.getFile("void", "data", "cache", "transcoded");
 		String destPath = FilenameUtils.getFullPath(file.getAbsolutePath());
 		
 		List<FileInfoInt> filesToMaybeTranscode = filesDevicePlaylist.stream()
-				.filter(f -> !f.getExt().equals("mp3"))
+				.filter(f -> !f.getExt().equals("mp3")) //FIXME !!! 0.5.0 destExt option
 				.collect(List.collector());
 		
 		LinkedHashSet<String> pathsForReplayGain = new LinkedHashSet<>();
+		ArrayList<FileInfoInt> filesTranslated = new ArrayList<>();
 		progressBar.setup(filesToMaybeTranscode.size());
 		filesToMaybeTranscode.forEach(fileInfoInt -> {
-			// FIXME !! 0.5.0 Make destExt an option (server or client side or both ?)
+			//FIXME !!! destExt option
 			String destExt = "mp3";				
 			try {
 				if(fileInfoInt.transcodeIfNeeded(destPath, destExt)) {
+					filesTranslated.add(fileInfoInt);
 					pathsForReplayGain.add(fileInfoInt.getRelativePath());
 				}
-				progressBar.progress("Transcoded: "+fileInfoInt.getRelativePath());
+				progressBar.progress("Transcoded: "+fileInfoInt.getRelativeFullPath());
+				callback.refresh();
 			} catch (IllegalArgumentException | EncoderException | IOException ex) {
 				Jamuz.getLogger().severe(ex.toString());
 			}
@@ -169,10 +179,21 @@ public class ProcessSync extends ProcessAbstract {
 
 		//Compute replayGain
 		pathsForReplayGain.forEach(relativePath -> {
-			boolean trackGain=false;  //  albumList.size()==1 && albumList.get(0).equals("Various Albums");	 // FIXME !! 0.5.0 			
-			MP3gain mP3gain = new MP3gain(trackGain, true, destPath, relativePath, progressBar);
+			boolean trackGain=false;  //  albumList.size()==1 && albumList.get(0).equals("Various Albums");	 // FIXME !!!! 0.5.0 trackGain if "Various Albums"
+			MP3gain mP3gain = new MP3gain(trackGain, true, destPath, relativePath, progressBar); //FIXME: callback.refresh(); within MP3gain
 			mP3gain.process();
-		});		
+		});
+		progressBar.setup(filesTranslated.size());
+		callback.refresh();
+		filesTranslated.stream().forEach((fileInfoDisplay) -> {
+			progressBar.progress("Reading ReplayGain from \""+fileInfoDisplay.getRelativeFullPath()+"\"");
+			callback.refresh();
+			ReplayGain.GainValues gv = fileInfoDisplay.getReplayGain(true);
+			fileInfoDisplay.saveReplayGainToID3(gv);
+			fileInfoDisplay.readMetadata(false); //To get new file information (format, size,...)
+		});
+		
+		Jamuz.getDb().insertOrUpdateDeviceFilesTranslated(filesTranslated);
 		
 		//Set statuses in deviceFile
 		progressBar.setup(fileInfoSourceList.size());

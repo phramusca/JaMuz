@@ -1503,9 +1503,10 @@ public class FileInfoInt extends FileInfo {
 		setRootPath(destPath);
 		setExt(destExt);
 		saveTags(true);
+		readMetadata(false); //To get new file information (format, size,...)
 	}
 	
-	private File getTranscodedFile(String destExt, String destPath) {
+	public File getTranscodedFile(String destExt, String destPath) {
 		return new File(FilenameUtils.concat(FilenameUtils.getFullPath(FilenameUtils.concat(destPath, this.relativeFullPath)), 
 				FilenameUtils.getBaseName(getFilename())+"."+destExt));
 	}

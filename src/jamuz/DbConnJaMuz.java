@@ -1266,11 +1266,12 @@ public class DbConnJaMuz extends StatSourceSQL {
                 dbConn.connection.setAutoCommit(false);
                 int[] results;
                 //FIXME Z Use this ON CONFLICT syntax for other insertOrUpdateXXX methods, if applicable
+				 //FIXME !! 0.5.0 Set updated column to proper value
                 PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
 						"INSERT INTO deviceFile "
-                    + " (idFile, idDevice, oriRelativeFullPath, status, updated) "    //NOI18N
-                    + " VALUES (?, ?, ?, \"NEW\", 0) " //FIXME !! 0.5.0 Set updated column to proper value
-					+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?, oriRelativeFullPath=?");   //NOI18N //FIXME !! 0.5.0 Set updated column to proper value
+                    + " (idFile, idDevice, oriRelativeFullPath, status, updated) " //NOI18N
+                    + " VALUES (?, ?, ?, \"NEW\", 0) "
+					+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?, oriRelativeFullPath=?"); //NOI18N
                 for (FileInfoInt file : files) {
                     stInsertDeviceFile.setInt(1, file.idFile);
                     stInsertDeviceFile.setInt(2, idDevice);
@@ -1417,6 +1418,50 @@ public class DbConnJaMuz extends StatSourceSQL {
             return false;
         }
     }
+
+	public synchronized void insertOrUpdateDeviceFilesTranslated(ArrayList<FileInfoInt> files) {
+		try {
+            if (files.size() > 0) {
+				long startTime = System.currentTimeMillis();
+                dbConn.connection.setAutoCommit(false);
+                int[] results;
+                PreparedStatement preparedStatement = dbConn.connection.prepareStatement(
+						"INSERT INTO fileTranscoded "
+                    + " (idFile, ext, bitRate, format, length, size, trackGain, albumGain, modifDate) " //NOI18N
+                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
+					+ " ON CONFLICT(idFile, ext) DO UPDATE SET bitRate=?, format=?, length=?, size=?, trackGain=?, albumGain=?, modifDate=?"); //NOI18N
+                for (FileInfoInt file : files) {
+					//Insert
+                    preparedStatement.setInt(1, file.idFile);
+                    preparedStatement.setString(2, file.getExt());
+                    preparedStatement.setString(3, file.getBitRate());
+					preparedStatement.setString(4, file.getFormat());
+					preparedStatement.setInt(5, file.getLength());
+					preparedStatement.setLong(6, file.getSize());
+					GainValues gainValues = file.getReplayGain(false);
+					preparedStatement.setFloat(7, gainValues.getTrackGain());
+					preparedStatement.setFloat(8, gainValues.getAlbumGain());
+					preparedStatement.setString(9, file.getFormattedModifDate());
+					//Update
+					preparedStatement.setString(10, file.getBitRate());
+					preparedStatement.setString(11, file.getFormat());
+					preparedStatement.setInt(12, file.getLength());
+					preparedStatement.setLong(13, file.getSize());
+					preparedStatement.setFloat(14, gainValues.getTrackGain());
+					preparedStatement.setFloat(15, gainValues.getAlbumGain());
+					preparedStatement.setString(16, file.getFormattedModifDate());
+                    preparedStatement.addBatch();
+                }
+                results = preparedStatement.executeBatch();
+                dbConn.connection.commit();
+				dbConn.connection.setAutoCommit(true);
+				long endTime = System.currentTimeMillis();
+				Jamuz.getLogger().log(Level.FINEST, "insertOrUpdateDeviceFilesTranslated // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
+            }
+        } catch (SQLException ex) {
+            Popup.error("insertOrUpdateDeviceFilesTranslated(ArrayList<FileInfoInt> files)", ex);   //NOI18N
+        }
+	}
 	
 	public enum SyncStatus {
 		NEW,
@@ -2637,11 +2682,26 @@ public class DbConnJaMuz extends StatSourceSQL {
     }
 	
 	public FileInfoInt getFile(int idFile) {
-		ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();
-        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
-				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
-				+ "FROM file F, path P "
-                + "WHERE F.idPath=P.idPath AND F.idFile="+idFile;    //NOI18N
+		ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();	
+		String sql = "SELECT F.idFile, F.idPath, F.name, F.rating, "
+					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
+					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" +
+				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
+					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
+					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" +
+				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" +
+				"ifnull(T.format, F.format) AS format, \n" +
+				"ifnull(T.length, F.length) AS length, \n" +
+				"ifnull(T.size, F.size) AS size, \n" +
+				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" +
+				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" +
+				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" +
+				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
+					+ "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate \n" +
+				"FROM file F \n" +
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\"mp3\" \n" //FIXME !!! destExt option
+				+ "JOIN path P ON F.idPath=P.idPath "
+				+ "WHERE F.idFile="+idFile;		
         getFiles(myFileInfoList, sql);
 		return myFileInfoList.get(0);
     }
