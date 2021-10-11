@@ -120,12 +120,12 @@ public class Server {
 			app.get("/download", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
+				String destExt = device.getPlaylist().getDestExt();
 				int idFile = Integer.valueOf(req.getQuery("id"));
-				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
+				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt); 
 				File file = fileInfoInt.getFullPath();
 				
-				String destExt = "mp3"; // FIXME !!! 0.5.0 destExt option
-				if(!fileInfoInt.getExt().equals(destExt)) {
+				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
 					File destPathFile = Jamuz.getFile("void", "data", "cache", "transcoded");
 					String destPath = FilenameUtils.getFullPath(destPathFile.getAbsolutePath());
 					file = fileInfoInt.getTranscodedFile(destExt, destPath);
@@ -189,6 +189,8 @@ public class Server {
 					List<StatSource> sources = new ArrayList();
 					sources.add(tableModel.getClient(login).getStatSource());
 					setStatus(login, "Starting merge");
+					Device device = tableModel.getClient(login).getDevice();
+					String destExt = device.getPlaylist().getDestExt();
 					new ProcessMerge("Thread.Server.ProcessMerge."+login,
 							sources, false, false, newTracks,
 							tableModel.getClient(login).getProgressBar(),
@@ -201,9 +203,8 @@ public class Server {
 									obj.put("type", "mergeListDbSelected");
 									JSONArray jsonArray = new JSONArray();
 									for (int i=0; i < mergeListDbSelected.size(); i++) {
-										String destExt = "mp3"; // FIXME !!! 0.5.0 destExt option
 										FileInfo fileInfo = mergeListDbSelected.get(i);
-										if(!fileInfo.getExt().equals(destExt)) {
+										if(!destExt.isBlank() && !fileInfo.getExt().equals(destExt)) {
 											//Note: No need to get info from fileTranscoded table since only stats are updated on remote
 											fileInfo.setExt(destExt);
 										}
@@ -224,11 +225,10 @@ public class Server {
 				}
 			});
 			
-			String ext = "mp3"; // FIXME !!! 0.5.0 destExt option
-			
 			app.get("/files/new", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
+				String destExt = device.getPlaylist().getDestExt();
 				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
 				String limit="";
 				if(!getCount) {
@@ -252,7 +252,7 @@ public class Server {
 				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
 					+ "P.mbId AS pathMbId, P.modifDate AS pathModifDate, DF.status \n") +
 				"FROM file F \n" +
-				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+ext+"\" \n"
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n"
 				+ " JOIN deviceFile DF ON DF.idFile=F.idFile "
 				+ " JOIN path P ON F.idPath=P.idPath "
 				+ " WHERE F.deleted=0 AND P.deleted=0 "
@@ -264,7 +264,7 @@ public class Server {
 				if(getCount) {
 					res.send(Jamuz.getDb().getFilesCount(sql).toString());
 				} else {
-					res.send(getFiles(sql));
+					res.send(getFiles(sql, destExt));
 				}
 				setStatus(login, "Sent "+(getCount?"count":"list") + " of NEW files ("+limit+" )");
 			});
@@ -272,6 +272,7 @@ public class Server {
 			app.get("/files/info", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
+				String destExt = device.getPlaylist().getDestExt();
 				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
 				String limit="";
 				if(!getCount) {
@@ -295,18 +296,18 @@ public class Server {
 				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
 					+ "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate, 'INFO' AS status \n") +
 				"FROM file F \n" +
-				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+ext+"\" \n"
-				+ " JOIN path P ON F.idPath=P.idPath "
-				+ " WHERE F.deleted=0 AND P.deleted=0 "
-				+ " AND F.idFile NOT IN (SELECT idFile FROM deviceFile WHERE idDevice="+device.getId()+" AND status=\""+DbConnJaMuz.SyncStatus.NEW+"\") "
-				+ " ORDER BY F.idFile "
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n"
+				+ "JOIN path P ON F.idPath=P.idPath \n"
+				+ "WHERE F.deleted=0 AND P.deleted=0 \n"
+				+ "AND F.idFile NOT IN (SELECT idFile FROM deviceFile WHERE idDevice="+device.getId()+" AND status=\""+DbConnJaMuz.SyncStatus.NEW+"\") \n"
+				+ "ORDER BY F.idFile "
 				+ limit;
 				
 				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files ("+limit+" )");
 				if(getCount) {
 					res.send(Jamuz.getDb().getFilesCount(sql).toString());
 				} else {
-					res.send(getFiles(sql));
+					res.send(getFiles(sql, destExt));
 				}
 				setStatus(login, "Sent "+(getCount?"count":"list") + " of INFO files ("+limit+" )");
 			});
@@ -320,17 +321,16 @@ public class Server {
 		}
 	}
 	
-	private String getFiles(String sql) {
+	private String getFiles(String sql, String destExt) {
 		ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
 		Jamuz.getDb().getFiles(filesToSend, sql);
 		Map jsonAsMap = new HashMap();
 		JSONArray jSONArray = new JSONArray();
 		for (FileInfoInt fileInfo : filesToSend) {
 			fileInfo.getTags();
-			String destExt = "mp3";//FIXME !!! 0.5.0 destExt option
-			if(!fileInfo.getExt().equals(destExt)) {
+			if(!destExt.isBlank() && !fileInfo.getExt().equals(destExt)) {
 				fileInfo.setExt(destExt);
-			}			
+			}
 			jSONArray.add(fileInfo.toMap());
 		}
 		jsonAsMap.put("files", jSONArray);		
@@ -510,8 +510,8 @@ public class Server {
 		
 	}
 	
-	public void sendFile(String clientId, String login, int idFile) {
-		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
+	public void sendFile(String clientId, String login, int idFile, String destExt) {
+		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt);
 		setStatus(login, "Sending file: "+fileInfoInt.getRelativeFullPath());
 		if(!sendFile(clientId, fileInfoInt)) {
 			//TODO SYNC Happens (still ?) when file not found

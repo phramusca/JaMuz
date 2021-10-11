@@ -750,7 +750,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             PreparedStatement stUpdatePlaylist = dbConn.connection.prepareStatement(
 					"UPDATE playlist "
                     + "SET limitDo=?, limitValue=?, limitUnit=?, random=?, "
-							+ "type=?, match=?, name=?, hidden=? "    //NOI18N
+							+ "type=?, match=?, name=?, hidden=?, destExt=? "    //NOI18N
                     + "WHERE idPlaylist=?");  //NOI18N
             stUpdatePlaylist.setBoolean(1, playlist.isLimit());
             stUpdatePlaylist.setDouble(2, playlist.getLimitValue());
@@ -760,7 +760,8 @@ public class DbConnJaMuz extends StatSourceSQL {
             stUpdatePlaylist.setString(6, playlist.getMatch().name());
             stUpdatePlaylist.setString(7, playlist.getName());
 			stUpdatePlaylist.setBoolean(8, playlist.isHidden());
-            stUpdatePlaylist.setInt(9, playlist.getId());
+            stUpdatePlaylist.setString(9, playlist.getDestExt());
+			stUpdatePlaylist.setInt(10, playlist.getId());
             int nbRowsAffected = stUpdatePlaylist.executeUpdate();
             if (nbRowsAffected == 1) {
                 PreparedStatement stDeletePlaylistFilters = dbConn.connection.
@@ -860,8 +861,8 @@ public class DbConnJaMuz extends StatSourceSQL {
         try {
             PreparedStatement stInsertPlaylist = dbConn.connection.prepareStatement(
 					"INSERT INTO playlist "
-                    + "(name, limitDo, limitValue, limitUnit, type, match, random, hidden) "    //NOI18N
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");   //NOI18N
+                    + "(name, limitDo, limitValue, limitUnit, type, match, random, hidden, destExt) "    //NOI18N
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");   //NOI18N
             stInsertPlaylist.setString(1, playlist.getName());
             stInsertPlaylist.setBoolean(2, playlist.isLimit());
             stInsertPlaylist.setInt(3, playlist.getLimitValue());
@@ -870,6 +871,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             stInsertPlaylist.setString(6, playlist.getMatch().name());
             stInsertPlaylist.setBoolean(7, playlist.isRandom());
 			stInsertPlaylist.setBoolean(8, playlist.isHidden());
+			stInsertPlaylist.setString(9, playlist.getDestExt());
 
             int nbRowsAffected = stInsertPlaylist.executeUpdate();
             if (nbRowsAffected == 1) {
@@ -922,7 +924,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean getPlaylists(HashMap<Integer, Playlist> playlists) {
         try {
             PreparedStatement stSelectPlaylists = dbConn.connection.prepareStatement("SELECT idPlaylist, name, limitDo, "
-                    + "limitValue, limitUnit, random, hidden, type, match FROM playlist");    //NOI18N
+                    + "limitValue, limitUnit, random, hidden, type, match, destExt FROM playlist");    //NOI18N
             ResultSet rs = stSelectPlaylists.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("idPlaylist");  //NOI18N
@@ -932,9 +934,10 @@ public class DbConnJaMuz extends StatSourceSQL {
                 Playlist.LimitUnit limitUnit = Playlist.LimitUnit.valueOf(dbConn.getStringValue(rs, "limitUnit"));  //NOI18N
                 boolean random = rs.getBoolean("random");  //NOI18N
 				boolean hidden = rs.getBoolean("hidden");
+				String destExt = rs.getString("destExt");
                 Playlist.Type type = Playlist.Type.valueOf(dbConn.getStringValue(rs, "type"));  //NOI18N
                 Playlist.Match match = Playlist.Match.valueOf(dbConn.getStringValue(rs, "match"));  //NOI18N
-                Playlist playlist = new Playlist(id, playlistName, limit, limitValue, limitUnit, random, type, match, hidden);
+                Playlist playlist = new Playlist(id, playlistName, limit, limitValue, limitUnit, random, type, match, hidden, destExt);
 
                 //Get the filters
                 PreparedStatement stSelectPlaylistFilters = dbConn.connection.prepareStatement("SELECT idPlaylistFilter, field, operator, value "
@@ -2679,7 +2682,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         return getFiles(myFileInfoList, sql);
     }
 	
-	public FileInfoInt getFile(int idFile) {
+	public FileInfoInt getFile(int idFile, String destExt) {
 		ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();	
 		String sql = "SELECT F.idFile, F.idPath, F.name, F.rating, "
 					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
@@ -2697,7 +2700,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
 					+ "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate \n" +
 				"FROM file F \n" +
-				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\"mp3\" \n" // FIXME !!! 0.5.0 destExt option
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n"
 				+ "JOIN path P ON F.idPath=P.idPath "
 				+ "WHERE F.idFile="+idFile;		
         getFiles(myFileInfoList, sql);

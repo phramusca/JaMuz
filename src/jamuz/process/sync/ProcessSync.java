@@ -126,7 +126,7 @@ public class ProcessSync extends ProcessAbstract {
 		//Get list of files to export
 		ArrayList<FileInfoInt> filesDevicePlaylist = new ArrayList<>();
 		Playlist playlist = device.getPlaylist();
-		playlist.getFiles(filesDevicePlaylist, "mp3"); //FIXME !!! 0.5.0 destExt option
+		playlist.getFiles(filesDevicePlaylist);
 		
 		//FIXME Z Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
 		//In a general manner better handle deleted=1 in file or path table:
@@ -149,51 +149,48 @@ public class ProcessSync extends ProcessAbstract {
 				+ " ORDER BY idFile ";
 		Jamuz.getDb().getFiles(fileInfoSourceList, sql);
 
-		//Transcode files
+		//Transcode files		
+		String destExt = playlist.getDestExt();
 		
-		// FIXME ! 0.5.0 Use a location.xxx instead of data cache as folder could contain a lot of data
-		File file = Jamuz.getFile("void", "data", "cache", "transcoded");
-		String destPath = FilenameUtils.getFullPath(file.getAbsolutePath());
-		
-		List<FileInfoInt> filesToMaybeTranscode = filesDevicePlaylist.stream()
-				.filter(f -> !f.getExt().equals("mp3")) //FIXME !!! 0.5.0 destExt option
-				.collect(List.collector());
-		
-		LinkedHashSet<String> pathsForReplayGain = new LinkedHashSet<>();
-		ArrayList<FileInfoInt> filesTranslated = new ArrayList<>();
-		progressBar.setup(filesToMaybeTranscode.size());
-		filesToMaybeTranscode.forEach(fileInfoInt -> {
-			//FIXME !!! 0.5.0 destExt option
-			String destExt = "mp3";				
-			try {
-				if(fileInfoInt.transcodeIfNeeded(destPath, destExt)) {
-					filesTranslated.add(fileInfoInt);
-					pathsForReplayGain.add(fileInfoInt.getRelativePath());
+		// FIXME ! 0.5.0 Move this to FolderInfo && offer to transcode from Check panel, from remote and from Export in Remote panel
+		if(!destExt.isBlank()) {
+			List<FileInfoInt> filesToMaybeTranscode = filesDevicePlaylist.stream()
+					.filter(f -> !f.getExt().equals(destExt))
+					.collect(List.collector());
+			LinkedHashSet<String> pathsForReplayGain = new LinkedHashSet<>();
+			ArrayList<FileInfoInt> filesTranslated = new ArrayList<>();
+			progressBar.setup(filesToMaybeTranscode.size());
+			// FIXME ! 0.5.0 Use a location.xxx instead of data cache as folder could contain a lot of data
+			File file = Jamuz.getFile("void", "data", "cache", "transcoded");
+			String destPath = FilenameUtils.getFullPath(file.getAbsolutePath());
+			filesToMaybeTranscode.forEach(fileInfoInt -> {
+				try {
+					if(fileInfoInt.transcodeIfNeeded(destPath, destExt)) {
+						filesTranslated.add(fileInfoInt);
+						pathsForReplayGain.add(fileInfoInt.getRelativePath());
+					}
+					progressBar.progress("Transcoded: "+fileInfoInt.getRelativeFullPath());
+					callback.refresh();
+				} catch (IllegalArgumentException | EncoderException | IOException ex) {
+					Jamuz.getLogger().severe(ex.toString());
 				}
-				progressBar.progress("Transcoded: "+fileInfoInt.getRelativeFullPath());
-				callback.refresh();
-			} catch (IllegalArgumentException | EncoderException | IOException ex) {
-				Jamuz.getLogger().severe(ex.toString());
-			}
-		});
-
-		//Compute replayGain
-		pathsForReplayGain.forEach(relativePath -> {
-			boolean trackGain=false;  //  albumList.size()==1 && albumList.get(0).equals("Various Albums");	 // FIXME !!!! 0.5.0 trackGain if "Various Albums"
-			MP3gain mP3gain = new MP3gain(trackGain, true, destPath, relativePath, progressBar); //FIXME: callback.refresh(); within MP3gain
-			mP3gain.process();
-		});
-		progressBar.setup(filesTranslated.size());
-		callback.refresh();
-		filesTranslated.stream().forEach((fileInfoDisplay) -> {
-			progressBar.progress("Reading ReplayGain from \""+fileInfoDisplay.getRelativeFullPath()+"\"");
+			});
+			pathsForReplayGain.forEach(relativePath -> {
+				boolean trackGain=false;  //  albumList.size()==1 && albumList.get(0).equals("Various Albums");	 // FIXME !!!! 0.5.0 trackGain if "Various Albums"
+				MP3gain mP3gain = new MP3gain(trackGain, true, destPath, relativePath, progressBar); //FIXME: callback.refresh(); within MP3gain
+				mP3gain.process();
+			});
+			progressBar.setup(filesTranslated.size());
 			callback.refresh();
-			ReplayGain.GainValues gv = fileInfoDisplay.getReplayGain(true);
-			fileInfoDisplay.saveReplayGainToID3(gv);
-			fileInfoDisplay.readMetadata(false); //To get new file information (format, size,...)
-		});
-		
-		Jamuz.getDb().insertOrUpdateFilesTranslated(filesTranslated);
+			filesTranslated.stream().forEach((fileInfoDisplay) -> {
+				progressBar.progress("Reading ReplayGain from \""+fileInfoDisplay.getRelativeFullPath()+"\"");
+				callback.refresh();
+				ReplayGain.GainValues gv = fileInfoDisplay.getReplayGain(true);
+				fileInfoDisplay.saveReplayGainToID3(gv);
+				fileInfoDisplay.readMetadata(false); //To get new file information (format, size,...)
+			});
+			Jamuz.getDb().insertOrUpdateFilesTranslated(filesTranslated);
+		}
 		
 		//Set statuses in deviceFile
 		progressBar.setup(fileInfoSourceList.size());

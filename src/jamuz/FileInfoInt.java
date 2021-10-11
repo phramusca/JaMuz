@@ -1460,7 +1460,7 @@ public class FileInfoInt extends FileInfo {
 		if(!getExt().equals(destExt)) {
 			File transcodedFile = getTranscodedFile(destExt, destPath);
 			if(transcodedFile.exists()) {				
-//				if(sizeOri!=getSize()) { //FIXME !! 0.5.0 Check path too ? other ?
+//				if(sizeOri!=getSize()) { //FIXME ! 0.5.0 Check size !!  and path too ? other ?
 //					transcode(destExt, destPath);	
 //					return true;
 //				}

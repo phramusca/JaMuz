@@ -410,7 +410,7 @@ public class Jamuz {
 			return playlists.get(id);
 		}
 		else {
-			return new Playlist(0, Inter.get("Playlist.FullLibrary"), false, 1, Playlist.LimitUnit.Gio, false, Playlist.Type.Songs, Playlist.Match.All, false); //NOI18N
+			return new Playlist(0, Inter.get("Playlist.FullLibrary"), false, 1, Playlist.LimitUnit.Gio, false, Playlist.Type.Songs, Playlist.Match.All, false, ""); //NOI18N
 		}
 	}
     

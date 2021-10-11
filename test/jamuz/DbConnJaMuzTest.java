@@ -1530,7 +1530,7 @@ public class DbConnJaMuzTest {
 		int idFile = 0;
 		DbConnJaMuz instance = null;
 		FileInfoInt expResult = null;
-		FileInfoInt result = instance.getFile(idFile);
+		FileInfoInt result = instance.getFile(idFile, "mp3");
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

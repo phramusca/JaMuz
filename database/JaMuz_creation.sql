@@ -101,7 +101,8 @@ CREATE TABLE "playlist" (
     "type" TEXT NOT NULL,
     "match" TEXT NOT NULL,
     "random" INTEGER NOT NULL,
-    "hidden" INTEGER NOT NULL
+    "hidden" INTEGER NOT NULL,
+    "destExt" TEXT NOT NULL
 );
 CREATE TABLE "fileTranscoded" (
 	"idFile"	INTEGER NOT NULL,
