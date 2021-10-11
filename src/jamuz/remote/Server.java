@@ -201,7 +201,7 @@ public class Server {
 									obj.put("type", "mergeListDbSelected");
 									JSONArray jsonArray = new JSONArray();
 									for (int i=0; i < mergeListDbSelected.size(); i++) {
-										String destExt = "mp3"; //FIXME !!! destExt option
+										String destExt = "mp3"; // FIXME !!! 0.5.0 destExt option
 										FileInfo fileInfo = mergeListDbSelected.get(i);
 										if(!fileInfo.getExt().equals(destExt)) {
 											//Note: No need to get info from fileTranscoded table since only stats are updated on remote
@@ -224,7 +224,7 @@ public class Server {
 				}
 			});
 			
-			String ext = "mp3"; //FIXME !!! destExt option
+			String ext = "mp3"; // FIXME !!! 0.5.0 destExt option
 			
 			app.get("/files/new", (req, res) -> {
 				String login=req.getHeader("login").get(0);
@@ -428,7 +428,7 @@ public class Server {
 							"source", client.getInfo().getLogin(), 
 							-1, 
 							client.getInfo().getLogin(), true);
-					if(Jamuz.getDb().setDevice(device)) {
+					if(Jamuz.getDb().updateDevice(device)) {
 						Device deviceWithId = Jamuz.getDb().getDevice(client.getInfo().getLogin());
 						client.getInfo().setDevice(deviceWithId);
 						StatSource statSource = new StatSource(
@@ -437,10 +437,10 @@ public class Server {
 							client.getInfo().getRootPath(), 
 							client.getInfo().getLogin(), 
 							deviceWithId.getId(), false, "", true);
-						if(Jamuz.getDb().setStatSource(statSource)) {
+						if(Jamuz.getDb().updateStatSource(statSource)) {
 							StatSource statSourceWithId = Jamuz.getDb().getStatSource(client.getInfo().getLogin());
 							client.getInfo().setStatSource(statSourceWithId);
-							if(Jamuz.getDb().setClientInfo(client.getInfo())) {
+							if(Jamuz.getDb().updateClient(client.getInfo())) {
 								ClientInfo clientInfo = Jamuz.getDb().getClient(client.getInfo().getLogin());
 								client.getInfo().setId(clientInfo.getId());
 								tableModel.add(clientInfo);

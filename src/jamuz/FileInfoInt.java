@@ -878,7 +878,7 @@ public class FileInfoInt extends FileInfo {
 	 */
 	public boolean insertTagsInDb() {
 		int [] key = new int[1]; //Hint: Using a int table as cannot pass a simple integer by reference
-		boolean result = Jamuz.getDb().insertTags(this, key);
+		boolean result = Jamuz.getDb().insert(this, key);
 		this.idFile=key[0]; //Get insertion key
 		return result;
 	}
@@ -888,15 +888,15 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public boolean updateTagsInDb() {
-		return Jamuz.getDb().updateTags(this);
+		return Jamuz.getDb().updateFile(this);
 	}
     
     /**
 	 *
 	 * @return
 	 */
-	public boolean saveBPMtoFileTags() {
-		return this.saveTag(FieldKey.BPM, String.valueOf(getBPM()));
+	public boolean saveMetadataBPM() {
+		return this.saveMetadata(FieldKey.BPM, String.valueOf(getBPM()));
     }
 	
 	/**
@@ -904,16 +904,16 @@ public class FileInfoInt extends FileInfo {
 	 * @param lyrics
 	 * @return
 	 */
-	public boolean saveTagLyrics(String lyrics) {
+	public boolean saveMetadataLyrics(String lyrics) {
         this.lyrics=lyrics;
-		return this.saveTag(FieldKey.LYRICS, lyrics);
+		return this.saveMetadata(FieldKey.LYRICS, lyrics);
     }
     
-	private boolean saveTag(FieldKey key, String value) {
-		return saveTag(new HashMap<FieldKey,String>() {{ put(key, value); }});
+	private boolean saveMetadata(FieldKey key, String value) {
+		return saveMetadata(new HashMap<FieldKey,String>() {{ put(key, value); }});
 	}
 	
-	private boolean saveTag(Map<FieldKey,String> keyValues) {
+	private boolean saveMetadata(Map<FieldKey,String> keyValues) {
 		try {
 			File testFile = getFullPath();
 			switch (this.ext) {
@@ -950,10 +950,10 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public boolean updateGenre(String genre) {
-		if(this.saveTag(FieldKey.GENRE, genre)) {
+		if(this.saveMetadata(FieldKey.GENRE, genre)) {
 			this.genre=genre;
 			if(this.idFile>-1) { //File displayed in player may not be from database (check new)
-				return Jamuz.getDb().updateGenre(this);
+				return Jamuz.getDb().updateFileGenre(this);
 			}
 			return true;
 		}
@@ -968,7 +968,7 @@ public class FileInfoInt extends FileInfo {
 	public boolean updateRating(String rating) {
         this.rating=Integer.valueOf(rating);
 		if(this.idFile>-1) { //File displayed in player may not be from database (check new)
-			return Jamuz.getDb().updateRating(this);
+			return Jamuz.getDb().updateFileRating(this);
 		}
 		return true;
     }

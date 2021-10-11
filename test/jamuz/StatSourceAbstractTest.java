@@ -238,7 +238,7 @@ public class StatSourceAbstractTest {
 		ArrayList<? extends FileInfo> files = null;
 		StatSourceAbstract instance = null;
 		int[] expResult = null;
-		int[] result = instance.updateStatistics(files);
+		int[] result = instance.updateFileStatistics(files);
 		assertArrayEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -357,7 +357,7 @@ public class StatSourceAbstractTest {
 			return false;
 		}
 
-		public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
+		public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
 			return null;
 		}
 

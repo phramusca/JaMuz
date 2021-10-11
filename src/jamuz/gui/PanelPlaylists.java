@@ -40,6 +40,8 @@ import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
 
+//FIXME ! 0.5.0 Add a destExt option in playlist so size, for playlist limit, and other file info can be the transcoded one 
+
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )

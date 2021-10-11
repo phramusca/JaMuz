@@ -1031,7 +1031,7 @@ public class DialogOptions extends javax.swing.JDialog {
 		selOptions.getOption("log.limit").setValue(jTextFieldOptionsLogLimit.getText());
 		selOptions.getOption("network.proxy").setValue(jTextFieldOptionsProxy.getText());
 		
-		Jamuz.getDb().setOptions(selOptions);
+		Jamuz.getDb().updateOptions(selOptions);
 		Jamuz.getDb().updateMachine(selOptions.getOption(0).getIdMachine(), jTextFieldDescription.getText());
 		
 		PanelMain.setOptions();

@@ -121,8 +121,8 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 	}
 
 	@Override
-	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
-		int[] results = super.updateStatistics(files); 
+	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
+		int[] results = super.updateFileStatistics(files); 
 		return setTags(files, results); 
 	}
 	

@@ -126,7 +126,7 @@ public class ProcessSync extends ProcessAbstract {
 		//Get list of files to export
 		ArrayList<FileInfoInt> filesDevicePlaylist = new ArrayList<>();
 		Playlist playlist = device.getPlaylist();
-		playlist.getFiles(filesDevicePlaylist, "mp3"); //FIXME !!! destExt option
+		playlist.getFiles(filesDevicePlaylist, "mp3"); //FIXME !!! 0.5.0 destExt option
 		
 		//FIXME Z Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
 		//In a general manner better handle deleted=1 in file or path table:
@@ -163,7 +163,7 @@ public class ProcessSync extends ProcessAbstract {
 		ArrayList<FileInfoInt> filesTranslated = new ArrayList<>();
 		progressBar.setup(filesToMaybeTranscode.size());
 		filesToMaybeTranscode.forEach(fileInfoInt -> {
-			//FIXME !!! destExt option
+			//FIXME !!! 0.5.0 destExt option
 			String destExt = "mp3";				
 			try {
 				if(fileInfoInt.transcodeIfNeeded(destPath, destExt)) {
@@ -193,7 +193,7 @@ public class ProcessSync extends ProcessAbstract {
 			fileInfoDisplay.readMetadata(false); //To get new file information (format, size,...)
 		});
 		
-		Jamuz.getDb().insertOrUpdateDeviceFilesTranslated(filesTranslated);
+		Jamuz.getDb().insertOrUpdateFilesTranslated(filesTranslated);
 		
 		//Set statuses in deviceFile
 		progressBar.setup(fileInfoSourceList.size());

@@ -1452,7 +1452,7 @@ public class FolderInfo implements java.lang.Comparable {
 			//Prevent duplicate strPath in database
 			int newIdPath = Jamuz.getDb().getIdPath(filesAudio.get(0).getRelativePath());
 			if(idPath>=0 && newIdPath>=0 && idPath!=newIdPath) {
-				if(Jamuz.getDb().setIdPath(idPath, newIdPath)) {
+				if(Jamuz.getDb().updateFileIdPath(idPath, newIdPath)) {
 					idPath=newIdPath;
 					checkedFlag=CheckedFlag.UNCHECKED;
 				} else {
@@ -1495,7 +1495,7 @@ public class FolderInfo implements java.lang.Comparable {
     
 	private void KO(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().setCheckedFlag(idPath, FolderInfo.CheckedFlag.KO);
+            Jamuz.getDb().updatePathChecked(idPath, FolderInfo.CheckedFlag.KO);
         }
         else {
             moveList(getAllFiles(), ProcessCheck.getKoLocation().getValue(), false, 
@@ -1507,7 +1507,7 @@ public class FolderInfo implements java.lang.Comparable {
     
     private boolean Manual(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().setCheckedFlag(idPath, FolderInfo.CheckedFlag.UNCHECKED);
+            Jamuz.getDb().updatePathChecked(idPath, FolderInfo.CheckedFlag.UNCHECKED);
             return false;
         }
         else {

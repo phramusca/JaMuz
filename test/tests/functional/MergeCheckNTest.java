@@ -389,7 +389,7 @@ public class MergeCheckNTest extends TestCase {
                 1, //playlist.getId()is not set (only when retrieved from db)
                 Jamuz.getMachine().getName(), false
         );
-        assertTrue("Device creation", Jamuz.getDb().setDevice(device));
+        assertTrue("Device creation", Jamuz.getDb().updateDevice(device));
         
         //Set stat sources
         String rootPath; int idDevice; String name;

@@ -243,7 +243,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param fileInfo
      * @return
      */
-    public synchronized boolean updateGenre(FileInfoInt fileInfo) {
+    public synchronized boolean updateFileGenre(FileInfoInt fileInfo) {
         try {
             PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement(
 					"UPDATE file set genre=?, "
@@ -320,7 +320,7 @@ public class DbConnJaMuz extends StatSourceSQL {
             stUpdateTag.setString(2, oldTag);
             int nbRowsAffected = stUpdateTag.executeUpdate();
             if (nbRowsAffected == 1) {
-                return updateTagsModifDate(newTag);
+                return updateFileTagsModifDate(newTag);
             } else {
                 Jamuz.getLogger().log(Level.SEVERE, "stUpdateTag, oldTag={0}, "
 						+ "newTag={1} # row(s) affected: +{2}", 
@@ -333,7 +333,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 	
-	private synchronized boolean updateTagsModifDate(String newTag) {
+	private synchronized boolean updateFileTagsModifDate(String newTag) {
         try {
             PreparedStatement stUpdateTagsModifDate = dbConn.getConnnection().prepareStatement(
 					"UPDATE file SET tagsModifDate=datetime('now') " + 
@@ -525,7 +525,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @param selOptions
 	 * @return
 	 */
-	public synchronized boolean setOptions(Machine selOptions) {
+	public synchronized boolean updateOptions(Machine selOptions) {
 		try {
 			dbConn.connection.setAutoCommit(false);
 			
@@ -576,7 +576,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param value
      * @return
      */
-    public synchronized boolean setOption(Option myOption, String value) {
+    public synchronized boolean updateOption(Option myOption, String value) {
         try {
             if (myOption.getType().equals("path")) {   //NOI18N
                 value = FilenameUtils.normalizeNoEndSeparator(value.trim()) + File.separator;
@@ -1051,7 +1051,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param statSource
      * @return
      */
-    public synchronized boolean setStatSource(StatSource statSource) {
+    public synchronized boolean updateStatSource(StatSource statSource) {
         try {
             if (statSource.getId() > -1) {
                 PreparedStatement stUpdateStatSource = dbConn.connection.
@@ -1141,7 +1141,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @param idStatSource
 	 * @return
 	 */
-	public synchronized String updateLastMergeDate(int idStatSource) {
+	public synchronized String updateStatSourceLastMergeDate(int idStatSource) {
         ResultSet rs=null;
 		
 		try {
@@ -1182,7 +1182,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param idStatSource
      * @return
      */
-    public synchronized boolean setPreviousPlayCounter(ArrayList<? super FileInfoInt> files, int idStatSource) {
+    public synchronized boolean updatePreviousPlayCounter(ArrayList<? super FileInfoInt> files, int idStatSource) {
         try {
             int[] results;
             PreparedStatement stUpdatePlayCounter = dbConn.connection.prepareStatement(
@@ -1419,7 +1419,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
-	public synchronized void insertOrUpdateDeviceFilesTranslated(ArrayList<FileInfoInt> files) {
+	public synchronized void insertOrUpdateFilesTranslated(ArrayList<FileInfoInt> files) {
 		try {
             if (files.size() > 0) {
 				long startTime = System.currentTimeMillis();
@@ -1476,7 +1476,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @param idDevice
      * @return
      */
-    public synchronized boolean setDeviceFileStatus(SyncStatus status, int idFile, int idDevice) {
+    public synchronized boolean updateDeviceFileStatus(SyncStatus status, int idFile, int idDevice) {
         try {
             PreparedStatement stUpdateCheckedFlagReset
                     = dbConn.connection.prepareStatement(
@@ -1593,7 +1593,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param device
      * @return
      */
-    public synchronized boolean setDevice(Device device) {
+    public synchronized boolean updateDevice(Device device) {
         try {
             if (device.getId() > -1) {
 				PreparedStatement stUpdateDevice = dbConn.connection.prepareStatement(
@@ -1661,7 +1661,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param clientInfo
      * @return
      */
-    public synchronized boolean setClientInfo(ClientInfo clientInfo) {
+    public synchronized boolean updateClient(ClientInfo clientInfo) {
         try {
             if (clientInfo.getId() > -1) {
 				
@@ -1676,8 +1676,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 
                 int nbRowsAffected = stUpdateClient.executeUpdate();
                 if (nbRowsAffected > 0) {
-					setDevice(clientInfo.getDevice());
-					setStatSource(clientInfo.getStatSource());
+					updateDevice(clientInfo.getDevice());
+					updateStatSource(clientInfo.getStatSource());
                     return true;
                 } else {
                     Jamuz.getLogger().log(Level.SEVERE, 
@@ -1916,7 +1916,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param key
      * @return
      */
-    public synchronized boolean insertTags(FileInfoInt fileInfo, int[] key) {
+    public synchronized boolean insert(FileInfoInt fileInfo, int[] key) {
         try {
             PreparedStatement stInsertFileTag = dbConn.connection.prepareStatement("INSERT INTO file (name, idPath, "
                     + "format, title, artist, album, albumArtist, genre, discNo, trackNo, year, comment, "    //NOI18N
@@ -1971,7 +1971,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param fileInfo
      * @return
      */
-    public synchronized boolean updateTags(FileInfoInt fileInfo) {
+    public synchronized boolean updateFile(FileInfoInt fileInfo) {
         try {
             PreparedStatement stUpdateFileTag = dbConn.connection.prepareStatement(
 					"UPDATE file "
@@ -1982,8 +1982,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 					+ "discTotal=?, BPM=?, "
                     + "nbCovers=?, deleted=0, coverHash=?, trackGain=?, albumGain=? "    //NOI18N
                     + "WHERE idPath=? AND idFile=?");   //NOI18N
-            
-            
             stUpdateFileTag.setString(1, fileInfo.getFormat());
             stUpdateFileTag.setString(2, fileInfo.title);
             stUpdateFileTag.setString(3, fileInfo.getArtist());
@@ -2028,7 +2026,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param file
      * @return
      */
-    public synchronized boolean updateLastPlayedAndCounter(FileInfoInt file) {
+    public synchronized boolean updateFileLastPlayedAndCounter(FileInfoInt file) {
         try {
             PreparedStatement stUpdateFileLastPlayedAndCounter = 
 					dbConn.connection.prepareStatement("UPDATE file "
@@ -2057,7 +2055,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param fileInfo
      * @return
      */
-    public synchronized boolean updateRating(FileInfoInt fileInfo) {
+    public synchronized boolean updateFileRating(FileInfoInt fileInfo) {
         try {
             PreparedStatement stUpdateFileRating = dbConn.connection.prepareStatement(
 					"UPDATE file set rating=?, "
@@ -2084,7 +2082,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @param newIdPath
 	 * @return
 	 */
-	public synchronized boolean setIdPath(int idPath, int newIdPath) {
+	public synchronized boolean updateFileIdPath(int idPath, int newIdPath) {
         try {
             PreparedStatement stUpdateIdPathInFile = dbConn.connection.prepareStatement(
 					"UPDATE file "
@@ -2225,7 +2223,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @return
      */
     @Override
-    protected FileInfo getStatistics(ResultSet rs) {
+    protected FileInfo getFileStatistics(ResultSet rs) {
         try {
 			//JaMuz database does not store rootPath in database, only relative one
             String relativeFullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N
@@ -2278,9 +2276,9 @@ public class DbConnJaMuz extends StatSourceSQL {
     }
 	
 	@Override
-	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
-		int[] results = super.updateStatistics(files); 
-		return setTags(files, results); 
+	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
+		int[] results = super.updateFileStatistics(files); 
+		return updateFileTags(files, results); 
 	}
 	// </editor-fold>
 	
@@ -2503,7 +2501,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param checkedFlag
      * @return
      */
-    public synchronized boolean setCheckedFlag(int idPath, CheckedFlag checkedFlag) {
+    public synchronized boolean updatePathChecked(int idPath, CheckedFlag checkedFlag) {
         try {
             PreparedStatement stUpdateCheckedFlag = dbConn.connection.prepareStatement("UPDATE path set checked=? WHERE idPath=?");   //NOI18N
             
@@ -2699,7 +2697,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
 					+ "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate \n" +
 				"FROM file F \n" +
-				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\"mp3\" \n" //FIXME !!! destExt option
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\"mp3\" \n" // FIXME !!! 0.5.0 destExt option
 				+ "JOIN path P ON F.idPath=P.idPath "
 				+ "WHERE F.idFile="+idFile;		
         getFiles(myFileInfoList, sql);
@@ -3325,7 +3323,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param copyRight
      * @return
      */
-    public synchronized boolean updateCopyRight(int idPath, int copyRight) {
+    public synchronized boolean updatePathCopyRight(int idPath, int copyRight) {
         try {
             PreparedStatement stUpdateCopyRight = dbConn.connection.prepareStatement(
 					"UPDATE path "
@@ -3351,18 +3349,18 @@ public class DbConnJaMuz extends StatSourceSQL {
 	
 	// <editor-fold defaultstate="collapsed" desc="TagFile & File">
 	
-	public synchronized int[] setTags(ArrayList<? extends FileInfo> files, int[] results) {
+	public synchronized int[] updateFileTags(ArrayList<? extends FileInfo> files, int[] results) {
 		int i=0;
 		for(FileInfo fileInfo : files) {
 			if(fileInfo.getTags()!=null) {
 				//FIXME Z MERGE Update tags and date in the same transaction 
 				//so it can be rolled back and probably faster
-				if(!setTags(fileInfo.getTags(), fileInfo.getIdFile())) {
+				if(!updateFileTags(fileInfo.getTags(), fileInfo.getIdFile())) {
 					if(results!=null) {
 						results[i]=0;
 					}
 				}
-				if(!updateTagsModifDate(fileInfo)) {
+				if(!updateFileTagsModifDate(fileInfo)) {
 					if(results!=null) {
 						results[i]=0;
 					}
@@ -3373,14 +3371,14 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return results;
 	}
 	
-	private synchronized  boolean setTags(ArrayList<String> tags, int idFile) {
-		if(!deleteTagFiles(idFile)) {
+	private synchronized  boolean updateFileTags(ArrayList<String> tags, int idFile) {
+		if(!deleteFileTags(idFile)) {
 			return false;
 		}
-		return insertTagFiles(tags, idFile);
+		return insertFileTags(tags, idFile);
 	}
 	
-	private synchronized boolean insertTagFiles(ArrayList<String> tags, int idFile) {
+	private synchronized boolean insertFileTags(ArrayList<String> tags, int idFile) {
         try {
             if (tags.size() > 0) {
                 dbConn.getConnnection().setAutoCommit(false);
@@ -3454,11 +3452,10 @@ public class DbConnJaMuz extends StatSourceSQL {
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }
-            
         }
     }
 		
-	private synchronized boolean deleteTagFiles(int idFile) {
+	private synchronized boolean deleteFileTags(int idFile) {
         try {
             PreparedStatement stDeleteTagFiles = dbConn.getConnnection()
 					.prepareStatement(
@@ -3491,7 +3488,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param fileInfo
      * @return
      */
-    private synchronized boolean updateTagsModifDate(FileInfo fileInfo) {
+    private synchronized boolean updateFileTagsModifDate(FileInfo fileInfo) {
         try {
             PreparedStatement stUpdateTagsModifDate = dbConn.getConnnection().prepareStatement(
 					"UPDATE file SET tagsModifDate=datetime('now') "

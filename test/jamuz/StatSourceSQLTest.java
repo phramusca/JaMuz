@@ -89,7 +89,7 @@ public class StatSourceSQLTest {
 		ResultSet rs = null;
 		StatSourceSQL instance = null;
 		FileInfo expResult = null;
-		FileInfo result = instance.getStatistics(rs);
+		FileInfo result = instance.getFileStatistics(rs);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -104,7 +104,7 @@ public class StatSourceSQLTest {
 		ArrayList<? extends FileInfo> files = null;
 		StatSourceSQL instance = null;
 		int[] expResult = null;
-		int[] result = instance.updateStatistics(files);
+		int[] result = instance.updateFileStatistics(files);
 		assertArrayEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

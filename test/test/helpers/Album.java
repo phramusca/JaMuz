@@ -604,7 +604,7 @@ public final class Album {
         StatSource statSource = Jamuz.getMachine().getStatSource(idStatSource);
         statSource.getSource().getSource(System.getProperty("java.io.tmpdir")+File.separator);
         statSource.getSource().setUp();
-        statSource.getSource().updateStatistics(getFiles());
+        statSource.getSource().updateFileStatistics(getFiles());
         statSource.getSource().tearDown();
         statSource.getSource().sendSource(System.getProperty("java.io.tmpdir")+File.separator);
         checkStatSource(idStatSource, isDevice, false);
@@ -661,7 +661,7 @@ public final class Album {
 	public void setAndCheckStatsInJamuzDb() throws IOException, 
 			CannotReadException, TagException, 
 			ReadOnlyFileException, InvalidAudioFrameException {
-        Jamuz.getDb().updateStatistics(getFiles());
+        Jamuz.getDb().updateFileStatistics(getFiles());
         checkDb();
     }
     

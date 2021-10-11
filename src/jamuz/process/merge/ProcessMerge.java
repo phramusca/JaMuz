@@ -883,11 +883,11 @@ public class ProcessMerge extends ProcessAbstract {
 					filesToUpdatePlayCounter.add(fileInfo);
 					completedList.add((FileInfo) fileInfo.clone());
 				}
-				Jamuz.getDb().setTags(mergeListDbSelected, null);
+				Jamuz.getDb().updateFileTags(mergeListDbSelected, null);
 			} else {
 				int[] results = selectedStatSource
 						.getSource()
-						.updateStatistics(mergeListDbSelected);
+						.updateFileStatistics(mergeListDbSelected);
 				if(results.length<nbFiles) {
 					return false;
 				}
@@ -924,7 +924,7 @@ public class ProcessMerge extends ProcessAbstract {
 		if(nbFiles>0) {
 			checkAbort();
 			int[] results = dBJaMuz
-					.updateStatistics(mergeListDbJaMuz);
+					.updateFileStatistics(mergeListDbJaMuz);
 			if(results.length<nbFiles) {
 				return false;
 			}
@@ -965,7 +965,7 @@ public class ProcessMerge extends ProcessAbstract {
 						fileInfoInt.updateGenre(fileInfoInt.getGenre());
 					}
 					if(fileInfoInt.getBPM()>=0) {
-						fileInfoInt.saveBPMtoFileTags();
+						fileInfoInt.saveMetadataBPM();
 					}
 					//FIXME TEST MERGE Are we updating *modifDate 
 					//	(modifDate in path and file 
@@ -983,7 +983,7 @@ public class ProcessMerge extends ProcessAbstract {
 				filesToUpdatePlayCounter = new ArrayList(
 						new LinkedHashSet(filesToUpdatePlayCounter)); //If you need to preserve the order use 'LinkedHashSet'
 				//Changing previous play counter if update was successfull
-				if(!dBJaMuz.setPreviousPlayCounter(filesToUpdatePlayCounter, 
+				if(!dBJaMuz.updatePreviousPlayCounter(filesToUpdatePlayCounter, 
 						selectedStatSource.getId())) {
 					return false;
 				}
