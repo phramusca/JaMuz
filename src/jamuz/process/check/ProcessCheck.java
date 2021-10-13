@@ -369,8 +369,6 @@ public class ProcessCheck {
             this.nbScan = nbScan;
         }
         
-	   //FIXME ! 0.5.0 Make a case for location.transcoded
-	   
         @Override
         public void run() {
             nbProcesses++;
@@ -389,6 +387,10 @@ public class ProcessCheck {
                         rootLocation = new Location("location.add"); //NOI18N
                         destinationLocation = new Location("location.ok"); //NOI18N
                         break;
+					case TRANSCODE:
+						rootLocation = new Location("location.library"); //NOI18N
+                        destinationLocation = new Location("location.transcoded"); //NOI18N
+						break;
                     default: //All other cases
                         rootLocation = new Location("location.library"); //NOI18N
                         destinationLocation = new Location("location.library"); //NOI18N
@@ -419,7 +421,8 @@ public class ProcessCheck {
                 boolean full=(!checkType.equals(CheckType.SCAN_QUICK));
 				boolean analyze=(!(checkType.equals(CheckType.SCAN_QUICK) 
 						|| checkType.equals(CheckType.SCAN_FULL) 
-						|| checkType.equals(CheckType.SCAN_DELETED)));
+						|| checkType.equals(CheckType.SCAN_DELETED)
+						|| checkType.equals(CheckType.TRANSCODE)));
                 
                 if(analyze) {
 					partialTimesAnalysis.clear();
@@ -460,6 +463,9 @@ public class ProcessCheck {
                         break;
 					case SCAN_DELETED:
 						scanDeleted();
+						break;
+					case TRANSCODE:
+						transcode();
 						break;
                 }
             } catch (InterruptedException ex) {
@@ -545,11 +551,19 @@ public class ProcessCheck {
         }
 
 		private boolean scanDeleted() throws InterruptedException {
-            //Get list of folders from library deleted included
+            //Get list of folders from library deleted excluded
             if(!Jamuz.getDb().getFolders(foldersDb, false)) {
                 return false;
             }
             return sendFoldersDbToScanQueue(ScanType.SCAN_DELETED);
+		}
+		
+		private boolean transcode() throws InterruptedException {
+            //Get list of folders from library deleted excluded
+            if(!Jamuz.getDb().getFolders(foldersDb, false)) {
+                return false;
+            }
+            return sendFoldersDbToScanQueue(ScanType.TRANSCODE);
 		}
 		
         private void scanNew() throws InterruptedException {
@@ -591,7 +605,12 @@ public class ProcessCheck {
 		/**
 		 *
 		 */
-		CHECK_NEW
+		CHECK_NEW,
+		
+		/**
+		 *
+		 */
+		TRANSCODE
     }
     
 	/**
@@ -660,15 +679,19 @@ public class ProcessCheck {
                 }
                 switch(folder.getScanType()) {
                     case SCAN_DELETED:
-                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+").scanDeleted({0})", folder.getRelativePath());
+                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folder.scanDeleted({0})", folder.getRelativePath());
                         folder.scanDeleted(progressBar);
                         break;
+					case TRANSCODE:
+						Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folder.transcodeAsNeeded({0})", folder.getRelativePath());
+                        folder.transcodeAsNeeded(progressBar);
+                        break;
                     case SCAN:
-                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+").scanAndBrowse({0})", folder.getRelativePath());
+                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): scanAndBrowse({0})", folder.getRelativePath());
                         scanAndBrowse(analyze, folder, progressBar);
                         break;
                     case CHECK_NEW:
-                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folderInfo.browse({0})", folder.getRelativePath());
+                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folder.browse({0})", folder.getRelativePath());
                         folder.browse(true, true, progressBar);
                         break;
                 }
@@ -972,6 +995,11 @@ public class ProcessCheck {
 		/**
 		 *
 		 */
-		CHECK_FOLDER
+		CHECK_FOLDER,
+
+		/**
+		 *
+		 */
+		TRANSCODE
     }
 }

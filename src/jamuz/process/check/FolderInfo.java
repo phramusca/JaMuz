@@ -51,12 +51,8 @@ import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import jamuz.utils.StringManager;
 import java.awt.Color;
-import java.util.logging.Logger;
-import ws.schild.jave.Encoder;
+import java.io.IOException;
 import ws.schild.jave.EncoderException;
-import ws.schild.jave.MultimediaObject;
-import ws.schild.jave.encode.AudioAttributes;
-import ws.schild.jave.encode.EncodingAttributes;
 
 /**
  * Folder information
@@ -359,6 +355,54 @@ public class FolderInfo implements java.lang.Comparable {
 			//Path does exist. Check if files have been deleted
 			scanDeletedFiles(progressBar);
 		}
+		return true;
+	}
+	
+	public boolean transcodeAsNeeded(ProgressBar progressBar) {
+		//Get list of files from library exluding the one(s) already set as deleted
+		if(!Jamuz.getDb().getFiles(filesDb, idPath, false)) {
+			return false;
+		}
+
+		//Extract the non-mp3
+		String destExt = "mp3"; //FIXME Z destExt option
+		List<FileInfoInt> filesToMaybeTranscode = filesDb.stream()
+					.filter(f -> !f.getExt().equals(destExt))
+					.collect(com.sun.tools.javac.util.List.collector());
+        progressBar.setup(filesToMaybeTranscode.size());
+		
+		//Transcode the ones not already transcoded
+		String destination = ProcessCheck.getDestinationLocation().getValue();
+		ArrayList<FileInfoInt> filesTranscoded = new ArrayList<>();
+		filesToMaybeTranscode.forEach(file -> {
+			try {
+				if(file.transcodeIfNeeded(destination, destExt)) {
+					filesTranscoded.add(file);
+				}
+				progressBar.progress("Transcoded: "+file.getRelativeFullPath());
+			} catch (IllegalArgumentException | EncoderException | IOException ex) {
+				Jamuz.getLogger().severe(ex.toString());
+			}
+		});
+
+		//Compute replaygain and insert in fileTranscoded
+		if(filesTranscoded.size()>0) {
+			progressBar.setIndeterminate("Computing ReplayGain for MP3 ...");
+			ArrayList<String> albumList = group(filesTranscoded, "getAlbum");  //NOI18N
+			boolean trackGain=albumList.size()==1 && albumList.get(0).equals("Various Albums");				
+			MP3gain mP3gain = new MP3gain(trackGain, true, destination, relativePath, progressBar);
+			if(mP3gain.process()) {
+				progressBar.setup(filesTranscoded.size());
+				filesTranscoded.stream().forEach((file) -> {
+					progressBar.progress("Reading ReplayGain from \""+file.getRelativeFullPath()+"\"");
+					GainValues gv = file.getReplayGain(true);
+					file.saveReplayGainToID3(gv);
+					file.readMetadata(false); //To get new file information (format, size,...)
+				});
+				Jamuz.getDb().insertOrUpdateFilesTranslated(filesTranscoded);
+			}
+		}	
+		
 		return true;
 	}
 	

@@ -174,7 +174,8 @@ public class PanelCheck extends javax.swing.JPanel {
         jPanelAnalysisMain.setVisible(!(
                 checkType.equals(CheckType.SCAN_QUICK) 
                         || checkType.equals(CheckType.SCAN_FULL) 
-                        || checkType.equals(CheckType.SCAN_DELETED)));
+                        || checkType.equals(CheckType.SCAN_DELETED)
+						|| checkType.equals(CheckType.TRANSCODE)));
         
         setThreadPanel(jPanelScan, 
 				(int) jSpinnerCheckScanNbThreads.getValue(), 
@@ -270,6 +271,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jButtonScanLibrary = new javax.swing.JButton();
         jCheckBoxCheckFull = new javax.swing.JCheckBox();
         jButtonScanDeleted = new javax.swing.JButton();
+        jButtonTranscode = new javax.swing.JButton();
         jPanelActionsMain = new javax.swing.JPanel();
         jCheckBoxDoActions = new javax.swing.JCheckBox();
         jProgressBarCheckActionsSize = new jamuz.gui.swing.ProgressBar();
@@ -340,6 +342,13 @@ public class PanelCheck extends javax.swing.JPanel {
             }
         });
 
+        jButtonTranscode.setText("Transcode");
+        jButtonTranscode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonTranscodeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelCheckProcessLayout = new javax.swing.GroupLayout(jPanelCheckProcess);
         jPanelCheckProcess.setLayout(jPanelCheckProcessLayout);
         jPanelCheckProcessLayout.setHorizontalGroup(
@@ -347,7 +356,7 @@ public class PanelCheck extends javax.swing.JPanel {
             .addGroup(jPanelCheckProcessLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButtonCheckAbort)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addComponent(jButtonCheckNew)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCheckLibrary)
@@ -356,10 +365,12 @@ public class PanelCheck extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonScanLibrary)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonScanDeleted)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxCheckFull)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonScanDeleted)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonTranscode)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                 .addComponent(jButtonMergeSources, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -376,7 +387,8 @@ public class PanelCheck extends javax.swing.JPanel {
                         .addComponent(jButtonScanLibrary)
                         .addComponent(jCheckBoxCheckFull)
                         .addComponent(jProgressBarFolders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonScanDeleted)))
+                        .addComponent(jButtonScanDeleted)
+                        .addComponent(jButtonTranscode)))
                 .addContainerGap())
         );
 
@@ -453,7 +465,7 @@ public class PanelCheck extends javax.swing.JPanel {
                     .addComponent(jProgressBarCheckActionsDequeue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSpinnerCheckMaxActionsInQueue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags2, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+                .addComponent(jScrollPaneCheckTags2, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
         );
 
         jPanelScanMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Scan"));
@@ -523,7 +535,7 @@ public class PanelCheck extends javax.swing.JPanel {
                 .addComponent(jProgressBarCheckAnalysisSize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSpinnerCheckAnalysisNbThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanelAnalysis, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
+            .addComponent(jPanelAnalysis, javax.swing.GroupLayout.DEFAULT_SIZE, 851, Short.MAX_VALUE)
         );
         jPanelAnalysisMainLayout.setVerticalGroup(
             jPanelAnalysisMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -641,6 +653,11 @@ public class PanelCheck extends javax.swing.JPanel {
         processCheck.setMaxActionQueueSize((int) jSpinnerCheckMaxActionsInQueue.getValue());
     }//GEN-LAST:event_jSpinnerCheckMaxActionsInQueueStateChanged
 
+    private void jButtonTranscodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTranscodeActionPerformed
+        jButtonTranscode.setFont(new Font(jButtonTranscode.getFont().getName(), Font.BOLD, 16));
+        startProcess(this, false, CheckType.TRANSCODE, -1);
+    }//GEN-LAST:event_jButtonTranscodeActionPerformed
+
     /**
      * Check given path
 	 * @param parent
@@ -694,6 +711,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jButtonCheckLibrary.setEnabled(isMaster);
         jButtonScanLibrary.setEnabled(isMaster);
         jButtonScanDeleted.setEnabled(isMaster);
+		jButtonTranscode.setEnabled(isMaster);
 	}
 
     /**
@@ -712,6 +730,7 @@ public class PanelCheck extends javax.swing.JPanel {
             jButtonCheckLibrary.setFont(new Font(jButtonCheckLibrary.getFont().getName(), Font.PLAIN, 12));
             jButtonScanLibrary.setFont(new Font(jButtonScanLibrary.getFont().getName(), Font.PLAIN, 12));
 			jButtonScanDeleted.setFont(new Font(jButtonScanDeleted.getFont().getName(), Font.PLAIN, 12));
+			jButtonTranscode.setFont(new Font(jButtonTranscode.getFont().getName(), Font.PLAIN, 12));
             jButtonCheckAbort.setText(Inter.get("Button.Abort"));  //NOI18N
             jButtonCheckAbort.setEnabled(false);
             
@@ -734,6 +753,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jButtonScanLibrary.setEnabled(enabled && isMaster);
         jButtonScanDeleted.setEnabled(enabled && isMaster);
         jCheckBoxCheckFull.setEnabled(enabled && isMaster);
+		jButtonTranscode.setEnabled(enabled && isMaster);
     }
     
 	/**
@@ -750,6 +770,7 @@ public class PanelCheck extends javax.swing.JPanel {
     private javax.swing.JButton jButtonMergeSources;
     private static javax.swing.JButton jButtonScanDeleted;
     private static javax.swing.JButton jButtonScanLibrary;
+    private static javax.swing.JButton jButtonTranscode;
     private static javax.swing.JCheckBox jCheckBoxCheckFull;
     private static javax.swing.JCheckBox jCheckBoxCheckKO;
     private static javax.swing.JCheckBox jCheckBoxCheckManual;
