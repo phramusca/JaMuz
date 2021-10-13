@@ -126,6 +126,7 @@ public class Server {
 				File file = fileInfoInt.getFullPath();
 				
 				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
+					// FIXME ! 0.5.0 Use a location.xxx
 					File destPathFile = Jamuz.getFile("void", "data", "cache", "transcoded");
 					String destPath = FilenameUtils.getFullPath(destPathFile.getAbsolutePath());
 					file = fileInfoInt.getTranscodedFile(destExt, destPath);

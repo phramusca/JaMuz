@@ -127,6 +127,7 @@ public class Jamuz {
 		logConfig("library.isMaster");
 		logConfig("location.add");
 		logConfig("location.ok");
+		logConfig("location.transcoded");
 		logConfig("location.mask");
 		logConfig("location.ko");
 		logConfig("location.manual");

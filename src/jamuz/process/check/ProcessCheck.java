@@ -369,6 +369,8 @@ public class ProcessCheck {
             this.nbScan = nbScan;
         }
         
+	   //FIXME ! 0.5.0 Make a case for location.transcoded
+	   
         @Override
         public void run() {
             nbProcesses++;
