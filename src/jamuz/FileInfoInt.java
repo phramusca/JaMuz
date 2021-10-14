@@ -1457,19 +1457,25 @@ public class FileInfoInt extends FileInfo {
 	}
 	
 	public boolean transcodeIfNeeded(String destPath, String destExt) throws IllegalArgumentException, EncoderException, IOException {
+		if(transcodeRequired(destPath, destExt)) {
+			readMetadata(true);
+			getLyrics();
+			transcode(destExt, destPath);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean transcodeRequired(String destPath, String destExt) throws IllegalArgumentException, EncoderException, IOException {
 		if(!getExt().equals(destExt)) {
 			File transcodedFile = getTranscodedFile(destExt, destPath);
-			if(transcodedFile.exists()) {				
-//				if(sizeOri!=getSize()) { //FIXME ! 0.5.0 Check size !!  and path too ? other ?
-//					transcode(destExt, destPath);	
-//					return true;
-//				}
-				setRootPath(destPath);
-				setExt(destExt);
+			if(transcodedFile.exists()) {
+				Date originalLastModified = new Date(getFullPath().lastModified());
+				Date transcodedLastModified = new Date(transcodedFile.lastModified());
+				if(originalLastModified.after(transcodedLastModified)) {
+					return true;
+				}
 			} else {
-				readMetadata(true);
-				getLyrics();
-				transcode(destExt, destPath);
 				return true;
 			}
 		}

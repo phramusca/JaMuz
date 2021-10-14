@@ -141,44 +141,6 @@ public class ProcessCheck {
 	public static Location getManualLocation() {
        return manualLocation;
    }
-
-    /**
-   * Location class
-   */   	
-    public class Location {
-      private final String optionId;
-      private final String value;
-
-      /**
-       * get value
-       * @return
-       */
-      public String getValue() {
-          return value;
-      }
-
-      /**
-       * create a new location
-       * @param optionId
-       */
-      public Location(String optionId) {
-          this.optionId = optionId;
-          this.value = Jamuz.getMachine().getOptionValue(this.optionId);
-      }
-
-      /**
-       * check if location exist
-       * @return
-       */
-      public boolean check() {
-          File checked = new File(this.value);
-          if(!checked.exists()) {
-              Popup.warning(java.text.MessageFormat.format(Inter.get("Error.Check.SourcePathNotFound"), this.value, Inter.get("Options.Title."+this.optionId)));  //NOI18N
-              return false;
-          }
-          return true;
-      }
-  }
     
     /**
 	 * Starts check process:
@@ -513,7 +475,7 @@ public class ProcessCheck {
                         PanelCheck.progressBarFolders.setMaximum(nbFilesInRootCount);
                     }
                     if(files.length<=0) {
-                        if(!FilenameUtils.equalsNormalizedOnSystem(rootLocation.value, path.getAbsolutePath()+File.separator)) {
+                        if(!FilenameUtils.equalsNormalizedOnSystem(rootLocation.getValue(), path.getAbsolutePath()+File.separator)) {
                             Jamuz.getLogger().log(Level.FINE, "Deleted empty folder \"{0}\"", path.getAbsolutePath());  //NOI18N
                             path.delete();
                         }
@@ -526,7 +488,7 @@ public class ProcessCheck {
                             }
 							PanelCheck.progressBarFolders.progress("");
                         }
-                        FolderInfo folder = new FolderInfo(path.getAbsolutePath()+File.separator, rootLocation.value);
+                        FolderInfo folder = new FolderInfo(path.getAbsolutePath()+File.separator, rootLocation.getValue());
                         int nbFiles = folder.nbFiles;
                         //Add the list of files to the FolderInfo list
                         if(nbFiles>0) {
@@ -546,7 +508,7 @@ public class ProcessCheck {
             }
             checkAbort();
             //Get list of folders from filesystem
-            sendFoldersFSToScanQueue(new File(rootLocation.value), ScanType.SCAN);
+            sendFoldersFSToScanQueue(new File(rootLocation.getValue()), ScanType.SCAN);
             return true;
         }
 
@@ -567,7 +529,7 @@ public class ProcessCheck {
 		}
 		
         private void scanNew() throws InterruptedException {
-            sendFoldersFSToScanQueue(new File(rootLocation.value), ScanType.CHECK_NEW);
+            sendFoldersFSToScanQueue(new File(rootLocation.getValue()), ScanType.CHECK_NEW);
         }
         
         private boolean scanDbUnchecked() throws InterruptedException {

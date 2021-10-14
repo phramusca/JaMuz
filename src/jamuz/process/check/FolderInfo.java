@@ -363,20 +363,26 @@ public class FolderInfo implements java.lang.Comparable {
 		if(!Jamuz.getDb().getFiles(filesDb, idPath, false)) {
 			return false;
 		}
-
+		return transcodeAsNeeded(filesDb, progressBar);
+	}
+	
+	public boolean transcodeAsNeeded(ArrayList <FileInfoInt> files, ProgressBar progressBar) {
+		Location location = new Location("location.transcoded");
+		if(!location.check()) {
+			return false;
+		}
+		String destPath = location.getValue();
 		//Extract the non-mp3
 		String destExt = "mp3"; //FIXME Z destExt option
-		List<FileInfoInt> filesToMaybeTranscode = filesDb.stream()
+		List<FileInfoInt> filesToMaybeTranscode = files.stream()
 					.filter(f -> !f.getExt().equals(destExt))
 					.collect(com.sun.tools.javac.util.List.collector());
         progressBar.setup(filesToMaybeTranscode.size());
 		
-		//Transcode the ones not already transcoded
-		String destination = ProcessCheck.getDestinationLocation().getValue();
 		ArrayList<FileInfoInt> filesTranscoded = new ArrayList<>();
 		filesToMaybeTranscode.forEach(file -> {
 			try {
-				if(file.transcodeIfNeeded(destination, destExt)) {
+				if(file.transcodeIfNeeded(destPath, destExt)) {
 					filesTranscoded.add(file);
 				}
 				progressBar.progress("Transcoded: "+file.getRelativeFullPath());
@@ -390,7 +396,7 @@ public class FolderInfo implements java.lang.Comparable {
 			progressBar.setIndeterminate("Computing ReplayGain for MP3 ...");
 			ArrayList<String> albumList = group(filesTranscoded, "getAlbum");  //NOI18N
 			boolean trackGain=albumList.size()==1 && albumList.get(0).equals("Various Albums");				
-			MP3gain mP3gain = new MP3gain(trackGain, true, destination, relativePath, progressBar);
+			MP3gain mP3gain = new MP3gain(trackGain, true, destPath, relativePath, progressBar);
 			if(mP3gain.process()) {
 				progressBar.setup(filesTranscoded.size());
 				filesTranscoded.stream().forEach((file) -> {
@@ -401,8 +407,7 @@ public class FolderInfo implements java.lang.Comparable {
 				});
 				Jamuz.getDb().insertOrUpdateFilesTranslated(filesTranscoded);
 			}
-		}	
-		
+		}
 		return true;
 	}
 	

@@ -22,6 +22,7 @@ import jamuz.DbConnJaMuz;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
+import jamuz.process.check.Location;
 import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.merge.StatSource;
@@ -39,7 +40,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -123,17 +123,22 @@ public class Server {
 				String destExt = device.getPlaylist().getDestExt();
 				int idFile = Integer.valueOf(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt); 
-				File file = fileInfoInt.getFullPath();
-				
-				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
-					// FIXME ! 0.5.0 Use a location.xxx
-					File destPathFile = Jamuz.getFile("void", "data", "cache", "transcoded");
-					String destPath = FilenameUtils.getFullPath(destPathFile.getAbsolutePath());
-					file = fileInfoInt.getTranscodedFile(destExt, destPath);
-					// FIXME ! 0.5.0 when requested from remote, If file has not been transcoded at export, it will return 404
+				if(fileInfoInt.isDeleted()) {
+					res.sendStatus(Status._404);
 				}
-				
-				if(!fileInfoInt.isDeleted() && file.exists() && file.isFile()) {	
+				File file = fileInfoInt.getFullPath();
+				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
+					Location location = new Location("location.transcoded");
+					if(!location.check()) {
+						res.sendStatus(Status._410);
+					}
+					String destPath = location.getValue();
+					file = fileInfoInt.getTranscodedFile(destExt, destPath);
+					if(!file.exists() || !file.isFile()) {
+						res.sendStatus(Status._410);
+					}
+				}
+				if(file.exists() && file.isFile()) {
 					String msg=" #"+fileInfoInt.getIdFile()+" ("+file.length()+"o) "+file.getAbsolutePath();
 					System.out.println("Sending"+msg);
 					res.sendAttachment(file.toPath());
@@ -144,7 +149,7 @@ public class Server {
 					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
 				} else {
 					res.sendStatus(Status._404);
-				}			
+				}		
 			});
 			
 			app.get("/tags", (req, res) -> {
@@ -254,11 +259,11 @@ public class Server {
 					+ "P.mbId AS pathMbId, P.modifDate AS pathModifDate, DF.status \n") +
 				"FROM file F \n" +
 				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n"
-				+ " JOIN deviceFile DF ON DF.idFile=F.idFile "
-				+ " JOIN path P ON F.idPath=P.idPath "
-				+ " WHERE F.deleted=0 AND P.deleted=0 "
-				+ " AND DF.idDevice="+device.getId()+" AND DF.status=\""+DbConnJaMuz.SyncStatus.NEW+"\""
-				+ " ORDER BY F.idFile "
+				+ "JOIN deviceFile DF ON DF.idFile=F.idFile \n"
+				+ "JOIN path P ON F.idPath=P.idPath \n"
+				+ "WHERE F.deleted=0 AND P.deleted=0 \n"
+				+ "AND DF.idDevice="+device.getId()+" AND DF.status=\""+DbConnJaMuz.SyncStatus.NEW+"\" \n"
+				+ "ORDER BY F.idFile \n"
 				+ limit;
 				
 				setStatus(login, "Sending "+(getCount?"count":"list") + " of NEW files ("+limit+" )");

@@ -81,8 +81,8 @@ public class ProcessCheckTest {
 	@Test
 	public void testGetDestinationLocation() {
 		System.out.println("getDestinationLocation");
-		ProcessCheck.Location expResult = null;
-		ProcessCheck.Location result = ProcessCheck.getDestinationLocation();
+		Location expResult = null;
+		Location result = ProcessCheck.getDestinationLocation();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -94,8 +94,8 @@ public class ProcessCheckTest {
 	@Test
 	public void testGetRootLocation() {
 		System.out.println("getRootLocation");
-		ProcessCheck.Location expResult = null;
-		ProcessCheck.Location result = ProcessCheck.getRootLocation();
+		Location expResult = null;
+		Location result = ProcessCheck.getRootLocation();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -107,8 +107,8 @@ public class ProcessCheckTest {
 	@Test
 	public void testGetKoLocation() {
 		System.out.println("getKoLocation");
-		ProcessCheck.Location expResult = null;
-		ProcessCheck.Location result = ProcessCheck.getKoLocation();
+		Location expResult = null;
+		Location result = ProcessCheck.getKoLocation();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -120,8 +120,8 @@ public class ProcessCheckTest {
 	@Test
 	public void testGetManualLocation() {
 		System.out.println("getManualLocation");
-		ProcessCheck.Location expResult = null;
-		ProcessCheck.Location result = ProcessCheck.getManualLocation();
+		Location expResult = null;
+		Location result = ProcessCheck.getManualLocation();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

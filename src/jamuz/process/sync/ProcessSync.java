@@ -25,8 +25,7 @@ import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.process.check.MP3gain;
-import jamuz.process.check.ReplayGain;
+import jamuz.process.check.Location;
 import jamuz.utils.ProcessAbstract;
 import java.io.File;
 import java.io.IOException;
@@ -39,8 +38,6 @@ import jamuz.utils.Benchmark;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import ws.schild.jave.EncoderException;
@@ -83,15 +80,17 @@ public class ProcessSync extends ProcessAbstract {
 	public void run() {
 		this.resetAbort();
         try {
-            sync();
+            if(sync() && toInsertInDeviceFiles.size()<=0) {
+				progressBar.setup(fileInfoSourceList.size());
+				progressBar.progress("Export complete.", fileInfoSourceList.size());
+				callback.refresh();
+			}
         } catch (InterruptedException ex) {
             Popup.info(Inter.get("Msg.Process.Aborted") //NOI18N
             + "\nYou shall sync again if some files have been deleted on destination\n"
                     + "OR you will face some merge \"not found\" issues.");  //TODO: Inter
         }
         finally {
-            progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
-            callback.refresh();
             //Updating database only if toInsertInDeviceFiles has items 
             //This prevents problems in case aborted before any change has been made 
             //BUT problem remains if some changes occur after abortion
@@ -99,12 +98,14 @@ public class ProcessSync extends ProcessAbstract {
             //TODO: Make a proper toInsertInDeviceFiles list in all cases:
             //  => Use fileInfoSourceList, fileInfoDestinationList and toInsertInDeviceFiles
             if(toInsertInDeviceFiles.size()>0) {
+				progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
+				callback.refresh();
                 Jamuz.getDb().deleteDeviceFiles(device.getId());
                 Jamuz.getDb().insertDeviceFiles(toInsertInDeviceFiles, device.getId());
+				progressBar.setup(fileInfoSourceList.size());
+				progressBar.progress("Export complete.", fileInfoSourceList.size());
+				callback.refresh();
             }
-			progressBar.setup(fileInfoSourceList.size());
-			progressBar.progress("Export complete.", fileInfoSourceList.size());
-			callback.refresh();
             callback.enable(); 
         }
 	}
@@ -152,52 +153,35 @@ public class ProcessSync extends ProcessAbstract {
 		//Transcode files		
 		String destExt = playlist.getDestExt();
 		
-		// FIXME ! 0.5.0 Move this to FolderInfo && offer to transcode from Check panel, from remote and from Export in Remote panel
+		// Check if some files require to be transcoded and exit if so
 		if(!destExt.isBlank()) {
+			Location location = new Location("location.transcoded");
+			if(!location.check()) {
+				return false;
+			}
+			String destPath = location.getValue();
 			List<FileInfoInt> filesToMaybeTranscode = filesDevicePlaylist.stream()
 					.filter(f -> !f.getExt().equals(destExt))
-					.collect(List.collector());
-			LinkedHashSet<String> pathsForReplayGain = new LinkedHashSet<>();
-			ArrayList<FileInfoInt> filesTranslated = new ArrayList<>();
-			progressBar.setup(filesToMaybeTranscode.size());
-			// FIXME ! 0.5.0 Use a location.xxx instead of data cache as folder could contain a lot of data
-			File file = Jamuz.getFile("void", "data", "cache", "transcoded");
-			String destPath = FilenameUtils.getFullPath(file.getAbsolutePath());
-			filesToMaybeTranscode.forEach(fileInfoInt -> {
+					.collect(List.collector());		
+			for(FileInfoInt file : filesToMaybeTranscode) {
 				try {
-					if(fileInfoInt.transcodeIfNeeded(destPath, destExt)) {
-						filesTranslated.add(fileInfoInt);
-						pathsForReplayGain.add(fileInfoInt.getRelativePath());
+					if(file.transcodeRequired(destPath, destExt)) {
+						Popup.warning("Some files requires transcoding but are not yet transcoded. Please use the Check tab to do so. ");
+						progressBar.reset();
+						callback.refresh();
+						return false;
 					}
-					progressBar.progress("Transcoded: "+fileInfoInt.getRelativeFullPath());
-					callback.refresh();
 				} catch (IllegalArgumentException | EncoderException | IOException ex) {
 					Jamuz.getLogger().severe(ex.toString());
 				}
-			});
-			pathsForReplayGain.forEach(relativePath -> {
-				boolean trackGain=false;  //  albumList.size()==1 && albumList.get(0).equals("Various Albums");	 // FIXME !!!! 0.5.0 trackGain if "Various Albums"
-				MP3gain mP3gain = new MP3gain(trackGain, true, destPath, relativePath, progressBar); //FIXME: callback.refresh(); within MP3gain
-				mP3gain.process();
-			});
-			progressBar.setup(filesTranslated.size());
-			callback.refresh();
-			filesTranslated.stream().forEach((fileInfoDisplay) -> {
-				progressBar.progress("Reading ReplayGain from \""+fileInfoDisplay.getRelativeFullPath()+"\"");
-				callback.refresh();
-				ReplayGain.GainValues gv = fileInfoDisplay.getReplayGain(true);
-				fileInfoDisplay.saveReplayGainToID3(gv);
-				fileInfoDisplay.readMetadata(false); //To get new file information (format, size,...)
-			});
-			Jamuz.getDb().insertOrUpdateFilesTranslated(filesTranslated);
+			}
 		}
 		
 		//Set statuses in deviceFile
 		progressBar.setup(fileInfoSourceList.size());
 		callback.refresh();
 		ArrayList<FileInfoInt> filesToInsertOrUpdate = new ArrayList<>();
-		for (Iterator<FileInfoInt> it = fileInfoSourceList.iterator(); it.hasNext();) {
-			FileInfoInt fileTable = it.next();
+		for (FileInfoInt fileTable : fileInfoSourceList) {
 			if(filesDevicePlaylist.contains(fileTable)) {
 				filesDevicePlaylist.remove(fileTable);
 				fileTable.setStatus(DbConnJaMuz.SyncStatus.NEW);
