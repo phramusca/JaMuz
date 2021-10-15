@@ -92,7 +92,7 @@ public class Settings {
         
         //Set options for current machine
         for(Option option : Jamuz.getMachine().getOptions()) {
-            Jamuz.getDb().setOption(option, getOptionValue(option.getId()));
+            Jamuz.getDb().updateOption(option, getOptionValue(option.getId()));
         }
 
         //Read created options
@@ -119,7 +119,7 @@ public class Settings {
 	public static void addStatSource(String name, int idStatement, String rootPath, int idDevice) throws IOException {
 		String destination=copyStatSourceDatabase(name, name);
         //Define stat source in Jamuz dB
-        Jamuz.getDb().setStatSource(new StatSource(-1, name, idStatement, destination, "", "", 
+        Jamuz.getDb().updateStatSource(new StatSource(-1, name, idStatement, destination, "", "", 
                 rootPath, Jamuz.getMachine().getName(), idDevice, true, "", false));
     }
 	

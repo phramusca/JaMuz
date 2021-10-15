@@ -19,11 +19,13 @@ package jamuz.process.sync;
 //FIXME Z SYNC If file missing in source, it blocks transfert
 //FIXME Z SYNC If tag issue (genre, only?), it blocks transfert (errors)
 //FIXME Z SYNC Export file scrollabr freeze => threaded ?
+import com.sun.tools.javac.util.List;
 import jamuz.DbConnJaMuz;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.process.check.Location;
 import jamuz.utils.ProcessAbstract;
 import java.io.File;
 import java.io.IOException;
@@ -36,9 +38,9 @@ import jamuz.utils.Benchmark;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
-import java.util.Iterator;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import ws.schild.jave.EncoderException;
 
 /**
  * Sync process class
@@ -72,23 +74,23 @@ public class ProcessSync extends ProcessAbstract {
 	}
 	
 	/**
-	 * Starts file synchronisation process in a new thread
-	 * Called by MainGUI
+	 * Starts file export process in a new thread
 	 */
     @Override
 	public void run() {
 		this.resetAbort();
-
         try {
-            sync();
+            if(sync() && toInsertInDeviceFiles.size()<=0) {
+				progressBar.setup(fileInfoSourceList.size());
+				progressBar.progress("Export complete.", fileInfoSourceList.size());
+				callback.refresh();
+			}
         } catch (InterruptedException ex) {
             Popup.info(Inter.get("Msg.Process.Aborted") //NOI18N
             + "\nYou shall sync again if some files have been deleted on destination\n"
                     + "OR you will face some merge \"not found\" issues.");  //TODO: Inter
         }
         finally {
-            progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
-            callback.refresh();
             //Updating database only if toInsertInDeviceFiles has items 
             //This prevents problems in case aborted before any change has been made 
             //BUT problem remains if some changes occur after abortion
@@ -96,12 +98,14 @@ public class ProcessSync extends ProcessAbstract {
             //TODO: Make a proper toInsertInDeviceFiles list in all cases:
             //  => Use fileInfoSourceList, fileInfoDestinationList and toInsertInDeviceFiles
             if(toInsertInDeviceFiles.size()>0) {
+				progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
+				callback.refresh();
                 Jamuz.getDb().deleteDeviceFiles(device.getId());
                 Jamuz.getDb().insertDeviceFiles(toInsertInDeviceFiles, device.getId());
-            }	
-			progressBar.setup(fileInfoSourceList.size());
-			progressBar.progress("Export complete.", fileInfoSourceList.size());
-			callback.refresh();
+				progressBar.setup(fileInfoSourceList.size());
+				progressBar.progress("Export complete.", fileInfoSourceList.size());
+				callback.refresh();
+            }
             callback.enable(); 
         }
 	}
@@ -126,10 +130,18 @@ public class ProcessSync extends ProcessAbstract {
 		playlist.getFiles(filesDevicePlaylist);
 		
 		//FIXME Z Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
+		//In a general manner better handle deleted=1 in file or path table:
+		//	- may cause duplicates in db (still under monitoring, )
+		//	- should be included in duplicate search in check process
+		//		- to reject duplicates with same mbId and low rating when deleted
+		//		- to accept and replace duplicates with same mbId and high rating when deleted
+		//		- think of the status: why would a OK with good rating be deleted ? why ... ?
 		
 		//GET list of files in deviceFile
 		fileInfoSourceList = new ArrayList<>();
-		String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
+		String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, "
+				+ " 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, "
+				+ " P.modifDate AS pathModifDate "
 				+ " FROM deviceFile DF "
 				+ " JOIN file F ON DF.idFile=F.idFile "
 				+ " JOIN path P ON F.idPath=P.idPath "
@@ -138,12 +150,38 @@ public class ProcessSync extends ProcessAbstract {
 				+ " ORDER BY idFile ";
 		Jamuz.getDb().getFiles(fileInfoSourceList, sql);
 
+		//Transcode files		
+		String destExt = playlist.getDestExt();
+		
+		// Check if some files require to be transcoded and exit if so
+		if(!destExt.isBlank()) {
+			Location location = new Location("location.transcoded");
+			if(!location.check()) {
+				return false;
+			}
+			String destPath = location.getValue();
+			List<FileInfoInt> filesToMaybeTranscode = filesDevicePlaylist.stream()
+					.filter(f -> !f.getExt().equals(destExt))
+					.collect(List.collector());		
+			for(FileInfoInt file : filesToMaybeTranscode) {
+				try {
+					if(file.transcodeRequired(destPath, destExt)) {
+						Popup.warning("Some files requires transcoding but are not yet transcoded. Please use the Check tab to do so. ");
+						progressBar.reset();
+						callback.refresh();
+						return false;
+					}
+				} catch (IllegalArgumentException | EncoderException | IOException ex) {
+					Jamuz.getLogger().severe(ex.toString());
+				}
+			}
+		}
+		
 		//Set statuses in deviceFile
 		progressBar.setup(fileInfoSourceList.size());
 		callback.refresh();
 		ArrayList<FileInfoInt> filesToInsertOrUpdate = new ArrayList<>();
-		for (Iterator<FileInfoInt> it = fileInfoSourceList.iterator(); it.hasNext();) {
-			FileInfoInt fileTable = it.next();
+		for (FileInfoInt fileTable : fileInfoSourceList) {
 			if(filesDevicePlaylist.contains(fileTable)) {
 				filesDevicePlaylist.remove(fileTable);
 				fileTable.setStatus(DbConnJaMuz.SyncStatus.NEW);

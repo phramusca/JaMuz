@@ -108,6 +108,7 @@ public class DialogOptions extends javax.swing.JDialog {
 		setOption("location.ko", jTextFieldOptionLocationKO, jLabelOptionLocationKO);
 		setOption("location.manual", jTextFieldOptionLocationManual, jLabelOptionLocationManual);
 		setOption("location.ok", jTextFieldOptionLocationOK, jLabelOptionLocationOK);
+		setOption("location.transcoded", jTextFieldOptionLocationTranscoded, jLabelOptionLocationTranscoded);
 		setOption("location.mask", jTextFieldOptionMask, jLabelOptionMask);
 		setOption("files.audio", jTextFieldOptionsFilesAudio, jLabelOptionsFilesAudio);
 		setOption("files.convert", jTextFieldOptionsFilesConvert, jLabelOptionsFilesConvert);
@@ -193,6 +194,10 @@ public class DialogOptions extends javax.swing.JDialog {
         jTextFieldOptionLocationKO = new javax.swing.JTextField();
         jButtonOptionSelectFolderKO = new javax.swing.JButton();
         jLabelOptionLocationKO = new javax.swing.JLabel();
+        jPanel21 = new javax.swing.JPanel();
+        jTextFieldOptionLocationTranscoded = new javax.swing.JTextField();
+        jButtonOptionSelectFolderTranscoded = new javax.swing.JButton();
+        jLabelOptionLocationTranscoded = new javax.swing.JLabel();
         jPanelCheckOptions = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jTextFieldOptionMask = new javax.swing.JTextField();
@@ -433,7 +438,7 @@ public class DialogOptions extends javax.swing.JDialog {
             }
         });
 
-        jLabelOptionLocationOK.setText("Location OK");
+        jLabelOptionLocationOK.setText(bundle.getString("Options.Comment.location.ok")); // NOI18N
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -484,7 +489,7 @@ public class DialogOptions extends javax.swing.JDialog {
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelOptionLocationKO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel17Layout.createSequentialGroup()
-                        .addComponent(jTextFieldOptionLocationKO, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
+                        .addComponent(jTextFieldOptionLocationKO, javax.swing.GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonOptionSelectFolderKO)))
                 .addContainerGap())
@@ -500,6 +505,46 @@ public class DialogOptions extends javax.swing.JDialog {
                     .addComponent(jTextFieldOptionLocationKO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
+        jPanel21.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jTextFieldOptionLocationTranscoded.setEditable(false);
+        jTextFieldOptionLocationTranscoded.setText("jTextField1");
+
+        jButtonOptionSelectFolderTranscoded.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
+        jButtonOptionSelectFolderTranscoded.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonOptionSelectFolderTranscoded.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptionSelectFolderTranscodedActionPerformed(evt);
+            }
+        });
+
+        jLabelOptionLocationTranscoded.setText(Inter.get("Options.Comment.location.transcoded")); // NOI18N
+
+        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
+        jPanel21.setLayout(jPanel21Layout);
+        jPanel21Layout.setHorizontalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelOptionLocationTranscoded, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel21Layout.createSequentialGroup()
+                        .addComponent(jTextFieldOptionLocationTranscoded)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonOptionSelectFolderTranscoded)))
+                .addContainerGap())
+        );
+        jPanel21Layout.setVerticalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelOptionLocationTranscoded)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonOptionSelectFolderTranscoded)
+                    .addComponent(jTextFieldOptionLocationTranscoded, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
         javax.swing.GroupLayout jPanelCheckLocationsLayout = new javax.swing.GroupLayout(jPanelCheckLocations);
         jPanelCheckLocations.setLayout(jPanelCheckLocationsLayout);
         jPanelCheckLocationsLayout.setHorizontalGroup(
@@ -510,7 +555,8 @@ public class DialogOptions extends javax.swing.JDialog {
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelCheckLocationsLayout.setVerticalGroup(
@@ -524,6 +570,8 @@ public class DialogOptions extends javax.swing.JDialog {
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1021,6 +1069,7 @@ public class DialogOptions extends javax.swing.JDialog {
 		selOptions.getOption("location.ko").setValue(jTextFieldOptionLocationKO.getText());
 		selOptions.getOption("location.manual").setValue(jTextFieldOptionLocationManual.getText());
 		selOptions.getOption("location.ok").setValue(jTextFieldOptionLocationOK.getText());
+		selOptions.getOption("location.transcoded").setValue(jTextFieldOptionLocationTranscoded.getText());
 		selOptions.getOption("location.mask").setValue(jTextFieldOptionMask.getText());
 		selOptions.getOption("files.audio").setValue(jTextFieldOptionsFilesAudio.getText());
 		selOptions.getOption("files.convert").setValue(jTextFieldOptionsFilesConvert.getText());
@@ -1031,7 +1080,7 @@ public class DialogOptions extends javax.swing.JDialog {
 		selOptions.getOption("log.limit").setValue(jTextFieldOptionsLogLimit.getText());
 		selOptions.getOption("network.proxy").setValue(jTextFieldOptionsProxy.getText());
 		
-		Jamuz.getDb().setOptions(selOptions);
+		Jamuz.getDb().updateOptions(selOptions);
 		Jamuz.getDb().updateMachine(selOptions.getOption(0).getIdMachine(), jTextFieldDescription.getText());
 		
 		PanelMain.setOptions();
@@ -1108,6 +1157,10 @@ public class DialogOptions extends javax.swing.JDialog {
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         doClose(RET_CANCEL);
     }//GEN-LAST:event_jButtonCancelActionPerformed
+
+    private void jButtonOptionSelectFolderTranscodedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSelectFolderTranscodedActionPerformed
+        selectFolder(jTextFieldOptionLocationTranscoded, Inter.get("Options.Title.location.transcoded"));
+    }//GEN-LAST:event_jButtonOptionSelectFolderTranscodedActionPerformed
 	
 	private void doClose(int retStatus) {
 		returnStatus = retStatus;
@@ -1157,6 +1210,7 @@ public class DialogOptions extends javax.swing.JDialog {
     private javax.swing.JButton jButtonOptionSelectFolderManual;
     private javax.swing.JButton jButtonOptionSelectFolderNew;
     private javax.swing.JButton jButtonOptionSelectFolderOK;
+    private javax.swing.JButton jButtonOptionSelectFolderTranscoded;
     private javax.swing.JButton jButtonStatSouceAdd;
     private javax.swing.JButton jButtonStatSouceDel;
     private javax.swing.JButton jButtonStatSouceEdit;
@@ -1167,6 +1221,7 @@ public class DialogOptions extends javax.swing.JDialog {
     private static javax.swing.JLabel jLabelOptionLocationLibrary;
     private static javax.swing.JLabel jLabelOptionLocationManual;
     private static javax.swing.JLabel jLabelOptionLocationOK;
+    private static javax.swing.JLabel jLabelOptionLocationTranscoded;
     private static javax.swing.JLabel jLabelOptionMask;
     private static javax.swing.JLabel jLabelOptionsFilesAudio;
     private static javax.swing.JLabel jLabelOptionsFilesConvert;
@@ -1188,6 +1243,7 @@ public class DialogOptions extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel21;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel7;
@@ -1210,6 +1266,7 @@ public class DialogOptions extends javax.swing.JDialog {
     private static javax.swing.JTextField jTextFieldOptionLocationLibrary;
     private static javax.swing.JTextField jTextFieldOptionLocationManual;
     private static javax.swing.JTextField jTextFieldOptionLocationOK;
+    private static javax.swing.JTextField jTextFieldOptionLocationTranscoded;
     private static javax.swing.JTextField jTextFieldOptionMask;
     private static javax.swing.JTextField jTextFieldOptionsFilesAudio;
     private static javax.swing.JTextField jTextFieldOptionsFilesConvert;

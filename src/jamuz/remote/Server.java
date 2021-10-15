@@ -22,6 +22,7 @@ import jamuz.DbConnJaMuz;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
+import jamuz.process.check.Location;
 import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.merge.StatSource;
@@ -39,14 +40,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import ws.schild.jave.EncoderException;
 
 /**
  *
@@ -121,50 +120,36 @@ public class Server {
 			app.get("/download", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
+				String destExt = device.getPlaylist().getDestExt();
 				int idFile = Integer.valueOf(req.getQuery("id"));
-				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
-				
-				// FIXME !! 0.5.0 Make destExt an option (server or client side or both ?)
-				String destExt = "mp3";
-				res.setHeader("oriExt", fileInfoInt.getExt());
-				res.setHeader("destExt", destExt);
-				boolean transcoded=false;
-				String oriExt = fileInfoInt.getExt();
-				if(!oriExt.equals(destExt)) {
-					try {
-						fileInfoInt.readMetadata(true);
-						fileInfoInt.getLyrics();
-						//FIXME !! 0.5.0 Replaygain is wrong for transcoded files on remote
-						//FIXME !! 0.5.0 Size differs a lot from flac to mp3 so playlist size to export is wrong :(
-						File f = Jamuz.getFile("void", "data", "temp", login, "transcoding");
-						String destPath = FilenameUtils.getFullPath(f.getAbsolutePath());
-						fileInfoInt.transcode(destExt, destPath);
-						transcoded=true;
-						res.setHeader("size", String.valueOf(fileInfoInt.getFullPath().length()));
-					} catch (IllegalArgumentException | EncoderException ex) {
-						Jamuz.getLogger().severe(ex.toString());
-						res.setStatus(Status._500);
-						res.send(ex.getLocalizedMessage());
+				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt); 
+				if(fileInfoInt.isDeleted()) {
+					res.sendStatus(Status._404);
+				}
+				File file = fileInfoInt.getFullPath();
+				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
+					Location location = new Location("location.transcoded");
+					if(!location.check()) {
+						res.sendStatus(Status._410);
+					}
+					String destPath = location.getValue();
+					file = fileInfoInt.getTranscodedFile(destExt, destPath);
+					if(!file.exists() || !file.isFile()) {
+						res.sendStatus(Status._410);
 					}
 				}
-				
-				File file = fileInfoInt.getFullPath();
-				if(!fileInfoInt.isDeleted() && file.exists() && file.isFile()) {	
+				if(file.exists() && file.isFile()) {
 					String msg=" #"+fileInfoInt.getIdFile()+" ("+file.length()+"o) "+file.getAbsolutePath();
 					System.out.println("Sending"+msg);
 					res.sendAttachment(file.toPath());
 					System.out.println("Sent"+msg);
 					ArrayList<FileInfoInt> insert = new ArrayList<>();
 					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
-					if(transcoded) {
-						fileInfoInt.getFullPath().delete();
-						fileInfoInt.setExt(oriExt);
-					}
 					insert.add(fileInfoInt);
 					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
 				} else {
 					res.sendStatus(Status._404);
-				}			
+				}		
 			});
 			
 			app.get("/tags", (req, res) -> {
@@ -210,6 +195,8 @@ public class Server {
 					List<StatSource> sources = new ArrayList();
 					sources.add(tableModel.getClient(login).getStatSource());
 					setStatus(login, "Starting merge");
+					Device device = tableModel.getClient(login).getDevice();
+					String destExt = device.getPlaylist().getDestExt();
 					new ProcessMerge("Thread.Server.ProcessMerge."+login,
 							sources, false, false, newTracks,
 							tableModel.getClient(login).getProgressBar(),
@@ -222,15 +209,14 @@ public class Server {
 									obj.put("type", "mergeListDbSelected");
 									JSONArray jsonArray = new JSONArray();
 									for (int i=0; i < mergeListDbSelected.size(); i++) {
-										String destExt = "mp3";
 										FileInfo fileInfo = mergeListDbSelected.get(i);
-										//FIXME !! 0.5.0 Better handle this for transcoding to mp3
-										if(!fileInfo.getExt().equals(destExt)) {
+										if(!destExt.isBlank() && !fileInfo.getExt().equals(destExt)) {
+											//Note: No need to get info from fileTranscoded table since only stats are updated on remote
 											fileInfo.setExt(destExt);
 										}
 										jsonArray.add(fileInfo.toMap());
 									}
-									obj.put("files", jsonArray);
+									obj.put("files", jsonArray); 
 									res.send(obj.toJSONString());
 								}
 
@@ -248,6 +234,7 @@ public class Server {
 			app.get("/files/new", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
+				String destExt = device.getPlaylist().getDestExt();
 				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
 				String limit="";
 				if(!getCount) {
@@ -255,19 +242,35 @@ public class Server {
 					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
 				}
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" DF.status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, P.modifDate AS pathModifDate ")
-				+ " FROM file F "
-				+ " JOIN deviceFile DF ON DF.idFile=F.idFile "
-				+ " JOIN path P ON F.idPath=P.idPath "
-				+ " WHERE F.deleted=0 AND P.deleted=0 "
-				+ " AND DF.idDevice="+device.getId()+" AND DF.status=\""+DbConnJaMuz.SyncStatus.NEW+"\""
-				+ " ORDER BY F.idFile "
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " : " F.idFile, F.idPath, F.name, F.rating, "
+					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
+					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" +
+				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
+					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
+					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" +
+				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" +
+				"ifnull(T.format, F.format) AS format, \n" +
+				"ifnull(T.length, F.length) AS length, \n" +
+				"ifnull(T.size, F.size) AS size, \n" +
+				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" +
+				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" +
+				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" +
+				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
+					+ "P.mbId AS pathMbId, P.modifDate AS pathModifDate, DF.status \n") +
+				"FROM file F \n" +
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n"
+				+ "JOIN deviceFile DF ON DF.idFile=F.idFile \n"
+				+ "JOIN path P ON F.idPath=P.idPath \n"
+				+ "WHERE F.deleted=0 AND P.deleted=0 \n"
+				+ "AND DF.idDevice="+device.getId()+" AND DF.status=\""+DbConnJaMuz.SyncStatus.NEW+"\" \n"
+				+ "ORDER BY F.idFile \n"
 				+ limit;
+				
 				setStatus(login, "Sending "+(getCount?"count":"list") + " of NEW files ("+limit+" )");
 				if(getCount) {
 					res.send(Jamuz.getDb().getFilesCount(sql).toString());
 				} else {
-					res.send(getFiles(sql));
+					res.send(getFiles(sql, destExt));
 				}
 				setStatus(login, "Sent "+(getCount?"count":"list") + " of NEW files ("+limit+" )");
 			});
@@ -275,6 +278,7 @@ public class Server {
 			app.get("/files/info", (req, res) -> {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
+				String destExt = device.getPlaylist().getDestExt();
 				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
 				String limit="";
 				if(!getCount) {
@@ -282,18 +286,34 @@ public class Server {
 					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
 				}
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) ":" 'INFO' AS status, F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, P.modifDate AS pathModifDate ")
-				+ " FROM file F "
-				+ " JOIN path P ON F.idPath=P.idPath "
-				+ " WHERE F.deleted=0 AND P.deleted=0 "
-				+ " AND F.idFile NOT IN (SELECT idFile FROM deviceFile WHERE idDevice="+device.getId()+" AND status=\""+DbConnJaMuz.SyncStatus.NEW+"\") "
-				+ " ORDER BY F.idFile "
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " : " F.idFile, F.idPath, F.name, F.rating, "
+					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
+					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" +
+				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
+					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
+					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" +
+				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" +
+				"ifnull(T.format, F.format) AS format, \n" +
+				"ifnull(T.length, F.length) AS length, \n" +
+				"ifnull(T.size, F.size) AS size, \n" +
+				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" +
+				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" +
+				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" +
+				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
+					+ "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate, 'INFO' AS status \n") +
+				"FROM file F \n" +
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n"
+				+ "JOIN path P ON F.idPath=P.idPath \n"
+				+ "WHERE F.deleted=0 AND P.deleted=0 \n"
+				+ "AND F.idFile NOT IN (SELECT idFile FROM deviceFile WHERE idDevice="+device.getId()+" AND status=\""+DbConnJaMuz.SyncStatus.NEW+"\") \n"
+				+ "ORDER BY F.idFile "
 				+ limit;
+				
 				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files ("+limit+" )");
 				if(getCount) {
 					res.send(Jamuz.getDb().getFilesCount(sql).toString());
 				} else {
-					res.send(getFiles(sql));
+					res.send(getFiles(sql, destExt));
 				}
 				setStatus(login, "Sent "+(getCount?"count":"list") + " of INFO files ("+limit+" )");
 			});
@@ -307,18 +327,16 @@ public class Server {
 		}
 	}
 	
-	private String getFiles(String sql) {
+	private String getFiles(String sql, String destExt) {
 		ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
 		Jamuz.getDb().getFiles(filesToSend, sql);
 		Map jsonAsMap = new HashMap();
 		JSONArray jSONArray = new JSONArray();
 		for (FileInfoInt fileInfo : filesToSend) {
 			fileInfo.getTags();
-			//FIXME !! 0.5.0 Better handle this for transcoding to mp3
-			String destExt = "mp3";
-			if(!fileInfo.getExt().equals(destExt)) {
+			if(!destExt.isBlank() && !fileInfo.getExt().equals(destExt)) {
 				fileInfo.setExt(destExt);
-			}			
+			}
 			jSONArray.add(fileInfo.toMap());
 		}
 		jsonAsMap.put("files", jSONArray);		
@@ -416,7 +434,7 @@ public class Server {
 							"source", client.getInfo().getLogin(), 
 							-1, 
 							client.getInfo().getLogin(), true);
-					if(Jamuz.getDb().setDevice(device)) {
+					if(Jamuz.getDb().updateDevice(device)) {
 						Device deviceWithId = Jamuz.getDb().getDevice(client.getInfo().getLogin());
 						client.getInfo().setDevice(deviceWithId);
 						StatSource statSource = new StatSource(
@@ -425,10 +443,10 @@ public class Server {
 							client.getInfo().getRootPath(), 
 							client.getInfo().getLogin(), 
 							deviceWithId.getId(), false, "", true);
-						if(Jamuz.getDb().setStatSource(statSource)) {
+						if(Jamuz.getDb().updateStatSource(statSource)) {
 							StatSource statSourceWithId = Jamuz.getDb().getStatSource(client.getInfo().getLogin());
 							client.getInfo().setStatSource(statSourceWithId);
-							if(Jamuz.getDb().setClientInfo(client.getInfo())) {
+							if(Jamuz.getDb().updateClient(client.getInfo())) {
 								ClientInfo clientInfo = Jamuz.getDb().getClient(client.getInfo().getLogin());
 								client.getInfo().setId(clientInfo.getId());
 								tableModel.add(clientInfo);
@@ -498,8 +516,8 @@ public class Server {
 		
 	}
 	
-	public void sendFile(String clientId, String login, int idFile) {
-		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile);
+	public void sendFile(String clientId, String login, int idFile, String destExt) {
+		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt);
 		setStatus(login, "Sending file: "+fileInfoInt.getRelativeFullPath());
 		if(!sendFile(clientId, fileInfoInt)) {
 			//TODO SYNC Happens (still ?) when file not found

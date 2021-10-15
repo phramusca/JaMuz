@@ -24,7 +24,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jSplitPanePlaylist" alignment="1" pref="1075" max="32767" attributes="0"/>
+          <Component id="jSplitPanePlaylist" alignment="1" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -234,6 +234,7 @@
                               <Component id="jPanelPlaylist" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanelPlaylistLimit" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Component id="jPanelPlaylistFilters" alignment="0" max="32767" attributes="0"/>
                           <Component id="jPanelPlaylistOrders" alignment="0" max="32767" attributes="0"/>
@@ -415,7 +416,7 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="jScrollPane1" pref="287" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" pref="229" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jButtonPlaylistFieldAdd" alignment="0" max="32767" attributes="0"/>
@@ -537,7 +538,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="jScrollPane2" pref="251" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" pref="194" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jCheckBoxRandom" alignment="0" max="32767" attributes="0"/>
@@ -651,26 +652,39 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jCheckBoxLimit" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jSpinnerLimitValue" min="-2" pref="62" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jComboBoxLimitUnit" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jCheckBoxHidden" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jCheckBoxLimit" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jSpinnerLimitValue" min="-2" pref="62" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jComboBoxLimitUnit" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="jCheckBoxHidden" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jCheckBoxTranscode" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="jCheckBoxLimit" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jSpinnerLimitValue" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jComboBoxLimitUnit" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jCheckBoxHidden" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="jCheckBoxLimit" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jSpinnerLimitValue" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jComboBoxLimitUnit" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxHidden" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jCheckBoxTranscode" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -712,6 +726,14 @@
                   </Properties>
                   <Events>
                     <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jCheckBoxHiddenItemStateChanged"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="jCheckBoxTranscode">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Transcode to MP3 ? (Server sync)"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxTranscodeActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

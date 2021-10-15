@@ -141,7 +141,7 @@ public class ServerTest {
 		String login = "";
 		int idFile = 0;
 		Server instance = null;
-		instance.sendFile(clientId, login, idFile);
+		instance.sendFile(clientId, login, idFile, "mp3");
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

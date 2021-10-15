@@ -54,6 +54,7 @@ CREATE TABLE "deviceFile" (
     "idDevice" INTEGER NOT NULL,
     "oriRelativeFullPath" TEXT NOT NULL,
 	"status" TEXT NOT NULL,
+    "updated" INTEGER NOT NULL
 	PRIMARY KEY ("idFile", "idDevice"),
 	FOREIGN KEY(idFile) REFERENCES file(idFile),
 	FOREIGN KEY(idDevice) REFERENCES device(idDevice) ON DELETE CASCADE
@@ -100,10 +101,23 @@ CREATE TABLE "playlist" (
     "type" TEXT NOT NULL,
     "match" TEXT NOT NULL,
     "random" INTEGER NOT NULL,
-    "hidden" INTEGER NOT NULL
+    "hidden" INTEGER NOT NULL,
+    "destExt" TEXT NOT NULL
+);
+CREATE TABLE "fileTranscoded" (
+	"idFile"	INTEGER NOT NULL,
+	"ext"	TEXT NOT NULL,
+	"bitRate"	TEXT NOT NULL,
+	"format"	TEXT NOT NULL,
+	"length"	INTEGER NOT NULL,
+	"size"	INTEGER NOT NULL,
+	"trackGain"	REAL,
+	"albumGain"	REAL,
+	"modifDate"	TEXT NOT NULL,
+	PRIMARY KEY("idFile","ext")
 );
 CREATE TABLE "file" (
-    "idFile" INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
+    "idFile" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     "idPath" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "rating" INTEGER NOT NULL,

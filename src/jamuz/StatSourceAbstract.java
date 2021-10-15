@@ -196,7 +196,7 @@ public abstract class StatSourceAbstract {
      * @param files
      * @return
      */
-    public abstract int[] updateStatistics(ArrayList<? extends FileInfo> files);
+    public abstract int[] updateFileStatistics(ArrayList<? extends FileInfo> files);
     
 	/**
      * Get user tags

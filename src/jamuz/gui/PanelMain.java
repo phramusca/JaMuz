@@ -244,7 +244,7 @@ public class PanelMain extends javax.swing.JFrame {
 					displayedFile.toggleTag(tag);
 					ArrayList<FileInfoInt> temp = new ArrayList<>();
 					temp.add(displayedFile);
-					Jamuz.getDb().setTags(temp, null);
+					Jamuz.getDb().updateFileTags(temp, null);
 					displayTags();
 					PanelRemote.send(displayedFile);
 				}
@@ -318,7 +318,7 @@ public class PanelMain extends javax.swing.JFrame {
         //update lastPlayed (now) and playCounter (+1)
 		FileInfoInt file = queueModel.getPlayingSong().getFile();
 		if(file.isFromLibrary()) {
-			Jamuz.getDb().updateLastPlayedAndCounter(file);
+			Jamuz.getDb().updateFileLastPlayedAndCounter(file);
 			//FIXME Z PLAYER Do not increase playCounter when moved back on queue and moved forward
 			// especially if many back and forward
 			//If not, increase playCounter too much
@@ -697,7 +697,7 @@ public class PanelMain extends javax.swing.JFrame {
                 if (tcl.getColumn() == 21) { //ComboBox is here
 					FolderInfo.CopyRight copyRight = (FolderInfo.CopyRight)tcl.getNewValue();
                     FileInfoInt myFileInfo = PanelSelect.getFileInfoList().get(tcl.getRow());
-                    Jamuz.getDb().updateCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
+                    Jamuz.getDb().updatePathCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
                     PanelSelect.refreshTable();
                 }
             }

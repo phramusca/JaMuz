@@ -14,4 +14,5 @@ insert into "optiontype" ("idOptionType", "name", "default", "type") values ('12
 insert into "optiontype" ("idOptionType", "name", "default", "type") values ('13', 'files.convert', 'wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3', 'csv');
 insert into "optiontype" ("idOptionType", "name", "default", "type") values ('14', 'files.delete', 'db,ini,txt,m3u,pls,htm,html,doc,nfo,url,sfv,wpl,sfk', 'csv');
 insert into "optiontype" ("idOptionType", "name", "default", "type") values ('15', 'location.manual', '', 'path');
+insert into "optiontype" ("idOptionType", "name", "default", "type") values ('16', 'location.transcoded', '', 'path');
 COMMIT;

@@ -141,44 +141,6 @@ public class ProcessCheck {
 	public static Location getManualLocation() {
        return manualLocation;
    }
-
-    /**
-   * Location class
-   */   	
-    public class Location {
-      private final String optionId;
-      private final String value;
-
-      /**
-       * get value
-       * @return
-       */
-      public String getValue() {
-          return value;
-      }
-
-      /**
-       * create a new location
-       * @param optionId
-       */
-      public Location(String optionId) {
-          this.optionId = optionId;
-          this.value = Jamuz.getMachine().getOptionValue(this.optionId);
-      }
-
-      /**
-       * check if location exist
-       * @return
-       */
-      public boolean check() {
-          File checked = new File(this.value);
-          if(!checked.exists()) {
-              Popup.warning(java.text.MessageFormat.format(Inter.get("Error.Check.SourcePathNotFound"), this.value, Inter.get("Options.Title."+this.optionId)));  //NOI18N
-              return false;
-          }
-          return true;
-      }
-  }
     
     /**
 	 * Starts check process:
@@ -387,6 +349,10 @@ public class ProcessCheck {
                         rootLocation = new Location("location.add"); //NOI18N
                         destinationLocation = new Location("location.ok"); //NOI18N
                         break;
+					case TRANSCODE:
+						rootLocation = new Location("location.library"); //NOI18N
+                        destinationLocation = new Location("location.transcoded"); //NOI18N
+						break;
                     default: //All other cases
                         rootLocation = new Location("location.library"); //NOI18N
                         destinationLocation = new Location("location.library"); //NOI18N
@@ -417,7 +383,8 @@ public class ProcessCheck {
                 boolean full=(!checkType.equals(CheckType.SCAN_QUICK));
 				boolean analyze=(!(checkType.equals(CheckType.SCAN_QUICK) 
 						|| checkType.equals(CheckType.SCAN_FULL) 
-						|| checkType.equals(CheckType.SCAN_DELETED)));
+						|| checkType.equals(CheckType.SCAN_DELETED)
+						|| checkType.equals(CheckType.TRANSCODE)));
                 
                 if(analyze) {
 					partialTimesAnalysis.clear();
@@ -458,6 +425,9 @@ public class ProcessCheck {
                         break;
 					case SCAN_DELETED:
 						scanDeleted();
+						break;
+					case TRANSCODE:
+						transcode();
 						break;
                 }
             } catch (InterruptedException ex) {
@@ -505,7 +475,7 @@ public class ProcessCheck {
                         PanelCheck.progressBarFolders.setMaximum(nbFilesInRootCount);
                     }
                     if(files.length<=0) {
-                        if(!FilenameUtils.equalsNormalizedOnSystem(rootLocation.value, path.getAbsolutePath()+File.separator)) {
+                        if(!FilenameUtils.equalsNormalizedOnSystem(rootLocation.getValue(), path.getAbsolutePath()+File.separator)) {
                             Jamuz.getLogger().log(Level.FINE, "Deleted empty folder \"{0}\"", path.getAbsolutePath());  //NOI18N
                             path.delete();
                         }
@@ -518,7 +488,7 @@ public class ProcessCheck {
                             }
 							PanelCheck.progressBarFolders.progress("");
                         }
-                        FolderInfo folder = new FolderInfo(path.getAbsolutePath()+File.separator, rootLocation.value);
+                        FolderInfo folder = new FolderInfo(path.getAbsolutePath()+File.separator, rootLocation.getValue());
                         int nbFiles = folder.nbFiles;
                         //Add the list of files to the FolderInfo list
                         if(nbFiles>0) {
@@ -538,20 +508,28 @@ public class ProcessCheck {
             }
             checkAbort();
             //Get list of folders from filesystem
-            sendFoldersFSToScanQueue(new File(rootLocation.value), ScanType.SCAN);
+            sendFoldersFSToScanQueue(new File(rootLocation.getValue()), ScanType.SCAN);
             return true;
         }
 
 		private boolean scanDeleted() throws InterruptedException {
-            //Get list of folders from library deleted included
+            //Get list of folders from library deleted excluded
             if(!Jamuz.getDb().getFolders(foldersDb, false)) {
                 return false;
             }
             return sendFoldersDbToScanQueue(ScanType.SCAN_DELETED);
 		}
 		
+		private boolean transcode() throws InterruptedException {
+            //Get list of folders from library deleted excluded
+            if(!Jamuz.getDb().getFolders(foldersDb, false)) {
+                return false;
+            }
+            return sendFoldersDbToScanQueue(ScanType.TRANSCODE);
+		}
+		
         private void scanNew() throws InterruptedException {
-            sendFoldersFSToScanQueue(new File(rootLocation.value), ScanType.CHECK_NEW);
+            sendFoldersFSToScanQueue(new File(rootLocation.getValue()), ScanType.CHECK_NEW);
         }
         
         private boolean scanDbUnchecked() throws InterruptedException {
@@ -589,7 +567,12 @@ public class ProcessCheck {
 		/**
 		 *
 		 */
-		CHECK_NEW
+		CHECK_NEW,
+		
+		/**
+		 *
+		 */
+		TRANSCODE
     }
     
 	/**
@@ -658,15 +641,19 @@ public class ProcessCheck {
                 }
                 switch(folder.getScanType()) {
                     case SCAN_DELETED:
-                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+").scanDeleted({0})", folder.getRelativePath());
+                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folder.scanDeleted({0})", folder.getRelativePath());
                         folder.scanDeleted(progressBar);
                         break;
+					case TRANSCODE:
+						Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folder.transcodeAsNeeded({0})", folder.getRelativePath());
+                        folder.transcodeAsNeeded(progressBar);
+                        break;
                     case SCAN:
-                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+").scanAndBrowse({0})", folder.getRelativePath());
+                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): scanAndBrowse({0})", folder.getRelativePath());
                         scanAndBrowse(analyze, folder, progressBar);
                         break;
                     case CHECK_NEW:
-                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folderInfo.browse({0})", folder.getRelativePath());
+                        Jamuz.getLogger().log(Level.FINEST, "DoScan("+progressBarId+"): folder.browse({0})", folder.getRelativePath());
                         folder.browse(true, true, progressBar);
                         break;
                 }
@@ -970,6 +957,11 @@ public class ProcessCheck {
 		/**
 		 *
 		 */
-		CHECK_FOLDER
+		CHECK_FOLDER,
+
+		/**
+		 *
+		 */
+		TRANSCODE
     }
 }

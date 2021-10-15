@@ -75,7 +75,7 @@ public class Playlist implements Comparable {
 	public void setName(String name) {
         this.name = name;
     }
-
+	
 	/**
 	 * Limit number of results ?
 	 */
@@ -88,7 +88,7 @@ public class Playlist implements Comparable {
 	public boolean isLimit() {
         return limit;
     }
-
+	
 	/**
 	 *
 	 * @param limit
@@ -216,9 +216,10 @@ public class Playlist implements Comparable {
 	 * @param type
 	 * @param match
 	 * @param hidden
+	 * @param destExt
 	 */
 	public Playlist(int id, String name, boolean limit, int limitValue, LimitUnit limitUnit, boolean random, 
-            Type type, Match match, boolean hidden) {
+            Type type, Match match, boolean hidden, String destExt) {
 		this.id=id;
 		this.hidden=hidden;
 		this.name=name;
@@ -230,6 +231,7 @@ public class Playlist implements Comparable {
         this.match=match;
 		this.filters = new ArrayList<>();
         this.orders = new ArrayList<>();
+		this.destExt = destExt;
 	}
 	
 	/**
@@ -303,6 +305,20 @@ public class Playlist implements Comparable {
 	public void setHidden(boolean hidden) {
 		this.hidden = hidden;
 	}
+
+	public String getDestExt() {
+		return destExt; 
+	}
+	
+	private String destExt = "";
+	
+	public boolean isTranscode() {
+		return !destExt.equals("");
+	}
+
+	public void setTranscode(boolean transcode) {
+		this.destExt = transcode?"mp3":""; // FIXME Z destExt option
+	}
     
     private static class FileInfoIntComparator implements Comparator {
 
@@ -370,16 +386,25 @@ public class Playlist implements Comparable {
             return 0; //By default: no sorting if none requested
         }
     }
-    
+	
 	/**
-	 * Get files for that playlist
-	 * @param fileInfoList
-	 * @return
+	 * Get files for that playlist, with transcoded info for given file extension.
+	 * @param fileInfoList FileInfoInt list to be returned.
+	 * @return false if an error occured with database.
 	 */
 	public boolean getFiles(ArrayList<FileInfoInt> fileInfoList) {
-
-        ArrayList<FileInfoInt> fileInfoListTemp = new ArrayList<>();
-        
+		return getFiles(fileInfoList, getDestExt());
+	}
+	
+	/**
+	 * Get files for that playlist, with transcoded info for given file extension.
+	 * @param fileInfoList FileInfoInt list to be returned.
+	 * @param destExt
+	 * @return false if an error occured with database.
+	 */
+	public boolean getFiles(ArrayList<FileInfoInt> fileInfoList, String destExt) {
+		
+        ArrayList<FileInfoInt> fileInfoListTemp = new ArrayList<>();       
         if(this.match.equals(Match.Inde)) { //Allows each sub-playlist to be limited (in "OR" mode limit is not performed in sub_playlists)
             ArrayList<Playlist> nonRandomLists = new ArrayList<>();
             ArrayList<Playlist> randomLists = new ArrayList<>();
@@ -402,7 +427,7 @@ public class Playlist implements Comparable {
             lists.addAll(randomLists);
             for(Playlist playlist : lists) {
                     ArrayList<FileInfoInt> fileInfoListTempSubPlaylist = new ArrayList<>();
-                    if(!playlist.getFiles(fileInfoListTempSubPlaylist)) {
+                    if(!playlist.getFiles(fileInfoListTempSubPlaylist, getDestExt())) {
                         return false;
                     }
                     fileInfoListTemp.addAll(fileInfoListTempSubPlaylist);
@@ -421,14 +446,30 @@ public class Playlist implements Comparable {
             
         }
         else {
-            String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, P.albumRating, P.percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
-            + "FROM file F " //NOI18N //NOI18N
-            + "JOIN (" +
-                "	SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n" +
-                "	ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n" +
-                "	FROM path JOIN file ON path.idPath=file.idPath WHERE file.deleted=0 AND path.deleted=0 GROUP BY path.idPath \n" +
-                ") P ON F.idPath=P.idPath "
-            + "WHERE F.deleted=0 ";  //NOI18N //NOI18N
+			String sql = "SELECT F.idFile, F.idPath, F.name, F.rating, "
+					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
+					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" +
+				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
+					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
+					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" +
+				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" +
+				"ifnull(T.format, F.format) AS format, \n" +
+				"ifnull(T.length, F.length) AS length, \n" +
+				"ifnull(T.size, F.size) AS size, \n" +
+				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" +
+				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" +
+				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" +
+				"P.strPath, P.checked, P.copyRight, P.albumRating, P.percentRated, "
+					+ "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate \n" +
+				"FROM file F \n" +
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n" +
+			    "JOIN (\n" +
+				"		SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n" +
+				"		ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n" +
+				"		FROM path JOIN file ON path.idPath=file.idPath WHERE file.deleted=0 AND path.deleted=0 GROUP BY path.idPath \n" +
+				"	) P ON F.idPath=P.idPath \n" +
+				"WHERE F.deleted=0";
+			
 			//FIXME Z SQL error on playlists involving a sub-playlist that is an Inde playlist
             sql += this.getSqlWhere(); //NOI18N
             Jamuz.getLogger().finest(sql);
@@ -445,7 +486,6 @@ public class Playlist implements Comparable {
             if(max>fileInfoListTemp.size()) {
                 max = fileInfoListTemp.size();
             }
-            
             fileInfoList.addAll(fileInfoListTemp.subList(0, max));
             return true;
         }

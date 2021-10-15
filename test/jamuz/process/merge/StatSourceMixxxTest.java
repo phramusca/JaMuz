@@ -74,7 +74,7 @@ public class StatSourceMixxxTest {
 		ResultSet rs = null;
 		StatSourceMixxx instance = null;
 		FileInfo expResult = null;
-		FileInfo result = instance.getStatistics(rs);
+		FileInfo result = instance.getFileStatistics(rs);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -132,7 +132,7 @@ public class StatSourceMixxxTest {
 		ArrayList<? extends FileInfo> files = null;
 		StatSourceMixxx instance = null;
 		int[] expResult = null;
-		int[] result = instance.updateStatistics(files);
+		int[] result = instance.updateFileStatistics(files);
 		assertArrayEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

@@ -71,7 +71,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonCheckAbort" min="-2" max="-2" attributes="1"/>
-                  <EmptySpace pref="58" max="32767" attributes="0"/>
+                  <EmptySpace pref="63" max="32767" attributes="0"/>
                   <Component id="jButtonCheckNew" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonCheckLibrary" min="-2" max="-2" attributes="0"/>
@@ -80,10 +80,12 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonScanLibrary" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButtonScanDeleted" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jCheckBoxCheckFull" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="59" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jButtonScanDeleted" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jButtonTranscode" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="63" max="32767" attributes="0"/>
                   <Component id="jButtonMergeSources" min="-2" pref="92" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -103,6 +105,7 @@
                           <Component id="jCheckBoxCheckFull" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jProgressBarFolders" alignment="3" max="32767" attributes="0"/>
                           <Component id="jButtonScanDeleted" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonTranscode" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -205,6 +208,17 @@
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
           </AuxValues>
         </Component>
+        <Component class="javax.swing.JButton" name="jButtonTranscode">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Transcode"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonTranscodeActionPerformed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+          </AuxValues>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jPanelActionsMain">
@@ -256,7 +270,7 @@
                       <Component id="jSpinnerCheckMaxActionsInQueue" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPaneCheckTags2" pref="123" max="32767" attributes="2"/>
+                  <Component id="jScrollPaneCheckTags2" pref="118" max="32767" attributes="2"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -463,7 +477,7 @@
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jSpinnerCheckAnalysisNbThreads" min="-2" max="-2" attributes="0"/>
               </Group>
-              <Component id="jPanelAnalysis" pref="614" max="32767" attributes="0"/>
+              <Component id="jPanelAnalysis" pref="851" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

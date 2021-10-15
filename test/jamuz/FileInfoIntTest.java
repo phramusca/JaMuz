@@ -426,7 +426,7 @@ public class FileInfoIntTest {
 		System.out.println("saveBPMtoFileTags");
 		FileInfoInt instance = null;
 		boolean expResult = false;
-		boolean result = instance.saveBPMtoFileTags();
+		boolean result = instance.saveMetadataBPM();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -441,7 +441,7 @@ public class FileInfoIntTest {
 		String lyrics = "";
 		FileInfoInt instance = null;
 		boolean expResult = false;
-		boolean result = instance.saveTagLyrics(lyrics);
+		boolean result = instance.saveMetadataLyrics(lyrics);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

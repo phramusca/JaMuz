@@ -237,7 +237,7 @@ public class DialogTag extends javax.swing.JDialog {
         file.setTags(getHighlightedTags());
 		ArrayList<FileInfoInt> temp = new ArrayList<>();
 		temp.add(file);
-		Jamuz.getDb().setTags(temp, null);
+		Jamuz.getDb().updateFileTags(temp, null);
         displayAndDispose();
     }//GEN-LAST:event_jButtonSaveActionPerformed
 

@@ -51,12 +51,8 @@ import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import jamuz.utils.StringManager;
 import java.awt.Color;
-import java.util.logging.Logger;
-import ws.schild.jave.Encoder;
+import java.io.IOException;
 import ws.schild.jave.EncoderException;
-import ws.schild.jave.MultimediaObject;
-import ws.schild.jave.encode.AudioAttributes;
-import ws.schild.jave.encode.EncodingAttributes;
 
 /**
  * Folder information
@@ -358,6 +354,59 @@ public class FolderInfo implements java.lang.Comparable {
 		else {
 			//Path does exist. Check if files have been deleted
 			scanDeletedFiles(progressBar);
+		}
+		return true;
+	}
+	
+	public boolean transcodeAsNeeded(ProgressBar progressBar) {
+		//Get list of files from library exluding the one(s) already set as deleted
+		if(!Jamuz.getDb().getFiles(filesDb, idPath, false)) {
+			return false;
+		}
+		return transcodeAsNeeded(filesDb, progressBar);
+	}
+	
+	public boolean transcodeAsNeeded(ArrayList <FileInfoInt> files, ProgressBar progressBar) {
+		Location location = new Location("location.transcoded");
+		if(!location.check()) {
+			return false;
+		}
+		String destPath = location.getValue();
+		//Extract the non-mp3
+		String destExt = "mp3"; //FIXME Z destExt option
+		List<FileInfoInt> filesToMaybeTranscode = files.stream()
+					.filter(f -> !f.getExt().equals(destExt))
+					.collect(com.sun.tools.javac.util.List.collector());
+        progressBar.setup(filesToMaybeTranscode.size());
+		
+		ArrayList<FileInfoInt> filesTranscoded = new ArrayList<>();
+		filesToMaybeTranscode.forEach(file -> {
+			try {
+				if(file.transcodeIfNeeded(destPath, destExt)) {
+					filesTranscoded.add(file);
+				}
+				progressBar.progress(file.getRelativeFullPath());
+			} catch (IllegalArgumentException | EncoderException | IOException ex) {
+				Jamuz.getLogger().severe(ex.toString());
+			}
+		});
+
+		//Compute replaygain and insert in fileTranscoded
+		if(filesTranscoded.size()>0) {
+			progressBar.setIndeterminate("Computing ReplayGain for MP3 ...");
+			ArrayList<String> albumList = group(filesTranscoded, "getAlbum");  //NOI18N
+			boolean trackGain=albumList.size()==1 && albumList.get(0).equals("Various Albums");				
+			MP3gain mP3gain = new MP3gain(trackGain, true, destPath, relativePath, progressBar);
+			if(mP3gain.process()) {
+				progressBar.setup(filesTranscoded.size());
+				filesTranscoded.stream().forEach((file) -> {
+					progressBar.progress("Reading ReplayGain from \""+file.getRelativeFullPath()+"\"");
+					GainValues gv = file.getReplayGain(true);
+					file.saveReplayGainToID3(gv);
+					file.readMetadata(false); //To get new file information (format, size,...)
+				});
+				Jamuz.getDb().insertOrUpdateFilesTranslated(filesTranscoded);
+			}
 		}
 		return true;
 	}
@@ -692,7 +741,7 @@ public class FolderInfo implements java.lang.Comparable {
         PanelMain.playSelected(false);
 	}
     
-	//TODO: Move this to a dedicated class
+	//TODO: Use stream() instead !!
 	/**
 	 *
 	 * @param list
@@ -1452,7 +1501,7 @@ public class FolderInfo implements java.lang.Comparable {
 			//Prevent duplicate strPath in database
 			int newIdPath = Jamuz.getDb().getIdPath(filesAudio.get(0).getRelativePath());
 			if(idPath>=0 && newIdPath>=0 && idPath!=newIdPath) {
-				if(Jamuz.getDb().setIdPath(idPath, newIdPath)) {
+				if(Jamuz.getDb().updateFileIdPath(idPath, newIdPath)) {
 					idPath=newIdPath;
 					checkedFlag=CheckedFlag.UNCHECKED;
 				} else {
@@ -1495,7 +1544,7 @@ public class FolderInfo implements java.lang.Comparable {
     
 	private void KO(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().setCheckedFlag(idPath, FolderInfo.CheckedFlag.KO);
+            Jamuz.getDb().updatePathChecked(idPath, FolderInfo.CheckedFlag.KO);
         }
         else {
             moveList(getAllFiles(), ProcessCheck.getKoLocation().getValue(), false, 
@@ -1507,7 +1556,7 @@ public class FolderInfo implements java.lang.Comparable {
     
     private boolean Manual(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().setCheckedFlag(idPath, FolderInfo.CheckedFlag.UNCHECKED);
+            Jamuz.getDb().updatePathChecked(idPath, FolderInfo.CheckedFlag.UNCHECKED);
             return false;
         }
         else {

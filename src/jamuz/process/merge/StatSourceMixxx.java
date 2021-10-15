@@ -81,7 +81,7 @@ public class StatSourceMixxx extends StatSourceSQL {
 	 * @return
 	 */
 	@Override
-    protected FileInfo getStatistics(ResultSet rs) {
+    protected FileInfo getFileStatistics(ResultSet rs) {
         try {
             String strfullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N
             String relativeFullPath = strfullPath.substring(getRootPath().length());
@@ -163,8 +163,8 @@ public class StatSourceMixxx extends StatSourceSQL {
 	}
 
 	@Override
-	public int[] updateStatistics(ArrayList<? extends FileInfo> files) {
-		int[] results = super.updateStatistics(files);
+	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
+		int[] results = super.updateFileStatistics(files);
 		return setTags(files, results); 
 	}
 	
