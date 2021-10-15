@@ -1461,6 +1461,7 @@ public class FileInfoInt extends FileInfo {
 			readMetadata(true);
 			getLyrics();
 			transcode(destExt, destPath);
+			unsetCover();
 			return true;
 		}
 		return false;

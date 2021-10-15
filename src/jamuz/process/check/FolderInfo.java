@@ -385,7 +385,7 @@ public class FolderInfo implements java.lang.Comparable {
 				if(file.transcodeIfNeeded(destPath, destExt)) {
 					filesTranscoded.add(file);
 				}
-				progressBar.progress("Transcoded: "+file.getRelativeFullPath());
+				progressBar.progress(file.getRelativeFullPath());
 			} catch (IllegalArgumentException | EncoderException | IOException ex) {
 				Jamuz.getLogger().severe(ex.toString());
 			}
