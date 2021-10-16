@@ -150,10 +150,8 @@ public class ProcessSync extends ProcessAbstract {
 				+ " ORDER BY idFile ";
 		Jamuz.getDb().getFiles(fileInfoSourceList, sql);
 
-		//Transcode files		
-		String destExt = playlist.getDestExt();
-		
 		// Check if some files require to be transcoded and exit if so
+		String destExt = playlist.getDestExt();
 		if(!destExt.isBlank()) {
 			Location location = new Location("location.transcoded");
 			if(!location.check()) {
@@ -194,7 +192,8 @@ public class ProcessSync extends ProcessAbstract {
 			callback.refresh();
 		}
 		filesToInsertOrUpdate.addAll(filesDevicePlaylist);
-		Jamuz.getDb().insertOrUpdateDeviceFiles(filesToInsertOrUpdate, device.getId());	
+		Jamuz.getDb().insertOrUpdateDeviceFiles(filesToInsertOrUpdate, device.getId());
+		fileInfoSourceList.addAll(filesDevicePlaylist); // To have a proper count in progressBar at the end
 		return true;
 	}
 	
