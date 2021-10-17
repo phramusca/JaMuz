@@ -73,7 +73,7 @@ public class TableColumnModel extends DefaultTableColumnModel {
             int visibleIndex        = 0;
             
             for(int invisibleIndex = 0; invisibleIndex < noInvisibleColumns; ++invisibleIndex) {
-                TableColumn visibleColumn   = (visibleIndex < noVisibleColumns ? (TableColumn)tableColumns.get(visibleIndex) : null);
+                TableColumn visibleColumn   = (visibleIndex < noVisibleColumns ? tableColumns.get(visibleIndex) : null);
                 TableColumn testColumn      = (TableColumn)allTableColumns.get(invisibleIndex);
                 
                 if(testColumn == column) {
@@ -97,7 +97,7 @@ public class TableColumnModel extends DefaultTableColumnModel {
         int noColumns       = allTableColumns.size();
         
         for(int columnIndex = 0; columnIndex < noColumns; ++columnIndex) {
-            TableColumn visibleColumn = (columnIndex < tableColumns.size() ? (TableColumn)tableColumns.get(columnIndex) : null);
+            TableColumn visibleColumn = (columnIndex < tableColumns.size() ? tableColumns.get(columnIndex) : null);
             TableColumn invisibleColumn = (TableColumn)allTableColumns.get(columnIndex);
             
             if(visibleColumn != invisibleColumn) {
@@ -178,8 +178,8 @@ public class TableColumnModel extends DefaultTableColumnModel {
             throw new IllegalArgumentException("moveColumn() - Index out of range"); //NOI18N
         } 
         
-        TableColumn fromColumn  = (TableColumn) tableColumns.get(oldIndex);
-        TableColumn toColumn    = (TableColumn) tableColumns.get(newIndex);
+        TableColumn fromColumn  = tableColumns.get(oldIndex);
+        TableColumn toColumn    = tableColumns.get(newIndex);
         
         int allColumnsOldIndex  = allTableColumns.indexOf(fromColumn);
         int allColumnsNewIndex  = allTableColumns.indexOf(toColumn);
@@ -264,6 +264,6 @@ public class TableColumnModel extends DefaultTableColumnModel {
      *				at <code>columnIndex</code>
      */
     public TableColumn getColumn(int columnIndex, boolean onlyVisible) {
-		return (TableColumn)tableColumns.elementAt(columnIndex);
+		return tableColumns.elementAt(columnIndex);
     }
 }

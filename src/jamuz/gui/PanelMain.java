@@ -1377,7 +1377,7 @@ public class PanelMain extends javax.swing.JFrame {
 
     private void jSliderPlayerLengthStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderPlayerLengthStateChanged
         JSlider source = (JSlider) evt.getSource();
-        int position = (int) source.getValue();
+        int position = source.getValue();
         if (!source.getValueIsAdjusting()) {
             if (isManual) {
 				MPLAYER.setPosition(position);

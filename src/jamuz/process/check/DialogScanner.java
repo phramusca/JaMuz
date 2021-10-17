@@ -42,6 +42,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.JTextComponent;
 
 /**
  *
@@ -160,7 +161,7 @@ public class DialogScanner extends javax.swing.JDialog {
 			}
 		});
         		
-		((JTextField)jComboBoxPaths.getEditor().getEditorComponent()).setEditable(false);
+		((JTextComponent)jComboBoxPaths.getEditor().getEditorComponent()).setEditable(false);
 		DefaultComboBoxModel model = (DefaultComboBoxModel) jComboBoxPaths.getModel();
 		model.removeAllElements();
 		for(String path : paths) {

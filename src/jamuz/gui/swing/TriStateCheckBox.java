@@ -105,7 +105,7 @@ public class TriStateCheckBox extends JCheckBox {
   @Override
   public void setSelected(boolean selected) 
   {
-    ((TriStateModel) model).setSelected(selected);    
+    model.setSelected(selected);    
   } 
   
    

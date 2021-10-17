@@ -61,7 +61,7 @@ public class PanelCover extends JPanel {
 		super.paintComponent(g);
 			if (this.image != null) {
 			// Scale it by width
-			int scaledWidth = (int)((this.image.getWidth() * getHeight()/this.image.getHeight()));
+			int scaledWidth = ((this.image.getWidth() * getHeight()/this.image.getHeight()));
 			// If the image is not off the screen horizontally...
 			if (scaledWidth < getWidth()) {
 				// Center the left and right destination x coordinates.

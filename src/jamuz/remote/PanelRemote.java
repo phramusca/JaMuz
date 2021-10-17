@@ -208,7 +208,7 @@ public class PanelRemote extends javax.swing.JPanel {
 	   StringBuilder IP = new StringBuilder();
 		IP.append("<html>Set \"<B>");
 		try {
-			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append((Integer) jSpinnerPort.getValue()); 
+			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append(jSpinnerPort.getValue()); 
 		} catch (UncheckedIOException | UnknownHostException ex) {
 			IP.append("Undetermined !");
 		}

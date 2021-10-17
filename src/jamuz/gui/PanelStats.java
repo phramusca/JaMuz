@@ -665,7 +665,7 @@ public class PanelStats extends javax.swing.JPanel {
 			}
             statItem.setPercentage(percentage);
 			this.addRowStats(tableModel, statItem);
-			slices.add(new PanelPieChart.PieSlice(statItem.getLabelForChart()+"\t ("+String.valueOf((int)percentage)+"%)", (double) statItem.getCountFile(), statItem.getColor()));  //NOI18N
+			slices.add(new PanelPieChart.PieSlice(statItem.getLabelForChart()+"\t ("+String.valueOf((int)percentage)+"%)", statItem.getCountFile(), statItem.getColor()));  //NOI18N
 		}
         
         if(showChart) {

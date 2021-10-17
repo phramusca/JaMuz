@@ -34,6 +34,7 @@ import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
 import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
+import org.jaudiotagger.tag.id3.AbstractTagFrame;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
@@ -210,7 +211,7 @@ public class ReplayGain {
 			while (i.hasNext()) {
 				Object obj = i.next();
 				if (obj instanceof AbstractID3v2Frame) {
-					AbstractTagFrameBody af = ((AbstractID3v2Frame) obj).getBody();
+					AbstractTagFrameBody af = ((AbstractTagFrame) obj).getBody();
 					if (af instanceof FrameBodyTXXX) {
 						FrameBodyTXXX fb = (FrameBodyTXXX) af;
 						switch (fb.getDescription().toUpperCase()) {

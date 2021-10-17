@@ -204,7 +204,7 @@ public class PanelBook extends javax.swing.JPanel {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
             boolean hasFocus, int row, int column) {
-          return (JComponent) value;
+          return (Component) value;
         }
       }
     

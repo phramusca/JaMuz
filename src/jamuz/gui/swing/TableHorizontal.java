@@ -38,7 +38,7 @@ public class TableHorizontal extends JTable  {
  @Override
   public Dimension getPreferredSize() {
     if (getParent () instanceof JViewport) {
-      if (((JViewport) getParent()).getWidth() > super.getPreferredSize().width) {
+      if (getParent().getWidth() > super.getPreferredSize().width) {
         return getMinimumSize();
       }
     }
@@ -49,7 +49,7 @@ public class TableHorizontal extends JTable  {
   public boolean getScrollableTracksViewportWidth () {
     if (autoResizeMode != AUTO_RESIZE_OFF) {
       if (getParent() instanceof JViewport) {
-        return (((JViewport) getParent()).getWidth() > getPreferredSize().width);
+        return (getParent().getWidth() > getPreferredSize().width);
       }
       return true;
     }

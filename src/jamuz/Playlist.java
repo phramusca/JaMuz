@@ -493,7 +493,7 @@ public class Playlist implements Comparable {
             if(this.limitUnit.equals(LimitUnit.Gio) || this.limitUnit.equals(LimitUnit.Mio)) {
                 double maxSizeOctet=0;
                 //http://fr.wikipedia.org/wiki/Gibioctet#Multiples_normalis.C3.A9s
-                double limitValueDouble = (double) this.limitValue;
+                double limitValueDouble = this.limitValue;
                 switch (this.limitUnit) {
                     case Gio:
                         maxSizeOctet=limitValueDouble*1073741824;

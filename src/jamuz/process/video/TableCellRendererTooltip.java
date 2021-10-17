@@ -36,7 +36,7 @@ public class TableCellRendererTooltip extends DefaultTableCellRenderer {
                         int row, int column) {
         JLabel c = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         //TODO: Debug and use this
-        String toolTipText = ((VideoMovie)value).getRelativeFullPath();
+        String toolTipText = ((VideoAbstract)value).getRelativeFullPath();
         c.setToolTipText(toolTipText);
         return c;
     }

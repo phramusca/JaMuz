@@ -993,11 +993,11 @@ public class PanelSelect extends javax.swing.JPanel {
                 selCheckedFlag[2]=jCheckBoxSelectCheckedFlag2.isSelected();
                 selCheckedFlag[3]=jCheckBoxSelectCheckedFlag3.isSelected();
 
-                int yearFrom=((Double) jSpinnerSelectYearFrom.getValue()).intValue();
-                int yearTo=((Double) jSpinnerSelectYearTo.getValue()).intValue();
+                int yearFrom=((Number) jSpinnerSelectYearFrom.getValue()).intValue();
+                int yearTo=((Number) jSpinnerSelectYearTo.getValue()).intValue();
                 
-                float bpmFrom = ((Integer) jSpinnerSelectBpmFrom.getValue()).floatValue();
-                float bpmTo = ((Integer) jSpinnerSelectBpmTo.getValue()).floatValue();
+                float bpmFrom = ((Number) jSpinnerSelectBpmFrom.getValue()).floatValue();
+                float bpmTo = ((Number) jSpinnerSelectBpmTo.getValue()).floatValue();
                 
                 int copyRight = jComboBoxBestOfCopyRight.getSelectedIndex() -1;
                 
@@ -1095,14 +1095,14 @@ public class PanelSelect extends javax.swing.JPanel {
         selCheckedFlag[2]=jCheckBoxSelectCheckedFlag2.isSelected();
         selCheckedFlag[3]=jCheckBoxSelectCheckedFlag3.isSelected();
         
-        int yearFrom=((Double) jSpinnerSelectYearFrom.getValue()).intValue();
-        int yearTo=((Double) jSpinnerSelectYearTo.getValue()).intValue();
+        int yearFrom=((Number) jSpinnerSelectYearFrom.getValue()).intValue();
+        int yearTo=((Number) jSpinnerSelectYearTo.getValue()).intValue();
         
 //        int yearFrom=(Integer) jSpinnerSelectYearFrom.getValue();
 //        int yearTo=(Integer) jSpinnerSelectYearTo.getValue();
         
-        float bpmFrom = ((Integer) jSpinnerSelectBpmFrom.getValue()).floatValue();
-        float bpmTo = ((Integer) jSpinnerSelectBpmTo.getValue()).floatValue();
+        float bpmFrom = ((Number) jSpinnerSelectBpmFrom.getValue()).floatValue();
+        float bpmTo = ((Number) jSpinnerSelectBpmTo.getValue()).floatValue();
         
         int copyRight = jComboBoxBestOfCopyRight.getSelectedIndex() -1;
         

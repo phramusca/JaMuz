@@ -125,7 +125,7 @@ public class PlayerMP3 extends PlaybackListener implements Runnable
 			
 			length=myHeader.getTrackLength();
 			//Frame length (in ms) = (samples per frame / sample rate (in hz)) * 1000
-			frameLength = getSamplesPerFrame(myHeader.getFormat()) / (double) myHeader.getSampleRateAsNumber();
+			frameLength = getSamplesPerFrame(myHeader.getFormat()) / myHeader.getSampleRateAsNumber();
 			double nbFrames = (length*1000/frameLength);
 			frameEnd = (int) nbFrames;
 			//The typical MP3 (an MPEG Layer III, version 1) has 1152 samples per frame 

@@ -163,10 +163,10 @@ public class ImageUtils {
      * @return The scaled image
      */
     public static BufferedImage scaleImage(BufferedImage image, int newWidth, int newHeight) {
-        double thumbRatio = (double) newWidth / (double) newHeight;
+        double thumbRatio = newWidth / (double) newHeight;
         int imageWidth = image.getWidth(null);
         int imageHeight = image.getHeight(null);
-        double aspectRatio = (double) imageWidth / (double) imageHeight;
+        double aspectRatio = imageWidth / (double) imageHeight;
         if (thumbRatio < aspectRatio) {
             newHeight = (int) (newWidth / aspectRatio);
         } else {

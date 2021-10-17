@@ -57,7 +57,7 @@ public class XML {
 		NodeList myElementList = myElement.getElementsByTagName(TagNameLev2);
 		Element mySubElement = (Element) myElementList.item(0);
 		NodeList mySubElementList = mySubElement.getChildNodes();
-		return ((Node) mySubElementList.item(0)).getNodeValue();
+		return mySubElementList.item(0).getNodeValue();
 	}
 	
 	public static ArrayList<Element> getElements(Document doc, String tagName) {
@@ -80,7 +80,7 @@ public class XML {
 	
 	public static String getElementValue(Element element) {
 		NodeList mySubElementList = element.getChildNodes();
-		return ((Node) mySubElementList.item(0)).getNodeValue();
+		return mySubElementList.item(0).getNodeValue();
 	}
 	
 	public static String getAttribute(Element element, String attribute) {

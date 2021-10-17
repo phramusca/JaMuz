@@ -1114,7 +1114,7 @@ public class FileInfoInt extends FileInfo {
 		if (this.trackNo < ((FileInfoInt) o).trackNo) return -1;
 		if (this.trackNo > ((FileInfoInt) o).trackNo) return 1;
 				
-		return this.getFilename().compareTo(((FileInfoInt) o).getFilename());
+		return this.getFilename().compareTo(((FileInfo) o).getFilename());
 	}
 
     /**
