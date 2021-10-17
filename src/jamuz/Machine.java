@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
  * Options class
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public final class Machine {
+public class Machine {
 
 	private ArrayList<Option> options; //TODO: Use an HashMap instead
 	private LinkedHashMap <Integer, StatSource> statSources;

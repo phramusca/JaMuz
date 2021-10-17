@@ -265,7 +265,7 @@ public class TableModelVideo extends TableModelGeneric {
     
     private class LoadIconsThread extends ProcessAbstract {
 
-        public LoadIconsThread(String name) {
+        LoadIconsThread(String name) {
             super(name);
         }
 		

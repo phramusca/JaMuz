@@ -389,7 +389,7 @@ public class Server {
 
 	class HandleLogin extends ProcessAbstract {
 
-		public HandleLogin(ServerSocket ss){
+		HandleLogin(ServerSocket ss){
 			super("Thread.Server.HandleLogin");
 		}
 

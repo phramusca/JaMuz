@@ -131,7 +131,7 @@ public class TriStateCheckBox extends JCheckBox {
   {      
     protected State state;  
  
-    public TriStateModel(State state)
+    TriStateModel(State state)
     {
       this.state = state;
     }

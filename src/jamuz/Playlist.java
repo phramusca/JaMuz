@@ -324,7 +324,7 @@ public class Playlist implements Comparable {
 
         private final ArrayList<Order> orders;
         
-        public FileInfoIntComparator(ArrayList<Order> orders) {
+        FileInfoIntComparator(ArrayList<Order> orders) {
             this.orders = orders;
         }
         

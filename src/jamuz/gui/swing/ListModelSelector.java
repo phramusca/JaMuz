@@ -54,7 +54,7 @@ public class ListModelSelector extends DefaultListModel {
     
     private class LoadIconsThread extends ProcessAbstract {
 
-        public LoadIconsThread(String name) {
+        LoadIconsThread(String name) {
             super(name);
         }
 		

@@ -37,14 +37,14 @@ public abstract class ProcessAbstract extends Thread {
 	/**
 	 * Abort process thread
 	 */
-	public final void abort() {
+	public void abort() {
 		this.abort = true;
 	}
 	
 	/**
 	 * Clears abort flag
 	 */
-	protected final void resetAbort() {
+	protected void resetAbort() {
 		this.abort = false;
 	}
 	

@@ -800,7 +800,7 @@ public class PanelOptions extends javax.swing.JPanel {
 			public File folder;
 			public long size;
 
-			public FolderInfo(File folder) {
+			FolderInfo(File folder) {
 				this.folder = folder;
 				this.size = FileSystem.size(folder.toPath());
 			}

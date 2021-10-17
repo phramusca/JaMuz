@@ -483,7 +483,7 @@ public class FileInfoInt extends FileInfo {
 		this.rootPath = rootPath;
 	}
 	
-	public final File getFullPath() {
+	public File getFullPath() {
 		return new File(FilenameUtils.concat(this.rootPath, this.relativeFullPath));
 	}
 	

@@ -516,7 +516,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 * Sets the path and filename
 	 * @param relativeFullPath
 	 */
-	public final void setPath(String relativeFullPath) {
+	public void setPath(String relativeFullPath) {
 		this.relativeFullPath = FilenameUtils.separatorsToSystem(relativeFullPath);
 		this.relativePath=FilenameUtils.getFullPath(this.relativeFullPath);
 		this.filename=FilenameUtils.getName(this.relativeFullPath);

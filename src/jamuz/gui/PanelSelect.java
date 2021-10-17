@@ -944,7 +944,7 @@ public class PanelSelect extends javax.swing.JPanel {
 		private final String field;
         private final boolean getSelection;
 
-        public FillListsThread(String field, boolean getSelection, String name) {
+        FillListsThread(String field, boolean getSelection, String name) {
             super(name);
             this.field = field;
             this.getSelection = getSelection;
@@ -964,7 +964,7 @@ public class PanelSelect extends javax.swing.JPanel {
     
     private static class FillMainListThread extends ProcessAbstract {
 
-        public FillMainListThread(String name) {
+        FillMainListThread(String name) {
             super(name);
         }
 		

@@ -60,7 +60,7 @@ public class ProcessBook extends ProcessAbstract {
 
     private class ProcessExport extends ProcessAbstract {
 
-        public ProcessExport(String name) {
+        ProcessExport(String name) {
             super(name);
         }
         
@@ -135,7 +135,7 @@ public class ProcessBook extends ProcessAbstract {
     //If it does somehow, do the same for other classes extending ProcessAbstract
     private class ProcessListDb extends ProcessAbstract {
 
-        public ProcessListDb(String name) {
+        ProcessListDb(String name) {
             super(name);
         }
         @Override

@@ -94,7 +94,7 @@ public class Client {
 	
 	class Authentication extends ProcessAbstract {
 
-		public Authentication() {
+		Authentication() {
 			super("Thread.Server.Authentication");
 		}
 

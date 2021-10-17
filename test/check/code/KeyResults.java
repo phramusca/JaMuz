@@ -29,7 +29,7 @@ class KeyResults {
 	List<String> values;
 	Map<String, List<Result>> fileResults;
 
-	public KeyResults() {
+	KeyResults() {
 		values=new ArrayList<>();
 		fileResults=new HashMap<>();
 	}

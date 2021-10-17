@@ -28,7 +28,7 @@ import org.musicbrainz.model.entity.RecordingWs2;
 class Recording {
 	private final String id;
 
-	public Recording(String id) {
+	Recording(String id) {
 	   this.id = id;
 	}
 

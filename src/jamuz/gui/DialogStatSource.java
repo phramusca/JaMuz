@@ -401,7 +401,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 		private final String locationFilePath;
 		private final String display;
 
-		public Locations(String rootPath, String locationFilePath, String display) {
+		Locations(String rootPath, String locationFilePath, String display) {
 			this.rootPath = rootPath;
 			this.locationFilePath = locationFilePath;
 			this.display = display;

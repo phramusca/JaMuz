@@ -60,7 +60,7 @@ public class TrackSourceRepo {
 	/**
 	 *
 	 */
-	protected static final class TrackSource {
+	protected static class TrackSource {
 
 		/**
 		 *
@@ -101,7 +101,7 @@ public class TrackSourceRepo {
 		 * @param size
 		 * @param modifDate
 		 */
-		public TrackSource(String filename, int length, String format, String bitRate, long size, String modifDate) {
+		TrackSource(String filename, int length, String format, String bitRate, long size, String modifDate) {
             this.filename = filename;
             this.length = length;
             this.format = format;
@@ -119,7 +119,7 @@ public class TrackSourceRepo {
 		 * @throws ReadOnlyFileException
 		 * @throws InvalidAudioFrameException
 		 */
-        public TrackSource(String pFilename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+        TrackSource(String pFilename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
             filename = pFilename;
 
             File file = getFile();

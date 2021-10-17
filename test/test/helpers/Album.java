@@ -52,7 +52,7 @@ import jamuz.utils.StringManager;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public final class Album {
+public class Album {
     
     private final String mbId;
 	private String version;
@@ -246,7 +246,7 @@ public final class Album {
         private final Sheet sheet;
         private final int index;
 
-        public Row(Sheet sheet, int index) {
+        Row(Sheet sheet, int index) {
             this.sheet = sheet;
             this.index = index;
         }

@@ -182,7 +182,7 @@ public class PanelBook extends javax.swing.JPanel {
         
         private final String url;
         
-        public OpenUrlAction(String text, String url) {
+        OpenUrlAction(String text, String url) {
             super(text, null);
             this.url = url;
 //            putValue(SHORT_DESCRIPTION, desc);

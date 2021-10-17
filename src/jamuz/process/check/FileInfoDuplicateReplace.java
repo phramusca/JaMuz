@@ -24,7 +24,7 @@ import jamuz.gui.swing.TableValue;
  * Similar as FileInfo class but for display only
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public final class FileInfoDuplicateReplace extends FileInfoInt {
+public class FileInfoDuplicateReplace extends FileInfoInt {
 
 	/**
 	 * Is this an audio file ?

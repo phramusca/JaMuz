@@ -873,7 +873,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
 
     private static class FillPlaylistThread extends ProcessAbstract {
 
-        public FillPlaylistThread(String name) {
+        FillPlaylistThread(String name) {
             super(name);
         }
         

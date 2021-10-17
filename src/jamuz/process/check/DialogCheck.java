@@ -50,7 +50,7 @@ import javax.swing.JButton;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public final class DialogCheck extends javax.swing.JDialog {
+public class DialogCheck extends javax.swing.JDialog {
 
     private final FolderInfo folder;
 	private final CheckDisplay checkDisplay;
@@ -58,7 +58,7 @@ public final class DialogCheck extends javax.swing.JDialog {
     /**
      * Progress bar
      */
-    protected ProgressBar progressBar;
+    ProgressBar progressBar;
     private final ProgressBar progressBarCover;
 	private final ICallBackCheckPanel callback;
     
