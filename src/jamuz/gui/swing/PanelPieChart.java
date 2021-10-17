@@ -85,7 +85,7 @@ public class PanelPieChart extends JPanel  {
 		this.data= new double[nbElements];
 		int i=0;
 		for (PieSlice mySlice : slices) {
-			if(mySlice.label.equals("")) {  //NOI18N
+			if(mySlice.label.isEmpty()) {  //NOI18N
 				mySlice.label="-";  //NOI18N
 			}
 			this.labels[i]=mySlice.label;

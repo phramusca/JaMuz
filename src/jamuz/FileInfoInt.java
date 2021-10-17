@@ -492,7 +492,7 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public String getLyrics() {
-		if(lyrics.equals("")) {
+		if(lyrics.isEmpty()) {
             try {
                 AudioFile myAudioFile = AudioFileIO.read(getFullPath());
 				Tag tag = myAudioFile.getTag();
@@ -607,29 +607,29 @@ public class FileInfoInt extends FileInfo {
 						if (myMP3File.hasID3v1Tag()) {
 							this.hasID3v1 = true;
 							ID3v1Tag v1Tag = myMP3File.getID3v1Tag();
-							if(this.artist.equals("")) {  //NOI18N
+							if(this.artist.isEmpty()) {  //NOI18N
 								this.artist=v1Tag.getFirst(FieldKey.ARTIST);
 							}
-							if(this.album.equals("")) {  //NOI18N
+							if(this.album.isEmpty()) {  //NOI18N
 								this.album=v1Tag.getFirst(FieldKey.ALBUM);
 							}
-							if(this.year.equals("")) {  //NOI18N
+							if(this.year.isEmpty()) {  //NOI18N
 								this.year=v1Tag.getFirst(FieldKey.YEAR);
 							}
-							if(this.title.equals("")) {  //NOI18N
+							if(this.title.isEmpty()) {  //NOI18N
 								this.title=v1Tag.getFirst(FieldKey.TITLE);
 							}
 							if(this.trackNo<1) {
 								this.trackNo=getInt(v1Tag.getFirst(FieldKey.TRACK));
 							}
-							if(this.genre.equals("")) {  //NOI18N
+							if(this.genre.isEmpty()) {  //NOI18N
 								this.genre=v1Tag.getFirst(FieldKey.GENRE);
 								//TODO: Translate v1 genres into String
 								//http://fr.wikipedia.org/wiki/ID3
 								//https://github.com/drogatkin/tiny-codec/blob/master/codecs/APE/src/java/davaguine/jmac/info/ID3Genre.java
 							}
 							//Reading this in case user do not want to remove comments
-							if(this.comment.equals("")) {  //NOI18N
+							if(this.comment.isEmpty()) {  //NOI18N
 								this.comment=v1Tag.getFirst(FieldKey.COMMENT);
 							}
 						}
@@ -669,7 +669,7 @@ public class FileInfoInt extends FileInfo {
 		this.artist=tag.getFirst(FieldKey.ARTIST);
 		this.albumArtist=tag.getFirst(FieldKey.ALBUM_ARTIST);
         try {
-            this.setBPM(tag.getFirst(FieldKey.BPM).equals("") ? 0 : Float.parseFloat(tag.getFirst(FieldKey.BPM)));
+            this.setBPM(tag.getFirst(FieldKey.BPM).isEmpty() ? 0 : Float.parseFloat(tag.getFirst(FieldKey.BPM)));
         }
         catch (NumberFormatException ex) {
         }
@@ -825,16 +825,16 @@ public class FileInfoInt extends FileInfo {
 		
 		//Note: Since we are overwritting all tags, we are only inserting non-empty ones
 		
-		if(!lyrics.equals("")) {  //NOI18N
+		if(!lyrics.isEmpty()) {  //NOI18N
 			tag.setField(FieldKey.LYRICS, lyrics);
 		}
-		if(!artist.equals("")) {  //NOI18N
+		if(!artist.isEmpty()) {  //NOI18N
 			tag.setField(FieldKey.ARTIST, artist);
 		}
-		if(!albumArtist.equals("")) {  //NOI18N
+		if(!albumArtist.isEmpty()) {  //NOI18N
 			tag.setField(FieldKey.ALBUM_ARTIST, albumArtist);
 		}
-		if(!album.equals("")) {  //NOI18N
+		if(!album.isEmpty()) {  //NOI18N
 			tag.setField(FieldKey.ALBUM, album);
 		}
 		if(trackNo>0) {
@@ -849,13 +849,13 @@ public class FileInfoInt extends FileInfo {
 		if(discTotal>0) {
 			tag.setField(FieldKey.DISC_TOTAL, String.valueOf(discTotal));
 		}
-		if(!title.equals("")) {  //NOI18N
+		if(!title.isEmpty()) {  //NOI18N
 			tag.setField(FieldKey.TITLE, title);
 		}
-		if(!genre.equals("")) {  //NOI18N
+		if(!genre.isEmpty()) {  //NOI18N
 			tag.setField(FieldKey.GENRE, genre);
 		}
-		if(!year.equals("")) {  //NOI18N
+		if(!year.isEmpty()) {  //NOI18N
 			tag.setField(FieldKey.YEAR, year);
 		}
 		if(myArt!=null) {
@@ -864,7 +864,7 @@ public class FileInfoInt extends FileInfo {
 		}
 		if(deleteComment) { //NOI18N
 			tag.setField(FieldKey.COMMENT, "");
-		} else if(!comment.equals("")) { //NOI18N
+		} else if(!comment.isEmpty()) { //NOI18N
 			tag.setField(FieldKey.COMMENT, comment);
 		}
 		if(bpm>0) {  //NOI18N
@@ -1073,8 +1073,8 @@ public class FileInfoInt extends FileInfo {
 	public String computeMask(String mask, String albumArtist, String album, String genre) {
 		String strResult=mask;
 		
-		String artistName = artist.equals("")?"{Empty}":artist;
-		String titleName = title.equals("")?"{Empty}":title;
+		String artistName = artist.isEmpty()?"{Empty}":artist;
+		String titleName = title.isEmpty()?"{Empty}":title;
 		strResult=strResult.replace("%artist%", StringManager.removeIllegal(artistName));  //NOI18N
 		strResult=strResult.replace("%albumartist%", StringManager.removeIllegal(albumArtist));  //NOI18N
 		strResult=strResult.replace("%album%", StringManager.removeIllegal(album));  //NOI18N

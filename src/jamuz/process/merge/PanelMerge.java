@@ -399,11 +399,11 @@ public class PanelMerge extends javax.swing.JPanel {
 				displayMergeResult(myFileInfo);
 			}
 			
-            if(!popupMsg.equals("")) {  //NOI18N
+            if(!popupMsg.isEmpty()) {  //NOI18N
                 popupMsg="<html>"
                     + "<h3>"+popupMsg+"</h3>";    //NOI18N //NOI18N
 
-                if(!mergeReport.equals("")) {  //NOI18N
+                if(!mergeReport.isEmpty()) {  //NOI18N
                     popupMsg+="<table cellpadding=\"2\" cellspacing=\"0\">"
                     + "<tr>"   //NOI18N //NOI18N
                     + "<td></td>"  //NOI18N

@@ -117,7 +117,7 @@ public class BundleScanner {
 			String key;
 			String value;
 			for(String line : FileUtils.readLines(new File(path))) {
-				int indexOf = line.indexOf("=");
+				int indexOf = line.indexOf('=');
 				if(indexOf>0) {
 					key=line.substring(0, indexOf);
 					value=line.substring(indexOf+1, line.length());

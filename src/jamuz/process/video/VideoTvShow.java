@@ -186,7 +186,7 @@ public class VideoTvShow extends VideoAbstract {
 		}
 		String ended="Ended";
 		if((!keepEnded && tvShowStatus.equals(ended)
-				&& getMissing().size()==0)
+				&& getMissing().isEmpty())
 			|| !keepCanceled && tvShowStatus.equals("Canceled"))
 		{
 			int nbSeasons=myTvShow.getSerie().getNumberOfSeasons(); 
@@ -296,7 +296,7 @@ public class VideoTvShow extends VideoAbstract {
     public void moveFilesAndSrt(PathBuffer buffer, DbConnVideo conn, SSH myConn) {
 
         String serieName = getTitle();
-        if(!getTitleOri().equals("") && !getTitle().equals(getTitleOri())) {
+        if(!getTitleOri().isEmpty() && !getTitle().equals(getTitleOri())) {
             serieName+=" ["+getTitleOri()+"]"; //NOI18N
         }
 		

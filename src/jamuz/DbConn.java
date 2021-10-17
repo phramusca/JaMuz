@@ -147,7 +147,7 @@ public class DbConn {
 	 */
 	public String getStringValue(ResultSet rs, String source, boolean replaceEmpty) {
 		try {
-			if(source.equals("")) {  //NOI18N
+			if(source.isEmpty()) {  //NOI18N
 				source = "{NoSource}";  //NOI18N
 			}
 			else {
@@ -155,7 +155,7 @@ public class DbConn {
 				if(source == null) {
 					source = "{null}";  //NOI18N
 				}
-				else if(source.equals("")) {  //NOI18N
+				else if(source.isEmpty()) {  //NOI18N
 					if(replaceEmpty) {
 						source = "{Empty}";  //NOI18N
 					}

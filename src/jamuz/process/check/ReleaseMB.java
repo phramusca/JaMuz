@@ -85,9 +85,9 @@ public class ReleaseMB {
 			
 			//Search for album/artist
 			artist = removeIllegal(artist);
-			if(!album.equals("")) {  //NOI18N
+			if(!album.isEmpty()) {  //NOI18N
 				album = removeIllegal(album);
-				if(!artist.equals("")) {  //NOI18N
+				if(!artist.isEmpty()) {  //NOI18N
 					release.search("'"+album+"' AND artist:'"+artist+"'");
 				}
 				else {

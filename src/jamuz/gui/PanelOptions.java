@@ -598,7 +598,7 @@ public class PanelOptions extends javax.swing.JPanel {
         DefaultListModel model = (DefaultListModel) jListGenres.getModel(); 
         if (model.contains(input)) { 
             Popup.warning(MessageFormat.format(Inter.get("Msg.Options.GenreExists"), input));  //NOI18N 
-        } else if (!input.equals("")) {  //NOI18N 
+        } else if (!input.isEmpty()) {  //NOI18N 
             Jamuz.getDb().insertGenre(input); 
             PanelMain.fillGenreLists(); 
 			jListGenres.setModel(Jamuz.getGenreListModel());
@@ -713,7 +713,7 @@ public class PanelOptions extends javax.swing.JPanel {
         DefaultListModel model = (DefaultListModel) jListTags.getModel(); 
         if (model.contains(input)) { 
             Popup.warning(MessageFormat.format(Inter.get("Msg.Options.Tag.Exists"), input));  //NOI18N 
-        } else if (!input.equals("")) {  //NOI18N 
+        } else if (!input.isEmpty()) {  //NOI18N 
             Jamuz.getDb().insertTag(input); 
             refreshListTagsModel();
         }

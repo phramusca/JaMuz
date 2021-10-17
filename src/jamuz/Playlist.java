@@ -339,7 +339,7 @@ public class Playlist implements Comparable {
 	 * @return
 	 */
 	public boolean isTranscode() {
-		return !destExt.equals("");
+		return !destExt.isEmpty();
 	}
 
 	/**

@@ -194,7 +194,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
 
 		String name = jTextName.getText();
 		String pwd = jTextFieldPwd.getText(); //TODO: Strength password required & do save hashed if to be used
-		if(name.equals("") || pwd.equals("")) {  //NOI18N
+		if(name.isEmpty() || pwd.isEmpty()) {  //NOI18N
 			Popup.warning(Inter.get("Error.AllFieldsMustBeSet")); //NOI18N
 		}
 		else {

@@ -348,7 +348,7 @@ public class ProcessMerge extends ProcessAbstract {
         msgSelected+=displayStatus((mergeListDbSelected.size()-nbFilesErrorSelected), Inter.get("Label.Updated"));
         msgSelected+=displayStatus(nbFilesNotFoundJaMuz, Inter.get("Label.NotFound"));//Yes, inverted, this is OK
         msgSelected+=displayStatus(nbFilesErrorSelected, Inter.get("Label.Errors"));
-        mergeReport+=msgSelected.equals("")?" --- ":msgSelected;
+        mergeReport+=msgSelected.isEmpty()?" --- ":msgSelected;
         
         mergeReport+="</td><td align=center style=\"border-right:1px solid black;border-bottom:1px solid black\">";  //NOI18N
         String msgJaMuz="";
@@ -356,7 +356,7 @@ public class ProcessMerge extends ProcessAbstract {
         msgJaMuz+=displayStatus(nbFilesNotFoundSelected, Inter.get("Label.NotFound"));//Yes, inverted, this is OK
         msgJaMuz+=displayStatus(nbFilesErrorJaMuz, Inter.get("Label.Updated"));
         msgJaMuz+="</td></tr>";  //NOI18N
-		mergeReport+=msgJaMuz.equals("")?" --- ":msgJaMuz;
+		mergeReport+=msgJaMuz.isEmpty()?" --- ":msgJaMuz;
 		
 		return true;
 	}
@@ -675,7 +675,7 @@ public class ProcessMerge extends ProcessAbstract {
 			}
 			
 			//FIXME Z Do not update files if "Forcer JaMuz" option selected
-			if(!genre.equals("") || BPM>=0) {
+			if(!genre.isEmpty() || BPM>=0) {
 				mergeListDbJaMuzFileTags.add(new FileInfoInt(fileJaMuz, BPM, genre));
 			}
 			
@@ -965,7 +965,7 @@ public class ProcessMerge extends ProcessAbstract {
 					FileInfoInt fileInfoInt = i.next();
 					checkAbort();
 					//TODO MERGE If aborted, tags will no more be written to file. 
-					if(!fileInfoInt.getGenre().equals("") ) {
+					if(!fileInfoInt.getGenre().isEmpty() ) {
 						fileInfoInt.updateGenre(fileInfoInt.getGenre());
 					}
 					if(fileInfoInt.getBPM()>=0) {

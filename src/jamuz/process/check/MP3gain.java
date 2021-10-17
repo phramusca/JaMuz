@@ -194,7 +194,7 @@ public class MP3gain {
 						String line;
 						while((line = inputReader.readLine()) != null) {
 //									Jamuz.getLogger().finest(line);
-							if(!line.trim().equals("")) {  //NOI18N
+							if(!line.trim().isEmpty()) {  //NOI18N
 								if(line.startsWith("No changes")) {  //NOI18N
 									//No changes to <myFile> are necessary
 									progressIndex+=2;
@@ -245,14 +245,14 @@ public class MP3gain {
 						String percent;
 						while((line = errorReader.readLine()) != null) {
 //                                    Jamuz.getLogger().finest(line);
-							if(!line.trim().equals("")) {  //NOI18N
+							if(!line.trim().isEmpty()) {  //NOI18N
 								if(line.endsWith("analyzed")) {  //NOI18N
 									//[1/8]  1% of 7721786 bytes analyzed
-									posBegin = line.indexOf("[");  //NOI18N
-									posMiddle = line.indexOf("/");  //NOI18N
-									posEnd=line.indexOf("]");  //NOI18N
+									posBegin = line.indexOf('[');  //NOI18N
+									posMiddle = line.indexOf('/');  //NOI18N
+									posEnd=line.indexOf(']');  //NOI18N
 									fileNumber=line.substring(posBegin+1,posMiddle);
-									percent=line.substring(posEnd+1, line.indexOf("%")).trim();  //NOI18N
+									percent=line.substring(posEnd+1, line.indexOf('%')).trim();  //NOI18N
 
 									if(Integer.parseInt(fileNumber)>progressIndex) {
 										progressIndex+=1;
@@ -262,7 +262,7 @@ public class MP3gain {
 								}
 								else if(line.endsWith("written")) {  //NOI18N
 									//1% of 7721786 bytes written
-									percent=line.substring(0, line.indexOf("%")).trim();  //NOI18N
+									percent=line.substring(0, line.indexOf('%')).trim();  //NOI18N
 									setProgress(Integer.valueOf(percent));		
 								}
 								//Not testing nor logging other messages

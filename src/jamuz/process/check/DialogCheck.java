@@ -1260,7 +1260,7 @@ public class DialogCheck extends javax.swing.JDialog {
 						jTextFieldCheckAlbum.setText(match.getAlbum());
 						Map<String, FolderInfoResult> results = folder.getResults(); 
 						FolderInfoResult resultYear = results.get("year"); //NOI18N
-						if (!match.getYear().equals("")) { 				  //NOI18N
+						if (!match.getYear().isEmpty()) { 				  //NOI18N
 							jTextFieldCheckYear.setText(match.getYear()); 			
 						}
 						else if(!resultYear.value.startsWith("{")){ //NOI18N

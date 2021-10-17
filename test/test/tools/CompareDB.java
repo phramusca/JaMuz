@@ -51,13 +51,13 @@ public class CompareDB {
         
 		String rootPath="/media/raph/Transcend/JaMuz";		
 		String db1=Swing.selectFile(rootPath, Swing.FileType.SQLITE, "Select 1st database");
-		if(db1.equals("")) {  //NOI18N
+		if(db1.isEmpty()) {  //NOI18N
 			Popup.error("Select a db1 file");
 			return;
 		}
 		
 		String db2=Swing.selectFile(rootPath, Swing.FileType.SQLITE, "Select 2nd database");
-		if(db2.equals("")) {  //NOI18N
+		if(db2.isEmpty()) {  //NOI18N
 			Popup.error("Select a db2 file");
 			return;
 		}

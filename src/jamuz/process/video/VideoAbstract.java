@@ -286,7 +286,7 @@ public abstract class VideoAbstract implements Comparable {
 	 */
 	protected String getStreamDetails4Filename(FileInfoVideo file) {
 		String streamDetails=file.getVideoStreamDetails();
-        streamDetails=streamDetails.equals("")?"":" ["+file.getVideoStreamDetails()+"]";
+        streamDetails=streamDetails.isEmpty()?"":" ["+file.getVideoStreamDetails()+"]";
         streamDetails+=""+file.getAudioStreamDetails()+"";
         streamDetails+=""+file.getSubtitlesStreamDetails()+"";
         return streamDetails;
@@ -550,7 +550,7 @@ public abstract class VideoAbstract implements Comparable {
      * @return
      */
     public String getImdbURI() {
-        if(!imdbId.equals("")) { //NOI18N
+        if(!imdbId.isEmpty()) { //NOI18N
             return ("http://www.imdb.com/title/"+imdbId+"/");
         }
         return null;
@@ -644,15 +644,15 @@ public abstract class VideoAbstract implements Comparable {
         if(!status.isOK) {
             display+= "<font color=\"red\"> | "+status.getMsg()+"</font><BR/>"; //NOI18N
         }
-        if(!genreStr.equals("")) { //NOI18N
+        if(!genreStr.isEmpty()) { //NOI18N
             display+= genreStr + "<BR/>"; //NOI18N
         }
-        if(!director.equals("")) { //NOI18N
+        if(!director.isEmpty()) { //NOI18N
             display+= " de " + director + "<BR/>"; //NOI18N
         }
         display+= getVideoSummary();
         
-        if(!country.equals("")) { //NOI18N
+        if(!country.isEmpty()) { //NOI18N
             display+= country + "<BR/>"; //NOI18N
         }
         display+= studio + "<BR/>"; //NOI18N

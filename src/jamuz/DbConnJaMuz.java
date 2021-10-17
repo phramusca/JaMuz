@@ -545,7 +545,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 			for(Option option : selOptions.getOptions()) {
                 if (option.getType().equals("path") 
-						&& !option.getValue().trim().equals("")
+						&& !option.getValue().trim().isEmpty()
 						&& !option.getValue().trim().startsWith("{")) {   //NOI18N
 					option.setValue(FilenameUtils.normalizeNoEndSeparator(option.getValue().trim()) 
 							+ File.separator);
@@ -1812,8 +1812,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 					"FROM client C \n" +
 					"JOIN device D ON D.idDevice=C.idDevice\n" +
 					"JOIN statSource S ON S.idStatSource=C.idStatSource"
-							+ (login.equals("")?login:" WHERE login=? "));  //NOI18N
-			if(!login.equals("")) { stSelectClients.setString(1, login); }
+							+ (login.isEmpty()?login:" WHERE login=? "));  //NOI18N
+			if(!login.isEmpty()) { stSelectClients.setString(1, login); }
             rs = stSelectClients.executeQuery();
             while (rs.next()) {
                 int idClient = rs.getInt("idClient");  //NOI18N
@@ -3213,7 +3213,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public boolean checkAlbumSimilar(ArrayList<DuplicateInfo> myList, 
 			String album, int idPath) {
-        if (!album.equals("")) {
+        if (!album.isEmpty()) {
 			try {
 
 				PreparedStatement stSelectAlbumSimilar = dbConn.connection.prepareStatement(
@@ -3251,7 +3251,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      */
     public boolean checkAlbumExact(ArrayList<DuplicateInfo> myList, String album, 
 			int idPath) {
-		if(!album.equals("")) {
+		if(!album.isEmpty()) {
 			try {
 				PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE
@@ -3279,7 +3279,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean checkAlbumDuplicate(
 			ArrayList<DuplicateInfo> myList, 
 			String mbId) {
-        if (mbId!=null && !mbId.equals("")) {    //NOI18N
+        if (mbId!=null && !mbId.isEmpty()) {    //NOI18N
             try {
                 PreparedStatement stSelectDuplicates = 
 					dbConn.connection.prepareStatement(
@@ -3313,7 +3313,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList, 
 			String albumArtist, String album, int idPath, int discNo, int discTotal) {
 		
-        if (!albumArtist.equals("") && !album.equals("")) {    //NOI18N
+        if (!albumArtist.isEmpty() && !album.isEmpty()) {    //NOI18N
             try {
                 PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE
@@ -3350,7 +3350,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList, 
 			String albumArtist, String album, int idPath) {
 		
-        if (!albumArtist.equals("") && !album.equals("")) {    //NOI18N
+        if (!albumArtist.isEmpty() && !album.isEmpty()) {    //NOI18N
             try {
                 PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE

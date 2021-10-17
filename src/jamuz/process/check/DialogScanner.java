@@ -550,7 +550,7 @@ public class DialogScanner extends javax.swing.JDialog {
 	
 	private String bold(Map<String, String> extracted, String key) {
 		String value=extracted.containsKey(key)?extracted.get(key):"";
-		if(!value.equals("")) {
+		if(!value.isEmpty()) {
 			return new StringBuilder().append("<html>")
 					.append("<b>")
 					.append(value)

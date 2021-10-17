@@ -71,7 +71,7 @@ public class PlayerMP3 extends PlaybackListener implements Runnable
 		// http://www.mp3-converter.com/mp3codec/frames.htm
 		
 		//Parse format
-		String version = format.substring(format.indexOf("-")+1, format.indexOf("-")+2);  //NOI18N
+		String version = format.substring(format.indexOf('-')+1, format.indexOf('-')+2);  //NOI18N
 		String layer = format.substring(format.length()-1, format.length());
 		
         if (version.equals("1")) {   // MPEG Version 1  //NOI18N

@@ -88,8 +88,8 @@ public class DbInfo {
 			String[] split3 = split2[1].split("@");  //NOI18N
 			this.ftpPwd = split3[0];
 			//	192.168.0.12/F/apps/XBMC_XBOXT_30832/XBMC/UserData/Database/MyMusic7.db
-			int firstDelim = split3[1].indexOf("/");  //NOI18N
-			int lastDelim = split3[1].lastIndexOf("/");  //NOI18N
+			int firstDelim = split3[1].indexOf('/');  //NOI18N
+			int lastDelim = split3[1].lastIndexOf('/');  //NOI18N
 			this.ftpServer = split3[1].substring(0, firstDelim);
 			this.ftpRemoteFolder = split3[1].substring(firstDelim, lastDelim);
 			this.ftpFileName = split3[1].substring(lastDelim + 1, split3[1].length());
@@ -228,7 +228,7 @@ public class DbInfo {
 						this.locationOri.replace("/", "-") + "--" + DateTime.getCurrentLocal(DateTime.DateTimeFormat.FILE) + ".sql";  //NOI18N
 				String myCmdLine = "mysqldump -u "+ this.user +" -p"+this.pwd
 						+" --opt --compatible=mysql40 "
-						+this.locationOri.substring(this.locationOri.indexOf("/")+1);  //NOI18N
+						+this.locationOri.substring(this.locationOri.indexOf('/')+1);  //NOI18N
 				Jamuz.getLogger().finest(myCmdLine);
 				Runtime runtime = Runtime.getRuntime();
 				final Process process;

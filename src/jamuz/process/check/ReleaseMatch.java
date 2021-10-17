@@ -346,7 +346,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 			text += " ["+this.score+"]";  //NOI18N
 		}
 		text += " : \""+this.album+"\" (\""+this.artist+"\")";  //NOI18N
-		if(!this.year.equals("")) {  //NOI18N
+		if(!this.year.isEmpty()) {  //NOI18N
 			text += " ["+this.year+"]";  //NOI18N
 		}
 		if(trackTotal>0) {

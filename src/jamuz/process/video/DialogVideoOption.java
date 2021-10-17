@@ -408,7 +408,7 @@ public class DialogVideoOption extends javax.swing.JDialog {
 	
 	private void getFolder(JTextField textField, String title) {
         String selectedFolder=Swing.selectFolder(textField.getText(), title);
-        if(!selectedFolder.equals("")) {  //NOI18N
+        if(!selectedFolder.isEmpty()) {  //NOI18N
             textField.setText(selectedFolder+File.separator);
         }
     }

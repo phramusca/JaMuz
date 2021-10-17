@@ -269,7 +269,7 @@ public class FolderInfoResult {
 			this.setKO(true);
 			return colorField(tagValue, 2);
 		}
-		else if(!tagValue.equals("")) {  //NOI18N
+		else if(!tagValue.isEmpty()) {  //NOI18N
 			this.setWarning(true);  //NOI18N
 			return colorField(tagValue, 1);
 		}
@@ -282,7 +282,7 @@ public class FolderInfoResult {
         if(tagValue.equals(matchValue)) {
             return colorField(tagValue, this.errorLevel);
         }
-        else if(matchValue.equals("")) { //NOI18N
+        else if(matchValue.isEmpty()) { //NOI18N
             if(tagValue.matches("\\d{4}")) { //NOI18N
                 this.setWarning(true);
                 return colorField(tagValue, 1);
@@ -321,7 +321,7 @@ public class FolderInfoResult {
 			this.setKO(true);
 		}
 		else {
-            tagNumber = tagNumber.equals("") ? "0" : tagNumber;
+            tagNumber = tagNumber.isEmpty() ? "0" : tagNumber;
             if(Integer.valueOf(tagNumber)<=0) {
                 errorlevelFormat=2;
                 this.setKO();
@@ -337,7 +337,7 @@ public class FolderInfoResult {
 			this.setKO(true);
 		}
 		else {
-            tagTotal = tagTotal.equals("") ? "0" : tagTotal;
+            tagTotal = tagTotal.isEmpty() ? "0" : tagTotal;
             if(Integer.valueOf(tagTotal)<=0) {
                 errorlevelFormat=2;
                 this.setKO();
@@ -352,7 +352,7 @@ public class FolderInfoResult {
 
 	private String analyseTrackString(String tagValue, String matchValue) {
 		if(matchValue.equals(tagValue)) { 
-            if(tagValue.equals("")) {  //NOI18N
+            if(tagValue.isEmpty()) {  //NOI18N
                 this.setKO();
                 return colorField("{Empty}", 2);  //NOI18N
             }
@@ -396,7 +396,7 @@ public class FolderInfoResult {
 		if(text==null) {
 			text="{null}";  //NOI18N
 		}
-		else if(text.equals("")) {  //NOI18N
+		else if(text.isEmpty()) {  //NOI18N
 			text="{Empty}";  //NOI18N
 		}
 		

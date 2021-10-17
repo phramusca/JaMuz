@@ -84,7 +84,7 @@ public class IconBufferCover {
     }
     
     private static File getCacheFile(String coverHash) {
-        String filename = coverHash.equals("")?"NA":coverHash;
+        String filename = coverHash.isEmpty()?"NA":coverHash;
         return Jamuz.getFile(filename+".png", "data", "cache", "audio");
     }
 }
