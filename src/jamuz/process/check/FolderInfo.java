@@ -58,7 +58,7 @@ import ws.schild.jave.EncoderException;
  * Folder information
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class FolderInfo implements java.lang.Comparable {
+public class FolderInfo implements java.lang.Comparable, Cloneable {
 	
 	/**
 	 * Id in database

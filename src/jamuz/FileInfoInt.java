@@ -1525,4 +1525,9 @@ public class FileInfoInt extends FileInfo {
 		return new File(FilenameUtils.concat(FilenameUtils.getFullPath(FilenameUtils.concat(destPath, this.relativeFullPath)), 
 				FilenameUtils.getBaseName(getFilename())+"."+destExt));
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone(); //To change body of generated methods, choose Tools | Templates.
+	}
 }

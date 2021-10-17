@@ -143,4 +143,9 @@ public class TrackTag extends FileInfoInt {
             return super.getFormattedLastPlayed();
         }
     }
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone(); //To change body of generated methods, choose Tools | Templates.
+	}
 }
