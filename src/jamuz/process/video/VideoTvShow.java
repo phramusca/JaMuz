@@ -138,7 +138,9 @@ public class VideoTvShow extends VideoAbstract {
             if(missing.size()>0) {
                 display += "<font color=red>";
                 int limit = missing.size();
-                if(limit>10) limit=10;
+                if(limit>10) {
+					limit=10;
+				}
                 for(int i=0; i<limit; i++) {
                     display += " "+missing.get(missing.size()-i-1);
                 }

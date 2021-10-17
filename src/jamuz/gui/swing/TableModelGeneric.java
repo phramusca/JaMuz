@@ -53,8 +53,9 @@ public abstract class TableModelGeneric extends AbstractTableModel {
     public boolean isCellEditable(int row, int col){
 		//If column has been setup to be editable, return true
 		for(int column:this.editableColumns){
-			if(col==column)
+			if(col==column) {
 				return true;
+			}
 		}
 		//Otherwise return false
 		return false;

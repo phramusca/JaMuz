@@ -1173,7 +1173,9 @@ public class FolderInfo implements java.lang.Comparable {
 	 */
 	public ReleaseMatch getMatch(int matchId) {
         List<ReleaseMatch> matchesL = getMatches();
-        if(matchesL==null) return null;
+        if(matchesL==null) {
+			return null;
+		}
         
         if(matchId < matchesL.size()) {
             return matchesL.get(matchId);
@@ -1835,7 +1837,9 @@ public class FolderInfo implements java.lang.Comparable {
         for (Map.Entry<String, FolderInfoResult> entry : results.entrySet()) {
             if(entry.getValue().errorLevel>0) {
                 result=entry.getKey();
-                if(!entry.getValue().value.equals("")) result+=":"+entry.getValue().value;
+                if(!entry.getValue().value.equals("")) {
+					result+=":"+entry.getValue().value;
+				}
                 builder.append(FolderInfoResult.colorField(result, entry.getValue().errorLevel, false));
 				builder.append(" | "); //NOI18N
 			}
@@ -1855,8 +1859,12 @@ public class FolderInfo implements java.lang.Comparable {
     @Override
 	public int compareTo(Object o) {
         //ORDER BY action
-		if (action.getOrder() < ((FolderInfo) o).action.getOrder()) return -1;
-		if (action.getOrder() > ((FolderInfo) o).action.getOrder()) return 1;
+		if (action.getOrder() < ((FolderInfo) o).action.getOrder()) {
+			return -1;
+		}
+		if (action.getOrder() > ((FolderInfo) o).action.getOrder()) {
+			return 1;
+		}
         return 0;
 	}
 

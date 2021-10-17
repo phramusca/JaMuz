@@ -134,7 +134,9 @@ public class StatSourceMixxx extends StatSourceSQL {
         }
         finally {
             try {
-                if (rs!=null) rs.close();
+                if (rs!=null) {
+					rs.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }
@@ -259,13 +261,17 @@ public class StatSourceMixxx extends StatSourceSQL {
         }
         finally {
             try {
-                if (rs!=null) rs.close();
+                if (rs!=null) {
+					rs.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }
             
             try {
-                if (keys!=null) keys.close();
+                if (keys!=null) {
+					keys.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }

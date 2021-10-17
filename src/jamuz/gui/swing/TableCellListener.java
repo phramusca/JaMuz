@@ -131,10 +131,11 @@ public class TableCellListener implements PropertyChangeListener, Runnable
 
 		if ("tableCellEditor".equals(e.getPropertyName()))  //NOI18N
 		{
-			if (table.isEditing())
+			if (table.isEditing()) {
 				processEditingStarted();
-			else
+			} else {
 				processEditingStopped();
+			}
 		}
 	}
 

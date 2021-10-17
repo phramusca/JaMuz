@@ -500,7 +500,9 @@ public class PanelMain extends javax.swing.JFrame {
             }
             i++;
         }
-        if(jComboBoxPlaylist.getSelectedItem().toString().equals(playlist)) refreshHiddenQueue=false;
+        if(jComboBoxPlaylist.getSelectedItem().toString().equals(playlist)) {
+			refreshHiddenQueue=false;
+		}
         jComboBoxPlaylist.setSelectedIndex(index);
         refreshHiddenQueue=true;
     }
@@ -1502,7 +1504,9 @@ public class PanelMain extends javax.swing.JFrame {
     private static boolean refreshHiddenQueue=true;
     
     private void jComboBoxPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPlaylistActionPerformed
-        if(refreshHiddenQueue) refreshHiddenQueue(false);
+        if(refreshHiddenQueue) {
+			refreshHiddenQueue(false);
+		}
     }//GEN-LAST:event_jComboBoxPlaylistActionPerformed
 
     public static void refreshHiddenQueue(boolean wait) {

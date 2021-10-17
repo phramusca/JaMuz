@@ -141,7 +141,9 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 		column.setMinWidth(width);
         column.setPreferredWidth(width);
 		column.setWidth(width);
-		if(maxWidth>=0)	column.setMaxWidth(maxWidth);
+		if(maxWidth>=0) {
+			column.setMaxWidth(maxWidth);
+		}
 	}
 	
 	/**

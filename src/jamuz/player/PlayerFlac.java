@@ -158,8 +158,9 @@ public class PlayerFlac implements PCMProcessor, LineListener, Runnable {
             // Add the listeners to the line at this point, it's the only
             // way to get the events triggered.
             int size = listeners.size();
-            for (int index = 0; index < size; index++)
-                line.addLineListener((LineListener) listeners.get(index));
+            for (int index = 0; index < size; index++) {
+				line.addLineListener((LineListener) listeners.get(index));
+			}
             
             line.open(fmt, AudioSystem.NOT_SPECIFIED);
             line.start();

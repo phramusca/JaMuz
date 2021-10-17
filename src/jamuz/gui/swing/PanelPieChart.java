@@ -169,12 +169,13 @@ public class PanelPieChart extends JPanel  {
 		public int compareTo(Object o) {
 
 			//ORDER BY value DESC
-			if (this.value == ((PieSlice) o).value)
+			if (this.value == ((PieSlice) o).value) {
 				return 0;
-			else if ((this.value) < ((PieSlice) o).value)
+			} else if ((this.value) < ((PieSlice) o).value) {
 				return 1;
-			else
+			} else {
 				return -1;
+			}
 		}
 
         @Override

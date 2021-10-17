@@ -77,7 +77,9 @@ public class DbConnVideo extends DbConn {
         }
         finally {
             try {
-                if (rs!=null) rs.close();
+                if (rs!=null) {
+					rs.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }
@@ -178,7 +180,9 @@ public class DbConnVideo extends DbConn {
 		}
         finally {
             try {
-                if (rs!=null) rs.close();
+                if (rs!=null) {
+					rs.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }
@@ -229,7 +233,9 @@ public class DbConnVideo extends DbConn {
 		}
         finally {
             try {
-                if (rsStream!=null) rsStream.close();
+                if (rsStream!=null) {
+					rsStream.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }
@@ -351,8 +357,12 @@ public class DbConnVideo extends DbConn {
 		}
         finally {
             try {
-                if (rs!=null) rs.close();
-                if (rsEpisodes!=null) rsEpisodes.close();
+                if (rs!=null) {
+					rs.close();
+				}
+                if (rsEpisodes!=null) {
+					rsEpisodes.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }
@@ -470,7 +480,9 @@ public class DbConnVideo extends DbConn {
 		}
         finally {
             try {
-                if (rs!=null) rs.close();
+                if (rs!=null) {
+					rs.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("getBytesFromCache: Failed to close ResultSet");
             }
@@ -524,7 +536,9 @@ public class DbConnVideo extends DbConn {
 		}
         finally {
             try {
-                if (rs!=null) rs.close();
+                if (rs!=null) {
+					rs.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("setObjectInCache: Failed to close ResultSet");
             }

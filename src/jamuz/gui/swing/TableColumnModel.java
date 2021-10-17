@@ -245,8 +245,9 @@ public class TableColumnModel extends DefaultTableColumnModel {
         for(int columnIndex = 0; columnIndex < noColumns; ++columnIndex) {
 	    column = (TableColumn)columns.get(columnIndex);
 
-            if(identifier.equals(column.getIdentifier()))
-		return columnIndex;
+            if(identifier.equals(column.getIdentifier())) {
+				return columnIndex;
+		}
         }
         
 	throw new IllegalArgumentException("Identifier not found");  //NOI18N

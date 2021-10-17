@@ -133,7 +133,9 @@ public class PlayerMP3 extends PlaybackListener implements Runnable
 			//Notice the frame length (time) does not depend on the bitrate
 
             //Resume to previous position
-            if(!resume) lastPosition=0;
+            if(!resume) {
+				lastPosition=0;
+			}
             this.setPosition(lastPosition/1000);
             
 			String lyrics = myMP3File.getID3v2Tag().getFirst(FieldKey.LYRICS);

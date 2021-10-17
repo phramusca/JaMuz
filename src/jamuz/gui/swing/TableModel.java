@@ -60,8 +60,9 @@ public class TableModel extends AbstractTableModel {
 		Object temp[][] = this.data;
 		this.data = new Object[nbRow+1][nbCol];
 
-		for(Object[] value : temp)
-				this.data[id++] = value;
+		for(Object[] value : temp) {
+			this.data[id++] = value;
+		}
 
 		this.data[id] = data;
 
@@ -199,8 +200,9 @@ public class TableModel extends AbstractTableModel {
     public boolean isCellEditable(int row, int col){
 		//If column has been setup to be editable, return true
 		for(int column:this.editableColumns){
-			if(col==column)
+			if(col==column) {
 				return true;
+			}
 		}
 		//Otherwise return false
 		return false;

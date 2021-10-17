@@ -260,10 +260,12 @@ public class JMPlayer {
 		}
 		String s = "ANS_" + name + "=";
 		String x = execute("get_property " + name, s);
-		if (x == null)
+		if (x == null) {
 			return null;
-		if (!x.startsWith(s))
+		}
+		if (!x.startsWith(s)) {
 			return null;
+		}
 		return x.substring(s.length());
 	}
 

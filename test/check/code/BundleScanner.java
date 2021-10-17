@@ -182,8 +182,9 @@ public class BundleScanner {
         {
             try
             {
-                if (br != null)
-                    br.close();
+                if (br != null) {
+					br.close();
+				}
             }
             catch (Exception ex)
             {

@@ -1108,11 +1108,19 @@ public class FileInfoInt extends FileInfo {
 		
 		//ORDER BY discNo, trackNo, filename
 		
-		if (this.discNo < ((FileInfoInt) o).discNo) return -1;
-		if (this.discNo > ((FileInfoInt) o).discNo) return 1;
+		if (this.discNo < ((FileInfoInt) o).discNo) {
+			return -1;
+		}
+		if (this.discNo > ((FileInfoInt) o).discNo) {
+			return 1;
+		}
 		
-		if (this.trackNo < ((FileInfoInt) o).trackNo) return -1;
-		if (this.trackNo > ((FileInfoInt) o).trackNo) return 1;
+		if (this.trackNo < ((FileInfoInt) o).trackNo) {
+			return -1;
+		}
+		if (this.trackNo > ((FileInfoInt) o).trackNo) {
+			return 1;
+		}
 				
 		return this.getFilename().compareTo(((FileInfo) o).getFilename());
 	}

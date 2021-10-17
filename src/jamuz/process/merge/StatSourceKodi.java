@@ -103,7 +103,9 @@ public class StatSourceKodi extends StatSourceSQL {
         }
         finally {
             try {
-                if (rs!=null) rs.close();
+                if (rs!=null) {
+					rs.close();
+				}
             } catch (SQLException ex) {
                 Jamuz.getLogger().warning("Failed to close ResultSet");
             }

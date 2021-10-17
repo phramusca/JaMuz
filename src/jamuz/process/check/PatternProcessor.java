@@ -81,8 +81,9 @@ public class PatternProcessor {
                 sb.append(c);
             }
         }
-        if(!sb.toString().equals(""))
-            params.add(sb.toString());
+        if(!sb.toString().equals("")) {
+			params.add(sb.toString());
+		}
 
         //Extract values from path
         Map<String, String> extracted = new HashMap<>();
@@ -95,7 +96,9 @@ public class PatternProcessor {
             param=params.get(i);
             if(!param.startsWith("%")) {
                 posParam = analyzedText.indexOf(param);
-                if(posParam<0) return extracted;
+                if(posParam<0) {
+					return extracted;
+				}
                 before = analyzedText.substring(0, posParam);
                 analyzedText = analyzedText.substring(posParam+param.length());
 				if(i>0) {

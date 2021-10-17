@@ -120,8 +120,9 @@ public class FileSystem {
 			   @Override
 			   public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
 
-				   if (exc != null)
+				   if (exc != null) {
 					   System.out.println("had trouble traversing: " + dir + " (" + exc + ")");
+				   }
 				   // Ignore errors traversing a folder
 				   return FileVisitResult.CONTINUE;
 			   }

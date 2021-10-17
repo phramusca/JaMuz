@@ -341,16 +341,28 @@ public class Playlist implements Comparable {
                         i = order.desc ? f2.genre.compareTo(f1.genre) : f1.genre.compareTo(f2.genre);
                         if(i!=0) { return i; }
                     case RATING: 
-                        if (f1.rating < f2.rating) i = order.desc ? 1 : -1;
-                        if (f1.rating > f2.rating) i = order.desc ? -1 : 1;
+                        if (f1.rating < f2.rating) {
+							i = order.desc ? 1 : -1;
+				}
+                        if (f1.rating > f2.rating) {
+							i = order.desc ? -1 : 1;
+				}
                          if(i!=0) { return i; }
                     case ALBUMRATING:
-                        if (f1.getAlbumRating() < f2.getAlbumRating()) i = order.desc ? 1 : -1;
-                        if (f1.getAlbumRating() > f2.getAlbumRating()) i = order.desc ? -1 : 1;
+                        if (f1.getAlbumRating() < f2.getAlbumRating()) {
+							i = order.desc ? 1 : -1;
+				}
+                        if (f1.getAlbumRating() > f2.getAlbumRating()) {
+							i = order.desc ? -1 : 1;
+				}
                          if(i!=0) { return i; }
                     case PERCENTRATED:
-                        if (f1.getPercentRated()< f2.getPercentRated()) i = order.desc ? 1 : -1;
-                        if (f1.getPercentRated() > f2.getPercentRated()) i = order.desc ? -1 : 1;
+                        if (f1.getPercentRated()< f2.getPercentRated()) {
+							i = order.desc ? 1 : -1;
+				}
+                        if (f1.getPercentRated() > f2.getPercentRated()) {
+							i = order.desc ? -1 : 1;
+				}
                          if(i!=0) { return i; }
                     case PLAYLIST: 
 					case TAG:
@@ -371,12 +383,20 @@ public class Playlist implements Comparable {
                         i = order.desc ? f2.year.compareTo(f1.year) : f1.year.compareTo(f2.year);
                         if(i!=0) { return i; }
                     case TRACKNO: 
-                        if (f1.trackNo < f2.trackNo) i = order.desc ? 1 : -1;
-                        if (f1.trackNo > f2.trackNo) i = order.desc ? -1 : 1;
+                        if (f1.trackNo < f2.trackNo) {
+							i = order.desc ? 1 : -1;
+				}
+                        if (f1.trackNo > f2.trackNo) {
+							i = order.desc ? -1 : 1;
+				}
                          if(i!=0) { return i; }
                     case PLAYCOUNTER: 
-                        if (f1.playCounter < f2.playCounter) i = order.desc ? 1 : -1;
-                        if (f1.playCounter > f2.playCounter) i = order.desc ? -1 : 1;
+                        if (f1.playCounter < f2.playCounter) {
+							i = order.desc ? 1 : -1;
+				}
+                        if (f1.playCounter > f2.playCounter) {
+							i = order.desc ? -1 : 1;
+				}
                          if(i!=0) { return i; }
                     case LASTPLAYED: 
                         i = order.desc ? f2.lastPlayed.compareTo(f1.lastPlayed) : f1.lastPlayed.compareTo(f2.lastPlayed);

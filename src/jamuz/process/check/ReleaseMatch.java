@@ -395,11 +395,19 @@ public class ReleaseMatch implements java.lang.Comparable {
 	public int compareTo(Object o) {
 		//ORDER BY score DESC,  year ASC
         
-        if (this.score < ((ReleaseMatch) o).score) return 1;
-		if (this.score > ((ReleaseMatch) o).score) return -1;
+        if (this.score < ((ReleaseMatch) o).score) {
+			return 1;
+		}
+		if (this.score > ((ReleaseMatch) o).score) {
+			return -1;
+		}
         
-        if (this.getYearInt() < ((ReleaseMatch) o).getYearInt()) return -1;
-		if (this.getYearInt() > ((ReleaseMatch) o).getYearInt()) return 1;
+        if (this.getYearInt() < ((ReleaseMatch) o).getYearInt()) {
+			return -1;
+		}
+		if (this.getYearInt() > ((ReleaseMatch) o).getYearInt()) {
+			return 1;
+		}
         
 		return 0;
 	}

@@ -376,7 +376,9 @@ public class Mplayer implements Runnable {
 				length=audioFile.getAudioHeader().getTrackLength();
 
 				//Resume to previous position
-				if(!resume) lastPosition=0;
+				if(!resume) {
+					lastPosition=0;
+				}
 				this.setPosition(lastPosition);
 
 				return lyrics;
@@ -510,10 +512,12 @@ public class Mplayer implements Runnable {
 		}
 		String s = "ANS_" + name + "=";
 		String x = execute("get_property " + name, s);
-		if (x == null)
+		if (x == null) {
 			return null;
-		if (!x.startsWith(s))
+		}
+		if (!x.startsWith(s)) {
 			return null;
+		}
 		return x.substring(s.length());
 	}
 	

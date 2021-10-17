@@ -296,13 +296,17 @@ public class Cover implements java.lang.Comparable {
 	@Override
 	public int compareTo(Object obj) {
         
-        if(image==null) return 1;
+        if(image==null) {
+			return 1;
+		}
         int width=image.getWidth();
         int height=image.getHeight();
         int size=width*height; 
         
         Cover other = (Cover) obj;
-        if(other.getImage()==null) return -1;
+        if(other.getImage()==null) {
+			return -1;
+		}
         int otherWidth=other.getImage().getWidth();
         int otherHeight=other.getImage().getHeight();
         int otherSize=otherWidth*otherHeight; 
@@ -310,31 +314,51 @@ public class Cover implements java.lang.Comparable {
         int maxSize=this.sizeMax;
         maxSize *= maxSize;
         
-        if(size>maxSize) return 1;
-        if(otherSize>maxSize) return -1;
+        if(size>maxSize) {
+			return 1;
+		}
+        if(otherSize>maxSize) {
+			return -1;
+		}
         
         //Favor square sizes (ex: 300x300)
         //TODO: +10 is not enough (same for CoverType lower down)
 //        int diffSize = Math.abs(width-height);
 //        if(diffSize>0) size=size-2*diffSize;
         
-        if(width==height) size+=10;
-        if(otherWidth==otherHeight) otherSize+=10;
+        if(width==height) {
+			size+=10;
+		}
+        if(otherWidth==otherHeight) {
+			otherSize+=10;
+		}
         
         //Favor Last FM and MB over file and tag
-        if(this.type.equals(CoverType.MB) || this.type.equals(CoverType.URL)) size+=10;
-        if(other.type.equals(CoverType.MB) || other.type.equals(CoverType.URL)) otherSize+=10;
+        if(this.type.equals(CoverType.MB) || this.type.equals(CoverType.URL)) {
+			size+=10;
+		}
+        if(other.type.equals(CoverType.MB) || other.type.equals(CoverType.URL)) {
+			otherSize+=10;
+		}
         
-        if(size>otherSize) return -1;
-        if(size<otherSize) return 1;
+        if(size>otherSize) {
+			return -1;
+		}
+        if(size<otherSize) {
+			return 1;
+		}
 
 		return this.name.compareTo(other.name);
 	}
 
     @Override
     public boolean equals(Object obj) {
-        if(obj==null) return false;
-        if(!obj.getClass().equals(this.getClass())) return false;
+        if(obj==null) {
+			return false;
+		}
+        if(!obj.getClass().equals(this.getClass())) {
+			return false;
+		}
         return name.equals(((Cover) obj).name);
     }
 
