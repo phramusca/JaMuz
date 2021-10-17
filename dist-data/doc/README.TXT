@@ -5,6 +5,24 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+0.5.0	Beta	- Improved Check process:
+					- Improved duplicates handling:
+						- Ability to replace a duplicate
+						- Buttons "None are duplicates" "Not a duplicate"
+					- Apply file pattern to KO too
+					- Shrink covers to 1000x1000 pixels
+					- Button to set disc and track numbers
+				- Improved Remote Sync:
+					- New sync process using java-express
+					- Full library synced and ability to download track(s) from JaMuz Remote
+					- Ability to transcode to MP3
+				- Popup menu in playlists (with new items)
+					- AcoustId (Alpha)
+				- CopyRight filter
+				- Various bug fixes
+				- New translation: Portuguese. Others updated.
+				- Compatible with JaMuz Remote v0.5.x only
+----------------------------------------------------------------------------------------------------------------------------------
 0.4.1	Beta	- Better duplicate searching
                 - Auto set number of check processes based on available threads.
                 - Scanner: WordUtils (::C ::l ...) + legend
@@ -13,6 +31,7 @@
                 - FLAC support by default
                 - Various and many fixes
                 - Remove MB wait (good idea ?)
+				- Compatible with JaMuz Remote v0.4.x only
 ----------------------------------------------------------------------------------------------------------------------------------
 0.4.0	Beta	- Sync improved and easy setup
 				- New translation (Portuguese (Brazil))

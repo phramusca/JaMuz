@@ -5,6 +5,24 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+0.5.0	Beta	- Amélioration du processus de vérification:
+					- Amélioration du traitement des doublons:
+						- Possibilité de remplacer un doublon
+						- Buttons "None are duplicates" "Not a duplicate"
+					- Application du masque de fichier pour les KO aussi
+					- Réduction des pochettes a 1000x1000 pixels
+					- Button pour écrire numéros de disque et piste
+				- Amélioration de la synchro vers JaMuz Remote:
+					- Nouveau processus de synchro avec java-express
+					- Tout la bibliothèque est synchronisée et possibilité de télécharger des fichiers depuis JaMuz Remote
+					- Possibilité de transcoded vers format MP3
+				- Popup menu pour playlists (avec de nouvelles entrées)
+					- AcoustId (Alpha)
+				- Filtre CopyRight
+				- Bug fixes variés
+				- Nouvelle traduction: Portugais. Mise à jour des autres.
+				- Compatible avec JaMuz Remote v0.5.x seulement
+----------------------------------------------------------------------------------------------------------------------------------
 0.4.1	Beta	- Meilleure recherche de doublons
                 - Configuration du nombre de processus de vérification automatique
                 - Scanner: WordUtils (::C ::l ...) + légende
