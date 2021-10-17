@@ -19,17 +19,17 @@ package jamuz.process.sync;
 
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.table.TableColumn;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Inter;
 import java.awt.Frame;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.table.TableColumn;
 
 /**
  *

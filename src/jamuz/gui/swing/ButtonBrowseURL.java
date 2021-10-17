@@ -18,10 +18,10 @@
 package jamuz.gui.swing;
 
 import jamuz.utils.Desktop;
-import java.awt.Component; 
-import java.awt.event.ActionEvent;  
-import javax.swing.DefaultCellEditor;  
-import javax.swing.JButton;  
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;  
 import javax.swing.JTable; 
 

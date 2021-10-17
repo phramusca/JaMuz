@@ -26,20 +26,20 @@ import jamuz.Jamuz;
 import jamuz.Playlist;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.Location;
-import jamuz.utils.ProcessAbstract;
-import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
-import jamuz.utils.Popup;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Benchmark;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
+import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import ws.schild.jave.EncoderException;
 
 /**

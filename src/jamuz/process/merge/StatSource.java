@@ -17,13 +17,13 @@
 
 package jamuz.process.merge;
 
-import jamuz.StatSourceAbstract;
-import jamuz.process.sync.Device;
-import jamuz.Jamuz;
 import jamuz.DbInfo;
 import jamuz.DbInfo.LibType;
-import java.util.Date;
+import jamuz.Jamuz;
+import jamuz.StatSourceAbstract;
+import jamuz.process.sync.Device;
 import jamuz.utils.DateTime;
+import java.util.Date;
 
 /**
  * Stat source class

@@ -19,10 +19,10 @@ package jamuz.remote;
 
 import jamuz.Jamuz;
 import jamuz.Playlist;
-import jamuz.utils.Popup;
-import javax.swing.DefaultComboBoxModel;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import java.awt.Frame;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  * JDialog extension to add/modify Stat source

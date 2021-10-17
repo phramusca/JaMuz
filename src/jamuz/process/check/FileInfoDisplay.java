@@ -20,9 +20,9 @@ package jamuz.process.check;
 import jamuz.FileInfoInt;
 import jamuz.gui.swing.TableValue;
 import jamuz.process.check.ReleaseMatch.Track;
+import jamuz.utils.Inter;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
-import jamuz.utils.Inter;
 
 /**
  * Similar as FileInfo class but for display only

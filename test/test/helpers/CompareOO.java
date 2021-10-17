@@ -18,7 +18,6 @@ package test.helpers;
 
 import jamuz.process.check.FolderInfoResult;
 import jamuz.utils.*;
-import jamuz.utils.LogText;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;

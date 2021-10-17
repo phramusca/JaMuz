@@ -19,11 +19,11 @@ package jamuz;
 
 import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.process.check.FolderInfo.CopyRight;
+import jamuz.utils.Inter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
-import jamuz.utils.Inter;
 import java.util.Objects;
 
 /**

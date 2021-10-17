@@ -18,15 +18,25 @@
 package jamuz.gui;
 
 import jamuz.FileInfoInt;
-import jamuz.process.check.FolderInfo;
-import jamuz.IconBufferCover;
 import jamuz.IconBuffer;
+import jamuz.IconBufferCover;
 import jamuz.Jamuz;
+import jamuz.gui.swing.ListCellRendererSelector;
 import jamuz.gui.swing.ListElement;
+import jamuz.gui.swing.ListModelSelector;
+import jamuz.gui.swing.TableColumnModel;
+import jamuz.gui.swing.TableModel;
+import jamuz.player.Mplayer;
+import jamuz.process.check.FolderInfo;
+import jamuz.utils.Inter;
+import jamuz.utils.Popup;
+import jamuz.utils.ProcessAbstract;
+import jamuz.utils.Swing;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JRadioButton;
@@ -36,16 +46,6 @@ import javax.swing.SortOrder;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.TableRowSorter;
-import jamuz.gui.swing.ListModelSelector;
-import jamuz.gui.swing.ListCellRendererSelector;
-import jamuz.gui.swing.TableColumnModel;
-import jamuz.gui.swing.TableModel;
-import jamuz.player.Mplayer;
-import jamuz.utils.Inter;
-import jamuz.utils.Popup;
-import jamuz.utils.ProcessAbstract;
-import jamuz.utils.Swing;
-import javax.swing.DefaultComboBoxModel;
 
 /**
  *

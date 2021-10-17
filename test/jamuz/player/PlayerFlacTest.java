@@ -20,10 +20,10 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.kc7bfi.jflac.metadata.StreamInfo;
 import org.kc7bfi.jflac.util.ByteData;
 

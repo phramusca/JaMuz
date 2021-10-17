@@ -17,11 +17,11 @@
 package jamuz.process.book;
 
 import jamuz.gui.swing.TableModelGeneric;
-import java.util.ArrayList;
-import java.util.List;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 
 /**

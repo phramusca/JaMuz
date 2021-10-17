@@ -17,13 +17,6 @@
 
 package jamuz;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import java.awt.Graphics2D;
@@ -31,8 +24,15 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.swing.GrayFilter;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 //FIXME Z Looks like there is only one repo for both tags and genre => Split
 // So that "Classique" and "Musical" are no more mixed

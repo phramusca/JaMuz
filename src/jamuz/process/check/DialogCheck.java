@@ -17,34 +17,34 @@
 
 package jamuz.process.check;
 
-import jamuz.Jamuz;
 import jamuz.IconBuffer;
+import jamuz.Jamuz;
 import jamuz.gui.PanelCover;
 import jamuz.gui.PanelMain;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import javax.swing.JOptionPane;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.WrapLayout;
 import jamuz.utils.Inter;
 import jamuz.utils.Swing;
 import jamuz.utils.Utils;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 /**
  *

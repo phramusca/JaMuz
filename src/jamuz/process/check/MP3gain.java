@@ -18,20 +18,20 @@
 package jamuz.process.check;
 
 import jamuz.Jamuz;
+import jamuz.gui.swing.ProgressBar;
+import jamuz.utils.Inter;
+import jamuz.utils.OS;
 import jamuz.utils.Popup;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import org.apache.commons.io.FilenameUtils;
-import jamuz.gui.swing.ProgressBar;
-import jamuz.utils.Inter;
-import jamuz.utils.OS;
-import java.text.MessageFormat;
 import java.util.logging.Logger;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * MP3gain class launches mp3gain executable to compute ReplayGain on MP3 files

@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package tests.functional;
-import test.helpers.AlbumBuffer;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.PanelCheck;
 import jamuz.process.check.ProcessCheck.Action;
 import jamuz.utils.ImageUtils;
-import test.helpers.TestProcessHelper;
-import test.helpers.Settings;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Test;
+import test.helpers.AlbumBuffer;
+import test.helpers.Settings;
+import test.helpers.TestProcessHelper;
 
 /**
  *

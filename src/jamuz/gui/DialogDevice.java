@@ -17,16 +17,16 @@
 
 package jamuz.gui;
 
-import jamuz.process.sync.Device;
 import jamuz.Jamuz;
 import jamuz.Playlist;
-import java.io.File;
-import jamuz.utils.Popup;
-import javax.swing.DefaultComboBoxModel;
-import org.apache.commons.io.FilenameUtils;
+import jamuz.process.sync.Device;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import jamuz.utils.Swing;
 import java.awt.Dialog;
+import java.io.File;
+import javax.swing.DefaultComboBoxModel;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * JDialog extension to add/modify Stat source

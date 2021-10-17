@@ -16,19 +16,6 @@
  */
 package tests.functional;
 
-import jamuz.utils.FileSystem;
-import jamuz.utils.XML;
-import java.io.File;
-import java.util.ArrayList;
-import org.musicbrainz.MBWS2Exception;
-import org.musicbrainz.controller.Release;
-import org.musicbrainz.model.TagWs2;
-import org.musicbrainz.model.entity.ReleaseWs2;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )

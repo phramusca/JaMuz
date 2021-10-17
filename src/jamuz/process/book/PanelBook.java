@@ -17,10 +17,19 @@
 
 package jamuz.process.book;
 
-import jamuz.process.video.*;
-import jamuz.process.check.FolderInfoResult;
 import jamuz.Jamuz;
+import jamuz.gui.swing.PopupListener;
+import jamuz.gui.swing.ProgressBar;
+import jamuz.gui.swing.TriStateCheckBox;
+import jamuz.gui.swing.TriStateCheckBox.State;
+import jamuz.process.check.FolderInfoResult;
+import jamuz.process.video.*;
+import jamuz.utils.Desktop;
+import jamuz.utils.Inter;
+import jamuz.utils.Popup;
+import jamuz.utils.StringManager;
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,32 +48,22 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
-import jamuz.gui.swing.PopupListener;
-import jamuz.gui.swing.ProgressBar;
-import jamuz.gui.swing.TriStateCheckBox;
-import jamuz.gui.swing.TriStateCheckBox.State;
-import jamuz.utils.Desktop;
-import jamuz.utils.Inter;
-import jamuz.utils.Popup;
-import jamuz.utils.StringManager;
-import java.awt.Frame;
-import java.util.stream.Collectors;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *

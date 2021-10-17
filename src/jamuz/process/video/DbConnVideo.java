@@ -17,20 +17,20 @@
 
 package jamuz.process.video;
 
-import jamuz.process.video.FileInfoVideo.StreamDetails;
-import jamuz.Jamuz;
 import jamuz.DbConn;
 import jamuz.DbInfo;
+import jamuz.Jamuz;
+import jamuz.process.video.FileInfoVideo.StreamDetails;
 import jamuz.utils.Popup;
+import jamuz.utils.StringManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.logging.Level;
-import jamuz.utils.StringManager;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 import org.apache.commons.lang3.SerializationUtils;
 
 /**

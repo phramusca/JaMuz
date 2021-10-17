@@ -17,8 +17,6 @@
 
 package jamuz.process.check;
 
-import jamuz.process.check.Cover;
-
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )

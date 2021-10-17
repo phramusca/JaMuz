@@ -17,25 +17,25 @@
 
 package jamuz.process.check;
 
-import jamuz.utils.ProcessAbstract;
-import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
-import jamuz.utils.Inter;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import org.apache.commons.io.FilenameUtils;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.process.check.FolderInfo.CheckedFlag;
 import static jamuz.process.check.PanelCheck.enableRowSorter;
 import jamuz.utils.Benchmark;
+import jamuz.utils.Inter;
+import jamuz.utils.Popup;
+import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import java.awt.Color;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Check process class

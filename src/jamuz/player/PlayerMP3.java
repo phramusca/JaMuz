@@ -17,10 +17,9 @@
 
 package jamuz.player;
 
-import jamuz.gui.PanelMain;
 import jamuz.gui.PanelLyrics;
-import jamuz.utils.Popup;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;

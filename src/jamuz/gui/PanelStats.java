@@ -17,10 +17,14 @@
 
 package jamuz.gui;
 
-import jamuz.gui.swing.PanelPieChart;
 import jamuz.DbConnJaMuz.StatItem;
-import jamuz.process.check.FolderInfo;
 import jamuz.Jamuz;
+import jamuz.gui.swing.PanelPieChart;
+import jamuz.gui.swing.TableModel;
+import jamuz.process.check.FolderInfo;
+import jamuz.utils.Inter;
+import jamuz.utils.Popup;
+import jamuz.utils.StringManager;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -35,10 +39,6 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
-import jamuz.gui.swing.TableModel;
-import jamuz.utils.Inter;
-import jamuz.utils.Popup;
-import jamuz.utils.StringManager;
 
 /**
  *

@@ -18,8 +18,8 @@
 package jamuz.gui.swing;
 
 import java.awt.event.*;
-import javax.swing.*;
 import java.beans.*;
+import javax.swing.*;
 
 /**
  *  This class listens for changes made to the data in the table via the

@@ -16,15 +16,12 @@
  */
 package jamuz.utils;
 
-import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  *

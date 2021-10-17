@@ -25,17 +25,19 @@
 
 package jamuz.process.merge;
 
-import jamuz.utils.LogText;
-import jamuz.StatSourceAbstract;
 import jamuz.DbConnJaMuz;
 import jamuz.DbInfo;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
+import jamuz.StatSourceAbstract;
 import jamuz.gui.swing.ProgressBar;
-import jamuz.utils.ProcessAbstract;
-import jamuz.utils.Popup;
+import jamuz.utils.DateTime;
 import jamuz.utils.Inter;
+import jamuz.utils.LogText;
+import jamuz.utils.Popup;
+import jamuz.utils.ProcessAbstract;
+import jamuz.utils.Utils;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -44,10 +46,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.logging.Level;
-import jamuz.utils.DateTime;
-import jamuz.utils.Utils;
 import java.util.Optional;
+import java.util.logging.Level;
 
 /**
  *

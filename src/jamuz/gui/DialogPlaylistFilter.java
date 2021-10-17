@@ -17,9 +17,8 @@
 
 package jamuz.gui;
 
-import jamuz.Playlist;
-import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.Jamuz;
+import jamuz.Playlist;
 import jamuz.Playlist.Field;
 import static jamuz.Playlist.Field.ALBUM;
 import static jamuz.Playlist.Field.ALBUMARTIST;
@@ -33,13 +32,13 @@ import static jamuz.Playlist.Field.TITLE;
 import static jamuz.Playlist.Field.TRACKNO;
 import static jamuz.Playlist.Field.YEAR;
 import jamuz.Playlist.Filter;
+import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.process.check.FolderInfo.CopyRight;
 import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.Toolkit;
-import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 
 /**

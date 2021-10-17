@@ -17,14 +17,14 @@
 
 package jamuz.process.merge;
 
-import jamuz.StatSourceSQL;
-import jamuz.FileInfo;
 import jamuz.DbInfo;
+import jamuz.FileInfo;
 import jamuz.Jamuz;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import jamuz.StatSourceSQL;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 

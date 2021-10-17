@@ -18,10 +18,10 @@ package jamuz.process.video;
 
 import jamuz.FileInfo;
 import jamuz.Jamuz;
-import java.util.ArrayList;
-import java.util.List;
 import jamuz.utils.StringManager;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 
 /**

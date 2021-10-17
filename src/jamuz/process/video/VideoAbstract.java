@@ -17,19 +17,19 @@
 package jamuz.process.video;
 
 import jamuz.FileInfo;
-import jamuz.process.check.FolderInfo;
 import jamuz.Jamuz;
 import jamuz.gui.swing.FileSizeComparable;
+import jamuz.process.check.FolderInfo;
+import jamuz.utils.FileSystem;
+import jamuz.utils.Inter;
+import jamuz.utils.SSH;
+import jamuz.utils.StringManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import javax.swing.ImageIcon;
 import org.apache.commons.io.FilenameUtils;
-import jamuz.utils.FileSystem;
-import jamuz.utils.Inter;
-import jamuz.utils.SSH;
-import jamuz.utils.StringManager;
 
 /**
  *

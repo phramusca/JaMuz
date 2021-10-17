@@ -22,13 +22,12 @@ import de.umass.lastfm.Album;
 import de.umass.lastfm.Artist;
 import de.umass.lastfm.ImageSize;
 import jamuz.Jamuz;
-import jamuz.Options;
 import jamuz.process.check.Cover.CoverType;
+import jamuz.process.check.ReleaseMatch.Track;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import jamuz.process.check.ReleaseMatch.Track;
 
 /**
  * Last.fm release class

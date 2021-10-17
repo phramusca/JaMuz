@@ -23,9 +23,12 @@ import jamuz.Jamuz;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.process.check.PanelCheck;
-import jamuz.process.sync.Device;
 import jamuz.process.check.ReleaseMatch;
 import jamuz.process.merge.StatSource;
+import jamuz.process.sync.Device;
+import jamuz.utils.DateTime;
+import jamuz.utils.Inter;
+import jamuz.utils.StringManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import org.junit.Assert;
 import org.apache.commons.io.FileExistsException;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -43,10 +45,8 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
+import org.junit.Assert;
 import org.musicbrainz.MBWS2Exception;
-import jamuz.utils.DateTime;
-import jamuz.utils.Inter;
-import jamuz.utils.StringManager;
 
 /**
  *

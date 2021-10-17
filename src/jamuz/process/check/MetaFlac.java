@@ -17,12 +17,12 @@
 
 package jamuz.process.check;
 
+import jamuz.utils.OS;
 import jamuz.utils.Popup;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import jamuz.utils.OS;
 import org.apache.commons.io.FilenameUtils;
 
 /**

@@ -18,10 +18,10 @@
 package jamuz.gui;
 
 import jamuz.FileInfoInt;
+import jamuz.utils.Inter;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import jamuz.utils.Inter;
 
 /**
  *

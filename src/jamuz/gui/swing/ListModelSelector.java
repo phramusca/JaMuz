@@ -17,11 +17,11 @@
 package jamuz.gui.swing;
 
 import jamuz.IconBufferCover;
+import jamuz.utils.Popup;
+import jamuz.utils.ProcessAbstract;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.DefaultListModel;
-import jamuz.utils.Popup;
-import jamuz.utils.ProcessAbstract;
 
 /**
  *

@@ -19,16 +19,16 @@ package jamuz.process.book;
 
 import jamuz.DbInfo;
 import jamuz.Jamuz;
-import java.io.File;
-import jamuz.utils.Popup;
-import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
+import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Video process class

@@ -18,10 +18,10 @@
 package jamuz.process.book;
 
 import jamuz.gui.swing.TriStateCheckBox;
-import javax.swing.RowFilter;
 import jamuz.gui.swing.TriStateCheckBox.State;
 import jamuz.utils.Inter;
 import java.util.List;
+import javax.swing.RowFilter;
 
 /**
  *

@@ -17,9 +17,9 @@
 package jamuz.process.check;
 
 import jamuz.gui.swing.TableModelGeneric;
+import jamuz.utils.Inter;
 import java.util.ArrayList;
 import java.util.List;
-import jamuz.utils.Inter;
 
 /**
  *

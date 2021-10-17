@@ -17,6 +17,11 @@
 
 package jamuz;
 
+import jamuz.utils.DateTime;
+import jamuz.utils.FileSystem;
+import jamuz.utils.Ftp;
+import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -25,11 +30,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.logging.Level;
-import jamuz.utils.DateTime;
-import jamuz.utils.FileSystem;
-import jamuz.utils.Ftp;
-import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 
 /**
  *

@@ -19,13 +19,13 @@ package test.helpers;
 
 import jamuz.Jamuz;
 import jamuz.Option;
-import jamuz.process.merge.StatSource;
 import jamuz.gui.PanelMain;
+import jamuz.process.merge.StatSource;
+import jamuz.utils.FileSystem;
+import jamuz.utils.Inter;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
-import jamuz.utils.FileSystem;
-import jamuz.utils.Inter;
 import org.apache.commons.io.FilenameUtils;
 
 /**

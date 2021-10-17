@@ -18,11 +18,11 @@
 package jamuz.process.book;
 
 import jamuz.Jamuz;
-import java.io.File;
-import javax.swing.JTextField;
 import jamuz.utils.Inter;
 import jamuz.utils.Swing;
 import java.awt.Frame;
+import java.io.File;
+import javax.swing.JTextField;
 
 /**
  *

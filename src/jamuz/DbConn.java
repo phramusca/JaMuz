@@ -17,8 +17,8 @@
 
 package jamuz;
 
-import jamuz.utils.Popup;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import java.sql.*;
 import java.util.logging.Level;
 import org.sqlite.SQLiteConfig;

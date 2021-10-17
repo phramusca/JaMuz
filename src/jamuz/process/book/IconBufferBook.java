@@ -19,12 +19,12 @@ package jamuz.process.book;
 
 import jamuz.Jamuz;
 import jamuz.utils.ImageUtils;
+import jamuz.utils.Popup;
+import jamuz.utils.StringManager;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import jamuz.utils.Popup;
-import jamuz.utils.StringManager;
 
 /**
  *

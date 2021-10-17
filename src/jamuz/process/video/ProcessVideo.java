@@ -19,19 +19,19 @@ package jamuz.process.video;
 
 import jamuz.DbInfo;
 import jamuz.Jamuz;
+import jamuz.utils.FileSystem;
+import jamuz.utils.Inter;
+import jamuz.utils.Popup;
+import jamuz.utils.ProcessAbstract;
+import jamuz.utils.SSH;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-import jamuz.utils.Popup;
 import java.util.HashMap;
-import java.util.Map;
-import org.apache.commons.io.FilenameUtils;
-import jamuz.utils.FileSystem;
-import jamuz.utils.SSH;
-import jamuz.utils.Inter;
-import jamuz.utils.ProcessAbstract;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Video process class

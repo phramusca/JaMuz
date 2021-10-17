@@ -16,19 +16,24 @@
  */
 package jamuz;
 
-import jamuz.process.sync.Device;
-import jamuz.process.check.FolderInfo;
-import jamuz.process.merge.StatSource;
-import jamuz.process.check.FolderInfo.CheckedFlag;
-import jamuz.process.check.FolderInfoResult;
-import jamuz.gui.swing.ListElement;
 import jamuz.Playlist.Field;
 import jamuz.Playlist.Filter;
 import jamuz.Playlist.Operator;
 import jamuz.Playlist.Order;
+import jamuz.gui.swing.ListElement;
 import jamuz.process.check.DuplicateInfo;
+import jamuz.process.check.FolderInfo;
+import jamuz.process.check.FolderInfo.CheckedFlag;
+import jamuz.process.check.FolderInfoResult;
 import jamuz.process.check.ReplayGain.GainValues;
+import jamuz.process.merge.StatSource;
+import jamuz.process.sync.Device;
 import jamuz.remote.ClientInfo;
+import jamuz.utils.DateTime;
+import jamuz.utils.Inter;
+import jamuz.utils.Popup;
+import jamuz.utils.StringManager;
+import java.awt.Color;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,18 +43,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import javax.swing.DefaultListModel;
 import org.apache.commons.io.FilenameUtils;
-import jamuz.utils.DateTime;
-import jamuz.utils.Inter;
-import jamuz.utils.Popup;
-import jamuz.utils.StringManager;
-import java.awt.Color;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Creates a new dbConn.connection to JaMuz database

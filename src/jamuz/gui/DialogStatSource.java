@@ -18,22 +18,22 @@
 package jamuz.gui;
 
 import jamuz.DbInfo;
-import jamuz.process.sync.Device;
 import jamuz.Jamuz;
 import jamuz.process.merge.StatSource;
 import jamuz.process.merge.StatSourceKodi;
 import jamuz.process.merge.StatSourceMixxx;
+import jamuz.process.sync.Device;
 import jamuz.utils.FileSystem;
-import jamuz.utils.Popup;
-import javax.swing.DefaultComboBoxModel;
-import org.apache.commons.io.FilenameUtils;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
+import jamuz.utils.Popup;
 import jamuz.utils.XML;
 import java.awt.Dialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import org.apache.commons.io.FilenameUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

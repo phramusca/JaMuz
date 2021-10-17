@@ -18,13 +18,12 @@ package jamuz.process.check;
 
 import java.awt.Dimension;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

@@ -19,17 +19,15 @@ package jamuz.gui;
 import jamuz.FileInfoInt;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
-import java.awt.Dimension;
 import java.util.List;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JTable;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

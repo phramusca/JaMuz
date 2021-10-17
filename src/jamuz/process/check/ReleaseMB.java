@@ -19,13 +19,13 @@
 
 package jamuz.process.check;
 
-import jamuz.process.check.Cover.CoverType;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.process.check.Cover.CoverType;
+import jamuz.process.check.ReleaseMatch.Track;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import jamuz.process.check.ReleaseMatch.Track;
 import java.util.logging.Level;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.musicbrainz.controller.Release;

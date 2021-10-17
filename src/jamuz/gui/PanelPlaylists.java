@@ -25,13 +25,6 @@ import jamuz.Playlist.Field;
 import jamuz.Playlist.Filter;
 import jamuz.Playlist.LimitUnit;
 import jamuz.Playlist.Match;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Inter;
@@ -39,6 +32,13 @@ import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
 /**
  *

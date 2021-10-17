@@ -20,14 +20,14 @@ package jamuz.process.check;
 import de.umass.lastfm.Album;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.utils.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import org.musicbrainz.MBWS2Exception;
 import org.musicbrainz.controller.Release;
-import org.musicbrainz.model.entity.ReleaseWs2;
-import jamuz.utils.DateTime;
 import org.musicbrainz.model.RatingsWs2;
+import org.musicbrainz.model.entity.ReleaseWs2;
 
 /**
  * Match release class. Can be Last.fm, MusicBrainz or Original

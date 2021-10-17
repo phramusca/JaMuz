@@ -20,15 +20,6 @@ package jamuz.process.check;
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
 import jamuz.gui.PanelMain;
-import java.awt.event.ItemEvent;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JTable;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableRowSorter;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.WrapLayout;
 import jamuz.process.check.ProcessCheck.CheckType;
@@ -38,9 +29,18 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.event.ItemEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 /**
  *

@@ -16,18 +16,15 @@
  */
 package jamuz.remote;
 
-import jamuz.FileInfo;
 import jamuz.FileInfoInt;
-import java.util.ArrayList;
-import java.util.Map;
 import javax.swing.JFrame;
 import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

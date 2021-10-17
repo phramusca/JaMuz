@@ -17,8 +17,8 @@
 
 package jamuz;
 
-import jamuz.process.sync.Device;
 import jamuz.process.merge.StatSource;
+import jamuz.process.sync.Device;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;

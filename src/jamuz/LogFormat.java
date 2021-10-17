@@ -17,12 +17,12 @@
 
 package jamuz;
 
+import jamuz.utils.DateTime;
 import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import jamuz.utils.DateTime;
 
 /**
  * A Formatter extension for current application

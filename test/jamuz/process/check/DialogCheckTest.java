@@ -17,20 +17,13 @@
 package jamuz.process.check;
 
 import java.awt.Color;
-import java.awt.Dialog;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
-import java.awt.image.ColorModel;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

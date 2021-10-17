@@ -18,6 +18,13 @@
 package jamuz.process.check;
 
 import jamuz.Jamuz;
+import jamuz.gui.swing.ListRendererCover;
+import jamuz.gui.swing.ProgressBar;
+import jamuz.gui.swing.SortedListModel;
+import jamuz.utils.ClipboardImage;
+import jamuz.utils.Desktop;
+import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.MouseInfo;
@@ -26,13 +33,6 @@ import java.awt.PointerInfo;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import jamuz.gui.swing.ListRendererCover;
-import jamuz.gui.swing.ProgressBar;
-import jamuz.gui.swing.SortedListModel;
-import jamuz.utils.ClipboardImage;
-import jamuz.utils.Desktop;
-import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 
 /**
  * A JDialog extension to select an album cover.

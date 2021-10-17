@@ -20,9 +20,9 @@
 
 package jamuz.player;
 
-import jamuz.gui.PanelLyrics;
-import jamuz.gui.PanelMain;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,16 +30,10 @@ import java.util.List;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import org.kc7bfi.jflac.PCMProcessor;
-import org.kc7bfi.jflac.FLACDecoder;
-import org.kc7bfi.jflac.metadata.StreamInfo;
-import org.kc7bfi.jflac.util.ByteData;
-import jamuz.utils.Popup;
-import java.io.File;
-import javax.sound.sampled.LineEvent;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -47,6 +41,10 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagException;
+import org.kc7bfi.jflac.FLACDecoder;
+import org.kc7bfi.jflac.PCMProcessor;
+import org.kc7bfi.jflac.metadata.StreamInfo;
+import org.kc7bfi.jflac.util.ByteData;
 
 /**
 * Play a FLAC file application.

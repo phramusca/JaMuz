@@ -19,12 +19,12 @@ package jamuz.process.video;
 
 import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.MovieDb;
-import jamuz.process.video.FileInfoVideo.StreamDetails;
 import jamuz.process.check.FolderInfo;
+import jamuz.process.video.FileInfoVideo.StreamDetails;
 import jamuz.process.video.ProcessVideo.PathBuffer;
-import java.util.ArrayList;
 import jamuz.utils.SSH;
 import jamuz.utils.StringManager;
+import java.util.ArrayList;
 
 /**
  * Video file information class

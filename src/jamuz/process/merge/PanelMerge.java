@@ -17,18 +17,11 @@
 
 package jamuz.process.merge;
 
-import jamuz.gui.swing.CheckBoxListItem;
 import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.gui.DialogOptions;
 import jamuz.gui.PanelOptions;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.DefaultListModel;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableRowSorter;
+import jamuz.gui.swing.CheckBoxListItem;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Desktop;
@@ -36,6 +29,13 @@ import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import java.awt.Frame;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 //TODO: Display lastMergeDate in jListMerge: <Source name> (<lastMergeDate or BETTER formatted interval ex: a week ago, 3 hours ago, ...)>)
 /**
  *

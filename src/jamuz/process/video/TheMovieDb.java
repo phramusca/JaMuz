@@ -35,12 +35,12 @@ import info.movito.themoviedbapi.model.tv.TvSeason;
 import info.movito.themoviedbapi.model.tv.TvSeries;
 import jamuz.DbInfo;
 import jamuz.Jamuz;
+import jamuz.utils.Popup;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import jamuz.utils.Popup;
 
 //http://jcenter.bintray.com/info/movito/themoviedbapi/1.6/
 

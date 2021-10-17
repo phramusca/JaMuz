@@ -18,9 +18,9 @@
 package jamuz.gui;
 
 import jamuz.FileInfoInt;
-import javax.swing.DefaultListModel;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
+import javax.swing.DefaultListModel;
 
 /**
  *

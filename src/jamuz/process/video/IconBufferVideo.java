@@ -19,14 +19,14 @@ package jamuz.process.video;
 
 import jamuz.Jamuz;
 import jamuz.utils.ImageUtils;
+import jamuz.utils.Popup;
+import jamuz.utils.StringManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import jamuz.utils.Popup;
-import jamuz.utils.StringManager;
 
 
 

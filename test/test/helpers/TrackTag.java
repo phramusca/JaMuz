@@ -22,14 +22,14 @@ import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.ReplayGain.GainValues;
+import jamuz.utils.DateTime;
+import jamuz.utils.FileSystem;
 import java.io.IOException;
+import java.util.Date;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
-import jamuz.utils.DateTime;
-import jamuz.utils.FileSystem;
-import java.util.Date;
 
 /**
  *
