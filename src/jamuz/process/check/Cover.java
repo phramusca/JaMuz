@@ -308,7 +308,7 @@ public class Cover implements java.lang.Comparable {
         int otherSize=otherWidth*otherHeight; 
         
         int maxSize=this.sizeMax;
-        maxSize=maxSize*maxSize;
+        maxSize *= maxSize;
         
         if(size>maxSize) return 1;
         if(otherSize>maxSize) return -1;

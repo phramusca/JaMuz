@@ -873,7 +873,7 @@ public class FolderInfo implements java.lang.Comparable {
 			for(FileInfoInt audioFile : filesAudio) {
 				mean+=audioFile.getNbCovers();
 			}
-			mean=mean/filesAudio.size();
+			mean /= filesAudio.size();
 			if(mean<1) {
 				//Some files do not have a cover
 				results.get("cover").setKO();  //NOI18N
@@ -1091,7 +1091,7 @@ public class FolderInfo implements java.lang.Comparable {
 			progressBar.setIndeterminate(Inter.get("Msg.Check.AnalyzingFolder")); //NOI18N
             
 			//Analyse mean BITRATE
-			meanBitRate = meanBitRate / filesAudio.size();
+			meanBitRate /= filesAudio.size();
 			//TODO: Looks like (to be further analysed) that ogg have lower bitrates
 			//at least with my test convertion of WMA 128, which results to a mean bitrate of 82 (74 to 93)
 			if(meanBitRate<128) {
@@ -1179,7 +1179,7 @@ public class FolderInfo implements java.lang.Comparable {
             return matchesL.get(matchId);
         }
         else {
-            matchId=matchId-matchesL.size();
+            matchId -= matchesL.size();
             if(matchId < originals.size()) {
                 return originals.get(matchId);
             }

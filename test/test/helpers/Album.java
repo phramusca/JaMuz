@@ -803,7 +803,7 @@ public final class Album {
                 trackStr="["+track.getDiscNo()+"-"+track.getDiscTotal()+"] - ";  //NOI18N
             }
             if(track.getTrackNo()>0) {
-                trackStr=trackStr+FolderInfoResult.formatNumber(track.getTrackNo());
+                trackStr += FolderInfoResult.formatNumber(track.getTrackNo());
             }
 
             filename += trackStr+" ";

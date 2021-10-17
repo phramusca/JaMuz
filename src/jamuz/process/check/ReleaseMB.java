@@ -114,11 +114,11 @@ public class ReleaseMB {
 						for(MediumWs2 medium : mediums) {
 							score=releaseResultWs2.getScore();
 							if(medium.getTracksCount()!=nbAudioFiles) {
-								score=score-20;
+								score -= 20;
 							}
 							if((discNb>0 && discTotal>0)
 									&& !(discNb==discNo && discTotal==discTotalMatch)) {
-								score=score-20;
+								score -= 20;
 							}
 							myMatch = new ReleaseMatch(releaseWs2, 
 									score, 
@@ -134,7 +134,7 @@ public class ReleaseMB {
 
 					score=releaseResultWs2.getScore();
 					if(releaseWs2.getTracksCount()!=nbAudioFiles) {
-						score=score-20;
+						score -= 20;
 					}
 
 					myMatch = new ReleaseMatch(releaseWs2, score, discTotalMatch, idPath);

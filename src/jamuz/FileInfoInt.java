@@ -1092,7 +1092,7 @@ public class FileInfoInt extends FileInfo {
 			trackStr="["+discNo+"-"+discTotal+"] - ";  //NOI18N
 		}
 		if(this.trackNo>0) {
-			trackStr=trackStr+FolderInfoResult.formatNumber(trackNo);
+			trackStr += FolderInfoResult.formatNumber(trackNo);
 		}
 		strResult=strResult.replace("%track%", trackStr);  //NOI18N
 		

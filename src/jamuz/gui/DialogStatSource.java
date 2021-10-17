@@ -255,7 +255,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 			int idLastSeparator=FilenameUtils.indexOfLastSeparator(rootPath);
 			if(idLastSeparator+1<rootPath.length() && idLastSeparator>-1) {
 				String separator=rootPath.substring(idLastSeparator, idLastSeparator+1);
-				rootPath=rootPath+separator;
+				rootPath += separator;
 			}
 			this.statSource.getSource().setRootPath(rootPath);
 			this.statSource.setIdStatement(jComboBoxType.getSelectedIndex()+1);
