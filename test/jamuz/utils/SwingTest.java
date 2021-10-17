@@ -27,34 +27,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class SwingTest {
-	
+
 	/**
 	 *
 	 */
 	public SwingTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -142,5 +142,5 @@ public class SwingTest {
 //		assertEquals(expResult, result);
 		//GUI. Cannot test => Manually validated
 	}
-	
+
 }

@@ -47,34 +47,31 @@ import test.helpers.Settings;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class DbConnJaMuzTest {
-	
+
 	// <editor-fold defaultstate="collapsed" desc="Test Setup & Cleanup">
-	
 	public DbConnJaMuzTest() {
 	}
-	
+
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		Settings.setupApplication();
 //        Jamuz.getMachine().read();
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	@Before
 	public void setUp() throws Exception {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
-	
+
 	// </editor-fold>
-	
 	// <editor-fold defaultstate="collapsed" desc="Setup">
-	
 	/**
 	 * Test of setUp method, of class DbConnJaMuz.
 	 */
@@ -96,17 +93,15 @@ public class DbConnJaMuzTest {
 		System.out.println("tearDown");
 		// This does nothing anyway. No test
 	}
-	
+
 	// </editor-fold>
-	
 	// <editor-fold defaultstate="collapsed" desc="Genre">
-	
 	/**
 	 * Test of genre methods, of class DbConnJaMuz.
 	 */
 	@Test
 	public void testGenre() {
-		
+
 		System.out.println("getGenreList");
 
 		ArrayList<String> expectedGenres = new ArrayList<>();
@@ -131,45 +126,45 @@ public class DbConnJaMuzTest {
 		expectedGenres.add("Ska");
 		expectedGenres.add("Ska Punk");
 		expectedGenres.add("Soul");
-		expectedGenres.add("Trip Hop");	
+		expectedGenres.add("Trip Hop");
 		checkGenreList(expectedGenres);
-		
+
 		assertTrue("updateGenre", Jamuz.getDb().updateGenre("Reggae", "Toto"));
 		expectedGenres.set(13, "Toto");
 		checkGenreList(expectedGenres);
-		
+
 		assertTrue("deleteGenre", Jamuz.getDb().deleteGenre("Toto"));
 		expectedGenres.remove("Toto");
 		checkGenreList(expectedGenres);
-		
+
 		assertTrue("insertGenre", Jamuz.getDb().insertGenre("Reggae"));
 		expectedGenres.add("Reggae");
 		checkGenreList(expectedGenres);
-		
+
 		assertTrue("checkGenre", Jamuz.getDb().checkGenre("Reggae"));
-		
+
 		//Negative cases
 		assertFalse("updateGenre negative", Jamuz.getDb().updateGenre("NoSuchWeirdGenre", "Toto"));
 		checkGenreList(expectedGenres);
-		
+
 		assertFalse("deleteGenre negative", Jamuz.getDb().deleteGenre("NoSuchWeirdGenre"));
 		checkGenreList(expectedGenres);
-		
+
 		assertFalse("insertGenre negative", Jamuz.getDb().insertGenre("Reggae")); //As duplicate
 		checkGenreList(expectedGenres);
-		
+
 		assertFalse("checkGenre negative", Jamuz.getDb().checkGenre("NoSuchWeirdGenre"));
-		
+
 		//FIXME TEST Check other constraints
 	}
-	
+
 	private void checkGenreList(ArrayList<String> expectedGenres) {
 		DefaultListModel myListModel = new DefaultListModel();
 		Jamuz.getDb().getGenreListModel(myListModel);
 		Collections.sort(expectedGenres);
 		assertArrayEquals(expectedGenres.toArray(), myListModel.toArray());
 	}
-	
+
 	@Test
 	@Ignore //Refer to testGenre() above
 	public void testUpdateGenre_String_String() {
@@ -183,6 +178,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	@Test
 	@Ignore //Refer to testGenre() above
 	public void testDeleteGenre() {
@@ -195,6 +191,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	@Test
 	@Ignore //Refer to testGenre() above
 	public void testInsertGenre() {
@@ -207,6 +204,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	@Test
 	@Ignore //Refer to testGenre() above
 	public void testCheckGenre() {
@@ -219,6 +217,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	@Test
 	@Ignore //Refer to testGenre() above
 	public void testUpdateGenre_FileInfoInt() {
@@ -231,6 +230,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	@Test
 	@Ignore //Refer to testGenre() above
 	public void testGetGenreListModel() {
@@ -241,64 +241,61 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	// </editor-fold>
-		
 	// <editor-fold defaultstate="collapsed" desc="Tag">
-	
 	/**
 	 * Test of tag methods, of class DbConnJaMuz.
 	 */
 	@Test
 	public void testTag() {
-		
+
 		System.out.println("getGenreList");
 
 		ArrayList<String> expectedTags = new ArrayList<>();
 		expectedTags.add("Calme");
 		expectedTags.add("Normal");
 		expectedTags.add("Joyeux");
-		for(String tag : expectedTags) {
+		for (String tag : expectedTags) {
 			assertTrue(Jamuz.getDb().insertTag(tag));
 		}
 		checkTagList(expectedTags);
-		
+
 		DefaultListModel myListModel = new DefaultListModel();
 		Jamuz.getDb().getTagListModel(myListModel);
 		assertArrayEquals(expectedTags.toArray(), myListModel.toArray());
-		
+
 		assertTrue("updateTag", Jamuz.getDb().updateTag("Normal", "Tutu"));
 		expectedTags.set(2, "Tutu");
 		checkTagList(expectedTags);
-				
+
 		assertTrue("deleteTag", Jamuz.getDb().deleteTag("Tutu"));
 		expectedTags.remove("Tutu");
 		checkTagList(expectedTags);
-		
+
 		assertTrue("insertTag", Jamuz.getDb().insertTag("Normal"));
 		expectedTags.add("Normal");
 		checkTagList(expectedTags);
-		
+
 		//Negative cases
 		assertFalse("updateTag negative", Jamuz.getDb().updateTag("NoSuchWeirdGenre", "Toto"));
 		checkTagList(expectedTags);
-		
+
 		assertFalse("deleteTag negative", Jamuz.getDb().deleteTag("NoSuchWeirdGenre"));
 		checkTagList(expectedTags);
-		
+
 		assertFalse("insertTag negative", Jamuz.getDb().insertTag("Normal")); //As duplicate
 		checkTagList(expectedTags);
-		
+
 		//FIXME TEST Check other constraints
-		
 	}
-	
+
 	private void checkTagList(ArrayList<String> expectedTags) {
 		ArrayList<String> actualList = Jamuz.getDb().getTags();
 		Collections.sort(expectedTags); // getTags() return sorted
 		assertArrayEquals(expectedTags.toArray(), actualList.toArray());
 	}
-	
+
 	@Test
 	@Ignore // Refer to testTag() above
 	public void testUpdateTag() {
@@ -312,6 +309,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	@Test
 	@Ignore // Refer to testTag() above
 	public void testInsertTag() {
@@ -324,6 +322,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	@Test
 	@Ignore // Refer to testTag() above
 	public void testDeleteTag() {
@@ -336,6 +335,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	@Test
 	@Ignore // Refer to testTag() above
 	public void testGetTagListModel() {
@@ -346,6 +346,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	@Test
 	@Ignore // Refer to testTag() above
 	public void testGetTags_0args() {
@@ -357,34 +358,32 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	// </editor-fold>
-			
 	// <editor-fold defaultstate="collapsed" desc="Machine & Option">
-	
 	/**
 	 * Test of machine and option methods, of class DbConnJaMuz.
 	 */
 	@Test
 	public void testMachineAndOption() {
-	
+
 		//Create a new machine
-		StringBuilder zText = new StringBuilder ();
-		String machineName="000aaaa000"; //Hoping this this will be id 0 when sorted
+		StringBuilder zText = new StringBuilder();
+		String machineName = "000aaaa000"; //Hoping this this will be id 0 when sorted
 		assertTrue("isMachine", Jamuz.getDb().isMachine(machineName, zText, false));
-		
+
 		//Get machines
 		DefaultListModel defaultListModel = new DefaultListModel();
 		Jamuz.getDb().getMachineListModel(defaultListModel);
 		ListElement element = (ListElement) defaultListModel.get(0);
 		assertEquals(2, defaultListModel.size()); //The created one and current machine
-		assertEquals("<html><b>"+machineName+"</b><BR/><i>{null}</i></html>", element.toString());
+		assertEquals("<html><b>" + machineName + "</b><BR/><i>{null}</i></html>", element.toString());
 		assertEquals(machineName, element.getValue());
 		assertNull(element.getFile());
-		
+
 		//Get new machine options
 		ArrayList<Option> expectedOptions = new ArrayList<>();
-		int idMachine=2;
+		int idMachine = 2;
 		expectedOptions.add(new Option("location.library", "{Empty}", idMachine, 1, "path"));
 		expectedOptions.add(new Option("library.isMaster", "false", idMachine, 2, "bool"));
 		expectedOptions.add(new Option("location.add", "{Empty}", idMachine, 3, "path"));
@@ -400,51 +399,52 @@ public class DbConnJaMuzTest {
 		expectedOptions.add(new Option("files.convert", "wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3", idMachine, 13, "csv"));
 		expectedOptions.add(new Option("files.delete", "db,ini,txt,m3u,pls,htm,html,doc,nfo,url,sfv,wpl,sfk", idMachine, 14, "csv"));
 		expectedOptions.add(new Option("location.manual", "{Empty}", idMachine, 15, "path"));
-		
+
 		checkOptionList(machineName, expectedOptions);
-						
+
 		//Set description
 		String description = "Waouh the great description!";
 		assertTrue(Jamuz.getDb().updateMachine(idMachine, description));
-		zText = new StringBuilder ();
+		zText = new StringBuilder();
 		assertTrue("isMachine updated", Jamuz.getDb().isMachine(machineName, zText, false));
 		assertEquals(description, zText.toString());
 		defaultListModel = new DefaultListModel();
 		Jamuz.getDb().getMachineListModel(defaultListModel);
 		element = (ListElement) defaultListModel.get(0);
 		assertEquals(2, defaultListModel.size()); //The created one and current machine
-		assertEquals("<html><b>"+machineName+"</b><BR/><i>"+description+"</i></html>", element.toString());
+		assertEquals("<html><b>" + machineName + "</b><BR/><i>" + description + "</i></html>", element.toString());
 		assertEquals(machineName, element.getValue());
 		assertNull(element.getFile());
 
 		//Set options (one by one)
-		int i=0; String newValue;
-		for(Option expectedOption : expectedOptions) {
-			newValue="New value "+i;
+		int i = 0;
+		String newValue;
+		for (Option expectedOption : expectedOptions) {
+			newValue = "New value " + i;
 			Jamuz.getDb().updateOption(expectedOption, newValue);
 			if (expectedOption.getType().equals("path")) {   //NOI18N
-                newValue = FilenameUtils.normalizeNoEndSeparator(newValue.trim()) + File.separator;
-            }
+				newValue = FilenameUtils.normalizeNoEndSeparator(newValue.trim()) + File.separator;
+			}
 			expectedOption.setValue(newValue);
 		}
 		checkOptionList(machineName, expectedOptions);
-		
+
 		//Set options
-		i=0; 
-		for(Option expectedOption : expectedOptions) {
-			newValue="New New value "+(i+10);
+		i = 0;
+		for (Option expectedOption : expectedOptions) {
+			newValue = "New New value " + (i + 10);
 			expectedOption.setValue(newValue);
 		}
 		Machine machine = new Machine(machineName);
 		machine.setOptions(expectedOptions);
 		assertTrue(Jamuz.getDb().updateOptions(machine));
-		for(Option expectedOption : expectedOptions) {
+		for (Option expectedOption : expectedOptions) {
 			if (expectedOption.getType().equals("path")) {   //NOI18N
-                expectedOption.setValue(FilenameUtils.normalizeNoEndSeparator(expectedOption.getValue().trim()) + File.separator);
-            }
+				expectedOption.setValue(FilenameUtils.normalizeNoEndSeparator(expectedOption.getValue().trim()) + File.separator);
+			}
 		}
 		checkOptionList(machineName, expectedOptions);
-		
+
 		//Delete machine 
 		assertTrue(Jamuz.getDb().deleteMachine(machineName));
 		defaultListModel = new DefaultListModel();
@@ -453,18 +453,20 @@ public class DbConnJaMuzTest {
 		element = (ListElement) defaultListModel.get(0);
 		assertNull(element.getFile());
 		assertNotEquals(machineName, element.getValue());
-				
+
 		//FIXME TEST Negative cases
 		//FIXME TEST Check other constraints
 	}
-	
+
 	private void checkOptionList(String machineName, ArrayList<Option> expectedOptions) {
 		ArrayList<Option> options = new ArrayList<>();
 		assertTrue("getOptions", Jamuz.getDb().getOptions(options, machineName));
-		Option actualOption; int i=0;
-		for(Option expectedOption : expectedOptions) {
-			actualOption = options.get(i); i++;
-			assertEquals(expectedOption.getComment(), actualOption.getComment());		
+		Option actualOption;
+		int i = 0;
+		for (Option expectedOption : expectedOptions) {
+			actualOption = options.get(i);
+			i++;
+			assertEquals(expectedOption.getComment(), actualOption.getComment());
 			assertEquals(expectedOption.getIdOptionType(), actualOption.getIdOptionType());
 			assertEquals(expectedOption.getId(), actualOption.getId());
 			assertEquals(expectedOption.getIdMachine(), actualOption.getIdMachine());
@@ -473,7 +475,7 @@ public class DbConnJaMuzTest {
 			assertEquals(expectedOption.toString(), actualOption.toString());
 		}
 	}
-	
+
 	/**
 	 * Test of isMachine method, of class DbConnJaMuz.
 	 */
@@ -491,7 +493,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of updateMachine method, of class DbConnJaMuz.
 	 */
@@ -538,7 +540,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of setOptions method, of class DbConnJaMuz.
 	 */
@@ -588,23 +590,20 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
-	// </editor-fold>
 
+	// </editor-fold>
 	//FIXME !!!!! WHY DUPLICATES IN DB ??? => Track this using a query launched frequently
 	//One example: L'Africain de Tiken Jah. L'Africain avec 2 ' différents => après suppression d'un des 2 et renommage de l'autre comme le premier:
 	// => 2 versions de chaque fichier, mais les 2 avec le même idPath.
 	// Du coup un problème car l'ancienne version aurait juste du passer de deleted=1 a 0 et vice-versa
-	
 	//FIXME TEST ! Continue from here
 	// <editor-fold defaultstate="collapsed" desc="Playlist">
-	
-		/**
-		 * Test of tag methods, of class DbConnJaMuz.
-		 */
-		@Test
-		public void testPlaylists() {
-		
+	/**
+	 * Test of tag methods, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testPlaylists() {
+
 //		System.out.println("getGenreList");
 //
 //		ArrayList<String> expectedTags = new ArrayList<>();
@@ -641,11 +640,9 @@ public class DbConnJaMuzTest {
 //		
 //		assertFalse("insertTag negative", Jamuz.getDb().insertTag("Normal")); //As duplicate
 //		checkTagList(expectedTags);
-		
 		//FIXME TEST Check other constraints
-		
 	}
-	
+
 	/**
 	 * Test of updatePlaylist method, of class DbConnJaMuz.
 	 */
@@ -660,7 +657,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of insertPlaylist method, of class DbConnJaMuz.
 	 */
@@ -675,7 +672,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of deletePlaylist method, of class DbConnJaMuz.
 	 */
@@ -690,7 +687,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of getPlaylists method, of class DbConnJaMuz.
 	 */
@@ -707,9 +704,7 @@ public class DbConnJaMuzTest {
 	}
 
 	// </editor-fold>
-		
 	// <editor-fold defaultstate="collapsed" desc="StatSource">
-
 	/**
 	 * Test of getStatSources method, of class DbConnJaMuz.
 	 */
@@ -741,7 +736,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of deleteStatSource method, of class DbConnJaMuz.
 	 */
@@ -756,7 +751,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of getStatSource method, of class DbConnJaMuz.
 	 */
@@ -786,11 +781,9 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	// </editor-fold>
-	
 	// <editor-fold defaultstate="collapsed" desc="PlayCounter">
-	
 	/**
 	 * Test of setPreviousPlayCounter method, of class DbConnJaMuz.
 	 */
@@ -806,11 +799,9 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	// </editor-fold>
-	
 	// <editor-fold defaultstate="collapsed" desc="DeviceFile">
-	
 	/**
 	 * Test of insertDeviceFiles method, of class DbConnJaMuz.
 	 */
@@ -857,11 +848,9 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	// </editor-fold>
-	
 	// <editor-fold defaultstate="collapsed" desc="Device">
-	
 	/**
 	 * Test of deleteDevice method, of class DbConnJaMuz.
 	 */
@@ -877,7 +866,6 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
-	
 	/**
 	 * Test of getDevice method, of class DbConnJaMuz.
 	 */
@@ -924,11 +912,9 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	// </editor-fold>
-	
 	// <editor-fold defaultstate="collapsed" desc="Client">
-	
 	/**
 	 * Test of setClientInfo method, of class DbConnJaMuz.
 	 */
@@ -974,12 +960,8 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
-	
-	
 	// </editor-fold>
-	
 	// <editor-fold defaultstate="collapsed" desc="File">
-	
 	/**
 	 * Test of getYear method, of class DbConnJaMuz.
 	 */
@@ -1014,7 +996,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of insertTags method, of class DbConnJaMuz.
 	 */
@@ -1061,7 +1043,6 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
-	
 	/**
 	 * Test of updateRating method, of class DbConnJaMuz.
 	 */
@@ -1077,7 +1058,6 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
-	
 	/**
 	 * Test of setIdPath method, of class DbConnJaMuz.
 	 */
@@ -1093,9 +1073,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
-	
-	
+
 	/**
 	 * Test of updateFileModifDate method, of class DbConnJaMuz.
 	 */
@@ -1112,7 +1090,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of setFileDeleted method, of class DbConnJaMuz.
 	 */
@@ -1127,7 +1105,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of setFileSaved method, of class DbConnJaMuz.
 	 */
@@ -1142,7 +1120,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of getStatistics method, of class DbConnJaMuz.
 	 */
@@ -1158,7 +1136,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of getStatistics method, of class DbConnJaMuz.
 	 */
@@ -1173,7 +1151,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of updateStatistics method, of class DbConnJaMuz.
 	 */
@@ -1188,9 +1166,10 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of setUpdateStatisticsParameters method, of class DbConnJaMuz.
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@Test
@@ -1202,11 +1181,9 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
-	// </editor-fold>
 
+	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Path">
-	
 	/**
 	 * Test of getFolders method, of class DbConnJaMuz.
 	 */
@@ -1269,7 +1246,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of getIdPath method, of class DbConnJaMuz.
 	 */
@@ -1284,7 +1261,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of insertPath method, of class DbConnJaMuz.
 	 */
@@ -1322,7 +1299,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of updateCopyRight method, of class DbConnJaMuz.
 	 */
@@ -1338,6 +1315,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
+
 	/**
 	 * Test of setCheckedFlag method, of class DbConnJaMuz.
 	 */
@@ -1369,9 +1347,8 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 	// </editor-fold>
-	
+
 	// <editor-fold defaultstate="collapsed" desc="File & Path">
-	
 	/**
 	 * Test of getSelectionList4Stats method, of class DbConnJaMuz.
 	 */
@@ -1399,7 +1376,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of getFiles method, of class DbConnJaMuz.
 	 */
@@ -1463,7 +1440,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of setPathDeleted method, of class DbConnJaMuz.
 	 */
@@ -1478,7 +1455,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of fillSelectorList method, of class DbConnJaMuz.
 	 */
@@ -1503,7 +1480,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of getFiles method, of class DbConnJaMuz.
 	 */
@@ -1568,7 +1545,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of checkAlbumSimilar method, of class DbConnJaMuz.
 	 */
@@ -1656,11 +1633,9 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	// </editor-fold>
-		
 	// <editor-fold defaultstate="collapsed" desc="TagFile & File">
-	
 	/**
 	 * Test of setTags method, of class DbConnJaMuz.
 	 */
@@ -1676,7 +1651,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	/**
 	 * Test of getTags method, of class DbConnJaMuz.
 	 */
@@ -1708,7 +1683,6 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 	// </editor-fold>
-	
 }

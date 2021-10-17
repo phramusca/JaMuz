@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package test.helpers;
 
 import jamuz.utils.DateTime;
@@ -36,7 +35,7 @@ import org.jaudiotagger.tag.TagException;
  */
 public class TrackSourceRepo {
 
-    private static HashMap<String, TrackSource> sources = new HashMap<>();
+	private static HashMap<String, TrackSource> sources = new HashMap<>();
 
 	/**
 	 *
@@ -49,14 +48,14 @@ public class TrackSourceRepo {
 	 * @throws InvalidAudioFrameException
 	 */
 	public static TrackSource get(String filename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        if(!sources.containsKey(filename)) {
-            TrackSource source = new TrackSource("1min.mp3");
-            sources.put(filename, source);
-        }
-        return sources.get(filename);
-        
-    }
-    
+		if (!sources.containsKey(filename)) {
+			TrackSource source = new TrackSource("1min.mp3");
+			sources.put(filename, source);
+		}
+		return sources.get(filename);
+
+	}
+
 	/**
 	 *
 	 */
@@ -102,13 +101,13 @@ public class TrackSourceRepo {
 		 * @param modifDate
 		 */
 		TrackSource(String filename, int length, String format, String bitRate, long size, String modifDate) {
-            this.filename = filename;
-            this.length = length;
-            this.format = format;
-            this.bitRate = bitRate;
-            this.size = size;
-            this.modifDate = modifDate;
-        }
+			this.filename = filename;
+			this.length = length;
+			this.format = format;
+			this.bitRate = bitRate;
+			this.size = size;
+			this.modifDate = modifDate;
+		}
 
 		/**
 		 *
@@ -119,26 +118,26 @@ public class TrackSourceRepo {
 		 * @throws ReadOnlyFileException
 		 * @throws InvalidAudioFrameException
 		 */
-        TrackSource(String pFilename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-            filename = pFilename;
+		TrackSource(String pFilename) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+			filename = pFilename;
 
-            File file = getFile();
-            modifDate = DateTime.formatUTCtoSqlUTC(new Date(file.lastModified()));
-            size = file.length();
+			File file = getFile();
+			modifDate = DateTime.formatUTCtoSqlUTC(new Date(file.lastModified()));
+			size = file.length();
 
-            MP3File myMP3File = (MP3File)AudioFileIO.read(file);
-            AudioHeader header = myMP3File.getAudioHeader();
-            bitRate=header.getBitRate();
-            format=header.getFormat();
-            length=header.getTrackLength();
-        }
+			MP3File myMP3File = (MP3File) AudioFileIO.read(file);
+			AudioHeader header = myMP3File.getAudioHeader();
+			bitRate = header.getBitRate();
+			format = header.getFormat();
+			length = header.getTrackLength();
+		}
 
 		/**
 		 *
 		 * @return
 		 */
 		public File getFile() {
-            return new File(Settings.getRessourcesPath()+"audioFiles"+File.separator+filename);
-        }
-    }
+			return new File(Settings.getRessourcesPath() + "audioFiles" + File.separator + filename);
+		}
+	}
 }

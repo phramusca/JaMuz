@@ -28,34 +28,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class EncryptionTest {
-	
+
 	/**
 	 *
 	 */
 	public EncryptionTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -75,7 +75,7 @@ public class EncryptionTest {
 		String result = Encryption.decrypt(encryptedData, secret);
 		assertEquals(Data, result);
 	}
-	
+
 	/**
 	 * Test of encrypt method, of class Encryption.
 	 */
@@ -93,5 +93,5 @@ public class EncryptionTest {
 		System.out.println("decrypt");
 		//Refer to testEncryptDecrypt() above
 	}
-	
+
 }

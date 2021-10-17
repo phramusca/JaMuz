@@ -46,5 +46,5 @@ public class RemoteSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

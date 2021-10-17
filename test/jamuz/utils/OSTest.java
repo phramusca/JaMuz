@@ -27,34 +27,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class OSTest {
-	
+
 	/**
 	 *
 	 */
 	public OSTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -109,5 +109,5 @@ public class OSTest {
 //		assertEquals(expResult, result);
 		//Cannot test. Manually validated
 	}
-	
+
 }

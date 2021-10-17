@@ -26,17 +26,18 @@ import java.util.Map;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 class KeyResults {
+
 	List<String> values;
 	Map<String, List<Result>> fileResults;
 
 	KeyResults() {
-		values=new ArrayList<>();
-		fileResults=new HashMap<>();
+		values = new ArrayList<>();
+		fileResults = new HashMap<>();
 	}
-	
+
 	public void add(String file, Result result) {
 		List<Result> resultList;
-		if(fileResults.containsKey(file)) {
+		if (fileResults.containsKey(file)) {
 			resultList = fileResults.get(file);
 		} else {
 			resultList = new ArrayList<>();

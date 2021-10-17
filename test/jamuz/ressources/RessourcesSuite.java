@@ -46,5 +46,5 @@ public class RessourcesSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

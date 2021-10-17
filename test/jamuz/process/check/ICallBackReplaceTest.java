@@ -28,34 +28,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class ICallBackReplaceTest {
-	
+
 	/**
 	 *
 	 */
 	public ICallBackReplaceTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -86,5 +86,5 @@ public class ICallBackReplaceTest {
 		public void replaced() {
 		}
 	}
-	
+
 }

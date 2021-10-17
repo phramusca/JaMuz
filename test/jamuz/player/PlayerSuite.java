@@ -46,5 +46,5 @@ public class PlayerSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

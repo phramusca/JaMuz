@@ -29,41 +29,41 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class DateTimeTest {
-	
+
 	/**
 	 *
 	 */
 	public DateTimeTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@After
 	public void tearDown() {
 	}
-	
+
 	/**
 	 * Test of formatUTC method, of class DateTime.
 	 */
@@ -71,9 +71,9 @@ public class DateTimeTest {
 	public void testFormatUTC_3args_1() {
 		System.out.println("formatUTC");
 		assertEquals("1970-01-01 01:00:00", DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", true));
-        System.out.println(DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", true));
-        assertEquals("1970-01-01 00:00:00", DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", false));
-        System.out.println(DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", false));	
+		System.out.println(DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", true));
+		assertEquals("1970-01-01 00:00:00", DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", false));
+		System.out.println(DateTime.formatUTC(new Date(0), "yyyy-MM-dd HH:mm:ss", false));
 	}
 
 	/**
@@ -83,9 +83,9 @@ public class DateTimeTest {
 	public void testFormatUTC_3args_2() {
 		System.out.println("formatUTC");
 		assertEquals("1970-01-01 01:00:00", DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, true));
-        System.out.println(DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, true));
-        assertEquals("1970-01-01 00:00:00", DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, false));
-        System.out.println(DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, false));
+		System.out.println(DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, true));
+		assertEquals("1970-01-01 00:00:00", DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, false));
+		System.out.println(DateTime.formatUTC(new Date(0), DateTime.DateTimeFormat.SQL, false));
 	}
 
 	/**
@@ -105,23 +105,23 @@ public class DateTimeTest {
 		System.out.println("formatUTCtoSqlLocal");
 		//Refer to formatUtc() below
 	}
-	
+
 	/**
 	 *
 	 * @throws Exception
 	 */
 	@Test
-    public void formatUtc() throws Exception {
-        assertEquals("1970-01-01 01:00:00", DateTime.formatUTCtoSqlLocal(new Date(0)));
-        System.out.println(DateTime.formatUTCtoSqlLocal(new Date(0)));
-        assertEquals("1970-01-01 00:00:00", DateTime.formatUTCtoSqlUTC(new Date(0)));
-        System.out.println(DateTime.formatUTCtoSqlUTC(new Date(0)));
-        
-        assertEquals(DateTime.formatUTCtoSqlUTC(new Date()), DateTime.getCurrentUtcSql());
-        System.out.println("DateTime.getCurrentUtcSql(): "+DateTime.getCurrentUtcSql());
-        assertEquals(DateTime.formatUTCtoSqlLocal(new Date()), DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL));
-        System.out.println("DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL):"+DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL));        
-    }
+	public void formatUtc() throws Exception {
+		assertEquals("1970-01-01 01:00:00", DateTime.formatUTCtoSqlLocal(new Date(0)));
+		System.out.println(DateTime.formatUTCtoSqlLocal(new Date(0)));
+		assertEquals("1970-01-01 00:00:00", DateTime.formatUTCtoSqlUTC(new Date(0)));
+		System.out.println(DateTime.formatUTCtoSqlUTC(new Date(0)));
+
+		assertEquals(DateTime.formatUTCtoSqlUTC(new Date()), DateTime.getCurrentUtcSql());
+		System.out.println("DateTime.getCurrentUtcSql(): " + DateTime.getCurrentUtcSql());
+		assertEquals(DateTime.formatUTCtoSqlLocal(new Date()), DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL));
+		System.out.println("DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL):" + DateTime.getCurrentLocal(DateTime.DateTimeFormat.SQL));
+	}
 
 	/**
 	 * Test of getCurrentLocal method, of class DateTime.
@@ -151,5 +151,5 @@ public class DateTimeTest {
 		Date result = DateTime.parseSqlUtc(date);
 		assertEquals(DateTime.formatUTCtoSqlUTC(result), date);
 	}
-	
+
 }

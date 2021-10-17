@@ -27,22 +27,23 @@ import javax.swing.JDialog;
  */
 public class DialogScannerTest {
 
-    /**
+	/**
 	 * Main program.
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		//%b - %z %y/%n.%a - %t.mp3
-		
+
 		List<String> paths = new ArrayList<>();
 		paths.add("the Grey CAT - SnaKee 1865/001.toto - INTRO.mp3");
 		paths.add("the Grey CAT - SnaKee 1865/toto - INTRO.mp3");
-		
+
 		jamuz.process.check.DialogScanner.main(new JDialog(), paths, new ICallBackScanner() {
 			@Override
 			public void completed(String pattern) {
-				System.out.println(".completed("+pattern+")");
+				System.out.println(".completed(" + pattern + ")");
 			}
 		});
-    }
+	}
 }

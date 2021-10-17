@@ -46,5 +46,5 @@ public class GuiSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

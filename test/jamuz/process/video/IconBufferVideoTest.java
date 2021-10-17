@@ -29,34 +29,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class IconBufferVideoTest {
-	
+
 	/**
 	 *
 	 */
 	public IconBufferVideoTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -76,5 +76,5 @@ public class IconBufferVideoTest {
 		ImageIcon result = IconBufferVideo.getCoverIcon(url, readIfNotFound);
 		assertNotNull("because image should be retrieved", result);
 	}
-	
+
 }

@@ -35,34 +35,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class VideoAbstractTest {
-	
+
 	/**
 	 *
 	 */
 	public VideoAbstractTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -757,5 +757,5 @@ public class VideoAbstractTest {
 			return false;
 		}
 	}
-	
+
 }

@@ -30,34 +30,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class ICallBackMergeTest {
-	
+
 	/**
 	 *
 	 */
 	public ICallBackMergeTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -114,5 +114,5 @@ public class ICallBackMergeTest {
 		public void refresh() {
 		}
 	}
-	
+
 }

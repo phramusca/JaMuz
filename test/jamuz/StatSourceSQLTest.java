@@ -31,22 +31,22 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class StatSourceSQLTest {
-	
+
 	public StatSourceSQLTest() {
 	}
-	
+
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	@Before
 	public void setUp() {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
@@ -231,5 +231,5 @@ public class StatSourceSQLTest {
 			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 		}
 	}
-	
+
 }

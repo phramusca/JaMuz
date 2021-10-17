@@ -46,5 +46,5 @@ public class MergeSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

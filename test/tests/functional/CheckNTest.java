@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package tests.functional;
+
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.PanelCheck;
 import jamuz.process.check.ProcessCheck.Action;
@@ -37,14 +38,14 @@ public class CheckNTest extends TestCase {
 	 * @throws Exception
 	 */
 	@Test
-    public void test() throws Exception {
-        
-        Settings.startGUI("Label.Check"); //Mandatory
+	public void test() throws Exception {
 
-        //Create somes albums
-        ArrayList<String> mbIds = new ArrayList<>();
-        mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
-        //FIXME TEST Apply the above changes to the below
+		Settings.startGUI("Label.Check"); //Mandatory
+
+		//Create somes albums
+		ArrayList<String> mbIds = new ArrayList<>();
+		mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
+		//FIXME TEST Apply the above changes to the below
 //        mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
 //        mbIds.add("c212b71b-848c-491c-8ae7-b62a993ae194");
 //        mbIds.add("8cfbb741-bd63-449f-9e48-4d234264c8d5");
@@ -52,78 +53,78 @@ public class CheckNTest extends TestCase {
 //        mbIds.add("6cc35892-c44f-4aa7-bfee-5f63eca70821");
 //        mbIds.add("7598d527-bc8d-4282-a72c-874f335d05ac");
 //        mbIds.add("13ca98f6-1a9f-4d76-a3b3-a72a16d91916");
-        for(String mbId : mbIds) {
-            AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").create();
-        }
-        
-        //Scan
-        TestProcessHelper.scanNewFolder();
-        checkNumberScanned(mbIds.size());
-        for(String mbId : mbIds) {
-            AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").checkActionsTableModel();
-            
-            //Set genre, cover and SAVE action. Apply changes
-            //Note that MusiBrainz album should have been retrieved
-            FolderInfo folder = AlbumBuffer.getAlbum(mbId, "CheckTest1_KO")
+		for (String mbId : mbIds) {
+			AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").create();
+		}
+
+		//Scan
+		TestProcessHelper.scanNewFolder();
+		checkNumberScanned(mbIds.size());
+		for (String mbId : mbIds) {
+			AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").checkActionsTableModel();
+
+			//Set genre, cover and SAVE action. Apply changes
+			//Note that MusiBrainz album should have been retrieved
+			FolderInfo folder = AlbumBuffer.getAlbum(mbId, "CheckTest1_KO")
 					.getCheckedFolder();
-            folder.setNewGenre("Reggae");
-            folder.setNewImage(ImageUtils.getTestCover());
-            folder.action=Action.SAVE;
+			folder.setNewGenre("Reggae");
+			folder.setNewImage(ImageUtils.getTestCover());
+			folder.action = Action.SAVE;
 //            PanelCheck.addToActionQueue(folder);//FIXME TEST !!!
-            TestProcessHelper.applyChanges();
-        }
+			TestProcessHelper.applyChanges();
+		}
 
-        //Scan again 
-        TestProcessHelper.scanNewFolder();
-        checkNumberScanned(mbIds.size());
-        
-        for(String mbId : mbIds) {
-            AlbumBuffer.getAlbum(mbId, "CheckTest2_OK").checkActionsTableModel(); //MusicBrainz + Reggae + cover => OK
-        }
+		//Scan again 
+		TestProcessHelper.scanNewFolder();
+		checkNumberScanned(mbIds.size());
 
-        //OK should have been selected. Apply changes
-        TestProcessHelper.applyChanges();
-        //Verifying there is nothing left in new folder
-        TestProcessHelper.scanNewFolder();
-        checkNumberScanned(0);
-        
-        for(String mbId : mbIds) {
-            AlbumBuffer.getAlbum(mbId, "CheckTest3_DbOk").checkDbAndFS(true); // In DB and OK
-        }
-        
-        assertTrue("Not valid test. Shall no pass yet !", false);
-        
-    }
+		for (String mbId : mbIds) {
+			AlbumBuffer.getAlbum(mbId, "CheckTest2_OK").checkActionsTableModel(); //MusicBrainz + Reggae + cover => OK
+		}
 
-    private void checkNumberScanned(int expected){
-        assertEquals("number of checked folders", expected, 
+		//OK should have been selected. Apply changes
+		TestProcessHelper.applyChanges();
+		//Verifying there is nothing left in new folder
+		TestProcessHelper.scanNewFolder();
+		checkNumberScanned(0);
+
+		for (String mbId : mbIds) {
+			AlbumBuffer.getAlbum(mbId, "CheckTest3_DbOk").checkDbAndFS(true); // In DB and OK
+		}
+
+		assertTrue("Not valid test. Shall no pass yet !", false);
+
+	}
+
+	private void checkNumberScanned(int expected) {
+		assertEquals("number of checked folders", expected,
 				PanelCheck.tableModelActionQueue.getFolders().size());
-    }
-    
+	}
+
 	/**
 	 *
 	 * @param testMethodName
 	 */
 	public CheckNTest(String testMethodName) {
-        super(testMethodName);
-    }
-    
-	/**
-	 *
-	 * @throws Exception
-	 */
-	@Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        Settings.setupApplication();
-    }
+		super(testMethodName);
+	}
 
 	/**
 	 *
 	 * @throws Exception
 	 */
 	@Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+	protected void setUp() throws Exception {
+		super.setUp();
+		Settings.setupApplication();
+	}
+
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
 }

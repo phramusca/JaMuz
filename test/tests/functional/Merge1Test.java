@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package tests.functional;
+
 import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
 import jamuz.utils.Inter;
@@ -36,102 +37,116 @@ public class Merge1Test extends TestCase {
 	 * @throws Exception
 	 */
 	@Test
-    public void test() throws Exception {
-        Settings.startGUI("Label.Check"); //Mandatory
- 
-        /***********************************************************
+	public void test() throws Exception {
+		Settings.startGUI("Label.Check"); //Mandatory
+
+		/**
+		 * *********************************************************
 		 * Create an album
-		***********************************************************/
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		**********************************************************
+		 */
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest1_Creation").create();
-        
-        /***********************************************************
+
+		/**
+		 * *********************************************************
 		 * Scan library quick
-		***********************************************************/
-        TestProcessHelper.scanLibraryQuick();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		**********************************************************
+		 */
+		TestProcessHelper.scanLibraryQuick();
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest2_DB").checkDbAndFS(false);
-        
-		/***********************************************************
+
+		/**
+		 * *********************************************************
 		 * Merge
-		***********************************************************/
-        PanelMain.selectTab(Inter.get("Label.Merge"));
-        TestProcessHelper.merge();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		**********************************************************
+		 */
+		PanelMain.selectTab(Inter.get("Label.Merge"));
+		TestProcessHelper.merge();
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest3").checkJaMuz();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest3").checkStatSource(1, false, false);
 
-		/***********************************************************
+		/**
+		 * *********************************************************
 		 * Change stats in stat source & JamuZ
-		***********************************************************/
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		**********************************************************
+		 */
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest4_1").setAndCheckStatsInStatSource(1, false); // Guayadeque 
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest4_JaMuz").setAndCheckStatsInJamuzDb();
 
-		/***********************************************************
+		/**
+		 * *********************************************************
 		 * Merge again and check merge ok
-		***********************************************************/
-        TestProcessHelper.merge();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		**********************************************************
+		 */
+		TestProcessHelper.merge();
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest4_New").checkJaMuz();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest4_New").checkStatSource(1, false, false);
-        
-		/***********************************************************
+
+		/**
+		 * *********************************************************
 		 * Change stats in stat source & JamuZ, playCounter especially
-		***********************************************************/
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		**********************************************************
+		 */
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest5_1").setAndCheckStatsInStatSource(1, false); // Guayadeque 
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest5_JaMuz").setAndCheckStatsInJamuzDb();
 
-		/***********************************************************
+		/**
+		 * *********************************************************
 		 * Merge again and check merge ok
-		***********************************************************/
-        TestProcessHelper.merge();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		**********************************************************
+		 */
+		TestProcessHelper.merge();
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest5_New").checkJaMuz();
-        AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10", 
+		AlbumBuffer.getAlbum("9e097b10-8160-491e-a310-e26e54a86a10",
 				"MergeTest5_New").checkStatSource(1, false, false);
 
-    }
+	}
 
 	/**
 	 *
 	 * @param testMethodName
 	 */
 	public Merge1Test(String testMethodName) {
-        super(testMethodName);
-    }
-    
-	/**
-	 *
-	 * @throws Exception
-	 */
-	@Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        Settings.setupApplication();
-        
-        Settings.addStatSource(
-            "guayadeque.db", 
-            1, 
-            Settings.getMusicFolder() + "Archive" + File.separator, 
-            -1
-        );
-		
-		//Read created options
-        Jamuz.getMachine().read();
-    }
+		super(testMethodName);
+	}
 
 	/**
 	 *
 	 * @throws Exception
 	 */
 	@Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+	protected void setUp() throws Exception {
+		super.setUp();
+		Settings.setupApplication();
+
+		Settings.addStatSource(
+				"guayadeque.db",
+				1,
+				Settings.getMusicFolder() + "Archive" + File.separator,
+				-1
+		);
+
+		//Read created options
+		Jamuz.getMachine().read();
+	}
+
+	/**
+	 *
+	 * @throws Exception
+	 */
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
 }

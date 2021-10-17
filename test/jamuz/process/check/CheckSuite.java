@@ -46,5 +46,5 @@ public class CheckSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

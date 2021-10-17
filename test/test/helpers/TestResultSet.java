@@ -43,7 +43,7 @@ import java.util.Map;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class TestResultSet {
-	
+
 	/**
 	 *
 	 * @param value
@@ -51,25 +51,25 @@ public class TestResultSet {
 	 */
 	public static ResultSet getResultSet(String value) {
 		return new ResultSet() {
-			
+
 			@Override
 			public String getString(int columnIndex) throws SQLException {
 				return value;
 			}
-			
+
 			@Override
 			public String getString(String columnLabel) throws SQLException {
-				switch(columnLabel) {
+				switch (columnLabel) {
 					case "GimmeEmpty":
-						return ""; 
-					case "GimmeNull" :
+						return "";
+					case "GimmeNull":
 						return null;
 					case "GimmeValue":
 						return value;
 				}
 				return "I don't know this field";
 			}
-			
+
 			@Override
 			public boolean next() throws SQLException {
 				throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -1016,6 +1016,5 @@ public class TestResultSet {
 			}
 		};
 	}
-	
-	
+
 }

@@ -31,34 +31,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class BenchmarkTest {
-	
+
 	/**
 	 *
 	 */
 	public BenchmarkTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -68,6 +68,7 @@ public class BenchmarkTest {
 
 	/**
 	 * Test of get method, of class Benchmark.
+	 *
 	 * @throws java.lang.InterruptedException
 	 */
 	@Test
@@ -127,7 +128,7 @@ public class BenchmarkTest {
 		assertEquals("Ecoulé: 04s, restant: -", result);
 		Thread.sleep(300);
 		result = instance.get();
-		assertEquals("Ecoulé: 05s, restant: -", result);	
+		assertEquals("Ecoulé: 05s, restant: -", result);
 	}
 
 	/**
@@ -162,5 +163,5 @@ public class BenchmarkTest {
 		long result = Benchmark.sum(numbers);
 		assertEquals(expResult, result);
 	}
-	
+
 }

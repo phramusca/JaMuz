@@ -40,28 +40,28 @@ public class StringManagerTest {
 	 */
 	public StringManagerTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -93,6 +93,7 @@ public class StringManagerTest {
 
 	/**
 	 * Test of humanReadableByteCount method, of class StringManager.
+	 *
 	 * @param expResult
 	 * @param bytes
 	 * @param si
@@ -100,13 +101,14 @@ public class StringManagerTest {
 	@Test
 	@Parameters
 	public void testHumanReadableByteCount(String expResult, long bytes, boolean si) {
-		System.out.println("humanReadableByteCount("+bytes+","+si+") = \""+expResult+"\"");
+		System.out.println("humanReadableByteCount(" + bytes + "," + si + ") = \"" + expResult + "\"");
 		String result = StringManager.humanReadableByteCount(bytes, si);
 		assertEquals(expResult, result);
 	}
+
 	private Object parametersForTestHumanReadableByteCount() {
-        return new Object[]{
-			new Object[]{"1,0 ko", 1000, true}, 
+		return new Object[]{
+			new Object[]{"1,0 ko", 1000, true},
 			new Object[]{"1000 o", 1000, false},
 			new Object[]{"1,0 ko", 1024, true},
 			new Object[]{"1,0 Kio", 1024, false},
@@ -127,19 +129,21 @@ public class StringManagerTest {
 
 	/**
 	 * Test of secondsToMMSS method, of class StringManager.
+	 *
 	 * @param expResult
 	 * @param seconds
 	 */
 	@Test
 	@Parameters
 	public void testSecondsToMMSS(String expResult, int seconds) {
-		System.out.println("secondsToMMSS("+seconds+") = \""+expResult+"\"");
+		System.out.println("secondsToMMSS(" + seconds + ") = \"" + expResult + "\"");
 		String result = StringManager.secondsToMMSS(seconds);
 		assertEquals(expResult, result);
 	}
+
 	private Object parametersForTestSecondsToMMSS() {
-        return new Object[]{
-			new Object[]{"00:00", 0}, 
+		return new Object[]{
+			new Object[]{"00:00", 0},
 			new Object[]{"--:--", -6},
 			new Object[]{"00:06", 6},
 			new Object[]{"00:54", 54},
@@ -153,19 +157,21 @@ public class StringManagerTest {
 
 	/**
 	 * Test of secondsToHHMM method, of class StringManager.
+	 *
 	 * @param expResult
 	 * @param seconds
 	 */
 	@Test
 	@Parameters
 	public void testSecondsToHHMM(String expResult, int seconds) {
-		System.out.println("secondsToHHMM("+seconds+") = \""+expResult+"\"");
+		System.out.println("secondsToHHMM(" + seconds + ") = \"" + expResult + "\"");
 		String result = StringManager.secondsToHHMM(seconds);
 		assertEquals(expResult, result);
 	}
+
 	private Object parametersForTestSecondsToHHMM() {
-        return new Object[]{
-			new Object[]{"00 h 00", 0}, 
+		return new Object[]{
+			new Object[]{"00 h 00", 0},
 			new Object[]{"--:--", -6},
 			new Object[]{"00 h 00", 6},
 			new Object[]{"00 h 00", 54},
@@ -179,19 +185,21 @@ public class StringManagerTest {
 
 	/**
 	 * Test of humanReadableSeconds method, of class StringManager.
+	 *
 	 * @param expResult
 	 * @param seconds
 	 */
 	@Test
 	@Parameters
 	public void testHumanReadableSeconds(String expResult, long seconds) {
-		System.out.println("humanReadableSeconds("+seconds+") = \""+expResult+"\"");
+		System.out.println("humanReadableSeconds(" + seconds + ") = \"" + expResult + "\"");
 		String result = StringManager.humanReadableSeconds(seconds);
 		assertEquals(expResult, result);
 	}
+
 	private Object parametersForTestHumanReadableSeconds() {
-        return new Object[]{
-			new Object[]{"-", 0}, 
+		return new Object[]{
+			new Object[]{"-", 0},
 			new Object[]{"-", -6},
 			new Object[]{"06s", 6},
 			new Object[]{"54s", 54},
@@ -203,9 +211,9 @@ public class StringManagerTest {
 			new Object[]{"03h", 10800},
 			new Object[]{"22h 06m 38s", 79598},
 			new Object[]{"18153d 22h 06m 38s", 1568498798}
-				// 1568498798 s = 18153 d (1568419200 s) + 79598 s
-				// 79598 s      = 22 h    (79200 s)      + 398 s
-				// 398 s        = 6 m     (360 s)        + 38 s
+		// 1568498798 s = 18153 d (1568419200 s) + 79598 s
+		// 79598 s      = 22 h    (79200 s)      + 398 s
+		// 398 s        = 6 m     (360 s)        + 38 s
 		};
 	}
 

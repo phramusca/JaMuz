@@ -29,34 +29,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class StatSourceAbstractTest {
-	
+
 	/**
 	 *
 	 */
 	public StatSourceAbstractTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -453,5 +453,5 @@ public class StatSourceAbstractTest {
 			return false;
 		}
 	}
-	
+
 }

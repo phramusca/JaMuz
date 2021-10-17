@@ -27,22 +27,22 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class ProcessAbstractTest {
-	
+
 	public ProcessAbstractTest() {
 	}
-	
+
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	@Before
 	public void setUp() {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
@@ -86,5 +86,5 @@ public class ProcessAbstractTest {
 			super("");
 		}
 	}
-	
+
 }

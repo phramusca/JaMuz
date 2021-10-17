@@ -46,5 +46,5 @@ public class UtilsSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

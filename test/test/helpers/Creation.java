@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package test.helpers;
 
 import java.io.IOException;
@@ -31,26 +30,24 @@ import org.musicbrainz.MBWS2Exception;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Creation {
-    
-    /**
+
+	/**
 	 * Main program.
+	 *
 	 * @param args
-     * @throws org.musicbrainz.MBWS2Exception
-     * @throws java.io.IOException
-     * @throws org.jaudiotagger.audio.exceptions.CannotReadException
-     * @throws org.jaudiotagger.tag.TagException
-     * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
-     * @throws org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
+	 * @throws org.musicbrainz.MBWS2Exception
+	 * @throws java.io.IOException
+	 * @throws org.jaudiotagger.audio.exceptions.CannotReadException
+	 * @throws org.jaudiotagger.tag.TagException
+	 * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
+	 * @throws org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
 	 */
-	public static void main(String[] args) throws MBWS2Exception, IOException, CannotReadException, TagException, 
-            ReadOnlyFileException, InvalidAudioFrameException {
-        
+	public static void main(String[] args) throws MBWS2Exception, IOException, CannotReadException, TagException,
+			ReadOnlyFileException, InvalidAudioFrameException {
+
 		//Create new ods (OpenDocument SpreadSheet) album test files
-		
-		
-        List<String> mbIds = new ArrayList<>();
-		
-		
+		List<String> mbIds = new ArrayList<>();
+
 		// WARNING : DO NOT USE AS-IS !!!!
 		// - Current test files have been manually modified later on.
 		//		!!!! THEY WOULD BE OVERWRITTEN !!!!
@@ -58,7 +55,6 @@ public class Creation {
 		// - This is not up-to-date !!!!!!! :
 		//		- Some versions (tabs) are missing
 		//		- All tabs will be the same
-		
 //        mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
 //        mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
 //        mbIds.add("c212b71b-848c-491c-8ae7-b62a993ae194");
@@ -67,8 +63,8 @@ public class Creation {
 //        mbIds.add("6cc35892-c44f-4aa7-bfee-5f63eca70821");
 //        mbIds.add("7598d527-bc8d-4282-a72c-874f335d05ac");
 //        mbIds.add("13ca98f6-1a9f-4d76-a3b3-a72a16d91916");
-        for(String mbId : mbIds) {
-            Album.createFile(mbId);
-        }
-    }
+		for (String mbId : mbIds) {
+			Album.createFile(mbId);
+		}
+	}
 }

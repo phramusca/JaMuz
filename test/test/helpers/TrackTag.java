@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package test.helpers;
 
 import jamuz.DbConnJaMuz;
@@ -73,23 +72,23 @@ public class TrackTag extends FileInfoInt {
 	 * @throws ReadOnlyFileException
 	 * @throws InvalidAudioFrameException
 	 */
-	public TrackTag(String sourceFile, String relativePath, String filename,  
-            float BPM, String album, String albumArtist, String artist, String comment, int discNo, int discTotal, String genre, 
-            int nbCovers, String title, int trackNo, int trackTotal, String year, int playCounter, int rating, String addedDate, 
-            String lastPlayed, boolean deleted, FolderInfo.CheckedFlag checkedFlag, boolean ignore) throws CannotReadException, IOException, TagException, 
-                ReadOnlyFileException, InvalidAudioFrameException {
+	public TrackTag(String sourceFile, String relativePath, String filename,
+			float BPM, String album, String albumArtist, String artist, String comment, int discNo, int discTotal, String genre,
+			int nbCovers, String title, int trackNo, int trackTotal, String year, int playCounter, int rating, String addedDate,
+			String lastPlayed, boolean deleted, FolderInfo.CheckedFlag checkedFlag, boolean ignore) throws CannotReadException, IOException, TagException,
+			ReadOnlyFileException, InvalidAudioFrameException {
 
-        super(-1, -1, relativePath, filename, TrackSourceRepo.get(sourceFile).length, TrackSourceRepo.get(sourceFile).format, 
-                TrackSourceRepo.get(sourceFile).bitRate, (int) TrackSourceRepo.get(sourceFile).size, BPM, album, albumArtist, artist, comment, 
-                discNo, discTotal, genre, nbCovers, title, trackNo, trackTotal, year, playCounter, rating, addedDate, lastPlayed, 
-                TrackSourceRepo.get(sourceFile).modifDate, deleted, "", checkedFlag, FolderInfo.CopyRight.UNDEFINED, 0, 0, "", DbConnJaMuz.SyncStatus.INFO, 
+		super(-1, -1, relativePath, filename, TrackSourceRepo.get(sourceFile).length, TrackSourceRepo.get(sourceFile).format,
+				TrackSourceRepo.get(sourceFile).bitRate, (int) TrackSourceRepo.get(sourceFile).size, BPM, album, albumArtist, artist, comment,
+				discNo, discTotal, genre, nbCovers, title, trackNo, trackTotal, year, playCounter, rating, addedDate, lastPlayed,
+				TrackSourceRepo.get(sourceFile).modifDate, deleted, "", checkedFlag, FolderInfo.CopyRight.UNDEFINED, 0, 0, "", DbConnJaMuz.SyncStatus.INFO,
 				DateTime.formatUTCtoSqlUTC(new Date(0)), "", new GainValues());
 
-        oriAddedDate=addedDate;
-        oriLastPlayed=lastPlayed;
-        this.sourceFile = sourceFile;
-        this.ignore = ignore;
-    }
+		oriAddedDate = addedDate;
+		oriLastPlayed = lastPlayed;
+		this.sourceFile = sourceFile;
+		this.ignore = ignore;
+	}
 
 	/**
 	 *
@@ -100,16 +99,16 @@ public class TrackTag extends FileInfoInt {
 	 * @throws ReadOnlyFileException
 	 * @throws InvalidAudioFrameException
 	 */
-	public void create(String option) throws CannotReadException, IOException, 
+	public void create(String option) throws CannotReadException, IOException,
 			TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        setRootPath(Jamuz.getMachine().getOptionValue(option));
-        FileSystem.copyFile(TrackSourceRepo.get(sourceFile).getFile(), 
+		setRootPath(Jamuz.getMachine().getOptionValue(option));
+		FileSystem.copyFile(TrackSourceRepo.get(sourceFile).getFile(),
 				getFullPath());
 		saveTags(false);
-    }
-    
-    private final String oriAddedDate;
-    private final String oriLastPlayed;
+	}
+
+	private final String oriAddedDate;
+	private final String oriLastPlayed;
 
 	/**
 	 *
@@ -121,28 +120,26 @@ public class TrackTag extends FileInfoInt {
 	 * @return
 	 */
 	@Override
-    public String getFormattedAddedDate() {
-        if(oriAddedDate.equals("NOW")) {
-            return DateTime.getCurrentUtcSql();
-        }
-        else {
-            return super.getFormattedAddedDate();
-        }
-    }
+	public String getFormattedAddedDate() {
+		if (oriAddedDate.equals("NOW")) {
+			return DateTime.getCurrentUtcSql();
+		} else {
+			return super.getFormattedAddedDate();
+		}
+	}
 
 	/**
 	 *
 	 * @return
 	 */
 	@Override
-    public String getFormattedLastPlayed() {
-        if(oriLastPlayed.equals("NOW")) {
-            return DateTime.getCurrentUtcSql();
-        }
-        else {
-            return super.getFormattedLastPlayed();
-        }
-    }
+	public String getFormattedLastPlayed() {
+		if (oriLastPlayed.equals("NOW")) {
+			return DateTime.getCurrentUtcSql();
+		} else {
+			return super.getFormattedLastPlayed();
+		}
+	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {

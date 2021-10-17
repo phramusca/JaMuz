@@ -27,34 +27,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class DesktopTest {
-	
+
 	/**
 	 *
 	 */
 	public DesktopTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -94,5 +94,5 @@ public class DesktopTest {
 //		Desktop.openFolder(path);
 		//Cannot assert, only manual test
 	}
-	
+
 }

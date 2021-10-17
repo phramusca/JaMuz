@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package test.helpers;
 
 import java.io.IOException;
@@ -30,30 +29,32 @@ import org.jaudiotagger.tag.TagException;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class AlbumBuffer {
-    private static final Map<String, Album> albums = new HashMap<>();
 
-    /**
-     * Get Album version
-     * @param mbId
-     * @param version
-     * @return
-     * @throws java.io.IOException
-     * @throws org.jaudiotagger.audio.exceptions.CannotReadException
-     * @throws org.jaudiotagger.tag.TagException
-     * @throws org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
-     * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
-     */
-    public static Album getAlbum(String mbId, String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	private static final Map<String, Album> albums = new HashMap<>();
+
+	/**
+	 * Get Album version
+	 *
+	 * @param mbId
+	 * @param version
+	 * @return
+	 * @throws java.io.IOException
+	 * @throws org.jaudiotagger.audio.exceptions.CannotReadException
+	 * @throws org.jaudiotagger.tag.TagException
+	 * @throws org.jaudiotagger.audio.exceptions.InvalidAudioFrameException
+	 * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
+	 */
+	public static Album getAlbum(String mbId, String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		String key = mbId + "--" + version;
-        
-        if(albums.containsKey(key)) {
-            return albums.get(key);
-        }
-        
-        //Album not found
-        Album album = new Album(mbId, version);        
-        albums.put(key, album);
-        
-        return album;
+
+		if (albums.containsKey(key)) {
+			return albums.get(key);
+		}
+
+		//Album not found
+		Album album = new Album(mbId, version);
+		albums.put(key, album);
+
+		return album;
 	}
 }

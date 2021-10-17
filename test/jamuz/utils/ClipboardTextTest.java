@@ -28,34 +28,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class ClipboardTextTest {
-	
+
 	/**
 	 *
 	 */
 	public ClipboardTextTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -73,8 +73,8 @@ public class ClipboardTextTest {
 	}
 
 	/**
-	 * Test of setClipboardContents AND getClipboardContents 
-	 * methods, of class ClipboardText.
+	 * Test of setClipboardContents AND getClipboardContents methods, of class
+	 * ClipboardText.
 	 */
 	@Test
 	public void testClipboardContents() {
@@ -85,7 +85,7 @@ public class ClipboardTextTest {
 		String result = instance.getClipboardContents();
 		assertEquals(aString, result);
 	}
-	
+
 	/**
 	 * Test of setClipboardContents method, of class ClipboardText.
 	 */
@@ -103,5 +103,5 @@ public class ClipboardTextTest {
 		System.out.println("getClipboardContents");
 		//Refer to testClipboardContents() above
 	}
-	
+
 }

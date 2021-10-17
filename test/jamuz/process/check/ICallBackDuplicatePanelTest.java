@@ -28,34 +28,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class ICallBackDuplicatePanelTest {
-	
+
 	/**
 	 *
 	 */
 	public ICallBackDuplicatePanelTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -88,5 +88,5 @@ public class ICallBackDuplicatePanelTest {
 		public void duplicate(DuplicateInfo duplicateInfo) {
 		}
 	}
-	
+
 }

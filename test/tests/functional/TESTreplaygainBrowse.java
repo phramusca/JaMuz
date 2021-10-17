@@ -25,8 +25,10 @@ import jamuz.process.check.FolderInfo;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class TESTreplaygainBrowse {
-    /**
+
+	/**
 	 * Main program.
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -36,16 +38,15 @@ public class TESTreplaygainBrowse {
 		boolean recalculate = true;
 
 		////////////////////////////////////////////////////////////////////////////
-		
 		//Configure application
-		if(!Jamuz.configure("/home/raph/Bureau/ReplayGain/")) {
+		if (!Jamuz.configure("/home/raph/Bureau/ReplayGain/")) {
 			System.exit(1);
 		}
 		FolderInfo folderInfo = new FolderInfo(
-				pathStr, 
+				pathStr,
 				"/home/raph/Bureau/");
 		ProgressBar progressBar = new ProgressBar();
-		System.out.println("Recomputing Replaygain ("+recalculate+"). Please wait ...");
+		System.out.println("Recomputing Replaygain (" + recalculate + "). Please wait ...");
 		folderInfo.browse(recalculate, true, progressBar);
-    } 
+	}
 }

@@ -30,34 +30,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class TableCellRendererTooltipTest {
-	
+
 	/**
 	 *
 	 */
 	public TableCellRendererTooltipTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -66,7 +66,8 @@ public class TableCellRendererTooltipTest {
 	}
 
 	/**
-	 * Test of getTableCellRendererComponent method, of class TableCellRendererTooltip.
+	 * Test of getTableCellRendererComponent method, of class
+	 * TableCellRendererTooltip.
 	 */
 	@Test
 	public void testGetTableCellRendererComponent() {
@@ -84,5 +85,5 @@ public class TableCellRendererTooltipTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 }

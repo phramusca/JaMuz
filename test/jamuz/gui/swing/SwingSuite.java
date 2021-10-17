@@ -46,5 +46,5 @@ public class SwingSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

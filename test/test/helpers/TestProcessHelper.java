@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package test.helpers;
 
 import jamuz.FileInfo;
@@ -47,97 +46,96 @@ public class TestProcessHelper {
 	 * @throws InterruptedException
 	 */
 	public static void scanNewFolder() throws InterruptedException {
-        startProcessCheck(true, ProcessCheck.CheckType.CHECK_NEW, -1);
-    }
+		startProcessCheck(true, ProcessCheck.CheckType.CHECK_NEW, -1);
+	}
 
 	/**
 	 *
 	 * @throws InterruptedException
 	 */
 	public static void checkLibrary() throws InterruptedException {
-        startProcessCheck(true, ProcessCheck.CheckType.CHECK_DB, -1);
-    }
-    
+		startProcessCheck(true, ProcessCheck.CheckType.CHECK_DB, -1);
+	}
+
 	/**
 	 *
 	 * @throws InterruptedException
 	 */
 	public static void scanLibraryQuick() throws InterruptedException {
-        startProcessCheck(false, ProcessCheck.CheckType.SCAN_QUICK, -1);
-    }
-    
+		startProcessCheck(false, ProcessCheck.CheckType.SCAN_QUICK, -1);
+	}
+
 	/**
 	 *
 	 * @throws InterruptedException
 	 */
 	public static void applyChanges() throws InterruptedException {
-        processCheck.startActions(true, true, true);
+		processCheck.startActions(true, true, true);
 //        processCheck.doActions.join();
 //		Thread.sleep(2000);
 		do {
 			Thread.sleep(2000);
-		} while(processCheck.actionQueue.size()>0);
+		} while (processCheck.actionQueue.size() > 0);
 		processCheck.stopActions();
-    }
+	}
 
 	/**
 	 *
 	 * @throws InterruptedException
 	 */
 	public static void merge() throws InterruptedException {
-        List sources = new ArrayList();
-        for(StatSource statSource : Jamuz.getMachine().getStatSources()) {
+		List sources = new ArrayList();
+		for (StatSource statSource : Jamuz.getMachine().getStatSources()) {
 			sources.add(statSource);
-        }
-        startProcessMerge(sources, false, false);
-		
-        //FIXME TEST Also test simulate and forceJamuz parameters
-    }
-    
+		}
+		startProcessMerge(sources, false, false);
+
+		//FIXME TEST Also test simulate and forceJamuz parameters
+	}
+
 	/**
 	 *
 	 * @throws InterruptedException
 	 */
 	public static void sync() throws InterruptedException {
-        for(Device device : Jamuz.getMachine().getDevices()) {
-            startProcessSync(device);
-        }
-    }
-    
+		for (Device device : Jamuz.getMachine().getDevices()) {
+			startProcessSync(device);
+		}
+	}
+
 	//Cannot use more nbScan & nbAnalysis for testing as we need to keep fixed idPath
 	//TODO: Support nbScan>1 & nbAnalysis>1 to check if still OK with more threads
-    private final static int NB_SCAN=1; 
-	private final static int NB_ANALYSIS=1;
-    private static ProcessCheck processCheck;
-    private static void startProcessCheck(
-			boolean enableDoActions, 
-			ProcessCheck.CheckType checkType, 
+	private final static int NB_SCAN = 1;
+	private final static int NB_ANALYSIS = 1;
+	private static ProcessCheck processCheck;
+
+	private static void startProcessCheck(
+			boolean enableDoActions,
+			ProcessCheck.CheckType checkType,
 			int idPath) throws InterruptedException {
 
-        PanelCheck.enableCheck(false);
-        PanelCheck.enableRowSorter(false);
-        PanelCheck.stopActions(enableDoActions);
-        
-        processCheck = new ProcessCheck(new ICallBackCheckPanel() {
+		PanelCheck.enableCheck(false);
+		PanelCheck.enableRowSorter(false);
+		PanelCheck.stopActions(enableDoActions);
+
+		processCheck = new ProcessCheck(new ICallBackCheckPanel() {
 			@Override
 			public void addToQueueAction(FolderInfo folder) {
 				//FIXME TEST !!!
 				throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 			}
 		});
-        
-        //Starting process finally
-        PanelCheck.tableModelActionQueue.clear();
+
+		//Starting process finally
+		PanelCheck.tableModelActionQueue.clear();
 		PanelCheck.setThreadPanels(checkType);
-        processCheck.startCheck(checkType, idPath, NB_ANALYSIS, NB_SCAN);
+		processCheck.startCheck(checkType, idPath, NB_ANALYSIS, NB_SCAN);
 
 		do {
 			Thread.sleep(2000);
-		} while(processCheck.isCheckAlive());
+		} while (processCheck.isCheckAlive());
 
-		
 		//Note: cannot use the following as causing Concurrent modification exceptions
-	
 //      processCheck.doBrowse.join();
 //		for(ProcessCheck.DoScan doScan : processCheck.doScanList) {
 //            if(doScan!=null) {
@@ -152,26 +150,26 @@ public class TestProcessHelper {
 //        if(processCheck.doActions!=null) { 
 //			processCheck.doActions.join(); 
 //		}
-    }
-    
-	//TODO: Now that using callbacks here, can we not launch gui ?
+	}
 
+	//TODO: Now that using callbacks here, can we not launch gui ?
 	/**
 	 *
 	 */
 	public static ProcessMerge processMerge;
-    private static void startProcessMerge(List<StatSource> sources, 
+
+	private static void startProcessMerge(List<StatSource> sources,
 			boolean simulate, boolean forceJaMuz) throws InterruptedException {
-        processMerge = new ProcessMerge("Thread.ProcessHelper.startProcessMerge", 
-				sources, simulate, forceJaMuz, null, 
+		processMerge = new ProcessMerge("Thread.ProcessHelper.startProcessMerge",
+				sources, simulate, forceJaMuz, null,
 				new ProgressBar(), new ICallBackMerge() {
 			@Override
 			public void completed(
-					ArrayList<FileInfo> errorList, 
-					ArrayList<FileInfo> completedList, 
-					String popupMsg, 
+					ArrayList<FileInfo> errorList,
+					ArrayList<FileInfo> completedList,
+					String popupMsg,
 					String mergeReport) {
-				Jamuz.getLogger().log(Level.INFO, "Sync callback: addRow popupMsg={0}, mergeReport={1}", 
+				Jamuz.getLogger().log(Level.INFO, "Sync callback: addRow popupMsg={0}, mergeReport={1}",
 						new Object[]{popupMsg, mergeReport});
 			}
 
@@ -180,13 +178,13 @@ public class TestProcessHelper {
 				Jamuz.getLogger().info("Sync callback: refresh");
 			}
 		});
-        processMerge.start();
-        processMerge.join();
-    }
+		processMerge.start();
+		processMerge.join();
+	}
 
-    private static void startProcessSync(Device device) throws InterruptedException {
-        ProcessSync processSync = new ProcessSync("Thread.ProcessHelper.startProcessSync"
-				, device, new ProgressBar(), new ICallBackSync() {
+	private static void startProcessSync(Device device) throws InterruptedException {
+		ProcessSync processSync = new ProcessSync("Thread.ProcessHelper.startProcessSync",
+				 device, new ProgressBar(), new ICallBackSync() {
 			@Override
 			public void refresh() {
 				Jamuz.getLogger().info("Sync callback: refresh");
@@ -204,20 +202,20 @@ public class TestProcessHelper {
 
 			@Override
 			public void addRow(String file, int idIcon) {
-				Jamuz.getLogger().log(Level.INFO, "Sync callback: addRow file={0}, idIcon={1}", 
+				Jamuz.getLogger().log(Level.INFO, "Sync callback: addRow file={0}, idIcon={1}",
 						new Object[]{file, idIcon});
 			}
 
 			@Override
 			public void addRow(String file, String msg) {
-				Jamuz.getLogger().log(Level.INFO, "Sync callback: addRow file={0}, msg={1}", 
+				Jamuz.getLogger().log(Level.INFO, "Sync callback: addRow file={0}, msg={1}",
 						new Object[]{file, msg});
 			}
 		});
-        processSync.start();
-        processSync.join();
-    }
-        
+		processSync.start();
+		processSync.join();
+	}
+
 //    private void setAction (FolderInfo folderInfo, Action action) throws InterruptedException, Exception {
 //        if(action.equals(Action.OK)) {
 //            throw new Exception("Cannot set action to OK in test. must be done auto");

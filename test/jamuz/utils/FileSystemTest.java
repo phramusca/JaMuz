@@ -32,42 +32,42 @@ import test.helpers.Settings;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class FileSystemTest {
-	
+
 	File source;
 	File destination;
-	
+
 	/**
 	 *
 	 */
 	public FileSystemTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
-		source = new File(FilenameUtils.concat(Settings.getRessourcesPath(), 
+		source = new File(FilenameUtils.concat(Settings.getRessourcesPath(),
 				FilenameUtils.concat("audioFiles", "1min.mp3")));
-		
-		destination = new File(FilenameUtils.concat(Settings.getAppFolder(), 
+
+		destination = new File(FilenameUtils.concat(Settings.getAppFolder(),
 				FilenameUtils.concat("temp-should_Be_DeletTED_Damned", "1min (copie).mp3")));
 	}
-	
+
 	/**
 	 *
 	 */
@@ -77,10 +77,10 @@ public class FileSystemTest {
 		destination.getParentFile().delete();
 	}
 
-	
 	//TODO: Add negative cases
 	/**
 	 * Test of moveFile method, of class FileSystem.
+	 *
 	 * @throws java.io.IOException
 	 */
 	@Test
@@ -89,25 +89,26 @@ public class FileSystemTest {
 		//Given
 		File moveSource = new File(FilenameUtils.concat(Settings.getAppFolder(), "tempShouldBeDeleted.mp3"));
 		FileSystem.copyFile(source, moveSource);
-        assertTrue(moveSource.exists());
-		assertTrue(moveSource.length()==961029);
+		assertTrue(moveSource.exists());
+		assertTrue(moveSource.length() == 961029);
 		assertTrue(!destination.getParentFile().exists());
 		assertTrue(!destination.exists());
-		
+
 		//When
-        FileSystem.moveFile(moveSource, destination);
-		
+		FileSystem.moveFile(moveSource, destination);
+
 		//Then
 		assertTrue(source.exists());
-		assertTrue(source.length()==961029);
+		assertTrue(source.length() == 961029);
 		assertTrue(destination.exists());
-		assertTrue(destination.length()==961029);
+		assertTrue(destination.length() == 961029);
 		assertTrue(!moveSource.exists());
 	}
 
 	//TODO: Add negative cases
 	/**
 	 * Test of copyFile method, of class FileSystem.
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@Test
@@ -115,19 +116,19 @@ public class FileSystemTest {
 		System.out.println("copyFile");
 
 		//Given
-        assertTrue(source.exists());
-		assertTrue(source.length()==961029);
+		assertTrue(source.exists());
+		assertTrue(source.length() == 961029);
 		assertTrue(!destination.getParentFile().exists());
 		assertTrue(!destination.exists());
-				
+
 		//When
-        FileSystem.copyFile(source, destination);
-		
+		FileSystem.copyFile(source, destination);
+
 		//Then
 		assertTrue(source.exists());
-		assertTrue(source.length()==961029);
+		assertTrue(source.length() == 961029);
 		assertTrue(destination.exists());
-		assertTrue(destination.length()==961029);
+		assertTrue(destination.length() == 961029);
 	}
 
 	/**
@@ -151,7 +152,7 @@ public class FileSystemTest {
 		File result = FileSystem.replaceHome("~/toto/~tem/oh~/top.mp9");
 		assertTrue(result.getAbsolutePath().endsWith("/toto/~tem/oh~/top.mp9"));
 		assertTrue(result.getAbsolutePath().startsWith("/home/"));
-		
+
 		String filename = "/tmp/toto/~tem/oh~/top.mp9";
 		result = FileSystem.replaceHome(filename);
 		assertEquals(new File(filename), result);
@@ -167,5 +168,5 @@ public class FileSystemTest {
 		long result = FileSystem.size(file.toPath());
 		assertEquals(7011134, result);
 	}
-	
+
 }

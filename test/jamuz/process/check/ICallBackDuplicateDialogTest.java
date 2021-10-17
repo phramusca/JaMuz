@@ -28,34 +28,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class ICallBackDuplicateDialogTest {
-	
+
 	/**
 	 *
 	 */
 	public ICallBackDuplicateDialogTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -104,5 +104,5 @@ public class ICallBackDuplicateDialogTest {
 		public void delete() {
 		}
 	}
-	
+
 }

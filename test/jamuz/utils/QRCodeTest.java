@@ -27,34 +27,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class QRCodeTest {
-	
+
 	/**
 	 *
 	 */
 	public QRCodeTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -88,5 +88,5 @@ public class QRCodeTest {
 //		assertEquals(expResult, result);
 		// Not easy to check generated image => Manual test
 	}
-	
+
 }

@@ -30,34 +30,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class PanelVideoTest {
-	
+
 	/**
 	 *
 	 */
 	public PanelVideoTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -127,5 +127,5 @@ public class PanelVideoTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 }

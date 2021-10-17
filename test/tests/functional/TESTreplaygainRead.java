@@ -25,17 +25,17 @@ import java.io.File;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class TESTreplaygainRead {
-    /**
+
+	/**
 	 * Main program.
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 
-		
 //		String pathStr = "/home/raph/Bureau/ReplayGain/Musique-copy/King Yellowman/";
 		String pathStr = "/home/raph/Bureau/ReplayGain/FLAC-not set/";
-		
-		
+
 		/////////////////////////////////////////////////////
 		File path = new File(pathStr);
 		File[] files = path.listFiles();
@@ -44,10 +44,10 @@ public class TESTreplaygainRead {
 				if (!file.isDirectory()) {
 					FileInfoInt fileInfoInt = new FileInfoInt(file.getAbsolutePath(), "");
 					ReplayGain.GainValues gv = fileInfoInt.getReplayGain(true);
-					System.out.println("ReplayGain: "+gv+" // "+gv.isValid()+" // " + fileInfoInt.getFullPath());
-					
+					System.out.println("ReplayGain: " + gv + " // " + gv.isValid() + " // " + fileInfoInt.getFullPath());
+
 				}
 			}
 		}
-    } 
+	}
 }

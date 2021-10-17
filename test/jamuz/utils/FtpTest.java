@@ -27,34 +27,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class FtpTest {
-	
+
 	/**
 	 *
 	 */
 	public FtpTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -96,5 +96,5 @@ public class FtpTest {
 //		assertEquals(expResult, result);
 		//No ftp server for test. Not used much and simply a wrapper, manually tested
 	}
-	
+
 }

@@ -46,5 +46,5 @@ public class VideoSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

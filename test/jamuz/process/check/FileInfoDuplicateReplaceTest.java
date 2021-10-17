@@ -29,22 +29,22 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class FileInfoDuplicateReplaceTest {
-	
+
 	public FileInfoDuplicateReplaceTest() {
 	}
-	
+
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	@Before
 	public void setUp() {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
@@ -102,5 +102,5 @@ public class FileInfoDuplicateReplaceTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 }

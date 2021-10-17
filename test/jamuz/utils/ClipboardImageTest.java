@@ -27,34 +27,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class ClipboardImageTest {
-	
+
 	/**
 	 *
 	 */
 	public ClipboardImageTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -71,9 +71,9 @@ public class ClipboardImageTest {
 //		Image expResult = null;
 //		Image result = ClipboardImage.getImageFromClipboard();
 //		assertEquals(expResult, result);
-		
+
 		// No support to copy an image to clipboard
 		// No real need to test anyway as validated visually many times
 	}
-	
+
 }

@@ -28,34 +28,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class ICallBackReceptionTest {
-	
+
 	/**
 	 *
 	 */
 	public ICallBackReceptionTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -134,5 +134,5 @@ public class ICallBackReceptionTest {
 		public void connected(Client client) {
 		}
 	}
-	
+
 }

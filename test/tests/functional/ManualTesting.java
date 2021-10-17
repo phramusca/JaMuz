@@ -22,17 +22,13 @@ package tests.functional;
  */
 public class ManualTesting {
 
-    /**
+	/**
 	 * Main program.
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
-		
-		
-		
-		
-		
+
 //		File file = FileSystem.replaceHome("~/.guayadeque/guayadeque.conf");
 //		if(!file.exists()) {
 //			System.exit(0);
@@ -49,8 +45,6 @@ public class ManualTesting {
 //				System.out.println("Path0:"+XML.getAttribute(XML.getElement(element, "Path0"), "value"));
 //			}
 //		}
-	
-
 //        try {
 //           
 //        //https://code.google.com/p/musicbrainzws2-java/wiki/Usage_SubmittingData#Submitting_data    
@@ -94,7 +88,5 @@ public class ManualTesting {
 //            Logger.getLogger(ManualTesting.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        
-        
-        
-    }
+	}
 }

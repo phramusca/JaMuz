@@ -46,5 +46,5 @@ public class JamuzSuite {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 }

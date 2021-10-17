@@ -30,22 +30,22 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class StatSourceJaMuzRemoteTest {
-	
+
 	public StatSourceJaMuzRemoteTest() {
 	}
-	
+
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	@Before
 	public void setUp() {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
@@ -65,7 +65,8 @@ public class StatSourceJaMuzRemoteTest {
 	}
 
 	/**
-	 * Test of setUpdateStatisticsParameters method, of class StatSourceJaMuzRemote.
+	 * Test of setUpdateStatisticsParameters method, of class
+	 * StatSourceJaMuzRemote.
 	 */
 	@Test
 	public void testSetUpdateStatisticsParameters() throws Exception {
@@ -92,5 +93,5 @@ public class StatSourceJaMuzRemoteTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 }

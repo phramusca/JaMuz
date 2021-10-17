@@ -27,34 +27,34 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class SSHTest {
-	
+
 	/**
 	 *
 	 */
 	public SSHTest() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	/**
 	 *
 	 */
 	@Before
 	public void setUp() {
 	}
-	
+
 	/**
 	 *
 	 */
@@ -128,5 +128,5 @@ public class SSHTest {
 //		assertEquals(expResult, result);
 		// Hard to test SSH. Simple jsch wrapper. Manually validated
 	}
-	
+
 }

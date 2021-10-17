@@ -30,22 +30,22 @@ import org.junit.Test;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public class StatSourceMediaMonkeyTest {
-	
+
 	public StatSourceMediaMonkeyTest() {
 	}
-	
+
 	@BeforeClass
 	public static void setUpClass() {
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	@Before
 	public void setUp() {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
@@ -65,7 +65,8 @@ public class StatSourceMediaMonkeyTest {
 	}
 
 	/**
-	 * Test of setUpdateStatisticsParameters method, of class StatSourceMediaMonkey.
+	 * Test of setUpdateStatisticsParameters method, of class
+	 * StatSourceMediaMonkey.
 	 */
 	@Test
 	public void testSetUpdateStatisticsParameters() throws Exception {
@@ -92,5 +93,5 @@ public class StatSourceMediaMonkeyTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 }
