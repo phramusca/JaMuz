@@ -27,6 +27,8 @@ import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
+import jamuz.process.sync.ICallBackSync;
+import jamuz.process.sync.ProcessSync;
 import jamuz.utils.Popup;
 import java.io.*;
 import java.net.*;
@@ -231,91 +233,87 @@ public class Server {
 				}
 			});
 			
-			app.get("/files/new", (req, res) -> {
-				String login=req.getHeader("login").get(0);
-				Device device = tableModel.getClient(login).getDevice();
-				String destExt = device.getPlaylist().getDestExt();
-				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
-				String limit="";
-				if(!getCount) {
-					int idFrom = Integer.valueOf(req.getQuery("idFrom"));
-					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
-					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
-				}
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " : " F.idFile, F.idPath, F.name, F.rating, "
-					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
-					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" +
-				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
-					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
-					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" +
-				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" +
-				"ifnull(T.format, F.format) AS format, \n" +
-				"ifnull(T.length, F.length) AS length, \n" +
-				"ifnull(T.size, F.size) AS size, \n" +
-				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" +
-				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" +
-				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" +
-				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
-					+ "P.mbId AS pathMbId, P.modifDate AS pathModifDate, DF.status \n") +
-				"FROM file F \n" +
-				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n"
-				+ "JOIN deviceFile DF ON DF.idFile=F.idFile \n"
-				+ "JOIN path P ON F.idPath=P.idPath \n"
-				+ "WHERE F.deleted=0 AND P.deleted=0 \n"
-				+ "AND DF.idDevice="+device.getId()+" AND DF.status=\""+DbConnJaMuz.SyncStatus.NEW+"\" \n"
-				+ "ORDER BY F.idFile \n"
-				+ limit;
+			app.get("/refresh", (req, res) -> { 
+				String login=req.getHeader("login").get(0); 
+				Device device = tableModel.getClient(login).getDevice(); 
+				ProcessSync processSync = new ProcessSync("Server.ProcessSync",  
+						device, tableModel.getClient(login).getProgressBar(),  
+						new ICallBackSync() { 
+					@Override 
+					public void refresh() { 
+						//TODO: Refresh only concerned cell (progressBar of given login) 
+						getTableModel().fireTableDataChanged(); 
+					} 
+ 
+					@Override 
+					public void enable() {
+						res.sendStatus(Status._200);
+					}
+ 
+					@Override 
+					public void enableButton(boolean enable) {} 
+ 
+					@Override 
+					public void addRow(String file, int idIcon) {} 
+ 
+					@Override 
+					public void addRow(String file, String msg) {} 
+						}); 
+                processSync.start();
 				
-				setStatus(login, "Sending "+(getCount?"count":"list") + " of NEW files ("+limit+" )");
-				if(getCount) {
-					res.send(Jamuz.getDb().getFilesCount(sql).toString());
-				} else {
-					res.send(getFiles(sql, destExt));
-				}
-				setStatus(login, "Sent "+(getCount?"count":"list") + " of NEW files ("+limit+" )");
 			});
 			
-			app.get("/files/info", (req, res) -> {
-				String login=req.getHeader("login").get(0);
-				Device device = tableModel.getClient(login).getDevice();
-				String destExt = device.getPlaylist().getDestExt();
-				boolean getCount = Boolean.valueOf(req.getQuery("getCount"));
-				String limit="";
-				if(!getCount) {
-					int idFrom = Integer.valueOf(req.getQuery("idFrom"));
-					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch"));
-					limit=" LIMIT "+idFrom+", "+nbFilesInBatch;
-				}
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " : " F.idFile, F.idPath, F.name, F.rating, "
-					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
-					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" +
-				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
-					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
-					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" +
-				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" +
-				"ifnull(T.format, F.format) AS format, \n" +
-				"ifnull(T.length, F.length) AS length, \n" +
-				"ifnull(T.size, F.size) AS size, \n" +
-				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" +
-				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" +
-				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" +
-				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
-					+ "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate, 'INFO' AS status \n") +
-				"FROM file F \n" +
-				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n"
-				+ "JOIN path P ON F.idPath=P.idPath \n"
-				+ "WHERE F.deleted=0 AND P.deleted=0 \n"
-				+ "AND F.idFile NOT IN (SELECT idFile FROM deviceFile WHERE idDevice="+device.getId()+" AND status=\""+DbConnJaMuz.SyncStatus.NEW+"\") \n"
-				+ "ORDER BY F.idFile "
-				+ limit;
-				
-				setStatus(login, "Sending "+(getCount?"count":"list") + " of INFO files ("+limit+" )");
-				if(getCount) {
-					res.send(Jamuz.getDb().getFilesCount(sql).toString());
-				} else {
-					res.send(getFiles(sql, destExt));
-				}
-				setStatus(login, "Sent "+(getCount?"count":"list") + " of INFO files ("+limit+" )");
+			app.get("/files/:status", (req, res) -> { 
+				String login=req.getHeader("login").get(0); 
+				Device device = tableModel.getClient(login).getDevice(); 
+				String destExt = device.getPlaylist().getDestExt(); 
+				DbConnJaMuz.SyncStatus status = DbConnJaMuz.SyncStatus.valueOf(req.getParam("status")); 
+				boolean getCount = Boolean.valueOf(req.getQuery("getCount")); 
+				String limit=""; 
+				if(!getCount) { 
+					int idFrom = Integer.valueOf(req.getQuery("idFrom")); 
+					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch")); 
+					limit=" LIMIT "+idFrom+", "+nbFilesInBatch; 
+				} 
+				String statusSql = status.equals(DbConnJaMuz.SyncStatus.INFO) 
+						?"'INFO' AS status" 
+						:"DF.status"; 
+				 
+				String whereSql = status.equals(DbConnJaMuz.SyncStatus.INFO) 
+						?"(DF.status is null OR DF.status=\"INFO\")" 
+						:"DF.idDevice="+device.getId()+" AND DF.status=\""+status+"\""; 
+				 
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " : " F.idFile, F.idPath, F.name, F.rating, " 
+					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, " 
+					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" + 
+				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, " 
+					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, " 
+					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" + 
+				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" + 
+				"ifnull(T.format, F.format) AS format, \n" + 
+				"ifnull(T.length, F.length) AS length, \n" + 
+				"ifnull(T.size, F.size) AS size, \n" + 
+				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" + 
+				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" + 
+				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" + 
+				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, " 
+					+ "P.mbId AS pathMbId, P.modifDate AS pathModifDate, "+statusSql+" \n") + 
+				"FROM file F \n" + 
+				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n" 
+				+ "LEFT JOIN deviceFile DF ON DF.idFile=F.idFile AND DF.idDevice="+device.getId()+" \n" 
+				+ "JOIN path P ON F.idPath=P.idPath \n" 
+				+ "WHERE F.deleted=0 AND P.deleted=0 \n" 
+				+ "AND "+whereSql+" \n" 
+				+ "ORDER BY F.idFile " 
+				+ limit; 
+				 
+				setStatus(login, "Sending "+(getCount?"count":"list") + " of "+status.name().toUpperCase()+" files ("+limit+" )"); 
+				if(getCount) { 
+					res.send(Jamuz.getDb().getFilesCount(sql).toString()); 
+				} else { 
+					res.send(getFiles(sql, destExt)); 
+				} 
+				setStatus(login, "Sent "+(getCount?"count":"list") + " of "+status.name().toUpperCase()+" files ("+limit+" )"); 
 			});
 			
 			app.listen(port+1); // port is already used by remote
