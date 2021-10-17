@@ -47,7 +47,16 @@ public class ButtonOpenVideo extends DefaultCellEditor {
 		});
     }
 
-    @Override
+	/**
+	 *
+	 * @param table
+	 * @param value
+	 * @param isSelected
+	 * @param row
+	 * @param column
+	 * @return
+	 */
+	@Override
     public Component getTableCellEditorComponent(JTable table, Object value,
             boolean isSelected, int row, int column) {
         if (isSelected) {
@@ -62,7 +71,11 @@ public class ButtonOpenVideo extends DefaultCellEditor {
         return button;
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public Object getCellEditorValue() {
         if (isClicked) {
 			Desktop.openFolder(buttonValue);			
@@ -71,13 +84,20 @@ public class ButtonOpenVideo extends DefaultCellEditor {
         return buttonValue;
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean stopCellEditing() {
         isClicked = false;
         return super.stopCellEditing();
     }
 
-    @Override
+	/**
+	 *
+	 */
+	@Override
     protected void fireEditingStopped() {
         super.fireEditingStopped();
     }

@@ -188,7 +188,12 @@ public class TableRowFilterVideo extends RowFilter {
         }
     }
     
-    @Override
+	/**
+	 *
+	 * @param entry
+	 * @return
+	 */
+	@Override
     public boolean include(Entry entry) {
         VideoAbstract videoFile = (VideoAbstract) entry.getValue(2);
         

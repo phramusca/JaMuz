@@ -29,21 +29,36 @@ import org.junit.Test;
  */
 public class ICallBackCheckPanelTest {
 	
+	/**
+	 *
+	 */
 	public ICallBackCheckPanelTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -61,8 +76,15 @@ public class ICallBackCheckPanelTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class ICallBackCheckPanelImpl implements ICallBackCheckPanel {
 
+		/**
+		 *
+		 * @param folder
+		 */
 		public void addToQueueAction(FolderInfo folder) {
 		}
 	}

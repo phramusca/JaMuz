@@ -46,6 +46,13 @@ import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
 public class ReplayGain {
 
 	//http://wiki.hydrogenaud.io/index.php?title=ReplayGain_2.0_specification#Metadata_format
+
+	/**
+	 *
+	 * @param path
+	 * @param ext
+	 * @return
+	 */
 	public static GainValues read(File path, String ext) {
 		GainValues gainValues=new GainValues();
 		switch(ext) {
@@ -70,42 +77,96 @@ public class ReplayGain {
 		return gainValues;
 	}
 	
+	/**
+	 *
+	 */
 	public static class GainValues {
 		private float albumGain=Float.NaN;
 		private float trackGain=Float.NaN;
 		
+		/**
+		 *
+		 */
 		public float trackPeak; //Not used
+
+		/**
+		 *
+		 */
 		public float albumPeak; //Not used
+
+		/**
+		 *
+		 */
 		public String MP3GAIN_MINMAX; //mp3gain only, Not used
+
+		/**
+		 *
+		 */
 		public String MP3GAIN_ALBUM_MINMAX; //mp3gain only, Not used
+
+		/**
+		 *
+		 */
 		public String MP3GAIN_UNDO; //mp3gain only, Not used
+
+		/**
+		 *
+		 */
 		public String REPLAYGAIN_REFERENCE_LOUDNESS; //Flac only, Not used
 
+		/**
+		 *
+		 */
 		public GainValues() {
 		}
 		
+		/**
+		 *
+		 * @param trackGain
+		 * @param albumGain
+		 */
 		public GainValues(float trackGain, float albumGain) {
 			this.trackGain = trackGain;
 			this.albumGain = albumGain;
 		}
 		
+		/**
+		 *
+		 * @return
+		 */
 		@Override
 		public String toString() {
 			return "albumGain=" + albumGain + ", trackGain=" + trackGain;
 		}
 		
+		/**
+		 *
+		 * @return
+		 */
 		public boolean isValid() {
 			return !Float.isNaN(albumGain) && !Float.isNaN(trackGain);
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public float getAlbumGain() {
 			return albumGain;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public float getTrackGain() {
 			return trackGain;
 		}
 		
+		/**
+		 *
+		 * @return
+		 */
 		public Map toMap() {
 			Map jsonAsMap = new HashMap();
 			jsonAsMap.put("albumGain", albumGain);

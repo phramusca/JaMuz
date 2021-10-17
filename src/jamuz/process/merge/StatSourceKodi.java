@@ -43,7 +43,11 @@ public class StatSourceKodi extends StatSourceSQL {
         super(dbInfo, name, rootPath, false, true, false, true, false, false);
     }
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean setUp() {
         try {
             this.dbConn.connect();
@@ -86,6 +90,10 @@ public class StatSourceKodi extends StatSourceSQL {
         this.stUpdateFileStatistics.addBatch();
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public String guessRootPath() {
         ResultSet rs = null;
         try {
@@ -113,6 +121,12 @@ public class StatSourceKodi extends StatSourceSQL {
         }
     }
 
+	/**
+	 *
+	 * @param tags
+	 * @param file
+	 * @return
+	 */
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		//No such thing as tag in kodi, at least when checked

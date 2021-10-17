@@ -46,7 +46,11 @@ public class StatSourceJaMuzRemote extends StatSourceSQL {
         super(dbInfo, name, rootPath, true, true, false, true, true, true);
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean setUp() {
         return true;
     }
@@ -60,6 +64,12 @@ public class StatSourceJaMuzRemote extends StatSourceSQL {
     protected void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
     }
 	
+	/**
+	 *
+	 * @param tags
+	 * @param file
+	 * @return
+	 */
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		return true;

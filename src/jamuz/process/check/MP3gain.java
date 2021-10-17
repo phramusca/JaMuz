@@ -63,6 +63,10 @@ public class MP3gain {
 		this.trackGain=trackGain;
     }
 
+	/**
+	 *
+	 * @param file
+	 */
 	public MP3gain(File file) {
         this.path = file.getAbsolutePath();
 		this.relativePath = FilenameUtils.getBaseName(path);
@@ -71,6 +75,10 @@ public class MP3gain {
 		this.trackGain=true;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public boolean process() {
 		File file = new File(path);
 		File[] files;
@@ -293,6 +301,10 @@ public class MP3gain {
 		}
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public boolean undo() {
 		File pathFile = new File(path);
 		File[] files = pathFile.listFiles();
@@ -342,6 +354,10 @@ public class MP3gain {
 		}
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public boolean clearTags() {
 		File pathFile = new File(path);
 		File[] files = pathFile.listFiles();

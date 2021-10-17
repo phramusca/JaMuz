@@ -36,17 +36,29 @@ public class FileSystemTest {
 	File source;
 	File destination;
 	
+	/**
+	 *
+	 */
 	public FileSystemTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 		source = new File(FilenameUtils.concat(Settings.getRessourcesPath(), 
@@ -56,6 +68,9 @@ public class FileSystemTest {
 				FilenameUtils.concat("temp-should_Be_DeletTED_Damned", "1min (copie).mp3")));
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 		destination.delete();

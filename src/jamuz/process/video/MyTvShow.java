@@ -87,6 +87,10 @@ public class MyTvShow extends MyVideoAbstract implements Serializable {
 		return this.serie.getHomepage();
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public String toString() {
 		return this.serie.getName()+" ("+this.serie.getUserRating()+")";

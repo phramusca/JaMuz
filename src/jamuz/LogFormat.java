@@ -29,7 +29,13 @@ import java.util.logging.LogRecord;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class LogFormat extends Formatter {
-		@Override
+
+	/**
+	 *
+	 * @param record
+	 * @return
+	 */
+	@Override
 		public String format(LogRecord record) {
 			
 			StringBuilder s = new StringBuilder(1000);
@@ -79,12 +85,22 @@ public class LogFormat extends Formatter {
 			return s.toString();
 		}
 		
-		@Override
+	/**
+	 *
+	 * @param h
+	 * @return
+	 */
+	@Override
 		public String getHead(Handler h) {
 			return "<html>\n<body>\n<table border=1>\n";  //NOI18N
 		}
 		
-		@Override
+	/**
+	 *
+	 * @param h
+	 * @return
+	 */
+	@Override
 		public String getTail(Handler h) {
 			return "</table>\n</body>\n</html>\n";  //NOI18N
 		}

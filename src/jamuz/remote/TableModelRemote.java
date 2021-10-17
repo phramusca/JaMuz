@@ -38,6 +38,9 @@ public class TableModelRemote extends TableModelGeneric {
         clients = new LinkedHashMap<>();
 	}
 	
+	/**
+	 *
+	 */
 	public void setColumnNames() {
 		//FIXME Z SERVER Progress & status
 		// -Inter
@@ -52,6 +55,12 @@ public class TableModelRemote extends TableModelGeneric {
 		this.fireTableStructureChanged();
 	}
 
+	/**
+	 *
+	 * @param rowIndex
+	 * @param columnIndex
+	 * @return
+	 */
 	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 		ClientInfo clientInfo = (new ArrayList<>(clients.values())).get(rowIndex);
@@ -64,7 +73,13 @@ public class TableModelRemote extends TableModelGeneric {
         return null;
     }
 	
-    @Override
+	/**
+	 *
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	@Override
     public boolean isCellEditable(int row, int col){
 		return false;
     }
@@ -87,7 +102,12 @@ public class TableModelRemote extends TableModelGeneric {
         return clients.keySet();
     }
 
-    public ClientInfo getClient(String login) {
+	/**
+	 *
+	 * @param login
+	 * @return
+	 */
+	public ClientInfo getClient(String login) {
 		return clients.get(login);
 	}
 	
@@ -100,6 +120,10 @@ public class TableModelRemote extends TableModelGeneric {
         return (new ArrayList<>(clients.values())).get(index);
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
     public int getRowCount() {
         return clients.size();
@@ -139,6 +163,10 @@ public class TableModelRemote extends TableModelGeneric {
 //		this.fireIntervalAdded(this, clients.size()-1, clients.size()-1);
     }
 
+	/**
+	 *
+	 * @param login
+	 */
 	public void removeClient(String login) {
 		if(clients.containsKey(login)) {
 			clients.remove(login);
@@ -147,6 +175,11 @@ public class TableModelRemote extends TableModelGeneric {
 		}
 	}
 
+	/**
+	 *
+	 * @param login
+	 * @return
+	 */
 	public boolean contains(String login) {
 		return clients.containsKey(login);
 	}

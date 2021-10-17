@@ -44,6 +44,11 @@ import java.util.Map;
  */
 public class TestResultSet {
 	
+	/**
+	 *
+	 * @param value
+	 * @return
+	 */
 	public static ResultSet getResultSet(String value) {
 		return new ResultSet() {
 			

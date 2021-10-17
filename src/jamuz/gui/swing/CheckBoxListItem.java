@@ -53,6 +53,10 @@ public class CheckBoxListItem {
 	   this.isSelected = isSelected;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public String toString()
 	{

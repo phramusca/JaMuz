@@ -521,7 +521,10 @@ public class PanelMain extends javax.swing.JFrame {
         }
     }
 
-    public static void fillGenreLists() {
+	/**
+	 *
+	 */
+	public static void fillGenreLists() {
 		Jamuz.readGenres();
 		
         //Fill genreDisplay combo boxes
@@ -1508,7 +1511,11 @@ public class PanelMain extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_jComboBoxPlaylistActionPerformed
 
-    public static void refreshHiddenQueue(boolean wait) {
+	/**
+	 *
+	 * @param wait
+	 */
+	public static void refreshHiddenQueue(boolean wait) {
         Thread fillQueue = new Thread("Thread.PanelMain.playlist.getFiles") {
 			@Override
 			public void run() {
@@ -1797,7 +1804,6 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
     /**
-	 * @param parent
      */
     public static void main() {
         /* Set the Nimbus look and feel */

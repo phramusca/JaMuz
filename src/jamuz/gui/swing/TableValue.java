@@ -24,6 +24,10 @@ public class TableValue {
 
 	private final String value;
 	private String display;
+
+	/**
+	 *
+	 */
 	public static String na = "<html><font color=\"red\">N/A</font></html>";
 
 	/**
@@ -35,6 +39,10 @@ public class TableValue {
 		this.display=value;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public String toString() {
 		return display;

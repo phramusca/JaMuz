@@ -20,6 +20,13 @@ import java.util.logging.Logger;
 public class AcoustID {
 	
 	//FIXME WINDOWS Support fpcalc on windows (as for mp3gain). Get exe here: https://acoustid.org/chromaprint
+
+	/**
+	 *
+	 * @param filename
+	 * @param key
+	 * @return
+	 */
 	public static Results analyze(String filename, String key) {
 		try {	
 			ChromaPrint chromaprint = chromaprint(new File(filename), "fpcalc");		

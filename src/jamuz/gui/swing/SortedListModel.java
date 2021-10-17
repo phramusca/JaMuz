@@ -43,13 +43,23 @@ public class SortedListModel<T> extends AbstractListModel<T> {
     }
 
     // ListModel methods
+
+	/**
+	 *
+	 * @return
+	 */
     @Override
     public int getSize() {
         // Return the model size
         return model.size();
     }
 
-    @Override
+	/**
+	 *
+	 * @param index
+	 * @return
+	 */
+	@Override
     public T getElementAt(int index) {
         return (T) model.toArray()[index];
     }
@@ -74,6 +84,9 @@ public class SortedListModel<T> extends AbstractListModel<T> {
         model.addAll(c);
     }
 
+	/**
+	 *
+	 */
 	public void fire() {
 		fireContentsChanged(this, 0, getSize()-1);
 	}

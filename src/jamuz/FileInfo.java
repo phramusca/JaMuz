@@ -237,6 +237,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return ratingModifDate;
     }
 
+	/**
+	 *
+	 * @param ratingModifDate
+	 */
 	public void setRatingModifDate(Date ratingModifDate) {
 		this.ratingModifDate = ratingModifDate;
 	}
@@ -262,6 +266,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return tagsModifDate;
     }
 
+	/**
+	 *
+	 * @param tagsModifDate
+	 */
 	public void setTagsModifDate(Date tagsModifDate) {
 		this.tagsModifDate = tagsModifDate;
 	}
@@ -274,20 +282,38 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return DateTime.formatUTCtoSqlUTC(tagsModifDate);
     }
 	
+	/**
+	 *
+	 */
 	protected Date genreModifDate=new Date();
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String getFormattedGenreModifDate() {
         return DateTime.formatUTCtoSqlUTC(genreModifDate);
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public Date getGenreModifDate() {
 		return genreModifDate;
 	}
 
+	/**
+	 *
+	 * @param genreModifDate
+	 */
 	public void setGenreModifDate(Date genreModifDate) {
 		this.genreModifDate = genreModifDate;
 	}
 	
+	/**
+	 *
+	 */
 	protected boolean updateGenreModifDate=false;
 	
 	/**
@@ -332,6 +358,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
         return previousPlayCounter;
     }
 
+	/**
+	 *
+	 * @param previousPlayCounter
+	 */
 	public void setPreviousPlayCounter(int previousPlayCounter) {
 		this.previousPlayCounter = previousPlayCounter;
 	}
@@ -359,6 +389,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 
 	ArrayList<String> tags = null;
 	
+	/**
+	 *
+	 * @return
+	 */
 	public ArrayList<String> getTags() {
         return tags;
     }
@@ -375,6 +409,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		return out;
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String getTagsToString() {
 		StringBuilder sb = new StringBuilder();
 		if(tags!=null) {
@@ -389,6 +427,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		return(sb.toString());
 	}
 	
+	/**
+	 *
+	 * @param tags
+	 */
 	public void setTags(ArrayList<String> tags) {
 		this.tags = tags;
 	}
@@ -523,6 +565,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 		this.ext=FilenameUtils.getExtension(this.filename).toLowerCase(Locale.ENGLISH);
 	}
 
+	/**
+	 *
+	 * @param destExt
+	 */
 	public void setExt(String destExt) {
 		setPath(FilenameUtils.concat(getRelativePath(), FilenameUtils.getBaseName(getFilename())+"."+destExt));
 	}
@@ -690,6 +736,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 				+ "tagsModifDate=" + DateTime.formatUTCtoSqlUTC(tagsModifDate)+"\n";
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public Map toMap() {
 		Map jsonAsMap = new HashMap();
 		jsonAsMap.put("path", relativeFullPath);

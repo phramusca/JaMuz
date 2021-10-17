@@ -29,21 +29,36 @@ import org.junit.Test;
  */
 public class ICallBackServerTest {
 	
+	/**
+	 *
+	 */
 	public ICallBackServerTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -75,11 +90,23 @@ public class ICallBackServerTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class ICallBackServerImpl implements ICallBackServer {
 
+		/**
+		 *
+		 * @param clientId
+		 * @param msg
+		 */
 		public void received(String clientId, String msg) {
 		}
 
+		/**
+		 *
+		 * @param clientId
+		 */
 		public void connectedRemote(String clientId) {
 		}
 	}

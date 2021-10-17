@@ -41,12 +41,21 @@ public class FileSizeComparable implements Comparable {
             return length;
         }
 
-        @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
         public String toString() {
             return StringManager.humanReadableByteCount(length, false);
         }
 
-        @Override
+	/**
+	 *
+	 * @param o
+	 * @return
+	 */
+	@Override
         public int compareTo(Object o) {
             return this.length.compareTo(((FileSizeComparable) o).length);
         }

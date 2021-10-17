@@ -31,21 +31,36 @@ import org.junit.Test;
  */
 public class ICallBackMergeTest {
 	
+	/**
+	 *
+	 */
 	public ICallBackMergeTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -78,11 +93,24 @@ public class ICallBackMergeTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class ICallBackMergeImpl implements ICallBackMerge {
 
+		/**
+		 *
+		 * @param errorList
+		 * @param completedList
+		 * @param popupMsg
+		 * @param mergeReport
+		 */
 		public void completed(ArrayList<FileInfo> errorList, ArrayList<FileInfo> completedList, String popupMsg, String mergeReport) {
 		}
 
+		/**
+		 *
+		 */
 		public void refresh() {
 		}
 	}

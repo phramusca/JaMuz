@@ -28,8 +28,10 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-
-
+/**
+ *
+ * @author raph
+ */
 public class IconBufferVideo {
     private static final Map<String, ImageIcon> icons = new HashMap<>();
 

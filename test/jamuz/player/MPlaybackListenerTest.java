@@ -29,21 +29,36 @@ import org.junit.Test;
  */
 public class MPlaybackListenerTest {
 	
+	/**
+	 *
+	 */
 	public MPlaybackListenerTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -87,14 +102,29 @@ public class MPlaybackListenerTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class MPlaybackListenerImpl implements MPlaybackListener {
 
+		/**
+		 *
+		 * @param volume
+		 */
 		public void volumeChanged(float volume) {
 		}
 
+		/**
+		 *
+		 */
 		public void playbackFinished() {
 		}
 
+		/**
+		 *
+		 * @param position
+		 * @param length
+		 */
 		public void positionChanged(int position, int length) {
 		}
 	}

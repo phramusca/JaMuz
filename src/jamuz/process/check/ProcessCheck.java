@@ -85,6 +85,10 @@ public class ProcessCheck {
     private int maxActionQueueSize=30; //TODO: Make this an option (save value automatically when changed, and do the same for nbSan et nbAnalysis spinners)
 	private final ICallBackCheckPanel callback;
 
+	/**
+	 *
+	 * @param callback
+	 */
 	public ProcessCheck(ICallBackCheckPanel callback) {
 		this.callback = callback;
 	}
@@ -331,7 +335,10 @@ public class ProcessCheck {
             this.nbScan = nbScan;
         }
         
-        @Override
+		/**
+		 *
+		 */
+		@Override
         public void run() {
             nbProcesses++;
             try {
@@ -597,7 +604,10 @@ public class ProcessCheck {
             this.progressBarId = progressBarId;
         }
         
-        @Override
+		/**
+		 *
+		 */
+		@Override
         public void run() {
             try {
 				Jamuz.getLogger().log(Level.FINEST, "DoScan({0}).run()", progressBarId);
@@ -728,7 +738,10 @@ public class ProcessCheck {
             this.progressBarId = progressBarId;
         }
         
-        @Override
+		/**
+		 *
+		 */
+		@Override
         public void run() {
             try {
 				Jamuz.getLogger().log(Level.FINEST, "DoAnalyze({0}).run()", progressBarId);
@@ -806,7 +819,10 @@ public class ProcessCheck {
             this.doManual = doManual;
         }
                 
-        @Override
+		/**
+		 *
+		 */
+		@Override
         public void run() {
             try {
 				Jamuz.getLogger().log(Level.FINEST, "DoActions.run(): doKO={0},doWarning={1},nbScan={2})", new Object[]{doKO, doWarning, doManual});
@@ -901,15 +917,28 @@ public class ProcessCheck {
 			this.res = res;
 			this.color = color;
 		}
+
+		/**
+		 *
+		 * @return
+		 */
 		@Override
 		public String toString() {
 			return display;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public String getRes() {
 			return res;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public Color getColor() {
 			return color;
 		}

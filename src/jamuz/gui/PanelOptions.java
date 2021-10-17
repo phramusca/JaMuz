@@ -46,6 +46,9 @@ import org.apache.commons.io.FileUtils;
  */
 public class PanelOptions extends javax.swing.JPanel {
 
+	/**
+	 *
+	 */
 	protected static ProgressBar progressBarCheckedFlag;
 	private final Frame parent;
 	
@@ -71,6 +74,9 @@ public class PanelOptions extends javax.swing.JPanel {
 		jListTags.setModel(Jamuz.getTagsModel());
 	}
 	
+	/**
+	 *
+	 */
 	public static void fillMachineList() {
         fillMachineList((DefaultListModel) jListMachines.getModel());  //NOI18N
         jListMachines.setSelectedValue(new ListElement(Jamuz.getMachine().getName(), ""), true);
@@ -103,13 +109,22 @@ public class PanelOptions extends javax.swing.JPanel {
         jButtonResetCheckedFlagWarning.setEnabled(enable);
     }
 
+	/**
+	 *
+	 */
 	public class SaveTags extends ProcessAbstract {
 
+		/**
+		 *
+		 */
 		public SaveTags() {
             super("Thread.PanelOptions.SaveTags");
         }
                 
-        @Override
+		/**
+		 *
+		 */
+		@Override
         public void run() {
             try {
                 ArrayList<FileInfoInt> filesToSave = new ArrayList<>();
@@ -668,6 +683,9 @@ public class PanelOptions extends javax.swing.JPanel {
         } 
     }//GEN-LAST:event_jButtonTagsEditActionPerformed
 
+	/**
+	 *
+	 */
 	public static void refreshListTagsModel() {
 		Jamuz.readTags();
 		jListTags.setModel(Jamuz.getTagsModel());
@@ -712,13 +730,22 @@ public class PanelOptions extends javax.swing.JPanel {
 		jLabelBytes.setText("("+Inter.get("Label.Keep")+" "+StringManager.humanReadableByteCount(size, false)+")");
     }//GEN-LAST:event_jSpinnerBytesStateChanged
 
+	/**
+	 *
+	 */
 	public class CleanupLog extends ProcessAbstract {
 
+		/**
+		 *
+		 */
 		public CleanupLog() {
             super("Thread.PanelOptions.CleanupLog");
         }
                 
-        @Override
+		/**
+		 *
+		 */
+		@Override
         public void run() {
             try {
 				File logPath = new File(Jamuz.getLogPath());

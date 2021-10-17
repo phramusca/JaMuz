@@ -26,23 +26,44 @@ public class AcoustIdResult {
 	private String artist;
 	private String title;
 
+	/**
+	 *
+	 * @param artist
+	 * @param title
+	 */
 	public AcoustIdResult(String artist, String title) {
 		this.artist = artist;
 		this.title = title;
 	}
 
+	/**
+	 *
+	 * @param score
+	 */
 	protected void setScore(String score) {
 		this.score = score;
 	}	
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getScore() {
 		return score;
 	}
 		
+	/**
+	 *
+	 * @return
+	 */
 	public String getArtist() {
 		return artist;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getTitle() {
 		return title;
 	}

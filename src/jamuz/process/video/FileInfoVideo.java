@@ -148,28 +148,63 @@ public class FileInfoVideo extends FileInfo {
         return subtitlesStreamDetails;
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public File getVideoFile() {
 		return new File(FilenameUtils.concat(getLibraryPath(), relativeFullPath));
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String getVideoPath() {
 		return FilenameUtils.concat(getLibraryPath(), relativePath);
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String getLibraryPath() {
 		return Boolean.parseBoolean(Jamuz.getOptions().get("video.library.remote"))?
 					Jamuz.getOptions().get("video.location.library")
 					:Jamuz.getOptions().get("video.rootPath");
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getTitle() {
 		return title;
 	}
     
+	/**
+	 *
+	 */
 	public enum Quality {
+
+		/**
+		 *
+		 */
 		HD1080("HD 1080"), //NOI18N
+
+		/**
+		 *
+		 */
 		HD720("HD 720"), //NOI18N
+
+		/**
+		 *
+		 */
 		SD("SD"),
+
+		/**
+		 *
+		 */
 		UNKNOWN(""); //NOI18N
         
         private final String display;
@@ -178,7 +213,11 @@ public class FileInfoVideo extends FileInfo {
             this.display = display;
 		}
 
-        @Override
+		/**
+		 *
+		 * @return
+		 */
+		@Override
 		public String toString() {
 			return display;
 		}

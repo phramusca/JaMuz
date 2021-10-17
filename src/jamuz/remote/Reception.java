@@ -33,6 +33,9 @@ public class Reception  extends ProcessAbstract {
 		this.client = client;
 	}
 	
+	/**
+	 *
+	 */
 	@Override
 	public void run() {
 		try {

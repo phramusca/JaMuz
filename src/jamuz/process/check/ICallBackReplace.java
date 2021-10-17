@@ -10,5 +10,9 @@ package jamuz.process.check;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public interface ICallBackReplace {
+
+	/**
+	 *
+	 */
 	public void replaced();
 }

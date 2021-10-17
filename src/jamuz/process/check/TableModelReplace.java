@@ -60,12 +60,22 @@ public class TableModelReplace extends TableModelGeneric {
 		return files;
 	}
   
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int getRowCount() {
         return files.size();
     }
 
-    @Override
+	/**
+	 *
+	 * @param rowIndex
+	 * @param columnIndex
+	 * @return
+	 */
+	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         FileInfoDuplicateReplace fileInfoDisplay = files.get(rowIndex);
 

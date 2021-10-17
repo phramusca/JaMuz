@@ -29,21 +29,36 @@ import org.junit.Test;
  */
 public class ICallBackSyncTest {
 	
+	/**
+	 *
+	 */
 	public ICallBackSyncTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -113,20 +128,43 @@ public class ICallBackSyncTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class ICallBackSyncImpl implements ICallBackSync {
 
+		/**
+		 *
+		 */
 		public void refresh() {
 		}
 
+		/**
+		 *
+		 */
 		public void enable() {
 		}
 
+		/**
+		 *
+		 * @param enable
+		 */
 		public void enableButton(boolean enable) {
 		}
 
+		/**
+		 *
+		 * @param file
+		 * @param idIcon
+		 */
 		public void addRow(String file, int idIcon) {
 		}
 
+		/**
+		 *
+		 * @param file
+		 * @param msg
+		 */
 		public void addRow(String file, String msg) {
 		}
 	}

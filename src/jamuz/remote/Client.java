@@ -144,14 +144,26 @@ public class Client {
         printWriter.flush();
 	}
 	
+	/**
+	 *
+	 * @param jsonAsMap
+	 */
 	public void send(Map jsonAsMap) {
 		send("JSON_"+JSONValue.toJSONString(jsonAsMap));
 	}
 	
+	/**
+	 *
+	 * @param obj
+	 */
 	public void send(JSONObject obj) {
 		send("JSON_"+obj.toJSONString());
 	}
     
+	/**
+	 *
+	 * @return
+	 */
 	public boolean getDatabase() {
 		try {
 			DataInputStream dis = new DataInputStream(new BufferedInputStream(inputStream));
@@ -194,6 +206,11 @@ public class Client {
         }
     }
 	
+	/**
+	 *
+	 * @param fileInfoInt
+	 * @return
+	 */
 	public boolean sendFile(FileInfoInt fileInfoInt) {
 		File file = fileInfoInt.getFullPath();
 		if(file.exists()&&file.isFile()) {
@@ -243,15 +260,27 @@ public class Client {
         }
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public String toString() {
 		return getClientId();
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public ClientInfo getInfo() {
 		return info;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String getClientId() {
 		return info.getLogin()+"-"+(canal);
 	}

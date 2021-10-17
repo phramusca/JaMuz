@@ -186,12 +186,19 @@ public class PlayerFlac implements PCMProcessor, LineListener, Runnable {
         listeners.remove(listener);
     }
 
-    @Override
+	/**
+	 *
+	 */
+	@Override
     public void run() {
         this.decode(filePath);
     }
 
-    @Override
+	/**
+	 *
+	 * @param event
+	 */
+	@Override
     public void update(LineEvent event) {
         //TODO PLAYER FLAC: How to display progress ??
         

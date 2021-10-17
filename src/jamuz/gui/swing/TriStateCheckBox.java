@@ -102,14 +102,21 @@ public class TriStateCheckBox extends JCheckBox {
     return ((TriStateModel) model).getState();
   } 
   
-  @Override
+	/**
+	 *
+	 * @param selected
+	 */
+	@Override
   public void setSelected(boolean selected) 
   {
     model.setSelected(selected);    
   } 
   
-   
-  @Override
+	/**
+	 *
+	 * @param g
+	 */
+	@Override
   public void paintComponent( Graphics g ) 
   {
     super.paintComponent( g );

@@ -29,21 +29,36 @@ import org.junit.Test;
  */
 public class MyVideoAbstractTest {
 	
+	/**
+	 *
+	 */
 	public MyVideoAbstractTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -197,15 +212,29 @@ public class MyVideoAbstractTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class MyVideoAbstractImpl extends MyVideoAbstract {
 
+		/**
+		 *
+		 * @return
+		 */
 		public int getId() {
 			return 0;
 		}
 
+		/**
+		 *
+		 */
 		public void setMyVideoInCache() {
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public String getHomepage() {
 			return "";
 		}

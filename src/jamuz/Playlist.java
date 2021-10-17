@@ -258,6 +258,10 @@ public class Playlist implements Comparable {
 		return Jamuz.getDb().deletePlaylist(id);
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public String toString() {
 		
@@ -274,19 +278,33 @@ public class Playlist implements Comparable {
 		return this.getName();
 	}
 
-    @Override
+	/**
+	 *
+	 * @param o
+	 * @return
+	 */
+	@Override
     public int compareTo(Object o) {
         return (this.name.compareTo(((Playlist) o).name));
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int hashCode() {
         int hash = 5;
         hash = 71 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
-    @Override
+	/**
+	 *
+	 * @param obj
+	 * @return
+	 */
+	@Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -306,16 +324,28 @@ public class Playlist implements Comparable {
 		this.hidden = hidden;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getDestExt() {
 		return destExt; 
 	}
 	
 	private String destExt = "";
 	
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isTranscode() {
 		return !destExt.equals("");
 	}
 
+	/**
+	 *
+	 * @param transcode
+	 */
 	public void setTranscode(boolean transcode) {
 		this.destExt = transcode?"mp3":""; // FIXME Z destExt option
 	}
@@ -728,7 +758,11 @@ public class Playlist implements Comparable {
 			this.sqlValue = sqlValue;
 		}
 
-        @Override
+		/**
+		 *
+		 * @return
+		 */
+		@Override
 		public String toString() {
 			return display;
 		}
@@ -828,8 +862,14 @@ public class Playlist implements Comparable {
 		
         CHECKEDFLAG(Inter.get("Stat.Checked"), "P.checked"),
 		
+		/**
+		 *
+		 */
 		COPYRIGHT(Inter.get("Label.BestOf.Ownership"), "P.copyRight"),
 		
+		/**
+		 *
+		 */
 		FORMAT(Inter.get("Tag.Format"), "F.format");
 
         //TODO: Store lyrics in DB. to be able to filter in playlists.
@@ -847,6 +887,11 @@ public class Playlist implements Comparable {
 			this.display = display;
 			this.sqlValue = sqlValue;
 		}
+
+		/**
+		 *
+		 * @return
+		 */
 		@Override
 		public String toString() {
 			return display;
@@ -918,6 +963,11 @@ public class Playlist implements Comparable {
 		private Operator(String display) {
 			this.display = display;
 		}
+
+		/**
+		 *
+		 * @return
+		 */
 		@Override
 		public String toString() {
 			return display;
@@ -1139,6 +1189,10 @@ public class Playlist implements Comparable {
 			return sql.toString();
 		}
 	
+		/**
+		 *
+		 * @return
+		 */
 		@Override
 		public String toString() {
 			String valueToReturn = this.value;
@@ -1245,7 +1299,11 @@ public class Playlist implements Comparable {
             return sql;
         }
         
-        @Override
+		/**
+		 *
+		 * @return
+		 */
+		@Override
 		public String toString() {
 			String s = this.field.toString();
             if(this.desc) {

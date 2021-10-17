@@ -54,6 +54,10 @@ public class DuplicateInfo {
 
 	private final FolderInfo folderInfo;
 
+	/**
+	 *
+	 * @return
+	 */
 	public FolderInfo getFolderInfo() {
 		return folderInfo;
 	}
@@ -181,15 +185,27 @@ public class DuplicateInfo {
 
 	private int discTotal;
 	
+	/**
+	 *
+	 * @return
+	 */
 	public int getDiscTotal() {
 		return discTotal;
 	}
 
+	/**
+	 *
+	 * @param discTotal
+	 */
 	public void setDiscTotal(int discTotal) {
 		this.discTotal = discTotal;
 	}
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public String toString() {
         return "<html><b>" + FolderInfoResult.colorField("\"" + album + "\" "+" ["+ discNo + "/" + discTotal + "] "
 						+"(\"" + albumArtist + "\")",  //NOI18N

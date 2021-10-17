@@ -14,8 +14,19 @@ import java.util.ArrayList;
  */
 public interface ICallBackMerge {
 
+	/**
+	 *
+	 * @param errorList
+	 * @param completedList
+	 * @param popupMsg
+	 * @param mergeReport
+	 */
 	public void completed(ArrayList<FileInfo> errorList, 
 				ArrayList<FileInfo> completedList, String popupMsg, 
 				String mergeReport);
+
+	/**
+	 *
+	 */
 	public void refresh();
 }

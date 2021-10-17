@@ -293,6 +293,11 @@ public class Cover implements java.lang.Comparable {
 		return value;
 	}
 
+	/**
+	 *
+	 * @param obj
+	 * @return
+	 */
 	@Override
 	public int compareTo(Object obj) {
         
@@ -351,7 +356,12 @@ public class Cover implements java.lang.Comparable {
 		return this.name.compareTo(other.name);
 	}
 
-    @Override
+	/**
+	 *
+	 * @param obj
+	 * @return
+	 */
+	@Override
     public boolean equals(Object obj) {
         if(obj==null) {
 			return false;
@@ -362,7 +372,11 @@ public class Cover implements java.lang.Comparable {
         return name.equals(((Cover) obj).name);
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int hashCode() {
         int hashCode = 3;
         hashCode = 79 * hashCode + Objects.hashCode(this.name);
@@ -398,7 +412,11 @@ public class Cover implements java.lang.Comparable {
         return msg;
     }
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public String toString() {
         String msg;
         msg="<html>"; //NOI18N

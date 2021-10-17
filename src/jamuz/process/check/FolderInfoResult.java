@@ -157,6 +157,10 @@ public class FolderInfoResult {
 		return (this.errorLevel == 1);
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public int getErrorLevel() {
 		return errorLevel;
 	}
@@ -434,7 +438,12 @@ public class FolderInfoResult {
 		return text;
 	}
 
-    @Override
+	/**
+	 *
+	 * @param obj
+	 * @return
+	 */
+	@Override
     public boolean equals(Object obj) {
         if(this == obj) {
             return true;
@@ -451,7 +460,11 @@ public class FolderInfoResult {
 		return false;
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int hashCode() {
         int hash = 3;
         hash = 47 * hash + Objects.hashCode(this.value);
@@ -459,7 +472,11 @@ public class FolderInfoResult {
         return hash;
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public String toString() {
         return "{" + "value=" + value + ", errorLevel=" + errorLevel + '}';
     }

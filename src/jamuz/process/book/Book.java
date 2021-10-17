@@ -56,6 +56,22 @@ public class Book implements Comparable {
 		return formats.contains("EPUB")?"epub":formats.get(0).toLowerCase();
 	}
 	
+	/**
+	 *
+	 * @param title
+	 * @param title_sort
+	 * @param pubdate
+	 * @param author_sort
+	 * @param uuid
+	 * @param path
+	 * @param comment
+	 * @param rating
+	 * @param language
+	 * @param author
+	 * @param filenameWithoutExtension
+	 * @param formats
+	 * @param tags
+	 */
 	public Book(String title, String title_sort, String pubdate, String author_sort, 
 			String uuid, String path, String comment, String rating, 
 			String language, String author, String filenameWithoutExtension, 
@@ -86,6 +102,10 @@ public class Book implements Comparable {
         return IconBufferBook.getCoverIcon(uuid, getCoverFilePath(), readIfNotFound);
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public List<String> getTags() {
 		return tags;
 	}
@@ -106,30 +126,58 @@ public class Book implements Comparable {
     }
 	private boolean selected;
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getTitle() {
 		return title;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getSort() {
 		return title_sort;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getPubdate() {
 		return pubdate;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getAuthor_sort() {
 		return author_sort;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getAuthor() {
 		return author;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getUuid() {
 		return uuid;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getRating() {
 		return rating;
 	}
@@ -140,6 +188,10 @@ public class Book implements Comparable {
 								path);
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String getRelativeFullPath() {
 		return FilenameUtils.concat(path,
 				filenameWithoutExtension).concat(".").concat(getFormat());
@@ -158,6 +210,10 @@ public class Book implements Comparable {
 		return file;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String getFullPath() {
 		return FilenameUtils.concat(getLocalPath(), filenameWithoutExtension)
 				.concat(".").concat(getFormat());
@@ -179,10 +235,18 @@ public class Book implements Comparable {
         return length;
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isLocal() {
         return getLength().getLength()>0;
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public String toString() {
 		return "<html><b>"+this.title+"</b><BR/><i>"+author+"</i><BR/>"+tagStr+"<BR/><BR/>"+comment+"</html>";

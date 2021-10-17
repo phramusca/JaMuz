@@ -404,7 +404,11 @@ public abstract class VideoAbstract implements Comparable {
             this.isOK = true;
         }
 
-        @Override
+		/**
+		 *
+		 * @return
+		 */
+		@Override
         public String toString() {
             return (this.isOK) ? Inter.get("Check.OK") : Inter.get("Check.KO"); //NOI18N
         }
@@ -485,6 +489,10 @@ public abstract class VideoAbstract implements Comparable {
         return year;
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	public int getYearInt() {
 		int yearInt=0;
 		try {
@@ -621,8 +629,11 @@ public abstract class VideoAbstract implements Comparable {
         this.myVideo = myTvShow;
     }
     
-    
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public String toString() {
         String display = "<html><b>"+title+"</b>"; //NOI18N
         if(!titleOri.equals(title)) {

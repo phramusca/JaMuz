@@ -18,6 +18,10 @@ public interface ICallBackServer {
 	 */
 	public void received(String clientId, String msg);
 	
+	/**
+	 *
+	 * @param clientId
+	 */
 	public void connectedRemote(String clientId);
 	
 }

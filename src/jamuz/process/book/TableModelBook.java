@@ -54,7 +54,13 @@ public class TableModelBook extends TableModelGeneric {
 		this.fireTableStructureChanged();
 	}
 
-    @Override
+	/**
+	 *
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	@Override
     public boolean isCellEditable(int row, int col){
 		if(col==0) { //Selected checkbox
             return true;
@@ -111,12 +117,22 @@ public class TableModelBook extends TableModelGeneric {
         return nbSelected;
     }
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int getRowCount() {
         return this.files.size();
     }
 
-    @Override
+	/**
+	 *
+	 * @param rowIndex
+	 * @param columnIndex
+	 * @return
+	 */
+	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Book book = files.get(rowIndex);
 

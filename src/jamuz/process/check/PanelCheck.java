@@ -170,7 +170,11 @@ public class PanelCheck extends javax.swing.JPanel {
 		this.parent = parent;
     }
     	
-    public static void setThreadPanels(ProcessCheck.CheckType checkType) {
+	/**
+	 *
+	 * @param checkType
+	 */
+	public static void setThreadPanels(ProcessCheck.CheckType checkType) {
         jPanelAnalysisMain.setVisible(!(
                 checkType.equals(CheckType.SCAN_QUICK) 
                         || checkType.equals(CheckType.SCAN_FULL) 

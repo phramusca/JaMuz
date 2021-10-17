@@ -47,6 +47,17 @@ public class ListRendererCover extends JLabel implements ListCellRenderer {
     * to the selected value and returns the label, set up
     * to display the text and image.
     */
+
+	/**
+	 *
+	 * @param list
+	 * @param value
+	 * @param index
+	 * @param isSelected
+	 * @param cellHasFocus
+	 * @return
+	 */
+
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         if (isSelected) {

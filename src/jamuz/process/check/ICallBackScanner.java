@@ -10,5 +10,10 @@ package jamuz.process.check;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public interface ICallBackScanner {
+
+	/**
+	 *
+	 * @param pattern
+	 */
 	public void completed(String pattern);
 }

@@ -38,6 +38,9 @@ public class FileInfoDuplicateReplace extends FileInfoInt {
 	 */
 	public int index;
 
+	/**
+	 *
+	 */
 	public TableValue filenameDisplay=new TableValue("");
 	
 	/**
@@ -78,6 +81,10 @@ public class FileInfoDuplicateReplace extends FileInfoInt {
 		title=TableValue.na;
 	}
     
+	/**
+	 *
+	 * @param fileInfoDuplicateReplace
+	 */
 	public void setFileInfoDuplicate(FileInfoDuplicateReplace fileInfoDuplicateReplace) {
 		discNoFullDisplay=new TableValue(fileInfoDuplicateReplace.discNoFullDisplay.getValue());
 		trackNoFullDisplay=new TableValue(fileInfoDuplicateReplace.trackNoFullDisplay.getValue());
@@ -102,6 +109,10 @@ public class FileInfoDuplicateReplace extends FileInfoInt {
 		this.filename=fileInfoInt.getFilename();
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public boolean updateInDb() {
 		if(fileInfoInt!=null) {

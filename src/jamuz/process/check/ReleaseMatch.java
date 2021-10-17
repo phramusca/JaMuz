@@ -391,6 +391,11 @@ public class ReleaseMatch implements java.lang.Comparable {
 		return display;
 	}
 	
+	/**
+	 *
+	 * @param o
+	 * @return
+	 */
 	@Override
 	public int compareTo(Object o) {
 		//ORDER BY score DESC,  year ASC

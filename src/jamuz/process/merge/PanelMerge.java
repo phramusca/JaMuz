@@ -48,12 +48,19 @@ public class PanelMerge extends javax.swing.JPanel {
     private static ProgressBar progressBar;
 	private final Frame parent;
     
-    public PanelMerge(Frame parent) {
+	/**
+	 *
+	 * @param parent
+	 */
+	public PanelMerge(Frame parent) {
         initComponents();
 		this.parent = parent;
     }
 
-    public void initExtended() {
+	/**
+	 *
+	 */
+	public void initExtended() {
 		//Get jTableMerge model
 		tableModel = (TableModel) jTableMerge.getModel();
 		//Set table model

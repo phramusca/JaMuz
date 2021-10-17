@@ -79,7 +79,12 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
         dbConn = new DbConn(dbInfo);
     }
 
-    @Override
+	/**
+	 *
+	 * @param files
+	 * @return
+	 */
+	@Override
     public boolean getStatistics(ArrayList<FileInfo> files) {
         ResultSet rs=null;
         try {
@@ -183,27 +188,50 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
         return path;
     }
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean check() {
         return this.dbConn.info.check();
     }
 
-    @Override
+	/**
+	 *
+	 * @param locationWork
+	 * @return
+	 */
+	@Override
     public boolean getSource(String locationWork) {
         return this.dbConn.info.copyDB(true, locationWork);
     }
 
-    @Override
+	/**
+	 *
+	 * @param locationWork
+	 * @return
+	 */
+	@Override
     public boolean sendSource(String locationWork) {
         return this.dbConn.info.copyDB(false, locationWork);
     }
 
-    @Override
+	/**
+	 *
+	 * @param locationWork
+	 * @return
+	 */
+	@Override
     public boolean backupSource(String locationWork) {
         return this.dbConn.info.backupDB(locationWork);
     }
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean tearDown() {
         this.dbConn.disconnect();
         return true;

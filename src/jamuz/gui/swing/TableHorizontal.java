@@ -35,7 +35,11 @@ import javax.swing.JViewport;
  */
 public class TableHorizontal extends JTable  {
 
- @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
   public Dimension getPreferredSize() {
     if (getParent () instanceof JViewport) {
       if (getParent().getWidth() > super.getPreferredSize().width) {
@@ -45,7 +49,11 @@ public class TableHorizontal extends JTable  {
     return super.getPreferredSize(); 
   }
 
-  @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
   public boolean getScrollableTracksViewportWidth () {
     if (autoResizeMode != AUTO_RESIZE_OFF) {
       if (getParent() instanceof JViewport) {

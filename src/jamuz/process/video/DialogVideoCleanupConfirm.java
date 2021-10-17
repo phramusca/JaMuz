@@ -37,6 +37,10 @@ public class DialogVideoCleanupConfirm extends javax.swing.JDialog {
 
 	private static TableModel tableModel;
 	private static ArrayList<FileInfoVideo> filesToCleanup;
+
+	/**
+	 *
+	 */
 	protected static ProgressBar progressBar;
 	/**
 	 * Creates new form DialogCleanup

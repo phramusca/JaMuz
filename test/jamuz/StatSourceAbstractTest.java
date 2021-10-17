@@ -30,21 +30,36 @@ import org.junit.Test;
  */
 public class StatSourceAbstractTest {
 	
+	/**
+	 *
+	 */
 	public StatSourceAbstractTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -347,44 +362,93 @@ public class StatSourceAbstractTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class StatSourceAbstractImpl extends StatSourceAbstract {
 
+		/**
+		 *
+		 */
 		public StatSourceAbstractImpl() {
 			super("", "", "", false, false, false, false, false, false);
 		}
 
+		/**
+		 *
+		 * @param files
+		 * @return
+		 */
 		public boolean getStatistics(ArrayList<FileInfo> files) {
 			return false;
 		}
 
+		/**
+		 *
+		 * @param files
+		 * @return
+		 */
 		public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
 			return null;
 		}
 
+		/**
+		 *
+		 * @param tags
+		 * @param file
+		 * @return
+		 */
 		public boolean getTags(ArrayList<String> tags, FileInfo file) {
 			return false;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public boolean setUp() {
 			return false;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public boolean tearDown() {
 			return false;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public boolean check() {
 			return false;
 		}
 
+		/**
+		 *
+		 * @param locationWork
+		 * @return
+		 */
 		public boolean getSource(String locationWork) {
 			return false;
 		}
 
+		/**
+		 *
+		 * @param locationWork
+		 * @return
+		 */
 		public boolean sendSource(String locationWork) {
 			return false;
 		}
 
+		/**
+		 *
+		 * @param locationWork
+		 * @return
+		 */
 		public boolean backupSource(String locationWork) {
 			return false;
 		}

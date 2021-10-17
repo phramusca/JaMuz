@@ -41,6 +41,11 @@ public class StringManager {
         return str.replaceAll(pattern, "_"); //NOI18N
     }
     
+	/**
+	 *
+	 * @param text
+	 * @return
+	 */
 	public static String truncate(String text) {
 		text=removeIllegal(text);
 		if(text.length()>150) {
@@ -158,6 +163,11 @@ public class StringManager {
         return sb.toString().trim();
     }
     
+	/**
+	 *
+	 * @param string
+	 * @return
+	 */
 	public static List<String> parseSlashList(String string) {
         return Arrays.asList(string.split(" / ")); //NOI18N
     }

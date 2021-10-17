@@ -12,5 +12,10 @@ import java.awt.image.BufferedImage;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public interface ICallBackCover {
+
+	/**
+	 *
+	 * @param image
+	 */
 	public void setImage(BufferedImage image);
 }

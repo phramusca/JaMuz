@@ -44,7 +44,11 @@ public class VideoRating implements Serializable {
         return rating;
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public String toString() {
         return display;
     }

@@ -24,11 +24,19 @@ public class ActionResult {
 	boolean isPerformed;
 	String status;
 
+	/**
+	 *
+	 * @param isPerformed
+	 */
 	public ActionResult(boolean isPerformed) {
 		this.isPerformed = isPerformed;
 		this.status = "";
 	}
 
+	/**
+	 *
+	 * @param status
+	 */
 	public ActionResult(String status) {
 		this(false);
 		this.status = status;

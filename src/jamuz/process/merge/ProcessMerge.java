@@ -84,6 +84,10 @@ public class ProcessMerge extends ProcessAbstract {
 	private int nbFilesErrorSelected=0;
 	private int nbFilesErrorJaMuz=0;
 	private ArrayList<FileInfo> errorList;
+
+	/**
+	 *
+	 */
 	protected ProgressBar progressBar;
 	private ArrayList<FileInfo> completedList;
 	private int nbSteps;
@@ -1028,10 +1032,18 @@ public class ProcessMerge extends ProcessAbstract {
         return true;
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	public ArrayList<FileInfo> getErrorList() {
         return errorList;
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public ArrayList<FileInfo> getCompletedList() {
         return completedList;
     }

@@ -79,7 +79,12 @@ public class TableRowFilterBook extends RowFilter {
         this.displayLocal=display;
     }
 	
-    @Override
+	/**
+	 *
+	 * @param entry
+	 * @return
+	 */
+	@Override
     public boolean include(Entry entry) {
         Book book = (Book) entry.getValue(2);
         return isToDisplaySelected(book.isSelected())

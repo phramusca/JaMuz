@@ -45,6 +45,13 @@ public class ClientInfo {
 //	private boolean allowControl;
 //	private boolean allow...;
 
+	/**
+	 *
+	 * @param login
+	 * @param pwd
+	 * @param rootPath
+	 */
+
 	public ClientInfo(String login, String pwd, String rootPath) {	
 		isConnected=false;
 		this.progressBar = new ProgressBar();
@@ -56,6 +63,16 @@ public class ClientInfo {
 		this.rootPath = rootPath;
 	}
 	
+	/**
+	 *
+	 * @param id
+	 * @param login
+	 * @param name
+	 * @param pwd
+	 * @param device
+	 * @param statSource
+	 * @param enabled
+	 */
 	public ClientInfo(int id, String login, String name, 
 			String pwd, Device device, StatSource statSource,
 			boolean enabled) {
@@ -67,42 +84,82 @@ public class ClientInfo {
 		this.enabled = enabled;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 *
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isConnected() {
 		return isConnected;
 	}
 	
+	/**
+	 *
+	 * @param connected
+	 */
 	public void setConnected(boolean connected) {
 		isConnected=connected;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getStatus() {
 		return status;
 	}
 
+	/**
+	 *
+	 * @param status
+	 */
 	public void setStatus(String status) {
 		this.status = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | "+status;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public ProgressBar getProgressBar() {
 		return progressBar;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String getLogin() {
         return login;
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String getPwd() {
 		return pwd;
 	}
@@ -111,39 +168,75 @@ public class ClientInfo {
 		this.pwd=pwd;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public Playlist getPlaylist() {
 		return Jamuz.getPlaylist(this.device.getIdPlaylist());
 	}
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public String toString() {
 		return this.name + " (" + this.getPlaylist().toString() + ")"; //NOI18N //NOI18N //NOI18N
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getRootPath() {
 		return rootPath;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public Device getDevice() {
 		return device;
 	}
 
+	/**
+	 *
+	 * @param device
+	 */
 	public void setDevice(Device device) {
 		this.device = device;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public StatSource getStatSource() {
 		return statSource;
 	}
 
+	/**
+	 *
+	 * @param statSource
+	 */
 	public void setStatSource(StatSource statSource) {
 		this.statSource = statSource;
 	}
 	
+	/**
+	 *
+	 * @param enable
+	 */
 	public void enable(boolean enable) {
 		this.enabled=enable;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isEnabled() {
 		return enabled;
 	}

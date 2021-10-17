@@ -7,16 +7,29 @@ public class ChromaPrint {
    final String chromaprint;
    final String duration;
 
-   public ChromaPrint(String chromaprint, String duration) {
+	/**
+	 *
+	 * @param chromaprint
+	 * @param duration
+	 */
+	public ChromaPrint(String chromaprint, String duration) {
       this.duration = duration;
       this.chromaprint = chromaprint;
    }
 
-   public String getChromaprint() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getChromaprint() {
       return chromaprint;
    }
 
-   public String getDuration() {
+	/**
+	 *
+	 * @return
+	 */
+	public String getDuration() {
       return duration;
    }
 }

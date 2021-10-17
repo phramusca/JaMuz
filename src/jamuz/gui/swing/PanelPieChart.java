@@ -178,7 +178,12 @@ public class PanelPieChart extends JPanel  {
 			}
 		}
 
-        @Override
+		/**
+		 *
+		 * @param obj
+		 * @return
+		 */
+		@Override
         public boolean equals(Object obj) {
             if(this == obj) {
                 return true;
@@ -189,7 +194,11 @@ public class PanelPieChart extends JPanel  {
             return false;
         }
 
-        @Override
+		/**
+		 *
+		 * @return
+		 */
+		@Override
         public int hashCode() {
             int hash = 3;
             hash = 97 * hash + (int) (Double.doubleToLongBits(this.value) ^ (Double.doubleToLongBits(this.value) >>> 32));

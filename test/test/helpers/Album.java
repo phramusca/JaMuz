@@ -118,30 +118,58 @@ public class Album {
         readFromFile(version);
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getMbId() {
 		return mbId;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public ArrayList<TrackTag> getTracks() {
 		return tracks;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public Map<String, FolderInfoResult> getResults() {
 		return results;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public int getIdPath() {
 		return idPath;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public int getIdFirstFile() {
 		return idFirstFile;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getLocation() {
 		return location;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public int getIndex() {
 		return index;
 	}

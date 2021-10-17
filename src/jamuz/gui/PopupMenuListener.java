@@ -22,7 +22,14 @@ package jamuz.gui;
  */
 public interface PopupMenuListener {
 
+	/**
+	 *
+	 * @return
+	 */
 	public boolean deleteStarted();
 
+	/**
+	 *
+	 */
 	public void deleteEnded();
 }

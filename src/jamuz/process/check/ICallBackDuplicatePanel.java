@@ -10,5 +10,10 @@ package jamuz.process.check;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public interface ICallBackDuplicatePanel {
+
+	/**
+	 *
+	 * @param duplicateInfo
+	 */
 	public void duplicate(DuplicateInfo duplicateInfo);
 }

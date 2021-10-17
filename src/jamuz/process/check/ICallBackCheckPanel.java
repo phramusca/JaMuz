@@ -21,5 +21,10 @@ package jamuz.process.check;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 public interface ICallBackCheckPanel {
+
+	/**
+	 *
+	 * @param folder
+	 */
 	public void addToQueueAction(FolderInfo folder);
 }

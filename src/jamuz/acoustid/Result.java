@@ -29,10 +29,18 @@ public class Result {
 	private List<Recording> recordings = new ArrayList<>();
 	String score;
    
+	/**
+	 *
+	 * @return
+	 */
 	public double getScore() {
 		return Double.parseDouble(score);
 	}
    
+	/**
+	 *
+	 * @return
+	 */
 	protected AcoustIdResult getFirst() {
 		Recording firstRecording = recordings.stream().findFirst().orElseThrow(NoSuchElementException::new);
 		AcoustIdResult meta = firstRecording.getMeta();
@@ -40,6 +48,11 @@ public class Result {
 		return meta;
 	}	
 	
+	/**
+	 *
+	 * @param index
+	 * @return
+	 */
 	public AcoustIdResult get(int index) {
 		Recording recording = recordings.get(index);
 		AcoustIdResult meta = recording.getMeta();

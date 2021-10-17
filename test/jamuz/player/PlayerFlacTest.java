@@ -33,21 +33,36 @@ import org.kc7bfi.jflac.util.ByteData;
  */
 public class PlayerFlacTest {
 	
+	/**
+	 *
+	 */
 	public PlayerFlacTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}

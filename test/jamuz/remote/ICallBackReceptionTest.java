@@ -29,21 +29,36 @@ import org.junit.Test;
  */
 public class ICallBackReceptionTest {
 	
+	/**
+	 *
+	 */
 	public ICallBackReceptionTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -90,14 +105,32 @@ public class ICallBackReceptionTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class ICallBackReceptionImpl implements ICallBackReception {
 
+		/**
+		 *
+		 * @param clientId
+		 * @param login
+		 * @param msg
+		 */
 		public void received(String clientId, String login, String msg) {
 		}
 
+		/**
+		 *
+		 * @param clientInfo
+		 * @param clientId
+		 */
 		public void disconnected(ClientInfo clientInfo, String clientId) {
 		}
 
+		/**
+		 *
+		 * @param client
+		 */
 		public void connected(Client client) {
 		}
 	}

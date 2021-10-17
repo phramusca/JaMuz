@@ -36,21 +36,36 @@ import org.junit.Test;
  */
 public class VideoAbstractTest {
 	
+	/**
+	 *
+	 */
 	public VideoAbstractTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -631,53 +646,113 @@ public class VideoAbstractTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class VideoAbstractImpl extends VideoAbstract {
 
+		/**
+		 *
+		 */
 		public VideoAbstractImpl() {
 			super("", "", 0, "", "", "", 0, "", 0, "", "", "", "", "", "", "");
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public String getRelativeFullPath() {
 			return "";
 		}
 
+		/**
+		 *
+		 * @param buffer
+		 * @param conn
+		 * @param myConn
+		 */
 		public void moveFilesAndSrt(ProcessVideo.PathBuffer buffer, DbConnVideo conn, SSH myConn) {
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public String getVideoSummary() {
 			return "";
 		}
 
+		/**
+		 *
+		 * @param nbSeasonToKeep
+		 * @param nbEpisodeToKeep
+		 * @param keepEnded
+		 * @param keepCanceled
+		 * @return
+		 */
 		public ArrayList<FileInfoVideo> getFilesToCleanup(int nbSeasonToKeep, int nbEpisodeToKeep, boolean keepEnded, boolean keepCanceled) {
 			return null;
 		}
 
+		/**
+		 *
+		 */
 		public void removeFavorite() {
 		}
 
+		/**
+		 *
+		 */
 		public void addFavorite() {
 		}
 
+		/**
+		 *
+		 */
 		public void removeFromWatchList() {
 		}
 
+		/**
+		 *
+		 */
 		public void addToWatchList() {
 		}
 
+		/**
+		 *
+		 * @param rating
+		 */
 		public void setRating(VideoRating rating) {
 		}
 
+		/**
+		 *
+		 * @param search
+		 */
 		public void setMyVideo(boolean search) {
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public boolean isLocal() {
 			return false;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public boolean isWatched() {
 			return false;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		public boolean isMovie() {
 			return false;
 		}

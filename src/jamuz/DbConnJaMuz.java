@@ -143,6 +143,10 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
     public boolean tearDown() {
 //        this.dbConn.disconnect();
@@ -992,6 +996,12 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// </editor-fold>
 	
 	// <editor-fold defaultstate="collapsed" desc="StatSource">
+
+	/**
+	 *
+	 * @param login
+	 * @return
+	 */
 	
 	public StatSource getStatSource(String login) {
 		LinkedHashMap <Integer, StatSource> statSources = new LinkedHashMap<>();
@@ -1437,6 +1447,10 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	/**
+	 *
+	 * @param files
+	 */
 	public synchronized void insertOrUpdateFilesTranslated(ArrayList<FileInfoInt> files) {
 		try {
             if (files.size() > 0) {
@@ -1481,8 +1495,19 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
 	}
 	
+	/**
+	 *
+	 */
 	public enum SyncStatus {
+
+		/**
+		 *
+		 */
 		NEW,
+
+		/**
+		 *
+		 */
 		INFO
 	}
 	
@@ -1551,6 +1576,11 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 	
+	/**
+	 *
+	 * @param login
+	 * @return
+	 */
 	public Device getDevice(String login) {
 		LinkedHashMap <Integer, Device> devices = new LinkedHashMap<>();
 		Jamuz.getDb().getDevices(devices, login, true);
@@ -1742,6 +1772,11 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 
+	/**
+	 *
+	 * @param login
+	 * @return
+	 */
 	public ClientInfo getClient(String login) {
 		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
 		getClients(clients, login);
@@ -1812,6 +1847,12 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// </editor-fold>
 	
 	// <editor-fold defaultstate="collapsed" desc="File">
+
+	/**
+	 *
+	 * @param sql
+	 * @return
+	 */
 	
     public Integer getFilesCount(String sql) {
         Statement st=null;
@@ -2309,6 +2350,11 @@ public class DbConnJaMuz extends StatSourceSQL {
         this.stUpdateFileStatistics.addBatch();
     }
 	
+	/**
+	 *
+	 * @param files
+	 * @return
+	 */
 	@Override
 	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
 		int[] results = super.updateFileStatistics(files); 
@@ -2727,6 +2773,12 @@ public class DbConnJaMuz extends StatSourceSQL {
         return getFiles(myFileInfoList, sql);
     }
 	
+	/**
+	 *
+	 * @param idFile
+	 * @param destExt
+	 * @return
+	 */
 	public FileInfoInt getFile(int idFile, String destExt) {
 		ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();	
 		String sql = "SELECT F.idFile, F.idPath, F.name, F.rating, "
@@ -3406,6 +3458,13 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// </editor-fold>
 	
 	// <editor-fold defaultstate="collapsed" desc="TagFile & File">
+
+	/**
+	 *
+	 * @param files
+	 * @param results
+	 * @return
+	 */
 	
 	public synchronized int[] updateFileTags(ArrayList<? extends FileInfo> files, int[] results) {
 		int i=0;
@@ -3594,6 +3653,12 @@ public class DbConnJaMuz extends StatSourceSQL {
         }
     }
 	
+	/**
+	 *
+	 * @param tags
+	 * @param file
+	 * @return
+	 */
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		return getTags(tags, file.getIdFile());

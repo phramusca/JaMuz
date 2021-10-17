@@ -159,7 +159,11 @@ public class Device {
 		return Jamuz.getPlaylist(this.idPlaylist);
 	}
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public String toString() {
 		return this.name + " (" + this.getPlaylist().toString() + ")"; //NOI18N //NOI18N //NOI18N
 	}

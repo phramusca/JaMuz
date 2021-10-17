@@ -49,7 +49,11 @@ public class StatSourceGuayadeque extends StatSourceSQL {
         super(dbInfo, name, rootPath, true, true, false, true, true, false);
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean setUp() {
         try {
             this.dbConn.connect();
@@ -99,6 +103,12 @@ public class StatSourceGuayadeque extends StatSourceSQL {
         this.stUpdateFileStatistics.addBatch();
     }
 
+	/**
+	 *
+	 * @param tags
+	 * @param file
+	 * @return
+	 */
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		try {
@@ -120,12 +130,23 @@ public class StatSourceGuayadeque extends StatSourceSQL {
         }
 	}
 
+	/**
+	 *
+	 * @param files
+	 * @return
+	 */
 	@Override
 	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
 		int[] results = super.updateFileStatistics(files); 
 		return setTags(files, results); 
 	}
 	
+	/**
+	 *
+	 * @param files
+	 * @param results
+	 * @return
+	 */
 	public synchronized int[] setTags(ArrayList<? extends FileInfo> files, int[] results) {
 		int i=0;
 		for(FileInfo fileInfo : files) {

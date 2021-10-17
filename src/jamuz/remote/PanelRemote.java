@@ -69,6 +69,10 @@ public class PanelRemote extends javax.swing.JPanel {
 		this.parent = parent;
 	}
 
+	/**
+	 *
+	 * @param callback
+	 */
 	public void initExtended(ICallBackServer callback) {
 		
 		boolean onStartup = Boolean.valueOf(Jamuz.getOptions().get("server.on.startup", "false"));
@@ -99,8 +103,22 @@ public class PanelRemote extends javax.swing.JPanel {
 		}
 	}
 	
+	/**
+	 *
+	 */
 	public class ProgressCellRender extends JProgressBar implements TableCellRenderer {
-        @Override
+
+		/**
+		 *
+		 * @param table
+		 * @param value
+		 * @param isSelected
+		 * @param hasFocus
+		 * @param row
+		 * @param column
+		 * @return
+		 */
+		@Override
         public Component getTableCellRendererComponent(JTable table, Object value, 
 				boolean isSelected, boolean hasFocus, int row, int column) {
 			ProgressBar progressBar = (ProgressBar) value;
@@ -115,6 +133,10 @@ public class PanelRemote extends javax.swing.JPanel {
         column.setMaxWidth(width*3);
     }
 		
+	/**
+	 *
+	 * @param fileInfo
+	 */
 	public static void send(FileInfoInt fileInfo) {		
 		fileInfo.getTags();
 		Map jsonAsMap = fileInfo.toMap();
@@ -122,18 +144,34 @@ public class PanelRemote extends javax.swing.JPanel {
         send(jsonAsMap);
     }
 	
+	/**
+	 *
+	 * @param clientId
+	 * @param displayedFile
+	 * @param maxWidth
+	 */
 	public static void sendCover(String clientId, FileInfoInt displayedFile, int maxWidth) {
 		if(server!=null) {
 			server.sendCover(clientId, displayedFile, maxWidth);
 		}
 	}
 	
+	/**
+	 *
+	 * @param jsonAsMap
+	 */
 	public static void send(Map jsonAsMap) {
         if(server!=null) {
             server.send(jsonAsMap);
         }
     }
 	
+	/**
+	 *
+	 * @param clientId
+	 * @param obj
+	 * @return
+	 */
 	public static boolean send(String clientId, JSONObject obj) {
         if(server!=null) {
             return server.send(clientId, obj);
@@ -141,6 +179,11 @@ public class PanelRemote extends javax.swing.JPanel {
 		return false;
     }
 	
+	/**
+	 *
+	 * @param clientId
+	 * @return
+	 */
 	public static boolean isConnected(String clientId) {
 		if(server!=null) {
             return server.isConnected(clientId);

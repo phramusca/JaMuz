@@ -160,6 +160,10 @@ public class Jamuz {
 		return true;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public static DefaultHttpClient getHttpClient() {
 		DefaultHttpClient httpclient = null;
 		if(machine!=null) {
@@ -174,6 +178,10 @@ public class Jamuz {
 		return httpclient;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public static Proxy getProxy() {
 		Proxy myProxy = null;
 		if(machine!=null) {
@@ -351,7 +359,11 @@ public class Jamuz {
     
     private static ArrayList<String> tags;
 	private static DefaultListModel tagsModel;
-    public static void readTags() {
+
+	/**
+	 *
+	 */
+	public static void readTags() {
         tags = getDb().getTags();
 		tagsModel = new DefaultListModel();
 		for(String tag : tags) {
@@ -367,6 +379,10 @@ public class Jamuz {
         return tags;
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	public static DefaultListModel getTagsModel() {
 		return tagsModel;
 	}

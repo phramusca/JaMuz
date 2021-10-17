@@ -358,6 +358,11 @@ public class FolderInfo implements java.lang.Comparable {
 		return true;
 	}
 	
+	/**
+	 *
+	 * @param progressBar
+	 * @return
+	 */
 	public boolean transcodeAsNeeded(ProgressBar progressBar) {
 		//Get list of files from library exluding the one(s) already set as deleted
 		if(!Jamuz.getDb().getFiles(filesDb, idPath, false)) {
@@ -366,6 +371,12 @@ public class FolderInfo implements java.lang.Comparable {
 		return transcodeAsNeeded(filesDb, progressBar);
 	}
 	
+	/**
+	 *
+	 * @param files
+	 * @param progressBar
+	 * @return
+	 */
 	public boolean transcodeAsNeeded(ArrayList <FileInfoInt> files, ProgressBar progressBar) {
 		Location location = new Location("location.transcoded");
 		if(!location.check()) {
@@ -1823,7 +1834,11 @@ public class FolderInfo implements java.lang.Comparable {
 		return true;
 	}
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         String result;
@@ -1856,7 +1871,12 @@ public class FolderInfo implements java.lang.Comparable {
         return builder.toString();
     }
 
-    @Override
+	/**
+	 *
+	 * @param o
+	 * @return
+	 */
+	@Override
 	public int compareTo(Object o) {
         //ORDER BY action
 		if (action.getOrder() < ((FolderInfo) o).action.getOrder()) {
@@ -1868,7 +1888,12 @@ public class FolderInfo implements java.lang.Comparable {
         return 0;
 	}
 
-    @Override
+	/**
+	 *
+	 * @param obj
+	 * @return
+	 */
+	@Override
     public boolean equals(Object obj) {
 		if(this == obj) {
             return true;
@@ -1880,7 +1905,11 @@ public class FolderInfo implements java.lang.Comparable {
 		return false;
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int hashCode() {
         return super.hashCode();
     }
@@ -2008,6 +2037,10 @@ public class FolderInfo implements java.lang.Comparable {
         this.mbId = mbId;
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	public String getNewGenre() {
 		return newGenre;
 	}
@@ -2149,6 +2182,11 @@ public class FolderInfo implements java.lang.Comparable {
 			this.value = value;
             this.color = color;
 		}
+
+		/**
+		 *
+		 * @return
+		 */
 		@Override
 		public String toString() {
 			return display;
@@ -2171,12 +2209,34 @@ public class FolderInfo implements java.lang.Comparable {
         }
 	}
 	
+	/**
+	 *
+	 */
 	public enum CopyRight {
 
+		/**
+		 *
+		 */
 		UNDEFINED(Inter.get("Label.BestOf.NotDefined"), 0),  //NOI18N
+
+		/**
+		 *
+		 */
         OWN_PHYSICAL(Inter.get("Label.BestOf.OwnPhysical"), 1), //NOI18N
+
+		/**
+		 *
+		 */
         OWN_DIGITAL(Inter.get("Label.BestOf.OwnDigital"), 2), //NOI18N
+
+		/**
+		 *
+		 */
         CONTRIBUTED(Inter.get("Label.BestOf.Contributed"), 3),  //NOI18N
+
+		/**
+		 *
+		 */
 		NO_SUPPORT(Inter.get("Label.BestOf.NoSupport"), 4);  //NOI18N
 
 		private final String display;
@@ -2186,6 +2246,11 @@ public class FolderInfo implements java.lang.Comparable {
 			this.display = display;
 			this.value = value;
 		}
+
+		/**
+		 *
+		 * @return
+		 */
 		@Override
 		public String toString() {
 			return display;

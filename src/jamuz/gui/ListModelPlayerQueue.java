@@ -169,7 +169,11 @@ public class ListModelPlayerQueue extends AbstractListModel {
         }
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int getSize() {
         return queue.size();
     }
@@ -193,7 +197,12 @@ public class ListModelPlayerQueue extends AbstractListModel {
         return queue;
     }
 
-    @Override
+	/**
+	 *
+	 * @param index
+	 * @return
+	 */
+	@Override
     public Object getElementAt(int index) {
         return queue.get(index);
     }

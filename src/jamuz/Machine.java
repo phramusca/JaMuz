@@ -108,6 +108,10 @@ public class Machine {
 		return options;
 	}
 
+	/**
+	 *
+	 * @param options
+	 */
 	public void setOptions(ArrayList<Option> options) {
 		this.options = options;
 	}

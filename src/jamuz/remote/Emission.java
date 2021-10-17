@@ -80,6 +80,9 @@ public class Emission extends ProcessAbstract {
         }
     }
 	
+	/**
+	 *
+	 */
 	@Override
 	public void run() {
 		try {

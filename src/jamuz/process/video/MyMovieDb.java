@@ -89,6 +89,10 @@ public class MyMovieDb extends MyVideoAbstract implements Serializable {
 		conn.disconnect();
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public String toString() {
 		return this.movieDb.getTitle()+" ("+this.movieDb.getUserRating()+")";

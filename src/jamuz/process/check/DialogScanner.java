@@ -181,6 +181,10 @@ public class DialogScanner extends javax.swing.JDialog {
 		}
 	}
 	
+	/**
+	 *
+	 * @param enable
+	 */
 	public static void enableRowSorter(boolean enable) {
 		if(enable) {
 			//Enable row tableSorter (cannot be done if model is empty)

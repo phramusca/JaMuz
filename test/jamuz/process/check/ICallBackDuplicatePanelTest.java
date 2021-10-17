@@ -29,21 +29,36 @@ import org.junit.Test;
  */
 public class ICallBackDuplicatePanelTest {
 	
+	/**
+	 *
+	 */
 	public ICallBackDuplicatePanelTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -61,8 +76,15 @@ public class ICallBackDuplicatePanelTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class ICallBackDuplicatePanelImpl implements ICallBackDuplicatePanel {
 
+		/**
+		 *
+		 * @param duplicateInfo
+		 */
 		public void duplicate(DuplicateInfo duplicateInfo) {
 		}
 	}

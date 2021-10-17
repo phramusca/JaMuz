@@ -49,7 +49,11 @@ public class StatSourceMyTunes extends StatSourceSQL {
         super(dbInfo, name, rootPath, true, true, false, true, false, false);
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean setUp() {
         try {
             this.dbConn.connect();
@@ -88,6 +92,12 @@ public class StatSourceMyTunes extends StatSourceSQL {
         this.stUpdateFileStatistics.addBatch();
     }
 
+	/**
+	 *
+	 * @param tags
+	 * @param file
+	 * @return
+	 */
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		//TODO TAGS get tags from Guayadeque

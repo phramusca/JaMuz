@@ -242,6 +242,10 @@ public class PlayerMP3 extends PlaybackListener implements Runnable
     }    
 
     // Runnable members
+
+	/**
+	 *
+	 */
 	@Override
     public void run()
     {

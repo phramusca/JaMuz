@@ -34,6 +34,11 @@ import org.xml.sax.SAXException;
  */
 public class XML {
 	
+	/**
+	 *
+	 * @param filename
+	 * @return
+	 */
 	public static Document open(String filename) {
 		try {
 			File file = new File(filename);
@@ -49,6 +54,13 @@ public class XML {
         }
 	}
 
+	/**
+	 *
+	 * @param doc
+	 * @param TagNameLev1
+	 * @param TagNameLev2
+	 * @return
+	 */
 	public static String getNodeValue(Document doc, String TagNameLev1, String TagNameLev2) {
 		NodeList nodeLst = doc.getElementsByTagName(TagNameLev1);
 		Node fstNode = nodeLst.item(0);
@@ -60,6 +72,12 @@ public class XML {
 		return mySubElementList.item(0).getNodeValue();
 	}
 	
+	/**
+	 *
+	 * @param doc
+	 * @param tagName
+	 * @return
+	 */
 	public static ArrayList<Element> getElements(Document doc, String tagName) {
 		ArrayList<Element> elements=new ArrayList<>();
 		NodeList nodeList = doc.getElementsByTagName(tagName);
@@ -72,17 +90,34 @@ public class XML {
 		return elements;
 	}
 	
+	/**
+	 *
+	 * @param element
+	 * @param tagName
+	 * @return
+	 */
 	public static Element getElement(Element element, String tagName) {
 		NodeList nodeList = element.getElementsByTagName(tagName);
 		Node node = nodeList.item(0);
 		return (Element) node;
 	}
 	
+	/**
+	 *
+	 * @param element
+	 * @return
+	 */
 	public static String getElementValue(Element element) {
 		NodeList mySubElementList = element.getChildNodes();
 		return mySubElementList.item(0).getNodeValue();
 	}
 	
+	/**
+	 *
+	 * @param element
+	 * @param attribute
+	 * @return
+	 */
 	public static String getAttribute(Element element, String attribute) {
 		return element.getAttribute(attribute);
 	}	

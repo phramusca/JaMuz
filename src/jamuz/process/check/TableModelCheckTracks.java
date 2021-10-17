@@ -80,12 +80,22 @@ public class TableModelCheckTracks extends TableModelGeneric {
 		return filesAudio;
 	}
   
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int getRowCount() {
         return this.filesAudio.size();
     }
 
-    @Override
+	/**
+	 *
+	 * @param rowIndex
+	 * @param columnIndex
+	 * @return
+	 */
+	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         FileInfoDisplay fileInfoDisplay = filesAudio.get(rowIndex);
 

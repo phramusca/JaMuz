@@ -150,22 +150,41 @@ public class TableModel extends AbstractTableModel {
 		}
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	@Override
     public int getRowCount() {
         return data.length;
     }
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
     public int getColumnCount() {
         return columnNames.length;
     }
 
+	/**
+	 *
+	 * @param rowIndex
+	 * @param columnIndex
+	 * @return
+	 */
 	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         return data[rowIndex][columnIndex];
     }
 
-    @Override
+	/**
+	 *
+	 * @param col
+	 * @return
+	 */
+	@Override
     public String getColumnName(int col) {
         return columnNames[col];
     }
@@ -196,7 +215,13 @@ public class TableModel extends AbstractTableModel {
 		this.data[row][col] = value;
     }
 
-    @Override
+	/**
+	 *
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	@Override
     public boolean isCellEditable(int row, int col){
 		//If column has been setup to be editable, return true
 		for(int column:this.editableColumns){

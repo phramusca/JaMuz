@@ -25,7 +25,11 @@ import javax.swing.table.AbstractTableModel;
 
 
 public abstract class TableModelGeneric extends AbstractTableModel {
-    protected String[] columnNames = {"ToBeDefined"};  //NOI18N
+
+	/**
+	 *
+	 */
+	protected String[] columnNames = {"ToBeDefined"};  //NOI18N
 
 	/**
 	 *
@@ -48,6 +52,13 @@ public abstract class TableModelGeneric extends AbstractTableModel {
 //	protected void setEditable(Integer[] editableColumns) {
 //		this.editableColumns = editableColumns;
 //	}
+
+	/**
+	 *
+	 * @param row
+	 * @param col
+	 * @return
+	 */
     
     @Override
     public boolean isCellEditable(int row, int col){
@@ -61,11 +72,20 @@ public abstract class TableModelGeneric extends AbstractTableModel {
 		return false;
     }
 	
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int getColumnCount() {
         return columnNames.length;
     }
 	
+	/**
+	 *
+	 * @param col
+	 * @return
+	 */
 	@Override
     public String getColumnName(int col) {
         return columnNames[col];

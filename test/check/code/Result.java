@@ -21,14 +21,31 @@ package check.code;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Result {
+
+	/**
+	 *
+	 */
 	public int lineNb;
+
+	/**
+	 *
+	 */
 	public String line;
 
+	/**
+	 *
+	 * @param lineNb
+	 * @param line
+	 */
 	public Result(int lineNb, String line) {
 		this.lineNb = lineNb;
 		this.line = line;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public String toString() {
 		return lineNb + ": " + line;

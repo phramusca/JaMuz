@@ -56,6 +56,10 @@ public class PanelCover extends JPanel {
 		return this.image;
 	}
 	
+	/**
+	 *
+	 * @param g
+	 */
 	@Override
     public void paintComponent(Graphics g) {
 		super.paintComponent(g);

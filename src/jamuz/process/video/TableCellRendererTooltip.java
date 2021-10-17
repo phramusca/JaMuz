@@ -29,7 +29,18 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 
 public class TableCellRendererTooltip extends DefaultTableCellRenderer {
-    @Override
+
+	/**
+	 *
+	 * @param table
+	 * @param value
+	 * @param isSelected
+	 * @param hasFocus
+	 * @param row
+	 * @param column
+	 * @return
+	 */
+	@Override
     public Component getTableCellRendererComponent(
                         JTable table, Object value,
                         boolean isSelected, boolean hasFocus,

@@ -29,21 +29,36 @@ import org.junit.Test;
  */
 public class ICallBackScannerTest {
 	
+	/**
+	 *
+	 */
 	public ICallBackScannerTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -61,8 +76,15 @@ public class ICallBackScannerTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class ICallBackScannerImpl implements ICallBackScanner {
 
+		/**
+		 *
+		 * @param pattern
+		 */
 		public void completed(String pattern) {
 		}
 	}

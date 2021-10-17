@@ -116,7 +116,11 @@ public class TrackTag extends FileInfoInt {
 	 */
 	public boolean ignore = false;
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public String getFormattedAddedDate() {
         if(oriAddedDate.equals("NOW")) {
             return DateTime.getCurrentUtcSql();
@@ -126,7 +130,11 @@ public class TrackTag extends FileInfoInt {
         }
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public String getFormattedLastPlayed() {
         if(oriLastPlayed.equals("NOW")) {
             return DateTime.getCurrentUtcSql();

@@ -471,6 +471,11 @@ public class DialogDuplicateReplace extends javax.swing.JDialog {
 		}
 	}
 	
+	/**
+	 *
+	 * @param colId
+	 * @return
+	 */
 	public static String getField(int colId) {
         String field; //NOI18N
         switch (colId) {

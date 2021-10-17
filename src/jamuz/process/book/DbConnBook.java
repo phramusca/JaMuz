@@ -36,7 +36,6 @@ public class DbConnBook extends DbConn {
 	/**
 	 * Creates a database connection.
 	 * @param dbInfo
-     * @param rootPath
 	 */
 	public DbConnBook(DbInfo dbInfo) {
 		super(dbInfo);

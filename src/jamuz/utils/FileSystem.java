@@ -75,10 +75,20 @@ public class FileSystem {
     //http://stackoverflow.com/questions/15805303/copying-a-file-using-fileutils-copyfile
 ////FOR DISPLAY progressbar IN A JTable cell: http://stackoverflow.com/questions/13753562/adding-progress-bar-to-each-table-cell-for-file-progress-java
     
+	/**
+	 *
+	 * @param file
+	 * @return
+	 */
 	public static File replaceHome(File file) {
 		return replaceHome(file.getPath());
 	}
 	
+	/**
+	 *
+	 * @param fileURL
+	 * @return
+	 */
 	public static File replaceHome(String fileURL) {
 		//Replacing ~ by real home path, ONLY IF AT START !
 		if(fileURL.startsWith("~")) {  //NOI18N

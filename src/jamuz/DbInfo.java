@@ -72,7 +72,6 @@ public class DbInfo {
      * @param location
      * @param user
      * @param pwd
-	 * @param canal
      */
     public DbInfo(LibType libType, String location, String user, String pwd) {
         this.libType = libType;

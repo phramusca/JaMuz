@@ -124,6 +124,11 @@ public class TableCellListener implements PropertyChangeListener, Runnable
 //
 //  Implement the PropertyChangeListener interface
 //
+
+	/**
+	 *
+	 * @param e
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent e)
 	{
@@ -154,6 +159,11 @@ public class TableCellListener implements PropertyChangeListener, Runnable
 	/*
 	 *  See above.
 	 */
+
+	/**
+	 *
+	 */
+
 	@Override
 	public void run()
 	{

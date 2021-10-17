@@ -66,6 +66,15 @@ public class PopupMenu {
 	ActionListener menuListener;
 	private final PopupMenuListener popupMenuListener;
 
+	/**
+	 *
+	 * @param jPopupMenu1
+	 * @param jTableSelect
+	 * @param tableModel
+	 * @param fileInfoList
+	 * @param mplayer
+	 * @param popupMenuListener
+	 */
 	public PopupMenu(JPopupMenu jPopupMenu1, JTable jTableSelect, TableModel tableModel, ArrayList<FileInfoInt> fileInfoList, Mplayer mplayer, PopupMenuListener popupMenuListener) {
 		this.jPopupMenu1 = jPopupMenu1;
 		this.jTableSelect = jTableSelect;

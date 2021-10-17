@@ -41,6 +41,13 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class ImageUtils {
 
+	/**
+	 *
+	 * @param url
+	 * @param height
+	 * @param file
+	 * @return
+	 */
 	public static ImageIcon readIconFromInternet(String url, int height, File file) {
         ImageIcon icon=null;
         try {
@@ -58,6 +65,13 @@ public class ImageUtils {
         return icon;
     }
 	
+	/**
+	 *
+	 * @param filename
+	 * @param height
+	 * @param file
+	 * @return
+	 */
 	public static ImageIcon readIconFromFile(String filename, int height, File file) {
         ImageIcon icon=null;
         try {
@@ -78,6 +92,14 @@ public class ImageUtils {
     }
 	   
     //TODO: MAke a smart cleanup feature
+
+	/**
+	 *
+	 * @param icon
+	 * @param file
+	 * @param overwrite
+	 * @return
+	 */
     public static boolean write(ImageIcon icon, File file, boolean overwrite) {
         try {
             File folder = new File(FilenameUtils.getFullPath(file.getAbsolutePath()));
@@ -94,6 +116,12 @@ public class ImageUtils {
         } 
     }
 	
+	/**
+	 *
+	 * @param icon
+	 * @param file
+	 * @return
+	 */
 	public static boolean write(ImageIcon icon, File file) {
 		return write(icon, file, true);
 	}
@@ -131,6 +159,11 @@ public class ImageUtils {
 		return toBufferedImage(icon.getImage());
     }
 	
+	/**
+	 *
+	 * @param image
+	 * @return
+	 */
 	public static ImageIcon getBorderedIfTooBig(BufferedImage image) {
 		ImageIcon icon = new ImageIcon(((new ImageIcon(image).getImage())));
 		//Shrink icon if too big
@@ -179,6 +212,12 @@ public class ImageUtils {
         return newImage;
     }
 	
+	/**
+	 *
+	 * @param image
+	 * @param maxIconSize
+	 * @return
+	 */
 	public static BufferedImage shrinkImage(BufferedImage image, int maxIconSize) {
 		if(image !=null && (image.getWidth()>maxIconSize || image.getHeight()>maxIconSize)) {
 			return scaleImage(image, maxIconSize, maxIconSize);
@@ -186,6 +225,10 @@ public class ImageUtils {
 		return image;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public static BufferedImage getEmptyCover() {
 		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 40);
 		BufferedImage coverImage = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
@@ -202,6 +245,10 @@ public class ImageUtils {
 		return coverImage;
 	}
 	
+	/**
+	 *
+	 * @return
+	 */
 	public static BufferedImage getTestCover() {
         Font f = new Font(Font.SANS_SERIF, Font.BOLD, 50);
         BufferedImage image = new BufferedImage(400, 400, BufferedImage.TYPE_INT_ARGB);

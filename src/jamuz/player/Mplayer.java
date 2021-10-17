@@ -154,6 +154,10 @@ public class Mplayer implements Runnable {
 			return value;
 		}
 
+		/**
+		 *
+		 * @return
+		 */
 		@Override
 		public String toString() {
 			return name;
@@ -569,7 +573,10 @@ public class Mplayer implements Runnable {
 		}
 	}
 
-    @Override
+	/**
+	 *
+	 */
+	@Override
     public void run() {
         this.startMplayer();
     }

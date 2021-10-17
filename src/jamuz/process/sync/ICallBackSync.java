@@ -11,13 +11,33 @@ package jamuz.process.sync;
  */
 public interface ICallBackSync {
 
+	/**
+	 *
+	 */
 	public void refresh();
 
+	/**
+	 *
+	 */
 	public void enable();
 
+	/**
+	 *
+	 * @param enable
+	 */
 	public void enableButton(boolean enable);
 
+	/**
+	 *
+	 * @param file
+	 * @param idIcon
+	 */
 	public void addRow(String file, int idIcon);
 
+	/**
+	 *
+	 * @param file
+	 * @param msg
+	 */
 	public void addRow(String file, String msg);
 }

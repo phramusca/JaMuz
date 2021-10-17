@@ -46,12 +46,22 @@ public class TableModelCheck extends TableModelGeneric {
 		this.fireTableStructureChanged();
 	}
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public int getRowCount() {
         return this.folders.size();
     }
 
-    @Override
+	/**
+	 *
+	 * @param rowIndex
+	 * @param columnIndex
+	 * @return
+	 */
+	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if(folders!=null) { 
             if(rowIndex<folders.size()) {

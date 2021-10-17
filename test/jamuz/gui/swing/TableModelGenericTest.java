@@ -29,21 +29,36 @@ import org.junit.Test;
  */
 public class TableModelGenericTest {
 	
+	/**
+	 *
+	 */
 	public TableModelGenericTest() {
 	}
 	
+	/**
+	 *
+	 */
 	@BeforeClass
 	public static void setUpClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 	
+	/**
+	 *
+	 */
 	@Before
 	public void setUp() {
 	}
 	
+	/**
+	 *
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -106,13 +121,26 @@ public class TableModelGenericTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 *
+	 */
 	public class TableModelGenericImpl extends TableModelGeneric {
 
+		/**
+		 *
+		 * @return
+		 */
 		@Override
 		public int getRowCount() {
 			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 		}
 
+		/**
+		 *
+		 * @param rowIndex
+		 * @param columnIndex
+		 * @return
+		 */
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

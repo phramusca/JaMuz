@@ -41,6 +41,15 @@ public class ListCellRendererSelector extends JLabel implements ListCellRenderer
 		setVerticalAlignment(0);
 	}
   
+	/**
+	 *
+	 * @param list
+	 * @param value
+	 * @param index
+	 * @param isSelected
+	 * @param cellHasFocus
+	 * @return
+	 */
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		if (isSelected) {

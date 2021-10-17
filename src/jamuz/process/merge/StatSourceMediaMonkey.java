@@ -41,7 +41,11 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
         //TODO: MediaMonkey support BPM I think. Need to get a Windows machine to test and update the SQL scripts below
     }
     
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean setUp() {
         try {
             this.dbConn.connect();
@@ -85,6 +89,12 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
         this.stUpdateFileStatistics.addBatch();
     }
 
+	/**
+	 *
+	 * @param tags
+	 * @param file
+	 * @return
+	 */
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		//FIXME WIDOWS MERGE get user tags from MediaMonkey

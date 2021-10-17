@@ -10,6 +10,14 @@ package jamuz.process.check;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public interface ICallBackDuplicateDialog {
+
+	/**
+	 *
+	 */
 	public void notAduplicate();
+
+	/**
+	 *
+	 */
 	public void delete();
 }

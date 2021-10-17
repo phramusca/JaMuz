@@ -44,7 +44,11 @@ public class StatSourceMixxx extends StatSourceSQL {
         super(dbInfo, name, rootPath, true, false, true, true, true, false);
     }
 
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
     public boolean setUp() {
         try {
             this.dbConn.connect();
@@ -116,6 +120,10 @@ public class StatSourceMixxx extends StatSourceSQL {
         this.stUpdateFileStatistics.addBatch();
     }
 	
+	/**
+	 *
+	 * @return
+	 */
 	public String guessRootPath() {
         ResultSet rs = null;
         try {
@@ -144,6 +152,12 @@ public class StatSourceMixxx extends StatSourceSQL {
         }
     }
 
+	/**
+	 *
+	 * @param tags
+	 * @param file
+	 * @return
+	 */
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		try {
@@ -164,12 +178,23 @@ public class StatSourceMixxx extends StatSourceSQL {
         }
 	}
 
+	/**
+	 *
+	 * @param files
+	 * @return
+	 */
 	@Override
 	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
 		int[] results = super.updateFileStatistics(files);
 		return setTags(files, results); 
 	}
 	
+	/**
+	 *
+	 * @param files
+	 * @param results
+	 * @return
+	 */
 	public synchronized int[] setTags(ArrayList<? extends FileInfo> files, int[] results) {
 		int i=0;
 		for(FileInfo fileInfo : files) {

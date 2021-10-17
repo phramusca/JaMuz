@@ -59,6 +59,10 @@ public class Server {
 	 *
 	 */
 	private Express app;
+
+	/**
+	 *
+	 */
 	public static ServerSocket serverSocket = null;
 	private int port;
 	private HandleLogin handleLogin;
@@ -358,6 +362,10 @@ public class Server {
 		return writer.toString();
 	}
 	
+	/**
+	 *
+	 * @param port
+	 */
 	public void setPort(int port) {
 		this.port = port;
 	}
@@ -514,6 +522,13 @@ public class Server {
 		
 	}
 	
+	/**
+	 *
+	 * @param clientId
+	 * @param login
+	 * @param idFile
+	 * @param destExt
+	 */
 	public void sendFile(String clientId, String login, int idFile, String destExt) {
 		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt);
 		setStatus(login, "Sending file: "+fileInfoInt.getRelativeFullPath());
@@ -545,10 +560,21 @@ public class Server {
         }
 	}
 	
+	/**
+	 *
+	 * @param clientId
+	 * @return
+	 */
 	public boolean isConnected(String clientId) {
 		return clientMap.containsKey(clientId);
 	}
 	
+	/**
+	 *
+	 * @param clientId
+	 * @param obj
+	 * @return
+	 */
 	public boolean send(String clientId, JSONObject obj) {
 		if(clientMap.containsKey(clientId)) {
 			clientMap.get(clientId).send(obj);
@@ -579,10 +605,17 @@ public class Server {
         }
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public TableModelRemote getTableModel() {
 		return tableModel;
 	}
 	
+	/**
+	 *
+	 */
 	public void fillClients() {
 		tableModel.clear();
 		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
