@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
  */
 public class Result {
 	String id;
-	private List<Recording> recordings = new ArrayList<>();
+	private final List<Recording> recordings = new ArrayList<>();
 	String score;
    
 	/**

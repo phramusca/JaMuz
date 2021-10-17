@@ -23,8 +23,8 @@ package jamuz.acoustid;
 public class AcoustIdResult {
 	
 	private String score;
-	private String artist;
-	private String title;
+	private final String artist;
+	private final String title;
 
 	/**
 	 *

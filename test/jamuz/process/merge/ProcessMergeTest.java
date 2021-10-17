@@ -72,7 +72,7 @@ public class ProcessMergeTest {
 	public void testRun() {
 		System.out.println("run");
 		ProcessMerge instance = null;
-		instance.run();
+		instance.start();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

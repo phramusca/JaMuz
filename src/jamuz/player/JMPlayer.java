@@ -35,16 +35,16 @@ import org.slf4j.LoggerFactory;
  */
 public class JMPlayer {
 
-	private static Logger logger = LoggerFactory.getLogger(JMPlayer.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(JMPlayer.class.getName());
 
 	/** A thread that reads from an input stream and outputs to another line by line. */
 	private static class LineRedirecter extends Thread {
 		/** The input stream to read from. */
-		private InputStream in;
+		private final InputStream in;
 		/** The output stream to write to. */
-		private OutputStream out;
+		private final OutputStream out;
 		/** The prefix used to prefix the lines when outputting to the logger. */
-		private String prefix;
+		private final String prefix;
 
 		/**
 		 * @param in
@@ -83,7 +83,7 @@ public class JMPlayer {
 	/** The path to the MPlayer executable. */
 	private String mplayerPath = "mplayer";
 	/** Options passed to MPlayer. */
-	private String mplayerOptions = "-quiet -demuxer lavf -x 640 -y 576 -slave"; // " -idle"; //
+	private final String mplayerOptions = "-quiet -demuxer lavf -x 640 -y 576 -slave"; // " -idle"; //
 
 	/** The process corresponding to MPlayer. */
 	private Process mplayerProcess;
