@@ -101,7 +101,7 @@ public class ProcessSync extends ProcessAbstract {
 				progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
 				callback.refresh();
                 Jamuz.getDb().deleteDeviceFiles(device.getId());
-                Jamuz.getDb().insertDeviceFiles(toInsertInDeviceFiles, device.getId());
+                Jamuz.getDb().insertOrIgnoreDeviceFiles(toInsertInDeviceFiles, device.getId());
 				progressBar.setup(fileInfoSourceList.size());
 				progressBar.progress("Export complete.", fileInfoSourceList.size());
 				callback.refresh();

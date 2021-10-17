@@ -1262,18 +1262,17 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @return
      */
     public synchronized ArrayList<FileInfoInt> insertOrUpdateDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
-        ArrayList<FileInfoInt> inserted=new ArrayList<>();
+        ArrayList<FileInfoInt> insertedOrUpdated=new ArrayList<>();
 		try {
             if (files.size() > 0) {
 				long startTime = System.currentTimeMillis();
                 dbConn.connection.setAutoCommit(false);
                 int[] results;
                 //FIXME Z Use this ON CONFLICT syntax for other insertOrUpdateXXX methods, if applicable
-				 //FIXME !! 0.5.0 Set updated column to proper value
                 PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
 						"INSERT INTO deviceFile "
-                    + " (idFile, idDevice, oriRelativeFullPath, status, updated) " //NOI18N
-                    + " VALUES (?, ?, ?, \"NEW\", 0) "
+                    + " (idFile, idDevice, oriRelativeFullPath, status) " //NOI18N
+                    + " VALUES (?, ?, ?, \"NEW\") "
 					+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?, oriRelativeFullPath=?"); //NOI18N
                 for (FileInfoInt file : files) {
                     stInsertDeviceFile.setInt(1, file.idFile);
@@ -1289,19 +1288,19 @@ public class DbConnJaMuz extends StatSourceSQL {
 				int result;
                 for (int i = 0; i < results.length; i++) {
                     result = results[i];
-                    if (result >= 0) {
-                        inserted.add(files.get(i));
+                    if (result > 0) {
+                        insertedOrUpdated.add(files.get(i));
                     }
                 }
 				dbConn.connection.setAutoCommit(true);
 				long endTime = System.currentTimeMillis();
-				Jamuz.getLogger().log(Level.FINEST, "insertDeviceFiles // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
+				Jamuz.getLogger().log(Level.FINEST, "insertOrUpdateDeviceFiles // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});    //NOI18N
             }
            
-            return inserted;
+            return insertedOrUpdated;
         } catch (SQLException ex) {
             Popup.error("insertDeviceFile(" + idDevice + ")", ex);   //NOI18N
-            return inserted;
+            return insertedOrUpdated;
         }
     }
 	
@@ -1312,7 +1311,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param idDevice
      * @return
      */
-    public synchronized ArrayList<FileInfoInt> insertDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
+    public synchronized ArrayList<FileInfoInt> insertOrIgnoreDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
         ArrayList<FileInfoInt> inserted=new ArrayList<>();
 		try {
             if (files.size() > 0) {
@@ -1335,7 +1334,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				int result;
                 for (int i = 0; i < results.length; i++) {
                     result = results[i];
-                    if (result >= 0) {
+                    if (result > 0) {
                         inserted.add(files.get(i));
                     }
                 }
@@ -1358,7 +1357,7 @@ public class DbConnJaMuz extends StatSourceSQL {
      * @param idDevice
      * @return
      */
-    public synchronized boolean insertDeviceFile(int idDevice, FileInfoInt file) {
+    public synchronized boolean insertOrIgnoreDeviceFile(int idDevice, FileInfoInt file) {
         try {
 			int result;
 			PreparedStatement stInsertDeviceFile = 

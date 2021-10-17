@@ -821,7 +821,7 @@ public class DbConnJaMuzTest {
 		int idDevice = 0;
 		DbConnJaMuz instance = null;
 		ArrayList<FileInfoInt> expResult = null;
-		ArrayList<FileInfoInt> result = instance.insertDeviceFiles(files, idDevice);
+		ArrayList<FileInfoInt> result = instance.insertOrIgnoreDeviceFiles(files, idDevice);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -837,7 +837,7 @@ public class DbConnJaMuzTest {
 		FileInfoInt file = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.insertDeviceFile(idDevice, file);
+		boolean result = instance.insertOrIgnoreDeviceFile(idDevice, file);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
