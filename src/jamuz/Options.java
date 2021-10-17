@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 import jamuz.utils.Popup;
@@ -33,22 +32,22 @@ import java.util.Properties;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Options {
- 
-    private String filename="";
-    private Properties properties;
+
+	private String filename = "";
+	private Properties properties;
 
 	/**
 	 *
 	 */
-	protected InputStream input=null;
-	
+	protected InputStream input = null;
+
 	/**
 	 *
 	 */
 	protected Options() {
 		this.properties = new Properties();
 	}
-	
+
 	/**
 	 *
 	 * @param filename
@@ -60,8 +59,8 @@ public class Options {
 		} catch (FileNotFoundException ex) {
 			Popup.error(ex);
 		}
-        this.filename = filename;
-    }
+		this.filename = filename;
+	}
 
 	/**
 	 *
@@ -69,9 +68,9 @@ public class Options {
 	 * @return
 	 */
 	public String get(String key) {
-        return properties.getProperty(key, "{Missing}");
-    }
-	
+		return properties.getProperty(key, "{Missing}");
+	}
+
 	/**
 	 *
 	 * @param key
@@ -79,66 +78,66 @@ public class Options {
 	 * @return
 	 */
 	public String get(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
-    }
-    
+		return properties.getProperty(key, defaultValue);
+	}
+
 	/**
 	 *
 	 * @param key
 	 * @param value
 	 */
 	public void set(String key, String value) {
-        properties.setProperty(key, value);
-    }
+		properties.setProperty(key, value);
+	}
 
 	/**
 	 *
 	 * @return
 	 */
 	public boolean save() {
-        OutputStream output = null;
-        try {
-            output = new FileOutputStream(filename);
-            properties.store(output, null);
-            return true;
+		OutputStream output = null;
+		try {
+			output = new FileOutputStream(filename);
+			properties.store(output, null);
+			return true;
 
-        } catch (IOException ex) {
-            Popup.error(ex);
-            return false;
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException ex) {
-                    Popup.error(ex);
-                }
-            }
-        }
-    }
+		} catch (IOException ex) {
+			Popup.error(ex);
+			return false;
+		} finally {
+			if (output != null) {
+				try {
+					output.close();
+				} catch (IOException ex) {
+					Popup.error(ex);
+				}
+			}
+		}
+	}
 
 	/**
 	 *
 	 * @return
 	 */
 	public boolean read() {
-		if (input==null) {
+		if (input == null) {
 			return false;
 		}
-        try {
-            properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
-            return true;
+		try {
+			properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
+			return true;
 
-        } catch (IOException ex) {
-            Popup.error(ex);
-            return false;
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException ex) {
-                    Popup.error(ex);
-                }
-            }
-        }
-    }
+		} catch (IOException ex) {
+			Popup.error(ex);
+			return false;
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException ex) {
+					Popup.error(ex);
+				}
+			}
+		}
+	}
 }

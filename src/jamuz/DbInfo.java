@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 import jamuz.utils.DateTime;
@@ -40,23 +39,23 @@ public class DbInfo {
 	/**
 	 * FTP user
 	 */
-	private String ftpUser="";
+	private String ftpUser = "";
 	/**
 	 * FTP password
 	 */
-	private String ftpPwd="";
+	private String ftpPwd = "";
 	/**
 	 * FTP server
 	 */
-	private String ftpServer="";
+	private String ftpServer = "";
 	/**
 	 * FTP remote folder
 	 */
-	private String ftpRemoteFolder="";
+	private String ftpRemoteFolder = "";
 	/**
 	 * FTP filename
 	 */
-	private String ftpFileName="";
+	private String ftpFileName = "";
 	/**
 	 * Database user, if applicable
 	 */
@@ -65,22 +64,22 @@ public class DbInfo {
 	 * Database password, if applicable
 	 */
 	protected final String pwd;
-		
-    /**
-     *
-     * @param libType
-     * @param location
-     * @param user
-     * @param pwd
-     */
-    public DbInfo(LibType libType, String location, String user, String pwd) {
-        this.libType = libType;
-        this.locationOri = location;
-        this.locationWork = location;
-        this.user = user;
-        this.pwd = pwd;
-        
-        //Parse FTP information
+
+	/**
+	 *
+	 * @param libType
+	 * @param location
+	 * @param user
+	 * @param pwd
+	 */
+	public DbInfo(LibType libType, String location, String user, String pwd) {
+		this.libType = libType;
+		this.locationOri = location;
+		this.locationWork = location;
+		this.user = user;
+		this.pwd = pwd;
+
+		//Parse FTP information
 		if (this.locationOri.startsWith("ftp://")) {  //NOI18N
 			String[] split1 = this.locationOri.split("//");  //NOI18N
 			String[] split2 = split1[1].split(":");  //NOI18N
@@ -93,56 +92,57 @@ public class DbInfo {
 			this.ftpServer = split3[1].substring(0, firstDelim);
 			this.ftpRemoteFolder = split3[1].substring(firstDelim, lastDelim);
 			this.ftpFileName = split3[1].substring(lastDelim + 1, split3[1].length());
-		}		
-    }
+		}
+	}
 
-    /**
+	/**
 	 * Return Ftp instance
-	 * @param localFolder 
+	 *
+	 * @param localFolder
 	 * @return
 	 */
 	public Ftp getFtp(String localFolder) {
-		return new Ftp(this.ftpServer, this.ftpUser, this.ftpPwd, localFolder, 
+		return new Ftp(this.ftpServer, this.ftpUser, this.ftpPwd, localFolder,
 				this.ftpRemoteFolder, this.ftpFileName);
 	}
 
 	/**
 	 * Check the stat source
+	 *
 	 * @return
 	 */
 	public boolean check() {
-        switch (this.libType) {
-            case Sqlite:
-                if (locationOri.startsWith("ftp://")) {  //NOI18N
-                    //TODO: Check FTP connect (and file ?)
-                    return true;
-                }
-                else {
-                    //Checking if file exists
-                    File myFile = FileSystem.replaceHome(locationOri);
-                    if (myFile.exists()) {
-                        return true;
-                    }
-                    else {
-                        Popup.error(java.text.MessageFormat.format(
-								Inter.get("Error.PathNotFound"), 
-								new Object[] {locationOri})); //NOI18N
-                        return false;
-                    }
-                }
-            case MySQL:
-                //TODO: Check database connect
-                return true;
-            default:
-                Popup.error(java.text.MessageFormat.format(
-						Inter.get("Error.DbTypeNotSupported"), 
-						new Object[] {this.libType})); //NOI18N
-                return false;
-        }
+		switch (this.libType) {
+			case Sqlite:
+				if (locationOri.startsWith("ftp://")) {  //NOI18N
+					//TODO: Check FTP connect (and file ?)
+					return true;
+				} else {
+					//Checking if file exists
+					File myFile = FileSystem.replaceHome(locationOri);
+					if (myFile.exists()) {
+						return true;
+					} else {
+						Popup.error(java.text.MessageFormat.format(
+								Inter.get("Error.PathNotFound"),
+								new Object[]{locationOri})); //NOI18N
+						return false;
+					}
+				}
+			case MySQL:
+				//TODO: Check database connect
+				return true;
+			default:
+				Popup.error(java.text.MessageFormat.format(
+						Inter.get("Error.DbTypeNotSupported"),
+						new Object[]{this.libType})); //NOI18N
+				return false;
+		}
 	}
-	
+
 	/**
 	 * Copy database from/to log sub path from/to original location
+	 *
 	 * @param receive
 	 * @param locationWork
 	 * @return
@@ -153,58 +153,55 @@ public class DbInfo {
 				String fileName;  //NOI18N
 				if (this.locationOri.startsWith("ftp://")) {  //NOI18N
 					Ftp myFTP = this.getFtp(locationWork);
-					if(receive) {
+					if (receive) {
 						fileName = this.ftpFileName;
 						if (!(myFTP.getFile())) {
 							Popup.error(MessageFormat.format(
-									Inter.get("Error.DatabaseFileRetrieve"), 
-									new Object[] {this.locationOri}));  //NOI18N
+									Inter.get("Error.DatabaseFileRetrieve"),
+									new Object[]{this.locationOri}));  //NOI18N
 							return false;
 						}
-						this.locationWork=locationWork + fileName;
-					}
-					else {
+						this.locationWork = locationWork + fileName;
+					} else {
 						if (!(myFTP.sendFile())) {
 							Popup.error(MessageFormat.format(
-									Inter.get("Error.DataBaseFileSend"), 
-									new Object[] {this.locationOri}));  //NOI18N
+									Inter.get("Error.DataBaseFileSend"),
+									new Object[]{this.locationOri}));  //NOI18N
 							return false;
 						}
 					}
 					return true;
-				} 
-                else {
+				} else {
 					File sourceFile;
 					File destinationFile;
-					if(receive) {
+					if (receive) {
 						sourceFile = FileSystem.replaceHome(this.locationOri);
 						fileName = sourceFile.getName();
 						destinationFile = new File(locationWork + fileName);
-						this.locationWork=locationWork + fileName;
-					}
-					else {
+						this.locationWork = locationWork + fileName;
+					} else {
 						sourceFile = new File(this.locationWork);
 						destinationFile = new File(this.locationOri);
 					}
-                    try {
-                        FileSystem.copyFile(sourceFile, destinationFile);
-                    } catch (IOException ex) {
-						Popup.error("sourceFile="+sourceFile+", destinationFile="
-								+destinationFile, ex);
-                        return false;
-                    }
-				}			
+					try {
+						FileSystem.copyFile(sourceFile, destinationFile);
+					} catch (IOException ex) {
+						Popup.error("sourceFile=" + sourceFile + ", destinationFile="
+								+ destinationFile, ex);
+						return false;
+					}
+				}
 			case MySQL:  //NOI18N
 				//No need to retrieve a mysql database ...
 				return true;
 			default:
 				Popup.error(MessageFormat.format(
-						Inter.get("Error.DbTypeNotSupported"), 
-						new Object[] {this.libType}));  //NOI18N
+						Inter.get("Error.DbTypeNotSupported"),
+						new Object[]{this.libType}));  //NOI18N
 				return false;
 		}
 	}
-    
+
 	/**
 	 *
 	 * @param destinationPath
@@ -216,19 +213,19 @@ public class DbInfo {
 				//Create a backup of that database file
 				File workingFile = new File(this.locationWork);
 				File backupFile = new File(this.locationWork + ".bak");  //NOI18N
-                try {
-                    FileSystem.copyFile(workingFile, backupFile);
-                } catch (IOException ex) {
-                    Popup.error(ex);
-                    return false;
-                }
-                return true;
+				try {
+					FileSystem.copyFile(workingFile, backupFile);
+				} catch (IOException ex) {
+					Popup.error(ex);
+					return false;
+				}
+				return true;
 			case MySQL:  //NOI18N
-				String mysqlBackupFile = destinationPath + 
-						this.locationOri.replace("/", "-") + "--" + DateTime.getCurrentLocal(DateTime.DateTimeFormat.FILE) + ".sql";  //NOI18N
-				String myCmdLine = "mysqldump -u "+ this.user +" -p"+this.pwd
-						+" --opt --compatible=mysql40 "
-						+this.locationOri.substring(this.locationOri.indexOf('/')+1);  //NOI18N
+				String mysqlBackupFile = destinationPath
+						+ this.locationOri.replace("/", "-") + "--" + DateTime.getCurrentLocal(DateTime.DateTimeFormat.FILE) + ".sql";  //NOI18N
+				String myCmdLine = "mysqldump -u " + this.user + " -p" + this.pwd
+						+ " --opt --compatible=mysql40 "
+						+ this.locationOri.substring(this.locationOri.indexOf('/') + 1);  //NOI18N
 				Jamuz.getLogger().finest(myCmdLine);
 				Runtime runtime = Runtime.getRuntime();
 				final Process process;
@@ -247,7 +244,6 @@ public class DbInfo {
 
 					//TODO: Return false if an error is detected 
 					//(check rc from process and/or ErrorStream)
-
 					// Consommation de la sortie standard de l'application externe dans un Thread separe
 					new Thread("Thread.DbInfo.backupDB.mySQL.mysqldump.InputStream") {
 						@Override
@@ -258,14 +254,14 @@ public class DbInfo {
 												process.getInputStream()));
 								String line;
 								try {
-									while((line = reader.readLine()) != null) {
-									mysqlBackupWriter.println(line);
-									mysqlBackupWriter.flush();
+									while ((line = reader.readLine()) != null) {
+										mysqlBackupWriter.println(line);
+										mysqlBackupWriter.flush();
 									}
 								} finally {
 									reader.close();
 								}
-							} catch(IOException ex) {
+							} catch (IOException ex) {
 								Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
 							}
 						}
@@ -281,14 +277,14 @@ public class DbInfo {
 												process.getErrorStream()));
 								String line;
 								try {
-									while((line = reader.readLine()) != null) {
+									while ((line = reader.readLine()) != null) {
 										//Logging eventual errors from mysqldump process
 										Jamuz.getLogger().severe(line);
 									}
 								} finally {
 									reader.close();
 								}
-							} catch(IOException ex) {
+							} catch (IOException ex) {
 								Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
 							}
 						}
@@ -297,7 +293,7 @@ public class DbInfo {
 					process.waitFor();
 
 					//Bzip the file
-					myCmdLine="bzip2 -fq "+mysqlBackupFile;  //NOI18N
+					myCmdLine = "bzip2 -fq " + mysqlBackupFile;  //NOI18N
 					process2 = runtime.exec(myCmdLine);
 					Jamuz.getLogger().finest(myCmdLine);
 
@@ -311,36 +307,36 @@ public class DbInfo {
 												process2.getErrorStream()));
 								String line;
 								try {
-								while((line = reader.readLine()) != null) {
-									//Logging eventual errors from bzip2 process
-									Jamuz.getLogger().severe(line);
-								}
+									while ((line = reader.readLine()) != null) {
+										//Logging eventual errors from bzip2 process
+										Jamuz.getLogger().severe(line);
+									}
 								} finally {
-								reader.close();
+									reader.close();
 								}
-							} catch(IOException ex) {
+							} catch (IOException ex) {
 								Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
 							}
 						}
 					}.start();
 					process.waitFor();
 					return true;
-					
+
 				} catch (IOException | InterruptedException ex) {
 					Popup.error(ex);
-					return false; 
+					return false;
 				}
 			default:
-				Popup.error(MessageFormat.format(Inter.get("Error.DbTypeNotSupported"), new Object[] {this.libType}));  //NOI18N
+				Popup.error(MessageFormat.format(Inter.get("Error.DbTypeNotSupported"), new Object[]{this.libType}));  //NOI18N
 				return false;
 		}
 	}
-    
+
 	/**
 	 *
 	 */
 	protected final LibType libType;
-	
+
 	/**
 	 *
 	 */
@@ -350,13 +346,12 @@ public class DbInfo {
 		 *
 		 */
 		Sqlite,
-
 		/**
 		 *
 		 */
 		MySQL
 	}
-    /**
+	/**
 	 * Original location
 	 */
 	protected String locationOri;
@@ -366,9 +361,9 @@ public class DbInfo {
 	 * @return
 	 */
 	public String getLocationOri() {
-        return locationOri;
-    }
-    
+		return locationOri;
+	}
+
 	/**
 	 * Work location
 	 */
@@ -379,16 +374,15 @@ public class DbInfo {
 	 * @return
 	 */
 	public String getLocationWork() {
-        return locationWork;
-    }
-    
+		return locationWork;
+	}
+
 	/**
 	 *
 	 * @param locationWork
 	 */
 	public void setLocationWork(String locationWork) {
-        this.locationWork = locationWork;
-    }
-    
-	
+		this.locationWork = locationWork;
+	}
+
 }

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 import jamuz.process.merge.StatSource;
@@ -25,83 +24,88 @@ import java.util.LinkedHashMap;
 
 /**
  * Options class
+ *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Machine {
 
 	private ArrayList<Option> options; //TODO: Use an HashMap instead
-	private LinkedHashMap <Integer, StatSource> statSources;
-	private LinkedHashMap <Integer, Device> devices;
-    private final String name;
-    private String description;
-    
+	private LinkedHashMap<Integer, StatSource> statSources;
+	private LinkedHashMap<Integer, Device> devices;
+	private final String name;
+	private String description;
+
 	/**
 	 * Creates Options for given machine name
-     * @param machineName
+	 *
+	 * @param machineName
 	 */
 	public Machine(String machineName) {
-        this.name = machineName;
-        this.description = "";
+		this.name = machineName;
+		this.description = "";
 	}
-	
+
 	/**
 	 * Read options and stat sources for given machine name
+	 *
 	 * @return
 	 */
 	public boolean read() {
-		options= new ArrayList<>();
+		options = new ArrayList<>();
 		statSources = new LinkedHashMap<>();
 		devices = new LinkedHashMap<>();
-        StringBuilder zText = new StringBuilder ();
-		if(Jamuz.getDb().isMachine(this.name, zText, false)) {
-            this.description=zText.toString();
-			if(!Jamuz.getDb().getOptions(options, this.name)) {
+		StringBuilder zText = new StringBuilder();
+		if (Jamuz.getDb().isMachine(this.name, zText, false)) {
+			this.description = zText.toString();
+			if (!Jamuz.getDb().getOptions(options, this.name)) {
 				return false;
 			}
-			if(!Jamuz.getDb().getStatSources(statSources, this.name, false)) {
+			if (!Jamuz.getDb().getStatSources(statSources, this.name, false)) {
 				return false;
 			}
 			return Jamuz.getDb().getDevices(devices, this.name, false);
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Get option by index
+	 *
 	 * @param index
 	 * @return
 	 */
-	public Option getOption(int index){
+	public Option getOption(int index) {
 		return options.get(index);
 	}
-	
+
 	/**
 	 *
 	 * @param id
 	 * @return
 	 */
-	public Option getOption(String id){    
+	public Option getOption(String id) {
 		for (Option myOption : options) {
 			if (myOption.getId().equals(id)) {
 				return myOption;
 			}
 		}
-		return null; 
+		return null;
 	}
-	
+
 	/**
 	 * Get option by value
+	 *
 	 * @param id
 	 * @return
 	 */
-	public String getOptionValue(String id){    
+	public String getOptionValue(String id) {
 		return getOption(id).getValue();
 	}
-	
+
 	/**
 	 * Return options list
+	 *
 	 * @return
 	 */
 	public ArrayList<Option> getOptions() {
@@ -115,73 +119,77 @@ public class Machine {
 	public void setOptions(ArrayList<Option> options) {
 		this.options = options;
 	}
-	
+
 	/**
 	 * Return Stat sources list
+	 *
 	 * @return
 	 */
 	public Collection<StatSource> getStatSources() {
 		return getStatSources(false);
 	}
-	
+
 	/**
 	 * Return Stat sources list
+	 *
 	 * @param force
 	 * @return
 	 */
 	public Collection<StatSource> getStatSources(boolean force) {
-		if(force) {
+		if (force) {
 			statSources = new LinkedHashMap<>();
 			Jamuz.getDb().getStatSources(statSources, this.name, false);
 		}
 		return statSources.values();
 	}
-	
+
 	/**
 	 * Return linked stat source
+	 *
 	 * @param id
 	 * @return
 	 */
 	public StatSource getStatSource(int id) {
-		if(id>0) {
+		if (id > 0) {
 			return this.statSources.get(id);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
 	/**
 	 * Return list of devices as Collection
+	 *
 	 * @return
 	 */
 	public Collection<Device> getDevices() {
 		return getDevices(false);
 	}
-	
+
 	/**
 	 * Return list of devices as Collection
+	 *
 	 * @param force
 	 * @return
 	 */
 	public Collection<Device> getDevices(boolean force) {
-		if(force) {
+		if (force) {
 			devices = new LinkedHashMap<>();
 			Jamuz.getDb().getDevices(devices, this.name, false);
 		}
 		return devices.values();
 	}
-	
-    /**
+
+	/**
 	 * Return requested device
+	 *
 	 * @param id
 	 * @return
 	 */
 	public Device getDevice(int id) {
-		if(id>0) {
+		if (id > 0) {
 			return this.devices.get(id);
-		}
-		else {
+		} else {
 			return new Device();
 		}
 	}
@@ -191,15 +199,15 @@ public class Machine {
 	 * @return
 	 */
 	public String getName() {
-        return name;
-    }
+		return name;
+	}
 
 	/**
 	 *
 	 * @return
 	 */
 	public String getDescription() {
-        return description;
-    }
-    
+		return description;
+	}
+
 }

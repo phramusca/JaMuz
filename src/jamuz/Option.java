@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 import jamuz.utils.Inter;
 
 /**
  * Option class
+ *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Option {
@@ -34,30 +34,32 @@ public class Option {
 
 	/**
 	 * Creates a new Option
+	 *
 	 * @param id
 	 * @param value
 	 * @param idMachine
 	 * @param idOptionType
 	 * @param type
 	 */
-	public Option(String id, String value, int idMachine, 
+	public Option(String id, String value, int idMachine,
 			int idOptionType, String type) {
 		this.id = id;
 		this.value = value;
 		this.comment = ""
 				+ "<html>"
 				+ "<b>"
-				+Inter.get("Options.Title."+id)
-				+"</b> : "
-				+Inter.get("Options.Comment."+id)
-				+"</html>";  //NOI18N
-		this.idMachine=idMachine;
-		this.idOptionType=idOptionType;
-		this.type=type;
+				+ Inter.get("Options.Title." + id)
+				+ "</b> : "
+				+ Inter.get("Options.Comment." + id)
+				+ "</html>";  //NOI18N
+		this.idMachine = idMachine;
+		this.idOptionType = idOptionType;
+		this.type = type;
 	}
 
 	/**
 	 * Return machine ID
+	 *
 	 * @return
 	 */
 	public int getIdMachine() {
@@ -66,6 +68,7 @@ public class Option {
 
 	/**
 	 * Return Option type ID
+	 *
 	 * @return
 	 */
 	public int getIdOptionType() {
@@ -74,12 +77,13 @@ public class Option {
 
 	/**
 	 * Return comment
+	 *
 	 * @return
 	 */
 	public String getComment() {
 		return comment;
 	}
-	
+
 	/**
 	 * Get the value
 	 *
@@ -100,6 +104,7 @@ public class Option {
 
 	/**
 	 * Sets value
+	 *
 	 * @param value
 	 */
 	public void setValue(String value) {
@@ -108,6 +113,7 @@ public class Option {
 
 	/**
 	 * Return type
+	 *
 	 * @return
 	 */
 	public String getType() {
@@ -119,7 +125,7 @@ public class Option {
 	 * @return
 	 */
 	@Override
-    public String toString() {
-        return id;
-    }
+	public String toString() {
+		return id;
+	}
 }

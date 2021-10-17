@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 import jamuz.utils.Inter;
@@ -25,22 +24,24 @@ import org.sqlite.SQLiteConfig;
 
 /**
  * Used to connect to a database
+ *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class DbConn {
-    /**
-     * The SQL connection
-     */
-    protected Connection connection;
+
+	/**
+	 * The SQL connection
+	 */
+	protected Connection connection;
 
 	/**
 	 *
 	 * @return
 	 */
 	public Connection getConnnection() {
-        return connection;
-    }
-    
+		return connection;
+	}
+
 	/**
 	 * Connection information
 	 */
@@ -51,44 +52,46 @@ public class DbConn {
 	 * @return
 	 */
 	public DbInfo getInfo() {
-        return info;
-    }
+		return info;
+	}
 
 	/**
 	 * Creates a new SQL database connection
+	 *
 	 * @param inDbInfo
 	 */
 	public DbConn(DbInfo inDbInfo) {
 		this.info = inDbInfo;
 	}
-	
+
 	/**
 	 * Connect database
-	 * @return 
+	 *
+	 * @return
 	 */
 	public boolean connect() {
 		try {
-            switch (this.info.libType) {
-                case Sqlite:
-                    //NOI18N
-                    Class.forName("org.sqlite.JDBC");  //NOI18N
-                    //This is to enforce foreign keys usage
-                    SQLiteConfig config = new SQLiteConfig();
-                    config.enforceForeignKeys(true);
-                    connection = DriverManager.getConnection("jdbc:sqlite:" + this.info.locationWork,config.toProperties()); //NOI18N //NOI18N
-                    break;
-                case MySQL:
-                    //NOI18N
-                    Class.forName("com.mysql.jdbc.Driver").newInstance();  //NOI18N
-                    connection = DriverManager.getConnection("jdbc:mysql://" + this.info.locationWork, this.info.user, this.info.pwd); //NOI18N //NOI18N
-                    break;
-                default: 
-                    Popup.error(Inter.get("Error.ConnectDatabase")+" \""+this.info.locationWork+"\"  "+" \""+this.info.libType+"\"  ");  //NOI18N
-                    return false;
-            }
+			switch (this.info.libType) {
+				case Sqlite:
+					//NOI18N
+					Class.forName("org.sqlite.JDBC");  //NOI18N
+					//This is to enforce foreign keys usage
+					SQLiteConfig config = new SQLiteConfig();
+					config.enforceForeignKeys(true);
+					connection = DriverManager.getConnection("jdbc:sqlite:" + this.info.locationWork, config.toProperties()); //NOI18N //NOI18N
+					break;
+				case MySQL:
+					//NOI18N
+					Class.forName("com.mysql.jdbc.Driver").newInstance();  //NOI18N
+					connection = DriverManager.getConnection("jdbc:mysql://" + this.info.locationWork, this.info.user, this.info.pwd); //NOI18N //NOI18N
+					break;
+				default:
+					Popup.error(Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\"  " + " \"" + this.info.libType + "\"  ");  //NOI18N
+					return false;
+			}
 			return true;
 		} catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException ex) {
-			Popup.error(Inter.get("Error.ConnectDatabase")+" \""+this.info.locationWork+"\"", ex);  //NOI18N
+			Popup.error(Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\"", ex);  //NOI18N
 			return false;
 		}
 	}
@@ -104,9 +107,10 @@ public class DbConn {
 		}
 	}
 
-    
 	/**
-	 * Get string value from database, replaced by given default value if empty or any problem occured
+	 * Get string value from database, replaced by given default value if empty
+	 * or any problem occured
+	 *
 	 * @param rs
 	 * @param source
 	 * @param defaultValue
@@ -114,32 +118,30 @@ public class DbConn {
 	 */
 	public String getStringValue(ResultSet rs, String source, String defaultValue) {
 		String value = getStringValue(rs, source);
-		if(value.startsWith("{")) {  //NOI18N
+		if (value.startsWith("{")) {  //NOI18N
 			value = defaultValue;
 		}
 		return value;
 	}
-	
+
 	/**
-	 * Get string value from database
-	 * Returns {NoSource} if source is not empty.
-	 * Returns {null} if value is null.
-	 * Returns {Empty} if value is empty
+	 * Get string value from database Returns {NoSource} if source is not empty.
+	 * Returns {null} if value is null. Returns {Empty} if value is empty
 	 * Returns {ERROR} if an error occured
+	 *
 	 * @param rs
 	 * @param source
-	 * @return 
+	 * @return
 	 */
 	public String getStringValue(ResultSet rs, String source) {
 		return getStringValue(rs, source, true);
 	}
 
 	/**
-	 * Get String value from database. 
-	 * Returns {NoSource} if source is not empty.
-	 * Returns {null} if value is null.
-	 * Returns {Empty} if value is empty (if replaceEmpty==true)
-	 * Returns {ERROR} if an error occured
+	 * Get String value from database. Returns {NoSource} if source is not
+	 * empty. Returns {null} if value is null. Returns {Empty} if value is empty
+	 * (if replaceEmpty==true) Returns {ERROR} if an error occured
+	 *
 	 * @param rs
 	 * @param source
 	 * @param replaceEmpty
@@ -147,16 +149,14 @@ public class DbConn {
 	 */
 	public String getStringValue(ResultSet rs, String source, boolean replaceEmpty) {
 		try {
-			if(source.isEmpty()) {  //NOI18N
+			if (source.isEmpty()) {  //NOI18N
 				source = "{NoSource}";  //NOI18N
-			}
-			else {
+			} else {
 				source = rs.getString(source);
-				if(source == null) {
+				if (source == null) {
 					source = "{null}";  //NOI18N
-				}
-				else if(source.isEmpty()) {  //NOI18N
-					if(replaceEmpty) {
+				} else if (source.isEmpty()) {  //NOI18N
+					if (replaceEmpty) {
 						source = "{Empty}";  //NOI18N
 					}
 				}

@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 /**
@@ -30,8 +29,8 @@ public class Keys extends Options {
 	public Keys(String filename) {
 		super();
 		input = Keys.class.getResourceAsStream(filename);
-    }
-	
+	}
+
 	/**
 	 *
 	 * @return
@@ -41,7 +40,7 @@ public class Keys extends Options {
 		//Not needed and unwanted
 		return false;
 	}
-	
+
 	/**
 	 *
 	 * @param key
@@ -49,6 +48,6 @@ public class Keys extends Options {
 	 */
 	@Override
 	public void set(String key, String value) {
-        //Not needed and unwanted
-    }
+		//Not needed and unwanted
+	}
 }

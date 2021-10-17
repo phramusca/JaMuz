@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 import jamuz.DbInfo.LibType;
@@ -51,13 +50,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class Jamuz {
 
-	private static String appPath="";  //NOI18N
-    private static String logPath="";  //NOI18N
-    private static Options options;
+	private static String appPath = "";  //NOI18N
+	private static String logPath = "";  //NOI18N
+	private static Options options;
 	private static Keys keys;
-    private static Machine machine;
-    private static DbConnJaMuz db;
-	private static HashMap <Integer, Playlist> playlists;
+	private static Machine machine;
+	private static DbConnJaMuz db;
+	private static HashMap<Integer, Playlist> playlists;
 
 	/**
 	 *
@@ -65,64 +64,63 @@ public class Jamuz {
 	 * @return
 	 */
 	public static boolean configure(String appPath) {
-        Jamuz.appPath = appPath;
-        logPath = appPath + "logs" + File.separator;  //NOI18N //NOI18N //NOI18N
+		Jamuz.appPath = appPath;
+		logPath = appPath + "logs" + File.separator;  //NOI18N //NOI18N //NOI18N
 
-        if(!connectDatabase()) {
-            return false;
-        }
-        readGenres(); 
-        readTags();
-		if(!readPlaylists()) {
+		if (!connectDatabase()) {
 			return false;
 		}
-        if(!getCurrentMachine())
-        {
-            return false;
-        }
-        if(!getMachine().read()) {
-            return false;
-        }
-        if(!createLog()) {
-            return false;
-        }
-        logger.info("JaMuz started"); //NOI18N
-        logger.log(Level.CONFIG, "Current folder: {0}", appPath); //NOI18N
+		readGenres();
+		readTags();
+		if (!readPlaylists()) {
+			return false;
+		}
+		if (!getCurrentMachine()) {
+			return false;
+		}
+		if (!getMachine().read()) {
+			return false;
+		}
+		if (!createLog()) {
+			return false;
+		}
+		logger.info("JaMuz started"); //NOI18N
+		logger.log(Level.CONFIG, "Current folder: {0}", appPath); //NOI18N
 
-        if(!OS.detect()) {
-            return false;
-        }
-        logger.log(Level.CONFIG, "OS: {0}", OS.getName()); //NOI18N
+		if (!OS.detect()) {
+			return false;
+		}
+		logger.log(Level.CONFIG, "OS: {0}", OS.getName()); //NOI18N
 
-        String filename = appPath + "JaMuz.properties";
-        if(new File(filename).exists()) {
-			options = new Options(filename); 
-			if(!options.read()) {
+		String filename = appPath + "JaMuz.properties";
+		if (new File(filename).exists()) {
+			options = new Options(filename);
+			if (!options.read()) {
 				return false;
 			}
 		} else {
 			Popup.error("Missing JaMuz.properties file.");
-            return false;
-        }
-
-		keys = new Keys("/jamuz/keys.properties");
-        if(!keys.read()) {
-			Popup.error("Missing keys.properties file from jar package.");
-            return false;
-        }
-        
-		//TODO: Test (not used a proxy for long and not since it is setup here)
-		//TODO: Reload when options changes
-		if(!setProxy()) {
 			return false;
 		}
-		
-        //Set logger on utils classes
-        Popup.setLogger(logger);
-        Ftp.setLogger(logger);
 
-        //Log options
-        logger.log(Level.CONFIG, "JaMuz database: {0}", getDb().getDbConn().info.locationOri); //NOI18N
+		keys = new Keys("/jamuz/keys.properties");
+		if (!keys.read()) {
+			Popup.error("Missing keys.properties file from jar package.");
+			return false;
+		}
+
+		//TODO: Test (not used a proxy for long and not since it is setup here)
+		//TODO: Reload when options changes
+		if (!setProxy()) {
+			return false;
+		}
+
+		//Set logger on utils classes
+		Popup.setLogger(logger);
+		Ftp.setLogger(logger);
+
+		//Log options
+		logger.log(Level.CONFIG, "JaMuz database: {0}", getDb().getDbConn().info.locationOri); //NOI18N
 		logConfig("location.library");
 		logConfig("library.isMaster");
 		logConfig("location.add");
@@ -140,35 +138,35 @@ public class Jamuz {
 		logConfig("files.convert");
 		logConfig("files.delete");
 
-        //Set library location (JaMuz's rootPath)
-        db.setRootPath(getMachine().getOptionValue("location.library"));  //NOI18N
-        
-        return true;
-    }
+		//Set library location (JaMuz's rootPath)
+		db.setRootPath(getMachine().getOptionValue("location.library"));  //NOI18N
+
+		return true;
+	}
 
 	private static void logConfig(String id) {
-		logger.log(Level.CONFIG, id+": {0}", getMachine().getOptionValue(id)); //NOI18N
+		logger.log(Level.CONFIG, id + ": {0}", getMachine().getOptionValue(id)); //NOI18N
 	}
-	
+
 	private static boolean setProxy() {
 		String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
-		if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
+		if (!proxy.startsWith("{")) { // For {Empty}  //NOI18N
 			String[] split = proxy.split(":");  //NOI18N
 			System.setProperty("http.proxyHost", split[0]);  //NOI18N
 			System.setProperty("http.proxyPort", split[1]);  //NOI18N
 		}
 		return true;
 	}
-	
+
 	/**
 	 *
 	 * @return
 	 */
 	public static DefaultHttpClient getHttpClient() {
 		DefaultHttpClient httpclient = null;
-		if(machine!=null) {
+		if (machine != null) {
 			String proxy = machine.getOptionValue("network.proxy");  //NOI18N
-			if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
+			if (!proxy.startsWith("{")) { // For {Empty}  //NOI18N
 				String[] split = proxy.split(":");  //NOI18N
 				HttpHost httpHost = new HttpHost(split[0], Integer.parseInt(split[1]));
 				httpclient = new DefaultHttpClient();
@@ -177,16 +175,16 @@ public class Jamuz {
 		}
 		return httpclient;
 	}
-	
+
 	/**
 	 *
 	 * @return
 	 */
 	public static Proxy getProxy() {
 		Proxy myProxy = null;
-		if(machine!=null) {
+		if (machine != null) {
 			String proxy = machine.getOptionValue("network.proxy");  //NOI18N
-			if(!proxy.startsWith("{")) { // For {Empty}  //NOI18N
+			if (!proxy.startsWith("{")) { // For {Empty}  //NOI18N
 				String[] split = proxy.split(":");  //NOI18N
 				InetSocketAddress sa = new InetSocketAddress(split[0], Integer.parseInt(split[1]));
 				myProxy = new Proxy(Proxy.Type.HTTP, sa);
@@ -194,30 +192,30 @@ public class Jamuz {
 		}
 		return myProxy;
 	}
-	
-    private static boolean getCurrentMachine() {
+
+	private static boolean getCurrentMachine() {
 		try {
 			String currentMachine = InetAddress.getLocalHost().getHostName();
-            machine = new Machine(currentMachine);
+			machine = new Machine(currentMachine);
 			return true;
 		} catch (UnknownHostException ex) {
 			Popup.error(ex);
 			return false;
 		}
 	}
-    
-    private static boolean connectDatabase() {
-        
-        //This is default database location and name
+
+	private static boolean connectDatabase() {
+
+		//This is default database location and name
 		String JaMuzDbPath = appPath + "JaMuz.db";
-		
+
 		//Check XML config file presence (to override database location and name)
-		String configFileName=appPath + "JaMuz.xml";  //NOI18N
-        File f = new File(configFileName);
-        if(f.exists()) {
+		String configFileName = appPath + "JaMuz.xml";  //NOI18N
+		File f = new File(configFileName);
+		if (f.exists()) {
 			//Open application XML configuration file
 			org.w3c.dom.Document docDatabase = XML.open(configFileName);
-			if(docDatabase==null) {
+			if (docDatabase == null) {
 				Popup.warning(Inter.get("Error.OpenXMLConfigFile")); //NOI18N
 				return false;
 			}
@@ -225,8 +223,8 @@ public class Jamuz {
 			//Check XML configuration file type and version
 			String type = XML.getNodeValue(docDatabase, "header", "type");  //NOI18N
 			String version = XML.getNodeValue(docDatabase, "header", "version");  //NOI18N
-			if(!type.equals("jamuz") || !version.equals("1")) { //NOI18N
-				Popup.warning(java.text.MessageFormat.format(Inter.get("Error.XMLConfigFileInvalid"), new Object[] {configFileName, type, version}));  //NOI18N
+			if (!type.equals("jamuz") || !version.equals("1")) { //NOI18N
+				Popup.warning(java.text.MessageFormat.format(Inter.get("Error.XMLConfigFileInvalid"), new Object[]{configFileName, type, version}));  //NOI18N
 				return false;
 			}
 
@@ -234,20 +232,20 @@ public class Jamuz {
 			JaMuzDbPath = XML.getNodeValue(docDatabase, "config", "database");  //NOI18N
 		}
 
-        //Check JaMuz JaMuzDbPath file presence
-        f = new File(JaMuzDbPath);
-        if(!f.exists()) {
-            Popup.warning(java.text.MessageFormat.format(Inter.get("Error.JaMuzDbNotFound"), JaMuzDbPath));  //NOI18N
-            return false;
-        }
-        
-        //Create and open connection to JaMuz JaMuzDbPath			
-        db= new DbConnJaMuz(new DbInfo(LibType.Sqlite, JaMuzDbPath, "", ""));
+		//Check JaMuz JaMuzDbPath file presence
+		f = new File(JaMuzDbPath);
+		if (!f.exists()) {
+			Popup.warning(java.text.MessageFormat.format(Inter.get("Error.JaMuzDbNotFound"), JaMuzDbPath));  //NOI18N
+			return false;
+		}
 
-        return db.setUp();
-    }
-    
-    private static boolean createLog() {
+		//Create and open connection to JaMuz JaMuzDbPath			
+		db = new DbConnJaMuz(new DbInfo(LibType.Sqlite, JaMuzDbPath, "", ""));
+
+		return db.setUp();
+	}
+
+	private static boolean createLog() {
 		try {
 			//Create process LOG folder if it does not yet exists
 			File f = new File(logPath);
@@ -255,21 +253,21 @@ public class Jamuz {
 			//TODO: Return an error if something goes wrong
 			//mkdir() return false if folder already exist and no Exception is thrown
 			//Need to use f.canRead(); et f.canWrite();
-			
+
 			//Create Logger
 			String logFilePath = logPath + "log-%g.html";  //NOI18N
-			FileHandler fh=new FileHandler(logFilePath, Integer.parseInt(getMachine().getOptionValue("log.limit")), Integer.parseInt(getMachine().getOptionValue("log.count"))); //NOI18N
+			FileHandler fh = new FileHandler(logFilePath, Integer.parseInt(getMachine().getOptionValue("log.limit")), Integer.parseInt(getMachine().getOptionValue("log.count"))); //NOI18N
 			fh.setFormatter(new LogFormat());
 			logger.addHandler(fh);
 			logger.setLevel(Level.parse(getMachine().getOptionValue("log.level"))); //NOI18N
-			
+
 			return true;
 		} catch (IOException ex) {
-			Popup.error(Inter.get("Error.IOException")+" (create journal):\n"+ex.toString());  //NOI18N
+			Popup.error(Inter.get("Error.IOException") + " (create journal):\n" + ex.toString());  //NOI18N
 			return false;
 		}
 	}
-    
+
 	/**
 	 *
 	 * @param filename
@@ -277,51 +275,54 @@ public class Jamuz {
 	 * @return
 	 */
 	public static File getFile(String filename, String... args) {
-        String file=appPath;
-        for (String subFolder : args) {
-            file = FilenameUtils.concat(file, subFolder); //NOI18N
+		String file = appPath;
+		for (String subFolder : args) {
+			file = FilenameUtils.concat(file, subFolder); //NOI18N
 			try {
 				FileUtils.forceMkdir(new File(file));
 			} catch (IOException ex) {
 				Logger.getLogger(Jamuz.class.getName()).log(Level.SEVERE, null, ex);
 			}
-        } 
-        file = FilenameUtils.concat(file, filename); //NOI18N
-        return new File(file); //NOI18N
-    }
+		}
+		file = FilenameUtils.concat(file, filename); //NOI18N
+		return new File(file); //NOI18N
+	}
 
-    /**
+	/**
 	 * Get Application LOG path. Used to backup database files also
-     * @return 
+	 *
+	 * @return
 	 */
-    public static String getLogPath() {
-        return logPath;
-    }
-	
+	public static String getLogPath() {
+		return logPath;
+	}
+
 	/**
 	 * Get Application database connection.
-     * @return 
+	 *
+	 * @return
 	 */
-    public static DbConnJaMuz getDb() {
+	public static DbConnJaMuz getDb() {
 		return db;
-    }
-    
-    /**
-	 * Get Application current machine's options.
-     * @return 
-	 */
-    public static Machine getMachine() {
-        return machine;
-    }
+	}
 
-    /**
-	 * Get Application options.
-     * Currently only video options.
-     * @return 
+	/**
+	 * Get Application current machine's options.
+	 *
+	 * @return
 	 */
-    public static Options getOptions() {
-        return options;
-    }
+	public static Machine getMachine() {
+		return machine;
+	}
+
+	/**
+	 * Get Application options. Currently only video options.
+	 *
+	 * @return
+	 */
+	public static Options getOptions() {
+		return options;
+	}
 
 	/**
 	 *
@@ -332,53 +333,53 @@ public class Jamuz {
 	}
 
 	private static DefaultListModel genreListModel;
-	
+
 	/**
 	 *
 	 */
 	public static void readGenres() {
-        genreListModel = new DefaultListModel();
-        getDb().getGenreListModel(genreListModel);
-    }
+		genreListModel = new DefaultListModel();
+		getDb().getGenreListModel(genreListModel);
+	}
 
 	/**
 	 *
 	 * @return
 	 */
 	public static List<String> getGenres() {
-        return (List<String>)(List<?>) Arrays.asList(genreListModel.toArray());
-    }
-	
+		return (List<String>) (List<?>) Arrays.asList(genreListModel.toArray());
+	}
+
 	/**
 	 *
 	 * @return
 	 */
 	public static DefaultListModel getGenreListModel() {
-        return genreListModel;
-    }
-    
-    private static ArrayList<String> tags;
+		return genreListModel;
+	}
+
+	private static ArrayList<String> tags;
 	private static DefaultListModel tagsModel;
 
 	/**
 	 *
 	 */
 	public static void readTags() {
-        tags = getDb().getTags();
+		tags = getDb().getTags();
 		tagsModel = new DefaultListModel();
-		for(String tag : tags) {
+		for (String tag : tags) {
 			tagsModel.addElement(tag);
 		}
-    }
+	}
 
 	/**
 	 *
 	 * @return
 	 */
 	public static ArrayList<String> getTags() {
-        return tags;
-    }
-	
+		return tags;
+	}
+
 	/**
 	 *
 	 * @return
@@ -387,25 +388,27 @@ public class Jamuz {
 		return tagsModel;
 	}
 
-    /**
+	/**
 	 * Reads playlists from database
+	 *
 	 * @return
 	 */
 	public static boolean readPlaylists() {
 		playlists = new HashMap<>();
 		return getDb().getPlaylists(playlists);
 	}
-    
+
 	/**
 	 * Return playlists as a Collection
+	 *
 	 * @return
 	 */
 	public static List<Playlist> getPlaylists() {
-        List list = new ArrayList(playlists.values());
-        Collections.sort(list);
+		List list = new ArrayList(playlists.values());
+		Collections.sort(list);
 		return list;
 	}
-    
+
 	/**
 	 *
 	 * @return
@@ -416,22 +419,22 @@ public class Jamuz {
 				.sorted()
 				.collect(Collectors.toList());
 	}
-	
+
 	/**
 	 * Return requested playlist
+	 *
 	 * @param id
 	 * @return
 	 */
 	public static Playlist getPlaylist(int id) {
-		if(id>0) {
+		if (id > 0) {
 			return playlists.get(id);
-		}
-		else {
+		} else {
 			return new Playlist(0, Inter.get("Playlist.FullLibrary"), false, 1, Playlist.LimitUnit.Gio, false, Playlist.Type.Songs, Playlist.Match.All, false, ""); //NOI18N
 		}
 	}
-    
-    /**
+
+	/**
 	 * Get LOG instance.
 	 */
 	private static final Logger logger = Logger.getLogger("JaMuz");  //NOI18N
@@ -441,7 +444,7 @@ public class Jamuz {
 	 * @return
 	 */
 	public static Logger getLogger() {
-        return logger;
-    }
-    
+		return logger;
+	}
+
 }

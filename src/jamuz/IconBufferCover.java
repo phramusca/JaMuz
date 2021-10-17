@@ -1,4 +1,4 @@
- /*
+/*
  * Copyright (C) 2014 phramusca ( https://github.com/phramusca/JaMuz/ )
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 import jamuz.utils.ImageUtils;
@@ -29,23 +28,21 @@ import javax.swing.ImageIcon;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-
-
 public class IconBufferCover {
 
-    /**
-     * Cover Icon Size
-     */
-    private static final int coverIconSize = 50;
+	/**
+	 * Cover Icon Size
+	 */
+	private static final int coverIconSize = 50;
 
 	/**
 	 *
 	 * @return
 	 */
 	public static int getCoverIconSize() {
-        return coverIconSize;
-    }
-    
+		return coverIconSize;
+	}
+
 	/**
 	 *
 	 * @param file
@@ -53,38 +50,38 @@ public class IconBufferCover {
 	 * @return
 	 */
 	public static ImageIcon getCoverIcon(FileInfoInt file, boolean readIfNotFound) {
-        ImageIcon icon;        
-        icon= readIconFromCache(file.getCoverHash());
-        if(icon!=null) {
-            return icon;
-        }
-        if(readIfNotFound) {
+		ImageIcon icon;
+		icon = readIconFromCache(file.getCoverHash());
+		if (icon != null) {
+			return icon;
+		}
+		if (readIfNotFound) {
 			BufferedImage coverImage = file.getCoverImage();
 			icon = new ImageIcon(coverImage.getScaledInstance(coverIconSize, coverIconSize, java.awt.Image.SCALE_SMOOTH));
-			file.unsetCover(); 
+			file.unsetCover();
 			ImageUtils.write(icon, getCacheFile(file.getCoverHash()), true);
-        }
-        return icon;
+		}
+		return icon;
 
-    }
-    
-    //TODO: Offer at least a cache cleanup function (better would be a smart auto cleanup)
-    //Until then, can delete cache folder (or only audio)
-    private static ImageIcon readIconFromCache(String coverHash) {
-        try {
-            File file = getCacheFile(coverHash);
-            if(file.exists()) {
-                return new ImageIcon(ImageIO.read(file));
-            }
-            return null;
-        } catch (IOException ex) {
-            Popup.error(ex);
-            return null;
-        }
-    }
-    
-    private static File getCacheFile(String coverHash) {
-        String filename = coverHash.isEmpty()?"NA":coverHash;
-        return Jamuz.getFile(filename+".png", "data", "cache", "audio");
-    }
+	}
+
+	//TODO: Offer at least a cache cleanup function (better would be a smart auto cleanup)
+	//Until then, can delete cache folder (or only audio)
+	private static ImageIcon readIconFromCache(String coverHash) {
+		try {
+			File file = getCacheFile(coverHash);
+			if (file.exists()) {
+				return new ImageIcon(ImageIO.read(file));
+			}
+			return null;
+		} catch (IOException ex) {
+			Popup.error(ex);
+			return null;
+		}
+	}
+
+	private static File getCacheFile(String coverHash) {
+		String filename = coverHash.isEmpty() ? "NA" : coverHash;
+		return Jamuz.getFile(filename + ".png", "data", "cache", "audio");
+	}
 }

@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 //TODO: Ant (build.xml):  copy configuration and other required files, make 7z package.
-
 //----------------------------------------------------------
 // - General TODO:
 //      - TODO: manage database backups in logs
@@ -75,7 +73,6 @@ package jamuz;
 //          => Doing this, merge options to copy/move files b/w "Sync" and "Video" (export)
 //TODO: List used librairies (source, version, how to compile if needed,...)
 //TODO: Consider using Maven
-
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
 import jamuz.utils.Popup;
@@ -84,37 +81,37 @@ import java.util.logging.Handler;
 
 /**
  * JaMuz main class
+ *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Main {
-    
+
 	/**
 	 * Main program.
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try {
 
-            //Get current application folder
+			//Get current application folder
 			File f = new File(".");  //NOI18N
 			Jamuz.getLogger().finest(f.getAbsolutePath());
 			String appPath = f.getAbsolutePath();
 			appPath = appPath.substring(0, appPath.length() - 1);
 
-            //Configure application
-            if(!Jamuz.configure(appPath)) {
-                System.exit(1);
-            }			
+			//Configure application
+			if (!Jamuz.configure(appPath)) {
+				System.exit(1);
+			}
 
 			//Add a listnerer on application exit
-			Runtime.getRuntime().addShutdownHook(new Thread("Thread.Main.main.addShutdownHook")
-			{
+			Runtime.getRuntime().addShutdownHook(new Thread("Thread.Main.main.addShutdownHook") {
 				@Override
-				public void run()
-				{
-					if(Jamuz.getLogger()!=null) {
+				public void run() {
+					if (Jamuz.getLogger() != null) {
 						//Close all handlers, if not already closed
-						for(Handler hd : Jamuz.getLogger().getHandlers()) {
+						for (Handler hd : Jamuz.getLogger().getHandlers()) {
 							hd.close();
 							hd.flush();
 						}
@@ -125,11 +122,10 @@ public class Main {
 			});
 
 			PanelMain.main();
-		}
-		catch(Exception ex) {
+		} catch (Exception ex) {
 			Popup.error(ex);
 			System.exit(99);
 		}
-    }   
+	}
 
 }

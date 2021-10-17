@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz;
 
 import jamuz.utils.Popup;
@@ -29,25 +28,24 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public abstract class StatSourceSQL extends StatSourceAbstract  {
-    //TODO: Make a "StatSourceTheAudioDb" (See TheMovieDb class & website http://www.theaudiodb.com/)
-    // => NEED TO FIND A JAVA LIB FIRST !
-    
-    //TODO: Make a "StatSourceMusicBrainz" (See ReleaseMB class and ManualTesting class - stop at ReleaseGroup level, ie not go to Medium level)
+public abstract class StatSourceSQL extends StatSourceAbstract {
+	//TODO: Make a "StatSourceTheAudioDb" (See TheMovieDb class & website http://www.theaudiodb.com/)
+	// => NEED TO FIND A JAVA LIB FIRST !
 
+	//TODO: Make a "StatSourceMusicBrainz" (See ReleaseMB class and ManualTesting class - stop at ReleaseGroup level, ie not go to Medium level)
 	/**
 	 *
 	 */
-    protected final DbConn dbConn;
+	protected final DbConn dbConn;
 
 	/**
 	 *
 	 * @return
 	 */
 	public DbConn getDbConn() {
-        return dbConn;
-    }
-	
+		return dbConn;
+	}
+
 	/**
 	 *
 	 */
@@ -57,27 +55,28 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 	 *
 	 */
 	protected PreparedStatement stUpdateFileStatistics;
-    /**
-     *
-     * @param dbInfo
-     * @param name
-     * @param updateAddedDate
-     * @param updateLastPlayed
-     * @param rootPath
-     * @param updateBPM
+
+	/**
+	 *
+	 * @param dbInfo
+	 * @param name
+	 * @param updateAddedDate
+	 * @param updateLastPlayed
+	 * @param rootPath
+	 * @param updateBPM
 	 * @param updatePlayCounter
 	 * @param updateTags
 	 * @param updateGenre
-     */
-    public StatSourceSQL(DbInfo dbInfo, String name, String rootPath, 
-            boolean updateAddedDate, boolean updateLastPlayed, 
-			boolean updateBPM, boolean updatePlayCounter, 
+	 */
+	public StatSourceSQL(DbInfo dbInfo, String name, String rootPath,
+			boolean updateAddedDate, boolean updateLastPlayed,
+			boolean updateBPM, boolean updatePlayCounter,
 			boolean updateTags, boolean updateGenre) {
-        super(name, rootPath, dbInfo.locationOri, updateAddedDate, 
-				updateLastPlayed, updateBPM, updatePlayCounter, 
+		super(name, rootPath, dbInfo.locationOri, updateAddedDate,
+				updateLastPlayed, updateBPM, updatePlayCounter,
 				updateTags, updateGenre);
-        dbConn = new DbConn(dbInfo);
-    }
+		dbConn = new DbConn(dbInfo);
+	}
 
 	/**
 	 *
@@ -85,33 +84,32 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 	 * @return
 	 */
 	@Override
-    public boolean getStatistics(ArrayList<FileInfo> files) {
-        ResultSet rs=null;
-        try {
-            FileInfo myFileInfo;
-            rs = this.stSelectFileStatistics.executeQuery();
-            while (rs.next()) {
+	public boolean getStatistics(ArrayList<FileInfo> files) {
+		ResultSet rs = null;
+		try {
+			FileInfo myFileInfo;
+			rs = this.stSelectFileStatistics.executeQuery();
+			while (rs.next()) {
 				myFileInfo = getFileStatistics(rs);
 				files.add(myFileInfo);
-            }
-            return true;
-        } catch (SQLException ex) {
-            Popup.error(ex);
+			}
+			return true;
+		} catch (SQLException ex) {
+			Popup.error(ex);
 			Jamuz.getLogger().log(Level.SEVERE, "getStatistics", ex);  //NOI18N
 			return false;
-        }
-        finally {
-            try {
-                if (rs!=null) {
+		} finally {
+			try {
+				if (rs != null) {
 					rs.close();
 				}
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            
-        }
-    }
-    
+			} catch (SQLException ex) {
+				Jamuz.getLogger().warning("Failed to close ResultSet");
+			}
+
+		}
+	}
+
 	/**
 	 *
 	 * @param rs
@@ -119,8 +117,8 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 	 */
 	protected FileInfo getFileStatistics(ResultSet rs) {
 		try {
-            String strfullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N
-            String relativeFullPath = strfullPath.substring(getRootPath().length());
+			String strfullPath = dbConn.getStringValue(rs, "fullPath");  //NOI18N
+			String relativeFullPath = strfullPath.substring(getRootPath().length());
 			int rating = rs.getInt("rating");  //NOI18N
 			String lastPlayed = dbConn
 					.getStringValue(rs, "lastplayed", "1970-01-01 00:00:00");  //NOI18N
@@ -128,40 +126,41 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 					.getStringValue(rs, "addedDate", "1970-01-01 00:00:00");  //NOI18N
 			int playCounter = rs.getInt("playCounter");  //NOI18N
 
-			return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed, 
-					addedDate, playCounter, this.getName(), 0, Float.valueOf(0), 
+			return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed,
+					addedDate, playCounter, this.getName(), 0, Float.valueOf(0),
 					"", "", "", "");
 		} catch (SQLException ex) {
 			Popup.error("getStatistics", ex);  //NOI18N
 			return null;
 		}
 	}
-    
-    /**
+
+	/**
 	 * Update statistics
+	 *
 	 * @param files
 	 * @return
 	 */
-    @Override
+	@Override
 	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
 		try {
 			dbConn.connection.setAutoCommit(false);
-			for(FileInfo file : files) {
-                setUpdateStatisticsParameters(file);
+			for (FileInfo file : files) {
+				setUpdateStatisticsParameters(file);
 			}
 			long startTime = System.currentTimeMillis();
 			int[] results = this.stUpdateFileStatistics.executeBatch();
 			dbConn.connection.commit();
 			long endTime = System.currentTimeMillis();
-			Jamuz.getLogger().log(Level.FINEST, "updateStatistics // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime-startTime});   //NOI18N
+			Jamuz.getLogger().log(Level.FINEST, "updateStatistics // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});   //NOI18N
 			dbConn.connection.setAutoCommit(true);
 			return results;
 		} catch (SQLException ex) {
 			Popup.error(ex);
-            return new int[0];
+			return new int[0];
 		}
 	}
-    
+
 	/**
 	 *
 	 * @param file
@@ -169,33 +168,31 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 	 */
 	abstract protected void setUpdateStatisticsParameters(FileInfo file) throws SQLException;
 
-    // Some audio players do not store path in current OS style
-    // Exemple: Mixxx store paths in linux style even running on Windows
-    // Since rootPath must use the good separator, we can use it to do conversions
-
+	// Some audio players do not store path in current OS style
+	// Exemple: Mixxx store paths in linux style even running on Windows
+	// Since rootPath must use the good separator, we can use it to do conversions
 	/**
 	 *
 	 * @param path
 	 * @return
 	 */
-    protected String getPath(String path) {
-		if(this.getRootPath().contains("/")) { //NOI18N
+	protected String getPath(String path) {
+		if (this.getRootPath().contains("/")) { //NOI18N
 			path = FilenameUtils.separatorsToUnix(path);
-		}
-		else {
+		} else {
 			path = FilenameUtils.separatorsToWindows(path);
 		}
-        return path;
-    }
-    
+		return path;
+	}
+
 	/**
 	 *
 	 * @return
 	 */
 	@Override
-    public boolean check() {
-        return this.dbConn.info.check();
-    }
+	public boolean check() {
+		return this.dbConn.info.check();
+	}
 
 	/**
 	 *
@@ -203,9 +200,9 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 	 * @return
 	 */
 	@Override
-    public boolean getSource(String locationWork) {
-        return this.dbConn.info.copyDB(true, locationWork);
-    }
+	public boolean getSource(String locationWork) {
+		return this.dbConn.info.copyDB(true, locationWork);
+	}
 
 	/**
 	 *
@@ -213,9 +210,9 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 	 * @return
 	 */
 	@Override
-    public boolean sendSource(String locationWork) {
-        return this.dbConn.info.copyDB(false, locationWork);
-    }
+	public boolean sendSource(String locationWork) {
+		return this.dbConn.info.copyDB(false, locationWork);
+	}
 
 	/**
 	 *
@@ -223,18 +220,18 @@ public abstract class StatSourceSQL extends StatSourceAbstract  {
 	 * @return
 	 */
 	@Override
-    public boolean backupSource(String locationWork) {
-        return this.dbConn.info.backupDB(locationWork);
-    }
-    
+	public boolean backupSource(String locationWork) {
+		return this.dbConn.info.backupDB(locationWork);
+	}
+
 	/**
 	 *
 	 * @return
 	 */
 	@Override
-    public boolean tearDown() {
-        this.dbConn.disconnect();
-        return true;
-    }
+	public boolean tearDown() {
+		this.dbConn.disconnect();
+		return true;
+	}
 
 }
