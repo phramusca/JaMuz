@@ -10,7 +10,8 @@ By contributing to this project you agree to license your contribution under the
 
 Using [weblate.org](https://hosted.weblate.org/engage/jamuz/)
 
-- If you plan to update the bundle**.properties files, please remember that such files are ISO 8859-1 encoded.
+*Note if you consider manual edition (ie: without weblate)*:
+- The **bundle\*\*.properties** files are **ISO 8859-1** encoded.
   - Using a different encoding may certainly result in weird characters in the GUI
     - ie: NO UTF-8 nor anything else
     - NetBeans respect the convention, but other editors may use instead UTF-8 for instance
