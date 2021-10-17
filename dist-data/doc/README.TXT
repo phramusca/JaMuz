@@ -5,6 +5,25 @@
 **********************************************************
 
 ----------------------------------------------------------------------------------------------------------------------------------
+Path				Description
+----------------------------------------------------------------------------------------------------------------------------------
+/data				Data files (configurable)
+/doc				Documentation
+/lib				Required libraries
+/logs				LOG files (and databases backups)
+/JaMuz.db		    Your new music library (back it up regularly !)
+/JaMuz.jar		    Program itself
+/JaMuz.properties	Configuration file
+/JaMuz.sh		    Linux launch script
+/myMovieDb.db		Database fro Video tab
+
+/JaMuz.xml			Configuration file (optional)
+						to change path and name of the music library
+						location. See template in /doc
+----------------------------------------------------------------------------------------------------------------------------------
+
+History
+----------------------------------------------------------------------------------------------------------------------------------
 0.5.0	Beta	- Improved Check process:
 					- Improved duplicates handling:
 						- Ability to replace a duplicate
@@ -58,19 +77,3 @@
 ----------------------------------------------------------------------------------------------------------------------------------
 0.0.24	Alpha	- 1st released version
 ----------------------------------------------------------------------------------------------------------------------------------
-
-----------------------------------------------------------------------------------------------------------------------------------
-Path				Description
-----------------------------------------------------------------------------------------------------------------------------------
-/data				Data files (configurable)
-/doc				Documentation
-/lib				Required libraries
-/logs				LOG files (and databases backups)
-/JaMuz.db		    Your new music library (back it up regularly !)
-/JaMuz.jar		    Program itself
-/JaMuz.sh		    Linux launch script
-/JaMuz.properties	Configuration file
-
-/JaMuz.xml		Configuration file (optional)
-						to change path and name of the music library
-						location. See template in /doc
