@@ -35,9 +35,9 @@ Please submit to the `master` branch.
   LastFm={yourKey}
   AcoustId={yourKey}
   ```
-* Copy from {Repo}/dist to {Repo}/ :
-  * JaMuz.db
-  * JaMuz.properties
+* Copy:
+  * JaMuz.db from {Repo}/dist to {Repo}
+  * JaMuz.properties from {Repo}/dist to {Repo}/src/jamuz
 * You can now run and enjoy (hopefully)
 
 ### Stat sources
