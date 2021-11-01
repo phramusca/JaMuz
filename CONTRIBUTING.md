@@ -28,12 +28,14 @@ Please submit to the `master` branch.
 * Build project
 * [Get a TheMovieDb API key for free](https://www.themoviedb.org/faq/api)
 * [Get a LastFm API key for free](http://www.last.fm/api/account/create)
-* Create a keys.properties in {Repo}/src/jamuz
+* [Get an AcoustId API key for free](https://acoustid.org/)
+* Create a keys.properties file in {Repo}/src/jamuz
   ```
   TheMovieDb={yourKey}
   LastFm={yourKey}
+  AcoustId={yourKey}
   ```
-* Copy from {Repo}/dist to {Repo}/ :
+* Copy from {Repo}/dist to {Repo}:
   * JaMuz.db
   * JaMuz.properties
 * You can now run and enjoy (hopefully)
