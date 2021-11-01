@@ -2320,7 +2320,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return updateFileTags(files, results);
 	}
 	// </editor-fold>
-
 	// <editor-fold defaultstate="collapsed" desc="Path">
 	/**
 	 * Gets folders having given checked flag

@@ -118,7 +118,7 @@ public class PanelStats extends javax.swing.JPanel {
         myColors [0]= new Color(255,80,5);
         myColors [1]= new Color(0,117,220);
         myColors [2]= new Color(153,63,0);
-        myColors [3]= new Color(76,0,92);
+        myColors [3]= new Color(237,174,255);
         myColors [4]= new Color(25,25,25);
         myColors [5]= new Color(0,92,49);
         myColors [6]= new Color(43,206,72);
