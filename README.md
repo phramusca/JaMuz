@@ -1,16 +1,15 @@
 
-**JaMuz** is a **Music library manager**, **player** and more, implemented in Java
+**JaMuz** is a **Music library manager**, **player** and more, for Linux and Windows.
 _________________________________________________________________________________
 * **Features**:
-  * ***Merge your data between your favorite players:***
+  * **Merge your data** (user custom tags, rating, BPM, genre and statistics: last played, play counter and added date) **between your favorite players:**
     * Guayadeque (Linux)
     * Kodi (Linux / Windows)
     * Media Monkey (Windows)
     * Mixxx (Linux / Windows)
     * JaMuz Remote (Android)
-    * MyTunes (Android) [app discontinued apparently]
+    * MyTunes (Android) [discontinued]
     * Please [contribute](CONTRIBUTING.md) to add some more.
-    * Data being user custom tags, rating, BPM, genre and statistics: last played, play counter and added date.
   * ***Check, tag and organize your files:***
     * Get tags and covers from Musicbrainz, last.fm and coverartarchive.org
     * Detect duplicates.
@@ -21,7 +20,7 @@ ________________________________________________________________________________
   * ***[JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)***
     * Your new Android music player
     * Easily sync a playlist over WiFi from JaMuz to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
-    * Easily merge your ratings, tags, genre and play statistics
+    * Easily merge your data over WiFi (user custom tags, rating, BPM, genre and statistics: last played, play counter and added date)
   * Create complex playlists in a simple way
   * Audio Player (using mplayer)
   * Runs on Windows and Linux (as written in Java), maybe Mac OS (not tested).
