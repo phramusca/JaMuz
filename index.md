@@ -10,6 +10,11 @@ ________________________________________________________________________________
 * Easily sync a playlist over WiFi from [JaMuz](https://github.com/phramusca/JaMuz) to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
 * Easily merge your ratings, tags, genre and play statistics
 * Remote control [JaMuz](https://github.com/phramusca/JaMuz)
+* Please help out translating by using [WebLate](https://hosted.weblate.org/engage/jamuz-remote/):
+<a href="https://hosted.weblate.org/engage/jamuz-remote/?utm_source=widget">
+<img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status" />
+</a>
+
 
 _________________________________________________________________________________
 
