@@ -58,6 +58,13 @@ public class Jamuz {
 	private static DbConnJaMuz db;
 	private static HashMap<Integer, Playlist> playlists;
 
+	//FIXME: Check dependencies
+	// mplayer !
+	// mp3gain
+	// metaflac
+	// paquet "flac"
+	// easytag
+	
 	/**
 	 *
 	 * @param appPath

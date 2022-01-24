@@ -37,6 +37,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import org.apache.commons.io.FilenameUtils;
 
+//FIXME: Pb "Vérifier" FLAC pour effacer commentaires
+
 /**
  * Check process class
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )

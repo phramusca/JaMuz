@@ -64,6 +64,9 @@ public class ProcessMerge extends ProcessAbstract {
 	private StatSource selectedStatSource; 
 	private DbConnJaMuz dBJaMuz; //Can be a copy if simulation mode
 	private ArrayList<FileInfo> statsListDbSelected;
+	
+	//FIXME: Pb "Error writing GENRE" après replace flac/mp3 (si changement genre of course)
+	//FIXME: Verifier merge quand modifié sur JaMuz server
 	private final boolean isRemote;
 	private ArrayList<FileInfo> mergeListDbSelected;
 	
