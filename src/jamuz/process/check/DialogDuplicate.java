@@ -401,12 +401,12 @@ public class DialogDuplicate extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCheckDelete1ActionPerformed
 
     private void jButtonReplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReplaceActionPerformed
-		//FIXME: Wait files have been loaded before displaying jButtonReplace button
+		//FIXME Z Wait files have been loaded before displaying jButtonReplace button
 		DialogDuplicateReplace.main(this, folder, duplicateInfo, new ICallBackReplace() {
 			@Override
 			public void replaced() {
 				panelDuplicate2.init(duplicateInfo);
-				//FIXME: remove original by selecting proper action
+				//FIXME Z remove original by selecting proper action
 			}
 		});
     }//GEN-LAST:event_jButtonReplaceActionPerformed

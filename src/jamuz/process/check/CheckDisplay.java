@@ -287,7 +287,7 @@ public class CheckDisplay {
 		column.setMinWidth(40);
 		column.setPreferredWidth(40);
 		
-		//FIXME: Display rating in check panel
+		//FIXME Z Display rating in check panel
 		// 26: "Rating"
         // column = columnModel.getColumn(17);
         // column.setMinWidth(50);

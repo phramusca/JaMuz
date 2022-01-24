@@ -38,7 +38,7 @@ import org.musicbrainz.model.entity.ReleaseWs2;
 import org.musicbrainz.model.searchresult.ReleaseResultWs2;
 import org.musicbrainz.webservice.impl.HttpClientWebServiceWs2;
 
-// FIXME: Enhance MB retriavl:
+// FIXME Z Enhance MB retriavl:
 //	- Artist					=> Store MBId in db ("path" table)
 //		- Release Group(s)		=> Store this info in db instead of Release(s)
 //			- Release(s)		=> What useful info VS Release group(s) ?  /!\ Date first release !

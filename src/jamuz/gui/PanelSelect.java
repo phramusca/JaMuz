@@ -53,7 +53,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class PanelSelect extends javax.swing.JPanel {
 
-	//FIXME: When no cover, it messes up the list: cannot sort or display "Extra" columns
+	//FIXME Z When no cover, it messes up the list: cannot sort or display "Extra" columns
     private static TableModel tableModel;
     private static final TableColumnModel TABLE_COLUMN_MODEL = new TableColumnModel();
     
