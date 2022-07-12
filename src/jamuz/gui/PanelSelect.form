@@ -98,9 +98,9 @@
                       <Component id="jScrollPaneSelectGenre" max="32767" attributes="2"/>
                       <Component id="jSplitPaneSelectArtistAlbum" alignment="0" pref="0" max="32767" attributes="3"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jPanelSelectFilters" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jPanelSelectFilters" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>

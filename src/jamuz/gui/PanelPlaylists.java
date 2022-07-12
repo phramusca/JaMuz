@@ -249,6 +249,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
 
         jPanelPlaylist.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("Label.Playlist"))); // NOI18N
 
+        jComboBoxPlaylist.setMaximumRowCount(50);
         jComboBoxPlaylist.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Playlist sample 1", "Playlist sample 2", "Playlist sample 3", "Playlist sample 4" }));
         jComboBoxPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
