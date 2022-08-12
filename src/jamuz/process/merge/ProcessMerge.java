@@ -65,15 +65,13 @@ public class ProcessMerge extends ProcessAbstract {
 	private DbConnJaMuz dBJaMuz; //Can be a copy if simulation mode
 	private ArrayList<FileInfo> statsListDbSelected;
 	
-	//FIXME !!! Pb "Error writing GENRE" après replace flac/mp3 (si changement genre of course)
-	//FIXME !!! Verifier merge quand modifié sur JaMuz server
 	private final boolean isRemote;
 	private ArrayList<FileInfo> mergeListDbSelected;
 	
 	//JaMuz DB information
 	private ArrayList<FileInfo> statsListDbJaMuz;
 	private ArrayList<FileInfo> mergeListDbJaMuz;
-    private ArrayList<FileInfoInt> mergeListDbJaMuzFileTags;
+    private ArrayList<FileInfoInt> mergeListDbJaMuzFilesMetadata;
     
 	//LOG files and report
 	private boolean doLogText = false;
@@ -376,7 +374,7 @@ public class ProcessMerge extends ProcessAbstract {
 	private void compareLists(String run) throws InterruptedException, CloneNotSupportedException {
 		mergeListDbSelected = new ArrayList<>();
 		mergeListDbJaMuz = new ArrayList<>();
-        mergeListDbJaMuzFileTags=new ArrayList<>();
+        mergeListDbJaMuzFilesMetadata=new ArrayList<>();
 		FileInfo fileDbSelected; 
 		FileInfo fileInfoDbJaMuz;
 		progressBar.progress(
@@ -388,9 +386,6 @@ public class ProcessMerge extends ProcessAbstract {
             //Checking if process got interrupted
             checkAbort();
             fileDbSelected = file;
-            //Convert path (potentially in Windows style) to JaMuz linux style
-            //No more needed as paths are directly converted to System when read from database
-//			String relativeFullPath = FilenameUtils.separatorsToUnix(myFileInfoDbSelected.relativeFullPath);
             
             //Get item from JaMuz DB
 			Optional<FileInfo> optionalFileInfo;
@@ -679,7 +674,9 @@ public class ProcessMerge extends ProcessAbstract {
 			
 			//FIXME Z Do not update files if "Forcer JaMuz" option selected
 			if(!genre.isEmpty() || BPM>=0) {
-				mergeListDbJaMuzFileTags.add(new FileInfoInt(fileJaMuz, BPM, genre));
+				//FIXME !!! Pb "Error writing GENRE" après replace flac/mp3 (si changement genre of course)
+				//fileJaMuz.setExt(properExt);
+				mergeListDbJaMuzFilesMetadata.add(new FileInfoInt(fileJaMuz, BPM, genre));
 			}
 			
 			//Comparing Tags
@@ -959,11 +956,11 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 
 		if(!simulate) {	
-			nbFiles=mergeListDbJaMuzFileTags.size();
+			nbFiles=mergeListDbJaMuzFilesMetadata.size();
 			progressBar.progress(Inter.get("Msg.Check.SavingTags")); //NOI18N
 			callback.refresh();
 			if(nbFiles>0) {
-				Iterator<FileInfoInt> i = mergeListDbJaMuzFileTags.iterator();
+				Iterator<FileInfoInt> i = mergeListDbJaMuzFilesMetadata.iterator();
 				while (i.hasNext()) {
 					FileInfoInt fileInfoInt = i.next();
 					checkAbort();
