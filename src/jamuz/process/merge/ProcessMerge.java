@@ -221,7 +221,7 @@ public class ProcessMerge extends ProcessAbstract {
 					new DbInfo(DbInfo.LibType.Sqlite, 
 							Jamuz.getDb().getDbConn().getInfo().getLocationWork(), "", ""));
 			//Connect and create Prepared Statements
-			if(!dBJaMuz.setUp()) {
+			if(!dBJaMuz.setUp(false)) {
 				return false;
 			}
 		}
@@ -284,7 +284,8 @@ public class ProcessMerge extends ProcessAbstract {
 		nbFilesNotFoundJaMuz=0;
 		nbFilesErrorSelected=0;
 		nbFilesErrorJaMuz=0;
-		
+
+		checkAbort();		
 		//Create text LOG files
 		if(doLogText) {
             progressBar.progress(Inter.get("Msg.Merge.CreateLogText")); //NOI18N
@@ -292,7 +293,6 @@ public class ProcessMerge extends ProcessAbstract {
 			if(!createTextLogs(run)) {
 				return false;
 			}
-			checkAbort();
 		}
 		else {
 			nbSteps-=1;
@@ -302,11 +302,11 @@ public class ProcessMerge extends ProcessAbstract {
 			//Connect selected database
 			progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.ConnectingDB"), selectedStatSource.getSource().getName())); //NOI18N
 			callback.refresh();
-			if(!selectedStatSource.getSource().setUp()) {
+			if(!selectedStatSource.getSource().setUp(false)) {
 				return false;
 			}
-			checkAbort();
 
+			checkAbort();
 			//Get statistics selected from database
 			progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.GettingStats"), selectedStatSource.getSource().getName())); //NOI18N
 			callback.refresh();
@@ -314,9 +314,11 @@ public class ProcessMerge extends ProcessAbstract {
 			if(!selectedStatSource.getSource().getStatistics(statsListDbSelected)) {
 				return false;
 			}
+		} else {
+			dBJaMuz.setUp(true);
 		}
-		checkAbort();
-		
+
+		checkAbort();	
 		//Get statistics from JaMuz database
 		progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.GettingStats"), dBJaMuz.getName())); //NOI18N
         callback.refresh();
@@ -324,22 +326,21 @@ public class ProcessMerge extends ProcessAbstract {
 		if(!dBJaMuz.getStatistics(statsListDbJaMuz, selectedStatSource)) {
 			return false;
 		}
+
 		checkAbort();
-	
 		//Compare both statistics lists
 		compareLists(run);
 		
+		checkAbort();
 		//Merge
 		if(!merge(run)) {
 			return false;
 		}
-		checkAbort();
-
+		
 		progressBar.progress(MessageFormat.format(Inter.get("Msg.Merge.ClosingConnectionDB"), selectedStatSource.getSource().getName())); //NOI18N
         callback.refresh();
 		if(!isRemote) {
 			selectedStatSource.getSource().tearDown();
-			checkAbort();
 		}
 
 		mergeReport+= "<tr>"
@@ -387,20 +388,10 @@ public class ProcessMerge extends ProcessAbstract {
             checkAbort();
             fileDbSelected = file;
             
-            //Get item from JaMuz DB
-			Optional<FileInfo> optionalFileInfo;
-			if(isRemote) {
-				int idFile  = fileDbSelected.getIdFile();
-				optionalFileInfo = statsListDbJaMuz.stream().filter(f->f.getIdFile()==idFile).findFirst();
-			} else {
-				//Searching ignoring case because of windows, but that may not be a good way 
-				//TODO: What if it changes to case-sensitive equals() ?
-				String relativeFullPath = fileDbSelected.getRelativeFullPath();
-				optionalFileInfo = statsListDbJaMuz.stream().filter(f->f.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)).findFirst();
-			}
+			Optional<FileInfo> optionalFileInfo = getItemFromList(fileDbSelected, statsListDbJaMuz);
             if(optionalFileInfo.isPresent()) {
-				fileInfoDbJaMuz=optionalFileInfo.get();
-                compareStats(run, fileDbSelected,fileInfoDbJaMuz);
+				fileInfoDbJaMuz = optionalFileInfo.get();
+                compareStats(run, fileDbSelected, fileInfoDbJaMuz);
                 statsListDbJaMuz.remove(fileInfoDbJaMuz);
             }
             else {
@@ -432,18 +423,33 @@ public class ProcessMerge extends ProcessAbstract {
             nbFilesNotFoundJaMuz+=1;
         }
 	}
+
+	private Optional<FileInfo> getItemFromList(FileInfo fileDbSelected, ArrayList<FileInfo> list) {
+		Optional<FileInfo> optionalFileInfo;
+		if(isRemote) {
+			int idFile  = fileDbSelected.getIdFile();
+			optionalFileInfo = list.stream().filter(f->f.getIdFile()==idFile).findFirst();
+		} else {
+			//Searching ignoring case because of windows, but that may not be a good way
+			//TODO: What if it changes to case-sensitive equals() ?
+			String relativeFullPath = fileDbSelected.getRelativeFullPath();
+			optionalFileInfo = list.stream().filter(f->f.getRelativeFullPath().equalsIgnoreCase(relativeFullPath)).findFirst();
+		}
+		return optionalFileInfo;
+	}
 	
 	private void compareStats(String run, FileInfo fileSelectedDb, 
 			FileInfo fileJaMuz) 
 			throws InterruptedException, CloneNotSupportedException {
-		//Checking if process got interrupted
 		checkAbort();
 
 		//New is by default the one from JaMuz
 		FileInfo fileNew=(FileInfo) fileJaMuz.clone();
 		fileNew.setSourceName("new"); //This will be overwritten anyway  //NOI18N
 		boolean isOneDbUpdated=false;
-		
+		String newGenre="";
+		float newBPM=-1;
+			
         //TODO: Replace "force Jamuz" option by a "Select action" option so that user can 
         //select what direction copy info to (1>2; 2>1; and none)
         //=> Allow only one statsource so that below buttons are effective
@@ -598,15 +604,14 @@ public class ProcessMerge extends ProcessAbstract {
 				fileNew.setUpdateRatingModifDate(true);
 			}
 			
-			String genre="";
-			float BPM=-1;
+			
 			
 			//Comparing genre
 			if(isGenreValid(fileSelectedDb.getGenre()) && !isGenreValid(fileJaMuz.getGenre())) {
-				fileNew.setGenre(fileSelectedDb.getGenre());
+				newGenre = fileSelectedDb.getGenre();
 			}
 			else if(!isGenreValid(fileSelectedDb.getGenre()) && isGenreValid(fileJaMuz.getGenre())) {
-				fileNew.setGenre(fileJaMuz.getGenre());
+				newGenre = fileJaMuz.getGenre();
 			}
 			else if(!fileSelectedDb.getGenre().equals(fileJaMuz.getGenre())) {
 				//TODO: include this new behavior in junit tests
@@ -615,8 +620,7 @@ public class ProcessMerge extends ProcessAbstract {
 					//It has been modified after last merge on JaMuz
 					//Could be the same on selected Db but Preferring JaMuz 
 					//since we cannot know for sure
-					fileNew.setGenre(fileJaMuz.getGenre());
-					
+					newGenre = fileJaMuz.getGenre();
 					//*** TIP ***: To force JaMuz for genre only, run this on JaMuz dB:
 					//update file set genreModifDate=datetime('now');
 					//=> Rating from Jamuz will then be replicated to all sources, 
@@ -630,17 +634,8 @@ public class ProcessMerge extends ProcessAbstract {
 					
 					//TODO: Add sources priority as an option to decide which 
 					//source is first
-					
-					fileNew.setGenre(fileSelectedDb.getGenre());
-				}
-				
-			}
-			if(!fileNew.getGenre().equals(fileJaMuz.getGenre()) 
-					&& isGenreValid(fileNew.getGenre())) {
-				//This will ensure that we only update genreModifDate
-				//if changed on JaMuz to a valid value
-				fileNew.setUpdateGenreModifDate(true);
-				genre=fileNew.getGenre();
+					newGenre = fileSelectedDb.getGenre();
+				}				
 			}
 			
 			//Comparing BPM
@@ -648,35 +643,38 @@ public class ProcessMerge extends ProcessAbstract {
 			if(selectedStatSource.getSource().isUpdateBPM()) {
 				if(fileSelectedDb.getBPM()<=0 && fileJaMuz.getBPM() <=0) {
 					//If both files have BPM <=0, set them both to 0
-					fileNew.setBPM(0);
+					newBPM = 0;
 				}
 				else if(fileSelectedDb.getBPM()<=0 || fileJaMuz.getBPM() <=0) {
 					//If only one file is <=0, take the other side
 					if(fileSelectedDb.getBPM()<=0) {
-						fileNew.setBPM(fileJaMuz.getBPM());
+						newBPM = fileJaMuz.getBPM();
 					}
 					else {
-						fileNew.setBPM(fileSelectedDb.getBPM());
-						BPM = fileSelectedDb.getBPM();
+						newBPM = fileSelectedDb.getBPM();
 					}
 				}
 				else if(fileSelectedDb.getBPM()!=fileJaMuz.getBPM()){
 					//If both are >0 but different then taking the one from Mixxx
 					if(selectedStatSource.getIdStatement()==4) { //TODO: Mixxx is Badly hard-coded (use an enum instead of int)
-						fileNew.setBPM(fileSelectedDb.getBPM());
-						BPM = fileSelectedDb.getBPM();
+						newBPM = fileSelectedDb.getBPM();
 					}
 					else {
-						fileNew.setBPM(fileJaMuz.getBPM());
+						newBPM = fileJaMuz.getBPM();
 					}
 				}
 			}
-			
+				
 			//FIXME Z Do not update files if "Forcer JaMuz" option selected
-			if(!genre.isEmpty() || BPM>=0) {
-				//FIXME !!! Pb "Error writing GENRE" après replace flac/mp3 (si changement genre of course)
-				//fileJaMuz.setExt(properExt);
-				mergeListDbJaMuzFilesMetadata.add(new FileInfoInt(fileJaMuz, BPM, genre));
+			if(!newGenre.equals(fileJaMuz.getGenre()) || newBPM!=fileJaMuz.getBPM()) {
+				String genreToWrite = "";
+				if(isGenreValid(fileNew.getGenre()) && !newGenre.equals(fileJaMuz.getGenre())) {
+					//This will ensure that we only update genreModifDate
+					//if changed on JaMuz to a valid value
+					fileNew.setUpdateGenreModifDate(true);
+					genreToWrite = newGenre;
+				}
+				mergeListDbJaMuzFilesMetadata.add(new FileInfoInt(fileJaMuz, newBPM, genreToWrite));
 			}
 			
 			//Comparing Tags
@@ -727,7 +725,7 @@ public class ProcessMerge extends ProcessAbstract {
 			
 			//Comparing new with JaMuz and add it to merge list if different
 			if(!fileJaMuz.equalsStats(fileNew)) {
-				fileNew.setSourceName(run+"-"+fileJaMuz.getSourceName());
+				fileNew.setSourceName(run+"-"+fileJaMuz.getSourceName());			
 				mergeListDbJaMuz.add((FileInfo) fileNew.clone());
 				Jamuz.getLogger().log(Level.FINEST, "Added to \"{0}\" merge list", 
 						fileNew.getSourceName());  //NOI18N
@@ -746,10 +744,15 @@ public class ProcessMerge extends ProcessAbstract {
 			fileNew.setAddedDate(fileSelectedDb.getAddedDate());
 		}
         if(!selectedStatSource.getSource().isUpdateBPM()) {
-            fileNew.setBPM(fileSelectedDb.getBPM());
+			fileNew.setBPM(fileSelectedDb.getBPM());
+		} else {
+			fileNew.setBPM(newBPM);
 		}
-		if(!selectedStatSource.getSource().isUpdateGenre()) {
-            fileNew.setGenre(fileSelectedDb.getGenre());
+		if(!selectedStatSource.getSource().isUpdateGenre()
+				|| !isGenreValid(newGenre) ) {
+			fileNew.setGenre(fileSelectedDb.getGenre());
+		} else {
+			fileNew.setGenre(newGenre);
 		}
 		if(!selectedStatSource.getSource().isUpdatePlayCounter()) {
 			fileNew.setPlayCounter(fileSelectedDb.getPlayCounter());
@@ -874,6 +877,7 @@ public class ProcessMerge extends ProcessAbstract {
 			CloneNotSupportedException {
 		int nbFiles;
         ArrayList<FileInfo> filesToUpdatePlayCounter = new ArrayList<>();
+		
         // Processing selected database
         progressBar.progress(MessageFormat.format(
 				Inter.get("Msg.Merge.Updating"), 
@@ -919,6 +923,48 @@ public class ProcessMerge extends ProcessAbstract {
 				checkAbort();
 			}
 		}
+
+		if(!simulate) {	
+			nbFiles=mergeListDbJaMuzFilesMetadata.size();
+			progressBar.progress(Inter.get("Msg.Check.SavingTags")); //NOI18N
+			callback.refresh();
+			if(nbFiles>0) {
+				Iterator<FileInfoInt> i = mergeListDbJaMuzFilesMetadata.iterator();
+				while (i.hasNext()) {
+					FileInfoInt fileInfoWithNewMetadata = i.next();
+					checkAbort();
+					//TODO MERGE If aborted, metadata will no more be written to file. 
+					if(!fileInfoWithNewMetadata.getGenre().isEmpty() || fileInfoWithNewMetadata.getBPM()>=0) {
+						Optional<FileInfo> optionalFileInfo = getItemFromList(fileInfoWithNewMetadata, mergeListDbJaMuz);
+						FileInfo fileInfoDbJaMuz = null;
+						if(optionalFileInfo.isPresent()) {
+							fileInfoDbJaMuz = optionalFileInfo.get();
+						}
+						if(!fileInfoWithNewMetadata.getGenre().isEmpty() ) {
+							if(fileInfoWithNewMetadata.updateGenre(fileInfoWithNewMetadata.getGenre())) {
+								if(fileInfoDbJaMuz!=null) {
+									fileInfoDbJaMuz.setGenre(fileInfoWithNewMetadata.getGenre());
+								}
+							}
+						}
+						if(fileInfoWithNewMetadata.getBPM()>=0) {
+							if(fileInfoWithNewMetadata.saveMetadataBPM()) {
+								if(fileInfoDbJaMuz!=null) {
+									fileInfoDbJaMuz.setBPM(fileInfoWithNewMetadata.getBPM());
+								}
+							}
+						}
+					}
+					//FIXME TEST MERGE Are we updating *modifDate 
+					//	(modifDate in path and file 
+							// + ratingModifDate, tagsModifDate & genreModifDate) 
+					//	when saving tags and whererver required
+					//FIXME TEST MERGE Is file.setLastModified() called accordingly ?
+					checkAbort();
+					i.remove();
+				}
+			}
+		}
 		
         //Processing jamuz
 		progressBar.progress(MessageFormat.format(Inter.get(
@@ -927,8 +973,7 @@ public class ProcessMerge extends ProcessAbstract {
 		nbFiles = mergeListDbJaMuz.size();
 		if(nbFiles>0) {
 			checkAbort();
-			int[] results = dBJaMuz
-					.updateFileStatistics(mergeListDbJaMuz);
+			int[] results = dBJaMuz.updateFileStatistics(mergeListDbJaMuz);
 			if(results.length<nbFiles) {
 				return false;
 			}
@@ -956,39 +1001,11 @@ public class ProcessMerge extends ProcessAbstract {
 		}
 
 		if(!simulate) {	
-			nbFiles=mergeListDbJaMuzFilesMetadata.size();
-			progressBar.progress(Inter.get("Msg.Check.SavingTags")); //NOI18N
-			callback.refresh();
-			if(nbFiles>0) {
-				Iterator<FileInfoInt> i = mergeListDbJaMuzFilesMetadata.iterator();
-				while (i.hasNext()) {
-					FileInfoInt fileInfoInt = i.next();
-					checkAbort();
-					//TODO MERGE If aborted, tags will no more be written to file. 
-					if(!fileInfoInt.getGenre().isEmpty() ) {
-						fileInfoInt.updateGenre(fileInfoInt.getGenre());
-					}
-					if(fileInfoInt.getBPM()>=0) {
-						fileInfoInt.saveMetadataBPM();
-					}
-					//FIXME TEST MERGE Are we updating *modifDate 
-					//	(modifDate in path and file 
-							// + ratingModifDate, tagsModifDate & genreModifDate) 
-					//	when saving tags and whererver required
-					//FIXME TEST MERGE Is file.setLastModified() called accordingly ?
-					checkAbort();
-					i.remove();
-				}
-			}
-
+			progressBar.progress(Inter.get("Msg.Check.Scan.Setup")); //NOI18N
 			if(filesToUpdatePlayCounter.size()>0) {
 				//Remove potential duplicates 
-	//	        filesToUpdatePlayCounter = new ArrayList(new HashSet(filesToUpdatePlayCounter)); //no order
-				filesToUpdatePlayCounter = new ArrayList(
-						new LinkedHashSet(filesToUpdatePlayCounter)); //If you need to preserve the order use 'LinkedHashSet'
-				//Changing previous play counter if update was successfull
-				if(!dBJaMuz.updatePreviousPlayCounter(filesToUpdatePlayCounter, 
-						selectedStatSource.getId())) {
+				filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter));
+				if(!dBJaMuz.updatePreviousPlayCounter(filesToUpdatePlayCounter, selectedStatSource.getId())) {
 					return false;
 				}
 			}

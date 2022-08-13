@@ -208,11 +208,12 @@ public abstract class StatSourceAbstract {
 	public abstract boolean getTags(ArrayList<String> tags, FileInfo file);
 
 	/**
-	 * Connect database, ... or whatever is needed to setup before merge
+	 * Connect database, ...or whatever is needed to setup before merge
 	 *
+	 * @param isRemote
 	 * @return
 	 */
-	abstract public boolean setUp();
+	abstract public boolean setUp(boolean isRemote);
 
 	/**
 	 * DisConnect database, ... or whatever is needed to cleanup after merge

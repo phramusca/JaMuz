@@ -48,7 +48,7 @@ public class StatSourceKodi extends StatSourceSQL {
 	 * @return
 	 */
 	@Override
-    public boolean setUp() {
+    public boolean setUp(boolean isRemote) {
         try {
             this.dbConn.connect();
 

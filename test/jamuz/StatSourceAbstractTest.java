@@ -283,7 +283,8 @@ public class StatSourceAbstractTest {
 		System.out.println("setUp");
 		StatSourceAbstract instance = null;
 		boolean expResult = false;
-		boolean result = instance.setUp();
+		boolean isRemote = false;
+		boolean result = instance.setUp(isRemote);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -379,6 +380,7 @@ public class StatSourceAbstractTest {
 		 * @param files
 		 * @return
 		 */
+		@Override
 		public boolean getStatistics(ArrayList<FileInfo> files) {
 			return false;
 		}
@@ -398,22 +400,21 @@ public class StatSourceAbstractTest {
 		 * @param file
 		 * @return
 		 */
+		@Override
 		public boolean getTags(ArrayList<String> tags, FileInfo file) {
 			return false;
 		}
 
-		/**
-		 *
-		 * @return
-		 */
-		public boolean setUp() {
-			return false;
+		@Override
+		public boolean setUp(boolean isRemote) {
+			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 		}
 
 		/**
 		 *
 		 * @return
 		 */
+		@Override
 		public boolean tearDown() {
 			return false;
 		}
@@ -422,6 +423,7 @@ public class StatSourceAbstractTest {
 		 *
 		 * @return
 		 */
+		@Override
 		public boolean check() {
 			return false;
 		}
@@ -431,6 +433,7 @@ public class StatSourceAbstractTest {
 		 * @param locationWork
 		 * @return
 		 */
+		@Override
 		public boolean getSource(String locationWork) {
 			return false;
 		}
@@ -440,6 +443,7 @@ public class StatSourceAbstractTest {
 		 * @param locationWork
 		 * @return
 		 */
+		@Override
 		public boolean sendSource(String locationWork) {
 			return false;
 		}
@@ -449,6 +453,7 @@ public class StatSourceAbstractTest {
 		 * @param locationWork
 		 * @return
 		 */
+		@Override
 		public boolean backupSource(String locationWork) {
 			return false;
 		}

@@ -249,7 +249,7 @@ public class Jamuz {
 		//Create and open connection to JaMuz JaMuzDbPath			
 		db = new DbConnJaMuz(new DbInfo(LibType.Sqlite, JaMuzDbPath, "", ""));
 		//TODO: Handle database version so that schema can be updated as needed, from one Jamuz version to a new one
-		return db.setUp();
+		return db.setUp(false);
 	}
 
 	private static boolean createLog() {

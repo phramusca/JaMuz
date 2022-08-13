@@ -704,7 +704,7 @@ public class Album {
 	public void setAndCheckStatsInStatSource(int idStatSource, boolean isDevice) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 		StatSource statSource = Jamuz.getMachine().getStatSource(idStatSource);
 		statSource.getSource().getSource(System.getProperty("java.io.tmpdir") + File.separator);
-		statSource.getSource().setUp();
+		statSource.getSource().setUp(false);
 		statSource.getSource().updateFileStatistics(getFiles());
 		statSource.getSource().tearDown();
 		statSource.getSource().sendSource(System.getProperty("java.io.tmpdir") + File.separator);
@@ -783,7 +783,7 @@ public class Album {
 		ArrayList<FileInfo> statSourcesFiles = new ArrayList<>();
 		statSource.getSource().getSource(
 				System.getProperty("java.io.tmpdir") + File.separator);
-		statSource.getSource().setUp();
+		statSource.getSource().setUp(false);
 		statSource.getSource().getStatistics(statSourcesFiles);
 		statSource.getSource().tearDown();
 		statSource.getSource().sendSource(

@@ -49,7 +49,7 @@ public class StatSourceMixxx extends StatSourceSQL {
 	 * @return
 	 */
 	@Override
-    public boolean setUp() {
+    public boolean setUp(boolean isRemote) {
         try {
             this.dbConn.connect();
 			//FIXME TEST MERGE mixxx does not update well if folder modification 

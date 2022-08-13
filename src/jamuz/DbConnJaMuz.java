@@ -89,17 +89,28 @@ public class DbConnJaMuz extends StatSourceSQL {
 	/**
 	 * Prepare the predefined SQL statements
 	 *
+	 * @param isRemote
 	 * @return
 	 */
 	@Override
-	public boolean setUp() {
+	public boolean setUp(boolean isRemote) {
 		try {
-
-			this.dbConn.connect();
-
+			String fullPath;
+			if(isRemote) {
+				// We do not care to get original fullPath when merging with remote
+				// Moreover it avoids an issue writing metadata, that is still present for other merge types, see below
+				fullPath = "(P.strPath || F.name)";
+			} else {
+				this.dbConn.connect();
+				//TODO: Pb writing metadata after a change of fullPath (for instance when mp3 replaced by flac)
+				// => Include both original path (for merge comparison) and current path on JaMuz side (for file metadata updates)
+				// => No need to have isRemote in setUp()
+				fullPath = "D.oriRelativeFullPath";
+			}
+			
 			stSelectFilesStats4SourceAndDevice = dbConn.getConnnection().prepareStatement(
 					"SELECT "
-					+ "F.idFile, F.idPath, D.oriRelativeFullPath AS fullPath, "
+					+ "F.idFile, F.idPath, " + fullPath + " AS fullPath, "
 					+ "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, " //NOI18N
 					+ "C.playcounter AS previousPlayCounter, " //NOI18N
 					+ "F.ratingModifDate, F.tagsModifDate, F.genre, F.genreModifDate  " //NOI18N
@@ -2224,8 +2235,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 	public boolean getStatistics(ArrayList<FileInfo> files, StatSource statSource) {
 		try {
 			if (statSource.getIdDevice() > 0) {
-				// Get all files copied to the device
-				// RelativeFullPath is retrieved from deviceFile table: the original one on device
 				this.stSelectFileStatistics = stSelectFilesStats4SourceAndDevice;
 				this.stSelectFileStatistics.setInt(1, statSource.getId());
 				this.stSelectFileStatistics.setInt(2, statSource.getIdDevice());

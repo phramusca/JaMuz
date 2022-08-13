@@ -46,7 +46,7 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
 	 * @return
 	 */
 	@Override
-    public boolean setUp() {
+    public boolean setUp(boolean isRemote) {
         try {
             this.dbConn.connect();
             //http://www.mediamonkey.com/forum/viewtopic.php?f=2&t=25687&sid=34fcd9835844e407f703630b8b4cc7ab&start=15

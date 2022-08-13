@@ -54,7 +54,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 	 * @return
 	 */
 	@Override
-    public boolean setUp() {
+    public boolean setUp(boolean isRemote) {
         try {
             this.dbConn.connect();
             

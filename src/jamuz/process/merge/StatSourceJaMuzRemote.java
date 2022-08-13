@@ -51,7 +51,7 @@ public class StatSourceJaMuzRemote extends StatSourceSQL {
 	 * @return
 	 */
 	@Override
-    public boolean setUp() {
+    public boolean setUp(boolean isRemote) {
         return true;
     }
 

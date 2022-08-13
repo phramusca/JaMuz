@@ -227,7 +227,7 @@ public class StatSourceSQLTest {
 		}
 
 		@Override
-		public boolean setUp() {
+		public boolean setUp(boolean isRemote) {
 			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 		}
 	}

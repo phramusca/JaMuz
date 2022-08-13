@@ -346,7 +346,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 						StatSourceMixxx source = new StatSourceMixxx(
 							new DbInfo(DbInfo.LibType.Sqlite, location, "", ""), 
 							"StatSourceMixxx", ""); 
-						if(source.setUp()) {
+						if(source.setUp(false)) {
 							String rootPath=source.guessRootPath();
 							list.add(new Locations(rootPath, 
 									source.getLocation(), 
@@ -385,7 +385,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 					new DbInfo(DbInfo.LibType.Sqlite, 
 							file.getAbsolutePath(), "", ""), 
 					"StatSourceKodi", ""); 
-					if(source.setUp()) {
+					if(source.setUp(false)) {
 						String rootPath=source.guessRootPath();
 						list.add(new Locations(rootPath, 
 								source.getLocation(), 
