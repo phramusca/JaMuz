@@ -265,9 +265,6 @@ public class CompareOO {
 		if (file1.getNbCovers() != file2.getNbCovers()) {
 			addToLog(file1.getRelativeFullPath(), "nbCovers", String.valueOf(file1.getNbCovers()), String.valueOf(file2.getNbCovers()));
 		}
-		if (file1.isDeleted() != file2.isDeleted()) {
-			addToLog(file1.getRelativeFullPath(), "deleted", String.valueOf(file1.isDeleted()), String.valueOf(file2.isDeleted()));
-		}
 		if (file1.getCheckedFlag() != file2.getCheckedFlag()) {
 			addToLog(file1.getRelativeFullPath(), "checkedFlag", String.valueOf(file1.getCheckedFlag()), String.valueOf(file2.getCheckedFlag()));
 		}

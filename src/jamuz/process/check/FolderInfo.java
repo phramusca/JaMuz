@@ -72,7 +72,6 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 * Number of files in folder
 	 */
 	protected int nbFiles;
-	private boolean deleted;
 	private CheckedFlag checkedFlag;
 	
 	private String fullPath;
@@ -178,14 +177,12 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 * @param id
 	 * @param relativePath
 	 * @param modifDate 
-	 * @param deleted 
 	 * @param checkedFlag  
 	 */
-	public FolderInfo(int id, String relativePath, Date modifDate, boolean deleted, CheckedFlag checkedFlag) {
+	public FolderInfo(int id, String relativePath, Date modifDate, CheckedFlag checkedFlag) {
 		this(false);
 		idPath=id;
 		this.modifDate=(Date) modifDate.clone();
-		this.deleted=deleted;
 		this.checkedFlag=checkedFlag;
 		
 		rootPath = Jamuz.getMachine().getOptionValue("location.library");  //NOI18N
@@ -272,8 +269,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		//Anyway, all files on that folder are not (supposed to be) in databsase yet, so will be inserted
 		if(idPath>0) {
 			progressBar.setIndeterminate(Inter.get("Msg.Check.Scan.Setup")); //NOI18N
-			//Get list of files from library including deleted
-			if(!Jamuz.getDb().getFiles(filesDb, idPath, true)) {
+			if(!Jamuz.getDb().getFiles(filesDb, idPath)) {
 				return false;
 			}
 		}
@@ -285,12 +281,12 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 				FileInfoInt fileDb = filesDb.get(idFileDb);
 				//Date comparison may not work: compare formatted strings instead 
 				//to compare with same formatDisplay as within database
-				if(fileDb.isDeleted() || full || !fileFS.getFormattedModifDate().equals(fileDb.getFormattedModifDate())) {
+				if(full || !fileFS.getFormattedModifDate().equals(fileDb.getFormattedModifDate())) {
 					fileFS.readMetadata(true); //TODO: Use returned boolean ! (shall we ?)
 					fileFS.setIdFile(fileDb.getIdFile());
 					fileFS.setIdPath(fileDb.getIdPath());
 					fileFS.setRating(fileDb.getRating());
-					//Update file in database (deleted=0 and tags)
+					//Update file in database (and tags)
 					if(!fileFS.updateTagsInDb()) {
 						fileFS.unsetCover(); //To prevent memory errors
                         return false;
@@ -321,11 +317,9 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	}
 	
 	private boolean scanDeletedFiles(ProgressBar progressBar) {
-        //Get list of files from library exluding the one(s) already set as deleted
-		if(!Jamuz.getDb().getFiles(filesDb, idPath, false)) {
+		if(!Jamuz.getDb().getFiles(filesDb, idPath)) {
 			return false;
 		}
-		//Loop on those files
         progressBar.setup(filesDb.size());
 		for (FileInfoInt fileDB : filesDb) {
 			if(!fileDB.scanDeleted()) {
@@ -346,13 +340,13 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		//Check if folder exist
 		File path = new File(fullPath);
 		if(!path.exists()) {
-			//Path does not exist. Set path and associated files as deleted in database
-			if(!Jamuz.getDb().setPathDeleted(idPath)) {
+			//Path does not exist. Delete path and associated files from database
+			if(!Jamuz.getDb().deletePath(idPath)) {
 				return false;
 			}
 		}
 		else {
-			//Path does exist. Check if files have been deleted
+			//Path exists. Check if files have been deleted
 			scanDeletedFiles(progressBar);
 		}
 		return true;
@@ -364,8 +358,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 * @return
 	 */
 	public boolean transcodeAsNeeded(ProgressBar progressBar) {
-		//Get list of files from library exluding the one(s) already set as deleted
-		if(!Jamuz.getDb().getFiles(filesDb, idPath, false)) {
+		if(!Jamuz.getDb().getFiles(filesDb, idPath)) {
 			return false;
 		}
 		return transcodeAsNeeded(filesDb, progressBar);
@@ -1962,14 +1955,6 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		//Returning a formatted String so that it is comparable
 		//Filesystem may include ms whereas we store in below formatDisplay in database
 		return DateTime.formatUTCtoSqlUTC(modifDate);
-	}
-
-	/**
-	 * Return deleted flag
-	 * @return
-	 */
-	public boolean isDeleted() {
-		return deleted;
 	}
 
 	/**

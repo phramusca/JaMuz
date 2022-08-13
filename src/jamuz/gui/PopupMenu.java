@@ -213,7 +213,7 @@ public class PopupMenu {
 		File currentFile = selected.getFullPath();
 		if(currentFile.exists() 
 				&& selected.getFullPath().delete()
-				&& Jamuz.getDb().setFileDeleted(selected.getIdFile())) {
+				&& Jamuz.getDb().deleteFile(selected.getIdFile())) {
 			tableModel.removeRow(selectedIndex);
 			return true;
 		}

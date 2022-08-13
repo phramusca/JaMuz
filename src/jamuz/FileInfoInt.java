@@ -400,7 +400,6 @@ public class FileInfoInt extends FileInfo {
 	 * @param rating
 	 * @param lastPlayed
 	 * @param modifDate
-	 * @param deleted
 	 * @param coverHash
 	 * @param checkedFlag
 	 * @param copyRight
@@ -418,8 +417,8 @@ public class FileInfoInt extends FileInfo {
 			String artist, String comment, int discNo, int discTotal,
 			String genre, int nbCovers, String title, int trackNo,
 			int trackTotal, String year, int playCounter, int rating,
-			String addedDate, String lastPlayed, String modifDate,
-			boolean deleted, String coverHash, CheckedFlag checkedFlag,
+			String addedDate, String lastPlayed, String modifDate, 
+			String coverHash, CheckedFlag checkedFlag,
 			FolderInfo.CopyRight copyRight, double albumRating,
 			int percentRated, String rootPath, SyncStatus status,
 			String pathModifDate, String pathMbid, GainValues replaygain) {
@@ -429,7 +428,6 @@ public class FileInfoInt extends FileInfo {
 		this.idFile = idFile;
 		this.idPath = idPath;
 		this.rootPath = rootPath;
-		this.deleted = deleted;
 		//Set File info
 		this.length = length;
 		this.lengthDisplay = String.valueOf(this.length);
@@ -992,7 +990,7 @@ public class FileInfoInt extends FileInfo {
 	public boolean scanDeleted() {
 		File currentFile = getFullPath();
 		if (!currentFile.exists()) {
-			if (!Jamuz.getDb().setFileDeleted(this.idFile)) {
+			if (!Jamuz.getDb().deleteFile(this.idFile)) {
 				return false;
 			}
 		}

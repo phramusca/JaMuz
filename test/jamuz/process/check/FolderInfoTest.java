@@ -665,20 +665,6 @@ public class FolderInfoTest {
 	}
 
 	/**
-	 * Test of isDeleted method, of class FolderInfo.
-	 */
-	@Test
-	public void testIsDeleted() {
-		System.out.println("isDeleted");
-		FolderInfo instance = new FolderInfo();
-		boolean expResult = false;
-		boolean result = instance.isDeleted();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of getRootPath method, of class FolderInfo.
 	 */
 	@Test

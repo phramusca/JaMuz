@@ -580,20 +580,6 @@ public class FileInfoTest {
 	}
 
 	/**
-	 * Test of isDeleted method, of class FileInfo.
-	 */
-	@Test
-	public void testIsDeleted() {
-		System.out.println("isDeleted");
-		FileInfo instance = null;
-		boolean expResult = false;
-		boolean result = instance.isDeleted();
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of setPath method, of class FileInfo.
 	 */
 	@Test

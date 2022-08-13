@@ -129,9 +129,6 @@ public class Server {
 				String destExt = device.getPlaylist().getDestExt();
 				int idFile = Integer.valueOf(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt); 
-				if(fileInfoInt.isDeleted()) {
-					res.sendStatus(Status._404);
-				}
 				File file = fileInfoInt.getFullPath();
 				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
 					Location location = new Location("location.transcoded");
@@ -291,7 +288,7 @@ public class Server {
 					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, " 
 					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" + 
 				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, " 
-					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, " 
+					+ "F.nbCovers, F.coverHash, F.ratingModifDate, " 
 					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" + 
 				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" + 
 				"ifnull(T.format, F.format) AS format, \n" + 
@@ -306,8 +303,7 @@ public class Server {
 				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n" 
 				+ "LEFT JOIN deviceFile DF ON DF.idFile=F.idFile AND DF.idDevice="+device.getId()+" \n" 
 				+ "JOIN path P ON F.idPath=P.idPath \n" 
-				+ "WHERE F.deleted=0 AND P.deleted=0 \n" 
-				+ "AND "+whereSql+" \n" 
+				+ "WHERE "+whereSql+" \n" 
 				+ "ORDER BY F.idFile " 
 				+ limit; 
 				 
@@ -533,10 +529,6 @@ public class Server {
 		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt);
 		setStatus(login, "Sending file: "+fileInfoInt.getRelativeFullPath());
 		if(!sendFile(clientId, fileInfoInt)) {
-			//TODO SYNC Happens (still ?) when file not found
-			// Need to mark as deleted in db 
-			// AND somehow remove it from filesToKeep
-			//and filesToGet in remote
 			Popup.error("Cannot send missing file \""
 					+fileInfoInt.getFullPath().getAbsolutePath()+"\"");
 		}

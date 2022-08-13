@@ -108,7 +108,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 					+ "JOIN devicefile D ON D.idFile=F.idFile "
 					+ "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
 					+ "ON F.idFile=C.idFile " //NOI18N //NOI18N
-					+ "WHERE D.idDevice=? AND F.deleted=0 AND D.status!='INFO'");
+					+ "WHERE D.idDevice=? AND D.status!='INFO'");
 			stSelectFilesStats4Source = dbConn.getConnnection().prepareStatement(
 					"SELECT "
 					+ "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
@@ -118,8 +118,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 					+ "FROM file F "
 					+ "JOIN path P ON F.idPath=P.idPath " //NOI18N
 					+ "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
-					+ "ON F.idFile=C.idFile " //NOI18N
-					+ "WHERE F.deleted=0 ");
+					+ "ON F.idFile=C.idFile ");
 
 			this.stSelectFileStatistics = this.stSelectFilesStats4Source; //by default, but not to be called directly 
 
@@ -1400,15 +1399,12 @@ public class DbConnJaMuz extends StatSourceSQL {
 			Jamuz.getLogger().log(Level.FINEST, "stDeleteDeviceFile DELETE "
 					+ "// Total execution time: {0}ms",
 					new Object[]{endTime - startTime});    //NOI18N
-
 			if (result < 0) {
 				Jamuz.getLogger().log(Level.SEVERE,
 						"stDeleteDeviceFile, idDevice={0}, result={1}",
 						new Object[]{idDevice, result});   //NOI18N
 			}
-
 			return true;
-
 		} catch (SQLException ex) {
 			Popup.error("deleteDeviceFiles()", ex);   //NOI18N
 			return false;
@@ -1910,7 +1906,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 			} else {
 				sql += " \nWHERE " + table + "." + field + "='" + value + "'";   //NOI18N
 			}
-			sql += " \nAND file.deleted=0 AND path.deleted=0";   //NOI18N
 			if (selRatings != null) {
 				sql += " \nAND file.rating IN " + getCSVlist(selRatings);
 			}
@@ -1952,9 +1947,9 @@ public class DbConnJaMuz extends StatSourceSQL {
 			PreparedStatement stInsertFileTag = dbConn.connection.prepareStatement("INSERT INTO file (name, idPath, "
 					+ "format, title, artist, album, albumArtist, genre, discNo, trackNo, year, comment, " //NOI18N
 					+ "length, bitRate, size, modifDate, trackTotal, discTotal, BPM, nbCovers, "
-					+ "rating, lastPlayed, playCounter, addedDate, deleted, coverHash, trackGain, albumGain) " //NOI18N
+					+ "rating, lastPlayed, playCounter, addedDate, coverHash, trackGain, albumGain) " //NOI18N
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-					+ "0, \"1970-01-01 00:00:00\", 0, datetime('now'), 0, ?, ?, ?)");      //NOI18N
+					+ "0, \"1970-01-01 00:00:00\", 0, datetime('now'), ?, ?, ?)");      //NOI18N
 			stInsertFileTag.setString(1, fileInfo.getFilename());
 			stInsertFileTag.setInt(2, fileInfo.getIdPath());
 			stInsertFileTag.setString(3, fileInfo.getFormat());
@@ -2011,7 +2006,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 					+ "trackNo=?, year=?, comment=?, " //NOI18N
 					+ "length=?, bitRate=?, size=?, modifDate=?, trackTotal=?, "
 					+ "discTotal=?, BPM=?, "
-					+ "nbCovers=?, deleted=0, coverHash=?, trackGain=?, albumGain=? " //NOI18N
+					+ "nbCovers=?, coverHash=?, trackGain=?, albumGain=? " //NOI18N
 					+ "WHERE idPath=? AND idFile=?");   //NOI18N
 			stUpdateFileTag.setString(1, fileInfo.getFormat());
 			stUpdateFileTag.setString(2, fileInfo.title);
@@ -2172,27 +2167,27 @@ public class DbConnJaMuz extends StatSourceSQL {
 	}
 
 	/**
-	 * Sets a file as deleted
+	 * Delete a file.
 	 *
 	 * @param idFile
 	 * @return
 	 */
-	public synchronized boolean setFileDeleted(int idFile) {
+	public synchronized boolean deleteFile(int idFile) {
 		try {
-			PreparedStatement stUpdateDeletedFile = dbConn.connection.prepareStatement(
-					"UPDATE file SET deleted=1 WHERE idFile=?");   //NOI18N
+			PreparedStatement stDeleteFile = dbConn.connection.prepareStatement(
+					"DELETE FROM file WHERE idFile=?");   //NOI18N
 
-			stUpdateDeletedFile.setInt(1, idFile);
-			int nbRowsAffected = stUpdateDeletedFile.executeUpdate();
+			stDeleteFile.setInt(1, idFile);
+			int nbRowsAffected = stDeleteFile.executeUpdate();
 			if (nbRowsAffected == 1) {
 				return true;
 			} else {
-				Jamuz.getLogger().log(Level.SEVERE, "setFileDeleted, idFile={0} "
+				Jamuz.getLogger().log(Level.SEVERE, "deleteFile, idFile={0} "
 						+ "# row(s) affected: +{1}", new Object[]{idFile, nbRowsAffected});   //NOI18N
 				return false;
 			}
 		} catch (SQLException ex) {
-			Popup.error("setFileDeleted(" + idFile + ")", ex);   //NOI18N
+			Popup.error("deleteFile(" + idFile + ")", ex);   //NOI18N
 			return false;
 		}
 	}
@@ -2204,10 +2199,10 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public synchronized boolean setFileSaved(int idFile) {
 		try {
-			PreparedStatement stUpdateDeletedFile = dbConn.connection.prepareStatement("UPDATE file SET saved=1 WHERE idFile=?");   //NOI18N
+			PreparedStatement stUpdateSavedFile = dbConn.connection.prepareStatement("UPDATE file SET saved=1 WHERE idFile=?");   //NOI18N
 
-			stUpdateDeletedFile.setInt(1, idFile);
-			int nbRowsAffected = stUpdateDeletedFile.executeUpdate();
+			stUpdateSavedFile.setInt(1, idFile);
+			int nbRowsAffected = stUpdateSavedFile.executeUpdate();
 			if (nbRowsAffected == 1) {
 				return true;
 			} else {
@@ -2230,7 +2225,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	public boolean getStatistics(ArrayList<FileInfo> files, StatSource statSource) {
 		try {
 			if (statSource.getIdDevice() > 0) {
-				// Get all files copied to the device, including locally deleted
+				// Get all files copied to the device
 				// RelativeFullPath is retrieved from deviceFile table: the original one on device
 				this.stSelectFileStatistics = stSelectFilesStats4SourceAndDevice;
 				this.stSelectFileStatistics.setInt(1, statSource.getId());
@@ -2330,7 +2325,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public boolean getFolders(ConcurrentHashMap<String, FolderInfo> folders,
 			CheckedFlag checkedFlag) {
-		return this.getFolders(folders, "WHERE deleted=0 AND checked="
+		return this.getFolders(folders, "WHERE checked="
 				+ checkedFlag.getValue());//NOI18N
 	}
 
@@ -2365,22 +2360,16 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * Get folders for scan
 	 *
 	 * @param folders
-	 * @param getDeleted
 	 * @return
 	 */
-	public boolean getFolders(ConcurrentHashMap<String, FolderInfo> folders,
-			boolean getDeleted) {
-		String SqlWhere = "";
-		if (!getDeleted) {
-			SqlWhere = " WHERE deleted=0 ";
-		}
-		return getFolders(folders, SqlWhere);
+	public boolean getFolders(ConcurrentHashMap<String, FolderInfo> folders) {
+		return getFolders(folders, "");
 	}
 
 	private boolean getFolders(ConcurrentHashMap<String, FolderInfo> folders,
 			String sqlWhere) {
 		folders.clear();
-		String sql = "SELECT idPath, strPath, modifDate, deleted, checked "
+		String sql = "SELECT idPath, strPath, modifDate, checked "
 				+ "FROM path " + sqlWhere;    //NOI18N
 		Statement st = null;
 		ResultSet rs = null;
@@ -2394,8 +2383,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				path = FilenameUtils.separatorsToSystem(
 						dbConn.getStringValue(rs, "strPath", false));   //NOI18N
 				folders.put(path, new FolderInfo(rs.getInt("idPath"),
-						path, dbModifDate, //NOI18N
-						rs.getBoolean("deleted"),
+						path, dbModifDate,
 						CheckedFlag.values()[rs.getInt("checked")]));   //NOI18N
 			}
 			return true;
@@ -2472,8 +2460,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 			relativePath = FilenameUtils.separatorsToUnix(relativePath);
 			PreparedStatement stInsertPath = dbConn.getConnnection().prepareStatement(
 					"INSERT INTO path "
-					+ "(strPath, modifDate, deleted, checked, mbId) " //NOI18N
-					+ "VALUES (?, ?, 0, ?, ?)");   //NOI18N
+					+ "(strPath, modifDate, checked, mbId) " //NOI18N
+					+ "VALUES (?, ?, ?, ?)");   //NOI18N
 
 			stInsertPath.setString(1, relativePath);
 			stInsertPath.setString(2, DateTime.formatUTCtoSqlUTC(modifDate));
@@ -2513,7 +2501,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		try {
 			PreparedStatement stUpdatePath = dbConn.connection.prepareStatement(
 					"UPDATE path "
-					+ "SET modifDate=?, deleted=0, checked=?, strPath=?, mbId=? " //NOI18N
+					+ "SET modifDate=?, checked=?, strPath=?, mbId=? " //NOI18N
 					+ "WHERE idPath=?");   //NOI18N
 			stUpdatePath.setString(1, DateTime.formatUTCtoSqlUTC(modifDate));
 			stUpdatePath.setInt(2, checkedFlag.getValue());
@@ -2572,7 +2560,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 			PreparedStatement stUpdateCheckedFlagReset
 					= dbConn.connection.prepareStatement(
 							"UPDATE path SET checked=0 "
-							+ "WHERE checked=? AND deleted=0");   //NOI18N
+							+ "WHERE checked=?");   //NOI18N
 			stUpdateCheckedFlagReset.setInt(1, checkedFlag.getValue());
 			stUpdateCheckedFlagReset.executeUpdate();
 			//we can have no rows affected if library is empty so not checking it
@@ -2600,8 +2588,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 			String sql = "SELECT COUNT(*), COUNT(DISTINCT P.idPath), SUM(size), "
 					+ " \nSUM(length), avg(rating)," + field + " "
 					+ " \nFROM file F JOIN path P ON P.idPath=F.idPath "
-					+ " \nWHERE F.deleted=0 AND P.deleted=0 " //NOI18N
-					+ " \nAND F.rating IN " + getCSVlist(selRatings)
+					+ " \nWHERE F.rating IN " + getCSVlist(selRatings)
 					+ " \nGROUP BY " + field + " ORDER BY " + field;   //NOI18N //NOI18N
 
 			st = dbConn.connection.createStatement();
@@ -2655,10 +2642,9 @@ public class DbConnJaMuz extends StatSourceSQL {
 					+ "  FROM file F JOIN ( "
 					+ "SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,\n"
 					+ "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"
-					+ "FROM path JOIN file ON path.idPath=file.idPath WHERE file.deleted=0 AND path.deleted=0 GROUP BY path.idPath\n"
+					+ "FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath\n"
 					+ ") "
 					+ "P ON F.idPath=P.idPath \n"
-					+ "WHERE F.deleted=0 AND P.deleted=0) t\n"
 					+ "GROUP BY t.range ";
 
 			st = dbConn.connection.createStatement();
@@ -2691,7 +2677,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 	/**
 	 * Get files matching given genre, artist, album, ratings and checkedFlag
-	 * (and not marked as deleted)
 	 *
 	 * @param myFileInfoList
 	 * @param selGenre
@@ -2735,7 +2720,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
 				+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n"
 				+ "F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
-				+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
+				+ "F.nbCovers, F.coverHash, F.ratingModifDate, "
 				+ "F.tagsModifDate, F.genreModifDate, F.saved, \n"
 				+ "ifnull(T.bitRate, F.bitRate) AS bitRate, \n"
 				+ "ifnull(T.format, F.format) AS format, \n"
@@ -2804,7 +2789,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 		String addedDate;
 		String lastPlayed;
 		String modifDate;
-		boolean deleted;
 		CheckedFlag checkedFlag;
 		FolderInfo.CopyRight copyRight;
 		double albumRating;
@@ -2856,7 +2840,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 				addedDate = dbConn.getStringValue(rs, "addedDate");   //NOI18N
 				lastPlayed = dbConn.getStringValue(rs, "lastPlayed");   //NOI18N
 				modifDate = dbConn.getStringValue(rs, "modifDate");   //NOI18N
-				deleted = rs.getBoolean("deleted");   //NOI18N
 				albumRating = rs.getDouble("albumRating");
 				percentRated = rs.getInt("percentRated");
 				status = SyncStatus.valueOf(dbConn.getStringValue(rs, "status", "INFO"));
@@ -2870,7 +2853,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 								albumArtist, artist, comment, discNo, discTotal,
 								genre, nbCovers, title, trackNo, trackTotal,
 								year, playCounter, rating, addedDate,
-								lastPlayed, modifDate, deleted, coverHash,
+								lastPlayed, modifDate, coverHash,
 								checkedFlag, copyRight, albumRating,
 								percentRated, rootPath, status, pathModifDate,
 								pathMbid, replayGain)
@@ -3058,8 +3041,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				+ //NOI18N
 				" \nINNER JOIN `path` P ON P.idPath=F.idPath "
 				+ //NOI18N
-				" \nWHERE F.deleted=0 AND P.deleted=0 " //NOI18N
-				+ " \nAND F.rating IN " + getCSVlist(selRatings)
+				" \nWHERE F.rating IN " + getCSVlist(selRatings)
 				+ " \nAND P.checked IN " + getCSVlist(selCheckedFlag) //NOI18N
 				//FIXME Z PanelSelect Check year valid and offer "allow invalid" as an option
 				//https://stackoverflow.com/questions/5071601/how-do-i-use-regex-in-a-sqlite-query
@@ -3099,36 +3081,36 @@ public class DbConnJaMuz extends StatSourceSQL {
 	}
 
 	/**
-	 * Sets a path as deleted
+	 * Deletes a path.
 	 *
 	 * @param idPath
 	 * @return
 	 */
-	public synchronized boolean setPathDeleted(int idPath) {
+	public synchronized boolean deletePath(int idPath) {
 		try {
-			PreparedStatement stUpdateDeletedPath = dbConn.connection.prepareStatement(
-					"UPDATE path SET deleted=1 WHERE idPath=?");   //NOI18N
-			PreparedStatement stUpdateDeletedFiles = dbConn.connection.prepareStatement(
-					"UPDATE file SET deleted=1 WHERE idPath=?");   //NOI18N
-			stUpdateDeletedPath.setInt(1, idPath);
-			stUpdateDeletedFiles.setInt(1, idPath);
-			int nbRowsAffected = stUpdateDeletedPath.executeUpdate();
+			PreparedStatement stDeletedPath = dbConn.connection.prepareStatement(
+					"DELETE FROM path WHERE idPath=?");   //NOI18N
+			PreparedStatement stDeletedFiles = dbConn.connection.prepareStatement(
+					"DELETE FROM file WHERE idPath=?");   //NOI18N
+			stDeletedPath.setInt(1, idPath);
+			stDeletedFiles.setInt(1, idPath);
+			int nbRowsAffected = stDeletedFiles.executeUpdate();
 			if (nbRowsAffected == 1) {
-				nbRowsAffected = stUpdateDeletedFiles.executeUpdate();
+				nbRowsAffected = stDeletedPath.executeUpdate();
 				if (nbRowsAffected > 0) {
 					return true;
 				} else {
-					Jamuz.getLogger().log(Level.SEVERE, "stUpdateDeletedFiles, "
+					Jamuz.getLogger().log(Level.SEVERE, "stDeletedPath, "
 							+ "idPath={0} # row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N
 					return false;
 				}
 			} else {
-				Jamuz.getLogger().log(Level.SEVERE, "stUpdateDeletedPath, idPath={0} "
+				Jamuz.getLogger().log(Level.SEVERE, "stDeletedFiles, idPath={0} "
 						+ "# row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N
 				return false;
 			}
 		} catch (SQLException ex) {
-			Popup.error("setPathDeleted(" + idPath + ")", ex);   //NOI18N
+			Popup.error("deletePath(" + idPath + ")", ex);   //NOI18N
 			return false;
 		}
 	}
@@ -3138,18 +3120,13 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 *
 	 * @param files
 	 * @param idPath
-	 * @param getDeleted
 	 * @return
 	 */
-	public boolean getFiles(ArrayList<FileInfoInt> files, int idPath,
-			boolean getDeleted) {
+	public boolean getFiles(ArrayList<FileInfoInt> files, int idPath) {
 		String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
 				+ "0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
 				+ "FROM file F, path P "
 				+ "WHERE F.idPath=P.idPath ";    //NOI18N
-		if (!getDeleted) {
-			sql += " AND F.deleted=0 ";   //NOI18N
-		}
 		if (idPath > -1) {
 			sql += " AND P.idPath=" + idPath;   //NOI18N
 		}
@@ -3189,10 +3166,10 @@ public class DbConnJaMuz extends StatSourceSQL {
 			= "SELECT album, albumArtist, checked, discNo, discTotal, "
 			+ " ifnull(round(((sum(case when rating > 0 then rating end))"
 			+ "/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, "
-			+ " P.idPath, P.strPath, P.modifDate, P.deleted"
+			+ " P.idPath, P.strPath, P.modifDate"
 			+ " FROM path P JOIN file F ON F.idPath=P.idPath ";
 	private static final String GROUP_DUPLICATE
-			= " AND F.deleted=0 AND P.deleted=0 GROUP BY P.idPath, discNo";   //NOI18N
+			= " GROUP BY P.idPath, discNo";   //NOI18N
 
 	/**
 	 * Check if an exact album exists in JaMuz database
@@ -3356,9 +3333,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 						dbConn.getStringValue(rs, "strPath", false));   //NOI18N
 
 				FolderInfo folderInfo = new FolderInfo(rs.getInt("idPath"),
-						path, dbModifDate, //NOI18N
-						rs.getBoolean("deleted"),
-						CheckedFlag.values()[rs.getInt("checked")]);
+						path, dbModifDate, CheckedFlag.values()[rs.getInt("checked")]);
 
 				myList.add(new DuplicateInfo(album, albumArtist, albumRating, checkedFlag,
 						errorlevel, discNo, discTotal, folderInfo));

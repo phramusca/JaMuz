@@ -243,7 +243,6 @@ public class Album {
 							rating = Integer.valueOf(row.getValue(18)),
 							addedDate = row.getValue(19),
 							lastPlayed = row.getValue(20),
-							deleted = Boolean.parseBoolean(row.getValue(15)),
 							checkedFlag = FolderInfo.CheckedFlag.valueOf(row.getValue(16)),
 							ignore
 					));
@@ -671,7 +670,7 @@ public class Album {
 		Assert.assertTrue("Could not retrieve idPath=" + idPath, folder != null);
 
 		ArrayList<FileInfoInt> files = new ArrayList<>();
-		Jamuz.getDb().getFiles(files, idPath, true);
+		Jamuz.getDb().getFiles(files, idPath);
 
 		compare(files);
 	}
@@ -955,10 +954,7 @@ public class Album {
 			Assert.assertEquals("BPM" + msg, tracks.get(indexTrack).getBPM(), file.getBPM(), 0.01f);
 			Assert.assertEquals("nbCovers" + msg, tracks.get(indexTrack).getNbCovers(), file.getNbCovers());
 			Assert.assertEquals("comment" + msg, tracks.get(indexTrack).getComment(), format(file.getComment()));
-
-			Assert.assertEquals("deleted" + msg, tracks.get(indexTrack).isDeleted(), file.isDeleted());
 			Assert.assertEquals("checkedFlag" + msg, tracks.get(indexTrack).getCheckedFlag(), file.getCheckedFlag());
-
 			Assert.assertEquals("playCounter" + msg, tracks.get(indexTrack).getPlayCounter(), file.getPlayCounter());
 			Assert.assertEquals("rating" + msg, tracks.get(indexTrack).getRating(), file.getRating());
 

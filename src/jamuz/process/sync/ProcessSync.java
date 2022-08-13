@@ -128,15 +128,7 @@ public class ProcessSync extends ProcessAbstract {
 		ArrayList<FileInfoInt> filesDevicePlaylist = new ArrayList<>();
 		Playlist playlist = device.getPlaylist();
 		playlist.getFiles(filesDevicePlaylist);
-		
-		//FIXME Z Clean deviceFile: remove files WHERE F.deleted=1 OR P.deleted=1
-		//In a general manner better handle deleted=1 in file or path table:
-		//	- may cause duplicates in db (still under monitoring, )
-		//	- should be included in duplicate search in check process
-		//		- to reject duplicates with same mbId and low rating when deleted
-		//		- to accept and replace duplicates with same mbId and high rating when deleted
-		//		- think of the status: why would a OK with good rating be deleted ? why ... ?
-		
+				
 		//GET list of files in deviceFile
 		fileInfoSourceList = new ArrayList<>();
 		String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, "
@@ -145,7 +137,6 @@ public class ProcessSync extends ProcessAbstract {
 				+ " FROM deviceFile DF "
 				+ " JOIN file F ON DF.idFile=F.idFile "
 				+ " JOIN path P ON F.idPath=P.idPath "
-				//+ " WHERE F.deleted=0 AND P.deleted=0 "
 				+ " AND DF.idDevice="+device.getId()+" "
 				+ " ORDER BY idFile ";
 		Jamuz.getDb().getFiles(fileInfoSourceList, sql);

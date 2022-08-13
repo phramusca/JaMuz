@@ -511,8 +511,8 @@ public class ProcessCheck {
         }
 
         private boolean scan() throws InterruptedException {
-            //Get list of folders from library deleted included
-            if(!Jamuz.getDb().getFolders(foldersDb, true)) {
+            //Get list of folders from library
+            if(!Jamuz.getDb().getFolders(foldersDb)) {
                 return false;
             }
             checkAbort();
@@ -522,16 +522,16 @@ public class ProcessCheck {
         }
 
 		private boolean scanDeleted() throws InterruptedException {
-            //Get list of folders from library deleted excluded
-            if(!Jamuz.getDb().getFolders(foldersDb, false)) {
+            //Get list of folders from library
+            if(!Jamuz.getDb().getFolders(foldersDb)) {
                 return false;
             }
             return sendFoldersDbToScanQueue(ScanType.SCAN_DELETED);
 		}
 		
 		private boolean transcode() throws InterruptedException {
-            //Get list of folders from library deleted excluded
-            if(!Jamuz.getDb().getFolders(foldersDb, false)) {
+            //Get list of folders from library
+            if(!Jamuz.getDb().getFolders(foldersDb)) {
                 return false;
             }
             return sendFoldersDbToScanQueue(ScanType.TRANSCODE);
@@ -688,7 +688,7 @@ public class ProcessCheck {
                 FolderInfo folderDb = foldersDb.get(folderFS.getRelativePath());
                 folderFS.idPath=folderDb.idPath;
                 
-                if(folderDb.isDeleted() || full || !folderFS.getModifDate().equals(folderDb.getModifDate())) {
+                if(full || !folderFS.getModifDate().equals(folderDb.getModifDate())) {
                     CheckedFlag checkedFlagDb=folderDb.getCheckedFlag();
                     if(!folderFS.getModifDate().equals(folderDb.getModifDate())) {
                         checkedFlagDb=CheckedFlag.UNCHECKED;

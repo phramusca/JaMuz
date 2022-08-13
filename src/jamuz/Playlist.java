@@ -528,7 +528,7 @@ public class Playlist implements Comparable {
 					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
 					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n"
 					+ "F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
-					+ "F.nbCovers, F.deleted, F.coverHash, F.ratingModifDate, "
+					+ "F.nbCovers, F.coverHash, F.ratingModifDate, "
 					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n"
 					+ "ifnull(T.bitRate, F.bitRate) AS bitRate, \n"
 					+ "ifnull(T.format, F.format) AS format, \n"
@@ -544,9 +544,8 @@ public class Playlist implements Comparable {
 					+ "JOIN (\n"
 					+ "		SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n"
 					+ "		ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"
-					+ "		FROM path JOIN file ON path.idPath=file.idPath WHERE file.deleted=0 AND path.deleted=0 GROUP BY path.idPath \n"
-					+ "	) P ON F.idPath=P.idPath \n"
-					+ "WHERE F.deleted=0";
+					+ "		FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath \n"
+					+ "	) P ON F.idPath=P.idPath ";
 
 			//FIXME Z SQL error on playlists involving a sub-playlist that is an Inde playlist
 			sql += this.getSqlWhere(); //NOI18N
@@ -1171,9 +1170,8 @@ public class Playlist implements Comparable {
 					sql.append(" (SELECT F.idFile FROM file F JOIN (")
 							.append(" SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n")
 							.append(" ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n")
-							.append("     FROM path JOIN file ON path.idPath=file.idPath WHERE file.deleted=0 AND path.deleted=0 GROUP BY path.idPath \n")
+							.append("     FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath \n")
 							.append(") P ON F.idPath=P.idPath ")
-							.append("WHERE F.deleted=0 ")
 							.append(playlist.getSqlWhere())
 							.append(")"); //NOI18N //NOI18N
 					break;

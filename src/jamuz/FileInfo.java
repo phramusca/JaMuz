@@ -455,19 +455,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	}
 
 	/**
-	 * Deleted flag
-	 */
-	protected boolean deleted;
-
-	/**
-	 *
-	 * @return
-	 */
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	/**
 	 * Used for scan statistics purposes (statistics info got from databases to
 	 * be merged)
 	 *
@@ -767,7 +754,6 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 			tagsAsMap.add(tag);
 		});
 		jsonAsMap.put("tags", tagsAsMap);
-		jsonAsMap.put("deleted", deleted);
 		jsonAsMap.put("genreModifDate", DateTime.formatUTCtoSqlUTC(genreModifDate));
 		jsonAsMap.put("previousPlayCounter", previousPlayCounter);
 		jsonAsMap.put("ratingModifDate", DateTime.formatUTCtoSqlUTC(ratingModifDate));

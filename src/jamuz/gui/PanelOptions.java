@@ -129,7 +129,7 @@ public class PanelOptions extends javax.swing.JPanel {
             try {
                 ArrayList<FileInfoInt> filesToSave = new ArrayList<>();
 				String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
-						+ " FROM file F JOIN path P ON F.idPath=P.idPath WHERE F.deleted=0 AND P.deleted=0 AND saved=0";
+						+ " FROM file F JOIN path P ON F.idPath=P.idPath WHERE saved=0";
 				ProgressBar progressBar = (ProgressBar)jProgressBarSaveTags;
 				
 				progressBar.setIndeterminate("Retrieving list");

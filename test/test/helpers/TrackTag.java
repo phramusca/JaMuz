@@ -63,7 +63,6 @@ public class TrackTag extends FileInfoInt {
 	 * @param rating
 	 * @param addedDate
 	 * @param lastPlayed
-	 * @param deleted
 	 * @param checkedFlag
 	 * @param ignore
 	 * @throws CannotReadException
@@ -75,13 +74,13 @@ public class TrackTag extends FileInfoInt {
 	public TrackTag(String sourceFile, String relativePath, String filename,
 			float BPM, String album, String albumArtist, String artist, String comment, int discNo, int discTotal, String genre,
 			int nbCovers, String title, int trackNo, int trackTotal, String year, int playCounter, int rating, String addedDate,
-			String lastPlayed, boolean deleted, FolderInfo.CheckedFlag checkedFlag, boolean ignore) throws CannotReadException, IOException, TagException,
+			String lastPlayed, FolderInfo.CheckedFlag checkedFlag, boolean ignore) throws CannotReadException, IOException, TagException,
 			ReadOnlyFileException, InvalidAudioFrameException {
 
 		super(-1, -1, relativePath, filename, TrackSourceRepo.get(sourceFile).length, TrackSourceRepo.get(sourceFile).format,
 				TrackSourceRepo.get(sourceFile).bitRate, (int) TrackSourceRepo.get(sourceFile).size, BPM, album, albumArtist, artist, comment,
 				discNo, discTotal, genre, nbCovers, title, trackNo, trackTotal, year, playCounter, rating, addedDate, lastPlayed,
-				TrackSourceRepo.get(sourceFile).modifDate, deleted, "", checkedFlag, FolderInfo.CopyRight.UNDEFINED, 0, 0, "", DbConnJaMuz.SyncStatus.INFO,
+				TrackSourceRepo.get(sourceFile).modifDate, "", checkedFlag, FolderInfo.CopyRight.UNDEFINED, 0, 0, "", DbConnJaMuz.SyncStatus.INFO,
 				DateTime.formatUTCtoSqlUTC(new Date(0)), "", new GainValues());
 
 		oriAddedDate = addedDate;
