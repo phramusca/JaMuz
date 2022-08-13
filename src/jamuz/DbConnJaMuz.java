@@ -2176,7 +2176,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 		try {
 			PreparedStatement stDeleteFile = dbConn.connection.prepareStatement(
 					"DELETE FROM file WHERE idFile=?");   //NOI18N
-
 			stDeleteFile.setInt(1, idFile);
 			int nbRowsAffected = stDeleteFile.executeUpdate();
 			if (nbRowsAffected == 1) {
@@ -3090,20 +3089,10 @@ public class DbConnJaMuz extends StatSourceSQL {
 		try {
 			PreparedStatement stDeletedPath = dbConn.connection.prepareStatement(
 					"DELETE FROM path WHERE idPath=?");   //NOI18N
-			PreparedStatement stDeletedFiles = dbConn.connection.prepareStatement(
-					"DELETE FROM file WHERE idPath=?");   //NOI18N
 			stDeletedPath.setInt(1, idPath);
-			stDeletedFiles.setInt(1, idPath);
-			int nbRowsAffected = stDeletedFiles.executeUpdate();
+			int nbRowsAffected = stDeletedPath.executeUpdate();
 			if (nbRowsAffected == 1) {
-				nbRowsAffected = stDeletedPath.executeUpdate();
-				if (nbRowsAffected > 0) {
-					return true;
-				} else {
-					Jamuz.getLogger().log(Level.SEVERE, "stDeletedPath, "
-							+ "idPath={0} # row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N
-					return false;
-				}
+				return true;
 			} else {
 				Jamuz.getLogger().log(Level.SEVERE, "stDeletedFiles, idPath={0} "
 						+ "# row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected});   //NOI18N

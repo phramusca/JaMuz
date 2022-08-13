@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "client" (
 	"idClient"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	"login"	TEXT NOT NULL UNIQUE,
 	"pwd"	TEXT NOT NULL,
-	"name"	TEXT NOT NULL,
+	"name"	TEXT NOT NULL UNIQUE,
 	"idDevice"	INTEGER,
 	"idStatSource"	INTEGER,
 	"enabled"	BOOL,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS "file" (
 	"saved"	INTEGER NOT NULL DEFAULT (0),
 	"trackGain"	REAL,
 	"albumGain"	REAL,
-	FOREIGN KEY("idPath") REFERENCES "path"("idPath")
+	FOREIGN KEY("idPath") REFERENCES "path"("idPath") ON DELETE CASCADE
 );
 DROP TABLE IF EXISTS "fileTranscoded";
 CREATE TABLE IF NOT EXISTS "fileTranscoded" (
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS "tagfile" (
 	"idFile"	INTEGER NOT NULL,
 	"idTag"	INTEGER NOT NULL,
 	FOREIGN KEY("idTag") REFERENCES "tag"("id") ON DELETE CASCADE,
-	FOREIGN KEY("idFile") REFERENCES "file"("idFile"),
+	FOREIGN KEY("idFile") REFERENCES "file"("idFile") ON DELETE CASCADE,
 	PRIMARY KEY("idFile","idTag")
 );
 DROP TABLE IF EXISTS "tag";
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS "playCounter" (
 	"idStatSource"	INTEGER NOT NULL,
 	"playCounter"	INTEGER NOT NULL,
 	FOREIGN KEY("idStatSource") REFERENCES "statsource"("idStatSource") ON DELETE CASCADE,
-	FOREIGN KEY("idFile") REFERENCES "file"("idFile"),
+	FOREIGN KEY("idFile") REFERENCES "file"("idFile") ON DELETE CASCADE,
 	PRIMARY KEY("idFile","idStatSource")
 );
 DROP TABLE IF EXISTS "playlistOrder";
@@ -182,6 +182,6 @@ CREATE TABLE IF NOT EXISTS "deviceFile" (
 	"status"	TEXT NOT NULL,
 	PRIMARY KEY("idFile","idDevice"),
 	FOREIGN KEY("idDevice") REFERENCES "device"("idDevice") ON DELETE CASCADE,
-	FOREIGN KEY("idFile") REFERENCES "file"("idFile")
+	FOREIGN KEY("idFile") REFERENCES "file"("idFile") ON DELETE CASCADE
 );
 COMMIT;
