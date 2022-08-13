@@ -2636,7 +2636,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		ResultSet rs = null;
 		try {
 			//Note Using "percent" as "%" is replaced by "-" because of decades. Now also replacing "percent" by "%"
-			String sql = "SELECT count(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), round(avg(albumRating),1 ) as [rating] , t.range as [percentRated] \n"
+			String sql = "SELECT count(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), round(avg(albumRating),1 ) as [rating] , T.range as [percentRated] \n"
 					+ "FROM (\n"
 					+ "SELECT albumRating, size, length, P.idPath,\n"
 					+ "	case  \n"
@@ -2647,13 +2647,12 @@ public class DbConnJaMuz extends StatSourceSQL {
 					+ "    when percentRated >= 75 and percentRated < 100 then '75 -> 99 percent'\n"
 					+ "    when percentRated == 100					      then 'x 100 percent x'\n"
 					+ "    else 'kes' end as range\n"
-					+ "  FROM file F JOIN ( "
-					+ "SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,\n"
-					+ "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"
-					+ "FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath\n"
-					+ ") "
-					+ "P ON F.idPath=P.idPath \n"
-					+ "GROUP BY t.range ";
+					+ "  FROM file F "
+					+ "  JOIN ( SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,\n"
+					+ "			ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"
+					+ "		FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath ) \n"
+					+ "P ON F.idPath=P.idPath ) T \n"
+					+ "GROUP BY T.range ";
 
 			st = dbConn.connection.createStatement();
 			rs = st.executeQuery(sql);

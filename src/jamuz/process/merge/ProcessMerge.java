@@ -933,7 +933,6 @@ public class ProcessMerge extends ProcessAbstract {
 				while (i.hasNext()) {
 					FileInfoInt fileInfoWithNewMetadata = i.next();
 					checkAbort();
-					//TODO MERGE If aborted, metadata will no more be written to file. 
 					if(!fileInfoWithNewMetadata.getGenre().isEmpty() || fileInfoWithNewMetadata.getBPM()>=0) {
 						Optional<FileInfo> optionalFileInfo = getItemFromList(fileInfoWithNewMetadata, mergeListDbJaMuz);
 						FileInfo fileInfoDbJaMuz = null;
