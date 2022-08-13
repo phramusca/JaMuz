@@ -694,22 +694,6 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			return false;
 		}
 	}
-	
-	/**
-	 * Deletes all files in folder
-	 */
-	private void deleteAllFiles(ProgressBar progressBar) {
-		progressBar.setup(filesAudio.size()
-				+getFilesOther().size()
-				+getFilesConvertible().size()
-				+getFilesImage().size());
-		deleteList(filesAudio, progressBar);
-		deleteList(getFilesOther(), progressBar);
-		deleteList(getFilesConvertible(), progressBar);
-		deleteList(getFilesImage(), progressBar);
-        
-        //TODO: If no more files in folder, remove the folder too
-	}
 
 	private void deleteList(List<? extends FileInfoInt> myList, ProgressBar progressBar) {
 		for (FileInfoInt myFileInfo : myList) {
@@ -724,14 +708,28 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         }
 	}
 
+	private int getTotalSize() {
+		return filesAudio.size()
+				+getFilesOther().size()
+				+getFilesConvertible().size()
+				+getFilesImage().size();
+	}
+	
     /**
      * delete all files in folder
      */
     void delete(ProgressBar progressBar) {
-        deleteAllFiles(progressBar);
+        progressBar.setup(getTotalSize());
+		deleteList(filesAudio, progressBar);
+		deleteList(getFilesOther(), progressBar);
+		deleteList(getFilesConvertible(), progressBar);
+		deleteList(getFilesImage(), progressBar);
         browse(false, false, progressBar);
         if(isCheckingMasterLibrary()) {
             scanDeleted(progressBar);
+			if(getTotalSize()==0) {
+				Jamuz.getDb().deletePath(idPath);
+			}
         }
 	}
     

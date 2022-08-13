@@ -474,7 +474,6 @@ public class ProcessCheck {
 		}
 
         private void sendFoldersFSToScanQueue(File path, ScanType scanType) throws InterruptedException {
-            //Verifying we have a path and not a file
             if (path.isDirectory()) {
                 File[] files = path.listFiles();
                 this.checkAbort();
@@ -498,9 +497,7 @@ public class ProcessCheck {
 							PanelCheck.progressBarFolders.progress("");
                         }
                         FolderInfo folder = new FolderInfo(path.getAbsolutePath()+File.separator, rootLocation.getValue());
-                        int nbFiles = folder.nbFiles;
-                        //Add the list of files to the FolderInfo list
-                        if(nbFiles>0) {
+                        if(folder.nbFiles>0) {
                             folder.setScanType(scanType);
                             scanQueue.put(folder);
                             displayScanQueue(0);
