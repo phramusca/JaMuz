@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.logging.Level;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -201,7 +203,7 @@ public class DbInfo {
 				return false;
 		}
 	}
-
+	
 	/**
 	 *
 	 * @param destinationPath
@@ -210,9 +212,13 @@ public class DbInfo {
 	public boolean backupDB(String destinationPath) {
 		switch (this.libType) {
 			case Sqlite:  //NOI18N
-				//Create a backup of that database file
+				String destinationFileName = FilenameUtils.concat(
+							destinationPath, 
+							FilenameUtils.getBaseName(locationWork)
+									+"_"+DateTime.formatUTC(new Date(), DateTime.DateTimeFormat.FILE, true)
+									+"."+FilenameUtils.getExtension(locationWork));
 				File workingFile = new File(this.locationWork);
-				File backupFile = new File(this.locationWork + ".bak");  //NOI18N
+				File backupFile = new File(destinationFileName);  //NOI18N
 				try {
 					FileSystem.copyFile(workingFile, backupFile);
 				} catch (IOException ex) {

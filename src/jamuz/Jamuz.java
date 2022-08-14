@@ -73,14 +73,18 @@ public class Jamuz {
 	public static boolean configure(String appPath) {
 		Jamuz.appPath = appPath;
 		logPath = appPath + "logs" + File.separator;  //NOI18N //NOI18N //NOI18N
-
 		if (!connectDatabase()) {
 			return false;
 		}
-		if(!getDb().updateSchema(3)) {
+		if(!getDb().dbConn.connect()) {
 			return false;
 		}
-
+		if(!getDb().updateSchema(1)) {
+			return false;
+		}
+		if(!db.setUp(false)) {
+			return false;
+		}
 		readGenres();
 		readTags();
 		if (!readPlaylists()) {
@@ -252,8 +256,7 @@ public class Jamuz {
 
 		//Create and open connection to JaMuz JaMuzDbPath			
 		db = new DbConnJaMuz(new DbInfo(LibType.Sqlite, JaMuzDbPath, "", ""));
-		//TODO: Handle database version so that schema can be updated as needed, from one Jamuz version to a new one
-		return db.setUp(false);
+		return true;
 	}
 
 	private static boolean createLog() {

@@ -3880,6 +3880,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 	}
 	
 	private boolean updateVersion(int oldVersion, int newVersion) {
+		Popup.info("Database requires an upgrade from version " + oldVersion + " to " + newVersion + ".\n\nDo not worry, a backup will be made.\nNo output is expected, just wait a little.\n\nClick OK to proceed.");
+		getDbConn().info.backupDB(FilenameUtils.getFullPath(getDbConn().info.getLocationWork()));	
 		for (int currentVersion = oldVersion; currentVersion < newVersion; currentVersion++) {
 			if(!updateSchemaToNewVersion(currentVersion+1)) {
 				return false;
