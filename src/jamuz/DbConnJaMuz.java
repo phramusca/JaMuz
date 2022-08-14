@@ -31,14 +31,14 @@ import jamuz.process.sync.Device;
 import jamuz.remote.ClientInfo;
 import jamuz.utils.DateTime;
 import jamuz.utils.Inter;
+import jamuz.utils.OS;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,15 +49,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.ibatis.jdbc.ScriptRunner;
 
 /**
  * Creates a new dbConn.connection to JaMuz database
@@ -3857,8 +3858,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Schema">
 	
-	//TODO: Try https://mybatis.org/mybatis-3/ for other connections ? What benefits ?
-	
 	boolean updateSchema(int requestedVersion) {
 		ArrayList<Version> versions = new ArrayList<>();
 		if(!getVersionHistory(versions)) {
@@ -3894,20 +3893,16 @@ public class DbConnJaMuz extends StatSourceSQL {
 	
 	private synchronized boolean updateSchemaToNewVersion(int newVersion) {
 		try {
-			dbConn.disconnect();
-			dbConn.connect(false);
-			ScriptRunner runner = new ScriptRunner(this.dbConn.connection);
-			InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(getClass().getResource(
-					"/jamuz/database/updates/" + newVersion + ".sql").toURI())));
-			runner.runScript(reader);
-			reader.close();
-			dbConn.disconnect();
-			dbConn.connect(true);
+			File scriptFile = Jamuz.getFile(newVersion + ".sql", "data", "system", "sql");
+			String locationWork = this.dbConn.info.getLocationWork();
+			ProcessBuilder builder = new ProcessBuilder("sqlite3", locationWork);
+			builder.redirectInput(scriptFile);
+			Process process = builder.start(); 
+			process.waitFor();
 			return true;
-		} catch (org.apache.ibatis.jdbc.RuntimeSqlException | NullPointerException | IOException | URISyntaxException ex) {
-			Popup.error("updateSchemaToNewVersion(" + newVersion + ")", ex);   //NOI18N
+		} catch (IOException | InterruptedException ex) {
+			Logger.getLogger(DbConnJaMuz.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		//NOI18N
 		return false;
 	}
 	

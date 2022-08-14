@@ -1,4 +1,4 @@
---PRAGMA foreign_keys=off;
+PRAGMA foreign_keys=off;
 
 ALTER TABLE file RENAME TO _file_old;
 ALTER TABLE path RENAME TO _path_old;
@@ -147,4 +147,4 @@ DROP TABLE _deviceFile_old;
 DROP TABLE _client_old;
 DROP TABLE _statSource_old;
 
---PRAGMA foreign_keys=on;
+PRAGMA foreign_keys=on;

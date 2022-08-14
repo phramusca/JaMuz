@@ -89,6 +89,11 @@
         <copy todir="${dist.dir}/data/icon">
 			<fileset dir="data/icon"/>
 		</copy>
+
+        <echo message="Copy data/system/sql"/>
+        <copy todir="${dist.dir}/data/system/sql">
+			<fileset dir="data/system/sql"/>
+		</copy>
 		
 		<echo message="Copy data/BookLinks.txt"/>
         <copy todir="${dist.dir}/data">

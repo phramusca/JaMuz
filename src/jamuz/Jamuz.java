@@ -77,6 +77,10 @@ public class Jamuz {
 		if (!connectDatabase()) {
 			return false;
 		}
+		if(!getDb().updateSchema(3)) {
+			return false;
+		}
+
 		readGenres();
 		readTags();
 		if (!readPlaylists()) {
