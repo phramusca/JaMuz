@@ -46,9 +46,8 @@ read -r -p "Continue with the release ? [Y/n] " input
       [yY][eE][sS]|[yY])
             echo "Copying 'dist' folder to '$backupPath'. Please wait."
             cp -r dist $backupPath/
-            mv $backupPath/dist $backupPath/JaMuz_v${version}_Beta
-            7z a -r $backupPath/JaMuz_v${version}_Beta.7z $backupPath/JaMuz_v${version}_Beta
-            #rm -rf $backupPath/dist $backupPath/JaMuz_v${version}_Beta
+            mv $backupPath/dist $backupPath/JaMuz_v${version}
+            7z a -r $backupPath/JaMuz_v${version}.7z $backupPath/JaMuz_v${version}
             ;;
       [nN][oO]|[nN])
             echo "Operation cancelled."
