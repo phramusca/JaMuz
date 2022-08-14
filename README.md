@@ -1,7 +1,10 @@
 
 **JaMuz** is a **Music library manager**, **player** and more, for Linux and Windows.
-_________________________________________________________________________________
+
+- - -
+
 * **Features**:
+
   * **Merge your data** (user custom tags, rating, BPM, genre and statistics: last played, play counter and added date) **between your favorite players:**
     * Guayadeque (Linux)
     * Kodi (Linux / Windows)
@@ -24,7 +27,7 @@ ________________________________________________________________________________
   * Create complex playlists in a simple way
   * Audio Player (using mplayer)
   * Runs on Windows and Linux (as written in Java), maybe Mac OS (not tested).
-  * Bonus: 
+  * Bonus:
     * Kodi helper to manage your videos.
     * Calibre helper to manage your ebooks.
   * Please help out translating by using [WebLate](https://hosted.weblate.org/engage/jamuz/):
@@ -38,6 +41,6 @@ ________________________________________________________________________________
   * Recurrent donations using Liberapay.com: <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
   * One time donation with PayPal.com: <a href="https://paypal.me/RaphaelCamus"><img alt="Donate using PayPal" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"></a>
 
+- - -
 
-______________________________________________________________________________________
-___ [Credits](CREDITS.md) ___ [Contributing](CONTRIBUTING.md) ___ [License](LICENSE) ___ 
+`___` [Credits](CREDITS.md) `___` [Contributing](CONTRIBUTING.md) `___` [License](LICENSE) `___`

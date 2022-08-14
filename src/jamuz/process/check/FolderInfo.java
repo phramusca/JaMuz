@@ -708,7 +708,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         }
 	}
 
-	private int getTotalSize() {
+	private int getNumberOfFiles() {
 		return filesAudio.size()
 				+getFilesOther().size()
 				+getFilesConvertible().size()
@@ -719,7 +719,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
      * delete all files in folder
      */
     void delete(ProgressBar progressBar) {
-        progressBar.setup(getTotalSize());
+        progressBar.setup(getNumberOfFiles());
 		deleteList(filesAudio, progressBar);
 		deleteList(getFilesOther(), progressBar);
 		deleteList(getFilesConvertible(), progressBar);
@@ -727,7 +727,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         browse(false, false, progressBar);
         if(isCheckingMasterLibrary()) {
             scanDeleted(progressBar);
-			if(getTotalSize()==0) {
+			if(getNumberOfFiles()==0) {
 				Jamuz.getDb().deletePath(idPath);
 			}
         }

@@ -2,6 +2,8 @@
 
 By contributing to this project you agree to license your contribution under the terms of the [GNU GPLv3](LICENSE).
 
+[[_TOC_]]
+
 ## Issues
 
 [Open an issue](https://github.com/phramusca/JaMuz/issues?state=open) for anything you would like to see in JaMuz, but please check other issues first.
@@ -11,11 +13,12 @@ By contributing to this project you agree to license your contribution under the
 Using [weblate.org](https://hosted.weblate.org/engage/jamuz/)
 
 *Note if you consider manual edition (ie: without weblate)*:
+
 - The **bundle\*\*.properties** files are **ISO 8859-1** encoded.
   - Using a different encoding may certainly result in weird characters in the GUI
     - ie: NO UTF-8 nor anything else
     - NetBeans respect the convention, but other editors may use instead UTF-8 for instance
- 
+
 ## Pull Requests
 
 Pull requests are welcome.
@@ -23,28 +26,81 @@ Please submit to the `master` branch.
 
 ### Get Started
 
-* Clone repository to {Repo}
-* Open project using [NetBeans](https://netbeans.org/downloads/)
-* Build project
-* [Get a TheMovieDb API key for free](https://www.themoviedb.org/faq/api)
-* [Get a LastFm API key for free](http://www.last.fm/api/account/create)
-* [Get an AcoustId API key for free](https://acoustid.org/)
-* Create a keys.properties file in {Repo}/src/jamuz
-  ```
+- Clone repository to {Repo}
+- Open project using [NetBeans](https://netbeans.org/downloads/)
+- Build project
+- [Get a TheMovieDb API key for free](https://www.themoviedb.org/faq/api)
+- [Get a LastFm API key for free](http://www.last.fm/api/account/create)
+- [Get an AcoustId API key for free](https://acoustid.org/)
+- Create a keys.properties file in {Repo}/src/jamuz
+
+  ```text
   TheMovieDb={yourKey}
   LastFm={yourKey}
   AcoustId={yourKey}
   ```
-* Copy from {Repo}/dist to {Repo}:
-  * JaMuz.db
-  * JaMuz.properties
-* You can now run and enjoy (hopefully)
+
+- Copy from {Repo}/dist to {Repo}:
+  - JaMuz.db
+  - JaMuz.properties
+- You can now run and enjoy (hopefully)
 
 ### Stat sources
 
 In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monkey, Mixxx, MyTunes) you can add one simply by extending the jamuz.StatSourceAbstract class and adding entry to database.
 
-### Roadmap to Release version 1.0
+## Release process
+
+1. Export prod schema and compare with JaMuz_creation.sql
+
+    - If it differs ?
+
+1. Update build.xml
+
+    ```xml
+    <property name="version.num" value="x.y.z" />
+    ```
+
+1. Update release notes
+
+    - [French LISEZMOI.TXT](dist-data/doc/LISEZMOI.TXT)
+    - [English README.TXT](dist-data/doc/README.TXT)
+
+1. Build
+
+    - Build `dist` folder with NetBeans: Run/Clean and build project (JaMuz)
+
+1. Create 7z release file
+
+    ```bash
+    sh ./release.sh 10.50.4056 ../../ReposSides/JaMuz/Backup_Releases/
+
+    Usage:
+
+      sh ./release.sh <version> <backup path>
+
+    <version> must be of type x.y.z (ex: 0.5.41)
+    <backup path> is the path to the releases backup folder
+      Ex: 1.0.51
+      Regex: ^[0-9]+\.[0-9]+\.[0-9]+$
+    ```
+
+1. **TEST**
+1. Commit (named vx.y.z) & PUSH
+1. [Create release on github](https://github.com/phramusca/JaMuz/releases/new) based on [previous ones](https://github.com/phramusca/JaMuz/releases)
+
+    - Drop 7z built earlier
+    - Update gh-pages with link to new release
+
+1. Update build.xml
+
+    ```xml
+    <property name="version.num" value="x.y.z+1-dev" />
+    ```
+
+1. Commit (named vx.y.z-dev) & PUSH
+
+## Roadmap to Release version 1.0
 
 - Test Plan:
   - add unit tests
