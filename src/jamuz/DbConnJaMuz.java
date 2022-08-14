@@ -3864,7 +3864,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 			return false;
 		}
 		if(versions.size()<1) {
-			updateVersion(0, requestedVersion);
+			return updateVersion(0, requestedVersion);
 		}
 		else {
 			Optional<Version> currentVersion = versions.stream().filter((t) -> {
@@ -3873,20 +3873,31 @@ public class DbConnJaMuz extends StatSourceSQL {
 			if(!currentVersion.isPresent()) {
 				return updateVersion(0, requestedVersion);
 			} else {
+				if(currentVersion.get().getVersion()==requestedVersion) {
+					return true;
+				}
 				return updateVersion(currentVersion.get().getVersion(), requestedVersion);
 			}
 		}
-		return false;
 	}
 	
 	private boolean updateVersion(int oldVersion, int newVersion) {
 		Popup.info("Database requires an upgrade from version " + oldVersion + " to " + newVersion + ".\n\nDo not worry, a backup will be made.\nNo output is expected, just wait a little.\n\nClick OK to proceed.");
 		getDbConn().info.backupDB(FilenameUtils.getFullPath(getDbConn().info.getLocationWork()));	
 		for (int currentVersion = oldVersion; currentVersion < newVersion; currentVersion++) {
-			if(!updateSchemaToNewVersion(currentVersion+1)) {
+			int nextVersion = currentVersion + 1;
+			if(oldVersion!=0 && !insertVersionHistory(nextVersion)) {
 				return false;
 			}
-			if(!updateVersionHistory(currentVersion+1)) {
+			if(!updateSchemaToNewVersion(nextVersion)) {
+				return false;
+			}
+			if(oldVersion==0) {
+				if(!insertVersionHistory(nextVersion)) {
+					return false;
+				}
+			}
+			if(!updateVersionHistory(nextVersion)) {
 				return false;
 			}
 		}
@@ -3906,6 +3917,25 @@ public class DbConnJaMuz extends StatSourceSQL {
 			Logger.getLogger(DbConnJaMuz.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return false;
+	}
+	
+	private synchronized boolean insertVersionHistory(int version) {
+		try {
+			PreparedStatement stInsertVersionHistory = dbConn.connection.prepareStatement(
+					"INSERT INTO versionHistory (version, upgradeStart) "
+							+ "VALUES (?, datetime('now')) ");  //NOI18N
+			stInsertVersionHistory.setInt(1,version);
+			int nbRowsAffected = stInsertVersionHistory.executeUpdate();
+			if (nbRowsAffected == 1) {
+				return true;
+			} else {
+				Jamuz.getLogger().log(Level.SEVERE, "stInsertVersionHistory, fileInfo={0} # row(s) affected: +{1}", new Object[]{version, nbRowsAffected});   //NOI18N
+				return false;
+			}
+		} catch (SQLException ex) {
+			Popup.error("insertVersionHistory(" + version + ")", ex);   //NOI18N
+			return false;
+		}
 	}
 	
 	private synchronized boolean updateVersionHistory(int version) {

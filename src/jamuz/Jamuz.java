@@ -73,7 +73,7 @@ public class Jamuz {
 	public static boolean configure(String appPath) {
 		Jamuz.appPath = appPath;
 		logPath = appPath + "logs" + File.separator;  //NOI18N //NOI18N //NOI18N
-		if (!connectDatabase()) {
+		if (!setupDatabase()) {
 			return false;
 		}
 		if(!getDb().dbConn.connect()) {
@@ -82,6 +82,7 @@ public class Jamuz {
 		if(!getDb().updateSchema(1)) {
 			return false;
 		}
+		getDb().dbConn.disconnect();
 		if(!db.setUp(false)) {
 			return false;
 		}
@@ -219,7 +220,7 @@ public class Jamuz {
 		}
 	}
 
-	private static boolean connectDatabase() {
+	private static boolean setupDatabase() {
 
 		//This is default database location and name
 		String JaMuzDbPath = appPath + "JaMuz.db";
