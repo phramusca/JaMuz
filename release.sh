@@ -44,10 +44,11 @@ echo ""
 read -r -p "Continue with the release ? [Y/n] " input
  case $input in
       [yY][eE][sS]|[yY])
-            cp -r dist ../../ReposSides/JaMuz/Backup_Releases/
-            mv ../../ReposSides/JaMuz/Backup_Releases/dist ../../ReposSides/JaMuz/Backup_Releases/JaMuz_v${version}_Beta
-            7z a -r ../../ReposSides/JaMuz/Backup_Releases/JaMuz_v${version}_Beta.7z ../../ReposSides/JaMuz/Backup_Releases/JaMuz_v${version}_Beta
-            rm -rf ../../ReposSides/JaMuz/Backup_Releases/dist ../../ReposSides/JaMuz/Backup_Releases/JaMuz_v${version}_Beta
+            echo "Copying 'dist' folder to '$backupPath'. Please wait."
+            cp -r dist $backupPath/
+            mv $backupPath/dist $backupPath/JaMuz_v${version}_Beta
+            7z a -r $backupPath/JaMuz_v${version}_Beta.7z $backupPath/JaMuz_v${version}_Beta
+            rm -rf $backupPath/dist $backupPath/JaMuz_v${version}_Beta
             ;;
       [nN][oO]|[nN])
             echo "Operation cancelled."
