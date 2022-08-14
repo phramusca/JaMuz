@@ -24,6 +24,11 @@ Emplacement			Description
 
 Historique
 ----------------------------------------------------------------------------------------------------------------------------------
+0.5.1	- Corrections de bugs
+		- Mise à jour de traductions
+		- Support de la mise à jour de la base de données, à partir de 0.5.0
+		- Compatible avec JaMuz Remote v0.5.x minimum
+----------------------------------------------------------------------------------------------------------------------------------
 0.5.0	Beta	- Amélioration du processus de vérification:
 					- Amélioration du traitement des doublons:
 						- Possibilité de remplacer un doublon

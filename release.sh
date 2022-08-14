@@ -48,7 +48,7 @@ read -r -p "Continue with the release ? [Y/n] " input
             cp -r dist $backupPath/
             mv $backupPath/dist $backupPath/JaMuz_v${version}_Beta
             7z a -r $backupPath/JaMuz_v${version}_Beta.7z $backupPath/JaMuz_v${version}_Beta
-            rm -rf $backupPath/dist $backupPath/JaMuz_v${version}_Beta
+            #rm -rf $backupPath/dist $backupPath/JaMuz_v${version}_Beta
             ;;
       [nN][oO]|[nN])
             echo "Operation cancelled."

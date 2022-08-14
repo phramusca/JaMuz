@@ -54,9 +54,14 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
 
 ## Release process
 
-1. Export prod schema and compare with JaMuz_creation.sql
+1. If `database/JaMuz_creation.sql` has changed:
 
-    - If it differs ?
+    - Create a file `data/system/sql/`$version`.sql`.
+      - `$version` is the new database version.
+    - Update `Jamuz.java`, set new version in `getDb().updateSchema(`$version`)` call.
+    - Update `database/JaMuz_insertion_minimal.sql` to set an entry with $version.
+    - Check that JaMuz properly handles update.
+      - Export prod schema and compare with JaMuz_creation.sql.
 
 1. Update build.xml
 
