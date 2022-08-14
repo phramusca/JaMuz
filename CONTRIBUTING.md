@@ -88,7 +88,7 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
 1. [Create release on github](https://github.com/phramusca/JaMuz/releases/new) based on [previous ones](https://github.com/phramusca/JaMuz/releases)
 
     - Drop 7z built earlier
-    - Update gh-pages with link to new release
+    - [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release
 
 1. Update build.xml
 
