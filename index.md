@@ -20,7 +20,7 @@ ________________________________________________________________________________
 
 # [JaMuz](https://github.com/phramusca/JaMuz) (Windows / Linux)
 
-### [Download **Beta v0.5.1** (.7z)](https://github.com/phramusca/JaMuz/releases/download/v0.5.1/JaMuz_v0.5.1_Beta.7z)
+### [Download **v0.5.1** (.7z)](https://github.com/phramusca/JaMuz/releases/download/v0.5.1/JaMuz_v0.5.1_Beta.7z)
 
 [Release Notes and other versions](https://github.com/phramusca/JaMuz/releases)
 
