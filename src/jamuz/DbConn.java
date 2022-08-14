@@ -70,6 +70,16 @@ public class DbConn {
 	 * @return
 	 */
 	public boolean connect() {
+		return connect(true);
+	}
+	
+	/**
+	 * Connect database
+	 *
+	 * @param enforceForeignKeys
+	 * @return
+	 */
+	public boolean connect(boolean enforceForeignKeys) {
 		try {
 			switch (this.info.libType) {
 				case Sqlite:
@@ -77,7 +87,7 @@ public class DbConn {
 					Class.forName("org.sqlite.JDBC");  //NOI18N
 					//This is to enforce foreign keys usage
 					SQLiteConfig config = new SQLiteConfig();
-					config.enforceForeignKeys(true);
+					config.enforceForeignKeys(enforceForeignKeys);
 					connection = DriverManager.getConnection("jdbc:sqlite:" + this.info.locationWork, config.toProperties()); //NOI18N //NOI18N
 					break;
 				case MySQL:
