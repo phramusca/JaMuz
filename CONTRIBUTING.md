@@ -12,7 +12,7 @@ By contributing to this project you agree to license your contribution under the
 
 Using [weblate.org](https://hosted.weblate.org/engage/jamuz/)
 
-*Note if you consider manual edition (ie: without weblate)*:
+**Note if you consider manual edition (ie: without weblate):**
 
 - The **bundle\*\*.properties** files are **ISO 8859-1** encoded.
   - Using a different encoding may certainly result in weird characters in the GUI
@@ -66,9 +66,7 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
     - [French LISEZMOI.TXT](dist-data/doc/LISEZMOI.TXT)
     - [English README.TXT](dist-data/doc/README.TXT)
 
-1. Build
-
-    - Build `dist` folder with NetBeans: Run/Clean and build project (JaMuz)
+1. Build `dist` folder with NetBeans: `Run / Clean and build project (JaMuz)`
 
 1. Create 7z release file
 
