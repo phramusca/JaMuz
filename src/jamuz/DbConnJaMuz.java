@@ -4023,6 +4023,5 @@ public class DbConnJaMuz extends StatSourceSQL {
 			}
 		}
 	}
-// </editor-fold>
-
+	// </editor-fold>
 }

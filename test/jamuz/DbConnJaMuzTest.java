@@ -166,9 +166,12 @@ public class DbConnJaMuzTest {
 		assertArrayEquals(expectedGenres.toArray(), myListModel.toArray());
 	}
 
+	/**
+	 * Test of updateGenre method, of class DbConnJaMuz.
+	 */
 	@Test
 	@Ignore //Refer to testGenre() above
-	public void testUpdateGenre_String_String() {
+	public void testUpdateGenre() {
 		System.out.println("updateGenre");
 		String oldGenre = "";
 		String newGenre = "";
@@ -214,19 +217,6 @@ public class DbConnJaMuzTest {
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
 		boolean result = instance.checkGenre(genre);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	@Test
-	@Ignore //Refer to testGenre() above
-	public void testUpdateGenre_FileInfoInt() {
-		System.out.println("updateGenre");
-		FileInfoInt fileInfo = null;
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.updateFileGenre(fileInfo);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -545,12 +535,12 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of setOptions method, of class DbConnJaMuz.
+	 * Test of updateOptions method, of class DbConnJaMuz.
 	 */
 	@Test
 	@Ignore // Refer to testMachineAndOption() above
-	public void testSetOptions() {
-		System.out.println("setOptions");
+	public void testUpdateOptions() {
+		System.out.println("updateOptions");
 		Machine selOptions = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
@@ -559,14 +549,13 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
+	
 	/**
-	 * Test of setOption method, of class DbConnJaMuz.
+	 * Test of updateOption method, of class DbConnJaMuz.
 	 */
 	@Test
-	@Ignore // Refer to testMachineAndOption() above
-	public void testSetOption() {
-		System.out.println("setOption");
+	public void testUpdateOption() {
+		System.out.println("updateOption");
 		Option myOption = null;
 		String value = "";
 		DbConnJaMuz instance = null;
@@ -758,11 +747,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of setStatSource method, of class DbConnJaMuz.
+	 * Test of updateStatSource method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testSetStatSource() {
-		System.out.println("setStatSource");
+	public void testUpdateStatSource() {
+		System.out.println("updateStatSource");
 		StatSource statSource = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
@@ -803,11 +792,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of updateLastMergeDate method, of class DbConnJaMuz.
+	 * Test of updateStatSourceLastMergeDate method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testUpdateLastMergeDate() {
-		System.out.println("updateLastMergeDate");
+	public void testUpdateStatSourceLastMergeDate() {
+		System.out.println("updateStatSourceLastMergeDate");
 		int idStatSource = 0;
 		DbConnJaMuz instance = null;
 		String expResult = "";
@@ -819,12 +808,13 @@ public class DbConnJaMuzTest {
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="PlayCounter">
+	
 	/**
-	 * Test of setPreviousPlayCounter method, of class DbConnJaMuz.
+	 * Test of updatePreviousPlayCounter method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testSetPreviousPlayCounter() {
-		System.out.println("setPreviousPlayCounter");
+	public void testUpdatePreviousPlayCounter() {
+		System.out.println("updatePreviousPlayCounter");
 		ArrayList<? super FileInfoInt> files = null;
 		int idStatSource = 0;
 		DbConnJaMuz instance = null;
@@ -837,12 +827,13 @@ public class DbConnJaMuzTest {
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="DeviceFile">
+	
 	/**
-	 * Test of insertDeviceFiles method, of class DbConnJaMuz.
+	 * Test of insertOrIgnoreDeviceFiles method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testInsertDeviceFiles() {
-		System.out.println("insertDeviceFiles");
+	public void testInsertOrIgnoreDeviceFiles() {
+		System.out.println("insertOrIgnoreDeviceFiles");
 		ArrayList<FileInfoInt> files = null;
 		int idDevice = 0;
 		DbConnJaMuz instance = null;
@@ -854,11 +845,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of insertDeviceFile method, of class DbConnJaMuz.
+	 * Test of insertOrIgnoreDeviceFile method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testInsertDeviceFile() {
-		System.out.println("insertDeviceFile");
+	public void testInsertOrIgnoreDeviceFile() {
+		System.out.println("insertOrIgnoreDeviceFile");
 		int idDevice = 0;
 		FileInfoInt file = null;
 		DbConnJaMuz instance = null;
@@ -884,6 +875,52 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 * Test of insertOrUpdateDeviceFiles method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testInsertOrUpdateDeviceFiles() {
+		System.out.println("insertOrUpdateDeviceFiles");
+		ArrayList<FileInfoInt> files = null;
+		int idDevice = 0;
+		DbConnJaMuz instance = null;
+		ArrayList<FileInfoInt> expResult = null;
+		ArrayList<FileInfoInt> result = instance.insertOrUpdateDeviceFiles(files, idDevice);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+	
+	/**
+	 * Test of updateDeviceFileStatus method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testUpdateDeviceFileStatus() {
+		System.out.println("updateDeviceFileStatus");
+		DbConnJaMuz.SyncStatus status = null;
+		int idFile = 0;
+		int idDevice = 0;
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.updateDeviceFileStatus(status, idFile, idDevice);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+	
+	/**
+	 * Test of insertOrUpdateFilesTranslated method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testInsertOrUpdateFilesTranslated() {
+		System.out.println("insertOrUpdateFilesTranslated");
+		ArrayList<FileInfoInt> files = null;
+		DbConnJaMuz instance = null;
+		instance.insertOrUpdateFilesTranslated(files);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+	
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Device">
 	/**
@@ -934,11 +971,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of setDevice method, of class DbConnJaMuz.
+	 * Test of updateDevice method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testSetDevice() {
-		System.out.println("setDevice");
+	public void testUpdateDevice() {
+		System.out.println("updateDevice");
 		Device device = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
@@ -950,12 +987,13 @@ public class DbConnJaMuzTest {
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Client">
+	
 	/**
-	 * Test of setClientInfo method, of class DbConnJaMuz.
+	 * Test of updateClient method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testSetClientInfo() {
-		System.out.println("setClientInfo");
+	public void testUpdateClient() {
+		System.out.println("updateClient");
 		ClientInfo clientInfo = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
@@ -1033,11 +1071,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of insertTags method, of class DbConnJaMuz.
+	 * Test of insert method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testInsertTags() {
-		System.out.println("insertTags");
+	public void testInsert() {
+		System.out.println("insert");
 		FileInfoInt fileInfo = null;
 		int[] key = null;
 		DbConnJaMuz instance = null;
@@ -1049,11 +1087,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of updateTags method, of class DbConnJaMuz.
+	 * Test of updateFile method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testUpdateTags() {
-		System.out.println("updateTags");
+	public void testUpdateFile() {
+		System.out.println("updateFile");
 		FileInfoInt fileInfo = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
@@ -1064,11 +1102,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of updateLastPlayedAndCounter method, of class DbConnJaMuz.
+	 * Test of updateFileLastPlayedAndCounter method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testUpdateLastPlayedAndCounter() {
-		System.out.println("updateLastPlayedAndCounter");
+	public void testUpdateFileLastPlayedAndCounter() {
+		System.out.println("updateFileLastPlayedAndCounter");
 		FileInfoInt file = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
@@ -1079,11 +1117,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of updateRating method, of class DbConnJaMuz.
+	 * Test of updateFileRating method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testUpdateRating() {
-		System.out.println("updateRating");
+	public void testUpdateFileRating() {
+		System.out.println("updateFileRating");
 		FileInfoInt fileInfo = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
@@ -1092,13 +1130,28 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
+	
 	/**
-	 * Test of setIdPath method, of class DbConnJaMuz.
+	 * Test of updateFileGenre method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testSetIdPath() {
-		System.out.println("setIdPath");
+	public void testUpdateFileGenre() {
+		System.out.println("updateFileGenre");
+		FileInfoInt fileInfo = null;
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.updateFileGenre(fileInfo);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+
+	/**
+	 * Test of updateFileIdPath method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testUpdateFileIdPath() {
+		System.out.println("updateFileIdPath");
 		int idPath = 0;
 		int newIdPath = 0;
 		DbConnJaMuz instance = null;
@@ -1160,7 +1213,7 @@ public class DbConnJaMuzTest {
 	 * Test of getStatistics method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testGetStatistics_ArrayList_StatSource() {
+	public void testGetStatistics() {
 		System.out.println("getStatistics");
 		ArrayList<FileInfo> files = null;
 		StatSource statSource = null;
@@ -1173,11 +1226,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of getStatistics method, of class DbConnJaMuz.
+	 * Test of getFileStatistics method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testGetStatistics_ResultSet() {
-		System.out.println("getStatistics");
+	public void testGetFileStatistics() {
+		System.out.println("getFileStatistics");
 		ResultSet rs = null;
 		DbConnJaMuz instance = null;
 		FileInfo expResult = null;
@@ -1188,11 +1241,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of updateStatistics method, of class DbConnJaMuz.
+	 * Test of updateFileStatistics method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testUpdateStatistics() {
-		System.out.println("updateStatistics");
+	public void testUpdateFileStatistics() {
+		System.out.println("updateFileStatistics");
 		ArrayList<? extends FileInfo> files = null;
 		DbConnJaMuz instance = null;
 		int[] expResult = null;
@@ -1217,6 +1270,21 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
+	/**
+	 * Test of getFilesCount method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testGetFilesCount() {
+		System.out.println("getFilesCount");
+		String sql = "";
+		DbConnJaMuz instance = null;
+		Integer expResult = null;
+		Integer result = instance.getFilesCount(sql);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+	
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Path">
 	/**
@@ -1270,7 +1338,7 @@ public class DbConnJaMuzTest {
 	 * Test of getFolders method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testGetFolders_ConcurrentHashMap_boolean() {
+	public void testGetFolders_ConcurrentHashMap() {
 		System.out.println("getFolders");
 		ConcurrentHashMap<String, FolderInfo> folders = null;
 		DbConnJaMuz instance = null;
@@ -1335,11 +1403,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of updateCopyRight method, of class DbConnJaMuz.
+	 * Test of updatePathCopyRight method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testUpdateCopyRight() {
-		System.out.println("updateCopyRight");
+	public void testUpdatePathCopyRight() {
+		System.out.println("updatePathCopyRight");
 		int idPath = 0;
 		int copyRight = 0;
 		DbConnJaMuz instance = null;
@@ -1351,11 +1419,11 @@ public class DbConnJaMuzTest {
 	}
 
 	/**
-	 * Test of setCheckedFlag method, of class DbConnJaMuz.
+	 * Test of updatePathChecked method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testSetCheckedFlag() {
-		System.out.println("setCheckedFlag");
+	public void testUpdatePathChecked() {
+		System.out.println("updatePathChecked");
 		int idPath = 0;
 		FolderInfo.CheckedFlag checkedFlag = null;
 		DbConnJaMuz instance = null;
@@ -1381,7 +1449,6 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 	// </editor-fold>
-
 	// <editor-fold defaultstate="collapsed" desc="File & Path">
 	/**
 	 * Test of getSelectionList4Stats method, of class DbConnJaMuz.
@@ -1519,7 +1586,7 @@ public class DbConnJaMuzTest {
 	 * Test of getFiles method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testGetFiles_3args_1() {
+	public void testGetFiles_ArrayList_int() {
 		System.out.println("getFiles");
 		ArrayList<FileInfoInt> files = null;
 		int idPath = 0;
@@ -1566,7 +1633,7 @@ public class DbConnJaMuzTest {
 	 * Test of getFiles method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testGetFiles_3args_2() {
+	public void testGetFiles_3args() {
 		System.out.println("getFiles");
 		ArrayList<FileInfoInt> myFileInfoList = null;
 		String sql = "";
@@ -1669,12 +1736,13 @@ public class DbConnJaMuzTest {
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="TagFile & File">
+
 	/**
-	 * Test of setTags method, of class DbConnJaMuz.
+	 * Test of updateFileTags method, of class DbConnJaMuz.
 	 */
 	@Test
-	public void testSetTags() {
-		System.out.println("setTags");
+	public void testUpdateFileTags() {
+		System.out.println("updateFileTags");
 		ArrayList<? extends FileInfo> files = null;
 		int[] results = null;
 		DbConnJaMuz instance = null;
@@ -1717,5 +1785,24 @@ public class DbConnJaMuzTest {
 		fail("The test case is a prototype.");
 	}
 
+	// </editor-fold>
+	
+	// <editor-fold defaultstate="collapsed" desc="Schema">
+	
+	/**
+	 * Test of updateSchema method, of class DbConnJaMuz.
+	 */
+	@Test
+	public void testUpdateSchema() {
+		System.out.println("updateSchema");
+		int requestedVersion = 0;
+		DbConnJaMuz instance = null;
+		boolean expResult = false;
+		boolean result = instance.updateSchema(requestedVersion);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
+	
 	// </editor-fold>
 }
