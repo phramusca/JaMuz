@@ -1245,7 +1245,7 @@ public class PanelMain extends javax.swing.JFrame {
 		
         String lyrics = myFileInfo.getLyrics();
         Color textColor=Color.RED;
-        if (!lyrics.isEmpty()) {  //NOI18N
+        if (!lyrics.isBlank()) {  //NOI18N
 			textColor=new Color(0, 128, 0);
         } 
         setTab("Label.Lyrics", "text", textColor);

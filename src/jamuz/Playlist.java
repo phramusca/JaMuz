@@ -384,7 +384,7 @@ public class Playlist implements Comparable {
 	 * @return
 	 */
 	public boolean isTranscode() {
-		return !destExt.isEmpty();
+		return !destExt.isBlank();
 	}
 
 	/**

@@ -742,7 +742,7 @@ public class Album {
 			FolderInfoResult resultActual = getCheckedFolder()
 					.getResults().get(entry.getKey());
 			FolderInfoResult resultExpected = entry.getValue();
-			if (!resultExpected.getValue().startsWith("{")) {
+			if (!resultExpected.getValue().isBlank()) {
 				Assert.assertEquals(
 						msg + " " + entry.getKey(),
 						resultExpected,
@@ -950,10 +950,10 @@ public class Album {
 			Assert.assertEquals("discNo" + msg, tracks.get(indexTrack).getDiscNo(), file.getDiscNo());
 			Assert.assertEquals("discTotal" + msg, tracks.get(indexTrack).getDiscTotal(), file.getDiscTotal());
 			Assert.assertEquals("year" + msg, tracks.get(indexTrack).getYear(), file.getYear());
-			Assert.assertEquals("genre" + msg, tracks.get(indexTrack).getGenre(), format(file.getGenre()));
+			Assert.assertEquals("genre" + msg, tracks.get(indexTrack).getGenre(), file.getGenre());
 			Assert.assertEquals("BPM" + msg, tracks.get(indexTrack).getBPM(), file.getBPM(), 0.01f);
 			Assert.assertEquals("nbCovers" + msg, tracks.get(indexTrack).getNbCovers(), file.getNbCovers());
-			Assert.assertEquals("comment" + msg, tracks.get(indexTrack).getComment(), format(file.getComment()));
+			Assert.assertEquals("comment" + msg, tracks.get(indexTrack).getComment(), file.getComment());
 			Assert.assertEquals("checkedFlag" + msg, tracks.get(indexTrack).getCheckedFlag(), file.getCheckedFlag());
 			Assert.assertEquals("playCounter" + msg, tracks.get(indexTrack).getPlayCounter(), file.getPlayCounter());
 			Assert.assertEquals("rating" + msg, tracks.get(indexTrack).getRating(), file.getRating());
@@ -984,9 +984,5 @@ public class Album {
 
 			indexTrack++;
 		}
-	}
-
-	private String format(String value) {
-		return value.replace("{Empty}", "");
 	}
 }

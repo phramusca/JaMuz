@@ -166,7 +166,7 @@ public class Jamuz {
 
 	private static boolean setProxy() {
 		String proxy = Jamuz.getMachine().getOptionValue("network.proxy");  //NOI18N
-		if (!proxy.startsWith("{")) { // For {Empty}  //NOI18N
+		if (!proxy.isBlank()) {
 			String[] split = proxy.split(":");  //NOI18N
 			System.setProperty("http.proxyHost", split[0]);  //NOI18N
 			System.setProperty("http.proxyPort", split[1]);  //NOI18N
@@ -182,7 +182,7 @@ public class Jamuz {
 		DefaultHttpClient httpclient = null;
 		if (machine != null) {
 			String proxy = machine.getOptionValue("network.proxy");  //NOI18N
-			if (!proxy.startsWith("{")) { // For {Empty}  //NOI18N
+			if (!proxy.isBlank()) {
 				String[] split = proxy.split(":");  //NOI18N
 				HttpHost httpHost = new HttpHost(split[0], Integer.parseInt(split[1]));
 				httpclient = new DefaultHttpClient();
@@ -200,7 +200,7 @@ public class Jamuz {
 		Proxy myProxy = null;
 		if (machine != null) {
 			String proxy = machine.getOptionValue("network.proxy");  //NOI18N
-			if (!proxy.startsWith("{")) { // For {Empty}  //NOI18N
+			if (!proxy.isBlank()) {
 				String[] split = proxy.split(":");  //NOI18N
 				InetSocketAddress sa = new InetSocketAddress(split[0], Integer.parseInt(split[1]));
 				myProxy = new Proxy(Proxy.Type.HTTP, sa);

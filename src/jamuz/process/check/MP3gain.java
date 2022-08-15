@@ -194,7 +194,7 @@ public class MP3gain {
 						String line;
 						while((line = inputReader.readLine()) != null) {
 //									Jamuz.getLogger().finest(line);
-							if(!line.trim().isEmpty()) {  //NOI18N
+							if(!line.isBlank()) {  //NOI18N
 								if(line.startsWith("No changes")) {  //NOI18N
 									//No changes to <myFile> are necessary
 									progressIndex+=2;
@@ -245,7 +245,7 @@ public class MP3gain {
 						String percent;
 						while((line = errorReader.readLine()) != null) {
 //                                    Jamuz.getLogger().finest(line);
-							if(!line.trim().isEmpty()) {  //NOI18N
+							if(!line.isBlank()) {  //NOI18N
 								if(line.endsWith("analyzed")) {  //NOI18N
 									//[1/8]  1% of 7721786 bytes analyzed
 									posBegin = line.indexOf('[');  //NOI18N

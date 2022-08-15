@@ -346,7 +346,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 			text += " ["+this.score+"]";  //NOI18N
 		}
 		text += " : \""+this.album+"\" (\""+this.artist+"\")";  //NOI18N
-		if(!this.year.isEmpty()) {  //NOI18N
+		if(!this.year.isBlank()) {  //NOI18N
 			text += " ["+this.year+"]";  //NOI18N
 		}
 		if(trackTotal>0) {
@@ -357,16 +357,16 @@ public class ReleaseMatch implements java.lang.Comparable {
 			if(isDiscPart) {
 				text += " [Disc "+ this.discNb + "/" + this.discTotal + "]";   //NOI18N //NOI18N //NOI18N
 			}
-			if(this.format != null && !this.format.isEmpty()) {
+			if(this.format != null && !this.format.isBlank()) {
 				text += " ("+this.format+")";  //NOI18N
 			}
-			if(this.countryId != null && !this.countryId.isEmpty()) {
+			if(this.countryId != null && !this.countryId.isBlank()) {
 				text += " ("+this.countryId+")";  //NOI18N
 			}
-			if(this.textLanguage != null && !this.textLanguage.isEmpty()) {
+			if(this.textLanguage != null && !this.textLanguage.isBlank()) {
 				text += " ("+this.textLanguage+")";  //NOI18N
 			}
-			if(this.quality != null && !this.quality.isEmpty()) {
+			if(this.quality != null && !this.quality.isBlank()) {
 				text += " (Quality="+this.quality+")";  //NOI18N
 			}
 		}

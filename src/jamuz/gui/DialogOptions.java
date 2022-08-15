@@ -1056,7 +1056,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
 	private void selectFolder(JTextField textField, String title) {
 		String selectedFolder=Swing.selectFolder(textField.getText(), title);
-        if(!selectedFolder.isEmpty()) {  //NOI18N
+        if(!selectedFolder.isBlank()) {  //NOI18N
             textField.setText(selectedFolder);
         }
 	}

@@ -445,7 +445,7 @@ public class PanelVideo extends javax.swing.JPanel {
 
         VideoAbstract fileInfoVideo = getSelected();
         if(fileInfoVideo!=null) {
-            if(!fileInfoVideo.getTrailerURL().startsWith("{")) { //NOI18N	
+            if(!fileInfoVideo.getTrailerURL().isBlank()) { //NOI18N	
 				Desktop.openBrowser(fileInfoVideo.getTrailerURL()); 
             }
         }

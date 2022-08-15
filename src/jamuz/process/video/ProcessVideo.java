@@ -99,7 +99,7 @@ public class ProcessVideo extends ProcessAbstract {
 		List<VideoAbstract> filestoExport = tableModel.getFiles().stream()
 				.filter(video -> video.isSelected()).collect(Collectors.toList());
 		
-		if(Jamuz.getOptions().get("video.destination").startsWith("{")) {
+		if(Jamuz.getOptions().get("video.destination").isBlank()) {
 			Popup.warning("Invalid destination folder.");
 			return false;
 		}
@@ -206,7 +206,7 @@ public class ProcessVideo extends ProcessAbstract {
 
 		//Connect to database
 		String dbLocation = Jamuz.getOptions().get("video.dbLocation");
-		if (dbLocation == null || dbLocation.trim().isEmpty()) {
+		if (dbLocation == null || dbLocation.isBlank()) {
 			return false; 
 		}
 		DbConnVideo connKodi = new DbConnVideo(new DbInfo(DbInfo.LibType.Sqlite, 

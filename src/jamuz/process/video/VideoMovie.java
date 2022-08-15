@@ -163,10 +163,10 @@ public class VideoMovie extends VideoAbstract {
         //There should be only one file in files, list is for tv shows only
         for(FileInfoVideo file : files.values()) { 
             String newName = getTitle();
-            if(!getTitleOri().isEmpty() && !getTitle().equals(getTitleOri())) {
+            if(!getTitleOri().isBlank() && !getTitle().equals(getTitleOri())) {
                 newName+=" ["+getTitleOri()+"]"; //NOI18N
             }
-			if(!getYear().isEmpty()) {
+			if(!getYear().isBlank()) {
                 newName+=" [" + getYear() + "]"; //NOI18N
             }
             newName += getStreamDetails4Filename(file);

@@ -63,7 +63,7 @@ public class DialogCoverSelect extends javax.swing.JDialog {
 		this.callback = callback;
 		if(myFolderInfo.getFilesAudio().size()>0) {
 			FileInfoDisplay file = myFolderInfo.getFilesAudio().get(0);
-			String artist = file.getAlbumArtist().isEmpty()?file.getArtist():file.getAlbumArtist();
+			String artist = file.getAlbumArtist().isBlank()?file.getArtist():file.getAlbumArtist();
 			searchGoogle = artist+" "+file.getAlbum();
 		}
 		coverList=myFolderInfo.getCoverList();

@@ -918,7 +918,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			ArrayList<String> yearList = group(filesAudio, "getYear");  //NOI18N
 			String year="";
 			if(yearList.size()==1) {
-				if(yearList.get(0).isEmpty()) {  //NOI18N
+				if(yearList.get(0).isBlank()) {  //NOI18N
 					results.get("year").value="{Empty}";  //NOI18N
 					results.get("year").setWarning(); //NOI18N
 				}
@@ -1014,7 +1014,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
                 }
 
                 //Analyze BITRATE
-                if(audioFile.getBitRate().isEmpty()) {  //NOI18N
+                if(audioFile.getBitRate().isBlank()) {  //NOI18N
                     results.get("bitRate").setKO();  //NOI18N
                     audioFile.bitRateDisplay=FolderInfoResult
 							.colorField(audioFile.getBitRate(), 2);
@@ -1073,7 +1073,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
                 }
 
                 //Analyse FORMAT
-                if(audioFile.getFormat().isEmpty()) {  //NOI18N
+                if(audioFile.getFormat().isBlank()) {  //NOI18N
                     //This should never happen
                     results.get("format").setKO();  //NOI18N
                     audioFile.formatDisplay=FolderInfoResult.colorField(audioFile.getFormat(), 2);
@@ -1103,7 +1103,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			
 			//Searching matches on MusicBrainz and Last.fm
 			//(Only if a valid artist could be retrieved)
-			if(!searchArtist.isEmpty()) {  //NOI18N
+			if(!searchArtist.isBlank()) {  //NOI18N
 				int discNo=1;
 				int discTotal=1;
 				ArrayList<String> discNoList = group(filesAudio, "getDiscNo");  //NOI18N
@@ -1124,7 +1124,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			ArrayList<String> releaseList = group(filesAudio, "getRelease");  //NOI18N
 			if(releaseList.size()>1) {
 				addToOriginals(Inter.get("Label.original")+0, "Various Artists", 
-						searchAlbum.isEmpty()?"Various Albums":searchAlbum, 
+						searchAlbum.isBlank()?"Various Albums":searchAlbum, 
 						year, filesAudio.size(), idPath);
 			}
 			int i=1;
@@ -1141,7 +1141,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			File file = new File(path);
 			
 			if(file.getPath().contains(File.separator)) {
-				if(file.getParent().isEmpty()) {  //NOI18N
+				if(file.getParent().isBlank()) {  //NOI18N
 					addToOriginals(Inter.get("Label.File"), file.getName(), "", 
 							year, filesAudio.size(), idPath);  //NOI18N
 				}
@@ -1239,7 +1239,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         //Analyse if match has a year
         results.get("year").restoreFolderErrorLevel(); //NOI18N
         results.get("year").tooltip=null; //NOI18N
-        if(match.getYear().isEmpty()) { //NOI18N
+        if(match.getYear().isBlank()) { //NOI18N
             results.get("year").tooltip=Inter.get("Tooltip.MatchHasNoYear"); //NOI18N
             results.get("year").setWarning(true);  //NOI18N
         }
@@ -1268,7 +1268,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
             if(fileInfoDisplay!=null) {
 				//Set new values from match
 				fileInfoDisplay.setTrack(track);
-				if(!match.getYear().isEmpty()) { //NOI18N
+				if(!match.getYear().isBlank()) { //NOI18N
 					fileInfoDisplay.setYear(match.getYear());
 				}
 				else {
@@ -1711,7 +1711,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
     }
     
 	private String getResultField(String field) {
-		return results.get(field).value.isEmpty()?"{Empty}":results.get(field).value;
+		return results.get(field).value.isBlank()?"{Empty}":results.get(field).value;
 	}
 	
     private String getDestination(FileInfoInt fileInfo, boolean useMask) {
@@ -1836,14 +1836,14 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         builder.append("<html><b>");
         builder.append(relativePath);
         builder.append("</b><BR/>");
-		if(!actionResult.isPerformed && !actionResult.status.isEmpty()) {
+		if(!actionResult.isPerformed && !actionResult.status.isBlank()) {
 			builder.append("<b>").append(FolderInfoResult.colorField(actionResult.status.toUpperCase(), 2, false)).append("</b>");
 		} 
 		builder.append(" | ");
         for (Map.Entry<String, FolderInfoResult> entry : results.entrySet()) {
             if(entry.getValue().errorLevel>0) {
                 result=entry.getKey();
-                if(!entry.getValue().value.isEmpty()) {
+                if(!entry.getValue().value.isBlank()) {
 					result+=":"+entry.getValue().value;
 				}
                 builder.append(FolderInfoResult.colorField(result, entry.getValue().errorLevel, false));

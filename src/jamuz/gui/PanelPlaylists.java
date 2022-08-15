@@ -639,7 +639,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
             DefaultComboBoxModel model = (DefaultComboBoxModel) jComboBoxPlaylist.getModel();
             if (model.getIndexOf(input) > -1) {
                 Popup.warning(MessageFormat.format(Inter.get("Playlist.NameAlreadyExist"), input));  //NOI18N
-            } else if (!input.isEmpty()) {  //NOI18N
+            } else if (!input.isBlank()) {  //NOI18N
                 Playlist playlist = new Playlist(0, input, false, 1, LimitUnit.Gio, false,
                     Playlist.Type.Songs, Match.All, false, "");
 
@@ -675,7 +675,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
             DefaultComboBoxModel model = (DefaultComboBoxModel) jComboBoxPlaylist.getModel();
             if (model.getIndexOf(newName) > -1) {
                 Popup.warning(MessageFormat.format(Inter.get("Playlist.NameAlreadyExist"), newName));  //NOI18N
-            } else if (!newName.isEmpty()) {  //NOI18N
+            } else if (!newName.isBlank()) {  //NOI18N
                 playlist.setName(newName);
             }
         }

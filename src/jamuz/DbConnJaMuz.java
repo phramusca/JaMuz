@@ -547,8 +547,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 			for (Option option : selOptions.getOptions()) {
 				if (option.getType().equals("path")
-						&& !option.getValue().trim().isEmpty()
-						&& !option.getValue().trim().startsWith("{")) {   //NOI18N
+						&& !option.getValue().isBlank()) {   //NOI18N
 					option.setValue(FilenameUtils.normalizeNoEndSeparator(option.getValue().trim())
 							+ File.separator);
 				}
@@ -682,7 +681,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 			stSelectMachine.setString(1, hostname);
 			rs = stSelectMachine.executeQuery();
 			if (rs.getInt(1) > 0) {
-				description.append(dbConn.getStringValue(rs, "description", false));
+				description.append(dbConn.getStringValue(rs, "description"));
 				return true;
 			} else {
 				//Insert a new machine
@@ -1788,8 +1787,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 					+ "FROM client C \n"
 					+ "JOIN device D ON D.idDevice=C.idDevice\n"
 					+ "JOIN statSource S ON S.idStatSource=C.idStatSource"
-					+ (login.isEmpty() ? login : " WHERE login=? "));  //NOI18N
-			if (!login.isEmpty()) {
+					+ (login.isBlank() ? login : " WHERE login=? "));  //NOI18N
+			if (!login.isBlank()) {
 				stSelectClients.setString(1, login);
 			}
 			rs = stSelectClients.executeQuery();
@@ -2397,7 +2396,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				Date dbModifDate = DateTime.parseSqlUtc(
 						dbConn.getStringValue(rs, "modifDate"));   //NOI18N
 				path = FilenameUtils.separatorsToSystem(
-						dbConn.getStringValue(rs, "strPath", false));   //NOI18N
+						dbConn.getStringValue(rs, "strPath"));   //NOI18N
 				folders.put(path, new FolderInfo(rs.getInt("idPath"),
 						path, dbModifDate,
 						CheckedFlag.values()[rs.getInt("checked")]));   //NOI18N
@@ -2711,10 +2710,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 			boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo,
 			float bpmFrom, float bpmTo, int copyRight) {
 
-		selGenre = getSelected(selGenre);
-		selArtist = getSelected(selArtist);
-		selAlbum = getSelected(selAlbum);
-
 		String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, "
 				+ "0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate, P.mbId AS pathMbId, P.modifDate AS pathModifDate " //NOI18N
 				+ getSqlWHERE(selGenre, selArtist, selAlbum, selRatings,
@@ -2829,7 +2824,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				copyRight = FolderInfo.CopyRight.values()[rs.getInt("copyRight")];
 
 				//Path can be empty if file is on root folder
-				relativePath = dbConn.getStringValue(rs, "strPath", false);   //NOI18N
+				relativePath = dbConn.getStringValue(rs, "strPath");   //NOI18N
 
 				filename = dbConn.getStringValue(rs, "name");   //NOI18N
 				length = rs.getInt("length");   //NOI18N
@@ -2916,10 +2911,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 			boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo,
 			float bpmFrom, float bpmTo, int copyRight) {
 
-		selGenre = getSelected(selGenre);
-		selArtist = getSelected(selArtist);
-		selAlbum = getSelected(selAlbum);
-
 		String sql = "SELECT COUNT(*) AS nbFiles, SUM(F.size) AS totalSize, "
 				+ "SUM(F.length) AS totalLength " //NOI18N
 				+ getSqlWHERE(selGenre, selArtist, selAlbum, selRatings,
@@ -2996,9 +2987,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 			boolean[] selCheckedFlag, int yearFrom, int yearTo, float bpmFrom,
 			float bpmTo, int copyRight, String sqlOrder) {
 
-		selGenre = getSelected(selGenre);
-		selArtist = getSelected(selArtist);
-		selAlbum = getSelected(selAlbum);
 		boolean[] allRatings = new boolean[6];
 		Arrays.fill(allRatings, Boolean.TRUE);
 		String sql;
@@ -3088,13 +3076,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return text.replaceAll("\"", "\"\"");
 	}
 
-	private String getSelected(String selected) {
-		if (selected.equals("{Empty}")) {  //NOI18N
-			selected = "";  //NOI18N
-		}
-		return selected;
-	}
-
 	/**
 	 * Deletes a path.
 	 *
@@ -3148,7 +3129,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public boolean checkAlbumSimilar(ArrayList<DuplicateInfo> myList,
 			String album, int idPath) {
-		if (!album.isEmpty()) {
+		if (!album.isBlank()) {
 			try {
 
 				PreparedStatement stSelectAlbumSimilar = dbConn.connection.prepareStatement(
@@ -3186,7 +3167,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public boolean checkAlbumExact(ArrayList<DuplicateInfo> myList, String album,
 			int idPath) {
-		if (!album.isEmpty()) {
+		if (!album.isBlank()) {
 			try {
 				PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE
@@ -3214,7 +3195,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	public boolean checkAlbumDuplicate(
 			ArrayList<DuplicateInfo> myList,
 			String mbId) {
-		if (mbId != null && !mbId.isEmpty()) {    //NOI18N
+		if (mbId != null && !mbId.isBlank()) {    //NOI18N
 			try {
 				PreparedStatement stSelectDuplicates
 						= dbConn.connection.prepareStatement(
@@ -3248,7 +3229,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList,
 			String albumArtist, String album, int idPath, int discNo, int discTotal) {
 
-		if (!albumArtist.isEmpty() && !album.isEmpty()) {    //NOI18N
+		if (!albumArtist.isBlank() && !album.isBlank()) {    //NOI18N
 			try {
 				PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE
@@ -3285,7 +3266,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	public boolean checkAlbumDuplicate(ArrayList<DuplicateInfo> myList,
 			String albumArtist, String album, int idPath) {
 
-		if (!albumArtist.isEmpty() && !album.isEmpty()) {    //NOI18N
+		if (!albumArtist.isBlank() && !album.isBlank()) {    //NOI18N
 			try {
 				PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
 						SELECT_DUPLICATE
@@ -3335,7 +3316,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				Date dbModifDate = DateTime.parseSqlUtc(
 						dbConn.getStringValue(rs, "modifDate"));   //NOI18N
 				String path = FilenameUtils.separatorsToSystem(
-						dbConn.getStringValue(rs, "strPath", false));   //NOI18N
+						dbConn.getStringValue(rs, "strPath"));   //NOI18N
 
 				FolderInfo folderInfo = new FolderInfo(rs.getInt("idPath"),
 						path, dbModifDate, CheckedFlag.values()[rs.getInt("checked")]);
@@ -3610,8 +3591,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 						int checked = rs.getInt("checked");  //NOI18N
 						String album = (String) elementToAdd;
 						String albumArtist = dbConn.getStringValue(rs, "albumArtist") + "<BR/>";  //NOI18N
-						String year = dbConn.getStringValue(rs, "year", false);  //NOI18N
-						if (albumArtist.startsWith("{")) {  //NOI18N
+						String year = dbConn.getStringValue(rs, "year");  //NOI18N
+						if (albumArtist.isBlank()) {  //NOI18N
 							albumArtist = dbConn.getStringValue(rs, "artist");  //NOI18N
 						}
 
@@ -3693,10 +3674,10 @@ public class DbConnJaMuz extends StatSourceSQL {
 	}
 
 	private ListElement makeListElement(Object elementToAdd, ResultSet rs) {
-		FileInfoInt file = new FileInfoInt(dbConn.getStringValue(rs, "strPath", false)
+		FileInfoInt file = new FileInfoInt(dbConn.getStringValue(rs, "strPath")
 				+ dbConn.getStringValue(rs, "name"), //NOI18N
 				Jamuz.getMachine().getOptionValue("location.library"));   //NOI18N
-		file.setCoverHash(dbConn.getStringValue(rs, "coverHash", false));  //NOI18N
+		file.setCoverHash(dbConn.getStringValue(rs, "coverHash"));  //NOI18N
 		file.nbCovers = 1;
 		file.albumArtist = dbConn.getStringValue(rs, "albumArtist");  //NOI18N
 		ListElement listElement = new ListElement((String) elementToAdd, file);

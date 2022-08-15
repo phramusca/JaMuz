@@ -128,53 +128,33 @@ public class DbConn {
 	 */
 	public String getStringValue(ResultSet rs, String source, String defaultValue) {
 		String value = getStringValue(rs, source);
-		if (value.startsWith("{")) {  //NOI18N
+		if (value.isBlank()) {  //NOI18N
 			value = defaultValue;
 		}
 		return value;
 	}
 
 	/**
-	 * Get string value from database Returns {NoSource} if source is not empty.
-	 * Returns {null} if value is null. Returns {Empty} if value is empty
-	 * Returns {ERROR} if an error occured
+	 * Get String value from database.
 	 *
 	 * @param rs
 	 * @param source
 	 * @return
 	 */
 	public String getStringValue(ResultSet rs, String source) {
-		return getStringValue(rs, source, true);
-	}
-
-	/**
-	 * Get String value from database. Returns {NoSource} if source is not
-	 * empty. Returns {null} if value is null. Returns {Empty} if value is empty
-	 * (if replaceEmpty==true) Returns {ERROR} if an error occured
-	 *
-	 * @param rs
-	 * @param source
-	 * @param replaceEmpty
-	 * @return
-	 */
-	public String getStringValue(ResultSet rs, String source, boolean replaceEmpty) {
 		try {
-			if (source.isEmpty()) {  //NOI18N
-				source = "{NoSource}";  //NOI18N
+			if (source.isBlank()) {
+				source = "";  //NOI18N
 			} else {
 				source = rs.getString(source);
 				if (source == null) {
-					source = "{null}";  //NOI18N
-				} else if (source.isEmpty()) {  //NOI18N
-					if (replaceEmpty) {
-						source = "{Empty}";  //NOI18N
-					}
+					source = "";  //NOI18N
 				}
 			}
 			return source;
 		} catch (SQLException ex) {
 			Popup.error(ex);
-			return "{ERROR}";  //NOI18N
+			return "";  //NOI18N
 		}
 	}
 }

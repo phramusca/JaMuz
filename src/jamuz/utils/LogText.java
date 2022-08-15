@@ -52,7 +52,7 @@ public class LogText {
 			String baseName = FilenameUtils.getBaseName(LogFileName);
 			baseName=StringManager.removeIllegal(baseName);
 			String logFilePath = FilenameUtils.concat(logPath, 
-					baseName+(ext.isEmpty()?"":("."+ext)));  //NOI18N
+					baseName+(ext.isBlank()?"":("."+ext)));  //NOI18N
 			File f = new File(logFilePath);
 			f.createNewFile(); //Creates if not exist
 			//Open file for writing

@@ -199,7 +199,7 @@ public class Cover implements java.lang.Comparable {
                             msg+=Inter.get("Cover.Not")+" ";  //NOI18N
                         }
                         msg+=Inter.get("Cover.Approved")+")";  //NOI18N
-                        if(!coverArtImage.getComment().isEmpty()) {  //NOI18N
+                        if(!coverArtImage.getComment().isBlank()) {  //NOI18N
                             msg+=" ["+coverArtImage.getComment()+"]";  //NOI18N
                         }
                         coverArtArchiveList.add(new MbImage(coverArtImage, msg));

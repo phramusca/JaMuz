@@ -58,7 +58,7 @@ public class ReleaseLastFm {
 		covers = new ArrayList<>();
 		try {
 			Collection<Album> albums = new ArrayList<>();
-			if(album.isEmpty()) {  //NOI18N
+			if(album.isBlank()) {  //NOI18N
 				albums = Artist.getTopAlbums(artist, Jamuz.getKeys().get("LastFm"));
 			}
 			else {
@@ -114,7 +114,7 @@ public class ReleaseLastFm {
 		
 		try {
             List<Track> tracksOut = new ArrayList<>();
-			if(!mbId.isEmpty()) {  //NOI18N
+			if(!mbId.isBlank()) {  //NOI18N
 				Album myAlbum=Album.getInfo("", mbId, Jamuz.getKeys().get("LastFm"));  //NOI18N
 				Collection<de.umass.lastfm.Track> tracks=myAlbum.getTracks();
 				int i=1;

@@ -126,7 +126,7 @@ public class DateTime {
 	 * @return
 	 */
 	private static Date parseUTC(String date, DateTimeFormat format) {
-		if(date.isEmpty()) {
+		if(date.isBlank()) {
             return new Date(0); 
         }
         try {

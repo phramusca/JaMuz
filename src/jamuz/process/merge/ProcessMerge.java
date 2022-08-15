@@ -350,7 +350,7 @@ public class ProcessMerge extends ProcessAbstract {
         msgSelected+=displayStatus((mergeListDbSelected.size()-nbFilesErrorSelected), Inter.get("Label.Updated"));
         msgSelected+=displayStatus(nbFilesNotFoundJaMuz, Inter.get("Label.NotFound"));//Yes, inverted, this is OK
         msgSelected+=displayStatus(nbFilesErrorSelected, Inter.get("Label.Errors"));
-        mergeReport+=msgSelected.isEmpty()?" --- ":msgSelected;
+        mergeReport+=msgSelected.isBlank()?" --- ":msgSelected;
         
         mergeReport+="</td><td align=center style=\"border-right:1px solid black;border-bottom:1px solid black\">";  //NOI18N
         String msgJaMuz="";
@@ -358,7 +358,7 @@ public class ProcessMerge extends ProcessAbstract {
         msgJaMuz+=displayStatus(nbFilesNotFoundSelected, Inter.get("Label.NotFound"));//Yes, inverted, this is OK
         msgJaMuz+=displayStatus(nbFilesErrorJaMuz, Inter.get("Label.Updated"));
         msgJaMuz+="</td></tr>";  //NOI18N
-		mergeReport+=msgJaMuz.isEmpty()?" --- ":msgJaMuz;
+		mergeReport+=msgJaMuz.isBlank()?" --- ":msgJaMuz;
 		
 		return true;
 	}
@@ -933,13 +933,13 @@ public class ProcessMerge extends ProcessAbstract {
 				while (i.hasNext()) {
 					FileInfoInt fileInfoWithNewMetadata = i.next();
 					checkAbort();
-					if(!fileInfoWithNewMetadata.getGenre().isEmpty() || fileInfoWithNewMetadata.getBPM()>=0) {
+					if(!fileInfoWithNewMetadata.getGenre().isBlank() || fileInfoWithNewMetadata.getBPM()>=0) {
 						Optional<FileInfo> optionalFileInfo = getItemFromList(fileInfoWithNewMetadata, mergeListDbJaMuz);
 						FileInfo fileInfoDbJaMuz = null;
 						if(optionalFileInfo.isPresent()) {
 							fileInfoDbJaMuz = optionalFileInfo.get();
 						}
-						if(!fileInfoWithNewMetadata.getGenre().isEmpty() ) {
+						if(!fileInfoWithNewMetadata.getGenre().isBlank() ) {
 							if(fileInfoWithNewMetadata.updateGenre(fileInfoWithNewMetadata.getGenre())) {
 								if(fileInfoDbJaMuz!=null) {
 									fileInfoDbJaMuz.setGenre(fileInfoWithNewMetadata.getGenre());
@@ -1103,7 +1103,7 @@ public class ProcessMerge extends ProcessAbstract {
 	}
 
 	private boolean isGenreValid(String genre) {
-		return !genre.startsWith("{") 
+		return !genre.isBlank() 
 				&& Jamuz.getGenres().contains(genre);
 	}
 }

@@ -87,7 +87,7 @@ public class FileInfoVideo extends FileInfo {
 			for(FileInfoVideo.StreamDetails.AudioStream audioStream : streamDetails.audio) {
                 //TODO: Offer this has an option
 //                newName += " [" + audioStream.codec + " " + "(" + audioStream.channels + ")"; //NOI18N
-                if(!audioStream.language.startsWith("{")) {
+                if(!audioStream.language.isBlank()) {
                     audioStreamDetails += " [" + audioStream.language.toUpperCase()+"]"; //NOI18N
                 }
 //                newName += "]"; //NOI18N
@@ -284,7 +284,7 @@ public class FileInfoVideo extends FileInfo {
          * @param language
          */
         public void addSubtitle(String language) {
-            if(!language.startsWith("{")) {
+            if(!language.isBlank()) {
                 this.subtitles.add(language);
             }
         }

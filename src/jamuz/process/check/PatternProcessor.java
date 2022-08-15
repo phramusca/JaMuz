@@ -61,7 +61,7 @@ public class PatternProcessor {
         {
             Character c = pattern.charAt(i);
             if(c == '%') {
-                if(!sb.toString().isEmpty()) {
+                if(!sb.toString().isBlank()) {
                     params.add(sb.toString());
 				}
                 sb = new StringBuilder();
@@ -81,7 +81,7 @@ public class PatternProcessor {
                 sb.append(c);
             }
         }
-        if(!sb.toString().isEmpty()) {
+        if(!sb.toString().isBlank()) {
 			params.add(sb.toString());
 		}
 

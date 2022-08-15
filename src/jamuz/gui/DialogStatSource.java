@@ -67,7 +67,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 			jComboBoxDevice.setSelectedIndex(0);
 		}
 		
-		if(!this.statSource.getSource().getName().isEmpty()) {
+		if(!this.statSource.getSource().getName().isBlank()) {
 			jTextName.setText(this.statSource.getSource().getName());
 		}
 		jTextLocation.setText(statSource.getSource().getLocation());
@@ -242,7 +242,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 		String rootPath = jTextRootPath.getText();
 
 		//TODO: This check could be part of StatSource's check() method ...
-		if(name.isEmpty() || location.isEmpty() || rootPath.isEmpty()) {  //NOI18N
+		if(name.isBlank() || location.isBlank() || rootPath.isBlank()) {  //NOI18N
 			Popup.warning(Inter.get("Error.AllFieldsMustBeSet")); //NOI18N
 		}
 		else {
@@ -280,7 +280,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 	}//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jComboBoxTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTypeActionPerformed
-        if(this.statSource.getSource().getName().isEmpty()) {
+        if(this.statSource.getSource().getName().isBlank()) {
 			jTextName.setText(jComboBoxType.getSelectedItem().toString());
 			setLocationAndRootPath();
 		}

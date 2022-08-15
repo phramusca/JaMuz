@@ -378,12 +378,12 @@ public class DbConnJaMuzTest {
 		//Get new machine options
 		ArrayList<Option> expectedOptions = new ArrayList<>();
 		int idMachine = 2;
-		expectedOptions.add(new Option("location.library", "{Empty}", idMachine, 1, "path"));
+		expectedOptions.add(new Option("location.library", "", idMachine, 1, "path"));
 		expectedOptions.add(new Option("library.isMaster", "false", idMachine, 2, "bool"));
-		expectedOptions.add(new Option("location.add", "{Empty}", idMachine, 3, "path"));
-		expectedOptions.add(new Option("location.ok", "{Empty}", idMachine, 4, "path"));
-		expectedOptions.add(new Option("location.ko", "{Empty}", idMachine, 5, "path"));
-		expectedOptions.add(new Option("network.proxy", "{Empty}", idMachine, 6, "proxy"));
+		expectedOptions.add(new Option("location.add", "", idMachine, 3, "path"));
+		expectedOptions.add(new Option("location.ok", "", idMachine, 4, "path"));
+		expectedOptions.add(new Option("location.ko", "", idMachine, 5, "path"));
+		expectedOptions.add(new Option("network.proxy", "", idMachine, 6, "proxy"));
 		expectedOptions.add(new Option("location.mask", "%albumartist%/%album%/%track% %title%", idMachine, 7, "mask"));
 		expectedOptions.add(new Option("log.level", "INFO", idMachine, 8, "list"));
 		expectedOptions.add(new Option("log.limit", "5242880", idMachine, 9, "integer"));
@@ -392,7 +392,7 @@ public class DbConnJaMuzTest {
 		expectedOptions.add(new Option("files.image", "png,jpg,jpeg,bmp,gif", idMachine, 12, "csv"));
 		expectedOptions.add(new Option("files.convert", "wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3", idMachine, 13, "csv"));
 		expectedOptions.add(new Option("files.delete", "db,ini,txt,m3u,pls,htm,html,doc,nfo,url,sfv,wpl,sfk", idMachine, 14, "csv"));
-		expectedOptions.add(new Option("location.manual", "{Empty}", idMachine, 15, "path"));
+		expectedOptions.add(new Option("location.manual", "", idMachine, 15, "path"));
 
 		checkOptionList(machineName, expectedOptions);
 

@@ -158,11 +158,11 @@ public class DbConnTest {
 
 		DbConn instance = new DbConn(new DbInfo(DbInfo.LibType.Sqlite, "location", "user", "pwd"));
 
-		assertEquals("{Empty}", instance.getStringValue(
+		assertEquals("", instance.getStringValue(
 				TestResultSet.getResultSet("MailleNiouValiou"),
 				"GimmeEmpty"));
 
-		assertEquals("{null}", instance.getStringValue(
+		assertEquals("", instance.getStringValue(
 				TestResultSet.getResultSet("MailleNiouValiou"),
 				"GimmeNull"));
 
@@ -180,29 +180,17 @@ public class DbConnTest {
 
 		DbConn instance = new DbConn(new DbInfo(DbInfo.LibType.Sqlite, "location", "user", "pwd"));
 
-		assertEquals("{Empty}", instance.getStringValue(
+		assertEquals("", instance.getStringValue(
 				TestResultSet.getResultSet("MailleNiouValiou"),
-				"GimmeEmpty", true));
-
-		assertEquals("{null}", instance.getStringValue(
-				TestResultSet.getResultSet("MailleNiouValiou"),
-				"GimmeNull", true));
-
-		assertEquals("MailleNiouValiou", instance.getStringValue(
-				TestResultSet.getResultSet("MailleNiouValiou"),
-				"GimmeValue", true));
+				"GimmeEmpty"));
 
 		assertEquals("", instance.getStringValue(
 				TestResultSet.getResultSet("MailleNiouValiou"),
-				"GimmeEmpty", false));
-
-		assertEquals("{null}", instance.getStringValue(
-				TestResultSet.getResultSet("MailleNiouValiou"),
-				"GimmeNull", false));
+				"GimmeNull"));
 
 		assertEquals("MailleNiouValiou", instance.getStringValue(
 				TestResultSet.getResultSet("MailleNiouValiou"),
-				"GimmeValue", false));
+				"GimmeValue"));
 	}
 
 }

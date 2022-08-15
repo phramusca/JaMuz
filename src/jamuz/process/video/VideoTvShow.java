@@ -57,9 +57,9 @@ public class VideoTvShow extends VideoAbstract {
                             String thumbnails, String mppaRating, String genre, String titleOri, 
                             String studio, String trailerURL, String fanartURLs,  int idPath, String path) {
         super(title, synopsis,
-            ratingVotes, "{Empty}", year, 
-            "{Empty}", -1, mppaRating, -1, genre, "{Empty}", 
-            titleOri, studio, trailerURL, fanartURLs, "{Empty}");
+            ratingVotes, "", year, 
+            "", -1, mppaRating, -1, genre, "", 
+            titleOri, studio, trailerURL, fanartURLs, "");
         this.thumbnails = parseURLStringList(thumbnails, "<thumb aspect=\"poster\">", "</thumb>");
         myVideo = new MyTvShow(new TvSeries());
     }
@@ -296,7 +296,7 @@ public class VideoTvShow extends VideoAbstract {
     public void moveFilesAndSrt(PathBuffer buffer, DbConnVideo conn, SSH myConn) {
 
         String serieName = getTitle();
-        if(!getTitleOri().isEmpty() && !getTitle().equals(getTitleOri())) {
+        if(!getTitleOri().isBlank() && !getTitle().equals(getTitleOri())) {
             serieName+=" ["+getTitleOri()+"]"; //NOI18N
         }
 		
