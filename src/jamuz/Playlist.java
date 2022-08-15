@@ -291,24 +291,29 @@ public class Playlist implements Comparable {
 		return (this.name.compareTo(((Playlist) o).name));
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	@Override
 	public int hashCode() {
-		int hash = 5;
-		hash = 71 * hash + Objects.hashCode(this.name);
+		int hash = 7;
+		hash = 97 * hash + (this.hidden ? 1 : 0);
+		//hash = 97 * hash + this.id;
+		hash = 97 * hash + Objects.hashCode(this.name);
+		hash = 97 * hash + (this.limit ? 1 : 0);
+		hash = 97 * hash + this.limitValue;
+		hash = 97 * hash + Objects.hashCode(this.limitUnit);
+		hash = 97 * hash + (this.random ? 1 : 0);
+		hash = 97 * hash + Objects.hashCode(this.type);
+		hash = 97 * hash + Objects.hashCode(this.match);
+		hash = 97 * hash + Objects.hashCode(this.filters);
+		hash = 97 * hash + Objects.hashCode(this.orders);
+		hash = 97 * hash + Objects.hashCode(this.destExt);
 		return hash;
 	}
 
-	/**
-	 *
-	 * @param obj
-	 * @return
-	 */
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
 		if (obj == null) {
 			return false;
 		}
@@ -316,9 +321,46 @@ public class Playlist implements Comparable {
 			return false;
 		}
 		final Playlist other = (Playlist) obj;
-		return Objects.equals(this.name, other.name);
+		if (this.hidden != other.hidden) {
+			return false;
+		}
+//		if (this.id != other.id) {
+//			return false;
+//		}
+		if (this.limit != other.limit) {
+			return false;
+		}
+		if (this.limitValue != other.limitValue) {
+			return false;
+		}
+		if (this.random != other.random) {
+			return false;
+		}
+		if (!Objects.equals(this.name, other.name)) {
+			return false;
+		}
+		if (!Objects.equals(this.destExt, other.destExt)) {
+			return false;
+		}
+		if (this.limitUnit != other.limitUnit) {
+			return false;
+		}
+		if (this.type != other.type) {
+			return false;
+		}
+		if (this.match != other.match) {
+			return false;
+		}
+		if (!Objects.equals(this.filters, other.filters)) {
+			return false;
+		}
+		if (!Objects.equals(this.orders, other.orders)) {
+			return false;
+		}
+		return true;
 	}
 
+	
 	/**
 	 *
 	 * @param hidden
@@ -1252,6 +1294,45 @@ public class Playlist implements Comparable {
 					return this.field + " " + this.operator + " \"" + valueToReturn + "\""; //NOI18N 
 			}
 		}
+
+		@Override
+		public int hashCode() {
+			int hash = 7;
+			//hash = 23 * hash + this.id;
+			hash = 23 * hash + Objects.hashCode(this.field);
+			hash = 23 * hash + Objects.hashCode(this.operator);
+			hash = 23 * hash + Objects.hashCode(this.value);
+			return hash;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			final Filter other = (Filter) obj;
+//			if (this.id != other.id) {
+//				return false;
+//			}
+			if (!Objects.equals(this.value, other.value)) {
+				return false;
+			}
+			if (this.field != other.field) {
+				return false;
+			}
+			if (this.operator != other.operator) {
+				return false;
+			}
+			return true;
+		}
+		
+		
 	}
 
 	/**
@@ -1353,6 +1434,38 @@ public class Playlist implements Comparable {
 			}
 			return s;
 		}
-	}
 
+		@Override
+		public int hashCode() {
+			int hash = 7;
+			//hash = 67 * hash + this.id;
+			hash = 67 * hash + (this.desc ? 1 : 0);
+			hash = 67 * hash + Objects.hashCode(this.field);
+			return hash;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			final Order other = (Order) obj;
+//			if (this.id != other.id) {
+//				return false;
+//			}
+			if (this.desc != other.desc) {
+				return false;
+			}
+			if (this.field != other.field) {
+				return false;
+			}
+			return true;
+		}
+	}
 }
