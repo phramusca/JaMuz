@@ -1162,7 +1162,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public synchronized String updateStatSourceLastMergeDate(int idStatSource) {
 		ResultSet rs = null;
-
 		try {
 			PreparedStatement stUpdateStatSourceLastMergeDate = dbConn.connection.prepareStatement("UPDATE statsource "
 					+ "SET lastMergeDate=datetime('now') WHERE idStatSource=?");

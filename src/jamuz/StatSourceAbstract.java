@@ -17,6 +17,7 @@
 package jamuz;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  *
@@ -254,4 +255,60 @@ public abstract class StatSourceAbstract {
 	 */
 	abstract public boolean backupSource(String locationWork);
 
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 23 * hash + Objects.hashCode(this.rootPath);
+		hash = 23 * hash + Objects.hashCode(this.location);
+		hash = 23 * hash + Objects.hashCode(this.name);
+		hash = 23 * hash + (this.updateAddedDate ? 1 : 0);
+		hash = 23 * hash + (this.updateLastPlayed ? 1 : 0);
+		hash = 23 * hash + (this.updateBPM ? 1 : 0);
+		hash = 23 * hash + (this.updateTags ? 1 : 0);
+		hash = 23 * hash + (this.updateGenre ? 1 : 0);
+		hash = 23 * hash + (this.updatePlayCounter ? 1 : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final StatSourceAbstract other = (StatSourceAbstract) obj;
+		if (this.updateAddedDate != other.updateAddedDate) {
+			return false;
+		}
+		if (this.updateLastPlayed != other.updateLastPlayed) {
+			return false;
+		}
+		if (this.updateBPM != other.updateBPM) {
+			return false;
+		}
+		if (this.updateTags != other.updateTags) {
+			return false;
+		}
+		if (this.updateGenre != other.updateGenre) {
+			return false;
+		}
+		if (this.updatePlayCounter != other.updatePlayCounter) {
+			return false;
+		}
+		if (!Objects.equals(this.rootPath, other.rootPath)) {
+			return false;
+		}
+		if (!Objects.equals(this.location, other.location)) {
+			return false;
+		}
+		if (!Objects.equals(this.name, other.name)) {
+			return false;
+		}
+		return true;
+	}
 }

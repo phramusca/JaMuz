@@ -24,6 +24,7 @@ import jamuz.StatSourceAbstract;
 import jamuz.process.sync.Device;
 import jamuz.utils.DateTime;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Stat source class
@@ -224,4 +225,58 @@ public class StatSource {
 		return hidden;
 	}
 
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 41 * hash + (this.hidden ? 1 : 0);
+		hash = 41 * hash + this.id;
+		hash = 41 * hash + this.idStatement;
+		hash = 41 * hash + Objects.hashCode(this.source);
+		hash = 41 * hash + Objects.hashCode(this.lastMergeDate);
+		hash = 41 * hash + Objects.hashCode(this.machineName);
+		hash = 41 * hash + (this.isSelected ? 1 : 0);
+		hash = 41 * hash + this.idDevice;
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final StatSource other = (StatSource) obj;
+		if (this.hidden != other.hidden) {
+			return false;
+		}
+		if (this.id != other.id) {
+			return false;
+		}
+		if (this.idStatement != other.idStatement) {
+			return false;
+		}
+		if (this.isSelected != other.isSelected) {
+			return false;
+		}
+		if (this.idDevice != other.idDevice) {
+			return false;
+		}
+		if (!Objects.equals(this.machineName, other.machineName)) {
+			return false;
+		}
+		if (!Objects.equals(this.source, other.source)) {
+			return false;
+		}
+		if (!Objects.equals(this.lastMergeDate, other.lastMergeDate)) {
+			return false;
+		}
+		return true;
+	}
+
+	
 }
