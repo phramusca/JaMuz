@@ -100,7 +100,7 @@ public class StatSource {
         }
 	}
 
-	private final int id;
+	private int id;
 
 	/**
 	 *
@@ -109,6 +109,11 @@ public class StatSource {
 	public int getId() {
         return id;
     }
+	
+	public void setId(int id) {
+		this.id=id;
+	}
+	
     private int idStatement; //TODO: Replace by an enum: refer to checkedFlag usage
     
 	/**
@@ -229,7 +234,7 @@ public class StatSource {
 	public int hashCode() {
 		int hash = 5;
 		hash = 41 * hash + (this.hidden ? 1 : 0);
-		hash = 41 * hash + this.id;
+		//hash = 41 * hash + this.id;
 		hash = 41 * hash + this.idStatement;
 		hash = 41 * hash + Objects.hashCode(this.source);
 		hash = 41 * hash + Objects.hashCode(this.lastMergeDate);
@@ -254,9 +259,9 @@ public class StatSource {
 		if (this.hidden != other.hidden) {
 			return false;
 		}
-		if (this.id != other.id) {
-			return false;
-		}
+//		if (this.id != other.id) {
+//			return false;
+//		}
 		if (this.idStatement != other.idStatement) {
 			return false;
 		}
@@ -278,5 +283,8 @@ public class StatSource {
 		return true;
 	}
 
-	
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
+	}
+
 }

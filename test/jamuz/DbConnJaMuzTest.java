@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.DefaultListModel;
 import org.apache.commons.io.FilenameUtils;
@@ -371,7 +372,7 @@ public class DbConnJaMuzTest {
 		Jamuz.getDb().getMachineListModel(defaultListModel);
 		ListElement element = (ListElement) defaultListModel.get(0);
 		assertEquals(2, defaultListModel.size()); //The created one and current machine
-		assertEquals("<html><b>" + machineName + "</b><BR/><i>{null}</i></html>", element.toString());
+		assertEquals("<html><b>" + machineName + "</b><BR/><i></i></html>", element.toString());
 		assertEquals(machineName, element.getValue());
 		assertNull(element.getFile());
 
@@ -726,7 +727,6 @@ public class DbConnJaMuzTest {
 	}
 
 	// </editor-fold>
-	//FIXME TEST ! Continue from here
 	// <editor-fold defaultstate="collapsed" desc="StatSource">
 	
 	@Test
@@ -739,22 +739,26 @@ public class DbConnJaMuzTest {
 		checkStatSourceList(expectedStatSources);	
 
 		//Create some stat sources and test insertion in db
-		StatSource statSource1 = new StatSource(Jamuz.getMachine().getName());
-		StatSource statSource2 = new StatSource(-1, "Numero Dos", 3, "ici et la", "moi meme", "BestPassword", "africa", Jamuz.getMachine().getName(), -1, false, "What if not a date?", false);
-		StatSource statSource3 = new StatSource(Jamuz.getMachine().getName());
+		StatSource statSource1 = new StatSource(-1, "Numero Uno", 3, "ici et la", "moi meme", "BestPassword", "africa", Jamuz.getMachine().getName(), 0, false, "What if not a date?", false);
+		StatSource statSource2 = new StatSource(-1, "Numero Dos", 5, "ici et ailleurs", "", "", "europe", Jamuz.getMachine().getName(), 0, true, "What if not a date?", false);
+		StatSource statSource3 = new StatSource(-1, "Numero Tres", 2, "loin", "", "", "asie", Jamuz.getMachine().getName(), 0, true, "What if not a date?", false);
 		expectedStatSources.add(statSource1);
 		expectedStatSources.add(statSource2);
 		expectedStatSources.add(statSource3);
 		for(StatSource statSource : expectedStatSources) {
 			assertTrue(Jamuz.getDb().insertOrUpdateStatSource(statSource));
 		}
+		// Needed in checkStatSourceList to get proper value
+		// and later on too, to be able to update them
+		statSource1.setId(1);
+		statSource2.setId(2);
+		statSource3.setId(3);
 		checkStatSourceList(expectedStatSources);
 
 		//Update some stat sources and test update in db
-		statSource1.setIdDevice(4569);
-		statSource1.setIdStatement(989153);
-		statSource1.setIsSelected(false);
-		statSource2.updateLastMergeDate();
+		//statSource1.setIdDevice(4569); // Need to create a device to test this
+		//statSource2.setIdStatement(1); // Need to update source in statSource2 if changing IdStatement
+		statSource3.setIsSelected(false);
 		for(StatSource statSource : expectedStatSources) {
 			assertTrue(Jamuz.getDb().insertOrUpdateStatSource(statSource));
 		}
@@ -765,10 +769,16 @@ public class DbConnJaMuzTest {
 		expectedStatSources.remove(statSource2);
 		checkStatSourceList(expectedStatSources);
 
-		Jamuz.getDb().updateStatSourceLastMergeDate(3);
+		//Jamuz.getDb().updateStatSourceLastMergeDate(3); //Called below + set statSource
 		statSource3.updateLastMergeDate();
-		Assert.assertEquals(Jamuz.getDb().getStatSource(statSource3.getMachineName()), statSource1);
+		checkStatSourceList(expectedStatSources);
 		
+		//getStatSource returns only the first stat source for given machine
+		//But ORDER BY on name only, so there might be an order on some other fields
+		//resulting in statSource3 to be returned finally
+		//Also, getStatSource is made for device remote, so stat source is hidden
+		statSource3.setHidden(true);
+		Assert.assertEquals(statSource3, Jamuz.getDb().getStatSource(Jamuz.getMachine().getName()));
 		
 		//FIXME TEST Negative cases
 		//FIXME TEST Check other constraints
@@ -776,14 +786,19 @@ public class DbConnJaMuzTest {
 	
 	private void checkStatSourceList(ArrayList<StatSource> expectedStatSources) {
 		LinkedHashMap<Integer, StatSource> actualList = new LinkedHashMap<>();
-		assertTrue(Jamuz.getDb().getStatSources(actualList, Jamuz.getMachine().getName(), true));
-		assertArrayEquals(expectedStatSources.toArray(), actualList.values().toArray());
+		assertTrue(Jamuz.getDb().getStatSources(actualList, Jamuz.getMachine().getName(), false));
+		for (StatSource value : actualList.values()) {
+			Optional<StatSource> findFirst = expectedStatSources.stream().filter(s -> s.getId()==value.getId()).findFirst();
+			assertTrue(findFirst.isPresent());
+			assertEquals(value, findFirst.get());
+		}
 	}
 	
 	/**
 	 * Test of getStatSources method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testStatSources() above
 	public void testGetStatSources() {
 		System.out.println("getStatSources");
 		LinkedHashMap<Integer, StatSource> statSources = null;
@@ -801,6 +816,7 @@ public class DbConnJaMuzTest {
 	 * Test of insertOrUpdateStatSource method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testStatSources() above
 	public void testInsertOrUpdateStatSource() {
 		System.out.println("insertOrUpdateStatSource");
 		StatSource statSource = null;
@@ -816,6 +832,7 @@ public class DbConnJaMuzTest {
 	 * Test of deleteStatSource method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testStatSources() above
 	public void testDeleteStatSource() {
 		System.out.println("deleteStatSource");
 		int id = 0;
@@ -831,6 +848,7 @@ public class DbConnJaMuzTest {
 	 * Test of getStatSource method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testStatSources() above
 	public void testGetStatSource() {
 		System.out.println("getStatSource");
 		String login = "";
@@ -846,6 +864,7 @@ public class DbConnJaMuzTest {
 	 * Test of updateStatSourceLastMergeDate method, of class DbConnJaMuz.
 	 */
 	@Test
+	@Ignore // Refer to testStatSources() above
 	public void testUpdateStatSourceLastMergeDate() {
 		System.out.println("updateStatSourceLastMergeDate");
 		int idStatSource = 0;
@@ -858,6 +877,7 @@ public class DbConnJaMuzTest {
 	}
 
 	// </editor-fold>
+	//FIXME TEST ! Continue from here
 	// <editor-fold defaultstate="collapsed" desc="PlayCounter">
 	
 	/**
