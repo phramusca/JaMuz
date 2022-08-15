@@ -445,7 +445,7 @@ public class Server {
 							client.getInfo().getRootPath(), 
 							client.getInfo().getLogin(), 
 							deviceWithId.getId(), false, "", true);
-						if(Jamuz.getDb().updateStatSource(statSource)) {
+						if(Jamuz.getDb().insertOrUpdateStatSource(statSource)) {
 							StatSource statSourceWithId = Jamuz.getDb().getStatSource(client.getInfo().getLogin());
 							client.getInfo().setStatSource(statSourceWithId);
 							if(Jamuz.getDb().updateClient(client.getInfo())) {

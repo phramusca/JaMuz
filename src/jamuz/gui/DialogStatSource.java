@@ -264,7 +264,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 			this.statSource.setIdDevice(device.getId());
 			//TODO: Cannot use check() as type is not initialized at this stage ...
 //			if(this.myStatSource.check()) {
-				if(Jamuz.getDb().updateStatSource(this.statSource)) {
+				if(Jamuz.getDb().insertOrUpdateStatSource(this.statSource)) {
 					this.dispose();
 					DialogOptions.displayStatSources();
 				}

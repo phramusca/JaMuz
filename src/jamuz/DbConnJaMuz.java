@@ -998,7 +998,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public StatSource getStatSource(String login) {
 		LinkedHashMap<Integer, StatSource> statSources = new LinkedHashMap<>();
-		Jamuz.getDb().getStatSources(statSources, login, true);
+		getStatSources(statSources, login, true);
 		return statSources.values().iterator().next();
 	}
 
@@ -1070,7 +1070,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @param statSource
 	 * @return
 	 */
-	public synchronized boolean updateStatSource(StatSource statSource) {
+	public synchronized boolean insertOrUpdateStatSource(StatSource statSource) {
 		try {
 			if (statSource.getId() > -1) {
 				PreparedStatement stUpdateStatSource = dbConn.connection.
@@ -1564,7 +1564,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public Device getDevice(String login) {
 		LinkedHashMap<Integer, Device> devices = new LinkedHashMap<>();
-		Jamuz.getDb().getDevices(devices, login, true);
+		getDevices(devices, login, true);
 		return devices.values().iterator().next();
 	}
 
@@ -1704,7 +1704,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				int nbRowsAffected = stUpdateClient.executeUpdate();
 				if (nbRowsAffected > 0) {
 					updateDevice(clientInfo.getDevice());
-					updateStatSource(clientInfo.getStatSource());
+					insertOrUpdateStatSource(clientInfo.getStatSource());
 					return true;
 				} else {
 					Jamuz.getLogger().log(Level.SEVERE,
