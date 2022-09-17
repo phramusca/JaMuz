@@ -90,7 +90,6 @@ public class PopupMenu {
         menuListener = (ActionEvent e) -> {
 			int selectedRow = jTableSelect.getSelectedRow(); 		
 			if(selectedRow>=0) { 	
-				//convert to model index (in case of sortable model) 		
 				final int selectedIndex = jTableSelect.convertRowIndexToModel(selectedRow); 
 				final FileInfoInt selected = fileInfoList.get(selectedIndex);
 				JMenuItem source = (JMenuItem)(e.getSource());
@@ -174,6 +173,7 @@ public class PopupMenu {
 		}
 		addMenu(Inter.get("Label.Check"));
 		addMenu("AcoustID");
+		
 		//Add links menu items
         File f = Jamuz.getFile("AudioLinks.txt", "data");
         if(f.exists()) {
@@ -181,13 +181,19 @@ public class PopupMenu {
             List<String> lines;
             try {
                 lines = Files.readAllLines(Paths.get(f.getAbsolutePath()), Charset.defaultCharset());
-                for(String line : lines) {
-                    if(line.contains("|")) {
-                        String[] splitted = line.split("\\|");
-                        JMenuItem menuItem1 = new JMenuItem(new PopupMenu.OpenUrlAction(splitted[0], splitted[1]));
-                        menuLinks.add(menuItem1);
-                    }
-                }
+				List<String> urls = new ArrayList<>();
+				lines.stream()
+						.filter(line -> (line.contains("|")))
+						.map(line -> line.split("\\|"))
+						.forEachOrdered(splitted -> {
+							ArrayList<String> arrayList = new ArrayList<>();
+							arrayList.add(splitted[1]);
+							urls.add(splitted[1]);
+							menuLinks.add(new JMenuItem(new PopupMenu.OpenUrlAction(splitted[0], arrayList)));
+						});
+				if(urls.size()>1) {
+					menuLinks.add(new JMenuItem(new PopupMenu.OpenUrlAction("ALL LINKS", urls)));
+				}
                 jPopupMenu1.add(menuLinks);
             } catch (IOException ex) {
                 Jamuz.getLogger().log(Level.SEVERE, null, ex);
@@ -195,11 +201,11 @@ public class PopupMenu {
         }
 		
 		JMenu menuDelete = new JMenu("Delete"); //NOI18N
-		JMenuItem menuItem1 = new JMenuItem("Delete Selected");
-		menuItem1.addActionListener(menuListener);
+			JMenuItem menuItem1 = new JMenuItem("Delete Selected");
+			menuItem1.addActionListener(menuListener);
 		menuDelete.add(menuItem1);
-		menuItem1 = new JMenuItem("Delete All");
-		menuItem1.addActionListener(menuListener);
+			menuItem1 = new JMenuItem("Delete All");
+			menuItem1.addActionListener(menuListener);
 		menuDelete.add(menuItem1);
 		jPopupMenu1.add(menuDelete);
 		
@@ -227,30 +233,30 @@ public class PopupMenu {
 	
 	class OpenUrlAction extends AbstractAction {
         
-        private final String url;
+        private final List<String> urls;
         
-        OpenUrlAction(String text, String url) {
+        OpenUrlAction(String text, List<String> urls) {
             super(text, null);
-            this.url = url;
+            this.urls = urls;
         }
 		
         @Override
         public void actionPerformed(ActionEvent e) {
             int selectedRow = jTableSelect.getSelectedRow(); 		
 			if(selectedRow>=0) { 	
-				//convert to model index (as sortable model) 		
 				selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
 				FileInfoInt myFileInfo = fileInfoList.get(selectedRow);
-
-				Desktop.openBrowser(url.replaceAll("<album>", 
-						myFileInfo.getAlbumArtist().concat(" ")
-								.concat(myFileInfo.getAlbum())));			 		
+				urls.forEach(url -> {
+					Desktop.openBrowser(url.replaceAll("<album>",
+							myFileInfo.getAlbumArtist().concat(" ")
+									.concat(myFileInfo.getAlbum())));
+				});
 			}
         }
 
 		@Override
 		public Object clone() throws CloneNotSupportedException {
-			return super.clone(); //To change body of generated methods, choose Tools | Templates.
+			return super.clone();
 		}
     }
 	
@@ -281,9 +287,7 @@ public class PopupMenu {
 	}
 	
 	private void selectOnRightClick(java.awt.event.MouseEvent evt) {                                          
-		// If Right mouse click, select the line under mouse
-        if ( SwingUtilities.isRightMouseButton( evt ) && enableMenu)
-        {
+        if (SwingUtilities.isRightMouseButton( evt ) && enableMenu) {
             Point p = evt.getPoint();
             int rowNumber = jTableSelect.rowAtPoint( p );
             ListSelectionModel model = jTableSelect.getSelectionModel();
