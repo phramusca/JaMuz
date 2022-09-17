@@ -134,20 +134,6 @@ public class PanelMainTest {
 	}
 
 	/**
-	 * Test of initSelectTable method, of class PanelMain.
-	 */
-	@Test
-	public void testInitSelectTable() {
-		System.out.println("initSelectTable");
-		TableModel tableModel = null;
-		JTable jTable = null;
-		TableColumnModel tableColumnModel = null;
-		PanelMain.initSelectTable(tableModel, jTable, tableColumnModel);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of setOptions method, of class PanelMain.
 	 */
 	@Test

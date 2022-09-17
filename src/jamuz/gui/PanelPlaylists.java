@@ -60,23 +60,20 @@ public class PanelPlaylists extends javax.swing.JPanel {
         initComponents();
     }
 
+	
     /**
      * extended init
      */
     public void initExtended() {
 		enablePlaylistEdit(false);
-
-        //Fills playlist combobox
         fillPlaylistCombo();
-
-        //Get table model
         tableModelPlaylist = (TableModel) jTablePlaylist.getModel();
-        PanelMain.initSelectTable(tableModelPlaylist, jTablePlaylist, columnModelPlaylist);
-        //clear the table
-        jTablePlaylist.setRowSorter(null);
-        tableModelPlaylist.clear();
 		fileInfoList=new ArrayList<>();
-		
+        PanelMain.initSelectTable(tableModelPlaylist, jTablePlaylist, columnModelPlaylist, fileInfoList, () -> {
+			fillPlayList();
+		});
+        jTablePlaylist.setRowSorter(null);
+        tableModelPlaylist.clear();	
 		myPopupMenu = new PopupMenu(jPopupMenu1, jTablePlaylist, tableModelPlaylist, fileInfoList, null, new PopupMenuListener() {
 			@Override
 			public boolean deleteStarted() {

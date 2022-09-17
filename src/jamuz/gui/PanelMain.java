@@ -547,16 +547,23 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
 
+	//TODO: Move to a SelectTable class
     /**
      * initialize a "select style" table (select and playlist tabs)
      *
      * @param tableModel
      * @param jTable
      * @param tableColumnModel
+	 * @param fileInfoList
+	 * @param callBackSelect
      */
-    public static void initSelectTable(TableModel tableModel, JTable jTable, TableColumnModel tableColumnModel) {
+    public static void initSelectTable(
+			TableModel tableModel, 
+			JTable jTable, 
+			TableColumnModel tableColumnModel,
+			ArrayList<FileInfoInt> fileInfoList,
+			ICallBackSelect callBackSelect) {
 
-        //Set table model
         String[] columnNames = {Inter.get("Tag.Artist"), Inter.get("Tag.Album"), //NOI18N
 			Inter.get("Tag.TrackNo"), Inter.get("Tag.Title"), //NOI18N
 			Inter.get("Tag.Genre"), Inter.get("Tag.Year"), //NOI18N
@@ -573,12 +580,7 @@ public class PanelMain extends javax.swing.JFrame {
                 "Default", "Default", "Default", "Default", "Button"} //NOI18N
         };
         tableModel.setModel(columnNames, data);
-
-        //Assigning XTableColumnModel to allow show/hide columns
         jTable.setColumnModel(tableColumnModel);
-
-		//Adding columns from model. Cannot be done automatically on properties
-        // as done, in initComponents, before setColumnModel which removes the columns ...
         jTable.createDefaultColumnsFromModel();
 
         TableColumn column;
@@ -614,7 +616,6 @@ public class PanelMain extends javax.swing.JFrame {
         //Set File column width
         column = jTable.getColumnModel().getColumn(7);
         column.setPreferredWidth(10);
-		//"Length", "Format", "SBPMDisplay", "BPM", "Album Artist", "Comment", "Disc #"
         //Set Length column width
         column = jTable.getColumnModel().getColumn(8);
         column.setMinWidth(50);
@@ -650,13 +651,10 @@ public class PanelMain extends javax.swing.JFrame {
         column.setMinWidth(50);
         column.setMaxWidth(200);
         column.setPreferredWidth(100);
-
-		//"Cover", "Play counter", "Rating", "Added", "Last Played"};
         //Set "Cover" column width
         column = jTable.getColumnModel().getColumn(15);
         column.setMinWidth(IconBufferCover.getCoverIconSize());
         column.setMaxWidth(IconBufferCover.getCoverIconSize());
-
         //Set "Play counter" column width
         column = jTable.getColumnModel().getColumn(16);
         column.setMinWidth(50);
@@ -677,13 +675,6 @@ public class PanelMain extends javax.swing.JFrame {
         column.setMinWidth(50);
         column.setMaxWidth(200);
         column.setPreferredWidth(100);
-
-        //TODO: Move CopyRight combobox to album folder as it is a path attribute
-        //TODO: Create an Amazon button in album list too, and change the one in this table 
-		//for searching MP3 single
-        //For the 2 above, this means, changing album jlist 
-		// (which has a special way of filling) to jtable !!
-        //+managing displaying columns or not (copyright and amazon buttons have to be optionnal)
         
         // 21: Combobox
         column = jTable.getColumnModel().getColumn(21);
@@ -693,16 +684,15 @@ public class PanelMain extends javax.swing.JFrame {
         column.setMinWidth(130);
         column.setMaxWidth(200);
         column.setPreferredWidth(130);
-
 		Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableCellListener tcl = (TableCellListener) e.getSource();
                 if (tcl.getColumn() == 21) { //ComboBox is here
 					FolderInfo.CopyRight copyRight = (FolderInfo.CopyRight)tcl.getNewValue();
-                    FileInfoInt myFileInfo = PanelSelect.getFileInfoList().get(tcl.getRow());
+                    FileInfoInt myFileInfo = fileInfoList.get(tcl.getRow());
                     Jamuz.getDb().updatePathCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
-                    PanelSelect.refreshTable();
+					callBackSelect.refresh();
                 }
             }
         };
@@ -727,8 +717,6 @@ public class PanelMain extends javax.swing.JFrame {
         setFileVisible(tableColumnModel, false);
 		setRightsVisible(tableColumnModel, false);
     }
-
-//    private static JButton button;
 
     /**
      * Set options

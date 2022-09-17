@@ -85,7 +85,7 @@ public class PanelSelect extends javax.swing.JPanel {
 	/**
 	 *
 	 */
-	public static void refreshTable() {
+	private void refreshTable() {
         		
         //clear the table
 		jTableSelect.setRowSorter(null);
@@ -166,16 +166,18 @@ public class PanelSelect extends javax.swing.JPanel {
         rendererGenre.setPreferredSize(new Dimension(0, IconBuffer.iconSize));
         jListSelectGenre.setCellRenderer(rendererGenre);
 		
-        //Get table model
+		fileInfoList= new ArrayList<>();
 		tableModel = (TableModel) jTableSelect.getModel();
-		PanelMain.initSelectTable(tableModel, jTableSelect, TABLE_COLUMN_MODEL);
+		PanelMain.initSelectTable(tableModel, jTableSelect, TABLE_COLUMN_MODEL, fileInfoList, () -> {
+			refreshTable();
+		});
 
         selGenre="%";  //NOI18N
         selArtist = new ListElement("%", "artist"); //NOI18N
 		selAlbum = new ListElement("%", "album"); //NOI18N
         
         setYearSpinners(); 
-		fileInfoList= new ArrayList<>();
+		
 		refreshTable();
 		
 		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
