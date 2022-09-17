@@ -21,7 +21,6 @@ import jamuz.IconBufferCover;
 import jamuz.Jamuz;
 import jamuz.Main;
 import jamuz.Playlist;
-import jamuz.gui.swing.ButtonBrowseURL;
 import jamuz.gui.swing.ComboBoxRenderer;
 import jamuz.gui.swing.ListElement;
 import jamuz.gui.swing.ProgressBar;
@@ -128,7 +127,7 @@ public class PanelMain extends javax.swing.JFrame {
     private static final int[] STATS_COLS = {16, 18, 19};
     private static final int[] FILE_COLS = {6, 7, 8, 9, 10};
     private static final int[] EXTRA_COLS = {11, 13, 14, 15, 20};
-	private static final int[] RIGHTS_COLS = {21, 22};
+	private static final int[] RIGHTS_COLS = {21};
 
     /**
      * Creates new form MainGUI
@@ -573,11 +572,11 @@ public class PanelMain extends javax.swing.JFrame {
 			Inter.get("Tag.Comment"), Inter.get("Tag.DiscNo"), Inter.get("Tag.Cover"), //NOI18N
 			Inter.get("Stat.PlayCounter"), Inter.get("Stat.Rating"), //NOI18N
 			Inter.get("Stat.Added"), Inter.get("Stat.LastPlayed"), //NOI18N
-			Inter.get("Stat.Checked"), Inter.get("Label.BestOf.Ownership"), ""};  //NOI18N
+			Inter.get("Stat.Checked"), Inter.get("Label.BestOf.Ownership")};  //NOI18N
         Object[][] data = {
             {"Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", //NOI18N
                 "Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", //NOI18N
-                "Default", "Default", "Default", "Default", "Button"} //NOI18N
+                "Default", "Default", "Default", "Default"} //NOI18N
         };
         tableModel.setModel(columnNames, data);
         jTable.setColumnModel(tableColumnModel);
@@ -697,18 +696,9 @@ public class PanelMain extends javax.swing.JFrame {
             }
         };
         TableCellListener tcl = new TableCellListener(jTable, action);
-		
-        // 22: Button
-        column = jTable.getColumnModel().getColumn(22);
-        column.setMinWidth(50);
-        column.setMaxWidth(200);
-        JButton button = new JButton("Amazon"); //NOI18N
-        column.setCellRenderer((JTable table, Object value, boolean isSelected, 
-				boolean hasFocus, int row, int column1) -> button);
-        column.setCellEditor(new ButtonBrowseURL());
         
-        //Combobox and button needs to be editable to work
-        tableModel.setEditable(new Integer[] {21, 22});
+        //Combobox needs to be editable to work
+        tableModel.setEditable(new Integer[] {21});
         
         //Display defaults columns (only basic by default)
         setBasicVisible(tableColumnModel, true);
@@ -1406,11 +1396,7 @@ public class PanelMain extends javax.swing.JFrame {
             myFileInfo.getBPM(), myFileInfo.getAlbumArtist(),
             myFileInfo.getComment(), myFileInfo.getDiscNoFull(), coverIcon,
             myFileInfo.getPlayCounter(), rating, myFileInfo.getAddedDateLocalTime(),
-            myFileInfo.getLastPlayedLocalTime(), myFileInfo.getCheckedFlag().toString(), myFileInfo.getCopyRight().toString(),
-            "http://www.amazon.fr/gp/search?ie=UTF8&camp=1642&creative=6746&index=aps&linkCode=ur2&tag=ja097-21&keywords=" + (myFileInfo.getArtist() + " " + myFileInfo.getAlbum()).replaceAll(" ", "+")};
-            //TODO: Support other amazon locations (.com, .co.uk,...)
-            //TODO: Support more vendors
-        
+            myFileInfo.getLastPlayedLocalTime(), myFileInfo.getCheckedFlag().toString(), myFileInfo.getCopyRight().toString()};       
         tableModel.addRow(donnee);
     }
 
