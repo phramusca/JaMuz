@@ -75,7 +75,10 @@ public class PopupMenu {
 	 * @param mplayer
 	 * @param popupMenuListener
 	 */
-	public PopupMenu(JPopupMenu jPopupMenu1, JTable jTableSelect, TableModel tableModel, ArrayList<FileInfoInt> fileInfoList, Mplayer mplayer, PopupMenuListener popupMenuListener) {
+	public PopupMenu(JPopupMenu jPopupMenu1, JTable jTableSelect, 
+			TableModel tableModel, ArrayList<FileInfoInt> fileInfoList, 
+			Mplayer mplayer, PopupMenuListener popupMenuListener) {
+		
 		this.jPopupMenu1 = jPopupMenu1;
 		this.jTableSelect = jTableSelect;
 		this.tableModel = tableModel;
@@ -86,73 +89,135 @@ public class PopupMenu {
 	}
 		
 	private void setup() {
-		       
-		jPopupMenu1.add(new JMenuItem(new AbstractAction(Inter.get("MainGUI.jButtonSelectQueue.text")) {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//TODO: Bug when adding to queue. JList is not refreshed
-				//Something's wrong b/w model and JList
-				FileInfoInt selected = getSelected();
-				if(selected!=null) {
-					PanelMain.addToQueue(selected, Jamuz.getDb().getRootPath());
-				}
-			}
-		}));
 		
-		jPopupMenu1.add(new JMenuItem(new AbstractAction(Inter.get("MainGUI.jButtonSelectQueueAll.text")) {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				FileInfoInt selected = getSelected();
-				if(selected!=null) {
-					PanelMain.getQueueModel().clear();
-					for(FileInfoInt myFileInfo : fileInfoList) {
-						PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 	
-					}
-				}
-			}
-		}));
-		
-		if(mplayer!=null) {
-			jPopupMenu1.add(new JMenuItem(new AbstractAction("Preview") {
+		JMenu menuTrack = new JMenu(Inter.get("Label.Track"));
+			menuTrack.add(new JMenuItem(new AbstractAction(Inter.get("MainGUI.jButtonSelectQueue.text")) {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					//TODO: Bug when adding to queue. JList is not refreshed
+					//Something's wrong b/w model and JList
 					FileInfoInt selected = getSelected();
 					if(selected!=null) {
-						//FIXME Z Uncomment 2 below lines
-						//	mplayer.setAudioCard((Mplayer.AudioCard)jComboBoxSoundCard.getSelectedItem());
-						//	jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
-						if(mplayer!=null) {
-							mplayer.play(selected.getFullPath().getAbsolutePath(), false);
+						PanelMain.addToQueue(selected, Jamuz.getDb().getRootPath());
+					}
+				}
+			}));
+			if(mplayer!=null) {
+				menuTrack.add(new JMenuItem(new AbstractAction("Preview") {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						FileInfoInt selected = getSelected();
+						if(selected!=null) {
+							//FIXME Z Uncomment 2 below lines
+							//	mplayer.setAudioCard((Mplayer.AudioCard)jComboBoxSoundCard.getSelectedItem());
+							//	jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
+							if(mplayer!=null) {
+								mplayer.play(selected.getFullPath().getAbsolutePath(), false);
+							}
+						}
+					}
+				}));
+			}
+			menuTrack.add(new JMenuItem(new AbstractAction(Inter.get("Label.Delete")) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int selectedRow = jTableSelect.getSelectedRow(); 		
+					if(selectedRow>=0) {
+						int selectedIndex = jTableSelect.convertRowIndexToModel(selectedRow); 
+						FileInfoInt selected = fileInfoList.get(selectedIndex);
+						int n = JOptionPane.showConfirmDialog( 
+							jTableSelect, "Are you sure you want to delete \""+selected.getRelativeFullPath()+"\" FROM FILESYSTEM ?", //NOI18N 
+							Inter.get("Label.Confirm"), //NOI18N 
+							JOptionPane.YES_NO_OPTION); 
+						if (n == JOptionPane.YES_OPTION) { 					
+							if(delete(selected, selectedIndex)) {
+								fileInfoList.remove(selectedIndex);
+							}
 						}
 					}
 				}
 			}));
-		}
-		
-		jPopupMenu1.add(new JMenuItem(new AbstractAction(Inter.get("Label.Check")) {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				FileInfoInt selected = getSelected();
-				if(selected!=null) {
-					PanelCheck.check(jTableSelect, selected.getIdPath());
+			menuTrack.add(new JMenuItem(new AbstractAction("AcoustID") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					FileInfoInt selected = getSelected();
+					if(selected!=null) {
+						//FIXME Z Do not block GUI.
+						Results analyzed = AcoustID.analyze(selected.getFullPath().getAbsolutePath(), Jamuz.getKeys().get("AcoustId"));
+						AcoustIdResult best = analyzed.getBest();
+						String msg = best==null?"Not found":best.getScore()+": \""+best.getTitle()+"\" by "+best.getArtist();
+						Popup.info(msg);
+					}
 				}
-			}
-		}));
-		
-		jPopupMenu1.add(new JMenuItem(new AbstractAction("AcoustID") {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				FileInfoInt selected = getSelected();
-				if(selected!=null) {
-					//FIXME Z Do not block GUI.
-					Results analyzed = AcoustID.analyze(selected.getFullPath().getAbsolutePath(), Jamuz.getKeys().get("AcoustId"));
-					AcoustIdResult best = analyzed.getBest();
-					String msg = best==null?"Not found":best.getScore()+": \""+best.getTitle()+"\" by "+best.getArtist();
-					Popup.info(msg);
+			}));
+		jPopupMenu1.add(menuTrack);
+
+		JMenu menuAlbum = new JMenu(Inter.get("Tag.Album"));
+			menuAlbum.add(new JMenuItem(new AbstractAction(Inter.get("Label.Check")) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					FileInfoInt selected = getSelected();
+					if(selected!=null) {
+						PanelCheck.check(jTableSelect, selected.getIdPath());
+					}
 				}
-			}
-		}));
-				
+			}));
+			menuAlbum.add(new JMenuItem(new AbstractAction(Inter.get("Button.Edit")) {//TODO: Add " (external)" to menu name	
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					FileInfoInt selected = getSelected();
+					if(selected!=null) {
+						PanelMain.editLocation(Jamuz.getDb().getRootPath()+selected.getRelativeFullPath());
+					}
+				}
+			}));
+		jPopupMenu1.add(menuAlbum);
+		
+		JMenu menuAll = new JMenu(Inter.get("Label.All"));
+			menuAll.add(new JMenuItem(new AbstractAction(Inter.get("MainGUI.jButtonSelectQueue.text")) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					FileInfoInt selected = getSelected();
+					if(selected!=null) {
+						PanelMain.getQueueModel().clear();
+						for(FileInfoInt myFileInfo : fileInfoList) {
+							PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 	
+						}
+					}
+				}
+			}));
+			menuAll.add(new JMenuItem(new AbstractAction(Inter.get("Label.Delete")) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int n = JOptionPane.showConfirmDialog( 
+							jTableSelect, "Are you sure that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
+							Inter.get("Label.Confirm"), //NOI18N 
+							JOptionPane.YES_NO_OPTION); 
+						if (n == JOptionPane.YES_OPTION) { 
+							n = JOptionPane.showConfirmDialog( 
+							jTableSelect, "Are you REALLY SURE that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
+							Inter.get("Label.Confirm"), //NOI18N 
+							JOptionPane.YES_NO_OPTION); 
+							if (n == JOptionPane.YES_OPTION) {
+								enableMenu=false;
+								if(popupMenuListener.deleteStarted()) {
+									new Thread(() -> {
+										for (Iterator<FileInfoInt> it = fileInfoList.iterator(); it.hasNext();) {
+											FileInfoInt file = it.next();
+											if(delete(file, 0)) {
+												it.remove();
+											}
+										}
+										popupMenuListener.deleteEnded();
+										enableMenu=true;
+									}).start();
+								}
+							}
+						}
+				}
+			}));
+		jPopupMenu1.add(menuAll);
+	
 		//Add links menu items
         File f = Jamuz.getFile("AudioLinks.txt", "data");
         if(f.exists()) {
@@ -198,68 +263,6 @@ public class PopupMenu {
                 Jamuz.getLogger().log(Level.SEVERE, null, ex);
             }
         }
-		
-		JMenu menuDelete = new JMenu("Delete"); //NOI18N
-		menuDelete.add(new JMenuItem(new AbstractAction("Delete Selected") {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int selectedRow = jTableSelect.getSelectedRow(); 		
-				if(selectedRow>=0) {
-					int selectedIndex = jTableSelect.convertRowIndexToModel(selectedRow); 
-					FileInfoInt selected = fileInfoList.get(selectedIndex);
-					int n = JOptionPane.showConfirmDialog( 
-						jTableSelect, "Are you sure you want to delete \""+selected.getRelativeFullPath()+"\" FROM FILESYSTEM ?", //NOI18N 
-						Inter.get("Label.Confirm"), //NOI18N 
-						JOptionPane.YES_NO_OPTION); 
-					if (n == JOptionPane.YES_OPTION) { 					
-						if(delete(selected, selectedIndex)) {
-							fileInfoList.remove(selectedIndex);
-						}
-					}
-				}
-			}
-		}));
-		menuDelete.add(new JMenuItem(new AbstractAction("Delete All") {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int n = JOptionPane.showConfirmDialog( 
-						jTableSelect, "Are you sure that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
-						Inter.get("Label.Confirm"), //NOI18N 
-						JOptionPane.YES_NO_OPTION); 
-					if (n == JOptionPane.YES_OPTION) { 
-						n = JOptionPane.showConfirmDialog( 
-						jTableSelect, "Are you REALLY SURE that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
-						Inter.get("Label.Confirm"), //NOI18N 
-						JOptionPane.YES_NO_OPTION); 
-						if (n == JOptionPane.YES_OPTION) {
-							enableMenu=false;
-							if(popupMenuListener.deleteStarted()) {
-								new Thread(() -> {
-									for (Iterator<FileInfoInt> it = fileInfoList.iterator(); it.hasNext();) {
-										FileInfoInt file = it.next();
-										if(delete(file, 0)) {
-											it.remove();
-										}
-									}
-									popupMenuListener.deleteEnded();
-									enableMenu=true;
-								}).start();
-							}
-						}
-					}
-			}
-		}));
-		jPopupMenu1.add(menuDelete);
-		
-		jPopupMenu1.add(new JMenuItem(new AbstractAction(Inter.get("Button.Edit")) {//TODO: Add " (external)" to menu name	
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				FileInfoInt selected = getSelected();
-				if(selected!=null) {
-					PanelMain.editLocation(Jamuz.getDb().getRootPath()+selected.getRelativeFullPath());
-				}
-			}
-		}));
 
 		jTableSelect.addMouseListener(new PopupListener());
 	}
