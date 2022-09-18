@@ -86,6 +86,11 @@ public class PanelPlaylists extends javax.swing.JPanel {
 			public void deleteEnded() {
 				enablePlaylist(true);
 			}
+
+			@Override
+			public void refresh() {
+				fillPlayList();
+			}
 		});
 		enableComboListner=true;
     }

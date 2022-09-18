@@ -193,6 +193,11 @@ public class PanelSelect extends javax.swing.JPanel {
 			public void deleteEnded() {
 				enableSelect(true);
 			}
+
+			@Override
+			public void refresh() {
+				refreshTable();
+			}
 		});
 	}
 	

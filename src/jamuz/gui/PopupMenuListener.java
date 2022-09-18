@@ -32,4 +32,6 @@ public interface PopupMenuListener {
 	 *
 	 */
 	public void deleteEnded();
+
+	public void refresh();
 }
