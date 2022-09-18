@@ -154,6 +154,22 @@ public class PopupMenu {
 		jPopupMenu1.add(menuTrack);
 
 		JMenu menuAlbum = new JMenu(Inter.get("Tag.Album"));
+		menuAlbum.add(new JMenuItem(new AbstractAction(Inter.get("MainGUI.jButtonSelectQueue.text")) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileInfoInt selected = getSelected();
+				if(selected!=null) {
+					ArrayList<FileInfoInt> albumFiles = new ArrayList<>();
+					if(Jamuz.getDb().getFiles(albumFiles, selected.getIdPath())) {
+						PanelMain.getQueueModel().clear();
+						for(FileInfoInt myFileInfo : albumFiles) {
+							PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 	
+						}
+					}
+					
+				}
+			}
+		}));
 		menuAlbum.add(new JMenuItem(new AbstractAction(Inter.get("Label.Check")) {
 			@Override
 			public void actionPerformed(ActionEvent e) {
