@@ -86,53 +86,146 @@ public class PopupMenu {
 	}
 		
 	private void setup() {
-		
-        menuListener = (ActionEvent e) -> {
-			int selectedRow = jTableSelect.getSelectedRow(); 		
-			if(selectedRow>=0) { 	
-				final int selectedIndex = jTableSelect.convertRowIndexToModel(selectedRow); 
-				final FileInfoInt selected = fileInfoList.get(selectedIndex);
-				JMenuItem source = (JMenuItem)(e.getSource());
-				String sourceTxt=source.getText();
-				if(sourceTxt.equals(Inter.get("Button.Edit"))) { //NOI18N
-					PanelMain.editLocation(Jamuz.getDb().getRootPath()+selected.getRelativeFullPath());
-				}
-				else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueue.text"))) { //NOI18N
-					//TODO: Bug when adding to queue. JList is not refreshed
-					//Something's wrong b/w model and JList
+		       
+		jPopupMenu1.add(new JMenuItem(new AbstractAction(Inter.get("MainGUI.jButtonSelectQueue.text")) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO: Bug when adding to queue. JList is not refreshed
+				//Something's wrong b/w model and JList
+				FileInfoInt selected = getSelected();
+				if(selected!=null) {
 					PanelMain.addToQueue(selected, Jamuz.getDb().getRootPath());
 				}
-				else if(sourceTxt.equals(Inter.get("MainGUI.jButtonSelectQueueAll.text"))) { //NOI18N
+			}
+		}));
+		
+		jPopupMenu1.add(new JMenuItem(new AbstractAction(Inter.get("MainGUI.jButtonSelectQueueAll.text")) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileInfoInt selected = getSelected();
+				if(selected!=null) {
 					PanelMain.getQueueModel().clear();
 					for(FileInfoInt myFileInfo : fileInfoList) {
 						PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 	
 					}
 				}
-				else if(sourceTxt.equals("Preview")) { //NOI18N
-					//FIXME Z Uncomment 2 below lines
-					//	mplayer.setAudioCard((Mplayer.AudioCard)jComboBoxSoundCard.getSelectedItem());
-					//	jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
-					if(mplayer!=null) {
-						mplayer.play(selected.getFullPath().getAbsolutePath(), false);
+			}
+		}));
+		
+		if(mplayer!=null) {
+			jPopupMenu1.add(new JMenuItem(new AbstractAction("Preview") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					FileInfoInt selected = getSelected();
+					if(selected!=null) {
+						//FIXME Z Uncomment 2 below lines
+						//	mplayer.setAudioCard((Mplayer.AudioCard)jComboBoxSoundCard.getSelectedItem());
+						//	jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
+						if(mplayer!=null) {
+							mplayer.play(selected.getFullPath().getAbsolutePath(), false);
+						}
 					}
 				}
-				else if(sourceTxt.equals(Inter.get("Label.Check"))) { //NOI18N
-					PanelCheck.check(jTableSelect, selected.getIdPath());	
-				} else if(sourceTxt.equals("Delete Selected")) {
+			}));
+		}
+		
+		jPopupMenu1.add(new JMenuItem(new AbstractAction(Inter.get("Label.Check")) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileInfoInt selected = getSelected();
+				if(selected!=null) {
+					PanelCheck.check(jTableSelect, selected.getIdPath());
+				}
+			}
+		}));
+		
+		jPopupMenu1.add(new JMenuItem(new AbstractAction("AcoustID") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileInfoInt selected = getSelected();
+				if(selected!=null) {
+					//FIXME Z Do not block GUI.
+					Results analyzed = AcoustID.analyze(selected.getFullPath().getAbsolutePath(), Jamuz.getKeys().get("AcoustId"));
+					AcoustIdResult best = analyzed.getBest();
+					String msg = best==null?"Not found":best.getScore()+": \""+best.getTitle()+"\" by "+best.getArtist();
+					Popup.info(msg);
+				}
+			}
+		}));
+				
+		//Add links menu items
+        File f = Jamuz.getFile("AudioLinks.txt", "data");
+        if(f.exists()) {
+            JMenu menuLinks = new JMenu(Inter.get("Label.Links")); //NOI18N
+            List<String> lines;
+            try {
+                lines = Files.readAllLines(Paths.get(f.getAbsolutePath()), Charset.defaultCharset());
+				List<String> urls = new ArrayList<>();
+				lines.stream()
+						.filter(line -> (line.contains("|")))
+						.map(line -> line.split("\\|"))
+						.forEachOrdered(splitted -> {
+							urls.add(splitted[1]);
+							menuLinks.add(new JMenuItem(new AbstractAction(splitted[0]) {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									FileInfoInt selected = getSelected();
+									if(selected!=null) {
+										Desktop.openBrowser(splitted[1].replaceAll("<album>",
+													selected.getAlbumArtist().concat(" ")
+															.concat(selected.getAlbum())));
+									}
+								}
+							}));
+						});
+				if(urls.size()>1) {
+					menuLinks.add(new JMenuItem(new AbstractAction("ALL LINKS") {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									FileInfoInt selected = getSelected();
+									if(selected!=null) {
+										urls.forEach(url -> {
+											Desktop.openBrowser(url.replaceAll("<album>",
+													selected.getAlbumArtist().concat(" ")
+															.concat(selected.getAlbum())));
+										});
+									}
+								}
+							}));
+				}
+                jPopupMenu1.add(menuLinks);
+            } catch (IOException ex) {
+                Jamuz.getLogger().log(Level.SEVERE, null, ex);
+            }
+        }
+		
+		JMenu menuDelete = new JMenu("Delete"); //NOI18N
+		menuDelete.add(new JMenuItem(new AbstractAction("Delete Selected") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = jTableSelect.getSelectedRow(); 		
+				if(selectedRow>=0) {
+					int selectedIndex = jTableSelect.convertRowIndexToModel(selectedRow); 
+					FileInfoInt selected = fileInfoList.get(selectedIndex);
 					int n = JOptionPane.showConfirmDialog( 
-                        jTableSelect, "Are you sure you want to delete \""+selected.getRelativeFullPath()+"\" FROM FILESYSTEM ?", //NOI18N 
-                        Inter.get("Label.Confirm"), //NOI18N 
-                        JOptionPane.YES_NO_OPTION); 
+						jTableSelect, "Are you sure you want to delete \""+selected.getRelativeFullPath()+"\" FROM FILESYSTEM ?", //NOI18N 
+						Inter.get("Label.Confirm"), //NOI18N 
+						JOptionPane.YES_NO_OPTION); 
 					if (n == JOptionPane.YES_OPTION) { 					
 						if(delete(selected, selectedIndex)) {
 							fileInfoList.remove(selectedIndex);
 						}
 					}
-				} else if(sourceTxt.equals("Delete All")) {
-					int n = JOptionPane.showConfirmDialog( 
-                        jTableSelect, "Are you sure that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
-                        Inter.get("Label.Confirm"), //NOI18N 
-                        JOptionPane.YES_NO_OPTION); 
+				}
+			}
+		}));
+		menuDelete.add(new JMenuItem(new AbstractAction("Delete All") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int n = JOptionPane.showConfirmDialog( 
+						jTableSelect, "Are you sure that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
+						Inter.get("Label.Confirm"), //NOI18N 
+						JOptionPane.YES_NO_OPTION); 
 					if (n == JOptionPane.YES_OPTION) { 
 						n = JOptionPane.showConfirmDialog( 
 						jTableSelect, "Are you REALLY SURE that you want to DELETE ALL "+ fileInfoList.size()+" files FROM FILESYSTEM?", //NOI18N 
@@ -154,65 +247,31 @@ public class PopupMenu {
 							}
 						}
 					}
-				} else if(sourceTxt.equals("AcoustID")) { //NOI18N
-					Results analyzed = AcoustID.analyze(selected.getFullPath().getAbsolutePath(), Jamuz.getKeys().get("AcoustId"));
-					AcoustIdResult best = analyzed.getBest();
-					String msg = best==null?"Not found":best.getScore()+": \""+best.getTitle()+"\" by "+best.getArtist();
-					Popup.info(msg);
-				}
-				else {
-					Popup.error(Inter.get("UNKNOWN MENU ITEM"));
-				}
 			}
-		};
-        
-		addMenu(Inter.get("MainGUI.jButtonSelectQueue.text"));
-		addMenu(Inter.get("MainGUI.jButtonSelectQueueAll.text"));
-		if(mplayer!=null) {
-			addMenu("Preview");
-		}
-		addMenu(Inter.get("Label.Check"));
-		addMenu("AcoustID");
-		
-		//Add links menu items
-        File f = Jamuz.getFile("AudioLinks.txt", "data");
-        if(f.exists()) {
-            JMenu menuLinks = new JMenu(Inter.get("Label.Links")); //NOI18N
-            List<String> lines;
-            try {
-                lines = Files.readAllLines(Paths.get(f.getAbsolutePath()), Charset.defaultCharset());
-				List<String> urls = new ArrayList<>();
-				lines.stream()
-						.filter(line -> (line.contains("|")))
-						.map(line -> line.split("\\|"))
-						.forEachOrdered(splitted -> {
-							ArrayList<String> arrayList = new ArrayList<>();
-							arrayList.add(splitted[1]);
-							urls.add(splitted[1]);
-							menuLinks.add(new JMenuItem(new PopupMenu.OpenUrlAction(splitted[0], arrayList)));
-						});
-				if(urls.size()>1) {
-					menuLinks.add(new JMenuItem(new PopupMenu.OpenUrlAction("ALL LINKS", urls)));
-				}
-                jPopupMenu1.add(menuLinks);
-            } catch (IOException ex) {
-                Jamuz.getLogger().log(Level.SEVERE, null, ex);
-            }
-        }
-		
-		JMenu menuDelete = new JMenu("Delete"); //NOI18N
-			JMenuItem menuItem1 = new JMenuItem("Delete Selected");
-			menuItem1.addActionListener(menuListener);
-		menuDelete.add(menuItem1);
-			menuItem1 = new JMenuItem("Delete All");
-			menuItem1.addActionListener(menuListener);
-		menuDelete.add(menuItem1);
+		}));
 		jPopupMenu1.add(menuDelete);
 		
-		addMenu(Inter.get("Button.Edit")); //TODO: Add " (external)" to menu name	
-		jTableSelect.addMouseListener(new PopupListener() {
-			
-        });
+		jPopupMenu1.add(new JMenuItem(new AbstractAction(Inter.get("Button.Edit")) {//TODO: Add " (external)" to menu name	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileInfoInt selected = getSelected();
+				if(selected!=null) {
+					PanelMain.editLocation(Jamuz.getDb().getRootPath()+selected.getRelativeFullPath());
+				}
+			}
+		}));
+
+		jTableSelect.addMouseListener(new PopupListener());
+	}
+	
+	private FileInfoInt getSelected() {
+		int selectedRow = jTableSelect.getSelectedRow(); 		
+		FileInfoInt selected = null;
+		if(selectedRow>=0) {
+			int selectedIndex = jTableSelect.convertRowIndexToModel(selectedRow); 
+			selected = fileInfoList.get(selectedIndex);
+		}
+		return selected;
 	}
 	
 	private boolean delete(FileInfoInt selected, int selectedIndex) {
@@ -229,41 +288,6 @@ public class PopupMenu {
 	private boolean enableMenu=true;
 	void setEnable(boolean enable) {
 		enableMenu=enable;
-	}
-	
-	class OpenUrlAction extends AbstractAction {
-        
-        private final List<String> urls;
-        
-        OpenUrlAction(String text, List<String> urls) {
-            super(text, null);
-            this.urls = urls;
-        }
-		
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int selectedRow = jTableSelect.getSelectedRow(); 		
-			if(selectedRow>=0) { 	
-				selectedRow = jTableSelect.convertRowIndexToModel(selectedRow); 
-				FileInfoInt myFileInfo = fileInfoList.get(selectedRow);
-				urls.forEach(url -> {
-					Desktop.openBrowser(url.replaceAll("<album>",
-							myFileInfo.getAlbumArtist().concat(" ")
-									.concat(myFileInfo.getAlbum())));
-				});
-			}
-        }
-
-		@Override
-		public Object clone() throws CloneNotSupportedException {
-			return super.clone();
-		}
-    }
-	
-	private void addMenu(String title) {
-		JMenuItem  menuItem = new JMenuItem(title); //NOI18N
-        menuItem.addActionListener(menuListener);
-        jPopupMenu1.add(menuItem);
 	}
 	
 	class PopupListener extends MouseAdapter {
