@@ -551,9 +551,8 @@ public class FileInfoInt extends FileInfo {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			ImageIO.write(coverImage, "png", outputStream); //NOI18N
 			byte[] data = outputStream.toByteArray();
-			MessageDigest md = MessageDigest.getInstance("MD5"); //NOI18N
-			md.update(data);
-			byte[] hash = md.digest();
+			MessageDigest md = MessageDigest.getInstance("SHA-256"); //NOI18N
+			byte[] hash = md.digest(data);
 			coverHash = returnHex(hash);
 		}
 	}

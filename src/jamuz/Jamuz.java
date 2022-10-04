@@ -382,9 +382,9 @@ public class Jamuz {
 	public static void readTags() {
 		tags = getDb().getTags();
 		tagsModel = new DefaultListModel();
-		for (String tag : tags) {
+		tags.forEach(tag -> {
 			tagsModel.addElement(tag);
-		}
+		});
 	}
 
 	/**
