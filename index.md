@@ -2,7 +2,7 @@ ________________________________________________________________________________
 
 # [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote) (Android)
 
-### [Download **v0.6.0** (.apk)](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.6.0/JaMuz_Remote_v0.6.0.apk)
+### [Download **v0.6.1** (.apk)](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.6.1/JaMuz_Remote_v0.6.1.apk)
 
 [Release Notes and other versions](https://github.com/phramusca/JaMuz-Remote/releases)
 
@@ -14,7 +14,6 @@ ________________________________________________________________________________
 <a href="https://hosted.weblate.org/engage/jamuz-remote/?utm_source=widget">
 <img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status" />
 </a>
-
 
 _________________________________________________________________________________
 
