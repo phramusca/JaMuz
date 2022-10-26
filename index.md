@@ -2,7 +2,7 @@ ________________________________________________________________________________
 
 # [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote) (Android)
 
-### [Download **v0.6.2** (.apk)](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.6.2/JaMuz_Remote_v0.6.2.apk)
+### [Download **v0.6.3** (.apk)](https://github.com/phramusca/JaMuz-Remote/releases/download/v0.6.3/JaMuz_Remote_v0.6.3.apk)
 
 [Release Notes and other versions](https://github.com/phramusca/JaMuz-Remote/releases)
 
