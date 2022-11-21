@@ -82,16 +82,13 @@ public class PanelBook extends javax.swing.JPanel {
 	 *
 	 */
 	protected static ProgressBar progressBarTimer;
-	private final Frame parent;
+	private Frame parent;
 
     /**
      * Creates new form PanelVideo
-	 * @param parent
      */
-    public PanelBook(Frame parent) {
-        initComponents();
-        initExtended();
-		this.parent = parent;
+    public PanelBook() {
+        initComponents();		
     }
     
 	/**
@@ -99,8 +96,8 @@ public class PanelBook extends javax.swing.JPanel {
 	 */
 	protected static VideoRating[] comboRating;
 
-    private void initExtended() {
-
+    public void initExtended(Frame parent) {
+		this.parent = parent;
         comboRating = new VideoRating[10];
         for (int i=0; i<10; i++) {
             comboRating[i] = new VideoRating(i+1, Inter.get("Label.Video.Rating."+(i+1)));

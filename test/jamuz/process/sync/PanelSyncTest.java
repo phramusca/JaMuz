@@ -70,8 +70,8 @@ public class PanelSyncTest {
 	@Test
 	public void testInitExtended() {
 		System.out.println("initExtended");
-		PanelSync instance = new PanelSync(new JFrame());
-		instance.initExtended();
+		PanelSync instance = new PanelSync();
+		instance.initExtended(new JFrame());
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

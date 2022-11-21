@@ -73,8 +73,8 @@ public class PanelRemoteTest {
 	public void testInitExtended() {
 		System.out.println("initExtended");
 		ICallBackServer callback = null;
-		PanelRemote instance = new PanelRemote(new JFrame());
-		instance.initExtended(callback);
+		PanelRemote instance = new PanelRemote();
+		instance.initExtended(new JFrame(), callback);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

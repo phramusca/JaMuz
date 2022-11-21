@@ -25,12 +25,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jSplitPaneMain" alignment="0" pref="1098" max="32767" attributes="0"/>
+          <Component id="jSplitPaneMain" alignment="0" pref="1184" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jSplitPaneMain" alignment="1" pref="510" max="32767" attributes="0"/>
+          <Component id="jSplitPaneMain" alignment="1" pref="591" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -75,7 +75,7 @@
             </Component>
             <Component class="jamuz.process.merge.PanelMerge" name="panelMerge">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.merge.PanelMerge(this);"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.merge.PanelMerge();"/>
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -92,7 +92,7 @@
             </Component>
             <Component class="jamuz.process.sync.PanelSync" name="panelSync">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.sync.PanelSync(this);"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.sync.PanelSync();"/>
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -109,7 +109,7 @@
             </Component>
             <Component class="jamuz.process.check.PanelCheck" name="panelCheck">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.check.PanelCheck(this)"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.check.PanelCheck()"/>
                 <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="PanelMain_panelCheck"/>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="20"/>
               </AuxValues>
@@ -170,7 +170,7 @@
             </Component>
             <Component class="jamuz.remote.PanelRemote" name="panelRemote">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.remote.PanelRemote(this)"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.remote.PanelRemote()"/>
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -187,7 +187,7 @@
             </Component>
             <Component class="jamuz.gui.PanelOptions" name="panelOptions">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.gui.PanelOptions(this);"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.gui.PanelOptions();"/>
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -204,7 +204,7 @@
             </Component>
             <Component class="jamuz.process.video.PanelVideo" name="panelVideo">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.video.PanelVideo(this);"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.video.PanelVideo();"/>
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -221,7 +221,7 @@
             </Component>
             <Component class="jamuz.process.book.PanelBook" name="panelBook">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.book.PanelBook(this);"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.book.PanelBook();"/>
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -286,7 +286,7 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPanePlayerQueue" pref="38" max="32767" attributes="0"/>
+                      <Component id="jScrollPanePlayerQueue" pref="169" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jButtonRefreshHiddenQueue" alignment="0" min="-2" max="-2" attributes="0"/>

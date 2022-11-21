@@ -95,7 +95,7 @@ public class PanelCheckTest {
 	public void testAddToActionQueue() {
 		System.out.println("addToActionQueue");
 		FolderInfo folder = null;
-		PanelCheck instance = new PanelCheck(new JFrame());
+		PanelCheck instance = new PanelCheck();
 		instance.addToActionQueue(folder);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

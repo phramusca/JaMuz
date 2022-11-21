@@ -58,23 +58,22 @@ import org.json.simple.JSONObject;
 public class PanelRemote extends javax.swing.JPanel {
 
 	private static Server server;
-	private final Frame parent;
+	private Frame parent;
 
 	/**
 	 * Creates new form PanelRemote
-	 * @param parent
 	 */
-	public PanelRemote(Frame parent) {
+	public PanelRemote() {
 		initComponents();
-		this.parent = parent;
 	}
 
 	/**
 	 *
+	 * @param parent
 	 * @param callback
 	 */
-	public void initExtended(ICallBackServer callback) {
-		
+	public void initExtended(Frame parent, ICallBackServer callback) {
+		this.parent = parent;
 		boolean onStartup = Boolean.valueOf(Jamuz.getOptions().get("server.on.startup", "false"));
 		jCheckBoxServerStartOnStartup.setSelected(onStartup);
 		int port = Integer.valueOf(Jamuz.getOptions().get("server.port", "2013"));

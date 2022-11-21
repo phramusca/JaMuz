@@ -100,15 +100,16 @@ public class PanelCheck extends javax.swing.JPanel {
 	 *
 	 */
 	public static TableModelCheck tableModelActionQueue = new TableModelCheck();
-	private final Frame parent;
+	private Frame parent;
        
     /**
      * Creates new form PanelCheck
-	 * @param parent
      */
-    public PanelCheck(Frame parent) {
+    public PanelCheck() {
         initComponents();
-		
+    }
+    	
+	public void initExtended(Frame parent) {
 		int cores = Runtime.getRuntime().availableProcessors();
 		int coresMax = cores-4;
 		coresMax=coresMax<2?2:coresMax;
@@ -116,11 +117,8 @@ public class PanelCheck extends javax.swing.JPanel {
 		jSpinnerCheckScanNbThreads.setModel(new javax.swing.SpinnerNumberModel(coresValue, 1, coresMax, 1));
 		jSpinnerCheckAnalysisNbThreads.setModel(new javax.swing.SpinnerNumberModel(coresValue, 1, coresMax, 1));
 		
-        processCheck = new ProcessCheck(new ICallBackCheckPanel() {
-			@Override
-			public void addToQueueAction(FolderInfo folder) {
-				addToActionQueue(folder);
-			}
+        processCheck = new ProcessCheck((FolderInfo folder) -> {
+			addToActionQueue(folder);
 		});
         jSpinnerCheckMaxActionsInQueue.setValue(processCheck.getMaxActionQueueSize());
         //Set table model
@@ -168,8 +166,8 @@ public class PanelCheck extends javax.swing.JPanel {
         progressActionsSize         = (ProgressBar)jProgressBarCheckActionsSize;
         progressActionsDequeue      = (ProgressBar)jProgressBarCheckActionsDequeue;
 		this.parent = parent;
-    }
-    	
+	}
+	
 	/**
 	 *
 	 * @param checkType

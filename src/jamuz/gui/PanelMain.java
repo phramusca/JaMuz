@@ -210,14 +210,16 @@ public class PanelMain extends javax.swing.JFrame {
 		MPLAYER.addListener(mPlaybackListener);
 		
 		//Init tabs
-		panelOptions.initExtended();
-        panelSync.initExtended();
-        panelMerge.initExtended();
+		panelOptions.initExtended(this);
+        panelSync.initExtended(this);
+        panelMerge.initExtended(this);
         PanelCheck.setOptions(); //Needs to be static (for now at least)
         panelStats.initExtended();
         panelSelect.initExtended();
         panelPlaylists.initExtended();
-		panelRemote.initExtended(new CallBackServer());
+		panelRemote.initExtended(this, new CallBackServer());
+		panelVideo.initExtended(this);
+		panelBook.initExtended(this);
 		
         setKeyBindings();		
     }
@@ -741,15 +743,15 @@ public class PanelMain extends javax.swing.JFrame {
         jSplitPaneMain = new javax.swing.JSplitPane();
         jTabbedPane = new javax.swing.JTabbedPane();
         panelSelect = new jamuz.gui.PanelSelect();
-        panelMerge = new jamuz.process.merge.PanelMerge(this);
-        panelSync = new jamuz.process.sync.PanelSync(this);
+        panelMerge = new jamuz.process.merge.PanelMerge();
+        panelSync = new jamuz.process.sync.PanelSync();
         panelPlaylists = new jamuz.gui.PanelPlaylists();
         panelLyrics = new jamuz.gui.PanelLyrics();
         panelStats = new jamuz.gui.PanelStats();
-        panelRemote = new jamuz.remote.PanelRemote(this);
-        panelOptions = new jamuz.gui.PanelOptions(this);
-        panelVideo = new jamuz.process.video.PanelVideo(this);
-        panelBook = new jamuz.process.book.PanelBook(this);
+        panelRemote = new jamuz.remote.PanelRemote();
+        panelOptions = new jamuz.gui.PanelOptions();
+        panelVideo = new jamuz.process.video.PanelVideo();
+        panelBook = new jamuz.process.book.PanelBook();
         jPanelPlayer = new javax.swing.JPanel();
         jLabelPlayerTitle = new javax.swing.JLabel();
         jLabelPlayerAlbum = new javax.swing.JLabel();
@@ -1087,7 +1089,7 @@ public class PanelMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPanePlayerQueue, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                .addComponent(jScrollPanePlayerQueue, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonRefreshHiddenQueue)
@@ -1107,11 +1109,11 @@ public class PanelMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1098, Short.MAX_VALUE)
+            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1184, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
+            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
         );
 
         pack();
@@ -1840,7 +1842,7 @@ public class PanelMain extends javax.swing.JFrame {
     private static javax.swing.JTabbedPane jTabbedPane;
     private static javax.swing.JToggleButton jToggleButtonPlayerInfo;
     private jamuz.process.book.PanelBook panelBook;
-    protected final jamuz.process.check.PanelCheck panelCheck = new jamuz.process.check.PanelCheck(this);
+    protected final jamuz.process.check.PanelCheck panelCheck = new jamuz.process.check.PanelCheck();
     private jamuz.gui.PanelLyrics panelLyrics;
     private jamuz.process.merge.PanelMerge panelMerge;
     private jamuz.gui.PanelOptions panelOptions;
