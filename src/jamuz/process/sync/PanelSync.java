@@ -44,15 +44,13 @@ public class PanelSync extends javax.swing.JPanel {
      * progress bar
      */
     private static ProgressBar progressBar;
-	private final Frame parent;
+	private Frame parent;
     
     /**
      * Creates new form PanelSync
-	 * @param parent
      */
-    public PanelSync(Frame parent) {
+    public PanelSync() {
         initComponents();
-		this.parent = parent;
     }
 
     /**
@@ -165,9 +163,10 @@ public class PanelSync extends javax.swing.JPanel {
 
     /**
      * extended init
+	 * @param parent
      */
-    public void initExtended() {
-
+    public void initExtended(Frame parent) {
+		this.parent = parent;
         icons.add(new ImageIcon(getClass().getResource("/jamuz/ressources/delete.png")));
         icons.add(new ImageIcon(getClass().getResource("/jamuz/ressources/add.png")));
         icons.add(new ImageIcon(getClass().getResource("/jamuz/ressources/cancel.png")));

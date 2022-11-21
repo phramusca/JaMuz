@@ -70,8 +70,8 @@ public class PanelMergeTest {
 	@Test
 	public void testInitExtended() {
 		System.out.println("initExtended");
-		PanelMerge instance = new PanelMerge(new JFrame());
-		instance.initExtended();
+		PanelMerge instance = new PanelMerge();
+		instance.initExtended(new JFrame());
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

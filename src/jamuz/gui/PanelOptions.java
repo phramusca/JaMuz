@@ -50,21 +50,21 @@ public class PanelOptions extends javax.swing.JPanel {
 	 *
 	 */
 	protected static ProgressBar progressBarCheckedFlag;
-	private final Frame parent;
+	private Frame parent;
 	
 	/**
 	 * Creates new form PanelOptions
-	 * @param parent
 	 */
-	public PanelOptions(Frame parent) {
+	public PanelOptions() {
 		initComponents();
-		this.parent = parent;
 	}
 
 	/**
      * extended init
+	 * @param parent
      */
-    public void initExtended() {
+    public void initExtended(Frame parent) {
+		this.parent = parent;
 		fillMachineList();
 		progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 		jListGenres.setModel(Jamuz.getGenreListModel());
