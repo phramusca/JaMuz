@@ -74,9 +74,6 @@
               </Constraints>
             </Component>
             <Component class="jamuz.process.merge.PanelMerge" name="panelMerge">
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.merge.PanelMerge();"/>
-              </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Merge">
@@ -91,9 +88,6 @@
               </Constraints>
             </Component>
             <Component class="jamuz.process.sync.PanelSync" name="panelSync">
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.sync.PanelSync();"/>
-              </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Export">
@@ -109,7 +103,6 @@
             </Component>
             <Component class="jamuz.process.check.PanelCheck" name="panelCheck">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.check.PanelCheck()"/>
                 <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="PanelMain_panelCheck"/>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="20"/>
               </AuxValues>
@@ -169,9 +162,6 @@
               </Constraints>
             </Component>
             <Component class="jamuz.remote.PanelRemote" name="panelRemote">
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.remote.PanelRemote()"/>
-              </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Server">
@@ -186,9 +176,6 @@
               </Constraints>
             </Component>
             <Component class="jamuz.gui.PanelOptions" name="panelOptions">
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.gui.PanelOptions();"/>
-              </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Options">
@@ -203,9 +190,6 @@
               </Constraints>
             </Component>
             <Component class="jamuz.process.video.PanelVideo" name="panelVideo">
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.video.PanelVideo();"/>
-              </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Video">
@@ -220,9 +204,6 @@
               </Constraints>
             </Component>
             <Component class="jamuz.process.book.PanelBook" name="panelBook">
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.process.book.PanelBook();"/>
-              </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Book">
