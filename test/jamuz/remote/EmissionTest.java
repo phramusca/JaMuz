@@ -70,7 +70,7 @@ public class EmissionTest {
 	public void testSend() {
 		System.out.println("send");
 		String msg = "";
-		Emission instance = null;
+		SocketEmission instance = null;
 		boolean expResult = false;
 		boolean result = instance.send(msg);
 		assertEquals(expResult, result);
@@ -85,7 +85,7 @@ public class EmissionTest {
 	public void testSendFile() {
 		System.out.println("sendFile");
 		String file = "";
-		Emission instance = null;
+		SocketEmission instance = null;
 		instance.sendFile(file);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -97,7 +97,7 @@ public class EmissionTest {
 	@Test
 	public void testRun() {
 		System.out.println("run");
-		Emission instance = null;
+		SocketEmission instance = null;
 		instance.start();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

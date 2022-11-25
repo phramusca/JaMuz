@@ -7,6 +7,7 @@ package jamuz.remote;
  */
 
 
+import jamuz.utils.ProcessAbstract;
 import java.io.BufferedReader;
 import java.io.IOException;
 
@@ -14,11 +15,11 @@ import java.io.IOException;
  *
  * @author raph
  */
-public class Reception  extends ProcessAbstract {
+public class SocketReception  extends ProcessAbstract {
 
 	private final BufferedReader bufferedReader;
 	private final ICallBackReception callback;
-	private final ClientSocket client;
+	private final SocketClient client;
 	
 	/**
 	 *
@@ -26,7 +27,7 @@ public class Reception  extends ProcessAbstract {
 	 * @param callback
 	 * @param client
 	 */
-	public Reception(BufferedReader bufferedReader, ICallBackReception callback, ClientSocket client){
+	public SocketReception(BufferedReader bufferedReader, ICallBackReception callback, SocketClient client){
 		super("Thread.Common.Reception");
 		this.callback = callback; 
 		this.bufferedReader = bufferedReader;

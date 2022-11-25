@@ -131,7 +131,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
             jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPlayerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelPlayerCover, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                .addComponent(jPanelPlayerCover, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,7 +139,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
                         .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabelPlayerTimeTotal, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -166,6 +166,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
      */
     public void displayFileInfo(FileInfoInt myFileInfo) {
 		try {
+			//FIXME !!! Do NOT extend to more than double (add an option) 
 			PanelCover coverImg = (PanelCover) jPanelPlayerCover;
 			coverImg.setImage(myFileInfo.getCoverImage());
 			

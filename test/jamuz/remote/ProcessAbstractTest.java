@@ -16,6 +16,7 @@
  */
 package jamuz.remote;
 
+import jamuz.utils.ProcessAbstract;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -56,18 +57,6 @@ public class ProcessAbstractTest {
 		System.out.println("abort");
 		ProcessAbstract instance = null;
 		instance.abort();
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of resetAbort method, of class ProcessAbstract.
-	 */
-	@Test
-	public void testResetAbort() {
-		System.out.println("resetAbort");
-		ProcessAbstract instance = null;
-		instance.resetAbort();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

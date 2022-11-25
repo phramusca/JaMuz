@@ -30,6 +30,7 @@ import jamuz.process.sync.Device;
 import jamuz.process.sync.ICallBackSync;
 import jamuz.process.sync.ProcessSync;
 import jamuz.utils.Popup;
+import jamuz.utils.ProcessAbstract;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -69,7 +70,7 @@ public class Server {
 	private final ICallBackServer callback;
 	
 	private final TableModelRemote tableModel; //contains clients info from database
-	private final Map<String, ClientSocket> clientMap; //contains connected clients
+	private final Map<String, SocketClient> clientMap; //contains connected clients
 	
 	/**
 	 *
@@ -382,7 +383,7 @@ public class Server {
 	}
 
 	void closeClients() {
-		for(ClientSocket client : clientMap.values()) {
+		for(SocketClient client : clientMap.values()) {
             closeClient(client.getClientId());
         }
 	}
@@ -406,7 +407,7 @@ public class Server {
 					Socket socket = serverSocket.accept(); //Blocks until connection made
 					checkAbort();
                     CallBackReception callBackReceptionLocal = new CallBackReception();
-					ClientSocket client = new ClientSocket(socket, callBackReceptionLocal);
+					SocketClient client = new SocketClient(socket, callBackReceptionLocal);
 					checkAbort();
 					client.login();
 				}
@@ -425,7 +426,7 @@ public class Server {
         }
 		
 		@Override
-		public void connected(ClientSocket client) {
+		public void connected(SocketClient client) {
 			if(!tableModel.contains(client.getInfo().getLogin())) {
 				//Creates a new machine, device and statSource
 				//and store the client
@@ -499,7 +500,7 @@ public class Server {
 		}
 	}
 	
-	private Map<String, ClientSocket> getRemoteClients() {
+	private Map<String, SocketClient> getRemoteClients() {
 		return clientMap.entrySet().stream()
 			.filter((client) -> client.getValue().getInfo().isConnected())
 			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
@@ -547,7 +548,7 @@ public class Server {
 	 * @param jsonAsMap
      */
     public void send(Map jsonAsMap) {
-        for(ClientSocket client : getRemoteClients().values()) {
+        for(SocketClient client : getRemoteClients().values()) {
             client.send(jsonAsMap);
         }
 	}

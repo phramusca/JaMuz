@@ -7,6 +7,7 @@ package jamuz.remote;
 
 import jamuz.FileInfoInt;
 import jamuz.utils.ImageUtils;
+import jamuz.utils.ProcessAbstract;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -36,10 +37,10 @@ import org.json.simple.parser.ParseException;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class ClientSocket {
+public class SocketClient {
 	private final Socket socket;
 	private BufferedReader bufferedReader;
-	private Reception reception;
+	private SocketReception reception;
 	private final ICallBackReception callback;
 	private ClientInfo info;
 	private int canal;
@@ -63,7 +64,7 @@ public class ClientSocket {
 	 * @param socket
 	 * @param callback
 	 */
-	public ClientSocket(Socket socket, ICallBackReception callback) {
+	public SocketClient(Socket socket, ICallBackReception callback) {
 		this.socket = socket;
         this.address = socket.getRemoteSocketAddress().toString();
         address = address.split(":")[0].substring(1);
@@ -109,14 +110,14 @@ public class ClientSocket {
 				int newCanal = (int) (long) jsonObject.get("canal");
 				String appId = (String) jsonObject.get("appId");
 				String rootPath = (String) jsonObject.get("rootPath");
-				reception = new Reception(bufferedReader, callback, ClientSocket.this);
+				reception = new SocketReception(bufferedReader, callback, SocketClient.this);
 				reception.start();
 				info = new ClientInfo(login+"-"+appId, password, rootPath);
 				info.setConnected(true);
 				canal = newCanal;
-				callback.connected(ClientSocket.this);
+				callback.connected(SocketClient.this);
 			} catch (IOException | ParseException ex) {
-				Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(SocketClient.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 	}
@@ -138,7 +139,7 @@ public class ClientSocket {
 	 * @param msg
 	 */
 	public void send(String msg) {
-		Logger.getLogger(ClientSocket.class.getName()).log(Level.FINE, 
+		Logger.getLogger(SocketClient.class.getName()).log(Level.FINE, 
 				"SEND to {0} : {1}", new Object[]{info==null?"null":info.getId(), msg});
         printWriter.println(msg+"\n");
         printWriter.flush();
@@ -180,7 +181,7 @@ public class ClientSocket {
 			}
 			return true;
 		} catch (IOException ex) {
-			Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(SocketClient.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}
@@ -201,7 +202,7 @@ public class ClientSocket {
             outputStream.flush();
 			return true;
         } catch (IOException ex) {
-			Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(SocketClient.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
         }
     }
@@ -236,11 +237,11 @@ public class ClientSocket {
 			System.out.println("File successfully sent!");
 			return true;
 		} catch (SocketException ex) {
-			Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(SocketClient.class.getName()).log(Level.SEVERE, null, ex);
 			close();
 			callback.disconnected(info, getClientId());
 		} catch (IOException ex) {
-			Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(SocketClient.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return false;
 	}

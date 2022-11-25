@@ -30,5 +30,5 @@ public interface ICallBackReception {
 	 *
 	 * @param client
 	 */
-	public void connected(ClientSocket client);
+	public void connected(SocketClient client);
 }

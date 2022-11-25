@@ -7,6 +7,7 @@ package jamuz.remote;
  */
 
 
+import jamuz.utils.ProcessAbstract;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author raph
  */
-public class Emission extends ProcessAbstract {
+public class SocketEmission extends ProcessAbstract {
 
 	private final PrintWriter printWriter;
 	private final BlockingQueue<String> outQueue;
@@ -33,7 +34,7 @@ public class Emission extends ProcessAbstract {
 	 *
 	 * @param os
 	 */
-	public Emission(OutputStream os) {
+	public SocketEmission(OutputStream os) {
 		super("Thread.Common.Emission");
 		this.printWriter = new PrintWriter(os);
 		outQueue = new LinkedBlockingQueue<>();
@@ -73,9 +74,9 @@ public class Emission extends ProcessAbstract {
             os.flush();
         }
         catch (FileNotFoundException ex) {
-            Logger.getLogger(Emission.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SocketEmission.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Emission.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SocketEmission.class.getName()).log(Level.SEVERE, null, ex);
         }        finally {
         }
     }
