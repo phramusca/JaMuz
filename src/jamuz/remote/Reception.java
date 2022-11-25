@@ -18,7 +18,7 @@ public class Reception  extends ProcessAbstract {
 
 	private final BufferedReader bufferedReader;
 	private final ICallBackReception callback;
-	private final Client client;
+	private final ClientSocket client;
 	
 	/**
 	 *
@@ -26,7 +26,7 @@ public class Reception  extends ProcessAbstract {
 	 * @param callback
 	 * @param client
 	 */
-	public Reception(BufferedReader bufferedReader, ICallBackReception callback, Client client){
+	public Reception(BufferedReader bufferedReader, ICallBackReception callback, ClientSocket client){
 		super("Thread.Common.Reception");
 		this.callback = callback; 
 		this.bufferedReader = bufferedReader;

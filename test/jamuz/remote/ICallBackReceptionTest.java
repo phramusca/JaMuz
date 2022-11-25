@@ -98,7 +98,7 @@ public class ICallBackReceptionTest {
 	@Test
 	public void testConnected() {
 		System.out.println("connected");
-		Client client = null;
+		ClientSocket client = null;
 		ICallBackReception instance = new ICallBackReceptionImpl();
 		instance.connected(client);
 		// TODO review the generated test code and remove the default call to fail.
@@ -131,7 +131,7 @@ public class ICallBackReceptionTest {
 		 *
 		 * @param client
 		 */
-		public void connected(Client client) {
+		public void connected(ClientSocket client) {
 		}
 	}
 

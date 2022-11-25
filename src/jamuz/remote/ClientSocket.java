@@ -36,7 +36,7 @@ import org.json.simple.parser.ParseException;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class Client {
+public class ClientSocket {
 	private final Socket socket;
 	private BufferedReader bufferedReader;
 	private Reception reception;
@@ -63,7 +63,7 @@ public class Client {
 	 * @param socket
 	 * @param callback
 	 */
-	public Client(Socket socket, ICallBackReception callback) {
+	public ClientSocket(Socket socket, ICallBackReception callback) {
 		this.socket = socket;
         this.address = socket.getRemoteSocketAddress().toString();
         address = address.split(":")[0].substring(1);
@@ -109,14 +109,14 @@ public class Client {
 				int newCanal = (int) (long) jsonObject.get("canal");
 				String appId = (String) jsonObject.get("appId");
 				String rootPath = (String) jsonObject.get("rootPath");
-				reception = new Reception(bufferedReader, callback, Client.this);
+				reception = new Reception(bufferedReader, callback, ClientSocket.this);
 				reception.start();
 				info = new ClientInfo(login+"-"+appId, password, rootPath);
 				info.setConnected(true);
 				canal = newCanal;
-				callback.connected(Client.this);
+				callback.connected(ClientSocket.this);
 			} catch (IOException | ParseException ex) {
-				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 	}
@@ -138,7 +138,7 @@ public class Client {
 	 * @param msg
 	 */
 	public void send(String msg) {
-		Logger.getLogger(Client.class.getName()).log(Level.FINE, 
+		Logger.getLogger(ClientSocket.class.getName()).log(Level.FINE, 
 				"SEND to {0} : {1}", new Object[]{info==null?"null":info.getId(), msg});
         printWriter.println(msg+"\n");
         printWriter.flush();
@@ -180,7 +180,7 @@ public class Client {
 			}
 			return true;
 		} catch (IOException ex) {
-			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}
@@ -201,7 +201,7 @@ public class Client {
             outputStream.flush();
 			return true;
         } catch (IOException ex) {
-			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
 			return false;
         }
     }
@@ -236,11 +236,11 @@ public class Client {
 			System.out.println("File successfully sent!");
 			return true;
 		} catch (SocketException ex) {
-			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
 			close();
 			callback.disconnected(info, getClientId());
 		} catch (IOException ex) {
-			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return false;
 	}

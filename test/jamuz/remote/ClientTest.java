@@ -60,7 +60,7 @@ public class ClientTest {
 	public void testSetPath() {
 		System.out.println("setPath");
 		String locationWork = "";
-		Client instance = null;
+		ClientSocket instance = null;
 		instance.setPath(locationWork);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -72,7 +72,7 @@ public class ClientTest {
 	@Test
 	public void testLogin() {
 		System.out.println("login");
-		Client instance = null;
+		ClientSocket instance = null;
 		boolean expResult = false;
 		boolean result = instance.login();
 		assertEquals(expResult, result);
@@ -86,7 +86,7 @@ public class ClientTest {
 	@Test
 	public void testClose() {
 		System.out.println("close");
-		Client instance = null;
+		ClientSocket instance = null;
 		instance.close();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -99,7 +99,7 @@ public class ClientTest {
 	public void testSend_String() {
 		System.out.println("send");
 		String msg = "";
-		Client instance = null;
+		ClientSocket instance = null;
 		instance.send(msg);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -112,7 +112,7 @@ public class ClientTest {
 	public void testSend_Map() {
 		System.out.println("send");
 		Map jsonAsMap = null;
-		Client instance = null;
+		ClientSocket instance = null;
 		instance.send(jsonAsMap);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -125,7 +125,7 @@ public class ClientTest {
 	public void testSend_JSONObject() {
 		System.out.println("send");
 		JSONObject obj = null;
-		Client instance = null;
+		ClientSocket instance = null;
 		instance.send(obj);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -137,7 +137,7 @@ public class ClientTest {
 	@Test
 	public void testGetDatabase() {
 		System.out.println("getDatabase");
-		Client instance = null;
+		ClientSocket instance = null;
 		boolean expResult = false;
 		boolean result = instance.getDatabase();
 		assertEquals(expResult, result);
@@ -153,7 +153,7 @@ public class ClientTest {
 		System.out.println("sendCover");
 		FileInfoInt displayedFile = null;
 		int maxWidth = 0;
-		Client instance = null;
+		ClientSocket instance = null;
 		boolean expResult = false;
 		boolean result = instance.sendCover(displayedFile, maxWidth);
 		assertEquals(expResult, result);
@@ -168,7 +168,7 @@ public class ClientTest {
 	public void testSendFile() {
 		System.out.println("sendFile");
 		FileInfoInt fileInfoInt = null;
-		Client instance = null;
+		ClientSocket instance = null;
 		boolean expResult = false;
 		boolean result = instance.sendFile(fileInfoInt);
 		assertEquals(expResult, result);
@@ -184,7 +184,7 @@ public class ClientTest {
 		System.out.println("copyStream");
 		InputStream input = null;
 		OutputStream output = null;
-		Client.copyStream(input, output);
+		ClientSocket.copyStream(input, output);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -195,7 +195,7 @@ public class ClientTest {
 	@Test
 	public void testToString() {
 		System.out.println("toString");
-		Client instance = null;
+		ClientSocket instance = null;
 		String expResult = "";
 		String result = instance.toString();
 		assertEquals(expResult, result);
@@ -209,7 +209,7 @@ public class ClientTest {
 	@Test
 	public void testGetInfo() {
 		System.out.println("getInfo");
-		Client instance = null;
+		ClientSocket instance = null;
 		ClientInfo expResult = null;
 		ClientInfo result = instance.getInfo();
 		assertEquals(expResult, result);
@@ -223,7 +223,7 @@ public class ClientTest {
 	@Test
 	public void testGetClientId() {
 		System.out.println("getClientId");
-		Client instance = null;
+		ClientSocket instance = null;
 		String expResult = "";
 		String result = instance.getClientId();
 		assertEquals(expResult, result);

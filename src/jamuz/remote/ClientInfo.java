@@ -227,10 +227,10 @@ public class ClientInfo {
 	
 	/**
 	 *
-	 * @param enable
+	 * @param enabled
 	 */
-	public void enable(boolean enable) {
-		this.enabled=enable;
+	public void enable(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	/**

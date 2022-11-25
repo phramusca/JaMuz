@@ -42,7 +42,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 		
-		jTextFieldLogin.setText(clientInfo.getLogin());
+		setTitle(clientInfo.getLogin());
 		jTextFieldRootPath.setText(clientInfo.getRootPath());
 		jTextName.setText(clientInfo.getName());
 		jTextFieldPwd.setText(clientInfo.getPwd());
@@ -76,8 +76,6 @@ public class DialogClientInfo extends javax.swing.JDialog {
         jLabelPlaylist = new javax.swing.JLabel();
         jComboBoxPlaylist = new javax.swing.JComboBox();
         jTextFieldPwd = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jTextFieldLogin = new javax.swing.JTextField();
         jLabelPwd = new javax.swing.JLabel();
         jTextFieldRootPath = new javax.swing.JTextField();
         jLabelRootPath = new javax.swing.JLabel();
@@ -112,15 +110,14 @@ public class DialogClientInfo extends javax.swing.JDialog {
 
         jComboBoxPlaylist.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText(Inter.get("DialogClientInfo.jLabel3.text")); // NOI18N
-
-        jTextFieldLogin.setEditable(false);
+        jTextFieldPwd.setEditable(false);
+        jTextFieldPwd.setEnabled(false);
 
         jLabelPwd.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabelPwd.setText(Inter.get("DialogClientInfo.jLabelPwd.text")); // NOI18N
 
         jTextFieldRootPath.setEditable(false);
+        jTextFieldRootPath.setEnabled(false);
 
         jLabelRootPath.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabelRootPath.setText(Inter.get("Label.RootPath")); // NOI18N
@@ -134,25 +131,23 @@ public class DialogClientInfo extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelName, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabelPlaylist, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabelRootPath, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelPlaylist, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelName, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabelPwd, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 171, Short.MAX_VALUE)
-                        .addComponent(jButtonCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(80, 80, 80)
                         .addComponent(jCheckBoxEnabled)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                        .addComponent(jButtonCancel)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonSave))
-                    .addComponent(jTextFieldRootPath)
-                    .addComponent(jTextName, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jComboBoxPlaylist, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextFieldPwd)
-                    .addComponent(jTextFieldLogin, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jTextName)
+                    .addComponent(jComboBoxPlaylist, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldRootPath, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -160,31 +155,26 @@ public class DialogClientInfo extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextFieldLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelPlaylist)
+                    .addComponent(jComboBoxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelRootPath)
                     .addComponent(jTextFieldRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldPwd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelPwd))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelPlaylist)
-                    .addComponent(jComboBoxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButtonCancel)
-                        .addComponent(jButtonSave))
+                    .addComponent(jButtonCancel)
+                    .addComponent(jButtonSave)
                     .addComponent(jCheckBoxEnabled))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -237,12 +227,10 @@ public class DialogClientInfo extends javax.swing.JDialog {
     private javax.swing.JButton jButtonSave;
     private javax.swing.JCheckBox jCheckBoxEnabled;
     private javax.swing.JComboBox jComboBoxPlaylist;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelName;
     private javax.swing.JLabel jLabelPlaylist;
     private javax.swing.JLabel jLabelPwd;
     private javax.swing.JLabel jLabelRootPath;
-    private javax.swing.JTextField jTextFieldLogin;
     private javax.swing.JTextField jTextFieldPwd;
     private javax.swing.JTextField jTextFieldRootPath;
     private static javax.swing.JTextField jTextName;

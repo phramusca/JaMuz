@@ -69,7 +69,7 @@ public class Server {
 	private final ICallBackServer callback;
 	
 	private final TableModelRemote tableModel; //contains clients info from database
-	private final Map<String, Client> clientMap; //contains connected clients
+	private final Map<String, ClientSocket> clientMap; //contains connected clients
 	
 	/**
 	 *
@@ -382,7 +382,7 @@ public class Server {
 	}
 
 	void closeClients() {
-		for(Client client : clientMap.values()) {
+		for(ClientSocket client : clientMap.values()) {
             closeClient(client.getClientId());
         }
 	}
@@ -406,7 +406,7 @@ public class Server {
 					Socket socket = serverSocket.accept(); //Blocks until connection made
 					checkAbort();
                     CallBackReception callBackReceptionLocal = new CallBackReception();
-					Client client = new Client(socket, callBackReceptionLocal);
+					ClientSocket client = new ClientSocket(socket, callBackReceptionLocal);
 					checkAbort();
 					client.login();
 				}
@@ -425,7 +425,7 @@ public class Server {
         }
 		
 		@Override
-		public void connected(Client client) {
+		public void connected(ClientSocket client) {
 			if(!tableModel.contains(client.getInfo().getLogin())) {
 				//Creates a new machine, device and statSource
 				//and store the client
@@ -499,7 +499,7 @@ public class Server {
 		}
 	}
 	
-	private Map<String, Client> getRemoteClients() {
+	private Map<String, ClientSocket> getRemoteClients() {
 		return clientMap.entrySet().stream()
 			.filter((client) -> client.getValue().getInfo().isConnected())
 			.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
@@ -547,7 +547,7 @@ public class Server {
 	 * @param jsonAsMap
      */
     public void send(Map jsonAsMap) {
-        for(Client client : getRemoteClients().values()) {
+        for(ClientSocket client : getRemoteClients().values()) {
             client.send(jsonAsMap);
         }
 	}

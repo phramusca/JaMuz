@@ -66,7 +66,7 @@ public class TableModelRemote extends TableModelGeneric {
 		ClientInfo clientInfo = (new ArrayList<>(clients.values())).get(rowIndex);
         switch (columnIndex) {
             case 0: return clientInfo.isConnected();
-			case 1: return clientInfo.getName();
+			case 1: return !clientInfo.isEnabled()?"<html><s>"+clientInfo.getName()+"</s></html>":clientInfo.getName();
 			case 2: return clientInfo.getStatus();
 			case 3: return clientInfo.getProgressBar();
 		}
