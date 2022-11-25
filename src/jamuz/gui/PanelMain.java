@@ -214,6 +214,7 @@ public class PanelMain extends javax.swing.JFrame {
         panelSync.initExtended(this);
         panelMerge.initExtended(this);
         PanelCheck.setOptions(); //Needs to be static (for now at least)
+		panelCheck.initExtended(this);
         panelStats.initExtended();
         panelSelect.initExtended();
         panelPlaylists.initExtended();

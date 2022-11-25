@@ -143,12 +143,7 @@ public class PanelCheck extends javax.swing.JPanel {
 			jButtonActionInJList.setBackground(folder.action.getColor());
 			return jButtonActionInJList;
 		});  
-		column.setCellEditor(new ButtonCheck(new ICallBackCheckPanel() {
-			@Override
-			public void addToQueueAction(FolderInfo folder) {
-				addToActionQueue(folder);
-			}
-		}, parent));
+		column.setCellEditor(new ButtonCheck(this::addToActionQueue, parent));
         
 		//	0:  Folder
 		column = jTableCheck.getColumnModel().getColumn(0);
