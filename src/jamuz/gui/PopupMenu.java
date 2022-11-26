@@ -195,7 +195,7 @@ public class PopupMenu {
 				if(selected!=null) {
 					ArrayList<FileInfoInt> albumFiles = new ArrayList<>();
 					if(Jamuz.getDb().getFiles(albumFiles, selected.getIdPath())) {
-						delete(albumFiles, false); //FIXME: Add a progress bar
+						delete(albumFiles, false); //FIXME Z Add a progress bar
 					}
 				}
 			}

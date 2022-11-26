@@ -166,10 +166,8 @@ public class FramePlayerInfo extends javax.swing.JFrame {
      */
     public void displayFileInfo(FileInfoInt myFileInfo) {
 		try {
-			//FIXME !!! Do NOT extend to more than double (add an option) 
 			PanelCover coverImg = (PanelCover) jPanelPlayerCover;
 			coverImg.setImage(myFileInfo.getCoverImage(), true);
-			
 		} catch (Exception ex) {
 			Popup.error(ex);
 		}

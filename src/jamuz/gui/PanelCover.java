@@ -29,7 +29,7 @@ public class PanelCover extends JPanel {
           
     private transient BufferedImage image;
 	private boolean isCover = false;
-	private boolean limitToDouble = false;
+	private boolean limitToDouble = false; // TODO: Make an option with more values available (max x2, x1, x3,...)
 			
 	/**
 	 * Returns if this is a valid cover
