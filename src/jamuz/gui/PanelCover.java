@@ -28,8 +28,9 @@ import javax.swing.*;
 public class PanelCover extends JPanel {
           
     private transient BufferedImage image;
-	private boolean isCover=false;
-
+	private boolean isCover = false;
+	private boolean limitToDouble = false;
+			
 	/**
 	 * Returns if this is a valid cover
 	 * @return
@@ -43,9 +44,19 @@ public class PanelCover extends JPanel {
 	 * @param image
 	 */
 	public void setImage(BufferedImage image) {
+		setImage(image, false);
+	}
+	
+	/**
+	 * Sets image
+	 * @param image
+	 * @param limitToDouble
+	 */
+	public void setImage(BufferedImage image, boolean limitToDouble) {
 		this.image = image;
 		this.repaint();
         this.isCover = image!=null;
+		this.limitToDouble = limitToDouble;
 	}
 
 	/**
@@ -63,23 +74,65 @@ public class PanelCover extends JPanel {
 	@Override
     public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-			if (this.image != null) {
+		if (this.image != null) {
+			
+			int imageWidth = limitToDouble  ? this.image.getWidth()  : this.image.getWidth();
+			int imaheHeight = limitToDouble ? this.image.getHeight() : this.image.getHeight();
+			
+			
 			// Scale it by width
 			int scaledWidth = ((this.image.getWidth() * getHeight()/this.image.getHeight()));
-			// If the image is not off the screen horizontally...
-			if (scaledWidth < getWidth()) {
-				// Center the left and right destination x coordinates.
-				int leftOffset = getWidth() / 2 - scaledWidth / 2;
-				int rightOffset = getWidth() / 2 + scaledWidth / 2;
-				g.drawImage(this.image, leftOffset, 0, rightOffset, getHeight(), 0, 0, this.image.getWidth(), this.image.getHeight(), null);
-			}
-			// Otherwise, the image width is too much, even scaled
-			// So we need to center it the other direction
-			else {
-				int scaledHeight = (this.image.getHeight() * getWidth()) / this.image.getWidth();
-				int topOffset = getHeight() / 2 - scaledHeight / 2;
-				int bottomOffset = getHeight() / 2 + scaledHeight / 2;
-				g.drawImage(this.image, 0, topOffset, getWidth(), bottomOffset, 0, 0, this.image.getWidth(), this.image.getHeight(), null);
+			
+			if(limitToDouble) {
+				if(scaledWidth > this.image.getWidth() * 2) {
+					scaledWidth = this.image.getWidth() * 2;
+				}
+				// If the image is not off the screen horizontally...
+				if (scaledWidth < getWidth()) {
+					// Center the left and right destination x coordinates.
+					int leftOffset = getWidth() / 2 - scaledWidth / 2;
+					int rightOffset = getWidth() / 2 + scaledWidth / 2;
+					int scaledHeight = (this.image.getHeight() * getWidth()) / this.image.getWidth();
+					int topOffset = 0;
+					int bottomOffset = getHeight();
+					if(scaledHeight > this.image.getHeight() * 2) {
+						scaledHeight = this.image.getHeight() * 2;
+						topOffset = getHeight() / 2 - scaledHeight / 2;
+						bottomOffset = getHeight() / 2 + scaledHeight / 2;
+					}
+					g.drawImage(this.image, leftOffset, topOffset, rightOffset, bottomOffset, 0, 0, this.image.getWidth(), this.image.getHeight(), null);
+				}
+				// Otherwise, the image width is too much, even scaled
+				// So we need to center it the other direction
+				else {
+					int scaledHeight = (this.image.getHeight() * getWidth()) / this.image.getWidth();
+					int leftOffset = 0;
+					int rightOffset = getWidth();
+					if(scaledHeight > this.image.getHeight()* 2) {
+						scaledHeight = this.image.getHeight() * 2;
+						leftOffset = getWidth() / 2 - scaledWidth / 2;
+						rightOffset = getWidth() / 2 + scaledWidth / 2;
+					}
+					int topOffset = getHeight() / 2 - scaledHeight / 2;
+					int bottomOffset = getHeight() / 2 + scaledHeight / 2;
+					g.drawImage(this.image, leftOffset, topOffset, rightOffset, bottomOffset, 0, 0, this.image.getWidth(), this.image.getHeight(), null);
+				}
+			} else {
+				// If the image is not off the screen horizontally...
+				if (scaledWidth < getWidth()) {
+					// Center the left and right destination x coordinates.
+					int leftOffset = getWidth() / 2 - scaledWidth / 2;
+					int rightOffset = getWidth() / 2 + scaledWidth / 2;
+					g.drawImage(this.image, leftOffset, 0, rightOffset, getHeight(), 0, 0, this.image.getWidth(), this.image.getHeight(), null);
+				}
+				// Otherwise, the image width is too much, even scaled
+				// So we need to center it the other direction
+				else {
+					int scaledHeight = (this.image.getHeight() * getWidth()) / this.image.getWidth();
+					int topOffset = getHeight() / 2 - scaledHeight / 2;
+					int bottomOffset = getHeight() / 2 + scaledHeight / 2;
+					g.drawImage(this.image, 0, topOffset, getWidth(), bottomOffset, 0, 0, this.image.getWidth(), this.image.getHeight(), null);
+				}
 			}
 		}
     }
