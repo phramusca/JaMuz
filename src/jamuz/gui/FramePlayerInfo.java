@@ -148,7 +148,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
 	
 	private class Updater extends Timer {
 		
-		private static final long UPDATE_PERIODE = 500; //FIXME !!!: adjust this
+		private static final long UPDATE_PERIODE = 1000;
 		
 		public void start() {
 			schedule(new displayPosition(), 0, UPDATE_PERIODE);
@@ -159,7 +159,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
 			public void run() {
 				long elapsedTime = System.currentTimeMillis() - lastMove;
 				System.out.println("elapsedTime: " + elapsedTime / 1000 + "s");
-				if(elapsedTime / 1000 > 3) { //Hide after 3s
+				if(elapsedTime / 1000 > 2) { //Hide after 3s
 					displayCursor(false);
 					stopTimer();
 				}
