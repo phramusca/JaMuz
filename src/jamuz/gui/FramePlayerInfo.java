@@ -20,6 +20,15 @@ package jamuz.gui;
 import jamuz.FileInfoInt;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.DefaultListModel;
 
 /**
@@ -27,9 +36,20 @@ import javax.swing.DefaultListModel;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 
+// FIXME !!! Disable screensaver
+// FIXME !!! Center list vertically
+
+// FIXME !!! Hide mplayer (happens on raspberry)
+
+
 
 public class FramePlayerInfo extends javax.swing.JFrame {
 
+	private Updater positionUpdater;
+	private long lastMove = System.currentTimeMillis();
+	private static Cursor BLANK_CURSOR;
+	private boolean cusrsorHidden = false;
+	
     /**
      * Creates new form PlayerInfo
      * @param title
@@ -39,15 +59,114 @@ public class FramePlayerInfo extends javax.swing.JFrame {
         initComponents();
         this.setTitle(title);
         jListPlayerQueue.setModel(queueModel);
-        
+        // Transparent 16 x 16 pixel cursor image.
+			BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+			BLANK_CURSOR = Toolkit.getDefaultToolkit().createCustomCursor(
+				cursorImg, new Point(0, 0), "blank cursor");
+			
         //TODO: Increase jSliderPlayerLength thumb height for better display
 //        jSliderPlayerLength.setUI(new MyCustonSliderUI());
 //                
 //        UIDefaults defaults = UIManager.getDefaults();
 //        defaults.put("Slider.thumbHeight", 100); // change height
 //        defaults.put("Slider.thumbWidth", 100); // change width
+
+		IdleMouseListener idleMouseListener = new IdleMouseListener();
+		jListPlayerQueue.addMouseListener(idleMouseListener);
+		jPanelPlayer.addMouseListener(idleMouseListener);
+		
+		IdleMouseMotionListener idleMouseMotionListener = new IdleMouseMotionListener();
+		jListPlayerQueue.addMouseMotionListener(idleMouseMotionListener);
+		jPanelPlayer.addMouseMotionListener(idleMouseMotionListener);
+
     }
-    
+	
+	private void startTimer() {
+		stopTimer();
+		lastMove = System.currentTimeMillis();
+		positionUpdater = new Updater();
+		positionUpdater.start();
+	}
+	
+	private void stopTimer() {
+		if(positionUpdater!=null) {
+			positionUpdater.cancel();
+			positionUpdater.purge();
+		}
+	}
+	
+	private void displayCursor(boolean display) {
+		if(display) {
+			System.out.println("DISPLAY");
+			getContentPane().setCursor(Cursor.getDefaultCursor());
+			cusrsorHidden = false;
+		} else {
+			System.out.println("HIDE");
+			getContentPane().setCursor(BLANK_CURSOR);
+			cusrsorHidden = true;
+		}
+	}
+
+	private class IdleMouseMotionListener implements MouseMotionListener {
+		@Override
+		public void mouseDragged(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			if(cusrsorHidden) {
+				displayCursor(true);
+				startTimer();
+			}
+		}		
+	}
+	
+	private class IdleMouseListener implements MouseListener {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			startTimer();
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			displayCursor(true);
+			stopTimer();
+		}		
+	}
+	
+	private class Updater extends Timer {
+		
+		private static final long UPDATE_PERIODE = 500; //FIXME !!!: adjust this
+		
+		public void start() {
+			schedule(new displayPosition(), 0, UPDATE_PERIODE);
+		}
+
+		private class displayPosition extends TimerTask {
+			@Override
+			public void run() {
+				long elapsedTime = System.currentTimeMillis() - lastMove;
+				System.out.println("elapsedTime: " + elapsedTime / 1000 + "s");
+				if(elapsedTime / 1000 > 3) { //Hide after 3s
+					displayCursor(false);
+					stopTimer();
+				}
+			}
+		}
+	}
+	
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
