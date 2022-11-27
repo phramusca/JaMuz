@@ -36,12 +36,7 @@ import javax.swing.DefaultListModel;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 
-// FIXME !!! Disable screensaver
-// FIXME !!! Center list vertically
-
-// FIXME !!! Hide mplayer (happens on raspberry)
-
-
+// TODO Center list vertically (how ??)
 
 public class FramePlayerInfo extends javax.swing.JFrame {
 

@@ -259,6 +259,14 @@ public class Mplayer implements Runnable {
 			cmdArray.add("mplayer");
 			cmdArray.add("-ao");
 			cmdArray.add("alsa:device="+audioCard.getValue());
+			// -novideo    
+			//   Ne pas jouer/encoder la vidéo. 
+			//   Dans bien des cas, cela ne fonctionnera pas, utilisez à la place -vc null -vo null.
+			cmdArray.add("-novideo");
+			cmdArray.add("-vc");
+			cmdArray.add("-null");
+			cmdArray.add("-vo");
+			cmdArray.add("-null");
 		}
 		
 		cmdArray.add("-slave");
