@@ -30,6 +30,7 @@ import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 
 /**
  *
@@ -74,6 +75,10 @@ public class FramePlayerInfo extends javax.swing.JFrame {
 		jListPlayerQueue.addMouseMotionListener(idleMouseMotionListener);
 		jPanelPlayer.addMouseMotionListener(idleMouseMotionListener);
 
+		//Set fullscreen
+//		GraphicsEnvironment gfxEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//		GraphicsDevice gfxDev = gfxEnv.getDefaultScreenDevice();
+//		gfxDev.setFullScreenWindow(this);
     }
 	
 	private void startTimer() {
@@ -178,6 +183,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jListPlayerQueue = new javax.swing.JList();
 
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentHidden(java.awt.event.ComponentEvent evt) {
                 formComponentHidden(evt);
@@ -199,7 +205,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
         );
         jPanelPlayerCoverLayout.setVerticalGroup(
             jPanelPlayerCoverLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 415, Short.MAX_VALUE)
         );
 
         jLabelPlayerTimeEllapsed.setFont(new java.awt.Font("DejaVu Sans", 0, 48)); // NOI18N
@@ -253,7 +259,7 @@ public class FramePlayerInfo extends javax.swing.JFrame {
                         .addComponent(jSliderPlayerLength, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabelPlayerTimeTotal, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
