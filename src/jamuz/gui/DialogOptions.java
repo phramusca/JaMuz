@@ -37,6 +37,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.DefaultListModel;
 import javax.swing.InputMap;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -107,11 +108,8 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jButtonOptionSave.setEnabled(true);
 
-		Option option = selOptions.getOption("library.isMaster");
 		displayOption("location.library", jTextFieldOptionLocationLibrary, jLabelOptionLocationLibrary);
-		jCheckBoxOptionLibraryIsMaster.setSelected(option.getValue().equals("true"));
-		jCheckBoxOptionLibraryIsMaster.setText(option.getComment());
-		
+		displayOptionCheckbox("library.isMaster", jCheckBoxOptionLibraryIsMaster);
 		displayOption("location.add", jTextFieldOptionLocationAdd, jLabelOptionLocationAdd);
 		displayOption("location.ko", jTextFieldOptionLocationKO, jLabelOptionLocationKO);
 		displayOption("location.manual", jTextFieldOptionLocationManual, jLabelOptionLocationManual);
@@ -122,6 +120,8 @@ public class DialogOptions extends javax.swing.JDialog {
 		displayOption("files.convert", jTextFieldOptionsFilesConvert, jLabelOptionsFilesConvert);
 		displayOption("files.delete", jTextFieldOptionsFilesDelete, jLabelOptionsFilesDelete);
 		displayOption("files.image", jTextFieldOptionsFilesImage, jLabelOptionsFilesImage);
+		displayOption("files.image.delete", jTextFieldOptionMask, jLabelOptionMask);
+		displayOptionCheckbox("files.image.delete", jCheckBoxOptionDeleteImages);
 		displayOption("log.count", jTextFieldOptionsLogCount, jLabelOptionsLogCount);
 		displayOption("log.level", jTextFieldOptionsLogLevel, jLabelOptionsLogLevel);
 		displayOption("log.limit", jTextFieldOptionsLogLimit, jLabelOptionsLogLimit);
@@ -153,10 +153,16 @@ public class DialogOptions extends javax.swing.JDialog {
 		});
 	}
 	
-	private static void displayOption(String id, JTextField textField, JLabel jLabel) {
+	private static void displayOption(String id, JTextField textField, JLabel label) {
 		Option option = selOptions.getOption(id);
 		textField.setText(option.getValue());
-		jLabel.setText(option.getComment());
+		label.setText(option.getComment());
+	}
+	
+	private static void displayOptionCheckbox(String id, JCheckBox checkBox) {
+		Option option = selOptions.getOption(id);
+		checkBox.setSelected(option.getValue().equals("true"));
+		checkBox.setText(option.getComment());
 	}
 	
 	/**
@@ -216,6 +222,7 @@ public class DialogOptions extends javax.swing.JDialog {
         jPanel18 = new javax.swing.JPanel();
         jTextFieldOptionsFilesImage = new javax.swing.JTextField();
         jLabelOptionsFilesImage = new javax.swing.JLabel();
+        jCheckBoxOptionDeleteImages = new javax.swing.JCheckBox();
         jPanel19 = new javax.swing.JPanel();
         jTextFieldOptionsFilesConvert = new javax.swing.JTextField();
         jLabelOptionsFilesConvert = new javax.swing.JLabel();
@@ -638,6 +645,8 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jLabelOptionsFilesImage.setText(Inter.get("Options.Comment.files.image")); // NOI18N
 
+        jCheckBoxOptionDeleteImages.setText(bundle.getString("Options.Delete.Images")); // NOI18N
+
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
         jPanel18Layout.setHorizontalGroup(
@@ -645,17 +654,23 @@ public class DialogOptions extends javax.swing.JDialog {
             .addGroup(jPanel18Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelOptionsFilesImage, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
-                    .addComponent(jTextFieldOptionsFilesImage))
+                    .addComponent(jLabelOptionsFilesImage, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
+                    .addComponent(jTextFieldOptionsFilesImage)
+                    .addGroup(jPanel18Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxOptionDeleteImages)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel18Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jLabelOptionsFilesImage)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldOptionsFilesImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTextFieldOptionsFilesImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxOptionDeleteImages)
+                .addContainerGap())
         );
 
         jPanel19.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -1118,6 +1133,7 @@ public class DialogOptions extends javax.swing.JDialog {
 		selOptions.getOption("files.convert").setValue(jTextFieldOptionsFilesConvert.getText());
 		selOptions.getOption("files.delete").setValue(jTextFieldOptionsFilesDelete.getText());
 		selOptions.getOption("files.image").setValue(jTextFieldOptionsFilesImage.getText());
+		selOptions.getOption("files.image.delete").setValue(jCheckBoxOptionDeleteImages.isSelected()?"true":"false");
 		selOptions.getOption("log.count").setValue(jTextFieldOptionsLogCount.getText());
 		selOptions.getOption("log.level").setValue(jTextFieldOptionsLogLevel.getText());
 		selOptions.getOption("log.limit").setValue(jTextFieldOptionsLogLimit.getText());
@@ -1270,6 +1286,7 @@ public class DialogOptions extends javax.swing.JDialog {
     private javax.swing.JButton jButtonStatSouceAdd;
     private javax.swing.JButton jButtonStatSouceDel;
     private javax.swing.JButton jButtonStatSouceEdit;
+    private static javax.swing.JCheckBox jCheckBoxOptionDeleteImages;
     private static javax.swing.JCheckBox jCheckBoxOptionLibraryIsMaster;
     private static javax.swing.JLabel jLabelDescription;
     private static javax.swing.JLabel jLabelOptionLocationAdd;

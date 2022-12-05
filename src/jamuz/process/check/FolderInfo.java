@@ -544,7 +544,10 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			if(filesAudio.size()<=0) {
 				if(filesConvertible.size()<=0) {
 					if(filesOther.size()<=0){
-						deleteList(filesImage, null);
+						boolean deleteImages = Jamuz.getMachine().getOptionValue("files.image.delete").equals("true");
+						if(deleteImages) {
+							deleteList(filesImage, null); // FIXME !!!!!! use option
+						}
 						return true;
 					}
 				}

@@ -79,7 +79,7 @@ public class Jamuz {
 		if(!getDb().dbConn.connect()) {
 			return false;
 		}
-		if(!getDb().updateSchema(1)) {
+		if(!getDb().updateSchema(2)) {
 			return false;
 		}
 		getDb().dbConn.disconnect();
@@ -151,6 +151,7 @@ public class Jamuz {
 		logConfig("log.count");
 		logConfig("files.audio");
 		logConfig("files.image");
+		logConfig("files.image.delete");
 		logConfig("files.convert");
 		logConfig("files.delete");
 

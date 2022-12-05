@@ -1,7 +1,7 @@
 BEGIN TRANSACTION;
 
 INSERT INTO "versionHistory" ("version", "upgradeStart", "upgradeEnd") 
-    VALUES ('1', datetime('now'), datetime('now'));
+	VALUES ('2', datetime('now'), datetime('now'));
 
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('1', 'location.library', '', 'path');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('2', 'library.isMaster', 'false', 'bool');
@@ -19,4 +19,5 @@ INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('13
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('14', 'files.delete', '', 'csv');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('15', 'location.manual', '', 'path');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('16', 'location.transcoded', '', 'path');
+INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('17', 'files.image.delete', 'false', 'bool');
 COMMIT;

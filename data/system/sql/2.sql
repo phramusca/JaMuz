@@ -1,0 +1,2 @@
+INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES (17, 'files.image.delete', 'false', 'bool');
+INSERT INTO option ('idMachine', 'idOptionType', 'value') SELECT idMachine, 17, 'false' FROM machine;
