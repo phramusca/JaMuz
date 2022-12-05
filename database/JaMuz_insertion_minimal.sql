@@ -15,8 +15,8 @@ INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('9'
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('10', 'log.count', '20', 'integer');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('11', 'files.audio', 'mp3,flac', 'csv');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('12', 'files.image', 'png,jpg,jpeg,bmp,gif', 'csv');
-INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('13', 'files.convert', 'wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3', 'csv');
-INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('14', 'files.delete', 'db,ini,txt,m3u,pls,htm,html,doc,nfo,url,sfv,wpl,sfk', 'csv');
+INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('13', 'files.convert', '', 'csv');
+INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('14', 'files.delete', '', 'csv');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('15', 'location.manual', '', 'path');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('16', 'location.transcoded', '', 'path');
 COMMIT;
