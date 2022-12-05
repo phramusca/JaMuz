@@ -31,7 +31,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class Settings {
+public class TestSettings {
 
 	/**
 	 *
@@ -144,17 +144,17 @@ public class Settings {
 	private static String getOptionValue(String optionId) {
 		switch (optionId) {
 			case "location.library":
-				return Settings.getMusicFolder() + "Archive" + File.separator;
+				return TestSettings.getMusicFolder() + "Archive" + File.separator;
 			case "library.isMaster":
 				return "true";
 			case "location.add":
-				return Settings.getMusicFolder() + "Nouveau" + File.separator;
+				return TestSettings.getMusicFolder() + "Nouveau" + File.separator;
 			case "location.ok":
-				return Settings.getMusicFolder() + "Archive" + File.separator;
+				return TestSettings.getMusicFolder() + "Archive" + File.separator;
 			case "location.ko":
-				return Settings.getMusicFolder() + "Nouveau-KO" + File.separator;
+				return TestSettings.getMusicFolder() + "Nouveau-KO" + File.separator;
 			case "location.manual":
-				return Settings.getMusicFolder() + "Nouveau-Manuel" + File.separator;
+				return TestSettings.getMusicFolder() + "Nouveau-Manuel" + File.separator;
 			case "location.mask":
 				return "%albumartist%/%album%/%track% %title%";
 			case "log.level":

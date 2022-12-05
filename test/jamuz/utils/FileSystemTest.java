@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import test.helpers.Settings;
+import test.helpers.TestSettings;
 
 /**
  *
@@ -61,10 +61,10 @@ public class FileSystemTest {
 	 */
 	@Before
 	public void setUp() {
-		source = new File(FilenameUtils.concat(Settings.getRessourcesPath(),
+		source = new File(FilenameUtils.concat(TestSettings.getRessourcesPath(),
 				FilenameUtils.concat("audioFiles", "1min.mp3")));
 
-		destination = new File(FilenameUtils.concat(Settings.getAppFolder(),
+		destination = new File(FilenameUtils.concat(TestSettings.getAppFolder(),
 				FilenameUtils.concat("temp-should_Be_DeletTED_Damned", "1min (copie).mp3")));
 	}
 
@@ -87,7 +87,7 @@ public class FileSystemTest {
 	public void testMoveFile() throws IOException {
 		System.out.println("moveFile");
 		//Given
-		File moveSource = new File(FilenameUtils.concat(Settings.getAppFolder(), "tempShouldBeDeleted.mp3"));
+		File moveSource = new File(FilenameUtils.concat(TestSettings.getAppFolder(), "tempShouldBeDeleted.mp3"));
 		FileSystem.copyFile(source, moveSource);
 		assertTrue(moveSource.exists());
 		assertTrue(moveSource.length() == 961029);
@@ -164,7 +164,7 @@ public class FileSystemTest {
 	@Test
 	public void testSize() {
 		System.out.println("size");
-		File file = new File(FilenameUtils.concat(Settings.getRessourcesPath(), "audioFiles"));
+		File file = new File(FilenameUtils.concat(TestSettings.getRessourcesPath(), "audioFiles"));
 		long result = FileSystem.size(file.toPath());
 		assertEquals(7011134, result);
 	}

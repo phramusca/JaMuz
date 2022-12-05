@@ -137,7 +137,7 @@ public class TrackSourceRepo {
 		 * @return
 		 */
 		public File getFile() {
-			return new File(Settings.getRessourcesPath() + "audioFiles" + File.separator + filename);
+			return new File(TestSettings.getRessourcesPath() + "audioFiles" + File.separator + filename);
 		}
 	}
 }

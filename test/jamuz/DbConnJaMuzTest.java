@@ -42,7 +42,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import test.helpers.Settings;
+import test.helpers.TestSettings;
 
 /**
  *
@@ -56,7 +56,7 @@ public class DbConnJaMuzTest {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		Settings.setupApplication();
+		TestSettings.setupApplication();
 //        Jamuz.getMachine().read();
 	}
 
@@ -390,11 +390,13 @@ public class DbConnJaMuzTest {
 		expectedOptions.add(new Option("log.limit", "5242880", idMachine, 9, "integer"));
 		expectedOptions.add(new Option("log.count", "20", idMachine, 10, "integer"));
 		expectedOptions.add(new Option("files.audio", "mp3,flac", idMachine, 11, "csv"));
-		expectedOptions.add(new Option("files.image", "png,jpg,jpeg,bmp,gif", idMachine, 12, "csv"));
-		expectedOptions.add(new Option("files.convert", "wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3", idMachine, 13, "csv"));
-		expectedOptions.add(new Option("files.delete", "db,ini,txt,m3u,pls,htm,html,doc,nfo,url,sfv,wpl,sfk", idMachine, 14, "csv"));
+		expectedOptions.add(new Option("files.image", "", idMachine, 12, "csv"));
+		expectedOptions.add(new Option("files.convert", "", idMachine, 13, "csv"));
+		expectedOptions.add(new Option("files.delete", "", idMachine, 14, "csv"));
 		expectedOptions.add(new Option("location.manual", "", idMachine, 15, "path"));
-
+		expectedOptions.add(new Option("location.transcoded", "", idMachine, 16, "csv"));
+		expectedOptions.add(new Option("files.image.delete", "false", idMachine, 17, "csv"));
+		
 		checkOptionList(machineName, expectedOptions);
 
 		//Set description

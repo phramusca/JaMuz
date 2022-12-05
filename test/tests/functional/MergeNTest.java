@@ -29,8 +29,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import test.helpers.AlbumBuffer;
-import test.helpers.Settings;
-import static test.helpers.Settings.getMusicFolder;
+import test.helpers.TestSettings;
+import static test.helpers.TestSettings.getMusicFolder;
 import test.helpers.TestProcessHelper;
 
 /**
@@ -47,7 +47,7 @@ public class MergeNTest extends TestCase {
 	@Test
 	public void test() throws Exception {
 
-		Settings.startGUI("Label.Check"); //Mandatory
+		TestSettings.startGUI("Label.Check"); //Mandatory
 
 		/**
 		 * *********************************************************
@@ -187,7 +187,7 @@ public class MergeNTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Settings.setupApplication();
+		TestSettings.setupApplication();
 
 		//Create test playlist (genre=reggae) for merge test with a device
 		Playlist playlist = new Playlist(0, "TestDevicePlaylist", false, 1, Playlist.LimitUnit.Gio, false,
@@ -224,17 +224,15 @@ public class MergeNTest extends TestCase {
 //        case 3: // MediaMonkey (Windows)
 //        case 4: // Mixxx 	(Linux/Windows)
 //        case 5: // MyTunes 	(Android)
-		Settings.addStatSource(
-				name = "guayadeque_Device.db",
+		TestSettings.addStatSource(name = "guayadeque_Device.db",
 				idStatement = 1,
-				rootPath = Settings.getMusicFolder() + "Archive" + File.separator,
+				rootPath = TestSettings.getMusicFolder() + "Archive" + File.separator,
 				idDevice = -1
 		);
-		Settings.addStatSource(
-				//FIXME TEST WINDOWS Test on Windows, on a SSH box and a FTP box
+		TestSettings.addStatSource(//FIXME TEST WINDOWS Test on Windows, on a SSH box and a FTP box
 				name = "MyMusic32_Device.db", //kodi
 				idStatement = 2,
-				rootPath = Settings.getMusicFolder() + "Archive" + File.separator,
+				rootPath = TestSettings.getMusicFolder() + "Archive" + File.separator,
 				idDevice = -1);
 		//FIXME TEST WINDOWS Enable this when I have a Windows PC available
 //        Settings.addStatSource(
@@ -242,13 +240,12 @@ public class MergeNTest extends TestCase {
 //                idStatement=3, 
 //                rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
 //                idDevice = -1);
-		Settings.addStatSource(
-				//FIXME TEST WINDOWS Test on windows
+		TestSettings.addStatSource(//FIXME TEST WINDOWS Test on windows
 				name = "mixxxdb_Device.sqlite",
 				idStatement = 4,
-				rootPath = Settings.getMusicFolder() + "Archive" + File.separator,
+				rootPath = TestSettings.getMusicFolder() + "Archive" + File.separator,
 				idDevice = -1);
-		Settings.addStatSource(
+		TestSettings.addStatSource(
 				name = "MusicIndexDatabase_Device.db", //MyTunes (could be removed ...) 
 				idStatement = 5,
 				rootPath = "/storage/extSdCard/Musique/",

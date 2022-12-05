@@ -158,7 +158,7 @@ public class CompareOO {
 			Album firstAlbum = AlbumBuffer.getAlbum(mbId1, tab1);
 			Album secondAlbum = AlbumBuffer.getAlbum(mbId2, tab2);
 
-			String pathLogs = Settings.getRessourcesPath() + "albumFiles_" + testName;
+			String pathLogs = TestSettings.getRessourcesPath() + "albumFiles_" + testName;
 			File f = new File(pathLogs);
 			f.mkdir();
 			logFile = new LogText(pathLogs + File.separator);

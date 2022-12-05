@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Test;
 import test.helpers.AlbumBuffer;
-import test.helpers.Settings;
+import test.helpers.TestSettings;
 import test.helpers.TestProcessHelper;
 
 /**
@@ -40,7 +40,7 @@ public class CheckNTest extends TestCase {
 	@Test
 	public void test() throws Exception {
 
-		Settings.startGUI("Label.Check"); //Mandatory
+		TestSettings.startGUI("Label.Check"); //Mandatory
 
 		//Create somes albums
 		ArrayList<String> mbIds = new ArrayList<>();
@@ -116,7 +116,7 @@ public class CheckNTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Settings.setupApplication();
+		TestSettings.setupApplication();
 	}
 
 	/**

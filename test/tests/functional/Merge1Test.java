@@ -23,7 +23,7 @@ import java.io.File;
 import junit.framework.TestCase;
 import org.junit.Test;
 import test.helpers.AlbumBuffer;
-import test.helpers.Settings;
+import test.helpers.TestSettings;
 import test.helpers.TestProcessHelper;
 
 /**
@@ -38,7 +38,7 @@ public class Merge1Test extends TestCase {
 	 */
 	@Test
 	public void test() throws Exception {
-		Settings.startGUI("Label.Check"); //Mandatory
+		TestSettings.startGUI("Label.Check"); //Mandatory
 
 		/**
 		 * *********************************************************
@@ -128,12 +128,11 @@ public class Merge1Test extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Settings.setupApplication();
+		TestSettings.setupApplication();
 
-		Settings.addStatSource(
-				"guayadeque.db",
+		TestSettings.addStatSource("guayadeque.db",
 				1,
-				Settings.getMusicFolder() + "Archive" + File.separator,
+				TestSettings.getMusicFolder() + "Archive" + File.separator,
 				-1
 		);
 
