@@ -21,12 +21,18 @@ import jamuz.Machine;
 import jamuz.Option;
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
+import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import jamuz.utils.Swing;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.DefaultListModel;
@@ -36,6 +42,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -100,24 +108,24 @@ public class DialogOptions extends javax.swing.JDialog {
         jButtonOptionSave.setEnabled(true);
 
 		Option option = selOptions.getOption("library.isMaster");
-		setOption("location.library", jTextFieldOptionLocationLibrary, jLabelOptionLocationLibrary);
+		displayOption("location.library", jTextFieldOptionLocationLibrary, jLabelOptionLocationLibrary);
 		jCheckBoxOptionLibraryIsMaster.setSelected(option.getValue().equals("true"));
 		jCheckBoxOptionLibraryIsMaster.setText(option.getComment());
 		
-		setOption("location.add", jTextFieldOptionLocationAdd, jLabelOptionLocationAdd);
-		setOption("location.ko", jTextFieldOptionLocationKO, jLabelOptionLocationKO);
-		setOption("location.manual", jTextFieldOptionLocationManual, jLabelOptionLocationManual);
-		setOption("location.ok", jTextFieldOptionLocationOK, jLabelOptionLocationOK);
-		setOption("location.transcoded", jTextFieldOptionLocationTranscoded, jLabelOptionLocationTranscoded);
-		setOption("location.mask", jTextFieldOptionMask, jLabelOptionMask);
-		setOption("files.audio", jTextFieldOptionsFilesAudio, jLabelOptionsFilesAudio);
-		setOption("files.convert", jTextFieldOptionsFilesConvert, jLabelOptionsFilesConvert);
-		setOption("files.delete", jTextFieldOptionsFilesDelete, jLabelOptionsFilesDelete);
-		setOption("files.image", jTextFieldOptionsFilesImage, jLabelOptionsFilesImage);
-		setOption("log.count", jTextFieldOptionsLogCount, jLabelOptionsLogCount);
-		setOption("log.level", jTextFieldOptionsLogLevel, jLabelOptionsLogLevel);
-		setOption("log.limit", jTextFieldOptionsLogLimit, jLabelOptionsLogLimit);
-		setOption("network.proxy", jTextFieldOptionsProxy, jLabelOptionsProxy);
+		displayOption("location.add", jTextFieldOptionLocationAdd, jLabelOptionLocationAdd);
+		displayOption("location.ko", jTextFieldOptionLocationKO, jLabelOptionLocationKO);
+		displayOption("location.manual", jTextFieldOptionLocationManual, jLabelOptionLocationManual);
+		displayOption("location.ok", jTextFieldOptionLocationOK, jLabelOptionLocationOK);
+		displayOption("location.transcoded", jTextFieldOptionLocationTranscoded, jLabelOptionLocationTranscoded);
+		displayOption("location.mask", jTextFieldOptionMask, jLabelOptionMask);
+		displayOption("files.audio", jTextFieldOptionsFilesAudio, jLabelOptionsFilesAudio);
+		displayOption("files.convert", jTextFieldOptionsFilesConvert, jLabelOptionsFilesConvert);
+		displayOption("files.delete", jTextFieldOptionsFilesDelete, jLabelOptionsFilesDelete);
+		displayOption("files.image", jTextFieldOptionsFilesImage, jLabelOptionsFilesImage);
+		displayOption("log.count", jTextFieldOptionsLogCount, jLabelOptionsLogCount);
+		displayOption("log.level", jTextFieldOptionsLogLevel, jLabelOptionsLogLevel);
+		displayOption("log.limit", jTextFieldOptionsLogLimit, jLabelOptionsLogLimit);
+		displayOption("network.proxy", jTextFieldOptionsProxy, jLabelOptionsProxy);
 	}
 	
 	/**
@@ -145,7 +153,7 @@ public class DialogOptions extends javax.swing.JDialog {
 		});
 	}
 	
-	private static void setOption(String id, JTextField textField, JLabel jLabel) {
+	private static void displayOption(String id, JTextField textField, JLabel jLabel) {
 		Option option = selOptions.getOption(id);
 		textField.setText(option.getValue());
 		jLabel.setText(option.getComment());
@@ -1063,13 +1071,48 @@ public class DialogOptions extends javax.swing.JDialog {
 	
     private void jButtonOptionSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSaveActionPerformed
         
+		String locationLibrary = jTextFieldOptionLocationLibrary.getText();
+		File locationLibraryFile = new File(locationLibrary);
+
+		boolean validLocations = true;
+		
+		String locationAdd = jTextFieldOptionLocationAdd.getText();
+		if(!checkLocation(locationLibraryFile, locationAdd)) {
+			validLocations = false;
+		}
+		
+		String locationKO = jTextFieldOptionLocationKO.getText();
+		if(!checkLocation(locationLibraryFile, locationKO)) {
+		validLocations = false;
+		}
+		
+		String locationManual = jTextFieldOptionLocationManual.getText();
+		if(!checkLocation(locationLibraryFile, locationManual)) {
+		validLocations = false;
+		}
+		
+		String locationOK = jTextFieldOptionLocationOK.getText();
+		if(!checkLocation(locationLibraryFile, locationOK)) {
+		validLocations = false;
+		}
+		
+		String locationTranscoded = jTextFieldOptionLocationTranscoded.getText();
+		if(!checkLocation(locationLibraryFile, locationTranscoded)) {
+			validLocations = false;
+		}
+		
+		if(!validLocations) {
+			return;
+		}
+		
+		selOptions.getOption("location.library").setValue(locationLibrary);
+		selOptions.getOption("location.add").setValue(locationAdd);
+		selOptions.getOption("location.ko").setValue(locationKO);
+		selOptions.getOption("location.manual").setValue(locationManual);
+		selOptions.getOption("location.ok").setValue(locationOK);
+		selOptions.getOption("location.transcoded").setValue(locationTranscoded);
+		
 		selOptions.getOption("library.isMaster").setValue(jCheckBoxOptionLibraryIsMaster.isSelected()?"true":"false");
-		selOptions.getOption("location.library").setValue(jTextFieldOptionLocationLibrary.getText());
-		selOptions.getOption("location.add").setValue(jTextFieldOptionLocationAdd.getText());
-		selOptions.getOption("location.ko").setValue(jTextFieldOptionLocationKO.getText());
-		selOptions.getOption("location.manual").setValue(jTextFieldOptionLocationManual.getText());
-		selOptions.getOption("location.ok").setValue(jTextFieldOptionLocationOK.getText());
-		selOptions.getOption("location.transcoded").setValue(jTextFieldOptionLocationTranscoded.getText());
 		selOptions.getOption("location.mask").setValue(jTextFieldOptionMask.getText());
 		selOptions.getOption("files.audio").setValue(jTextFieldOptionsFilesAudio.getText());
 		selOptions.getOption("files.convert").setValue(jTextFieldOptionsFilesConvert.getText());
@@ -1088,6 +1131,19 @@ public class DialogOptions extends javax.swing.JDialog {
 		doClose(RET_OK);
     }//GEN-LAST:event_jButtonOptionSaveActionPerformed
 
+	private boolean checkLocation(File base, String child) {
+		try {
+			if(FileSystem.isSubDirectory(base, new File(child))) {
+				Popup.error("\"" + child + "\" is a sub folder of \"" + base.getAbsolutePath() + "\". Please change.");
+				return false;
+			}
+			return true;
+		} catch (IOException ex) {
+			Popup.error(ex);
+			return false;
+		}
+	}
+	
     private void jButtonOptionSelectFolderNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSelectFolderNewActionPerformed
         selectFolder(jTextFieldOptionLocationAdd, Inter.get("Options.Title.location.add"));
     }//GEN-LAST:event_jButtonOptionSelectFolderNewActionPerformed
