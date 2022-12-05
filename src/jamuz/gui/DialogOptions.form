@@ -738,7 +738,9 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabelOptionMask">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="jLabelOptionMask"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="jamuz/Bundle.properties" key="Options.Title.location.add" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
@@ -788,7 +790,7 @@
                 <Component class="javax.swing.JLabel" name="jLabelOptionsFilesAudio">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Options.Comment.files.audio" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="jamuz/Bundle.properties" key="Options.Title.files.audio" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <AuxValues>
@@ -846,7 +848,7 @@
                 <Component class="javax.swing.JLabel" name="jLabelOptionsFilesImage">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Options.Comment.files.image" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="jamuz/Bundle.properties" key="Options.Title.files.image" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <AuxValues>
@@ -856,7 +858,7 @@
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxOptionDeleteImages">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Options.Delete.Images" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="jamuz/Bundle.properties" key="Options.Comment.files.image.delete" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <AuxValues>
@@ -906,7 +908,9 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabelOptionsFilesConvert">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Files convert"/>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="jamuz/Bundle.properties" key="Options.Title.location.transcoded" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                    </Property>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>

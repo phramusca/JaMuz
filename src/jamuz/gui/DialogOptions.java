@@ -120,7 +120,6 @@ public class DialogOptions extends javax.swing.JDialog {
 		displayOption("files.convert", jTextFieldOptionsFilesConvert, jLabelOptionsFilesConvert);
 		displayOption("files.delete", jTextFieldOptionsFilesDelete, jLabelOptionsFilesDelete);
 		displayOption("files.image", jTextFieldOptionsFilesImage, jLabelOptionsFilesImage);
-		displayOption("files.image.delete", jTextFieldOptionMask, jLabelOptionMask);
 		displayOptionCheckbox("files.image.delete", jCheckBoxOptionDeleteImages);
 		displayOption("log.count", jTextFieldOptionsLogCount, jLabelOptionsLogCount);
 		displayOption("log.level", jTextFieldOptionsLogLevel, jLabelOptionsLogLevel);
@@ -594,7 +593,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabelOptionMask.setText("jLabelOptionMask");
+        jLabelOptionMask.setText(bundle.getString("Options.Title.location.add")); // NOI18N
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -619,7 +618,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jPanel16.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabelOptionsFilesAudio.setText(Inter.get("Options.Comment.files.audio")); // NOI18N
+        jLabelOptionsFilesAudio.setText(Inter.get("Options.Title.files.audio")); // NOI18N
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -643,9 +642,9 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jPanel18.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabelOptionsFilesImage.setText(Inter.get("Options.Comment.files.image")); // NOI18N
+        jLabelOptionsFilesImage.setText(Inter.get("Options.Title.files.image")); // NOI18N
 
-        jCheckBoxOptionDeleteImages.setText(bundle.getString("Options.Delete.Images")); // NOI18N
+        jCheckBoxOptionDeleteImages.setText(bundle.getString("Options.Comment.files.image.delete")); // NOI18N
 
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
@@ -675,7 +674,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jPanel19.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabelOptionsFilesConvert.setText("Files convert");
+        jLabelOptionsFilesConvert.setText(bundle.getString("Options.Title.location.transcoded")); // NOI18N
 
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
