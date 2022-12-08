@@ -1,5 +1,5 @@
 
-**JaMuz** is a **Music library manager**, **player** and more, for Linux and Windows.
+**JaMuz Desktop** is a **Music library manager**, **player** and more, for Linux and Windows.
 
 - - -
 
