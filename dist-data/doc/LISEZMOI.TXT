@@ -24,6 +24,14 @@ Emplacement			Description
 
 Historique
 ----------------------------------------------------------------------------------------------------------------------------------
+0.6.0	- Menus contextuels revus et corrigés
+		- Menu edition client revu et corrigé
+		- Fenêtre info lecture revue et corrigée
+		- Bug fixes variés
+		- Cover hash SHA-256
+		- Compatible avec JaMuz Remote v0.5.x minimum
+		- Correction options par défaut: PLUS de convertion auto (wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3) et suppression des fichiers (db,ini,txt,m3u,pls,htm,html,doc,nfo,url,sfv,wpl,sfk)
+----------------------------------------------------------------------------------------------------------------------------------
 0.5.1	- Corrections de bugs
 		- Mise à jour de traductions
 		- Support de la mise à jour de la base de données, à partir de 0.5.0

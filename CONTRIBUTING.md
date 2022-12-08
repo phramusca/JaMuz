@@ -74,6 +74,12 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
 
 1. Build `dist` folder with NetBeans: `Run / Clean and build project (JaMuz)`
 
+1. Install 7zip, if not already done
+
+    ```bash
+    sudo apt install p7zip-full
+    ```
+
 1. Create 7z release file
 
     ```bash

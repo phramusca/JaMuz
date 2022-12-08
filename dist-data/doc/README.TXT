@@ -24,6 +24,14 @@ Path				Description
 
 History
 ----------------------------------------------------------------------------------------------------------------------------------
+0.6.0	- Contextual menus reviewed and fixed
+		- Client edition menu reviewed and fixed
+		- Player info panel reviewed and fixed
+		- Various bug fixes
+		- Cover hash SHA-256
+		- Compatible with JaMuz Remote v0.5.x minimum
+		- Fix default options: NO MORE auto convertions (wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3) and files deletion (db,ini,txt,m3u,pls,htm,html,doc,nfo,url,sfv,wpl,sfk)
+----------------------------------------------------------------------------------------------------------------------------------
 0.5.1	- Various fixes
 		- Translations updates
 		- Database updates handled. Support from 0.5.0
