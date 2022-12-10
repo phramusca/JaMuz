@@ -438,8 +438,8 @@ public class PanelMain extends javax.swing.JFrame {
                 moveCursor(0);
             }
         };
-//FIXME !!!!! Document keyboard shortcuts !!!
-        InputMap inputMap = this.jSplitPaneMain.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+		InputMap inputMap = this.jSplitPaneMain.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, Event.SHIFT_MASK+Event.ALT_MASK), "setRating1");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, Event.SHIFT_MASK+Event.ALT_MASK), "setRating2");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, Event.SHIFT_MASK+Event.ALT_MASK), "setRating3");

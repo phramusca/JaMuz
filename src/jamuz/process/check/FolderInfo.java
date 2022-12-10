@@ -546,7 +546,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 					if(filesOther.size()<=0){
 						boolean deleteImages = Jamuz.getMachine().getOptionValue("files.image.delete").equals("true");
 						if(deleteImages) {
-							deleteList(filesImage, null); // FIXME !!!!!! use option
+							deleteList(filesImage, null);
 						}
 						return true;
 					}

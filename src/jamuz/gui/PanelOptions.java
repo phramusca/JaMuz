@@ -177,12 +177,12 @@ public class PanelOptions extends javax.swing.JPanel {
         jButtonGenresEdit = new javax.swing.JButton();
         jButtonGenresDel = new javax.swing.JButton();
         jButtonGenresAdd = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
+        jPanelResetCheckedFlag = new javax.swing.JPanel();
         jButtonResetCheckedFlagKO = new javax.swing.JButton();
         jButtonResetCheckedFlagWarning = new javax.swing.JButton();
         jButtonResetCheckedFlagOK = new javax.swing.JButton();
         jProgressBarResetChecked = new jamuz.gui.swing.ProgressBar();
-        jPanel4 = new javax.swing.JPanel();
+        jPanelSaveFiles = new javax.swing.JPanel();
         jProgressBarSaveTags = new jamuz.gui.swing.ProgressBar();
         jButtonRetagAllFiles = new javax.swing.JButton();
         jPanelOptionsTags = new javax.swing.JPanel();
@@ -191,16 +191,18 @@ public class PanelOptions extends javax.swing.JPanel {
         jButtonTagsEdit = new javax.swing.JButton();
         jButtonTagsDel = new javax.swing.JButton();
         jButtonTagsAdd = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
+        jPanelCleanupLogFolder = new javax.swing.JPanel();
         jProgressBarCleanupLogs = new jamuz.gui.swing.ProgressBar();
         jButtonCleanupLogs = new javax.swing.JButton();
         jSpinnerBytes = new javax.swing.JSpinner();
         jLabelCleanup = new javax.swing.JLabel();
         jLabelBytes = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextPaneShortcuts = new javax.swing.JTextPane();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
-        jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
+        jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
 
         jListMachines.setModel(new DefaultListModel());
         jListMachines.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -238,13 +240,16 @@ public class PanelOptions extends javax.swing.JPanel {
         jPanelOptionsMachinesLayout.setVerticalGroup(
             jPanelOptionsMachinesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelOptionsMachinesLayout.createSequentialGroup()
-                .addComponent(jButtonMachinesEdit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonMachinesDel))
-            .addComponent(jScrollPaneOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelOptionsMachinesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelOptionsMachinesLayout.createSequentialGroup()
+                        .addComponent(jButtonMachinesEdit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonMachinesDel))
+                    .addComponent(jScrollPaneOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanelOptionsGenres.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), bundle.getString("PanelMain.jPanelOptionsGenres.border.title"))); // NOI18N
+        jPanelOptionsGenres.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("PanelMain.jPanelOptionsGenres.border.title"))); // NOI18N
 
         jListGenres.setModel(new DefaultListModel());
         jScrollPaneOptionsMachines1.setViewportView(jListGenres);
@@ -302,7 +307,7 @@ public class PanelOptions extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("Label.Scan.ResetCheckFlag"))); // NOI18N
+        jPanelResetCheckedFlag.setBorder(javax.swing.BorderFactory.createTitledBorder(Inter.get("Label.Scan.ResetCheckFlag"))); // NOI18N
 
         jButtonResetCheckedFlagKO.setText(Inter.get("Check.KO")); // NOI18N
         jButtonResetCheckedFlagKO.addActionListener(new java.awt.event.ActionListener() {
@@ -329,17 +334,17 @@ public class PanelOptions extends javax.swing.JPanel {
         jProgressBarResetChecked.setString(" "); // NOI18N
         jProgressBarResetChecked.setStringPainted(true);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelResetCheckedFlagLayout = new javax.swing.GroupLayout(jPanelResetCheckedFlag);
+        jPanelResetCheckedFlag.setLayout(jPanelResetCheckedFlagLayout);
+        jPanelResetCheckedFlagLayout.setHorizontalGroup(
+            jPanelResetCheckedFlagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelResetCheckedFlagLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanelResetCheckedFlagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelResetCheckedFlagLayout.createSequentialGroup()
                         .addComponent(jProgressBarResetChecked, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(3, 3, 3))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(jPanelResetCheckedFlagLayout.createSequentialGroup()
                         .addComponent(jButtonResetCheckedFlagKO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonResetCheckedFlagWarning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -347,20 +352,20 @@ public class PanelOptions extends javax.swing.JPanel {
                         .addComponent(jButtonResetCheckedFlagOK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        jPanelResetCheckedFlagLayout.setVerticalGroup(
+            jPanelResetCheckedFlagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelResetCheckedFlagLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanelResetCheckedFlagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonResetCheckedFlagKO)
                     .addComponent(jButtonResetCheckedFlagWarning)
                     .addComponent(jButtonResetCheckedFlagOK))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBarResetChecked, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jProgressBarResetChecked, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Save files"));
+        jPanelSaveFiles.setBorder(javax.swing.BorderFactory.createTitledBorder("Save files"));
 
         jProgressBarSaveTags.setMinimumSize(new java.awt.Dimension(1, 23));
         jProgressBarSaveTags.setString(" "); // NOI18N
@@ -373,20 +378,20 @@ public class PanelOptions extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelSaveFilesLayout = new javax.swing.GroupLayout(jPanelSaveFiles);
+        jPanelSaveFiles.setLayout(jPanelSaveFilesLayout);
+        jPanelSaveFilesLayout.setHorizontalGroup(
+            jPanelSaveFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSaveFilesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanelSaveFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButtonRetagAllFiles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jProgressBarSaveTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+        jPanelSaveFilesLayout.setVerticalGroup(
+            jPanelSaveFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSaveFilesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButtonRetagAllFiles)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -448,11 +453,11 @@ public class PanelOptions extends javax.swing.JPanel {
                         .addComponent(jButtonTagsEdit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonTagsDel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 51, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Cleanup Log folder"));
+        jPanelCleanupLogFolder.setBorder(javax.swing.BorderFactory.createTitledBorder("Cleanup Log folder"));
 
         jProgressBarCleanupLogs.setMinimumSize(new java.awt.Dimension(1, 23));
         jProgressBarCleanupLogs.setString(" "); // NOI18N
@@ -478,35 +483,35 @@ public class PanelOptions extends javax.swing.JPanel {
 
         jLabel1.setText("bytes"); // NOI18N
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelCleanupLogFolderLayout = new javax.swing.GroupLayout(jPanelCleanupLogFolder);
+        jPanelCleanupLogFolder.setLayout(jPanelCleanupLogFolderLayout);
+        jPanelCleanupLogFolderLayout.setHorizontalGroup(
+            jPanelCleanupLogFolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCleanupLogFolderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanelCleanupLogFolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelCleanupLogFolderLayout.createSequentialGroup()
                         .addComponent(jButtonCleanupLogs)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelBytes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCleanupLogFolderLayout.createSequentialGroup()
                         .addComponent(jLabelCleanup)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinnerBytes, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                        .addComponent(jSpinnerBytes, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1))
                     .addComponent(jProgressBarCleanupLogs, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        jPanelCleanupLogFolderLayout.setVerticalGroup(
+            jPanelCleanupLogFolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCleanupLogFolderLayout.createSequentialGroup()
+                .addGroup(jPanelCleanupLogFolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinnerBytes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelCleanup)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanelCleanupLogFolderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCleanupLogs)
                     .addComponent(jLabelBytes))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -514,23 +519,30 @@ public class PanelOptions extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        jTextPaneShortcuts.setEditable(false);
+        jTextPaneShortcuts.setText("Keyboard Shortcuts:\n\n- ALT+ SHIFT + P : Play\n- ALT+ SHIFT + RIGHT : Next track\n- ALT+ SHIFT + LEFT : Previous track\n- ALT+ SHIFT + F : Forward\n- ALT+ SHIFT + R : Rewind\n- ALT+ SHIFT + W : Pullup\n- ALT+ SHIFT + E : Clear tracks       \n- ALT+ SHIFT + F1 : Set rating 1\n- ALT+ SHIFT + F2 : Set rating 2\n- ALT+ SHIFT + F3 : Set rating 3\n- ALT+ SHIFT + F4 : Set rating 4\n- ALT+ SHIFT + F5 : Set rating 5");
+        jScrollPane1.setViewportView(jTextPaneShortcuts);
+
         javax.swing.GroupLayout jPanelOptionsLayout = new javax.swing.GroupLayout(jPanelOptions);
         jPanelOptions.setLayout(jPanelOptionsLayout);
         jPanelOptionsLayout.setHorizontalGroup(
             jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelOptionsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
                         .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelOptionsTags, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelOptionsLayout.createSequentialGroup()
+                        .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1)))
                 .addGap(29, 29, 29)
                 .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanelSaveFiles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelResetCheckedFlag, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelCleanupLogFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelOptionsLayout.setVerticalGroup(
@@ -539,18 +551,20 @@ public class PanelOptions extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                        .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanelOptionsTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanelCleanupLogFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanelSaveFiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanelResetCheckedFlag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -854,18 +868,20 @@ public class PanelOptions extends javax.swing.JPanel {
     private static javax.swing.JList jListGenres;
     private static javax.swing.JList jListMachines;
     private static javax.swing.JList jListTags;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanelCleanupLogFolder;
     private javax.swing.JPanel jPanelOptionsGenres;
     private javax.swing.JPanel jPanelOptionsMachines;
     private javax.swing.JPanel jPanelOptionsTags;
+    private javax.swing.JPanel jPanelResetCheckedFlag;
+    private javax.swing.JPanel jPanelSaveFiles;
     private static javax.swing.JProgressBar jProgressBarCleanupLogs;
     private static javax.swing.JProgressBar jProgressBarResetChecked;
     private static javax.swing.JProgressBar jProgressBarSaveTags;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines1;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines2;
     private javax.swing.JSpinner jSpinnerBytes;
+    private javax.swing.JTextPane jTextPaneShortcuts;
     // End of variables declaration//GEN-END:variables
 }
