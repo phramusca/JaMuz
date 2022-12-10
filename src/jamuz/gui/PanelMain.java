@@ -35,6 +35,7 @@ import jamuz.process.merge.PanelMerge;
 import jamuz.process.sync.PanelSync;
 import jamuz.remote.ICallBackServer;
 import jamuz.remote.PanelRemote;
+import jamuz.utils.Dependencies;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
 import jamuz.utils.Popup;
@@ -222,7 +223,9 @@ public class PanelMain extends javax.swing.JFrame {
 		panelVideo.initExtended(this);
 		panelBook.initExtended(this);
 		
-        setKeyBindings();		
+        setKeyBindings();
+		
+		Dependencies.check(this);
     }
 	
 	class CallBackServer implements ICallBackServer {

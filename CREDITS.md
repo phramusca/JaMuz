@@ -30,9 +30,6 @@
 
 ## Utilities
 
-For windows:
-
-- metaflac.exe
-- mp3gain.exe
-- mplayer.exe
-- sqlite3.exe (only for build)
+- [mplayer](https://mplayerhq.hu/): play tracks
+- [metaflac](https://xiph.org/flac/): store replaygain in FLAC files
+- [mp3gain](https://snapcraft.io/mp3gain): compute replaygain for MP3 files

@@ -17,6 +17,7 @@
 package jamuz;
 
 import jamuz.DbInfo.LibType;
+import jamuz.utils.Dependencies;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
@@ -57,13 +58,6 @@ public class Jamuz {
 	private static Machine machine;
 	private static DbConnJaMuz db;
 	private static HashMap<Integer, Playlist> playlists;
-
-	//FIXME Z Check dependencies
-	// mplayer !
-	// mp3gain
-	// metaflac
-	// paquet "flac"
-	// easytag
 	
 	/**
 	 *
@@ -157,7 +151,7 @@ public class Jamuz {
 
 		//Set library location (JaMuz's rootPath)
 		db.setRootPath(getMachine().getOptionValue("location.library"));  //NOI18N
-
+		
 		return true;
 	}
 
