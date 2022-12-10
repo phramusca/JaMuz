@@ -1280,32 +1280,6 @@ public class PanelMain extends javax.swing.JFrame {
         playerInfo.displayFileInfo(fileInfoInt);
     }
 
-    //TODO: Move to another class
-    /**
-     * Edit path with : - easytag under linux - mp3tag under windows Yes, hard-
-     * coded, but can be improved ...
-     *
-     * @param location
-     */
-    public static void editLocation(String location) {
-		//TODO: allow user to select its desired application
-        //	maybe make a default list, based on windows/linux
-        //	maybe detect what is installed on PC against allowed application list
-        try {
-            Runtime rt = Runtime.getRuntime();
-            String cmd = "";  //NOI18N
-            if (OS.isUnix()) {
-                cmd = "easytag";  //NOI18N
-            } else if (OS.isWindows()) {
-                cmd = "C:\\Program Files\\Mp3tag\\Mp3tag.exe";  //NOI18N
-            }
-            rt.exec(new String[]{cmd, location});
-        } catch (IOException ex) {
-            Popup.error(ex);
-        }
-    }
-
-
     private void jButtonPlayerClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlayerClearActionPerformed
         queueModel.clear();
     }//GEN-LAST:event_jButtonPlayerClearActionPerformed

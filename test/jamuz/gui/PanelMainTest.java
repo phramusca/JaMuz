@@ -229,18 +229,6 @@ public class PanelMainTest {
 	}
 
 	/**
-	 * Test of editLocation method, of class PanelMain.
-	 */
-	@Test
-	public void testEditLocation() {
-		System.out.println("editLocation");
-		String location = "";
-		PanelMain.editLocation(location);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of addRowSelect method, of class PanelMain.
 	 */
 	@Test

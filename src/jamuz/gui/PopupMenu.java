@@ -179,15 +179,6 @@ public class PopupMenu {
 				}
 			}
 		}));
-		menuAlbum.add(new JMenuItem(new AbstractAction(Inter.get("Button.Edit")) {//TODO: Add " (external)" to menu name	
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				FileInfoInt selected = getSelected();
-				if(selected!=null) {
-					PanelMain.editLocation(Jamuz.getDb().getRootPath()+selected.getRelativeFullPath());
-				}
-			}
-		}));
 		menuAlbum.add(new JMenuItem(new AbstractAction(Inter.get("Label.Delete")) {
 			@Override
 			public void actionPerformed(ActionEvent e) {

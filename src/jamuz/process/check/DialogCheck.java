@@ -241,7 +241,6 @@ public class DialogCheck extends javax.swing.JDialog {
         jButtonCheckUp = new javax.swing.JButton();
         jButtonCheckDown = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
-        jButtonCheckEditTag = new javax.swing.JButton();
         jButtonCheckOpen = new javax.swing.JButton();
         jButtonCheckSingleFolder = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
@@ -257,7 +256,7 @@ public class DialogCheck extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanelCheckFolder.setBackground(java.awt.Color.lightGray);
-        jPanelCheckFolder.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelCheckFolder.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jButtonCheckOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/accept.png"))); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
@@ -352,7 +351,7 @@ public class DialogCheck extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jPanelCheckCoverThumb.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelCheckCoverThumb.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         jPanelCheckCoverThumb.setMaximumSize(new java.awt.Dimension(150, 150));
         jPanelCheckCoverThumb.setMinimumSize(new java.awt.Dimension(150, 150));
         jPanelCheckCoverThumb.setPreferredSize(new java.awt.Dimension(150, 150));
@@ -375,7 +374,7 @@ public class DialogCheck extends javax.swing.JDialog {
         });
 
         jPanel2.setBackground(java.awt.Color.lightGray);
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jLabelCheckNbTracks.setBackground(new java.awt.Color(255, 255, 255));
         jLabelCheckNbTracks.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -435,7 +434,7 @@ public class DialogCheck extends javax.swing.JDialog {
         );
 
         jPanel5.setBackground(java.awt.Color.lightGray);
-        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jButtonCheckApplyYear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/apply_to_all.png"))); // NOI18N
         jButtonCheckApplyYear.addActionListener(new java.awt.event.ActionListener() {
@@ -484,7 +483,7 @@ public class DialogCheck extends javax.swing.JDialog {
         );
 
         jPanel6.setBackground(java.awt.Color.lightGray);
-        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jLabelCoverInfo.setBackground(new java.awt.Color(255, 255, 255));
         jLabelCoverInfo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -534,7 +533,7 @@ public class DialogCheck extends javax.swing.JDialog {
         );
 
         jPanel7.setBackground(java.awt.Color.lightGray);
-        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jButtonCheckSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/search_plus.png"))); // NOI18N
         jButtonCheckSearch.setToolTipText("Query Last.FM and MusicBrainz for matches");
@@ -635,7 +634,7 @@ public class DialogCheck extends javax.swing.JDialog {
         );
 
         jPanel8.setBackground(java.awt.Color.lightGray);
-        jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel8.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jLabelCheckAlbumTag.setBackground(new java.awt.Color(255, 255, 255));
         jLabelCheckAlbumTag.setText(" "); // NOI18N
@@ -679,7 +678,7 @@ public class DialogCheck extends javax.swing.JDialog {
         );
 
         jPanelGenre.setBackground(java.awt.Color.lightGray);
-        jPanelGenre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanelGenre.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jCheckBoxCheckGenreDisplay.setText(bundle.getString("Tag.Genre")); // NOI18N
 
@@ -701,7 +700,7 @@ public class DialogCheck extends javax.swing.JDialog {
         );
 
         jPanel4.setBackground(java.awt.Color.lightGray);
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jCheckBoxCheckFormatDisplay.setText(bundle.getString("Tag.Format")); // NOI18N
 
@@ -910,15 +909,7 @@ public class DialogCheck extends javax.swing.JDialog {
         });
 
         jPanel9.setBackground(java.awt.Color.lightGray);
-        jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        jButtonCheckEditTag.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/external.png"))); // NOI18N
-        jButtonCheckEditTag.setText(bundle.getString("Button.Edit")); // NOI18N
-        jButtonCheckEditTag.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCheckEditTagActionPerformed(evt);
-            }
-        });
+        jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jButtonCheckOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder.png"))); // NOI18N
         jButtonCheckOpen.setText(Inter.get("Button.Open")); // NOI18N
@@ -944,8 +935,6 @@ public class DialogCheck extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jButtonCheckOpen)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonCheckEditTag)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCheckSingleFolder)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -955,13 +944,12 @@ public class DialogCheck extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCheckOpen)
-                    .addComponent(jButtonCheckEditTag)
                     .addComponent(jButtonCheckSingleFolder))
                 .addContainerGap())
         );
 
         jPanel10.setBackground(java.awt.Color.lightGray);
-        jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         jButtonPlayerPrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/resultset-premier-icone-4160-16.png"))); // NOI18N
         jButtonPlayerPrevious.addActionListener(new java.awt.event.ActionListener() {
@@ -1104,10 +1092,6 @@ public class DialogCheck extends javax.swing.JDialog {
         PanelMain.getQueueModel().clear();
         folder.queueAll();
     }//GEN-LAST:event_jButtonCheckPreviewActionPerformed
-
-    private void jButtonCheckEditTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckEditTagActionPerformed
-        PanelMain.editLocation(folder.getFullPath());
-    }//GEN-LAST:event_jButtonCheckEditTagActionPerformed
 
     private void jButtonCheckOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckOKActionPerformed
         if(folder.isWarning()) {
@@ -1531,7 +1515,6 @@ public class DialogCheck extends javax.swing.JDialog {
         jButtonCheckApplyAlbum.setEnabled(enable);
         jButtonCheckApplyYear.setEnabled(enable);
 		jPanelCheckCoverThumb.setEnabled(enable);
-		jButtonCheckEditTag.setEnabled(enable);
 		jButtonCheckScanner.setEnabled(enable);
 		jButtonSelectOriginal.setEnabled(enable);
 	}
@@ -1823,7 +1806,6 @@ public class DialogCheck extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCheckApplyYear;
     private javax.swing.JButton jButtonCheckDelete;
     private javax.swing.JButton jButtonCheckDown;
-    private javax.swing.JButton jButtonCheckEditTag;
     private javax.swing.JButton jButtonCheckKO;
     private javax.swing.JButton jButtonCheckKOLibrary;
     private javax.swing.JButton jButtonCheckNoneDuplicates;
