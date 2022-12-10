@@ -62,6 +62,6 @@ I'll always be pleased if you offer me a beer (or a cup of tea, or more) to supp
 * Recurrent donations using Liberapay.com: <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 * One time donation with PayPal.com: <a href="https://paypal.me/RaphaelCamus"><img alt="Donate using PayPal" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"></a>
 
-- - - 
+- - -
 
 `___` [Credits](CREDITS.md) `___` [Contributing](CONTRIBUTING.md) `___` [License](LICENSE) `___`

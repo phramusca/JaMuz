@@ -1,11 +1,11 @@
-## Credits
+# Credits
 
-### Contributions
+## Contributions
 
 * [Thanks to all contributors](https://github.com/phramusca/JaMuz/graphs/contributors)
 * You too can [contribute](CONTRIBUTING.md), even if you are not a developer.
 
-###  Libraries
+## Libraries
 
 * [Beaglebuddy](http://www.beaglebuddy.com/): Read ReplayGain from MP3 APE tags
 * [Apache Commons IO](https://commons.apache.org/proper/commons-io/)
@@ -28,7 +28,3 @@
 * [themoviedbapi](https://github.com/holgerbrandl/themoviedbapi): Query [themoviedb.org](http://themoviedb.org/)
 * [java-express](https://github.com/Simonwep/java-express): HTTP Framework based on expressjs
 * [Weblate](https://hosted.weblate.org/engage/jamuz/): Online translation tool
-
-Still used ???
-* [JLayer](http://www.javazoom.net/javalayer/javalayer.html): MP3 player
-
