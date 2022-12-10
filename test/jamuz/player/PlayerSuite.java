@@ -28,7 +28,7 @@ import org.junit.runners.Suite;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({jamuz.player.MplayerTest.class, jamuz.player.PlayerMP3Test.class, jamuz.player.MPlaybackListenerTest.class, jamuz.player.JMPlayerTest.class, jamuz.player.PlayerFlacTest.class})
+@Suite.SuiteClasses({jamuz.player.MplayerTest.class, jamuz.player.MPlaybackListenerTest.class, jamuz.player.JMPlayerTest.class})
 public class PlayerSuite {
 
 	@BeforeClass

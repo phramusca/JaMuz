@@ -45,10 +45,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.AudioDevice;
-import javazoom.jl.player.JavaSoundAudioDevice;
-import javazoom.jl.player.advanced.AdvancedPlayer;
 import org.apache.commons.io.FilenameUtils;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -1310,51 +1306,6 @@ public class FileInfoInt extends FileInfo {
 	public String getRelease() {
 		String separator = "X7IzQsi3";  //NOI18N
 		return this.albumArtist + separator + this.album;
-	}
-
-	/**
-	 *
-	 * @param sayRated
-	 */
-	public void sayRating(boolean sayRated) {
-		//TODO: Play a reminder at 1/3 and 2/3 of the trackGain
-
-		//TODO: Do this as an option (and review calls before enabling back)
-//        if(this.idFile>-1) {
-//            if(rating<=0) {
-//                playRessouce("HERE COMES A NEW CHALLENGER - YouTube.mp3");
-//           }
-//           else if(sayRated) {
-//               playRessouce(rating+"Star.mp3");
-//           }
-//        }
-	}
-
-	/**
-	 *
-	 * @param filename
-	 */
-	public void playRessouce(final String filename) {
-		//TODO: Use the basic player (if more efficient as do not need advance features fo that)
-
-		Thread t = new Thread("Thread.FileInfoInt.playRessouce") {
-			@Override
-			public void run() {
-				File ressource = Jamuz.getFile(filename, "data", "sound", "rating");
-				if (ressource.exists()) {
-					try {
-						FileInputStream fis = new FileInputStream(ressource);
-						BufferedInputStream bis = new BufferedInputStream(fis);
-						AudioDevice audioDevice = new JavaSoundAudioDevice();
-						AdvancedPlayer advancedPlayer = new AdvancedPlayer(bis, audioDevice);
-						advancedPlayer.play();
-					} catch (FileNotFoundException | JavaLayerException ex) {
-						//                    Popup.error(Inter.get("Error.Play")+" \""+filePath+"\"", ex);  //NOI18N
-					}
-				}
-			}
-		};
-		t.start();
 	}
 
 	/**

@@ -28,7 +28,7 @@ import org.junit.runners.Suite;
  * @author phramusca ( https://github.com/phramusca/ )
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({jamuz.utils.PopupTest.class, jamuz.utils.EncryptionTest.class, jamuz.utils.OSTest.class, jamuz.utils.SwingTest.class, jamuz.utils.LogTextTest.class, jamuz.utils.FileSystemTest.class, jamuz.utils.FtpTest.class, jamuz.utils.QRCodeTest.class, jamuz.utils.SSHTest.class, jamuz.utils.ProcessAbstractTest.class, jamuz.utils.ClipboardTextTest.class, jamuz.utils.InterTest.class, jamuz.utils.ImageUtilsTest.class, jamuz.utils.XMLTest.class, jamuz.utils.DesktopTest.class, jamuz.utils.UtilsTest.class, jamuz.utils.ClipboardImageTest.class, jamuz.utils.DateTimeTest.class, jamuz.utils.BenchmarkTest.class, jamuz.utils.StringManagerTest.class})
+@Suite.SuiteClasses({jamuz.utils.PopupTest.class, jamuz.utils.EncryptionTest.class, jamuz.utils.OSTest.class, jamuz.utils.SwingTest.class, jamuz.utils.LogTextTest.class, jamuz.utils.FileSystemTest.class, jamuz.utils.FtpTest.class, jamuz.utils.QRCodeTest.class, jamuz.utils.SSHTest.class, jamuz.utils.ProcessAbstractTest.class, jamuz.utils.ClipboardTextTest.class, jamuz.utils.InterTest.class, jamuz.utils.ImageUtilsTest.class, jamuz.utils.XMLTest.class, jamuz.utils.DesktopTest.class, jamuz.utils.UtilsTest.class, jamuz.utils.ClipboardImageTest.class, jamuz.utils.DateTimeTest.class, jamuz.utils.BenchmarkTest.class})
 public class UtilsSuite {
 
 	@BeforeClass

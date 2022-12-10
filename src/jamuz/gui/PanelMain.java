@@ -281,7 +281,6 @@ public class PanelMain extends javax.swing.JFrame {
 					  jSpinnerVolume.setValue( 
 						  (float)jSpinnerVolume.getValue()-5.0f);  
 					  break; 
-					case "sayRating": displayedFile.sayRating(true); break; 
 					default: 
 						Jamuz.getLogger().warning(msg); 
 						break; 
@@ -436,13 +435,7 @@ public class PanelMain extends javax.swing.JFrame {
                 moveCursor(0);
             }
         };
-        Action sayRating = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                displayedFile.sayRating(true);
-            }
-        };
-
+//FIXME !!!!! Document keyboard shortcuts !!!
         InputMap inputMap = this.jSplitPaneMain.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, Event.SHIFT_MASK+Event.ALT_MASK), "setRating1");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, Event.SHIFT_MASK+Event.ALT_MASK), "setRating2");
@@ -458,7 +451,6 @@ public class PanelMain extends javax.swing.JFrame {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, Event.SHIFT_MASK+Event.ALT_MASK), "forward");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.SHIFT_MASK+Event.ALT_MASK), "rewind");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, Event.SHIFT_MASK+Event.ALT_MASK), "pullup");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.SHIFT_MASK+Event.ALT_MASK), "sayRating");
         
         this.jSplitPaneMain.getActionMap().put("setRating1", setRating1);
         this.jSplitPaneMain.getActionMap().put("setRating2", setRating2);
@@ -474,7 +466,6 @@ public class PanelMain extends javax.swing.JFrame {
         this.jSplitPaneMain.getActionMap().put("forward", forward);
         this.jSplitPaneMain.getActionMap().put("rewind", rewind);
         this.jSplitPaneMain.getActionMap().put("pullup", pullup);
-        this.jSplitPaneMain.getActionMap().put("sayRating", sayRating);
     }
     
     private static void moveCursor(int value) {
@@ -511,7 +502,6 @@ public class PanelMain extends javax.swing.JFrame {
 	private void setRating(int rating, boolean sayRated) {
 		if(displayedFile.isFromLibrary()) {
             jComboBoxPlayerRating.setSelectedIndex(rating);
-            displayedFile.sayRating(sayRated);
             PanelRemote.send(displayedFile);
         }
     }
@@ -1219,7 +1209,6 @@ public class PanelMain extends javax.swing.JFrame {
         jLabelPlayerTimeTotal.setText(StringManager.secondsToMMSS(myFileInfo.getLength()));
         playerInfo.setMax(myFileInfo.getLength());
         String audioFileName = myFileInfo.getFullPath().getAbsolutePath();
-        myFileInfo.sayRating(false);
         boolean enablejSliderPlayerLength=true;
 		
 		MPLAYER.play(audioFileName, resume);

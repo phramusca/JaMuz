@@ -831,32 +831,6 @@ public class FileInfoIntTest {
 	}
 
 	/**
-	 * Test of sayRating method, of class FileInfoInt.
-	 */
-	@Test
-	public void testSayRating() {
-		System.out.println("sayRating");
-		boolean sayRated = false;
-		FileInfoInt instance = null;
-		instance.sayRating(sayRated);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of playRessouce method, of class FileInfoInt.
-	 */
-	@Test
-	public void testPlayRessouce() {
-		System.out.println("playRessouce");
-		String filename = "";
-		FileInfoInt instance = null;
-		instance.playRessouce(filename);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
 	 * Test of getTags method, of class FileInfoInt.
 	 */
 	@Test
