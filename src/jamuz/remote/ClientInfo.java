@@ -50,9 +50,9 @@ public class ClientInfo {
 	 * @param login
 	 * @param pwd
 	 * @param rootPath
+	 * @param name
 	 */
-
-	public ClientInfo(String login, String pwd, String rootPath) {	
+	public ClientInfo(String login, String pwd, String rootPath, String name) {	
 		isConnected=false;
 		this.progressBar = new ProgressBar();
 		this.login = login;
@@ -61,6 +61,7 @@ public class ClientInfo {
 		this.name = "";
 		this.enabled = false;
 		this.rootPath = rootPath;
+		this.name = name;
 	}
 	
 	/**
@@ -76,9 +77,8 @@ public class ClientInfo {
 	public ClientInfo(int id, String login, String name, 
 			String pwd, Device device, StatSource statSource,
 			boolean enabled) {
-		this(login, pwd, statSource.getSource().getRootPath());
+		this(login, pwd, statSource.getSource().getRootPath(), name);
 		this.id = id;
-		this.name = name;
 		this.device = device;
 		this.statSource = statSource;
 		this.enabled = enabled;

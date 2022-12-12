@@ -110,9 +110,10 @@ public class SocketClient {
 				int newCanal = (int) (long) jsonObject.get("canal");
 				String appId = (String) jsonObject.get("appId");
 				String rootPath = (String) jsonObject.get("rootPath");
+				String model = (String) jsonObject.get("model");
 				reception = new SocketReception(bufferedReader, callback, SocketClient.this);
 				reception.start();
-				info = new ClientInfo(login+"-"+appId, password, rootPath);
+				info = new ClientInfo(login+"-"+appId, password, rootPath, model);
 				info.setConnected(true);
 				canal = newCanal;
 				callback.connected(SocketClient.this);

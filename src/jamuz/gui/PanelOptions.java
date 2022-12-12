@@ -521,6 +521,8 @@ public class PanelOptions extends javax.swing.JPanel {
 
         jTextPaneShortcuts.setEditable(false);
         jTextPaneShortcuts.setText("Keyboard Shortcuts:\n\n- ALT+ SHIFT + P : Play\n- ALT+ SHIFT + RIGHT : Next track\n- ALT+ SHIFT + LEFT : Previous track\n- ALT+ SHIFT + F : Forward\n- ALT+ SHIFT + R : Rewind\n- ALT+ SHIFT + W : Pullup\n- ALT+ SHIFT + E : Clear tracks       \n- ALT+ SHIFT + F1 : Set rating 1\n- ALT+ SHIFT + F2 : Set rating 2\n- ALT+ SHIFT + F3 : Set rating 3\n- ALT+ SHIFT + F4 : Set rating 4\n- ALT+ SHIFT + F5 : Set rating 5");
+        jTextPaneShortcuts.setEnabled(false);
+        jTextPaneShortcuts.setFocusable(false);
         jScrollPane1.setViewportView(jTextPaneShortcuts);
 
         javax.swing.GroupLayout jPanelOptionsLayout = new javax.swing.GroupLayout(jPanelOptions);

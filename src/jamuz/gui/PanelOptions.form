@@ -669,6 +669,8 @@
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="text" type="java.lang.String" value="Keyboard Shortcuts:&#xa;&#xa;- ALT+ SHIFT + P : Play&#xa;- ALT+ SHIFT + RIGHT : Next track&#xa;- ALT+ SHIFT + LEFT : Previous track&#xa;- ALT+ SHIFT + F : Forward&#xa;- ALT+ SHIFT + R : Rewind&#xa;- ALT+ SHIFT + W : Pullup&#xa;- ALT+ SHIFT + E : Clear tracks       &#xa;- ALT+ SHIFT + F1 : Set rating 1&#xa;- ALT+ SHIFT + F2 : Set rating 2&#xa;- ALT+ SHIFT + F3 : Set rating 3&#xa;- ALT+ SHIFT + F4 : Set rating 4&#xa;- ALT+ SHIFT + F5 : Set rating 5"/>
+                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>

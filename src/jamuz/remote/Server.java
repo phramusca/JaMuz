@@ -106,17 +106,25 @@ public class Server {
 
 			app.use((req, res) -> {
 				String login=req.getHeader("login").get(0);
-				if(!validateLogin(login)) {
-					res.sendStatus(Status._401);
+				if(!tableModel.contains(login)) {
+					String password=req.getHeader("password").get(0);
+					String rootPath=req.getHeader("rootPath").get(0);
+					String model=req.getHeader("model").get(0);
+					ClientInfo info = new ClientInfo(login, password, rootPath, model);
+					createClient(info);
 				}
-				String apiVersion=req.getHeader("api-version").get(0);
-				if(!apiVersion.equals("1.0")) {
-					res.setStatus(Status._301); // 301 Moved Permanently
-					JSONArray list = new JSONArray();
-					list.add("1.0");
-					JSONObject obj = new JSONObject();
-					obj.put("supported-versions", list);
-					res.send(obj.toJSONString());
+				if(!tableModel.contains(login) || !tableModel.getClient(login).isEnabled()) {
+					res.sendStatus(Status._401);
+				} else {
+					String apiVersion=req.getHeader("api-version").get(0);
+					if(!apiVersion.equals("2.0")) {
+						res.setStatus(Status._301); // 301 Moved Permanently
+						JSONArray list = new JSONArray();
+						list.add("2.0");
+						JSONObject obj = new JSONObject();
+						obj.put("supported-versions", list);
+						res.send(obj.toJSONString());
+					}	
 				}
 			});
 			
@@ -341,16 +349,6 @@ public class Server {
 		jsonAsMap.put("files", jSONArray);		
 		return JSONValue.toJSONString(jsonAsMap);
 	}
-	
-	private boolean validateLogin(String login) {
-		return tableModel.contains(login) && tableModel.getClient(login).isEnabled();
-//		if(tableModel.contains(login)) {
-//			if(tableModel.getClient(login).isEnabled()) {
-//				return true;
-//			}
-//		}
-//		return false;
-	}
 
 	private String getBody(InputStream stream) throws IOException {
 		//read body
@@ -428,35 +426,7 @@ public class Server {
 		@Override
 		public void connected(SocketClient client) {
 			if(!tableModel.contains(client.getInfo().getLogin())) {
-				//Creates a new machine, device and statSource
-				//and store the client
-				StringBuilder zText = new StringBuilder ();
-				if(Jamuz.getDb().isMachine(client.getInfo().getLogin(), zText, true)) {
-					Device device = new Device(-1, 
-							client.getInfo().getLogin(), 
-							"source", client.getInfo().getLogin(), 
-							-1, 
-							client.getInfo().getLogin(), true);
-					if(Jamuz.getDb().updateDevice(device)) {
-						Device deviceWithId = Jamuz.getDb().getDevice(client.getInfo().getLogin());
-						client.getInfo().setDevice(deviceWithId);
-						StatSource statSource = new StatSource(
-							-1, client.getInfo().getLogin(), 6, 
-							client.getInfo().getLogin(), "MySqlUser", "MySqlPwd", 
-							client.getInfo().getRootPath(), 
-							client.getInfo().getLogin(), 
-							deviceWithId.getId(), false, "", true);
-						if(Jamuz.getDb().insertOrUpdateStatSource(statSource)) {
-							StatSource statSourceWithId = Jamuz.getDb().getStatSource(client.getInfo().getLogin());
-							client.getInfo().setStatSource(statSourceWithId);
-							if(Jamuz.getDb().updateClient(client.getInfo())) {
-								ClientInfo clientInfo = Jamuz.getDb().getClient(client.getInfo().getLogin());
-								client.getInfo().setId(clientInfo.getId());
-								tableModel.add(clientInfo);
-							}
-						}
-					}
-				}
+				createClient(client.getInfo());
 			}
 			if(!clientMap.containsKey(client.getClientId())
 					&& tableModel.contains(client.getInfo().getLogin())
@@ -491,6 +461,38 @@ public class Server {
 			} 
 		}
     }
+	
+	private void createClient(ClientInfo clientInfo) {
+		//Creates a new machine, device and statSource
+		//and store the client
+		StringBuilder zText = new StringBuilder ();
+		if(Jamuz.getDb().isMachine(clientInfo.getLogin(), zText, true)) {
+			Device device = new Device(-1, 
+					clientInfo.getLogin(), 
+					"source", clientInfo.getLogin(), 
+					-1, 
+					clientInfo.getLogin(), true);
+			if(Jamuz.getDb().updateDevice(device)) {
+				Device deviceWithId = Jamuz.getDb().getDevice(clientInfo.getLogin());
+				clientInfo.setDevice(deviceWithId);
+				StatSource statSource = new StatSource(
+					-1, clientInfo.getLogin(), 6, 
+					clientInfo.getLogin(), "MySqlUser", "MySqlPwd", 
+					clientInfo.getRootPath(), 
+					clientInfo.getLogin(), 
+					deviceWithId.getId(), false, "", true);
+				if(Jamuz.getDb().insertOrUpdateStatSource(statSource)) {
+					StatSource statSourceWithId = Jamuz.getDb().getStatSource(clientInfo.getLogin());
+					clientInfo.setStatSource(statSourceWithId);
+					if(Jamuz.getDb().updateClient(clientInfo)) {
+						ClientInfo clientInfoUpdated = Jamuz.getDb().getClient(clientInfo.getLogin());
+						clientInfo.setId(clientInfoUpdated.getId());
+						tableModel.add(clientInfoUpdated);
+					}
+				}
+			}
+		}
+	}
 	
 	private void setStatus(String login, String status) {
 		if(tableModel.contains(login)) {
