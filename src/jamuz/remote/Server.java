@@ -110,7 +110,8 @@ public class Server {
 					String password=req.getHeader("password").get(0);
 					String rootPath=req.getHeader("rootPath").get(0);
 					String model=req.getHeader("model").get(0);
-					ClientInfo info = new ClientInfo(login, password, rootPath, model);
+					boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
+					ClientInfo info = new ClientInfo(login, password, rootPath, model, enableNewClients);
 					createClient(info);
 				}
 				if(!tableModel.contains(login) || !tableModel.getClient(login).isEnabled()) {
@@ -136,7 +137,7 @@ public class Server {
 				String login=req.getHeader("login").get(0);
 				Device device = tableModel.getClient(login).getDevice();
 				String destExt = device.getPlaylist().getDestExt();
-				int idFile = Integer.valueOf(req.getQuery("id"));
+				int idFile = Integer.parseInt(req.getQuery("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt); 
 				File file = fileInfoInt.getFullPath();
 				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
@@ -278,11 +279,11 @@ public class Server {
 				Device device = tableModel.getClient(login).getDevice(); 
 				String destExt = device.getPlaylist().getDestExt(); 
 				DbConnJaMuz.SyncStatus status = DbConnJaMuz.SyncStatus.valueOf(req.getParam("status")); 
-				boolean getCount = Boolean.valueOf(req.getQuery("getCount")); 
+				boolean getCount = Boolean.parseBoolean(req.getQuery("getCount")); 
 				String limit=""; 
 				if(!getCount) { 
-					int idFrom = Integer.valueOf(req.getQuery("idFrom")); 
-					int nbFilesInBatch = Integer.valueOf(req.getQuery("nbFilesInBatch")); 
+					int idFrom = Integer.parseInt(req.getQuery("idFrom")); 
+					int nbFilesInBatch = Integer.parseInt(req.getQuery("nbFilesInBatch")); 
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch; 
 				} 
 				String statusSql = status.equals(DbConnJaMuz.SyncStatus.INFO) 
@@ -351,7 +352,6 @@ public class Server {
 	}
 
 	private String getBody(InputStream stream) throws IOException {
-		//read body
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(stream, writer, StandardCharsets.UTF_8.name());
 		return writer.toString();

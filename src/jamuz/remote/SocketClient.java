@@ -6,6 +6,7 @@
 package jamuz.remote;
 
 import jamuz.FileInfoInt;
+import jamuz.Jamuz;
 import jamuz.utils.ImageUtils;
 import jamuz.utils.ProcessAbstract;
 import java.awt.image.BufferedImage;
@@ -113,7 +114,8 @@ public class SocketClient {
 				String model = (String) jsonObject.get("model");
 				reception = new SocketReception(bufferedReader, callback, SocketClient.this);
 				reception.start();
-				info = new ClientInfo(login+"-"+appId, password, rootPath, model);
+				boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
+				info = new ClientInfo(login+"-"+appId, password, rootPath, model, enableNewClients);
 				info.setConnected(true);
 				canal = newCanal;
 				callback.connected(SocketClient.this);

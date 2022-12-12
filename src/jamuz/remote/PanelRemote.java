@@ -74,9 +74,13 @@ public class PanelRemote extends javax.swing.JPanel {
 	 */
 	public void initExtended(Frame parent, ICallBackServer callback) {
 		this.parent = parent;
-		boolean onStartup = Boolean.valueOf(Jamuz.getOptions().get("server.on.startup", "false"));
+		boolean onStartup = Boolean.parseBoolean(Jamuz.getOptions().get("server.on.startup", "false"));
 		jCheckBoxServerStartOnStartup.setSelected(onStartup);
-		int port = Integer.valueOf(Jamuz.getOptions().get("server.port", "2013"));
+		
+		boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
+		jCheckBoxEnableByDefault.setSelected(enableNewClients);
+		
+		int port = Integer.parseInt(Jamuz.getOptions().get("server.port", "2013"));
 		jSpinnerPort.setValue(port);
 		server = new Server(port, callback);
 
@@ -303,6 +307,7 @@ public class PanelRemote extends javax.swing.JPanel {
         jScrollPaneCheckTags1 = new javax.swing.JScrollPane();
         jTableRemote = new javax.swing.JTable();
         jButtonRefreshIP = new javax.swing.JButton();
+        jCheckBoxEnableByDefault = new javax.swing.JCheckBox();
 
         jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder("Jamuz Remote Server"));
 
@@ -358,6 +363,15 @@ public class PanelRemote extends javax.swing.JPanel {
             }
         });
 
+        jCheckBoxEnableByDefault.setSelected(true);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("jamuz/Bundle"); // NOI18N
+        jCheckBoxEnableByDefault.setText(bundle.getString("PanelMain.jCheckBoxEnableByDefault.text")); // NOI18N
+        jCheckBoxEnableByDefault.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxEnableByDefaultItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
@@ -365,36 +379,44 @@ public class PanelRemote extends javax.swing.JPanel {
             .addGroup(jPanelRemoteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneCheckTags1)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonQRcode)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonStart))
-                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addComponent(jButtonRefreshIP)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelIP)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jCheckBoxServerStartOnStartup)))
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                                .addComponent(jButtonRefreshIP)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelIP))
+                            .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonQRcode)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBoxServerStartOnStartup)
+                            .addComponent(jCheckBoxEnableByDefault))
+                        .addGap(32, 32, 32)
+                        .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonQRcode)
-                    .addComponent(jButtonStart))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonRefreshIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBoxServerStartOnStartup)
-                    .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonQRcode)
+                            .addComponent(jCheckBoxEnableByDefault))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButtonRefreshIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jCheckBoxServerStartOnStartup))))
+                    .addComponent(jButtonStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                 .addContainerGap())
@@ -458,6 +480,12 @@ public class PanelRemote extends javax.swing.JPanel {
     private void jButtonRefreshIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshIPActionPerformed
         setIpText();
     }//GEN-LAST:event_jButtonRefreshIPActionPerformed
+
+    private void jCheckBoxEnableByDefaultItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxEnableByDefaultItemStateChanged
+        Jamuz.getOptions().set("server.enable.new.clients", String.valueOf(Boolean.valueOf(jCheckBoxEnableByDefault.isSelected())));
+		Jamuz.getOptions().save();
+		
+    }//GEN-LAST:event_jCheckBoxEnableByDefaultItemStateChanged
 
 	private ClientInfo getSelected() {
 		int selectedRow = jTableRemote.getSelectedRow(); 			
@@ -538,6 +566,7 @@ public class PanelRemote extends javax.swing.JPanel {
     private javax.swing.JButton jButtonQRcode;
     private javax.swing.JButton jButtonRefreshIP;
     private javax.swing.JButton jButtonStart;
+    private javax.swing.JCheckBox jCheckBoxEnableByDefault;
     private javax.swing.JCheckBox jCheckBoxServerStartOnStartup;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelIP;
