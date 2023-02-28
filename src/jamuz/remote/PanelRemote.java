@@ -41,6 +41,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
@@ -139,11 +140,14 @@ public class PanelRemote extends javax.swing.JPanel {
 	/**
 	 *
 	 * @param fileInfo
+	 * @param playlistInfo
 	 */
-	public static void send(FileInfoInt fileInfo) {		
+	public static void send(FileInfoInt fileInfo, String playlistInfo) {		
 		fileInfo.getTags();
-		Map jsonAsMap = fileInfo.toMap();
+		Map jsonAsMap = new HashMap();
         jsonAsMap.put("type", "fileInfoInt");
+		jsonAsMap.put("fileInfoInt", fileInfo.toMap());
+		jsonAsMap.put("playlistInfo", playlistInfo);
         send(jsonAsMap);
     }
 	

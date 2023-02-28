@@ -1714,7 +1714,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 						+ "VALUES (?, ?, ?, ?, ?, ?)");    //NOI18N
 				stInsertClient.setString(1, clientInfo.getLogin());
 				stInsertClient.setString(2, clientInfo.getPwd());
-				stInsertClient.setString(3, clientInfo.getName());
+				stInsertClient.setString(3, clientInfo.getName() + "-" + clientInfo.getLogin().substring(0, 5));
 				if (clientInfo.getDevice() != null) {
 					stInsertClient.setInt(4, clientInfo.getDevice().getId());
 				} else {

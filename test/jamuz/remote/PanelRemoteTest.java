@@ -86,7 +86,7 @@ public class PanelRemoteTest {
 	public void testSend_FileInfoInt() {
 		System.out.println("send");
 		FileInfoInt fileInfo = null;
-		PanelRemote.send(fileInfo);
+		PanelRemote.send(fileInfo, "");
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

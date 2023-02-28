@@ -234,7 +234,6 @@ public class ClientInfo {
 		this.enabled = enabled;
 	}
 
-	//FIXME !!! Use this for sync too
 	/**
 	 *
 	 * @return
