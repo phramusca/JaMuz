@@ -141,13 +141,15 @@ public class PanelRemote extends javax.swing.JPanel {
 	 *
 	 * @param fileInfo
 	 * @param playlistInfo
+	 * @param currentPosition
 	 */
-	public static void send(FileInfoInt fileInfo, String playlistInfo) {		
+	public static void send(FileInfoInt fileInfo, String playlistInfo, int currentPosition) {		
 		fileInfo.getTags();
 		Map jsonAsMap = new HashMap();
         jsonAsMap.put("type", "fileInfoInt");
 		jsonAsMap.put("fileInfoInt", fileInfo.toMap());
 		jsonAsMap.put("playlistInfo", playlistInfo);
+		jsonAsMap.put("currentPosition", currentPosition);
         send(jsonAsMap);
     }
 	

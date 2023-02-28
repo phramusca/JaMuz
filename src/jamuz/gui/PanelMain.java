@@ -250,7 +250,7 @@ public class PanelMain extends javax.swing.JFrame {
 					temp.add(displayedFile);
 					Jamuz.getDb().updateFileTags(temp, null);
 					displayTags();
-					PanelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString());
+					sendTrackToRemote();
 				}
 			}
 			else {
@@ -294,7 +294,7 @@ public class PanelMain extends javax.swing.JFrame {
 		@Override
 		public void connectedRemote(String clientId) {
 			sendPlaylists(clientId, jComboBoxPlaylist.getSelectedItem().toString());
-			PanelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString());
+			sendTrackToRemote();
 		}
 
 //		@Override
@@ -505,16 +505,20 @@ public class PanelMain extends javax.swing.JFrame {
 	private void setRating(int rating, boolean sayRated) {
 		if(displayedFile.isFromLibrary()) {
             jComboBoxPlayerRating.setSelectedIndex(rating);
-            PanelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString());
+            sendTrackToRemote();
         }
     }
 	
 	private void setGenre(String genre) {
 		if(displayedFile.isFromLibrary()) {
 			jComboBoxPlayerGenre.setSelectedItem(genre);
-            PanelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString());
+            sendTrackToRemote();
         }
     }
+	
+	private static void sendTrackToRemote() {
+		PanelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString(), jSliderPlayerLength.getValue());
+	}
 
 	/**
 	 *
@@ -1493,7 +1497,7 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonRefreshHiddenQueueActionPerformed
 
     private void jButtonTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsActionPerformed
-        DialogTag.main(this, displayedFile, jComboBoxPlaylist.getSelectedItem().toString());
+        sendTrackToRemote();
     }//GEN-LAST:event_jButtonTagsActionPerformed
 
     private void jSpinnerVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVolumeStateChanged
@@ -1579,7 +1583,7 @@ public class PanelMain extends javax.swing.JFrame {
 
             if (isPlaying) {
                 playerInfo.displayFileInfo(fileInfo);
-                PanelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString());
+                sendTrackToRemote();
             }
         } catch (Exception ex) {
             Popup.error(ex);
