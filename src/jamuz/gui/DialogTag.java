@@ -43,8 +43,6 @@ import javax.swing.JButton;
 public class DialogTag extends javax.swing.JDialog {
 
     private static FileInfoInt file;
-	private final String playlistInfo;
-	private final int currentPosition;
 
     /**
      * Creates new form PanelDialogCheck
@@ -54,7 +52,7 @@ public class DialogTag extends javax.swing.JDialog {
 	 * @param playlistInfo
 	 * @param currentPosition
      */
-    public DialogTag(java.awt.Frame parent, boolean modal, FileInfoInt file, String playlistInfo, int currentPosition) {
+    public DialogTag(java.awt.Frame parent, boolean modal, FileInfoInt file) {
         super(parent, modal);
         initComponents();
 		DialogTag.file = file;
@@ -65,8 +63,6 @@ public class DialogTag extends javax.swing.JDialog {
 			}
 		});
         initExtended();
-		this.playlistInfo = playlistInfo;
-		this.currentPosition = currentPosition;
     }
 
      /**
@@ -75,7 +71,7 @@ public class DialogTag extends javax.swing.JDialog {
 	 * @param playlistInfo 
 	 * @param currentPosition 
 	 */
-	public static void main(Frame parent, FileInfoInt file, String playlistInfo, int currentPosition) {
+	public static void main(Frame parent, FileInfoInt file) {
 		/* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -93,7 +89,7 @@ public class DialogTag extends javax.swing.JDialog {
 		}
 		//</editor-fold>
 
-        DialogTag dialog = new DialogTag(parent, true, file, playlistInfo, currentPosition);
+        DialogTag dialog = new DialogTag(parent, true, file);
         dialog.setLocationRelativeTo(parent);
         dialog.setTitle(file.getArtist().concat(" | ").concat(file.getTitle()).concat(" | (").concat(file.getAlbum()).concat(")"));
         dialog.setVisible(true);
@@ -260,9 +256,7 @@ public class DialogTag extends javax.swing.JDialog {
 	
 	private void displayAndDispose() {
 		PanelMain.displayTags();
-		PanelRemote.send(file, playlistInfo, currentPosition);
-		//Close this GUI
-        this.dispose();
+        dispose();
 	}
 	
 	/**

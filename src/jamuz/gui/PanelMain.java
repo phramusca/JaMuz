@@ -37,7 +37,6 @@ import jamuz.remote.ICallBackServer;
 import jamuz.remote.PanelRemote;
 import jamuz.utils.Dependencies;
 import jamuz.utils.Inter;
-import jamuz.utils.OS;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import jamuz.utils.Swing;
@@ -46,7 +45,6 @@ import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -250,7 +248,6 @@ public class PanelMain extends javax.swing.JFrame {
 					temp.add(displayedFile);
 					Jamuz.getDb().updateFileTags(temp, null);
 					displayTags();
-					sendTrackToRemote();
 				}
 			}
 			else {
@@ -1141,7 +1138,7 @@ public class PanelMain extends javax.swing.JFrame {
      */
     public static void enablePreviousAndNext(boolean previous, boolean next) {
         jButtonPlayerPrevious.setEnabled(previous);
-        jButtonPlayerNext.setEnabled(next || (fileInfoHiddenQueue.size()>0 && jButtonPlayerPlay.getText().equals(Inter.get("Button.Pause"))));
+        jButtonPlayerNext.setEnabled(next || (!fileInfoHiddenQueue.isEmpty() && jButtonPlayerPlay.getText().equals(Inter.get("Button.Pause"))));
     }
 
     /**
@@ -1165,7 +1162,7 @@ public class PanelMain extends javax.swing.JFrame {
         }
         
         //Fillup queue until reached "nbFilesInQueue"
-        if (fileInfoHiddenQueue.size() > 0) {
+        if (!fileInfoHiddenQueue.isEmpty()) {
             while (queueModel.getSize() < nbFilesInQueue) {
                 //TODO: Eventually Replace arraylist with a fifo queue and manage thread safety
                 FileInfoInt myFileInfo = fileInfoHiddenQueue.get(0);
@@ -1497,7 +1494,7 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonRefreshHiddenQueueActionPerformed
 
     private void jButtonTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsActionPerformed
-        sendTrackToRemote();
+        DialogTag.main(this, displayedFile);
     }//GEN-LAST:event_jButtonTagsActionPerformed
 
     private void jSpinnerVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVolumeStateChanged
@@ -1583,7 +1580,6 @@ public class PanelMain extends javax.swing.JFrame {
 
             if (isPlaying) {
                 playerInfo.displayFileInfo(fileInfo);
-                sendTrackToRemote();
             }
         } catch (Exception ex) {
             Popup.error(ex);
@@ -1596,6 +1592,8 @@ public class PanelMain extends javax.swing.JFrame {
 			builder.append(tag).append(" ");
 		}
 		jLabelTags.setText(toHTML(builder.toString()));
+		sendTrackToRemote();
+		
 	}
 
     private static long startTime=System.currentTimeMillis();
