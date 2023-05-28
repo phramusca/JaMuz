@@ -152,10 +152,7 @@ public class DialogVideoExport extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void getFolder(JTextField textField, String title) {
-        String selectedFolder=Swing.selectFolder(textField.getText(), title);
-        if(!selectedFolder.isBlank()) {  //NOI18N
-            textField.setText(selectedFolder+File.separator);
-        }
+        Swing.selectFolder(textField, title, true);
     }
     
     private void jButtonSelectDestinationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDestinationActionPerformed

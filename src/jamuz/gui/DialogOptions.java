@@ -1077,10 +1077,7 @@ public class DialogOptions extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonOptionSelectFolderActionPerformed
 
 	private void selectFolder(JTextField textField, String title) {
-		String selectedFolder=Swing.selectFolder(textField.getText(), title);
-        if(!selectedFolder.isBlank()) {  //NOI18N
-            textField.setText(selectedFolder);
-        }
+		Swing.selectFolder(textField, title, false);
 	}
 	
     private void jButtonOptionSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSaveActionPerformed

@@ -231,17 +231,11 @@ public class DialogDevice extends javax.swing.JDialog {
 	}//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSelectDestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDestActionPerformed
-        String selectedFolder=Swing.selectFolder(jTextFieldDestination.getText(), Inter.get("Label.Destination"));
-		if(!selectedFolder.isBlank()) {  //NOI18N
-			jTextFieldDestination.setText(selectedFolder); 
-		}
+		Swing.selectFolder(jTextFieldDestination, Inter.get("Label.Destination"), false);
     }//GEN-LAST:event_jButtonSelectDestActionPerformed
 
     private void jButtonSelectSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectSourceActionPerformed
-		String selectedFolder=Swing.selectFolder(jTextFieldSource.getText(), Inter.get("Label.Source"));
-		if(!selectedFolder.isBlank()) {  //NOI18N
-			jTextFieldSource.setText(selectedFolder); 
-		}
+		Swing.selectFolder(jTextFieldSource, Inter.get("Label.Source"), false);
     }//GEN-LAST:event_jButtonSelectSourceActionPerformed
 
     /**

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -51,11 +52,21 @@ public class Swing {
 
 	/**
 	 * Select a folder (open a folder chooser GUI)
-	 * @param defaultFolder 
-	 * @param title 
-	 * @return
+	 * @param textField 
+	 * @param title
+	 * @param addTrailingSlash
+	 * @return 
 	 */
-	public static String selectFolder(String defaultFolder, String title) {
+	public static boolean selectFolder(JTextField textField, String title, boolean addTrailingSlash) {
+		String selectedFolder = Swing.selectFolder(textField.getText(), title);
+        if(!selectedFolder.isBlank()) {
+            textField.setText(selectedFolder+(addTrailingSlash?File.separator:""));
+			return true;
+        }
+		return false;
+	}
+	
+	private static String selectFolder(String defaultFolder, String title) {
 		JFileChooser fc = new JFileChooser(defaultFolder);
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fc.setDialogTitle(title);
