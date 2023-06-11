@@ -2660,10 +2660,25 @@ public class DbConnJaMuz extends StatSourceSQL {
 			st = dbConn.connection.createStatement();
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
-				stats.add(new StatItem(dbConn.getStringValue(rs, "percentRated"),
-						dbConn.getStringValue(rs, "percentRated"),
+				String label = dbConn.getStringValue(rs, "percentRated");
+				Color color = Color.WHITE;
+				switch(label) {
+					case "0 -> 9 percent":
+						color = new Color(233,76,18); break;
+					case "10 -> 24 percent":
+						color = new Color(233,183, 18); break;
+					case "25 -> 49 percent":
+						color = new Color(212,233,18); break;
+					case "50 -> 74 percent":
+						color = new Color(153,255,153); break;
+					case "75 -> 99 percent":
+						color = new Color(51,255,51); break;
+					case "x 100 percent x":
+						color = new Color(0,195,0); break;
+				}
+				stats.add(new StatItem(label, label,
 						rs.getLong(1), rs.getLong(2), rs.getLong(3),
-						rs.getLong(4), rs.getDouble(5), null));
+						rs.getLong(4), rs.getDouble(5), color));
 			}
 		} catch (SQLException ex) {
 			Popup.error("getPercentRatedForStats()", ex);   //NOI18N
