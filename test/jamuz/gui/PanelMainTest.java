@@ -21,7 +21,6 @@ import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
 import java.util.List;
 import javax.swing.ImageIcon;
-import javax.swing.JTable;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;

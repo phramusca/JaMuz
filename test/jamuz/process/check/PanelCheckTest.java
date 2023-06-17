@@ -16,7 +16,6 @@
  */
 package jamuz.process.check;
 
-import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;

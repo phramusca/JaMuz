@@ -17,7 +17,6 @@
 package jamuz;
 
 import jamuz.DbInfo.LibType;
-import jamuz.utils.Dependencies;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;

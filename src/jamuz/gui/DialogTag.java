@@ -21,7 +21,6 @@ import jamuz.FileInfoInt;
 import jamuz.IconBuffer;
 import jamuz.Jamuz;
 import jamuz.gui.swing.WrapLayout;
-import jamuz.remote.PanelRemote;
 import jamuz.utils.Inter;
 import java.awt.Color;
 import java.awt.Component;

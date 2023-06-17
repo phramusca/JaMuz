@@ -120,7 +120,7 @@ public class Main {
 					PanelSelect.stopMplayer();
 				}
 			});
-
+			
 			PanelMain.main();
 		} catch (Exception ex) {
 			Popup.error(ex);
