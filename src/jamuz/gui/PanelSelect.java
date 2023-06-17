@@ -490,6 +490,7 @@ public class PanelSelect extends javax.swing.JPanel {
         jCheckBoxSelectCheckedFlag2.setText(Inter.get("Check.OK")); // NOI18N
         jCheckBoxSelectCheckedFlag2.setOpaque(true);
 
+        jCheckBoxSelectCheckedFlag1.setSelected(true);
         jCheckBoxSelectCheckedFlag1.setText(Inter.get("Check.KO")); // NOI18N
         jCheckBoxSelectCheckedFlag1.setOpaque(true);
 
@@ -529,9 +530,11 @@ public class PanelSelect extends javax.swing.JPanel {
         jCheckBoxSelectRating0.setSelected(true);
         jCheckBoxSelectRating0.setText("?"); // NOI18N
 
+        jCheckBoxSelectRating1.setSelected(true);
         jCheckBoxSelectRating1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/1starU.png"))); // NOI18N
         jCheckBoxSelectRating1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/1starC.png"))); // NOI18N
 
+        jCheckBoxSelectRating2.setSelected(true);
         jCheckBoxSelectRating2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/2starU.png"))); // NOI18N
         jCheckBoxSelectRating2.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/2starC.png"))); // NOI18N
 
