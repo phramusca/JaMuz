@@ -120,8 +120,10 @@ public class Main {
 					PanelSelect.stopMplayer();
 				}
 			});
-			
+
+			//Start GUI
 			PanelMain.main();
+
 		} catch (Exception ex) {
 			Popup.error(ex);
 			System.exit(99);
