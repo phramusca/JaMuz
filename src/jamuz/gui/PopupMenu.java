@@ -24,6 +24,7 @@ import jamuz.acoustid.Results;
 import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
 import jamuz.process.check.PanelCheck;
+import jamuz.soulseek.DialogSoulseek;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -41,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -255,6 +255,17 @@ public class PopupMenu {
 							}));
 				}
                 jPopupMenu1.add(menuLinks);
+				
+				jPopupMenu1.add(new JMenuItem(new AbstractAction("Soulseek") {
+					@Override
+					public void actionPerformed(ActionEvent ae) {
+						FileInfoInt selected = getSelected();
+						if(selected!=null) {
+							//TODO: set parent frame
+							DialogSoulseek.main(null, selected.getAlbumArtist().concat(" ").concat(selected.getAlbum()));
+						}
+					}
+				}));
             } catch (IOException ex) {
                 Jamuz.getLogger().log(Level.SEVERE, null, ex);
             }

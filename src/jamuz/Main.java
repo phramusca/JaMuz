@@ -93,13 +93,12 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-
 			//Get current application folder
 			File f = new File(".");  //NOI18N
 			Jamuz.getLogger().finest(f.getAbsolutePath());
 			String appPath = f.getAbsolutePath();
 			appPath = appPath.substring(0, appPath.length() - 1);
-
+			
 			//Configure application
 			if (!Jamuz.configure(appPath)) {
 				System.exit(1);
