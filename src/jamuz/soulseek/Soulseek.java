@@ -17,6 +17,9 @@
 
 package jamuz.soulseek;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.utils.Benchmark;
@@ -28,8 +31,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -133,7 +138,9 @@ public class Soulseek {
 		}
 		else {
 			//TODO: Test if it works in MacOS for instance
-			cmdArray.add("soulseek");		
+//			cmdArray.add("soulseek");		
+			cmdArray.add("node");
+			cmdArray.add("/home/raph/Documents/04-Creations/Dev/Repos/soulseek-cli/cli.js");	
 		}
 		cmdArray.add(command.name());
 		switch(command) {
@@ -145,6 +152,7 @@ public class Soulseek {
 				cmdArray.add(query);
 				break;
 			case download:
+				cmdArray.add("--non-interactive");
 				cmdArray.add("--mode");
 				cmdArray.add(mode.name());
 				cmdArray.add(query);
@@ -163,6 +171,7 @@ public class Soulseek {
 			StdIn = process.getOutputStream();
 			downloadStarted = false;
 			enableSearch = true;
+			StringBuilder jsonRes = new StringBuilder();
 			
 			// Reading Input Stream
 			Thread readInputThread = new Thread("Thread.Soulseek.process.soulseek.InputStream") {
@@ -173,7 +182,6 @@ public class Soulseek {
 						inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 						String line;
 						int resultsCount = 0;
-						int currentId = 0;
 						int downloadId = 0;
 						List<SoulseekResult> downloads = new ArrayList<>();
 						boolean downloadNotified = false;
@@ -182,17 +190,15 @@ public class Soulseek {
 							Jamuz.getLogger().finest(line);
 							System.out.println(line);
 							if(!downloadStarted) {
-								if(line.contains("(Move up and down to reveal more choices)")) {
-									//FIXME Soulseek How to send DOWN key ??? To get the rest of the list. Ask them a --non-interactive option
-									enableSearch = false;
-									callback.enableDownload();
-								}
-								else if(line.startsWith("Displaying ")) {
+								if(line.startsWith("Displaying ")) {
 									callback.progress(line);
 									resultsCount = getResultsCount(line);
 									System.out.println(resultsCount + " ::: " + line);
-								} else if(line.equals("? Choose a folder to download ")) {
-									// no need to display this ugly line  in gui
+								} else if(line.equals("Choose a folder to download")) {
+									final Gson gson = new Gson();
+									Type mapType = new TypeToken<Map<String, SoulseekResultFolder>>(){}.getType();
+									Map<String, SoulseekResultFolder> fromJson = gson.fromJson(jsonRes.toString(), mapType);
+									callback.enableDownload(fromJson);
 								} else if(line.equals("Nothing found")) {
 									callback.progress(line);
 									if(mode.equals(Mode.flac)) {
@@ -201,17 +207,7 @@ public class Soulseek {
 									}
 									cancel();
 								} else if(resultsCount > 0) {
-									int id = getResultId(line);
-									if(id>0) {
-										currentId=id;
-										callback.addResult(new SoulseekResult(line, SoulseekResult.Status.Folder, id, line), "");
-										if(id == resultsCount) {
-											enableSearch = false;
-											callback.enableDownload();
-										}
-									} else {
-										callback.appendResult(line, currentId-1);
-									}
+									jsonRes.append(line);
 								} else {
 									checkError(line);
 								}

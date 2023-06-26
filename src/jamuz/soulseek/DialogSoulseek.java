@@ -29,6 +29,7 @@ import java.awt.Dialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -158,17 +159,13 @@ public class DialogSoulseek extends javax.swing.JDialog {
 			}
 
 			@Override
-			public void enableDownload() {
+			public void enableDownload(Map<String, SoulseekResultFolder> results) {
 				new Thread() {
 					@Override
 					public void run() {
-						try {
-							// Wait for a potential remaining line to be appended to last result
-							//Unfortuneatly, without a --non-interactive mode, no way to know when is the end of the list :(
-							Thread.sleep(500); 
-						} catch (InterruptedException ex) {
-							Logger.getLogger(DialogSoulseek.class.getName()).log(Level.SEVERE, null, ex);
-						}
+						//FIXME !!!!!!!!!!!!! Use results : insert in jTable
+						
+						
 						for (SoulseekResult result : tableModelResults.getRows()) {
 							if(result.getStatus().equals(SoulseekResult.Status.Folder)) {
 								result.parseFolderAttributes();

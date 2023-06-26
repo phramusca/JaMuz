@@ -5,6 +5,8 @@
  */
 package jamuz.soulseek;
 
+import java.util.Map;
+
 /**
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
@@ -21,7 +23,7 @@ public interface ICallBackSoulseek {
 
 	public void completed();
 		
-	public void enableDownload();
+	public void enableDownload(Map<String, SoulseekResultFolder> results);
 
 	public void enableSearch();
 
