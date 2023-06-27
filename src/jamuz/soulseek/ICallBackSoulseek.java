@@ -17,8 +17,6 @@ public interface ICallBackSoulseek {
 
 	public void addResult(SoulseekResult file, String progressMsg);
 
-	public void appendResult(String path, int row);
-
 	public void replaceResult(SoulseekResult result, int row, String bench);
 
 	public void completed();

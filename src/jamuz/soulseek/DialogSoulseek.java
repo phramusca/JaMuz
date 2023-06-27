@@ -145,12 +145,6 @@ public class DialogSoulseek extends javax.swing.JDialog {
 			}
 
 			@Override
-			public void appendResult(String path, int row) {
-				SoulseekResult current = tableModelResults.getRow(row);
-				current.append(path);
-			}
-
-			@Override
 			public void replaceResult(SoulseekResult result, int row, String progressMsg) {
 				if(row <= jTableSoulseek.getRowCount()) {
 					progressBar.progress(progressMsg);
@@ -163,13 +157,23 @@ public class DialogSoulseek extends javax.swing.JDialog {
 				new Thread() {
 					@Override
 					public void run() {
-						//FIXME !!!!!!!!!!!!! Use results : insert in jTable
-						
+						for (Map.Entry<String, SoulseekResultFolder> entry : results.entrySet()) {
+							String key = entry.getKey();
+							SoulseekResultFolder soulseekResultFolder = entry.getValue();
+							//FIXME Soulseek ! Display files in a treeViewTable
+							tableModelResults.addRow(
+									new SoulseekResult(key, 
+											SoulseekResult.Status.Folder, 
+											soulseekResultFolder.folder, 
+											soulseekResultFolder.user, 
+											soulseekResultFolder.files.size(), 
+											soulseekResultFolder.bitrateInKbps,  //FIXME Soulseek !!! store as int
+											String.valueOf(soulseekResultFolder.sizeInMb), //FIXME Soulseek !!! store as int
+											String.valueOf(soulseekResultFolder.speedInKbPerSecond))); //FIXME Soulseek !!! store as int
+						}						
 						
 						for (SoulseekResult result : tableModelResults.getRows()) {
 							if(result.getStatus().equals(SoulseekResult.Status.Folder)) {
-								result.parseFolderAttributes();
-								
 								SoulseekDownload sd = new SoulseekDownload(jTextFieldQuery.getText(), result.getNbOfFiles(), result.getPath(), result.getUsername(), destinationTemp.getValue());
 								SoulseekDownload read = sd.read();
 								if(read!=null) {

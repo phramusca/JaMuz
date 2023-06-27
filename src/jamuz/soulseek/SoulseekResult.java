@@ -17,8 +17,6 @@
 package jamuz.soulseek;
 
 import jamuz.utils.DateTime;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -26,34 +24,41 @@ import java.util.regex.Pattern;
  */
 public class SoulseekResult {
 	
-	private String line;
-	private Status status;
-	private int id;
-	private int nbOfFiles;
-	private String path="";
-	private String username="";
-	private String bitrate="";
-	private String size="";
-	private String speed="";
 	private String date;
-	private String attributes;
+	private Status status;
+	private int nbOfFiles;
 	private int nbDownloaded;
+	private String path;
+	private int id;
+	private String key = "";
+	private String username = "";
+	private String bitrate = "";
+	private String size = "";
+	private String speed = "";
 
 	/**
 	 * Soulseek result
-	 * @param line
 	 * @param status
 	 * @param id
 	 * @param path
 	 */
-	public SoulseekResult(String line, Status status, int id, String path) {
-		this.line = line;
+	public SoulseekResult(int id, Status status, String path) {
 		this.id = id;
 		this.path = path;
 		this.status = status;
 		this.date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
 	}
 
+	public SoulseekResult(String key, Status status, String path, String username, int nbOfFiles, String bitrate, String size, String speed) {
+		this(-1, status, path);
+		this.nbOfFiles = nbOfFiles;
+		this.username = username;
+		this.bitrate = bitrate;
+		this.size = size;
+		this.speed = speed;
+		this.key = key;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -78,6 +83,10 @@ public class SoulseekResult {
 		return date;
 	}
 
+	String getKey() {
+		return key;
+	}
+
 	public enum Status {
 		Folder,
 		Downloading,
@@ -87,35 +96,6 @@ public class SoulseekResult {
 	
 	Status getStatus() {
 		return status;
-	}
-
-	public boolean parseFolderAttributes() {
-		Pattern patterner = Pattern.compile("^  ([0-9]+)\\)(.*) - (.*)(\\(([0-9]+) file.*)", Pattern.CASE_INSENSITIVE);
-		Matcher matcher = patterner.matcher(line);
-		boolean matchFound = matcher.find();
-		if(matchFound) {
-			id = Integer.parseInt(matcher.group(1));
-			path = matcher.group(2).trim();
-			username = matcher.group(3).trim();
-			
-			attributes = matcher.group(4);
-			nbOfFiles = Integer.parseInt(matcher.group(5));
-			attributes = attributes.substring(0, attributes.length()-1).substring(1);
-			String[] split = attributes.split(",");		
-			for (String string : split) {
-				String[] split1 = string.split(":");
-				if(split1.length > 1) {
-					String key = split1[0].trim();
-					String value = split1[1].trim();
-					switch(key) {
-						case "bitrate": bitrate = value; break;
-						case "size": size = value; break;
-						case "speed": speed = value; break;
-					}
-				}
-			}
-		}
-		return matchFound;
 	}
 	
 	public String getBitrate() {
@@ -136,10 +116,6 @@ public class SoulseekResult {
 
 	public void setNbDownloaded(int nbDownloaded) {
 		this.nbDownloaded = nbDownloaded;
-	}
-	
-	void append(String string) {
-		this.line += string;
 	}
 
 	public void setStatus(Status status) {
@@ -165,6 +141,6 @@ public class SoulseekResult {
 	
 	@Override
 	public String toString() {
-		return path + " | " + username + " | " + attributes + " |" ;
+		return path + " | " + username + " | " + nbOfFiles + " |" ;
 	}
 }

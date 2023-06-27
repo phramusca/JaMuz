@@ -92,7 +92,7 @@ public class Soulseek {
 	boolean sendSelection(SoulseekResult result, String query) {
 		try {
 			folderBeingDownloaded = new SoulseekDownload(query, result.getNbOfFiles(), result.getPath(), result.getUsername(), destination);
-			StdIn.write((result.getId()+"\n").getBytes());
+			StdIn.write((result.getKey()+"\n").getBytes());
 			downloadStarted = true;
 			benchmark = new Benchmark(result.getNbOfFiles());
 			StdIn.flush();
@@ -363,9 +363,8 @@ public class Soulseek {
 		Matcher matcher = patterner.matcher(line);
 		boolean matchFound = matcher.find();
 		if(matchFound) {
-			SoulseekResult soulseekDownload = new SoulseekResult(line,
+			SoulseekResult soulseekDownload = new SoulseekResult(downloadId,
 					SoulseekResult.Status.Received,
-					downloadId,
 					FilenameUtils.concat(destination, matcher.group(1)));
 			return soulseekDownload;
 		}
@@ -378,9 +377,8 @@ public class Soulseek {
 		Matcher matcher = patterner.matcher(line);
 		boolean matchFound = matcher.find();
 		if(matchFound) {
-			SoulseekResult soulseekDownload = new SoulseekResult(line,
+			SoulseekResult soulseekDownload = new SoulseekResult(downloadId,
 					SoulseekResult.Status.Downloading,
-					downloadId,
 					matcher.group(1));
 			return soulseekDownload;
 		}
@@ -394,8 +392,8 @@ public class Soulseek {
 		boolean matchFound = matcher.find();
 		if(matchFound) {
 			SoulseekResult soulseekDownload = new SoulseekResult(
-					line, SoulseekResult.Status.Received,
-					Integer.parseInt(matcher.group(1)),
+					Integer.parseInt(matcher.group(1)), 
+					SoulseekResult.Status.Received,
 					matcher.group(3));
 			return soulseekDownload;
 		}
