@@ -99,7 +99,7 @@ public class TableEntrySlsk {
 	}
 	
 	public String getBitrate() {
-		return bitrate;
+		return bitrate!=null?bitrate:"";
 	}
 
 	public String getSize() {
