@@ -30,7 +30,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author raph
  */
-public class SoulseekDownload {
+public class SlskDownload {
 	
 	@Expose
 	public String query;
@@ -54,7 +54,7 @@ public class SoulseekDownload {
 	 * @param username
 	 * @param destination
 	 */
-	public SoulseekDownload(String query, int nbOfFiles, String path, String username, String destination) {
+	public SlskDownload(String query, int nbOfFiles, String path, String username, String destination) {
 		this.query = query;
 		this.nbOfFiles = nbOfFiles;
 		this.path = path;
@@ -80,21 +80,21 @@ public class SoulseekDownload {
 			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 			FileSystem.writeTextFile(jsonFile, gson.toJson(this));
 		} catch (IOException ex) {
-			Logger.getLogger(SoulseekDownload.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(SlskDownload.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 	
-	SoulseekDownload read() {
+	SlskDownload read() {
 		final Gson gson = new Gson();
-		SoulseekDownload fromJson = null;
+		SlskDownload fromJson = null;
 		if(jsonFile.exists()) {
 			try {
 				String readJson = FileSystem.readTextFile(jsonFile);
 				if (!readJson.equals("")) {
-					fromJson = gson.fromJson(readJson, SoulseekDownload.class);
+					fromJson = gson.fromJson(readJson, SlskDownload.class);
 				}
 			} catch (IOException ex) {
-				Logger.getLogger(SoulseekDownload.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(SlskDownload.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 		return fromJson;

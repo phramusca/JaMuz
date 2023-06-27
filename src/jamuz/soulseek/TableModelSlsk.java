@@ -24,14 +24,14 @@ import java.util.List;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class TableModelSoulseek extends TableModelGeneric {
+public class TableModelSlsk extends TableModelGeneric {
 
-    private List<SoulseekResult> results;
+    private List<TableEntrySlsk> results;
 
     /**
 	 * Create the table model
 	 */
-	public TableModelSoulseek() {
+	public TableModelSlsk() {
         this.results = new ArrayList<>();
         this.setColumnNames(new String [] {
             "Date", //NOI18N
@@ -54,7 +54,7 @@ public class TableModelSoulseek extends TableModelGeneric {
 	 */
 	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        SoulseekResult soulseekDownload = results.get(rowIndex);
+        TableEntrySlsk soulseekDownload = results.get(rowIndex);
         switch (columnIndex) {
 			case 0: return soulseekDownload.getDate();
 			case 1: return soulseekDownload.getNbDownloaded();
@@ -71,7 +71,7 @@ public class TableModelSoulseek extends TableModelGeneric {
 	
 	@Override
     public void setValueAt(Object value, int row, int col) {
-		SoulseekResult result = results.get(row);
+		TableEntrySlsk result = results.get(row);
 //        switch (col) {
 //			case 3: 
 //				result.setPath((String) value);
@@ -105,7 +105,7 @@ public class TableModelSoulseek extends TableModelGeneric {
     * Add a row to the table
 	 * @param result
     */
-    public void addRow(SoulseekResult result){
+    public void addRow(TableEntrySlsk result){
 		this.results.add(result);
 		this.fireTableDataChanged();
     }
@@ -115,7 +115,7 @@ public class TableModelSoulseek extends TableModelGeneric {
 	 * @param result
 	 * @param row
     */
-    public void replaceRow(SoulseekResult result, int row){
+    public void replaceRow(TableEntrySlsk result, int row){
 		this.results.set(row, result);
 		this.fireTableDataChanged();
     }
@@ -124,7 +124,7 @@ public class TableModelSoulseek extends TableModelGeneric {
 	 *
 	 * @param file
 	 */
-	public void removeRow(SoulseekResult file){
+	public void removeRow(TableEntrySlsk file){
 		this.results.remove(file);
 		this.fireTableDataChanged();
     }
@@ -133,7 +133,7 @@ public class TableModelSoulseek extends TableModelGeneric {
 	 * Return list of lines
 	 * @return
 	 */
-	public List<SoulseekResult> getRows() {
+	public List<TableEntrySlsk> getRows() {
 		return results;
 	}
 
@@ -142,7 +142,7 @@ public class TableModelSoulseek extends TableModelGeneric {
      * @param index
      * @return
      */
-    public SoulseekResult getRow(int index) {
+    public TableEntrySlsk getRow(int index) {
         return this.results.get(index);
     }
    

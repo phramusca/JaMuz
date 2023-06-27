@@ -11,17 +11,17 @@ import java.util.Map;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public interface ICallBackSoulseek {
+public interface ICallBackSlsk {
 	
 	public void progress(String line);
 
-	public void addResult(SoulseekResult file, String progressMsg);
+	public void addResult(TableEntrySlsk file, String progressMsg);
 
-	public void replaceResult(SoulseekResult result, int row, String bench);
+	public void replaceResult(TableEntrySlsk result, int row, String bench);
 
 	public void completed();
 		
-	public void enableDownload(Map<String, SoulseekResultFolder> results);
+	public void enableDownload(Map<String, SlskResultFolder> results);
 
 	public void enableSearch();
 

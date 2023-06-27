@@ -24,7 +24,7 @@ import jamuz.acoustid.Results;
 import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
 import jamuz.process.check.PanelCheck;
-import jamuz.soulseek.DialogSoulseek;
+import jamuz.soulseek.DialogSlsk;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -262,7 +262,7 @@ public class PopupMenu {
 						FileInfoInt selected = getSelected();
 						if(selected!=null) {
 							//TODO: set parent frame
-							DialogSoulseek.main(null, selected.getAlbumArtist().concat(" ").concat(selected.getAlbum()));
+							DialogSlsk.main(null, selected.getAlbumArtist().concat(" ").concat(selected.getAlbum()));
 						}
 					}
 				}));

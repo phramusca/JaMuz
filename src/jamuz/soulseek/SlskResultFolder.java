@@ -22,11 +22,11 @@ import java.util.List;
  *
  * @author raph
  */
-public class SoulseekResultFolder {
+public class SlskResultFolder {
 	String user;
 	String folder;
 	String bitrateInKbps;
 	int sizeInMb;
 	int speedInKbPerSecond;
-	List<SoulseekResultFile> files;
+	List<SlskResultFile> files;
 }

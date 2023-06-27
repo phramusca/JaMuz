@@ -44,14 +44,14 @@ import org.apache.commons.io.FilenameUtils;
 /**
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class Soulseek {
+public class Slsk {
 	
-	private final ICallBackSoulseek callback;
+	private final ICallBackSlsk callback;
 	private OutputStream StdIn;
 	private boolean downloadStarted;
 	private Process process;
 	private Benchmark benchmark;
-	private SoulseekDownload folderBeingDownloaded;
+	private SlskDownload folderBeingDownloaded;
 	private boolean enableSearch;
 	private String destination;
 	
@@ -70,7 +70,7 @@ public class Soulseek {
      *
 	 * @param callBackSoulseek
      */  
-    public Soulseek(ICallBackSoulseek callBackSoulseek) {
+    public Slsk(ICallBackSlsk callBackSoulseek) {
 		this.callback = callBackSoulseek;
     }
 
@@ -89,22 +89,22 @@ public class Soulseek {
 		return process(Command.download, query, mode);
 	}
 	
-	boolean sendSelection(SoulseekResult result, String query) {
+	boolean sendSelection(TableEntrySlsk result, String query) {
 		try {
-			folderBeingDownloaded = new SoulseekDownload(query, result.getNbOfFiles(), result.getPath(), result.getUsername(), destination);
+			folderBeingDownloaded = new SlskDownload(query, result.getNbOfFiles(), result.getPath(), result.getUsername(), destination);
 			StdIn.write((result.getKey()+"\n").getBytes());
 			downloadStarted = true;
 			benchmark = new Benchmark(result.getNbOfFiles());
 			StdIn.flush();
 			return true;
 		} catch (IOException ex) {
-			Logger.getLogger(Soulseek.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
 			callback.error(ex.getMessage());
 			return false;
 		}
 	}
 
-	public SoulseekDownload getFolderBeingDownloaded() {
+	public SlskDownload getFolderBeingDownloaded() {
 		return folderBeingDownloaded;
 	}
 
@@ -183,7 +183,7 @@ public class Soulseek {
 						String line;
 						int resultsCount = 0;
 						int downloadId = 0;
-						List<SoulseekResult> downloads = new ArrayList<>();
+						List<TableEntrySlsk> downloads = new ArrayList<>();
 						boolean downloadNotified = false;
 						
 						while((line = inputReader.readLine()) != null) {
@@ -196,8 +196,8 @@ public class Soulseek {
 									System.out.println(resultsCount + " ::: " + line);
 								} else if(line.equals("Choose a folder to download")) {
 									final Gson gson = new Gson();
-									Type mapType = new TypeToken<Map<String, SoulseekResultFolder>>(){}.getType();
-									Map<String, SoulseekResultFolder> fromJson = gson.fromJson(jsonRes.toString(), mapType);
+									Type mapType = new TypeToken<Map<String, SlskResultFolder>>(){}.getType();
+									Map<String, SlskResultFolder> fromJson = gson.fromJson(jsonRes.toString(), mapType);
 									callback.enableDownload(fromJson);
 								} else if(line.equals("Nothing found")) {
 									callback.progress(line);
@@ -217,20 +217,20 @@ public class Soulseek {
 								} else if(line.endsWith("downloaded.")) {
 									callback.completed();
 								} else if(downloadNotified) {
-									SoulseekResult soulseekDownloading = getSoulseekDownloading(line, downloadId);
+									TableEntrySlsk soulseekDownloading = getSoulseekDownloading(line, downloadId);
 									if(soulseekDownloading!=null) {
 										downloads.add(soulseekDownloading);
 										downloadId++;
 										callback.addResult(soulseekDownloading, "");
 									} else {
-										SoulseekResult soulseekAlreadyDownloaded = getSoulseekAlreadyDownloaded(line, 
+										TableEntrySlsk soulseekAlreadyDownloaded = getSoulseekAlreadyDownloaded(line, 
 											FilenameUtils.concat(destination, folderBeingDownloaded.getPath()), downloadId);
 										if(soulseekAlreadyDownloaded!=null) {
 											downloadId++;
 											String get = benchmark.get();
 											callback.addResult(soulseekAlreadyDownloaded, get);
 										} else {
-											SoulseekResult soulseekDownloaded = getSoulseekDownloaded(line);
+											TableEntrySlsk soulseekDownloaded = getSoulseekDownloaded(line);
 											if(soulseekDownloaded!=null) {
 												String path = soulseekDownloaded.getPath();
 												File file = new File(path);
@@ -266,7 +266,7 @@ public class Soulseek {
 							try {
 								inputReader.close();
 							} catch (IOException ex) {
-								Logger.getLogger(Soulseek.class.getName()).log(Level.SEVERE, null, ex);
+								Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
 							}
 						}
 					}
@@ -306,7 +306,7 @@ public class Soulseek {
 							try {
 								errorReader.close();
 							} catch (IOException ex) {
-								Logger.getLogger(Soulseek.class.getName()).log(Level.SEVERE, null, ex);
+								Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
 							}
 						}
 					}
@@ -358,13 +358,13 @@ public class Soulseek {
 	}
 	
 	//filename.mp3|flac [already downloaded: skipping]
-	private SoulseekResult getSoulseekAlreadyDownloaded(String line, String destination, int downloadId) {
+	private TableEntrySlsk getSoulseekAlreadyDownloaded(String line, String destination, int downloadId) {
 		Pattern patterner = Pattern.compile("^(.*) \\[already downloaded: skipping]$", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = patterner.matcher(line);
 		boolean matchFound = matcher.find();
 		if(matchFound) {
-			SoulseekResult soulseekDownload = new SoulseekResult(downloadId,
-					SoulseekResult.Status.Received,
+			TableEntrySlsk soulseekDownload = new TableEntrySlsk(downloadId,
+					TableEntrySlsk.Status.Received,
 					FilenameUtils.concat(destination, matcher.group(1)));
 			return soulseekDownload;
 		}
@@ -372,13 +372,13 @@ public class Soulseek {
 	}
 	
 	//filename.mp3|flac [downloading...]
-	private SoulseekResult getSoulseekDownloading(String line, int downloadId) {
+	private TableEntrySlsk getSoulseekDownloading(String line, int downloadId) {
 		Pattern patterner = Pattern.compile("^(.*) \\[downloading\\.\\.\\.\\]$", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = patterner.matcher(line);
 		boolean matchFound = matcher.find();
 		if(matchFound) {
-			SoulseekResult soulseekDownload = new SoulseekResult(downloadId,
-					SoulseekResult.Status.Downloading,
+			TableEntrySlsk soulseekDownload = new TableEntrySlsk(downloadId,
+					TableEntrySlsk.Status.Downloading,
 					matcher.group(1));
 			return soulseekDownload;
 		}
@@ -386,14 +386,14 @@ public class Soulseek {
 	}
 	
 	//(2/24) Received: /path/to/folder/filename.mp3|flac
-	private SoulseekResult getSoulseekDownloaded(String line) {
+	private TableEntrySlsk getSoulseekDownloaded(String line) {
 		Pattern patterner = Pattern.compile("^\\(([0-9]+)\\/([0-9]+)\\) Received: (.*)$", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = patterner.matcher(line);
 		boolean matchFound = matcher.find();
 		if(matchFound) {
-			SoulseekResult soulseekDownload = new SoulseekResult(
+			TableEntrySlsk soulseekDownload = new TableEntrySlsk(
 					Integer.parseInt(matcher.group(1)), 
-					SoulseekResult.Status.Received,
+					TableEntrySlsk.Status.Received,
 					matcher.group(3));
 			return soulseekDownload;
 		}

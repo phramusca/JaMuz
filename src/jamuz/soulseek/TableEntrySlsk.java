@@ -22,7 +22,7 @@ import jamuz.utils.DateTime;
  *
  * @author raph
  */
-public class SoulseekResult {
+public class TableEntrySlsk {
 	
 	private String date;
 	private Status status;
@@ -42,14 +42,14 @@ public class SoulseekResult {
 	 * @param id
 	 * @param path
 	 */
-	public SoulseekResult(int id, Status status, String path) {
+	public TableEntrySlsk(int id, Status status, String path) {
 		this.id = id;
 		this.path = path;
 		this.status = status;
 		this.date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
 	}
 
-	public SoulseekResult(String key, Status status, String path, String username, int nbOfFiles, String bitrate, String size, String speed) {
+	public TableEntrySlsk(String key, Status status, String path, String username, int nbOfFiles, String bitrate, String size, String speed) {
 		this(-1, status, path);
 		this.nbOfFiles = nbOfFiles;
 		this.username = username;

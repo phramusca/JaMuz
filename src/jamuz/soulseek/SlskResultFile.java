@@ -20,7 +20,7 @@ package jamuz.soulseek;
  *
  * @author raph
  */
-public class SoulseekResultFile {
+public class SlskResultFile {
 	String user;
 	String file;
 	int size;
