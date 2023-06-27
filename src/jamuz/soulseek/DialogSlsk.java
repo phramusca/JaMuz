@@ -30,8 +30,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -71,15 +69,15 @@ public class DialogSlsk extends javax.swing.JDialog {
 		jTableSoulseek.setColumnModel(columnModel);
 		jTableSoulseek.createDefaultColumnsFromModel();
 				
-		setColumn(0, 110);	// Date
-		setColumn(1, 30);	// # downloaded
-        setColumn(2, 30);	// # files
+		setColumn(0, 140);	// Date
+		setColumn(1, 40);	// # downloaded
+        setColumn(2, 40);	// # files
 		setColumn(3, 80);	// Status
-		setColumn(4, 130);	// BitRate
-		setColumn(5, 95);	// Size
-		setColumn(6, 140);	// Speed
-		setColumn(7, 90);	// Username
-		setColumn(8, 300);	// Path
+		setColumn(4, 50);	// BitRate
+		setColumn(5, 50);	// Size
+		setColumn(6, 50);	// Speed
+		setColumn(7, 150);	// Username
+		setColumn(8, 600);	// Path
 		
 		progressBar = (ProgressBar)jProgressBarSlsk;
 
@@ -123,7 +121,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 							destinationTemp.getValue());
 					SlskDownload read = sd.read();
 					if(read!=null) {
-						read.cleanup();
+						read.cleanup(destinationTemp.getValue());
 					}
 					int n = JOptionPane.showConfirmDialog(DialogSlsk.this, 
 								"Download completed.\nDo you want to close the window ?",  //NOI18N
@@ -174,7 +172,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 						
 						for (TableEntrySlsk result : tableModelResults.getRows()) {
 							if(result.getStatus().equals(TableEntrySlsk.Status.Folder)) {
-								SlskDownload sd = new SlskDownload(jTextFieldQuery.getText(), result.getNbOfFiles(), result.getPath(), result.getUsername(), destinationTemp.getValue());
+								SlskDownload sd = new SlskDownload(
+										jTextFieldQuery.getText(), 
+										result.getNbOfFiles(), 
+										result.getPath(), 
+										result.getUsername(), 
+										destinationTemp.getValue());
+								
 								SlskDownload read = sd.read();
 								if(read!=null) {
 									result.setNbDownloaded(read.nbDownloaded);

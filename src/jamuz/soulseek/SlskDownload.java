@@ -43,8 +43,8 @@ public class SlskDownload {
 	@Expose
 	public int nbDownloaded;
 	
-	private final File jsonFile;
-	private final File folder;
+	private File jsonFile;
+	private File folder;
 
 	/**
 	 *
@@ -59,10 +59,15 @@ public class SlskDownload {
 		this.nbOfFiles = nbOfFiles;
 		this.path = path;
 		this.username = username;
-		this.jsonFile = new File(FilenameUtils.concat(destination, username + "--" + path + ".json"));
-		this.folder = new File(FilenameUtils.concat(destination, path));
+		setFiles(destination);
 	}
 
+	private void setFiles(String destination) {
+		String folderName = username + "--" + path.replaceAll("\\\\", "--");
+		this.jsonFile = new File(FilenameUtils.concat(destination, folderName + ".json"));
+		this.folder = new File(FilenameUtils.concat(destination, folderName));
+	}
+	
 	public String getPath() {
 		return path;
 	}
@@ -105,7 +110,8 @@ public class SlskDownload {
 		 write();
 	}
 
-	void cleanup() {
+	void cleanup(String destination) {
+		setFiles(destination);
 		if(jsonFile.exists()) {
 			jsonFile.delete();
 		}
