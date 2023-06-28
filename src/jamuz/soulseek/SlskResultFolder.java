@@ -25,7 +25,7 @@ import java.util.List;
 public class SlskResultFolder {
 	String user;
 	String folder;
-	String bitrateInKbps;
+	int bitrateInKbps;
 	int sizeInMb;
 	int speedInKbPerSecond;
 	List<SlskResultFile> files;

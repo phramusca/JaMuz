@@ -48,7 +48,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 	private final Slsk soulseek;
 	private ProgressBar progressBar;
 	
-	private static final int[] SEARCH_SPECIFIC_COLUMNS = new int[] {1, 2, 7};
+	private static final int[] SEARCH_SPECIFIC_COLUMNS = new int[] {1, 2, 4, 5, 6, 7};
 	
     /**
      * Creates new form DialogSoulseek
@@ -158,16 +158,16 @@ public class DialogSlsk extends javax.swing.JDialog {
 						for (Map.Entry<String, SlskResultFolder> entry : results.entrySet()) {
 							String key = entry.getKey();
 							SlskResultFolder soulseekResultFolder = entry.getValue();
-							//FIXME Soulseek ! Display files in a treeViewTable
+							//TODO Soulseek ! Display files in a treeViewTable
 							tableModelResults.addRow(
 									new TableEntrySlsk(key, 
 											TableEntrySlsk.Status.Folder, 
 											soulseekResultFolder.folder, 
 											soulseekResultFolder.user, 
 											soulseekResultFolder.files.size(), 
-											soulseekResultFolder.bitrateInKbps,  //FIXME Soulseek !!! store as int
-											String.valueOf(soulseekResultFolder.sizeInMb), //FIXME Soulseek !!! store as int
-											String.valueOf(soulseekResultFolder.speedInKbPerSecond))); //FIXME Soulseek !!! store as int
+											soulseekResultFolder.bitrateInKbps,
+											soulseekResultFolder.sizeInMb,
+											soulseekResultFolder.speedInKbPerSecond));
 						}						
 						
 						for (TableEntrySlsk result : tableModelResults.getRows()) {
@@ -176,7 +176,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 										jTextFieldQuery.getText(), 
 										result.getNbOfFiles(), 
 										result.getPath(), 
-										result.getUsername(), 
+										result.getUser(), 
 										destinationTemp.getValue());
 								
 								SlskDownload read = sd.read();
@@ -255,8 +255,8 @@ public class DialogSlsk extends javax.swing.JDialog {
 				
 				sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING)); // nb of downloaded
 				sortKeys.add(new RowSorter.SortKey(2, SortOrder.DESCENDING)); // nb of files
-//				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // BitRate /FIXME Soulseek ! extract BitRate to be able to sort
-//				sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Speed //FIXME Soulseek ! extract speed to be able to sort
+				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // BitRate
+				sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Speed
 
 				tableSorter.setSortKeys(sortKeys);
 				jTableSoulseek.getSelectionModel().setSelectionInterval(0, 0);

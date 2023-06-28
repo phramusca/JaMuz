@@ -29,12 +29,13 @@ public class TableEntrySlsk {
 	private int nbOfFiles;
 	private int nbDownloaded;
 	private String path;
+	private String fileInfo = "";
 	private int id;
 	private String key = "";
-	private String username = "";
-	private String bitrate = "";
-	private String size = "";
-	private String speed = "";
+	private String user = "";
+	private int bitrate = -1;
+	private int size = -1;
+	private int speed = -1;
 
 	/**
 	 * Soulseek result
@@ -49,10 +50,10 @@ public class TableEntrySlsk {
 		this.date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
 	}
 
-	public TableEntrySlsk(String key, Status status, String path, String username, int nbOfFiles, String bitrate, String size, String speed) {
+	public TableEntrySlsk(String key, Status status, String path, String username, int nbOfFiles, int bitrate, int size, int speed) {
 		this(-1, status, path);
 		this.nbOfFiles = nbOfFiles;
-		this.username = username;
+		this.user = username;
 		this.bitrate = bitrate;
 		this.size = size;
 		this.speed = speed;
@@ -71,8 +72,8 @@ public class TableEntrySlsk {
 		return path;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUser() {
+		return user;
 	}
 	
 	public void setId(int rowToReplace) {
@@ -87,6 +88,14 @@ public class TableEntrySlsk {
 		return key;
 	}
 
+	public String getFileInfo() {
+		return fileInfo;
+	}
+
+	void setFileInfo(String fileInfo) {
+		this.fileInfo = fileInfo;
+	}
+
 	public enum Status {
 		Folder,
 		Downloading,
@@ -98,15 +107,15 @@ public class TableEntrySlsk {
 		return status;
 	}
 	
-	public String getBitrate() {
-		return bitrate!=null?bitrate:"";
+	public int getBitrate() {
+		return bitrate;
 	}
 
-	public String getSize() {
+	public int getSize() {
 		return size;
 	}
 
-	public String getSpeed() {
+	public int getSpeed() {
 		return speed;
 	}
 
@@ -127,20 +136,20 @@ public class TableEntrySlsk {
 		this.path = path;
 	}
 
-	public void setBitrate(String bitrate) {
+	public void setBitrate(int bitrate) {
 		this.bitrate = bitrate;
 	}
 
-	public void setSize(String size) {
+	public void setSize(int size) {
 		this.size = size;
 	}
 
-	public void setSpeed(String speed) {
+	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
 	
 	@Override
 	public String toString() {
-		return path + " | " + username + " | " + nbOfFiles + " |" ;
+		return path + " | " + user + " | " + nbOfFiles + " |" ;
 	}
 }

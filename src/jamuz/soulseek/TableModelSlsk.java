@@ -17,6 +17,7 @@
 package jamuz.soulseek;
 
 import jamuz.gui.swing.TableModelGeneric;
+import jamuz.soulseek.TableEntrySlsk.Status;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +36,13 @@ public class TableModelSlsk extends TableModelGeneric {
         this.results = new ArrayList<>();
         this.setColumnNames(new String [] {
             "Date", //NOI18N
-			"Down.", //NOI18N
-            "Tot.", //NOI18N
+				"Down.", //NOI18N
+				"Tot.", //NOI18N 
 			"Status", //NOI18N
-			"BitRate", //NOI18N
-			"Size", //NOI18N
-			"Speed", //NOI18N
-			"User", //NOI18N
+				"BitRate", //NOI18N
+				"Size", //NOI18N
+				"Speed", //NOI18N
+				"User", //NOI18N
             "Path",  //NOI18N
         });
 	}
@@ -63,8 +64,10 @@ public class TableModelSlsk extends TableModelGeneric {
 			case 4: return soulseekDownload.getBitrate();
 			case 5: return soulseekDownload.getSize();
 			case 6: return soulseekDownload.getSpeed();
-			case 7: return soulseekDownload.getUsername();
-            case 8: return soulseekDownload.getPath();
+			case 7: return soulseekDownload.getUser();
+            case 8: return soulseekDownload.getStatus().equals(Status.Received)
+					?soulseekDownload.getFileInfo()
+					:soulseekDownload.getPath();
 		}
         return null;
     }

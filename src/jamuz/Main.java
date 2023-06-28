@@ -93,7 +93,6 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-	
 			//Get current application folder
 			File f = new File(".");  //NOI18N
 			Jamuz.getLogger().finest(f.getAbsolutePath());

@@ -19,7 +19,6 @@ package jamuz.soulseek;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.reflect.TypeToken;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.utils.Benchmark;
@@ -54,16 +53,6 @@ public class Slsk {
 	private SlskDownload folderBeingDownloaded;
 	private boolean enableSearch;
 	private String destination;
-	
-	//FIXME Soulseek: Doc installation:
-	// - Uninstall node with apt
-	//		- sudo apt remove nodejs
-	// - Install node with nvm
-	//		- nvm install node
-	// - Create symbolic link
-	//		- sudo ln -s "$(which node)" /usr/bin/node
-	// - Install soulseek cli
-	//		- npm install -g soulseek-cli
 		
     /**
 	 * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
@@ -74,7 +63,7 @@ public class Slsk {
 		this.callback = callBackSoulseek;
     }
 
-	//FIXME Soulseek ! Use login command
+	//TODO Soulseek ! Use login command
 	public boolean login() {
 		return process(Command.login, "", Mode.mp3);
 	}
@@ -91,7 +80,7 @@ public class Slsk {
 	
 	boolean sendSelection(TableEntrySlsk result, String query) {
 		try {
-			folderBeingDownloaded = new SlskDownload(query, result.getNbOfFiles(), result.getPath(), result.getUsername(), destination);
+			folderBeingDownloaded = new SlskDownload(query, result.getNbOfFiles(), result.getPath(), result.getUser(), destination);
 			StdIn.write((result.getKey()+"\n").getBytes());
 			downloadStarted = true;
 			benchmark = new Benchmark(result.getNbOfFiles());
@@ -138,7 +127,18 @@ public class Slsk {
 		}
 		else {
 			//TODO: Test if it works in MacOS for instance
-//			cmdArray.add("soulseek");		
+//			cmdArray.add("soulseek");
+
+	//FIXME Soulseek: Doc installation (need to make a PR with --non-interactive) OR embed simplified cli 
+	// - Uninstall node with apt
+	//		- sudo apt remove nodejs
+	// - Install node with nvm
+	//		- nvm install node
+	// - Create symbolic link
+	//		- sudo ln -s "$(which node)" /usr/bin/node
+	// - Install soulseek cli
+	//		- npm install -g soulseek-cli
+
 			cmdArray.add("node");
 			cmdArray.add("/home/raph/Documents/04-Creations/Dev/Repos/soulseek-cli/cli.js");	
 		}
@@ -233,15 +233,17 @@ public class Slsk {
 											TableEntrySlsk soulseekDownloaded = getSoulseekDownloaded(line);
 											if(soulseekDownloaded!=null) {
 												String path = soulseekDownloaded.getPath();
+												String get = benchmark.get();
 												File file = new File(path);
 												if(file.exists()) {
 													FileInfoInt fileInfoInt = new FileInfoInt(path, "");
-													fileInfoInt.readMetadata(false);
-													soulseekDownloaded.setBitrate(fileInfoInt.getFormat()+" @ "+fileInfoInt.getBitRate()+" kb/s");
-													soulseekDownloaded.setSize(StringManager.secondsToMMSS(fileInfoInt.getLength())+" | "+StringManager.humanReadableByteCount(fileInfoInt.getSize(), false));
+													fileInfoInt.readMetadata(false);												
+													soulseekDownloaded.setFileInfo(FilenameUtils.getName(file.getAbsolutePath())  + "\t [ " 
+															+ fileInfoInt.getFormat() + " @ " + fileInfoInt.getBitRate() + " kb/s" + " | "
+															+ StringManager.secondsToMMSS(fileInfoInt.getLength()) + " | "
+															+ StringManager.humanReadableByteCount(fileInfoInt.getSize(), false) + " ] "
+															+ get);
 												}
-												String get = benchmark.get();
-												soulseekDownloaded.setSpeed(get);
 												int rowToReplace = downloads.get(soulseekDownloaded.getId()-1).getId();
 												soulseekDownloaded.setId(rowToReplace);
 												folderBeingDownloaded.fileDownloaded();
@@ -366,6 +368,7 @@ public class Slsk {
 			TableEntrySlsk soulseekDownload = new TableEntrySlsk(downloadId,
 					TableEntrySlsk.Status.Received,
 					FilenameUtils.concat(destination, matcher.group(1)));
+			soulseekDownload.setFileInfo(matcher.group(1));
 			return soulseekDownload;
 		}
 		return null;
