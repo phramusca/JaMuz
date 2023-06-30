@@ -75,6 +75,7 @@ package jamuz;
 //TODO: Consider using Maven
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
+import jamuz.soulseek.DialogSlsk;
 import jamuz.utils.Popup;
 import java.io.File;
 import java.util.logging.Handler;
@@ -120,6 +121,8 @@ public class Main {
 				}
 			});
 
+//			DialogSlsk.main(null, "The White Stripes Elephant");
+			
 			//Start GUI
 			PanelMain.main();
 

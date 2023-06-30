@@ -51,7 +51,6 @@ public class Slsk {
 	private Process process;
 	private Benchmark benchmark;
 	private SlskDownload folderBeingDownloaded;
-	private boolean enableSearch;
 	private String destination;
 		
     /**
@@ -106,7 +105,8 @@ public class Slsk {
 	
 	public enum Mode {
 		mp3,
-		flac
+		flac,
+		flacORmp3
 	}
 	
 	private enum Command {
@@ -170,7 +170,6 @@ public class Slsk {
 			process = runtime.exec(stockArr, null, new File(destination));
 			StdIn = process.getOutputStream();
 			downloadStarted = false;
-			enableSearch = true;
 			StringBuilder jsonRes = new StringBuilder();
 			
 			// Reading Input Stream
@@ -201,10 +200,6 @@ public class Slsk {
 									callback.enableDownload(fromJson);
 								} else if(line.equals("Nothing found")) {
 									callback.progress(line);
-									if(mode.equals(Mode.flac)) {
-										enableSearch = false;
-										callback.noFlacFound();
-									}
 									cancel();
 								} else if(resultsCount > 0) {
 									jsonRes.append(line);
@@ -325,9 +320,7 @@ public class Slsk {
 			Popup.error(ex);
 			return false;
 		} finally {
-			if(enableSearch) {
-				callback.enableSearch();
-			}
+			callback.enableSearch();
 		}
 	}
 	

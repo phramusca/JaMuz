@@ -36,13 +36,11 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPaneCheckTags3" alignment="0" max="32767" attributes="2"/>
+                  <Component id="jScrollPaneCheckTags3" alignment="0" pref="1287" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jTextFieldQuery" pref="1025" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jButtonSearchFlac" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jButtonSearchMp3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldQuery" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButtonSearch" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jProgressBarSlsk" alignment="0" max="32767" attributes="1"/>
                   <Component id="jLabelFolder" alignment="1" max="32767" attributes="0"/>
@@ -57,8 +55,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jTextFieldQuery" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonSearchFlac" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonSearchMp3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonSearch" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="54" max="-2" attributes="0"/>
@@ -148,17 +145,17 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCancelActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonSearchFlac">
+    <Component class="javax.swing.JButton" name="jButtonSearch">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/jamuz/ressources/search_plus.png"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Search.Flac" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Search" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSearchFlacActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSearchActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldDestinationTemp">
@@ -196,19 +193,6 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new jamuz.gui.swing.ProgressBar()"/>
       </AuxValues>
-    </Component>
-    <Component class="javax.swing.JButton" name="jButtonSearchMp3">
-      <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/jamuz/ressources/search_plus.png"/>
-        </Property>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Search.Mp3" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSearchMp3ActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -25,7 +25,5 @@ public interface ICallBackSlsk {
 
 	public void enableSearch();
 
-	public void noFlacFound();
-
 	public void error(String message);
 }

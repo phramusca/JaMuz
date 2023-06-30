@@ -22,6 +22,7 @@ import jamuz.gui.PanelMain;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.process.check.Location;
+import jamuz.soulseek.Slsk.Mode;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Swing;
@@ -158,7 +159,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 						for (Map.Entry<String, SlskResultFolder> entry : results.entrySet()) {
 							String key = entry.getKey();
 							SlskResultFolder soulseekResultFolder = entry.getValue();
-							//TODO Soulseek ! Display files in a treeViewTable
+							//TODO Soulseek ! Display files in a treeViewTable (https://www-hameister-org.translate.goog/JavaSwingTreeTable.html?_x_tr_sl=uk&_x_tr_tl=fr&_x_tr_hl=fr&_x_tr_pto=wapp)
 							tableModelResults.addRow(
 									new TableEntrySlsk(key, 
 											TableEntrySlsk.Status.Folder, 
@@ -198,14 +199,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 			public void enableSearch() {
 				enableGui(true);
 			}
-
-			@Override
-			public void noFlacFound() {
-				if(destinationTemp.check()) {
-					jButtonSearchMp3.setEnabled(true);
-					startSoulseekSearch(Slsk.Mode.mp3);
-				}
-			}
 		});
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
@@ -217,7 +210,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		
 		if(destinationTemp.check()) {
 			jTextFieldDestinationTemp.setText(destinationTemp.getValue());
-			startSoulseekSearch(Slsk.Mode.flac);
+			startSoulseekSearch(Slsk.Mode.flacORmp3);
 		}
     }
 	
@@ -286,12 +279,11 @@ public class DialogSlsk extends javax.swing.JDialog {
         jTextAreaLog = new javax.swing.JTextArea();
         jButtonDownload = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
-        jButtonSearchFlac = new javax.swing.JButton();
+        jButtonSearch = new javax.swing.JButton();
         jTextFieldDestinationTemp = new javax.swing.JTextField();
         jButtonOptionSelectFolderNew = new javax.swing.JButton();
         jLabelFolder = new javax.swing.JLabel();
         jProgressBarSlsk = new jamuz.gui.swing.ProgressBar();
-        jButtonSearchMp3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -329,11 +321,11 @@ public class DialogSlsk extends javax.swing.JDialog {
             }
         });
 
-        jButtonSearchFlac.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/search_plus.png"))); // NOI18N
-        jButtonSearchFlac.setText(bundle.getString("Button.Search.Flac")); // NOI18N
-        jButtonSearchFlac.addActionListener(new java.awt.event.ActionListener() {
+        jButtonSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/search_plus.png"))); // NOI18N
+        jButtonSearch.setText(bundle.getString("Button.Search")); // NOI18N
+        jButtonSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSearchFlacActionPerformed(evt);
+                jButtonSearchActionPerformed(evt);
             }
         });
 
@@ -354,14 +346,6 @@ public class DialogSlsk extends javax.swing.JDialog {
         jProgressBarSlsk.setString(" "); // NOI18N
         jProgressBarSlsk.setStringPainted(true);
 
-        jButtonSearchMp3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/search_plus.png"))); // NOI18N
-        jButtonSearchMp3.setText(bundle.getString("Button.Search.Mp3")); // NOI18N
-        jButtonSearchMp3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSearchMp3ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -378,13 +362,11 @@ public class DialogSlsk extends javax.swing.JDialog {
                         .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonCancel))
-                    .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1287, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextFieldQuery, javax.swing.GroupLayout.DEFAULT_SIZE, 1025, Short.MAX_VALUE)
+                        .addComponent(jTextFieldQuery)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonSearchFlac)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonSearchMp3))
+                        .addComponent(jButtonSearch))
                     .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabelFolder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -395,8 +377,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldQuery, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSearchFlac)
-                    .addComponent(jButtonSearchMp3))
+                    .addComponent(jButtonSearch))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -417,13 +398,12 @@ public class DialogSlsk extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonSearchFlacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchFlacActionPerformed
-		startSoulseekSearch(Slsk.Mode.flac);
-    }//GEN-LAST:event_jButtonSearchFlacActionPerformed
+    private void jButtonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchActionPerformed
+		startSoulseekSearch(Slsk.Mode.flacORmp3);
+    }//GEN-LAST:event_jButtonSearchActionPerformed
 
 	private void enableGui(boolean enable) {
-		jButtonSearchFlac.setEnabled(enable);
-		jButtonSearchMp3.setEnabled(enable);
+		jButtonSearch.setEnabled(enable);
 		jTextFieldQuery.setEnabled(enable);
 	}
 	
@@ -465,17 +445,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
     }//GEN-LAST:event_jButtonOptionSelectFolderNewActionPerformed
 
-    private void jButtonSearchMp3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchMp3ActionPerformed
-        startSoulseekSearch(Slsk.Mode.mp3);
-    }//GEN-LAST:event_jButtonSearchMp3ActionPerformed
-
     private void jTableSoulseekMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableSoulseekMouseClicked
         if (evt.getClickCount() == 2 && jButtonDownload.isEnabled()) {
             startSoulseekDownload();
         }
     }//GEN-LAST:event_jTableSoulseekMouseClicked
 
-	private void startSoulseekSearch(Slsk.Mode mode) {
+	private void startSoulseekSearch(Mode mode) {
 		new Thread() {
 			@Override
 			public void run() {
@@ -534,8 +510,7 @@ public class DialogSlsk extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonDownload;
     private javax.swing.JButton jButtonOptionSelectFolderNew;
-    private javax.swing.JButton jButtonSearchFlac;
-    private javax.swing.JButton jButtonSearchMp3;
+    private javax.swing.JButton jButtonSearch;
     private javax.swing.JLabel jLabelFolder;
     private javax.swing.JProgressBar jProgressBarSlsk;
     private javax.swing.JScrollPane jScrollPane1;
