@@ -85,18 +85,15 @@ public class DialogSlsk extends javax.swing.JDialog {
 		File f = new File(".");  //NOI18N
 		String appPath = f.getAbsolutePath();
 		appPath = appPath.substring(0, appPath.length() - 1);
-		File SlskDownloadingFolder = new File(appPath);
 		String filename = appPath + "Slsk.properties";
 		options = new Options(filename);
 		if (options.read()) {
-			jTextFieldDownloadingFolder.setText(options.get("slsk.downloading.folder"));
 			jTextFieldDownloadedFolder.setText(options.get("slsk.downloaded.folder"));
-			SlskDownloadingFolder = new File(jTextFieldDownloadingFolder.getText());
 		}
-		if(!SlskDownloadingFolder.exists()) {
+		if(!(new File(options.get("slsk.downloading.folder"))).exists()) {
 			options.set("slsk.downloading.folder", appPath);
-			jTextFieldDownloadingFolder.setText(options.get("slsk.downloading.folder"));
 		}
+		jTextFieldDownloadingFolder.setText(options.get("slsk.downloading.folder"));
 		
 		soulseek = new Slsk(new ICallBackSlsk() {
 			@Override
@@ -226,8 +223,7 @@ public class DialogSlsk extends javax.swing.JDialog {
         });
 		
 		
-		if(SlskDownloadingFolder.exists()) {
-			jTextFieldDownloadingFolder.setText(SlskDownloadingFolder.getPath());
+		if(new File(options.get("slsk.downloading.folder")).exists()) {
 			startSoulseekSearch(Slsk.Mode.flacORmp3);
 		}
     }
@@ -501,7 +497,7 @@ public class DialogSlsk extends javax.swing.JDialog {
     }//GEN-LAST:event_jTableSoulseekMouseClicked
 
     private void jButtonSelectDownloadedFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDownloadedFolderActionPerformed
-        if(Swing.selectFolder(jTextFieldDownloadedFolder, "Soulseek temporary download folder", true)) {
+        if(Swing.selectFolder(jTextFieldDownloadedFolder, "Soulseek final download folder", true)) {
 			options.set("slsk.downloaded.folder", jTextFieldDownloadedFolder.getText());
 			
 		}
@@ -523,8 +519,8 @@ public class DialogSlsk extends javax.swing.JDialog {
 				PanelMain.setColumnVisible(columnModel, SEARCH_SPECIFIC_COLUMNS, true);
 				jTextAreaLog.append("Starting "+mode.toString()+" search with soulseek-cli.\n");
 				jLabelFolder.setText(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | "+mode.toString().toUpperCase()+" search: " + jTextFieldQuery.getText());
-				String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText();
-				destinationNoTrailingSlash = destinationNoTrailingSlash.substring(0, destinationNoTrailingSlash.length() - (destinationNoTrailingSlash.endsWith("/") ? 1 : 0));
+				String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
+						.substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
 				if(soulseek.download(jTextFieldQuery.getText(), destinationNoTrailingSlash, mode)) {
 //					Popup.info("\"download\" completed");
 				}
