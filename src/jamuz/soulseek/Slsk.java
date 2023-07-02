@@ -20,7 +20,6 @@ package jamuz.soulseek;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import jamuz.FileInfoInt;
-import jamuz.Jamuz;
 import jamuz.utils.Benchmark;
 import jamuz.utils.OS;
 import jamuz.utils.Popup;
@@ -100,7 +99,9 @@ public class Slsk {
 	
 	void cancel() {
 		cancelling = true;
-		process.destroyForcibly();
+		if(process!=null) {
+			process.destroyForcibly();
+		}
 	}
 	
 	public enum Mode {
@@ -186,7 +187,6 @@ public class Slsk {
 						boolean downloadNotified = false;
 						
 						while((line = inputReader.readLine()) != null) {
-							Jamuz.getLogger().finest(line);
 							System.out.println(line);
 							if(!downloadStarted) {
 								if(line.startsWith("Displaying ")) {
@@ -252,7 +252,7 @@ public class Slsk {
 							}
 						}
 					} catch(IOException ex) {
-						Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
+						Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, "", ex);  //NOI18N
 						if(cancelling) {
 							callback.progress(ex.getMessage());
 						} else {
@@ -289,10 +289,10 @@ public class Slsk {
 								cancel();
 							}
 							callback.progress("!! ERROR !! " + line);
-							Jamuz.getLogger().finest(line);
+							Logger.getLogger(Slsk.class.getName()).finest(line);
 						}
 					} catch(IOException ex) {
-						Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
+						Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, "", ex);  //NOI18N
 						if(cancelling) {
 							callback.progress(ex.getMessage());
 						} else {

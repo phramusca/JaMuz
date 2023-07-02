@@ -20,5 +20,4 @@ INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('14
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('15', 'location.manual', '', 'path');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('16', 'location.transcoded', '', 'path');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('17', 'files.image.delete', 'false', 'bool');
-INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('18', 'location.slsk', '', 'path');
 COMMIT;
