@@ -330,7 +330,7 @@ public class PanelMerge extends javax.swing.JPanel {
         if(isRunning()) {
 			return;
 		}
-		if(Jamuz.getMachine().getStatSources().size()>0) {
+		if(!Jamuz.getMachine().getStatSources().isEmpty()) {
 			DefaultListModel myModel = (DefaultListModel) jListMerge.getModel();
 			myModel.clear();
 			for(StatSource statSource : Jamuz.getMachine().getStatSources()) {

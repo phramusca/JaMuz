@@ -133,7 +133,7 @@ public class DialogDevice extends javax.swing.JDialog {
         jTextFieldSource.setEditable(false);
 
         jButtonSelectSource.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jamuz/ressources/folder_explore.png"))); // NOI18N
-        jButtonSelectSource.setText(bundle.getString("DialogOptions.jButtonSelectSource.text")); // NOI18N
+        jButtonSelectSource.setText(bundle.getString("Button.Select")); // NOI18N
         jButtonSelectSource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSelectSourceActionPerformed(evt);
