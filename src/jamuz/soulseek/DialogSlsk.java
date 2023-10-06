@@ -216,6 +216,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		});
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
             public void windowClosing(java.awt.event.WindowEvent e) {
                 soulseek.cancel();
 				options.save();
@@ -533,7 +534,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 	 * @param query
      */
     public static void main(Dialog parent, String query) {
-        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -548,9 +548,6 @@ public class DialogSlsk extends javax.swing.JDialog {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(DialogSlsk.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         DialogSlsk dialog = new DialogSlsk(parent, false, query);

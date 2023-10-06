@@ -121,10 +121,9 @@ public class Main {
 				}
 			});
 
-//			DialogSlsk.main(null, "The White Stripes Elephant");
-			
 			//Start GUI
-			PanelMain.main();
+//			PanelMain.main();			
+			DialogSlsk.main(null, "The White Stripes Elephant");
 
 		} catch (Exception ex) {
 			Popup.error(ex);

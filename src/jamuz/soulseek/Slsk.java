@@ -120,208 +120,95 @@ public class Slsk {
 	 * @return  
 	 */
 	private boolean process(Command command, String query, Mode mode) {
-		List<String> cmdArray = new ArrayList<>();
-		if(OS.isWindows()) {
-			//FIXME WINDOWS Suppport soulseek
-			return false;
-			//cmdArray.add("data\\soulseek.exe");
-		}
-		else {
-			//TODO: Test if it works in MacOS for instance
-//			cmdArray.add("soulseek");
-
-	//FIXME Soulseek: Doc installation (need to make a PR with --non-interactive) OR embed simplified cli 
-	// - Uninstall node with apt
-	//		- sudo apt remove nodejs
-	// - Install node with nvm
-	//		- nvm install node
-	// - Create symbolic link
-	//		- sudo ln -s "$(which node)" /usr/bin/node
-	// - Install soulseek cli
-	//		- npm install -g soulseek-cli
-
-			cmdArray.add("node");
-			cmdArray.add("/home/raph/Documents/04-Creations/Dev/Repos/soulseek-cli/cli.js");	
-		}
-		cmdArray.add(command.name());
-		switch(command) {
-			case login:
-				break;
-			case query:
-				cmdArray.add("--mode");
-				cmdArray.add(mode.name());
-				cmdArray.add(query);
-				break;
-			case download:
-				cmdArray.add("--non-interactive");
-				cmdArray.add("--mode");
-				cmdArray.add(mode.name());
-				cmdArray.add(query);
-				cmdArray.add("--destination");
-				cmdArray.add(destination);
-				break;
-			default:
-				throw new AssertionError(command.name());
-		}
 		
-		Runtime runtime = Runtime.getRuntime();
-		try {
-			String[] stockArr = new String[cmdArray.size()];
-			stockArr = cmdArray.toArray(stockArr);
-			process = runtime.exec(stockArr, null, new File(destination));
-			StdIn = process.getOutputStream();
-			downloadStarted = false;
-			StringBuilder jsonRes = new StringBuilder();
-			
-			// Reading Input Stream
-			Thread readInputThread = new Thread("Thread.Soulseek.process.soulseek.InputStream") {
-				@Override
-				public void run() {
-					BufferedReader inputReader=null;
-					try {
-						inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-						String line;
-						int resultsCount = 0;
-						int downloadId = 0;
-						List<TableEntrySlsk> downloads = new ArrayList<>();
-						boolean downloadNotified = false;
-						
-						while((line = inputReader.readLine()) != null) {
-							System.out.println(line);
-							if(!downloadStarted) {
-								if(line.startsWith("Displaying ")) {
-									callback.progress(line);
-									resultsCount = getResultsCount(line);
-									System.out.println(resultsCount + " ::: " + line);
-								} else if(line.equals("Choose a folder to download")) {
-									final Gson gson = new Gson();
-									Type mapType = new TypeToken<Map<String, SlskResultFolder>>(){}.getType();
-									Map<String, SlskResultFolder> fromJson = gson.fromJson(jsonRes.toString(), mapType);
-									callback.enableDownload(fromJson);
-								} else if(line.equals("Nothing found")) {
-									callback.progress(line);
-									cancel();
-								} else if(resultsCount > 0) {
-									jsonRes.append(line);
-								} else {
-									checkError(line);
-								}
-							} else {
-								if(line.contains("Starting download of")) {
-									downloadNotified = true;
-								} else if(line.endsWith("downloaded.")) {
-									callback.completed();
-								} else if(downloadNotified) {
-									TableEntrySlsk soulseekDownloading = getSoulseekDownloading(line, downloadId);
-									if(soulseekDownloading!=null) {
-										downloads.add(soulseekDownloading);
-										downloadId++;
-										callback.addResult(soulseekDownloading, "");
-									} else {
-										TableEntrySlsk soulseekAlreadyDownloaded = getSoulseekAlreadyDownloaded(line, 
-											FilenameUtils.concat(destination, folderBeingDownloaded.getPath()), downloadId);
-										if(soulseekAlreadyDownloaded!=null) {
-											downloadId++;
-											String get = benchmark.get();
-											callback.addResult(soulseekAlreadyDownloaded, get);
-										} else {
-											TableEntrySlsk soulseekDownloaded = getSoulseekDownloaded(line);
-											if(soulseekDownloaded!=null) {
-												String path = soulseekDownloaded.getPath();
-												String get = benchmark.get();
-												File file = new File(path);
-												if(file.exists()) {
-													FileInfoInt fileInfoInt = new FileInfoInt(path, "");
-													fileInfoInt.readMetadata(false);												
-													soulseekDownloaded.setFileInfo(FilenameUtils.getName(file.getAbsolutePath())  + "\t [ " 
-															+ fileInfoInt.getFormat() + " @ " + fileInfoInt.getBitRate() + " kb/s" + " | "
-															+ StringManager.secondsToMMSS(fileInfoInt.getLength()) + " | "
-															+ StringManager.humanReadableByteCount(fileInfoInt.getSize(), false) + " ] "
-															+ get);
-												}
-												int rowToReplace = downloads.get(soulseekDownloaded.getId()-1).getId();
-												soulseekDownloaded.setId(rowToReplace);
-												folderBeingDownloaded.fileDownloaded();
-												callback.replaceResult(soulseekDownloaded, rowToReplace, get);
-											} else {
-												checkError(line);
-											}
-										}
-									}
-								}
-							}
-						}
-					} catch(IOException ex) {
-						Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, "", ex);  //NOI18N
-						if(cancelling) {
-							callback.progress(ex.getMessage());
-						} else {
-							callback.error(ex.getMessage());
-						}
-					} finally {
-						if(inputReader!=null) {
-							try {
-								inputReader.close();
-							} catch (IOException ex) {
-								Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-							}
-						}
-					}
-				}
-			};
-			readInputThread.start();
+//		try {
 
-			// Reading Error Stream
-			Thread readErrorThread = new Thread("Thread.Soulseek.process.soulseek.ErrorStream") {
-				@Override
-				public void run() {
-					BufferedReader errorReader=null;
-					try {
-						errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-						String line;
-						while((line = errorReader.readLine()) != null) {
-							
-							Pattern patterner = Pattern.compile("^(.*)Error: (.*)$", Pattern.CASE_INSENSITIVE);
-							Matcher matcher = patterner.matcher(line);
-							boolean matchFound = matcher.find();
-							if(matchFound) {
-								callback.error(line);
-								cancel();
-							}
-							callback.progress("!! ERROR !! " + line);
-							Logger.getLogger(Slsk.class.getName()).finest(line);
-						}
-					} catch(IOException ex) {
-						Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, "", ex);  //NOI18N
-						if(cancelling) {
-							callback.progress(ex.getMessage());
-						} else {
-							callback.error(ex.getMessage());
-						}
-					} finally {
-						if(errorReader!=null) {
-							try {
-								errorReader.close();
-							} catch (IOException ex) {
-								Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-							}
-						}
-					}
-				}
-			};
-			readErrorThread.start();
+			downloadStarted = false;
 			
-			process.waitFor();
-			readInputThread.join();
-			readErrorThread.join();
+		try {
+				String search = new SlskClient().search("bod dylan");
+		} catch (IOException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SlskClient.ServerException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		}
+			
+			checkError("");
+			
+//			while((line = inputReader.readLine()) != null) {
+//				System.out.println(line);
+//				if(!downloadStarted) {
+//					if(line.startsWith("Displaying ")) {
+//						callback.progress(line);
+//						resultsCount = getResultsCount(line);
+//						System.out.println(resultsCount + " ::: " + line);
+//					} else if(line.equals("Choose a folder to download")) {
+//						final Gson gson = new Gson();
+//						Type mapType = new TypeToken<Map<String, SlskResultFolder>>(){}.getType();
+//						Map<String, SlskResultFolder> fromJson = gson.fromJson(jsonRes.toString(), mapType);
+//						callback.enableDownload(fromJson);
+//					} else if(line.equals("Nothing found")) {
+//						callback.progress(line);
+//						cancel();
+//					} else if(resultsCount > 0) {
+//						jsonRes.append(line);
+//					} else {
+//						checkError(line);
+//					}
+//				} else {
+//					if(line.contains("Starting download of")) {
+//						downloadNotified = true;
+//					} else if(line.endsWith("downloaded.")) {
+//						callback.completed();
+//					} else if(downloadNotified) {
+//						TableEntrySlsk soulseekDownloading = getSoulseekDownloading(line, downloadId);
+//						if(soulseekDownloading!=null) {
+//							downloads.add(soulseekDownloading);
+//							downloadId++;
+//							callback.addResult(soulseekDownloading, "");
+//						} else {
+//							TableEntrySlsk soulseekAlreadyDownloaded = getSoulseekAlreadyDownloaded(line, 
+//								FilenameUtils.concat(destination, folderBeingDownloaded.getPath()), downloadId);
+//							if(soulseekAlreadyDownloaded!=null) {
+//								downloadId++;
+//								String get = benchmark.get();
+//								callback.addResult(soulseekAlreadyDownloaded, get);
+//							} else {
+//								TableEntrySlsk soulseekDownloaded = getSoulseekDownloaded(line);
+//								if(soulseekDownloaded!=null) {
+//									String path = soulseekDownloaded.getPath();
+//									String get = benchmark.get();
+//									File file = new File(path);
+//									if(file.exists()) {
+//										FileInfoInt fileInfoInt = new FileInfoInt(path, "");
+//										fileInfoInt.readMetadata(false);												
+//										soulseekDownloaded.setFileInfo(FilenameUtils.getName(file.getAbsolutePath())  + "\t [ " 
+//												+ fileInfoInt.getFormat() + " @ " + fileInfoInt.getBitRate() + " kb/s" + " | "
+//												+ StringManager.secondsToMMSS(fileInfoInt.getLength()) + " | "
+//												+ StringManager.humanReadableByteCount(fileInfoInt.getSize(), false) + " ] "
+//												+ get);
+//									}
+//									int rowToReplace = downloads.get(soulseekDownloaded.getId()-1).getId();
+//									soulseekDownloaded.setId(rowToReplace);
+//									folderBeingDownloaded.fileDownloaded();
+//									callback.replaceResult(soulseekDownloaded, rowToReplace, get);
+//								} else {
+//									checkError(line);
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+			
 			return true;
 
-		} catch (IOException | InterruptedException ex) {
-			Popup.error(ex);
-			return false;
-		} finally {
-			callback.enableSearch();
-		}
+//		} catch (InterruptedException ex) {
+//			Popup.error(ex);
+//			return false;
+//		} finally {
+//			callback.enableSearch();
+//		}
 	}
 	
 	private void checkError(String line) {
