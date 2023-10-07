@@ -126,10 +126,35 @@ public class Slsk {
 			downloadStarted = false;
 			
 		try {
-				String search = new SlskClient().search("bod dylan");
+				SlskdClient slskdClient = new SlskdClient();
+
+				SlskdSearchResult search = slskdClient.search(query);
+				
+				while(!search.isComplete) {
+					search = slskdClient.getSearch(search.id);
+					Thread.sleep(1000);
+				}
+				
+				List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id);
+				
+				for (SlskdSearchResponse searchResponse : searchResponses) {
+					
+//					for (SlskdFile file : searchResponse.files) {
+//						
+//					}
+					TableEntrySlsk tableEntrySlsk = new TableEntrySlsk("what key?", TableEntrySlsk.Status.Folder, "what path ?", searchResponse.username, searchResponse.fileCount, 0, 0, searchResponse.uploadSpeed);
+					
+					callback.addResult(tableEntrySlsk, "what progress msg ?");
+				}
+				
+				
+				
+				
 		} catch (IOException ex) {
 			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (SlskClient.ServerException ex) {
+		} catch (SlskdClient.ServerException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (InterruptedException ex) {
 			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
 		}
 			
