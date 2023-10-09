@@ -17,6 +17,7 @@
 package jamuz.soulseek;
 
 import jamuz.utils.DateTime;
+import jamuz.utils.StringManager;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
@@ -43,18 +44,26 @@ public class SlskdSearchResponse {
 	}
 
 	public double getBitrate() {
-		return files.stream()
+		if(files!=null & !files.isEmpty()) {
+			return files.stream()
                 .mapToDouble(file -> file.bitRate)
                 .average()
                 .orElse(0.0);
+		} else {
+			return 0.0;
+		}
 	}
 
-	public double getSize() {
-		double meanSize = files.stream()
+	public String getSize() {
+		if(files!=null & !files.isEmpty()) {
+			double meanSize = files.stream()
                 .mapToDouble(file -> file.size)
-                .average()
-                .orElse(0.0);
-		return meanSize; //>0?StringManager.humanReadableByteCount((long) meanSize, false):"0";
+                .sum();
+			//FIXME ! Check displayed matches slskd
+			return StringManager.humanReadableByteCount(meanSize, false);
+		} else {
+			return "0";
+		}
 	}
 
 	public String getPath() {

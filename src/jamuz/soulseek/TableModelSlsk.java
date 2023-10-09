@@ -58,7 +58,7 @@ public class TableModelSlsk extends TableModelGeneric {
             case 1: return soulseekDownload.fileCount;
 			case 2: return soulseekDownload.getBitrate();
 			case 3: return soulseekDownload.getSize();
-			case 4: return soulseekDownload.getSpeed();
+			case 4: return soulseekDownload.uploadSpeed;
 			case 5: return soulseekDownload.username;
             case 6: return soulseekDownload.getPath();
 		}
