@@ -20,21 +20,16 @@ import jamuz.Options;
 import jamuz.gui.PanelMain;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableColumnModel;
-import jamuz.soulseek.Slsk.Mode;
 import jamuz.utils.DateTime;
-import jamuz.utils.FileSystem;
 import jamuz.utils.Swing;
 import java.awt.Dialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -70,14 +65,12 @@ public class DialogSlsk extends javax.swing.JDialog {
 		jTableSoulseek.createDefaultColumnsFromModel();
 				
 		setColumn(0, 140);	// Date
-		setColumn(1, 40);	// # downloaded
-        setColumn(2, 40);	// # files
-		setColumn(3, 80);	// Status
-		setColumn(4, 50);	// BitRate
-		setColumn(5, 50);	// Size
-		setColumn(6, 50);	// Speed
-		setColumn(7, 150);	// Username
-		setColumn(8, 600);	// Path
+        setColumn(1, 40);	// # files
+		setColumn(2, 50);	// BitRate
+		setColumn(3, 50);	// Size
+		setColumn(4, 50);	// Speed
+		setColumn(5, 150);	// Username
+		setColumn(6, 600);	// Path
 		
 		progressBar = (ProgressBar)jProgressBarSlsk;
 
@@ -95,125 +88,62 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
 		jTextFieldDownloadingFolder.setText(options.get("slsk.downloading.folder"));
 		
-		soulseek = new Slsk(new ICallBackSlsk() {
-			@Override
-			public void progress(String line) {
-				jTextAreaLog.append(line+"\n");
-				jTextAreaLog.setCaretPosition(jTextAreaLog.getDocument().getLength()-1);
-			}
-
-			@Override
-			public void error(String message) {
-				jLabelFolder.setText("<html>" + DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | <font color=\"red\">"+message+"</font></html>");
-				jTextAreaLog.append(message+"\n");
-				jTextAreaLog.setCaretPosition(jTextAreaLog.getDocument().getLength()-1);
-			}
-			
-			@Override
-			public void completed() {
-				jButtonCancel.setEnabled(false);
-				File SlskDownloadedFolder = new File(jTextFieldDownloadedFolder.getText());
-				File SlskDownloadingFolder = new File(jTextFieldDownloadingFolder.getText());
-				if(SlskDownloadedFolder.exists() && SlskDownloadingFolder.exists()) {
-					progressBar.setup(tableModelResults.getRowCount());
-					for (TableEntrySlsk result : tableModelResults.getRows()) {
-						File sourceFile = new File(result.getPath());
-						String relativeSourcePath = result.getPath().substring(jTextFieldDownloadingFolder.getText().length());
-						String destPath = FilenameUtils.concat(SlskDownloadedFolder.getPath(), relativeSourcePath);
-						File destFile = new File(destPath);
-						FileSystem.moveFile(sourceFile, destFile);
-						result.setStatus(TableEntrySlsk.Status.Moved);
-						result.setPath(destPath);
-						replaceResult(result, result.getId(), "");
-					}
-					SlskDownload sd = new SlskDownload(
-							jTextFieldQuery.getText(), 
-							soulseek.getFolderBeingDownloaded().getNbOfFiles(), 
-							soulseek.getFolderBeingDownloaded().getPath(), 
-							soulseek.getFolderBeingDownloaded().getUsername(), 
-							SlskDownloadingFolder.getPath());
-					SlskDownload read = sd.read();
-					if(read!=null) {
-						read.cleanup(SlskDownloadingFolder.getPath());
-					}
-					int n = JOptionPane.showConfirmDialog(DialogSlsk.this, 
-								"Download completed.\nDo you want to close the window ?",  //NOI18N
-								soulseek.getFolderBeingDownloaded().getPath(),  //NOI18N
-								JOptionPane.YES_NO_OPTION);
-					soulseek.cancel();
-					if (n == JOptionPane.YES_OPTION) {
-						dispose();
-					}
-				}
-			}
-
-			@Override
-			public void addResult(TableEntrySlsk result, String progressMsg) {
-				if(!progressMsg.isBlank()) {
-					progressBar.progress(progressMsg);
-				}
-				tableModelResults.addRow(result);
-			}
-
-			@Override
-			public void replaceResult(TableEntrySlsk result, int row, String progressMsg) {
-				if(row <= jTableSoulseek.getRowCount()) {
-					progressBar.progress(progressMsg);
-					tableModelResults.replaceRow(result, row);
-				}
-			}
-
-			@Override
-			public void enableDownload(Map<String, SlskResultFolder> results) {
-				new Thread() {
-					@Override
-					public void run() {
-						for (Map.Entry<String, SlskResultFolder> entry : results.entrySet()) {
-							String key = entry.getKey();
-							SlskResultFolder soulseekResultFolder = entry.getValue();
-							//TODO Soulseek ! Display files in a treeViewTable (https://www-hameister-org.translate.goog/JavaSwingTreeTable.html?_x_tr_sl=uk&_x_tr_tl=fr&_x_tr_hl=fr&_x_tr_pto=wapp)
-							tableModelResults.addRow(
-									new TableEntrySlsk(key, 
-											TableEntrySlsk.Status.Folder, 
-											soulseekResultFolder.folder, 
-											soulseekResultFolder.user, 
-											soulseekResultFolder.files.size(), 
-											soulseekResultFolder.bitrateInKbps,
-											soulseekResultFolder.sizeInMb,
-											soulseekResultFolder.speedInKbPerSecond));
-						}						
-						File SlskDownloadingFolder = new File(jTextFieldDownloadingFolder.getText());
-						if(SlskDownloadingFolder.exists()) {
-							for (TableEntrySlsk result : tableModelResults.getRows()) {
-								if(result.getStatus().equals(TableEntrySlsk.Status.Folder)) {
-									SlskDownload sd = new SlskDownload(
-											jTextFieldQuery.getText(), 
-											result.getNbOfFiles(), 
-											result.getPath(), 
-											result.getUser(), 
-											SlskDownloadingFolder.getPath());
-
-									SlskDownload read = sd.read();
-									if(read!=null) {
-										result.setNbDownloaded(read.nbDownloaded);
-									}
-								}
-							}
-							enableRowSorter(true);
-							tableModelResults.fireTableDataChanged();
-							jTableSoulseek.setRowSelectionInterval(0, 0);
-							jButtonDownload.setEnabled(true);
-							jButtonCancel.setEnabled(true);
-						}
-					}
-				}.start();
-			}
-
-			@Override
-			public void enableSearch() {
-				enableGui(true);
-			}
-		});
+		soulseek = new Slsk()
+//					for (SlskdSearchResponse result : tableModelResults.getRows()) {
+//						File sourceFile = new File(result.getPath());
+//						String relativeSourcePath = result.getPath().substring(jTextFieldDownloadingFolder.getText().length());
+//						String destPath = FilenameUtils.concat(SlskDownloadedFolder.getPath(), relativeSourcePath);
+//						File destFile = new File(destPath);
+//						FileSystem.moveFile(sourceFile, destFile);
+////						result.setStatus(TableEntrySlsk.Status.Moved);
+////						result.setPath(destPath);
+////						replaceResult(result, result.getId(), "");
+//					}
+		//NOI18N
+		//NOI18N
+//				new Thread() {
+//					@Override
+//					public void run() {
+//						for (Map.Entry<String, SlskResultFolder> entry : results.entrySet()) {
+//							String key = entry.getKey();
+//							SlskResultFolder soulseekResultFolder = entry.getValue();
+//							//TODO Soulseek ! Display files in a treeViewTable (https://www-hameister-org.translate.goog/JavaSwingTreeTable.html?_x_tr_sl=uk&_x_tr_tl=fr&_x_tr_hl=fr&_x_tr_pto=wapp)
+//							tableModelResults.addRow(
+//									new TableEntrySlsk(key,
+//											TableEntrySlsk.Status.Folder,
+//											soulseekResultFolder.folder,
+//											soulseekResultFolder.user,
+//											soulseekResultFolder.files.size(), 
+//											soulseekResultFolder.bitrateInKbps,
+//											soulseekResultFolder.sizeInMb,
+//											soulseekResultFolder.speedInKbPerSecond));
+//						}						
+//						File SlskDownloadingFolder = new File(jTextFieldDownloadingFolder.getText());
+//						if(SlskDownloadingFolder.exists()) {
+//							for (SlskdSearchResponse result : tableModelResults.getRows()) {
+//								if(result.getStatus().equals(TableEntrySlsk.Status.Folder)) {
+//									SlskDownload sd = new SlskDownload(
+//											jTextFieldQuery.getText(),
+//											result.getNbOfFiles(),
+//											result.getPath(),
+//											result.getUser(), 
+//											SlskDownloadingFolder.getPath());
+//
+//									SlskDownload read = sd.read();
+//									if(read!=null) {
+//										result.setNbDownloaded(read.nbDownloaded);
+//									}
+//								}
+//							}
+//							enableRowSorter(true);
+//							tableModelResults.fireTableDataChanged();
+//							jTableSoulseek.setRowSelectionInterval(0, 0);
+//							jButtonDownload.setEnabled(true);
+//							jButtonCancel.setEnabled(true);
+//						}
+//					}
+//				}.start();
+		;
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
@@ -225,7 +155,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		
 		
 		if(new File(options.get("slsk.downloading.folder")).exists()) {
-			startSoulseekSearch(Slsk.Mode.flacORmp3);
+			startSoulseekSearch();
 		}
     }
 	
@@ -244,27 +174,14 @@ public class DialogSlsk extends javax.swing.JDialog {
 		if(enable) {
 			//Enable row tableSorter (cannot be done if model is empty)
 			if(tableModelResults.getRowCount()>0) {
-				//Enable auto sorter
 				jTableSoulseek.setAutoCreateRowSorter(true);
-				//Sort by action, result
 				TableRowSorter<TableModelSlsk> tableSorter = new TableRowSorter<>(tableModelResults);
 				jTableSoulseek.setRowSorter(tableSorter);
 				List <RowSorter.SortKey> sortKeys = new ArrayList<>();
 
-//				setColumn(0, 110);	// Date
-//				setColumn(1, 30);	// # downloaded
-//				setColumn(2, 30);	// # files
-//				setColumn(3, 80);	// Status
-//				setColumn(4, 130);	// BitRate
-//				setColumn(5, 95);	// Size
-//				setColumn(6, 140);	// Speed
-//				setColumn(7, 90);	// Username
-//				setColumn(8, 300);	// Path
-				
-				sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING)); // nb of downloaded
-				sortKeys.add(new RowSorter.SortKey(2, SortOrder.DESCENDING)); // nb of files
-				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // BitRate
-				sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Speed
+				sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING)); // nb of files
+				sortKeys.add(new RowSorter.SortKey(2, SortOrder.DESCENDING)); // BitRate
+				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // Speed
 
 				tableSorter.setSortKeys(sortKeys);
 				jTableSoulseek.getSelectionModel().setSelectionInterval(0, 0);
@@ -447,7 +364,7 @@ public class DialogSlsk extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchActionPerformed
-		startSoulseekSearch(Slsk.Mode.flacORmp3);
+		startSoulseekSearch();
     }//GEN-LAST:event_jButtonSearchActionPerformed
 
 	private void enableGui(boolean enable) {
@@ -472,12 +389,12 @@ public class DialogSlsk extends javax.swing.JDialog {
 			if((new File(jTextFieldDownloadingFolder.getText())).exists()) {
 				jButtonDownload.setEnabled(false);
 				selectedRow = jTableSoulseek.convertRowIndexToModel(selectedRow); 
-				TableEntrySlsk result = tableModelResults.getRow(selectedRow);
+				SlskdSearchResponse result = tableModelResults.getRow(selectedRow);
 				jLabelFolder.setText(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | Download: " + result.toString());
 				enableRowSorter(false);
 				tableModelResults.clear();
 				PanelMain.setColumnVisible(columnModel, SEARCH_SPECIFIC_COLUMNS, false);
-				progressBar.setup(result.getNbOfFiles());
+				progressBar.setup(result.fileCount);
 				soulseek.sendSelection(result, jTextFieldQuery.getText());
 			}
 		}
@@ -504,7 +421,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
     }//GEN-LAST:event_jButtonSelectDownloadedFolderActionPerformed
 
-	private void startSoulseekSearch(Mode mode) {
+	private void startSoulseekSearch() {
 		new Thread() {
 			@Override
 			public void run() {
@@ -518,13 +435,17 @@ public class DialogSlsk extends javax.swing.JDialog {
 				tableModelResults.clear();
 				progressBar.reset();
 				PanelMain.setColumnVisible(columnModel, SEARCH_SPECIFIC_COLUMNS, true);
-				jTextAreaLog.append("Starting "+mode.toString()+" search with soulseek-cli.\n");
-				jLabelFolder.setText(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | "+mode.toString().toUpperCase()+" search: " + jTextFieldQuery.getText());
+				jTextAreaLog.append("Starting search on slskd.\n");
+				jLabelFolder.setText(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | search: " + jTextFieldQuery.getText());
 				String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
 						.substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
-				if(soulseek.download(jTextFieldQuery.getText(), destinationNoTrailingSlash, mode)) {
-//					Popup.info("\"download\" completed");
+				
+				List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), destinationNoTrailingSlash);
+				for (SlskdSearchResponse slskdSearchResponse : searchResponses) {
+					tableModelResults.addRow(slskdSearchResponse);
 				}
+				//FIWME ! enableRowSorter(true);
+//				enableRowSorter(true);
 			}
 		}.start();
 	}

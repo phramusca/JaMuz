@@ -19,7 +19,6 @@ package jamuz.soulseek;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import okhttp3.HttpUrl;
@@ -39,16 +38,14 @@ public class SlskdClient {
 	
 	private static final String BASE_URL = "http://localhost:5030/api/v0"; // No trailing slash !!
 	
-	private String TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic2xza2QiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjU3OWJlYjQxLWYzYjQtNGRkYS1iYzZjLTQ5YmRkMWQ0MmJlYiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluaXN0cmF0b3IiLCJuYW1lIjoic2xza2QiLCJpYXQiOiIxNjk2NjE4OTUxIiwibmJmIjoxNjk2NjE4OTUxLCJleHAiOjE2OTcyMjM3NTEsImlzcyI6InNsc2tkIn0.s9RBrEoe43epTO1y3uU3kaVgdr3R1A6llA6FAZZ0KsU";
+	private String TOKEN = "";
 	private final OkHttpClient client = new OkHttpClient.Builder().build();
 	private final Gson gson = new Gson();
 
 	public SlskdClient() throws IOException, ServerException {
 		getToken();
 	}
-	
-	
-	
+
 	public void getToken() throws IOException, ServerException {
 		HttpUrl.Builder urlBuilder = getUrlBuilder("session"); //NON-NLS
 		
@@ -77,61 +74,18 @@ public class SlskdClient {
 	
 	public SlskdSearchResult search(String queryText) throws IOException, ServerException {
 		JSONObject obj = new JSONObject();
-		obj.put("searchText", queryText);
-//		JSONArray filesToMerge = new JSONArray();
-//		for (Track track : tracks) {
-//			track.getTags(true);
-//			filesToMerge.put(track.toJSONObject());
-//		}
-//		obj.put("files", filesToMerge); //NON-NLS
 		
-//SearchRequest{
-//description:	
-//
-//A search request.
-//id	string($uuid)
-//nullable: true
-//
-//Gets or sets the unique search identifier.
-//fileLimit	integer($int32)
-//nullable: true
-//
-//Gets or sets the maximum number of file results to accept before the search is considered complete. (Default = 10,000).
-//filterResponses	boolean
-//nullable: true
-//
-//Gets or sets a value indicating whether responses are to be filtered. (Default = true).
-//maximumPeerQueueLength	integer($int32)
-//nullable: true
-//
-//Gets or sets the maximum queue depth a peer may have in order for a response to be processed. (Default = 1000000).
-//minimumPeerUploadSpeed	integer($int32)
-//nullable: true
-//
-//Gets or sets the minimum upload speed a peer must have in order for a response to be processed. (Default = 0).
-//minimumResponseFileCount	integer($int32)
-//nullable: true
-//
-//Gets or sets the minimum number of files a response must contain in order to be processed. (Default = 1).
-//responseLimit	integer($int32)
-//nullable: true
-//
-//Gets or sets the maximum number of search results to accept before the search is considered complete. (Default = 100).
-//searchText	string
-//nullable: true
-//
-//Gets or sets the search text.
-//searchTimeout	integer($int32)
-//nullable: true
-//
-//Gets or sets the search timeout value, in seconds, used to determine when the search is complete. (Default = 15).
-//token	integer($int32)
-//nullable: true
-//
-//Gets or sets the search token.
-//}
-
-
+//		obj.put("id", "xxx-x--x-x-x-x");			//  string($uuid)	//the unique search identifier.
+//		obj.put("fileLimit", 10000);				//  integer($int32)	//the maximum number of file results to accept before the search is considered complete. (Default = 10,000).
+//		obj.put("filterResponses", true);			//  boolean			//a value indicating whether responses are to be filtered. (Default = true).
+//		obj.put("maximumPeerQueueLength", 1000000);		//  integer($int32) //the maximum queue depth a peer may have in order for a response to be processed. (Default = 1000000).
+//		obj.put("minimumPeerUploadSpeed", 0);		//	integer($int32) //the minimum upload speed a peer must have in order for a response to be processed. (Default = 0).
+//		obj.put("minimumResponseFileCount", 1);	//	integer($int32)	//the minimum number of files a response must contain in order to be processed. (Default = 1).
+//		obj.put("responseLimit", 100);				//	integer($int32)	//the maximum number of search results to accept before the search is considered complete. (Default = 100).
+		obj.put("searchText", queryText);			//	string			//the search text.
+//		obj.put("searchTimeout", 15);				//	integer($int32)	//the search timeout value, in seconds, used to determine when the search is complete. (Default = 15).
+//		obj.put("token", 0);						//	integer($int32)	//the search token.
+				
 		HttpUrl.Builder urlBuilder = getUrlBuilder("searches"); //NON-NLS
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
                     .post(RequestBody.create(obj.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS

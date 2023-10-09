@@ -17,7 +17,6 @@
 package jamuz.soulseek;
 
 import jamuz.gui.swing.TableModelGeneric;
-import jamuz.soulseek.TableEntrySlsk.Status;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
  */
 public class TableModelSlsk extends TableModelGeneric {
 
-    private List<TableEntrySlsk> results;
+    private List<SlskdSearchResponse> results;
 
     /**
 	 * Create the table model
@@ -36,9 +35,7 @@ public class TableModelSlsk extends TableModelGeneric {
         this.results = new ArrayList<>();
         this.setColumnNames(new String [] {
             "Date", //NOI18N
-				"Down.", //NOI18N
-				"Tot.", //NOI18N 
-			"Status", //NOI18N
+				"Nb", //NOI18N
 				"BitRate", //NOI18N
 				"Size", //NOI18N
 				"Speed", //NOI18N
@@ -55,29 +52,25 @@ public class TableModelSlsk extends TableModelGeneric {
 	 */
 	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        TableEntrySlsk soulseekDownload = results.get(rowIndex);
+        SlskdSearchResponse soulseekDownload = results.get(rowIndex);
         switch (columnIndex) {
 			case 0: return soulseekDownload.getDate();
-			case 1: return soulseekDownload.getNbDownloaded();
-            case 2: return soulseekDownload.getNbOfFiles();
-            case 3: return soulseekDownload.getStatus().name();
-			case 4: return soulseekDownload.getBitrate();
-			case 5: return soulseekDownload.getSize();
-			case 6: return soulseekDownload.getSpeed();
-			case 7: return soulseekDownload.getUser();
-            case 8: return soulseekDownload.getStatus().equals(Status.Received)
-					?soulseekDownload.getFileInfo()
-					:soulseekDownload.getPath();
+            case 1: return soulseekDownload.fileCount;
+			case 2: return soulseekDownload.getBitrate();
+			case 3: return soulseekDownload.getSize();
+			case 4: return soulseekDownload.getSpeed();
+			case 5: return soulseekDownload.username;
+            case 6: return soulseekDownload.getPath();
 		}
         return null;
     }
 	
 	@Override
     public void setValueAt(Object value, int row, int col) {
-		TableEntrySlsk result = results.get(row);
+		SlskdSearchResponse searchResponse = results.get(row);
 //        switch (col) {
 //			case 3: 
-//				result.setPath((String) value);
+//				searchResponse.setPath((String) value);
 //				break;
 //		}
 		fireTableCellUpdated(row, col);
@@ -106,29 +99,29 @@ public class TableModelSlsk extends TableModelGeneric {
 	
 	/**
     * Add a row to the table
-	 * @param result
+	 * @param searchResponse
     */
-    public void addRow(TableEntrySlsk result){
-		this.results.add(result);
+    public void addRow(SlskdSearchResponse searchResponse){
+		this.results.add(searchResponse);
 		this.fireTableDataChanged();
     }
 	
 	/**
     * Replace a row to the table
-	 * @param result
+	 * @param searchResponse
 	 * @param row
     */
-    public void replaceRow(TableEntrySlsk result, int row){
-		this.results.set(row, result);
+    public void replaceRow(SlskdSearchResponse searchResponse, int row){
+		this.results.set(row, searchResponse);
 		this.fireTableDataChanged();
     }
 
 	/**
 	 *
-	 * @param file
+	 * @param searchResponse
 	 */
-	public void removeRow(TableEntrySlsk file){
-		this.results.remove(file);
+	public void removeRow(SlskdSearchResponse searchResponse){
+		this.results.remove(searchResponse);
 		this.fireTableDataChanged();
     }
 
@@ -136,7 +129,7 @@ public class TableModelSlsk extends TableModelGeneric {
 	 * Return list of lines
 	 * @return
 	 */
-	public List<TableEntrySlsk> getRows() {
+	public List<SlskdSearchResponse> getRows() {
 		return results;
 	}
 
@@ -145,7 +138,7 @@ public class TableModelSlsk extends TableModelGeneric {
      * @param index
      * @return
      */
-    public TableEntrySlsk getRow(int index) {
+    public SlskdSearchResponse getRow(int index) {
         return this.results.get(index);
     }
    

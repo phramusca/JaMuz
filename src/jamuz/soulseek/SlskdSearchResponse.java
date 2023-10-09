@@ -16,7 +16,10 @@
  */
 package jamuz.soulseek;
 
+import jamuz.utils.DateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -32,4 +35,41 @@ public class SlskdSearchResponse {
 	public int token;
 	public int uploadSpeed;
 	public String username;	
+	
+	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
+	
+	public String getDate() {
+		return date;
+	}
+
+	public double getBitrate() {
+		return files.stream()
+                .mapToDouble(file -> file.bitRate)
+                .average()
+                .orElse(0.0);
+	}
+
+	public double getSize() {
+		double meanSize = files.stream()
+                .mapToDouble(file -> file.size)
+                .average()
+                .orElse(0.0);
+		return meanSize; //>0?StringManager.humanReadableByteCount((long) meanSize, false):"0";
+	}
+
+	public String getPath() {
+		List<String> paths = files.stream()
+                .map(file -> FilenameUtils.getFullPathNoEndSeparator(file.filename))
+                .distinct()
+                .collect(Collectors.toList());
+		
+		String path = !paths.isEmpty()?paths.get(0):"N/A";
+			
+		return path;
+	}
+
+	public int getSpeed() {
+		return uploadSpeed;
+	}
+	
 }
