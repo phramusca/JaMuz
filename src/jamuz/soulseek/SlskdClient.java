@@ -21,6 +21,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -28,10 +30,11 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- *
+ * Wrapper for http://localhost:5030/swagger/index.html
  * @author raph
  */
 public class SlskdClient {
@@ -72,16 +75,37 @@ public class SlskdClient {
 		return true; //TODO: return true or false based on http result
 	}
 	
+	public boolean download(SlskdSearchResponse searchResponse) {
+		try {
+			JSONArray jsonArray = new JSONArray();
+			for (SlskdFile file : searchResponse.files) {
+				JSONObject fileObj = new JSONObject();
+				fileObj.put("filename", file.filename);
+				fileObj.put("size", file.size);
+				jsonArray.add(fileObj);
+			}
+			HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/"+searchResponse.username); //NON-NLS
+			Request request = getRequestBuilder(urlBuilder) //NON-NLS
+					.post(RequestBody.create(jsonArray.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
+			
+			Response response = client.newCall(request).execute();
+			return response.isSuccessful();
+		} catch (IOException ex) {
+			Logger.getLogger(SlskdClient.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return false;
+	}
+	
 	public SlskdSearchResult search(String queryText) throws IOException, ServerException {
 		JSONObject obj = new JSONObject();
 		
 //		obj.put("id", "xxx-x--x-x-x-x");			//  string($uuid)	//the unique search identifier.
 //		obj.put("fileLimit", 10000);				//  integer($int32)	//the maximum number of file results to accept before the search is considered complete. (Default = 10,000).
 //		obj.put("filterResponses", true);			//  boolean			//a value indicating whether responses are to be filtered. (Default = true).
-//		obj.put("maximumPeerQueueLength", 1000000);		//  integer($int32) //the maximum queue depth a peer may have in order for a response to be processed. (Default = 1000000).
+//		obj.put("maximumPeerQueueLength", 1000000);	//  integer($int32) //the maximum queue depth a peer may have in order for a response to be processed. (Default = 1000000).
 //		obj.put("minimumPeerUploadSpeed", 0);		//	integer($int32) //the minimum upload speed a peer must have in order for a response to be processed. (Default = 0).
 //		obj.put("minimumResponseFileCount", 1);	//	integer($int32)	//the minimum number of files a response must contain in order to be processed. (Default = 1).
-//		obj.put("responseLimit", 100);				//	integer($int32)	//the maximum number of search results to accept before the search is considered complete. (Default = 100).
+		obj.put("responseLimit", 5);				//	integer($int32)	//the maximum number of search results to accept before the search is considered complete. (Default = 100).
 		obj.put("searchText", queryText);			//	string			//the search text.
 //		obj.put("searchTimeout", 15);				//	integer($int32)	//the search timeout value, in seconds, used to determine when the search is complete. (Default = 15).
 //		obj.put("token", 0);						//	integer($int32)	//the search token.
@@ -158,7 +182,7 @@ public class SlskdClient {
         }
         return response.body();
     }
-	
+
 	static class ServerException extends Exception {
         public ServerException(String errorMessage) {
             super(errorMessage);

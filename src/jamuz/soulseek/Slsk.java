@@ -29,12 +29,16 @@ public class Slsk {
 	
 	private Process process;
 	private String destination;
+	private final SlskdClient slskdClient;
 		
     /**
 	 * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
      *
+	 * @throws java.io.IOException
+	 * @throws jamuz.soulseek.SlskdClient.ServerException
      */  
-    public Slsk() {
+    public Slsk() throws IOException, SlskdClient.ServerException {
+		slskdClient = new SlskdClient();
     }
 
 	public List<SlskdSearchResponse> search(String query, String destination) {
@@ -42,19 +46,8 @@ public class Slsk {
 		return process(query);
 	}
 	
-	boolean sendSelection(SlskdSearchResponse result, String query) {
-//		try {
-//			folderBeingDownloaded = new SlskDownload(query, result.getNbOfFiles(), result.getPath(), result.getUser(), destination);
-//			StdIn.write((result.getKey()+"\n").getBytes());
-//			downloadStarted = true;
-//			benchmark = new Benchmark(result.getNbOfFiles());
-//			StdIn.flush();
-			return true;
-//		} catch (IOException ex) {
-//			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-//			callback.error(ex.getMessage());
-//			return false;
-//		}
+	boolean download(SlskdSearchResponse searchResponse) {
+		return slskdClient.download(searchResponse);
 	}
 
 	boolean cancelling = false;
@@ -71,9 +64,7 @@ public class Slsk {
 	 */
 	private List<SlskdSearchResponse> process(String query) {
 		try {
-				SlskdClient slskdClient = new SlskdClient();
 				SlskdSearchResult search = slskdClient.search(query);
-				
 				while(!search.isComplete) {
 					search = slskdClient.getSearch(search.id);
 					Thread.sleep(1000);

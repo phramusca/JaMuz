@@ -17,8 +17,9 @@
 package jamuz.soulseek;
 
 import jamuz.utils.DateTime;
-import jamuz.utils.StringManager;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
 
@@ -45,25 +46,39 @@ public class SlskdSearchResponse {
 
 	public double getBitrate() {
 		if(files!=null & !files.isEmpty()) {
-			return files.stream()
+			return Math.round(files.stream()
                 .mapToDouble(file -> file.bitRate)
                 .average()
-                .orElse(0.0);
+                .orElse(0.0));
 		} else {
 			return 0.0;
 		}
 	}
 
-	public String getSize() {
-		if(files!=null & !files.isEmpty()) {
-			double meanSize = files.stream()
-                .mapToDouble(file -> file.size)
-                .sum();
-			//FIXME ! Check displayed matches slskd
-			return StringManager.humanReadableByteCount(meanSize, false);
-		} else {
-			return "0";
-		}
+//	public String getSize() {
+//		if(files!=null & !files.isEmpty()) {
+//			double meanSize = files.stream()
+//                .mapToDouble(file -> file.size)
+//                .sum();
+//			//FIXME ! Check displayed matches slskd
+//			return StringManager.humanReadableByteCount(meanSize, false);
+//		} else {
+//			return "0";
+//		}
+//	}
+	
+	public double getSize() {
+//		try {
+			if(files!=null & !files.isEmpty()) {
+				double meanSize = files.stream()
+					.mapToDouble(file -> file.size)
+					.sum();
+				return meanSize;
+			}
+//		} catch (Exception ex) {
+//			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+//		}
+		return 0;
 	}
 
 	public String getPath() {

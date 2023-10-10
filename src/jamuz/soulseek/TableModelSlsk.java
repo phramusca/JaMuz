@@ -52,15 +52,15 @@ public class TableModelSlsk extends TableModelGeneric {
 	 */
 	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        SlskdSearchResponse soulseekDownload = results.get(rowIndex);
+        SlskdSearchResponse searchResponse = results.get(rowIndex);
         switch (columnIndex) {
-			case 0: return soulseekDownload.getDate();
-            case 1: return soulseekDownload.fileCount;
-			case 2: return soulseekDownload.getBitrate();
-			case 3: return soulseekDownload.getSize();
-			case 4: return soulseekDownload.uploadSpeed;
-			case 5: return soulseekDownload.username;
-            case 6: return soulseekDownload.getPath();
+			case 0: return searchResponse.getDate();
+            case 1: return searchResponse.fileCount;
+			case 2: return searchResponse.getBitrate();
+			case 3: return searchResponse.getSize();
+			case 4: return searchResponse.uploadSpeed;
+			case 5: return searchResponse.username;
+            case 6: return searchResponse.getPath();
 		}
         return null;
     }

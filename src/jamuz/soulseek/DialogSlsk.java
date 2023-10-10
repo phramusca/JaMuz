@@ -24,6 +24,7 @@ import jamuz.utils.DateTime;
 import jamuz.utils.Swing;
 import java.awt.Dialog;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.RowSorter;
@@ -40,18 +41,20 @@ public class DialogSlsk extends javax.swing.JDialog {
     private final TableModelSlsk tableModelResults;
 	private final TableColumnModel columnModel;
 	private Slsk soulseek;
-	private ProgressBar progressBar;
+	private final ProgressBar progressBar;
 	private Options options;
 	
-	private static final int[] SEARCH_SPECIFIC_COLUMNS = new int[] {1, 2, 4, 5, 6, 7};
+	private static final int[] SEARCH_SPECIFIC_COLUMNS = new int[] {1, 2, 4, 5, 6, 7}; //FIXME ! SEARCH_SPECIFIC_COLUMNS
 	
     /**
      * Creates new form DialogSoulseek
      * @param parent
      * @param modal
 	 * @param query
+	 * @throws java.io.IOException
+	 * @throws jamuz.soulseek.SlskdClient.ServerException
      */
-    public DialogSlsk(Dialog parent, boolean modal, String query) {
+    public DialogSlsk(Dialog parent, boolean modal, String query) throws IOException, SlskdClient.ServerException {
         super(parent, modal);
         initComponents();
 
@@ -88,62 +91,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
 		jTextFieldDownloadingFolder.setText(options.get("slsk.downloading.folder"));
 		
-		soulseek = new Slsk()
-//					for (SlskdSearchResponse result : tableModelResults.getRows()) {
-//						File sourceFile = new File(result.getPath());
-//						String relativeSourcePath = result.getPath().substring(jTextFieldDownloadingFolder.getText().length());
-//						String destPath = FilenameUtils.concat(SlskDownloadedFolder.getPath(), relativeSourcePath);
-//						File destFile = new File(destPath);
-//						FileSystem.moveFile(sourceFile, destFile);
-////						result.setStatus(TableEntrySlsk.Status.Moved);
-////						result.setPath(destPath);
-////						replaceResult(result, result.getId(), "");
-//					}
-		//NOI18N
-		//NOI18N
-//				new Thread() {
-//					@Override
-//					public void run() {
-//						for (Map.Entry<String, SlskResultFolder> entry : results.entrySet()) {
-//							String key = entry.getKey();
-//							SlskResultFolder soulseekResultFolder = entry.getValue();
-//							//TODO Soulseek ! Display files in a treeViewTable (https://www-hameister-org.translate.goog/JavaSwingTreeTable.html?_x_tr_sl=uk&_x_tr_tl=fr&_x_tr_hl=fr&_x_tr_pto=wapp)
-//							tableModelResults.addRow(
-//									new TableEntrySlsk(key,
-//											TableEntrySlsk.Status.Folder,
-//											soulseekResultFolder.folder,
-//											soulseekResultFolder.user,
-//											soulseekResultFolder.files.size(), 
-//											soulseekResultFolder.bitrateInKbps,
-//											soulseekResultFolder.sizeInMb,
-//											soulseekResultFolder.speedInKbPerSecond));
-//						}						
-//						File SlskDownloadingFolder = new File(jTextFieldDownloadingFolder.getText());
-//						if(SlskDownloadingFolder.exists()) {
-//							for (SlskdSearchResponse result : tableModelResults.getRows()) {
-//								if(result.getStatus().equals(TableEntrySlsk.Status.Folder)) {
-//									SlskDownload sd = new SlskDownload(
-//											jTextFieldQuery.getText(),
-//											result.getNbOfFiles(),
-//											result.getPath(),
-//											result.getUser(), 
-//											SlskDownloadingFolder.getPath());
-//
-//									SlskDownload read = sd.read();
-//									if(read!=null) {
-//										result.setNbDownloaded(read.nbDownloaded);
-//									}
-//								}
-//							}
-//							enableRowSorter(true);
-//							tableModelResults.fireTableDataChanged();
-//							jTableSoulseek.setRowSelectionInterval(0, 0);
-//							jButtonDownload.setEnabled(true);
-//							jButtonCancel.setEnabled(true);
-//						}
-//					}
-//				}.start();
-		;
+		soulseek = new Slsk();
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
@@ -389,13 +337,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 			if((new File(jTextFieldDownloadingFolder.getText())).exists()) {
 				jButtonDownload.setEnabled(false);
 				selectedRow = jTableSoulseek.convertRowIndexToModel(selectedRow); 
-				SlskdSearchResponse result = tableModelResults.getRow(selectedRow);
-				jLabelFolder.setText(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | Download: " + result.toString());
+				SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
+				jLabelFolder.setText(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | Download: " + searchResponse.toString());
 				enableRowSorter(false);
 				tableModelResults.clear();
 				PanelMain.setColumnVisible(columnModel, SEARCH_SPECIFIC_COLUMNS, false);
-				progressBar.setup(result.fileCount);
-				soulseek.sendSelection(result, jTextFieldQuery.getText());
+				progressBar.setup(searchResponse.fileCount);
+				soulseek.download(searchResponse);
 			}
 		}
 	}
@@ -440,12 +388,29 @@ public class DialogSlsk extends javax.swing.JDialog {
 				String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
 						.substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
 				
+				//FIXME ! Manage exceptions:
+				
+				//FIXME ! Start (and check errors) docker image slskd
+//				docker run -d \
+//					-p 5030:5030 \
+//					-p 5031:5031 \
+//					-p 50300:50300 \
+//					-e SLSKD_REMOTE_CONFIGURATION=true \
+//					-e SLSKD_SLSK_USERNAME=xxx \
+//					-e SLSKD_SLSK_PASSWORD="xxx" \
+//					-e SLSKD_SWAGGER=true \
+//					-v /home/xxx/yyy/SlskdData:/app \
+//					--name slskd \
+//					slskd/slskd:latest
+		  
+				// docker ps -a 
+				
 				List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), destinationNoTrailingSlash);
 				for (SlskdSearchResponse slskdSearchResponse : searchResponses) {
 					tableModelResults.addRow(slskdSearchResponse);
 				}
-				//FIWME ! enableRowSorter(true);
-//				enableRowSorter(true);
+				enableRowSorter(true);
+				jButtonDownload.setEnabled(true);
 			}
 		}.start();
 	}
@@ -453,8 +418,10 @@ public class DialogSlsk extends javax.swing.JDialog {
     /**
 	 * @param parent
 	 * @param query
+	 * @throws java.io.IOException
+	 * @throws jamuz.soulseek.SlskdClient.ServerException
      */
-    public static void main(Dialog parent, String query) {
+    public static void main(Dialog parent, String query) throws IOException, SlskdClient.ServerException {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
