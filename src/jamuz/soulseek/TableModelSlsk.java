@@ -26,8 +26,31 @@ import java.util.List;
  */
 public class TableModelSlsk extends TableModelGeneric {
 
-    private List<SlskdSearchResponse> results;
+    private List<TableEntrySlsk> results;
 
+//	private int fileCount;
+//	private boolean hasFreeUploadSlot;
+//	private int lockedFileCount;
+//	private int queueLength;
+//	private int speed;
+//	private String username;	
+//	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
+//	private String path;
+//	private double bitRate;
+//	private double size;
+//
+//	private int startOffset;
+//	private String state;
+//	private String requestedAt;
+//	private String enqueuedAt;
+//	private String startedAt;
+//	private String endedAt;
+//	private int bytesTransferred;
+//	private int bytesRemaining;
+//	private String elapsedTime;
+//	private int percentComplete;
+//	private String remainingTime;
+	
     /**
 	 * Create the table model
 	 */
@@ -52,14 +75,14 @@ public class TableModelSlsk extends TableModelGeneric {
 	 */
 	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        SlskdSearchResponse searchResponse = results.get(rowIndex);
+        TableEntrySlsk searchResponse = results.get(rowIndex);
         switch (columnIndex) {
 			case 0: return searchResponse.getDate();
-            case 1: return searchResponse.fileCount;
-			case 2: return searchResponse.getBitrate();
+            case 1: return searchResponse.getFileCount();
+			case 2: return searchResponse.getBitRate();
 			case 3: return searchResponse.getSize();
-			case 4: return searchResponse.uploadSpeed;
-			case 5: return searchResponse.username;
+			case 4: return searchResponse.getSpeed();
+			case 5: return searchResponse.getUsername();
             case 6: return searchResponse.getPath();
 		}
         return null;
@@ -67,7 +90,7 @@ public class TableModelSlsk extends TableModelGeneric {
 	
 	@Override
     public void setValueAt(Object value, int row, int col) {
-		SlskdSearchResponse searchResponse = results.get(row);
+		TableEntrySlsk searchResponse = results.get(row);
 //        switch (col) {
 //			case 3: 
 //				searchResponse.setPath((String) value);
@@ -101,7 +124,7 @@ public class TableModelSlsk extends TableModelGeneric {
     * Add a row to the table
 	 * @param searchResponse
     */
-    public void addRow(SlskdSearchResponse searchResponse){
+    public void addRow(TableEntrySlsk searchResponse){
 		this.results.add(searchResponse);
 		this.fireTableDataChanged();
     }
@@ -111,7 +134,7 @@ public class TableModelSlsk extends TableModelGeneric {
 	 * @param searchResponse
 	 * @param row
     */
-    public void replaceRow(SlskdSearchResponse searchResponse, int row){
+    public void replaceRow(TableEntrySlsk searchResponse, int row){
 		this.results.set(row, searchResponse);
 		this.fireTableDataChanged();
     }
@@ -120,7 +143,7 @@ public class TableModelSlsk extends TableModelGeneric {
 	 *
 	 * @param searchResponse
 	 */
-	public void removeRow(SlskdSearchResponse searchResponse){
+	public void removeRow(TableEntrySlsk searchResponse){
 		this.results.remove(searchResponse);
 		this.fireTableDataChanged();
     }
@@ -129,7 +152,7 @@ public class TableModelSlsk extends TableModelGeneric {
 	 * Return list of lines
 	 * @return
 	 */
-	public List<SlskdSearchResponse> getRows() {
+	public List<TableEntrySlsk> getRows() {
 		return results;
 	}
 
@@ -138,7 +161,7 @@ public class TableModelSlsk extends TableModelGeneric {
      * @param index
      * @return
      */
-    public SlskdSearchResponse getRow(int index) {
+    public TableEntrySlsk getRow(int index) {
         return this.results.get(index);
     }
    

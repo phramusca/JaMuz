@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableColumn;
@@ -43,6 +44,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 	private Slsk soulseek;
 	private final ProgressBar progressBar;
 	private Options options;
+	private SlskdSearchResponse searchResponse;
 	
 	private static final int[] SEARCH_SPECIFIC_COLUMNS = new int[] {1, 2, 4, 5, 6, 7}; //FIXME ! SEARCH_SPECIFIC_COLUMNS
 	
@@ -168,6 +170,7 @@ public class DialogSlsk extends javax.swing.JDialog {
         jTextFieldDownloadedFolder = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -245,6 +248,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 
         jLabel2.setText("DownloadED folder:");
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -253,13 +263,11 @@ public class DialogSlsk extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 1262, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jTextFieldQuery)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSearch))
-                    .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabelFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -275,7 +283,13 @@ public class DialogSlsk extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonCancel)
-                            .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabelFolder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1164, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -288,11 +302,14 @@ public class DialogSlsk extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelFolder, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelFolder, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldDownloadingFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -337,13 +354,36 @@ public class DialogSlsk extends javax.swing.JDialog {
 			if((new File(jTextFieldDownloadingFolder.getText())).exists()) {
 				jButtonDownload.setEnabled(false);
 				selectedRow = jTableSoulseek.convertRowIndexToModel(selectedRow); 
-				SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
+				
+				TableEntrySlsk tableEntrySlsk = tableModelResults.getRow(selectedRow);
+				
+				searchResponse = tableEntrySlsk.getSearchResponse();
+						
 				jLabelFolder.setText(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | Download: " + searchResponse.toString());
 				enableRowSorter(false);
 				tableModelResults.clear();
-				PanelMain.setColumnVisible(columnModel, SEARCH_SPECIFIC_COLUMNS, false);
+				//				PanelMain.setColumnVisible(columnModel, SEARCH_SPECIFIC_COLUMNS, false); //FIXME !
 				progressBar.setup(searchResponse.fileCount);
-				soulseek.download(searchResponse);
+				if(soulseek.download(searchResponse)) {
+					displayDownloads();
+				}
+			}
+		}
+	}
+
+	private void displayDownloads() {
+		if(searchResponse!=null) {
+			tableModelResults.clear();
+			SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
+
+			List<SlskdDownloadFile> filteredFiles = downloads.directories
+					.stream()
+					.filter(directory -> directory.directory.startsWith(searchResponse.getPath()))
+					.flatMap(directory -> directory.files.stream())
+					.collect(Collectors.toList());
+
+			for (SlskdDownloadFile filteredFile : filteredFiles) {
+				tableModelResults.addRow(new TableEntrySlsk(filteredFile));
 			}
 		}
 	}
@@ -368,6 +408,10 @@ public class DialogSlsk extends javax.swing.JDialog {
 			
 		}
     }//GEN-LAST:event_jButtonSelectDownloadedFolderActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        displayDownloads();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 	private void startSoulseekSearch() {
 		new Thread() {
@@ -407,7 +451,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 				
 				List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), destinationNoTrailingSlash);
 				for (SlskdSearchResponse slskdSearchResponse : searchResponses) {
-					tableModelResults.addRow(slskdSearchResponse);
+					tableModelResults.addRow(new TableEntrySlsk(slskdSearchResponse));
 				}
 				enableRowSorter(true);
 				jButtonDownload.setEnabled(true);
@@ -444,6 +488,7 @@ public class DialogSlsk extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonDownload;
     private javax.swing.JButton jButtonSearch;

@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 2023 raph
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package jamuz.soulseek;
+
+/**
+ *
+ * @author raph
+ */
+//FIXME ! Merge with SlskdSearchFile or create an interface for list display
+public class SlskdDownloadFile {
+	public String id;
+	public String username;
+	public String direction;
+	public String filename;
+	public int size;
+	public int startOffset;
+	public String state;
+	public String requestedAt;
+	public String enqueuedAt;
+	public String startedAt;
+	public String endedAt;
+	public int bytesTransferred;
+	public double averageSpeed;
+	public int bytesRemaining;
+	public String elapsedTime;
+	public double percentComplete;
+	public String remainingTime;
+}

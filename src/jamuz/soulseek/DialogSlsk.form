@@ -27,14 +27,12 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jScrollPaneCheckTags3" alignment="0" pref="1262" max="32767" attributes="2"/>
+                  <Component id="jScrollPaneCheckTags3" alignment="0" pref="1271" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jTextFieldQuery" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonSearch" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jProgressBarSlsk" alignment="0" max="32767" attributes="1"/>
-                  <Component id="jLabelFolder" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -56,6 +54,14 @@
                           <Component id="jButtonDownload" min="-2" pref="90" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="jLabelFolder" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jProgressBarSlsk" alignment="0" pref="1164" max="32767" attributes="1"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButton1" min="-2" pref="101" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -72,11 +78,16 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="54" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabelFolder" min="-2" pref="17" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="jLabelFolder" min="-2" pref="17" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <Component id="jProgressBarSlsk" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="jButton1" max="32767" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jProgressBarSlsk" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPaneCheckTags3" pref="276" max="32767" attributes="2"/>
+              <Component id="jScrollPaneCheckTags3" pref="270" max="32767" attributes="2"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jTextFieldDownloadingFolder" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -241,6 +252,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="DownloadED folder:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jButton1"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

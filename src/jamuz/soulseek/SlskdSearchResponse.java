@@ -18,8 +18,6 @@ package jamuz.soulseek;
 
 import jamuz.utils.DateTime;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
 
@@ -29,13 +27,13 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class SlskdSearchResponse {
 	public int fileCount;
-	public List<SlskdFile> files;
+	public List<SlskdSearchFile> files;
 	public boolean hasFreeUploadSlot;
 	public int lockedFileCount;
-	public List<SlskdFile> lockedFiles;
+	public List<SlskdSearchFile> lockedFiles;
 	public int queueLength;
 	public int token;
-	public int uploadSpeed;
+	public double uploadSpeed;
 	public String username;	
 	
 	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
@@ -55,29 +53,15 @@ public class SlskdSearchResponse {
 		}
 	}
 
-//	public String getSize() {
-//		if(files!=null & !files.isEmpty()) {
-//			double meanSize = files.stream()
-//                .mapToDouble(file -> file.size)
-//                .sum();
-//			//FIXME ! Check displayed matches slskd
-//			return StringManager.humanReadableByteCount(meanSize, false);
-//		} else {
-//			return "0";
-//		}
-//	}
-	
 	public double getSize() {
-//		try {
-			if(files!=null & !files.isEmpty()) {
-				double meanSize = files.stream()
-					.mapToDouble(file -> file.size)
-					.sum();
-				return meanSize;
-			}
-//		} catch (Exception ex) {
-//			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-//		}
+		if(files!=null & !files.isEmpty()) {
+			double meanSize = files.stream()
+				.mapToDouble(file -> file.size)
+				.sum();
+			return meanSize;
+//			//FIXME ! Check displayed matches slskd, and think of row sorting before changing
+//			return StringManager.humanReadableByteCount(meanSize, false);
+		}
 		return 0;
 	}
 
@@ -92,8 +76,21 @@ public class SlskdSearchResponse {
 		return path;
 	}
 
-	public int getSpeed() {
+	public double getSpeed() {
 		return uploadSpeed;
 	}
-	
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SlskdSearchResponse{");
+		sb.append("fileCount=").append(fileCount);
+		sb.append(", hasFreeUploadSlot=").append(hasFreeUploadSlot);
+		sb.append(", lockedFileCount=").append(lockedFileCount);
+		sb.append(", queueLength=").append(queueLength);
+		sb.append(", uploadSpeed=").append(uploadSpeed);
+		sb.append(", username=").append(username);
+		sb.append('}');
+		return sb.toString();
+	}
 }

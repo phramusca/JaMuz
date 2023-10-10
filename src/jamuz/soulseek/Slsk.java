@@ -30,7 +30,7 @@ public class Slsk {
 	private Process process;
 	private String destination;
 	private final SlskdClient slskdClient;
-		
+//FIXME ! Manage exceptions and method returns		
     /**
 	 * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
      *
@@ -46,8 +46,26 @@ public class Slsk {
 		return process(query);
 	}
 	
+	SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) {
+		try {
+			return slskdClient.getDownlods(searchResponse);
+		} catch (IOException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SlskdClient.ServerException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return null;
+	}
+	
 	boolean download(SlskdSearchResponse searchResponse) {
-		return slskdClient.download(searchResponse);
+		try {
+			return slskdClient.download(searchResponse);
+		} catch (IOException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SlskdClient.ServerException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return false;
 	}
 
 	boolean cancelling = false;

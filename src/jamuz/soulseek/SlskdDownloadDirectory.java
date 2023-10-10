@@ -16,19 +16,14 @@
  */
 package jamuz.soulseek;
 
+import java.util.List;
+
 /**
  *
  * @author raph
  */
-class SlskdFile {
-	public int bitDepth;
-	public int bitRate;
-	public int code;
-	public String extension;
-	public String filename;
-	public boolean isVariableBitRate;
-	public int length;
-	public int sampleRate;
-	public int size;
-	public boolean isLocked;	
+public class SlskdDownloadDirectory {
+	public String directory;
+	public int fileCount;
+	public List<SlskdDownloadFile> files;
 }

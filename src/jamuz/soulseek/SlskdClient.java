@@ -75,27 +75,34 @@ public class SlskdClient {
 		return true; //TODO: return true or false based on http result
 	}
 	
-	public boolean download(SlskdSearchResponse searchResponse) {
-		try {
-			JSONArray jsonArray = new JSONArray();
-			for (SlskdFile file : searchResponse.files) {
-				JSONObject fileObj = new JSONObject();
-				fileObj.put("filename", file.filename);
-				fileObj.put("size", file.size);
-				jsonArray.add(fileObj);
-			}
-			HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/"+searchResponse.username); //NON-NLS
-			Request request = getRequestBuilder(urlBuilder) //NON-NLS
-					.post(RequestBody.create(jsonArray.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
-			
-			Response response = client.newCall(request).execute();
-			return response.isSuccessful();
-		} catch (IOException ex) {
-			Logger.getLogger(SlskdClient.class.getName()).log(Level.SEVERE, null, ex);
+	public boolean download(SlskdSearchResponse searchResponse) throws IOException, ServerException {
+		JSONArray jsonArray = new JSONArray();
+		for (SlskdSearchFile file : searchResponse.files) {
+			JSONObject fileObj = new JSONObject();
+			fileObj.put("filename", file.filename);
+			fileObj.put("size", file.size);
+			jsonArray.add(fileObj);
 		}
-		return false;
+		HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/"+searchResponse.username); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder) //NON-NLS
+				.post(RequestBody.create(jsonArray.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
+
+		Response response = client.newCall(request).execute();
+		return response.isSuccessful();
 	}
 	
+	//TODO: download only audio files ?
+	public SlskdDownloadUser getDownlods(SlskdSearchResponse searchResponse) throws IOException, ServerException {
+		String bodyString = getBodyString("transfers/downloads/" + searchResponse.username, client);
+		
+		SlskdDownloadUser fromJson = null;
+		if (!bodyString.equals("")) {
+			fromJson = gson.fromJson(bodyString, SlskdDownloadUser.class);
+		}
+		return fromJson;
+	}
+	
+	//FIXME ! Filter flac and mp3 (as an option or use existing)
 	public SlskdSearchResult search(String queryText) throws IOException, ServerException {
 		JSONObject obj = new JSONObject();
 		
@@ -183,7 +190,7 @@ public class SlskdClient {
         return response.body();
     }
 
-	static class ServerException extends Exception {
+	public static class ServerException extends Exception {
         public ServerException(String errorMessage) {
             super(errorMessage);
         }

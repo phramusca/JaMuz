@@ -25,6 +25,7 @@ import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
 import jamuz.process.check.PanelCheck;
 import jamuz.soulseek.DialogSlsk;
+import jamuz.soulseek.SlskdClient;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -261,8 +263,14 @@ public class PopupMenu {
 					public void actionPerformed(ActionEvent ae) {
 						FileInfoInt selected = getSelected();
 						if(selected!=null) {
-							//TODO: set parent frame
-							DialogSlsk.main(null, selected.getAlbumArtist().concat(" ").concat(selected.getAlbum()));
+							try {
+								//TODO: set parent frame
+								DialogSlsk.main(null, selected.getAlbumArtist().concat(" ").concat(selected.getAlbum()));
+							} catch (IOException ex) {
+								Logger.getLogger(PopupMenu.class.getName()).log(Level.SEVERE, null, ex);
+							} catch (SlskdClient.ServerException ex) {
+								Logger.getLogger(PopupMenu.class.getName()).log(Level.SEVERE, null, ex);
+							}
 						}
 					}
 				}));
