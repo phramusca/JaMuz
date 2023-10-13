@@ -87,22 +87,15 @@ public class DialogSlsk extends javax.swing.JDialog {
 		//Assigning XTableColumnModel to allow show/hide columns
 		jTableDownload.setColumnModel(columnModelDownload);
 		jTableDownload.createDefaultColumnsFromModel();
-		setColumn(columnModelDownload, 0, 140);	// Date
-        setColumn(columnModelDownload, 1, 40);	// BitDepth
-		setColumn(columnModelDownload, 2, 50);	// BitRate
-		setColumn(columnModelDownload, 3, 50);	// Code
-		setColumn(columnModelDownload, 4, 50);	// ext
-		setColumn(columnModelDownload, 5, 50);	// Var. Bitrate
-		setColumn(columnModelDownload, 6, 50);	// Length
-		setColumn(columnModelDownload, 7, 50);	// Sample Rate
-		setColumn(columnModelDownload, 8, 50);	// Locked
-		setColumn(columnModelDownload, 9, 50);	// State
-		setColumn(columnModelDownload, 10, 50);	// Size
-		setColumn(columnModelDownload, 11, 50);	// Speed
-		setColumn(columnModelDownload, 12, 50);	// Completed
-		setColumn(columnModelDownload, 13, 150);	// User
-		setColumn(columnModelDownload, 14, 600);	// Path
-		setColumn(columnModelDownload, 15, 300);	// More info
+		setColumn(columnModelDownload, 0, 140);    // Date
+		setColumn(columnModelDownload, 1, 50);     // BitRate
+		setColumn(columnModelDownload, 2, 50);     // Length
+		setColumn(columnModelDownload, 3, 50);     // State
+		setColumn(columnModelDownload, 4, 50);     // Size
+		setColumn(columnModelDownload, 5, 50);     // Speed
+		setColumn(columnModelDownload, 6, 50);     // Completed
+		setColumn(columnModelDownload, 7, 200);    // File
+		setColumn(columnModelDownload, 8, 400);    // Path
 		
 		
 		progressBar = (ProgressBar)jProgressBarSlsk;
@@ -352,7 +345,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                 .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldDownloadingFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSelectDownloadingFolder)

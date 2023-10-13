@@ -42,12 +42,21 @@ public class SlskFile {
 		public int startOffset;
 	public String state="null";
 	
-	//FIXME !!! display proper dates accordingly (to state ?)
-		public String requestedAt="null";
-		public String enqueuedAt="null";
+	public String requestedAt="null";
+	public String enqueuedAt="null";
 	public String startedAt="null";
-		public String endedAt="null";
+	public String endedAt="null";
 	
+	String getDate() {
+		String date = 
+				!endedAt.equals("null")?endedAt
+				:!startedAt.equals("null")?startedAt
+				:!enqueuedAt.equals("null")?enqueuedAt
+				:!requestedAt.equals("null")?requestedAt
+				:"--";
+		return date;
+	}
+		
 	public double percentComplete;
 	public double averageSpeed;
 	
@@ -71,23 +80,10 @@ public class SlskFile {
 		this.username=username;
 	}
 
-	public String getMoreInfo() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("SlskdFile{");
-		sb.append("id=").append(id);
-		sb.append(", direction=").append(direction);
-		sb.append(", startOffset=").append(startOffset);
-		sb.append(", requestedAt=").append(requestedAt);
-		sb.append(", enqueuedAt=").append(enqueuedAt);
-		sb.append(", startedAt=").append(startedAt);
-		sb.append(", endedAt=").append(endedAt);
-		sb.append(", percentComplete=").append(percentComplete);
-		sb.append(", averageSpeed=").append(averageSpeed);
-		sb.append('}');
-		return sb.toString();
-	}
-
 	void update(SlskdDownloadFile filteredFile) {
+//		this.filename=filteredFile.filename;
+//		this.size=filteredFile.size;
+//		this.username=filteredFile.username;
 		this.averageSpeed=filteredFile.averageSpeed;
 		this.bytesRemaining=filteredFile.bytesRemaining;
 		this.bytesTransferred=filteredFile.bytesTransferred;
@@ -95,16 +91,13 @@ public class SlskFile {
 		this.elapsedTime=filteredFile.elapsedTime;
 		this.endedAt=filteredFile.endedAt;
 		this.enqueuedAt=filteredFile.enqueuedAt;
-//		this.filename=filteredFile.filename;
 		this.id=filteredFile.id;
 		this.percentComplete=filteredFile.percentComplete;
 		this.remainingTime=filteredFile.remainingTime;
 		this.requestedAt=filteredFile.requestedAt;
-//		this.size=filteredFile.size;
 		this.startOffset=filteredFile.startOffset;
 		this.startedAt=filteredFile.startedAt;
 		this.state=filteredFile.state;
-//		this.username=filteredFile.username;
 	}
 
 	public String getKey() {

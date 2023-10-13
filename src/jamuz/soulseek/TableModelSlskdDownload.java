@@ -19,6 +19,7 @@ package jamuz.soulseek;
 import jamuz.gui.swing.TableModelGeneric;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -35,21 +36,14 @@ public class TableModelSlskdDownload extends TableModelGeneric {
         this.results = new ArrayList<>();
         this.setColumnNames(new String [] {
             "Date", //NOI18N
-			"BitDepth", //NOI18N
 			"BitRate", //NOI18N
-			"Code", //NOI18N
-			"ext", //NOI18N
-			"Var. Bitrate", //NOI18N
 			"Length", //NOI18N
-			"Sample Rate", //NOI18N
-			"Locked", //NOI18N
 			"State", //NOI18N
 			"Size", //NOI18N
 			"Speed", //NOI18N
 			"Completed", //NOI18N //FIXME !!! Replace with a progressbar
-			"User", //NOI18N
-            "Path",  //NOI18N
-			"More info",  //NOI18N
+            "File",  //NOI18N
+			"Path",  //NOI18N
         });
 	}
 
@@ -59,29 +53,22 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 	 * @param columnIndex
 	 * @return
 	 */
-	@Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        SlskFile searchResponse = results.get(rowIndex);
-        switch (columnIndex) {
-			case 0: return searchResponse.startedAt; //FIXME !!! display proper date
-            case 1: return searchResponse.bitDepth;
-			case 2: return searchResponse.bitRate;
-			case 3: return searchResponse.code;
-			case 4: return searchResponse.extension;
-			case 5: return searchResponse.isVariableBitRate;
-            case 6: return searchResponse.length;
-			case 7: return searchResponse.sampleRate;
-			case 8: return searchResponse.isLocked;
-			case 9: return searchResponse.state; //FIXME !!! display state
-			case 10: return searchResponse.size;
-			case 11: return searchResponse.averageSpeed;
-			case 12: return searchResponse.percentComplete;
-			case 13: return searchResponse.username;
-			case 14: return searchResponse.filename;
-			case 15: return searchResponse.getMoreInfo();
-		}
-        return null;
+@Override
+public Object getValueAt(int rowIndex, int columnIndex) {
+    SlskFile searchResponse = results.get(rowIndex);
+    switch (columnIndex) {
+        case 0: return searchResponse.getDate();
+		case 1: return searchResponse.bitRate;
+		case 2: return searchResponse.length;
+		case 3: return searchResponse.state;
+		case 4: return searchResponse.size;
+		case 5: return searchResponse.averageSpeed;
+		case 6: return searchResponse.percentComplete;
+		case 7: return FilenameUtils.getName(searchResponse.filename);
+		case 8: return FilenameUtils.getFullPath(searchResponse.filename);
     }
+    return null;
+}
 	
 	@Override
     public void setValueAt(Object value, int row, int col) {
