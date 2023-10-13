@@ -20,13 +20,13 @@ package jamuz.soulseek;
  *
  * @author raph
  */
-//FIXME ! Merge with SlskdSearchFile or create an interface for list display
 public class SlskdDownloadFile {
+	public String filename;
+	public int size;
+	
 	public String id;
 	public String username;
 	public String direction;
-	public String filename;
-	public int size;
 	public int startOffset;
 	public String state;
 	public String requestedAt;

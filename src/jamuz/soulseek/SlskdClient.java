@@ -92,7 +92,7 @@ public class SlskdClient {
 	}
 	
 	//TODO: download only audio files ?
-	public SlskdDownloadUser getDownlods(SlskdSearchResponse searchResponse) throws IOException, ServerException {
+	public SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
 		String bodyString = getBodyString("transfers/downloads/" + searchResponse.username, client);
 		
 		SlskdDownloadUser fromJson = null;
@@ -102,7 +102,7 @@ public class SlskdClient {
 		return fromJson;
 	}
 	
-	//FIXME ! Filter flac and mp3 (as an option or use existing)
+	//FIXME !! Filter flac and mp3 (as an option or use existing)
 	public SlskdSearchResult search(String queryText) throws IOException, ServerException {
 		JSONObject obj = new JSONObject();
 		

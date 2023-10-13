@@ -21,14 +21,15 @@ package jamuz.soulseek;
  * @author raph
  */
 class SlskdSearchFile {
+	public String filename;
+	public int size;
+	
 	public int bitDepth;
 	public int bitRate;
 	public int code;
 	public String extension;
-	public String filename;
 	public boolean isVariableBitRate;
 	public int length;
 	public int sampleRate;
-	public int size;
 	public boolean isLocked;	
 }

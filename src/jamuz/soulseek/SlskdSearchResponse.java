@@ -59,7 +59,7 @@ public class SlskdSearchResponse {
 				.mapToDouble(file -> file.size)
 				.sum();
 			return meanSize;
-//			//FIXME ! Check displayed matches slskd, and think of row sorting before changing
+//			//FIXME !!! Check displayed matches slskd, and think of row sorting before changing
 //			return StringManager.humanReadableByteCount(meanSize, false);
 		}
 		return 0;

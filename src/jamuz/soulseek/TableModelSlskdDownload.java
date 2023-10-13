@@ -24,46 +24,32 @@ import java.util.List;
  *
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
-public class TableModelSlsk extends TableModelGeneric {
+public class TableModelSlskdDownload extends TableModelGeneric {
 
-    private List<TableEntrySlsk> results;
+    private List<SlskdFile> results;
 
-//	private int fileCount;
-//	private boolean hasFreeUploadSlot;
-//	private int lockedFileCount;
-//	private int queueLength;
-//	private int speed;
-//	private String username;	
-//	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
-//	private String path;
-//	private double bitRate;
-//	private double size;
-//
-//	private int startOffset;
-//	private String state;
-//	private String requestedAt;
-//	private String enqueuedAt;
-//	private String startedAt;
-//	private String endedAt;
-//	private int bytesTransferred;
-//	private int bytesRemaining;
-//	private String elapsedTime;
-//	private int percentComplete;
-//	private String remainingTime;
-	
     /**
 	 * Create the table model
 	 */
-	public TableModelSlsk() {
+	public TableModelSlskdDownload() {
         this.results = new ArrayList<>();
         this.setColumnNames(new String [] {
             "Date", //NOI18N
-				"Nb", //NOI18N
-				"BitRate", //NOI18N
-				"Size", //NOI18N
-				"Speed", //NOI18N
-				"User", //NOI18N
+			"BitDepth", //NOI18N
+			"BitRate", //NOI18N
+			"Code", //NOI18N
+			"ext", //NOI18N
+			"Var. Bitrate", //NOI18N
+			"Length", //NOI18N
+			"Sample Rate", //NOI18N
+			"Locked", //NOI18N
+			"State", //NOI18N
+			"Size", //NOI18N
+			"Speed", //NOI18N
+			"Completed", //NOI18N //FIXME !!! Replace with a progressbar
+			"User", //NOI18N
             "Path",  //NOI18N
+			"More info",  //NOI18N
         });
 	}
 
@@ -75,22 +61,31 @@ public class TableModelSlsk extends TableModelGeneric {
 	 */
 	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        TableEntrySlsk searchResponse = results.get(rowIndex);
+        SlskdFile searchResponse = results.get(rowIndex);
         switch (columnIndex) {
-			case 0: return searchResponse.getDate();
-            case 1: return searchResponse.getFileCount();
-			case 2: return searchResponse.getBitRate();
-			case 3: return searchResponse.getSize();
-			case 4: return searchResponse.getSpeed();
-			case 5: return searchResponse.getUsername();
-            case 6: return searchResponse.getPath();
+			case 0: return ""; //searchResponse.startedAt; //FIXME !!! display proper date
+            case 1: return searchResponse.bitDepth;
+			case 2: return searchResponse.bitRate;
+			case 3: return searchResponse.code;
+			case 4: return searchResponse.extension;
+			case 5: return searchResponse.isVariableBitRate;
+            case 6: return searchResponse.length;
+			case 7: return searchResponse.sampleRate;
+			case 8: return searchResponse.isLocked;
+			case 9: return "";//searchResponse.state; //FIXME !!! display state
+			case 10: return searchResponse.size;
+			case 11: return searchResponse.averageSpeed;
+			case 12: return searchResponse.percentComplete;
+			case 13: return searchResponse.username;
+			case 14: return searchResponse.filename;
+			case 15: return searchResponse.getMoreInfo();
 		}
         return null;
     }
 	
 	@Override
     public void setValueAt(Object value, int row, int col) {
-		TableEntrySlsk searchResponse = results.get(row);
+		SlskdFile searchResponse = results.get(row);
 //        switch (col) {
 //			case 3: 
 //				searchResponse.setPath((String) value);
@@ -124,7 +119,7 @@ public class TableModelSlsk extends TableModelGeneric {
     * Add a row to the table
 	 * @param searchResponse
     */
-    public void addRow(TableEntrySlsk searchResponse){
+    public void addRow(SlskdFile searchResponse){
 		this.results.add(searchResponse);
 		this.fireTableDataChanged();
     }
@@ -134,7 +129,7 @@ public class TableModelSlsk extends TableModelGeneric {
 	 * @param searchResponse
 	 * @param row
     */
-    public void replaceRow(TableEntrySlsk searchResponse, int row){
+    public void replaceRow(SlskdFile searchResponse, int row){
 		this.results.set(row, searchResponse);
 		this.fireTableDataChanged();
     }
@@ -143,7 +138,7 @@ public class TableModelSlsk extends TableModelGeneric {
 	 *
 	 * @param searchResponse
 	 */
-	public void removeRow(TableEntrySlsk searchResponse){
+	public void removeRow(SlskdFile searchResponse){
 		this.results.remove(searchResponse);
 		this.fireTableDataChanged();
     }
@@ -152,7 +147,7 @@ public class TableModelSlsk extends TableModelGeneric {
 	 * Return list of lines
 	 * @return
 	 */
-	public List<TableEntrySlsk> getRows() {
+	public List<SlskdFile> getRows() {
 		return results;
 	}
 
@@ -161,7 +156,7 @@ public class TableModelSlsk extends TableModelGeneric {
      * @param index
      * @return
      */
-    public TableEntrySlsk getRow(int index) {
+    public SlskdFile getRow(int index) {
         return this.results.get(index);
     }
    
