@@ -181,14 +181,11 @@ public class DialogSlsk extends javax.swing.JDialog {
         jScrollPaneCheckTags3 = new javax.swing.JScrollPane();
         jTableResults = new jamuz.gui.swing.TableHorizontal();
         jTextFieldQuery = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaLog = new javax.swing.JTextArea();
         jButtonDownload = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonSearch = new javax.swing.JButton();
         jTextFieldDownloadingFolder = new javax.swing.JTextField();
         jButtonSelectDownloadingFolder = new javax.swing.JButton();
-        jLabelFolder = new javax.swing.JLabel();
         jProgressBarSlsk = new jamuz.gui.swing.ProgressBar();
         jButtonSelectDownloadedFolder = new javax.swing.JButton();
         jTextFieldDownloadedFolder = new javax.swing.JTextField();
@@ -211,11 +208,6 @@ public class DialogSlsk extends javax.swing.JDialog {
         jScrollPaneCheckTags3.setViewportView(jTableResults);
 
         jTextFieldQuery.setToolTipText("");
-
-        jTextAreaLog.setEditable(false);
-        jTextAreaLog.setColumns(20);
-        jTextAreaLog.setRows(5);
-        jScrollPane1.setViewportView(jTextAreaLog);
 
         jButtonDownload.setText("Download");
         jButtonDownload.setEnabled(false);
@@ -252,8 +244,6 @@ public class DialogSlsk extends javax.swing.JDialog {
                 jButtonSelectDownloadingFolderActionPerformed(evt);
             }
         });
-
-        jLabelFolder.setToolTipText("");
 
         jProgressBarSlsk.setMinimumSize(new java.awt.Dimension(1, 23));
         jProgressBarSlsk.setString(" "); // NOI18N
@@ -293,7 +283,6 @@ public class DialogSlsk extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jTextFieldQuery)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -308,7 +297,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                             .addComponent(jButtonSelectDownloadingFolder))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldDownloadingFolder, javax.swing.GroupLayout.DEFAULT_SIZE, 935, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDownloadingFolder)
                             .addComponent(jTextFieldDownloadedFolder))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,9 +305,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                             .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabelFolder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1164, Short.MAX_VALUE))
+                        .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.PREFERRED_SIZE, 1164, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2)
@@ -333,14 +320,9 @@ public class DialogSlsk extends javax.swing.JDialog {
                     .addComponent(jTextFieldQuery, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSearch))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelFolder, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -390,7 +372,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 				jButtonDownload.setEnabled(false);
 				selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
 				SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-				jLabelFolder.setText(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | Download: " + searchResponse.toString());
 				progressBar.setup(searchResponse.fileCount);
 				if(soulseek.download(searchResponse)) {
 					displayDownloads();
@@ -491,9 +472,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 				jButtonDownload.setEnabled(false);
 				tableModelResults.clear();
 				progressBar.reset();
-//				PanelMain.setColumnVisible(columnModelResults, SEARCH_SPECIFIC_COLUMNS, true);
-				jTextAreaLog.append("Starting search on slskd.\n");
-				jLabelFolder.setText(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)+" | search: " + jTextFieldQuery.getText());
 				String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
 						.substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
 				
@@ -559,14 +537,11 @@ public class DialogSlsk extends javax.swing.JDialog {
     private javax.swing.JButton jButtonSelectDownloadingFolder;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabelFolder;
     private javax.swing.JProgressBar jProgressBarSlsk;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneCheckTags3;
     private javax.swing.JTable jTableDownload;
     private javax.swing.JTable jTableResults;
-    private javax.swing.JTextArea jTextAreaLog;
     private javax.swing.JTextField jTextFieldDownloadedFolder;
     private javax.swing.JTextField jTextFieldDownloadingFolder;
     private javax.swing.JTextField jTextFieldQuery;
