@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class TableModelSlskdDownload extends TableModelGeneric {
 
-    private List<SlskdFile> results;
+    private List<SlskFile> results;
 
     /**
 	 * Create the table model
@@ -61,9 +61,9 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 	 */
 	@Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        SlskdFile searchResponse = results.get(rowIndex);
+        SlskFile searchResponse = results.get(rowIndex);
         switch (columnIndex) {
-			case 0: return ""; //searchResponse.startedAt; //FIXME !!! display proper date
+			case 0: return searchResponse.startedAt; //FIXME !!! display proper date
             case 1: return searchResponse.bitDepth;
 			case 2: return searchResponse.bitRate;
 			case 3: return searchResponse.code;
@@ -72,7 +72,7 @@ public class TableModelSlskdDownload extends TableModelGeneric {
             case 6: return searchResponse.length;
 			case 7: return searchResponse.sampleRate;
 			case 8: return searchResponse.isLocked;
-			case 9: return "";//searchResponse.state; //FIXME !!! display state
+			case 9: return searchResponse.state; //FIXME !!! display state
 			case 10: return searchResponse.size;
 			case 11: return searchResponse.averageSpeed;
 			case 12: return searchResponse.percentComplete;
@@ -85,7 +85,7 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 	
 	@Override
     public void setValueAt(Object value, int row, int col) {
-		SlskdFile searchResponse = results.get(row);
+		SlskFile searchResponse = results.get(row);
 //        switch (col) {
 //			case 3: 
 //				searchResponse.setPath((String) value);
@@ -119,7 +119,7 @@ public class TableModelSlskdDownload extends TableModelGeneric {
     * Add a row to the table
 	 * @param searchResponse
     */
-    public void addRow(SlskdFile searchResponse){
+    public void addRow(SlskFile searchResponse){
 		this.results.add(searchResponse);
 		this.fireTableDataChanged();
     }
@@ -129,7 +129,7 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 	 * @param searchResponse
 	 * @param row
     */
-    public void replaceRow(SlskdFile searchResponse, int row){
+    public void replaceRow(SlskFile searchResponse, int row){
 		this.results.set(row, searchResponse);
 		this.fireTableDataChanged();
     }
@@ -138,7 +138,7 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 	 *
 	 * @param searchResponse
 	 */
-	public void removeRow(SlskdFile searchResponse){
+	public void removeRow(SlskFile searchResponse){
 		this.results.remove(searchResponse);
 		this.fireTableDataChanged();
     }
@@ -147,7 +147,7 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 	 * Return list of lines
 	 * @return
 	 */
-	public List<SlskdFile> getRows() {
+	public List<SlskFile> getRows() {
 		return results;
 	}
 
@@ -156,7 +156,7 @@ public class TableModelSlskdDownload extends TableModelGeneric {
      * @param index
      * @return
      */
-    public SlskdFile getRow(int index) {
+    public SlskFile getRow(int index) {
         return this.results.get(index);
     }
    

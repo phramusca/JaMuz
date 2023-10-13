@@ -21,22 +21,26 @@ package jamuz.soulseek;
  * @author raph
  */
 public class SlskdDownloadFile {
-	public String filename;
+	public String filename="null";
 	public int size;
 	
-	public String id;
-	public String username;
-	public String direction;
+	public String id="null";
+	public String username="null";
+	public String direction="null";
 	public int startOffset;
-	public String state;
-	public String requestedAt;
-	public String enqueuedAt;
-	public String startedAt;
-	public String endedAt;
+	public String state="null";
+	public String requestedAt="null";
+	public String enqueuedAt="null";
+	public String startedAt="null";
+	public String endedAt="null";
 	public int bytesTransferred;
 	public double averageSpeed;
 	public int bytesRemaining;
-	public String elapsedTime;
+	public String elapsedTime="null";
 	public double percentComplete;
-	public String remainingTime;
+	public String remainingTime="null";
+	
+	public String getKey() {
+		return "[" + size + "]" + filename;
+	}
 }

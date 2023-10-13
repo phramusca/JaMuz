@@ -21,8 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.TimeUnit;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -83,11 +82,15 @@ public class SlskdClient {
 			fileObj.put("size", file.size);
 			jsonArray.add(fileObj);
 		}
+		OkHttpClient timeoutClient = new OkHttpClient.Builder()
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .build();
+		
 		HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/"+searchResponse.username); //NON-NLS
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
 				.post(RequestBody.create(jsonArray.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
 
-		Response response = client.newCall(request).execute();
+		Response response = timeoutClient.newCall(request).execute();
 		return response.isSuccessful();
 	}
 	

@@ -66,14 +66,17 @@ public class SlskdSearchResponse {
 	}
 
 	public String getPath() {
+		List<String> paths = getPaths();
+		String path = !paths.isEmpty()?"["+paths.size()+"] "+paths.get(0):"N/A";
+		return path;
+	}
+	
+	List<String> getPaths() {
 		List<String> paths = files.stream()
                 .map(file -> FilenameUtils.getFullPathNoEndSeparator(file.filename))
                 .distinct()
                 .collect(Collectors.toList());
-		
-		String path = !paths.isEmpty()?paths.get(0):"N/A";
-			
-		return path;
+		return paths;
 	}
 
 	public double getSpeed() {
@@ -93,4 +96,5 @@ public class SlskdSearchResponse {
 		sb.append('}');
 		return sb.toString();
 	}
+	
 }
