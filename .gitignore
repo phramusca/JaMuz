@@ -34,6 +34,7 @@ database/*_for_comparison.sql
 
 /JaMuz.xml
 /JaMuz.properties
+/Slsk.properties
 JaMuz\.db
 JaMuz\.xml\.bak
 logs\.bak/
@@ -56,3 +57,5 @@ Test Remote.session.sql
 Test.session.sql
 Prod.session.sql
 JaMuz_*-*-*--*-*-*.db
+
+

@@ -35,7 +35,7 @@ public class Dependencies {
 			check(cmpnt, "mplayer", isApt?"apt://mplayer":"https://mplayerhq.hu/", "play tracks");
 			check(cmpnt, "metaflac", isApt?"apt://flac":"https://xiph.org/flac/", "store replaygain in FLAC files");
 			check(cmpnt, "mp3gain", "https://snapcraft.io/mp3gain", "compute replaygain for MP3 files");
-			//FIXME: Add "aplay" (from Mplayer.getAudioCards())
+			//FIXME Z Add "aplay" (from Mplayer.getAudioCards())
 		}
 	}
 	

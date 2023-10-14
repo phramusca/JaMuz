@@ -20,14 +20,13 @@ import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.DialogQRcode;
 import jamuz.gui.swing.PopupListener;
-import jamuz.gui.swing.ProgressBar;
+import jamuz.gui.swing.ProgressCellRender;
 import jamuz.process.sync.ICallBackSync;
 import jamuz.process.sync.ProcessSync;
 import jamuz.utils.Encryption;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.QRCode;
-import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -44,11 +43,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JMenuItem;
-import javax.swing.JProgressBar;
-import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import org.json.simple.JSONObject;
 
@@ -106,29 +102,6 @@ public class PanelRemote extends javax.swing.JPanel {
 			startStopRemoteServer();
 		}
 	}
-	
-	/**
-	 *
-	 */
-	public class ProgressCellRender extends JProgressBar implements TableCellRenderer {
-
-		/**
-		 *
-		 * @param table
-		 * @param value
-		 * @param isSelected
-		 * @param hasFocus
-		 * @param row
-		 * @param column
-		 * @return
-		 */
-		@Override
-        public Component getTableCellRendererComponent(JTable table, Object value, 
-				boolean isSelected, boolean hasFocus, int row, int column) {
-			ProgressBar progressBar = (ProgressBar) value;
-            return progressBar;
-        }
-    }
 	
 	private void setColumn(int index, int width) {
         TableColumn column = jTableRemote.getColumnModel().getColumn(index);

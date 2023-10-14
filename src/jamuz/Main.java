@@ -75,8 +75,11 @@ package jamuz;
 //TODO: Consider using Maven
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
+import jamuz.soulseek.DialogSlsk;
+import jamuz.utils.DateTime;
 import jamuz.utils.Popup;
 import java.io.File;
+import java.util.Date;
 import java.util.logging.Handler;
 
 /**
@@ -93,13 +96,12 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
-
 			//Get current application folder
 			File f = new File(".");  //NOI18N
 			Jamuz.getLogger().finest(f.getAbsolutePath());
 			String appPath = f.getAbsolutePath();
 			appPath = appPath.substring(0, appPath.length() - 1);
-
+			
 			//Configure application
 			if (!Jamuz.configure(appPath)) {
 				System.exit(1);
@@ -122,7 +124,8 @@ public class Main {
 			});
 
 			//Start GUI
-			PanelMain.main();
+//			PanelMain.main();			
+			DialogSlsk.main(null, "The White Stripes Elephant");
 
 		} catch (Exception ex) {
 			Popup.error(ex);

@@ -42,7 +42,11 @@ public class DateTime {
 		/**
 		 * File dateTime format ("yyyy-MM-dd--HH-mm-ss")
 		 */
-		FILE("yyyy-MM-dd--HH-mm-ss") ;
+		FILE("yyyy-MM-dd--HH-mm-ss"),
+		/**
+		 * Microsoft like dateTime format ("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSX")
+		 */
+		MS("yyyy-MM-dd'T'HH:mm:ss");
     
         private final String pattern;
 		private DateTimeFormat(String display) {
@@ -125,7 +129,7 @@ public class DateTime {
 	 * @param format
 	 * @return
 	 */
-	private static Date parseUTC(String date, DateTimeFormat format) {
+	public static Date parseUTC(String date, DateTimeFormat format) {
 		if(date.isBlank()) {
             return new Date(0); 
         }

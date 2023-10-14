@@ -214,8 +214,7 @@ public class Album {
 					String lastPlayed;
 					boolean deleted;
 					FolderInfo.CheckedFlag checkedFlag;
-					boolean ignore = false;
-
+					boolean ignore;
 					if (nColCount > 21) {
 						ignore = row.getValue(21).equals("{IGNORE}");
 					} else {
@@ -226,21 +225,21 @@ public class Album {
 							sourceFile = row.getValue(5),
 							relativePath = mbId + File.separator,
 							filename = "Track" + nRowIndex + ".mp3",
-							BPM = Float.valueOf(row.getValue(12)),
+							BPM = Float.parseFloat(row.getValue(12)),
 							album = row.getValue(3),
 							albumArtist = row.getValue(2),
 							artist = row.getValue(1),
 							comment = row.getValue(14),
-							discNo = Integer.valueOf(row.getValue(6)),
-							discTotal = Integer.valueOf(row.getValue(7)),
+							discNo = Integer.parseInt(row.getValue(6)),
+							discTotal = Integer.parseInt(row.getValue(7)),
 							genre = row.getValue(11),
-							nbCovers = Integer.valueOf(row.getValue(13)),
+							nbCovers = Integer.parseInt(row.getValue(13)),
 							title = row.getValue(4),
-							trackNo = Integer.valueOf(row.getValue(8)),
-							trackTotal = Integer.valueOf(row.getValue(9)),
+							trackNo = Integer.parseInt(row.getValue(8)),
+							trackTotal = Integer.parseInt(row.getValue(9)),
 							year = row.getValue(10),
-							playCounter = Integer.valueOf(row.getValue(17)),
-							rating = Integer.valueOf(row.getValue(18)),
+							playCounter = Integer.parseInt(row.getValue(17)),
+							rating = Integer.parseInt(row.getValue(18)),
 							addedDate = row.getValue(19),
 							lastPlayed = row.getValue(20),
 							checkedFlag = FolderInfo.CheckedFlag.valueOf(row.getValue(16)),
@@ -267,13 +266,13 @@ public class Album {
 					String value = row.getValue(2);
 					switch (row.getArg(1)) {
 						case "index":
-							this.index = Integer.valueOf(value);
+							this.index = Integer.parseInt(value);
 							break;
 						case "idpath":
-							this.idPath = Integer.valueOf(value);
+							this.idPath = Integer.parseInt(value);
 							break;
 						case "idfirstfile":
-							this.idFirstFile = Integer.valueOf(value);
+							this.idFirstFile = Integer.parseInt(value);
 							break;
 						case "location":
 							this.location = value;

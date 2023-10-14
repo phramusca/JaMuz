@@ -17,7 +17,12 @@
 
 package jamuz.utils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -75,6 +80,25 @@ public class FileSystem {
     //http://stackoverflow.com/questions/15805303/copying-a-file-using-fileutils-copyfile
 ////FOR DISPLAY progressbar IN A JTable cell: http://stackoverflow.com/questions/13753562/adding-progress-bar-to-each-table-cell-for-file-progress-java
     
+	public static void writeTextFile(File file, String text) throws IOException {
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(file.getAbsolutePath(), false))) {
+            out.write(text);
+            out.flush();
+        }
+    }
+    
+    public static String readTextFile(File file) throws FileNotFoundException, IOException {
+        StringBuilder text = new StringBuilder();
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+        while ((line = br.readLine()) != null) {
+            text.append(line);
+            text.append('\n');
+        }
+        br.close();
+        return text.toString();
+    }
+	
 	/**
 	 *
 	 * @param file

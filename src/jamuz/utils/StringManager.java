@@ -75,7 +75,7 @@ public class StringManager {
      * @param si
      * @return
      */
-    public static String humanReadableByteCount(long bytes, boolean si) {
+    public static String humanReadableByteCount(double bytes, boolean si) {
         if (bytes < 0) {
             bytes = Math.abs(bytes);
         }
