@@ -18,6 +18,7 @@
 package jamuz.soulseek;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,12 +90,16 @@ public class Slsk {
 				}
 	
 				List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id);
+				List<SlskdSearchResponse> validSearchResponses = new ArrayList<>();
 				for (SlskdSearchResponse searchResponse : searchResponses) {
 					//FIXME !!!! sort by path and file
 					searchResponse.filterFiles();
+					if(!searchResponse.getFilteredFiles().isEmpty()) {
+						validSearchResponses.add(searchResponse);
+					}
 				}
 				
-				return searchResponses;	
+				return validSearchResponses;	
 		} catch (IOException ex) {
 			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (SlskdClient.ServerException ex) {

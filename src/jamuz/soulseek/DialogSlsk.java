@@ -20,7 +20,6 @@ import jamuz.Options;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
-import jamuz.player.Mplayer;
 import jamuz.utils.Popup;
 import jamuz.utils.Swing;
 import java.awt.Dialog;
@@ -471,7 +470,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
 	}
 	
-	
     private void jButtonSelectDownloadingFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDownloadingFolderActionPerformed
 		if(Swing.selectFolder(jTextFieldDownloadingFolder, "Soulseek temporary download folder", true)) {
 			options.set("slsk.downloading.folder", jTextFieldDownloadingFolder.getText());
@@ -530,9 +528,8 @@ public class DialogSlsk extends javax.swing.JDialog {
 					tableModelResults.addRow(slskdSearchResponse);
 				}
 				enableRowSorter(true);
-				//FIXME ! Select first row to display files
+				displaySearchFiles();
 				jButtonDownload.setEnabled(true);
-				
 			}
 		}.start();
 	}
