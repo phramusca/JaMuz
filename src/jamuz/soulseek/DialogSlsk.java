@@ -20,6 +20,7 @@ import jamuz.Options;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
+import jamuz.player.Mplayer;
 import jamuz.utils.Popup;
 import jamuz.utils.Swing;
 import java.awt.Dialog;
@@ -28,6 +29,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.swing.RowSorter;
@@ -48,6 +51,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 	private Slsk soulseek;
 	private final ProgressBar progressBar;
 	private Options options;
+	private Updater positionUpdater;
 	
     /**
      * Creates new form DialogSoulseek
@@ -376,8 +380,38 @@ public class DialogSlsk extends javax.swing.JDialog {
 				progressBar.setup(searchResponse.fileCount);
 				if(soulseek.download(searchResponse)) {
 					displayDownloads();
-					jButtonDownload.setEnabled(true); //FIXME !!!! Do not unable if download has already been started
+					jButtonDownload.setEnabled(true); //FIXME !! Do not unable if download has already been started
+					
+					
+					positionUpdater = new Updater();
+					positionUpdater.start();
 				}
+			}
+		}
+	}
+	
+	/**
+	 * Position updater class
+	 */
+	public class Updater extends Timer {
+		
+		/**
+		 * Update period:
+		 * 800: too much, 500 looks OK
+		 */
+		private static final long UPDATE_PERIODE = 500;
+		
+		/**
+		 * Starts position updater
+		 */
+		public void start() {
+			schedule(new displayPosition(), 0, UPDATE_PERIODE);
+		}
+
+		private class displayPosition extends TimerTask {
+			@Override
+			public void run() {
+				displayDownloads();
 			}
 		}
 	}
@@ -388,6 +422,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
 			tableModelDownload.clear();
+			
+			//FIXME !! Need to restart it if download is already started
+			if(positionUpdater!=null) {
+				positionUpdater.cancel();
+				positionUpdater.purge();
+			}
+			
 			for (SlskdSearchFile file : searchResponse.getFilteredFiles()) {
 				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
 			}
@@ -400,31 +441,33 @@ public class DialogSlsk extends javax.swing.JDialog {
 			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
 			SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
-			List<String> searchPaths = searchResponse.getPaths();
-			List<SlskFile> rows = tableModelDownload.getRows();
-			
-			Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
-			.stream()
-			.filter(directory -> 
-				searchPaths.stream().anyMatch(path -> directory.directory.startsWith(path)))
-			.flatMap(directory -> directory.files.stream())
-			.collect(Collectors.toMap(
-				SlskdDownloadFile::getKey,
-				Function.identity(),
-				(existing, replacement) -> existing
-			));
-			
-			for (int i = 0; i < rows.size(); i++) {
-				SlskFile rowFile = rows.get(i);
-				
-				if(filteredFiles.containsKey(rowFile.getKey())) {
-					SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
-					rowFile.update(filteredFile); //FIXME !!!!! update search result too in tableModel
-				} else {
-					Popup.error("<> files"); //FIXME !! remove this. Why would this happen ?
+			if(downloads!=null) {
+				List<String> searchPaths = searchResponse.getPaths();
+				List<SlskFile> rows = tableModelDownload.getRows();
+
+				Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
+				.stream()
+				.filter(directory -> 
+					searchPaths.stream().anyMatch(path -> directory.directory.startsWith(path)))
+				.flatMap(directory -> directory.files.stream())
+				.collect(Collectors.toMap(
+					SlskdDownloadFile::getKey,
+					Function.identity(),
+					(existing, replacement) -> existing
+				));
+
+				for (int i = 0; i < rows.size(); i++) {
+					SlskFile rowFile = rows.get(i);
+
+					if(filteredFiles.containsKey(rowFile.getKey())) {
+						SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
+						rowFile.update(filteredFile); //FIXME !!!!! update search result too in tableModel
+					} else {
+						Popup.error("<> files"); //FIXME !!! remove this. Why would this happen ?
+					}
 				}
+				tableModelDownload.fireTableDataChanged();
 			}
-			tableModelDownload.fireTableDataChanged();
 		}
 	}
 	
@@ -467,7 +510,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 				String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
 						.substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
 				
-				//FIXME ! Start (and check errors) docker image slskd
+				//FIXME !!! Start (and check errors) docker image slskd
 //				docker run -d \
 //					-p 5030:5030 \
 //					-p 5031:5031 \
@@ -487,7 +530,9 @@ public class DialogSlsk extends javax.swing.JDialog {
 					tableModelResults.addRow(slskdSearchResponse);
 				}
 				enableRowSorter(true);
+				//FIXME ! Select first row to display files
 				jButtonDownload.setEnabled(true);
+				
 			}
 		}.start();
 	}

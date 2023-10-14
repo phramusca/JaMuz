@@ -42,7 +42,7 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 			"Size", //NOI18N //FIXME !!!! human readable size
 			"Speed", //NOI18N //FIXME !!!! human readable speed
 			"Progress", //NOI18N
-            "File",  //NOI18N //FIXME 
+            "File",  //NOI18N
 			"Path",  //NOI18N
         });
 	}

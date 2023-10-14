@@ -30,7 +30,7 @@ public class Slsk {
 	private Process process;
 	private String destination;
 	private final SlskdClient slskdClient;
-//FIXME !! Manage exceptions and method returns		
+//FIXME !!! Manage exceptions and method returns		
     /**
 	 * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
      *
