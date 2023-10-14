@@ -39,10 +39,10 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 			"BitRate", //NOI18N
 			"Length", //NOI18N
 			"State", //NOI18N
-			"Size", //NOI18N
-			"Speed", //NOI18N
+			"Size", //NOI18N //FIXME !!!! human readable size
+			"Speed", //NOI18N //FIXME !!!! human readable speed
 			"Progress", //NOI18N
-            "File",  //NOI18N
+            "File",  //NOI18N //FIXME 
 			"Path",  //NOI18N
         });
 	}

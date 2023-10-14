@@ -91,7 +91,7 @@ public class SlskFile {
 		return progressBar;
 	}
 	
-	//FIXME !!! Display those below
+	//FIXME !!! Display bytesTransferred, bytesRemaining, elapsedTime and remainingTime
 		public int bytesTransferred;
 		public int bytesRemaining;
 		public String elapsedTime="null";

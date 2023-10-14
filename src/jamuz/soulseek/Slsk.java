@@ -87,8 +87,13 @@ public class Slsk {
 					search = slskdClient.getSearch(search.id);
 					Thread.sleep(1000);
 				}
-				
+	
 				List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id);
+				for (SlskdSearchResponse searchResponse : searchResponses) {
+					//FIXME !!!! sort by path and file
+					searchResponse.filterFiles();
+				}
+				
 				return searchResponses;	
 		} catch (IOException ex) {
 			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);

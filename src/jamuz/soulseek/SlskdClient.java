@@ -76,7 +76,7 @@ public class SlskdClient {
 	
 	public boolean download(SlskdSearchResponse searchResponse) throws IOException, ServerException {
 		JSONArray jsonArray = new JSONArray();
-		for (SlskdSearchFile file : searchResponse.files) {
+		for (SlskdSearchFile file : searchResponse.getFilteredFiles()) {
 			JSONObject fileObj = new JSONObject();
 			fileObj.put("filename", file.filename);
 			fileObj.put("size", file.size);
@@ -105,7 +105,6 @@ public class SlskdClient {
 		return fromJson;
 	}
 	
-	//FIXME !! Filter flac and mp3 (as an option or use existing)
 	public SlskdSearchResult search(String queryText) throws IOException, ServerException {
 		JSONObject obj = new JSONObject();
 		

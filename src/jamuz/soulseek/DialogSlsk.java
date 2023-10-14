@@ -20,8 +20,6 @@ import jamuz.Options;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
-import jamuz.remote.PanelRemote;
-import jamuz.utils.DateTime;
 import jamuz.utils.Popup;
 import jamuz.utils.Swing;
 import java.awt.Dialog;
@@ -97,10 +95,8 @@ public class DialogSlsk extends javax.swing.JDialog {
 		setColumn(columnModelDownload, 5, 50);     // Speed
 		TableColumn column = setColumn(columnModelDownload, 6, 80);     // Completed
 		column.setCellRenderer(new ProgressCellRender());
-		
 		setColumn(columnModelDownload, 7, 300);    // File
 		setColumn(columnModelDownload, 8, 400);    // Path
-		
 		
 		progressBar = (ProgressBar)jProgressBarSlsk;
 
@@ -392,7 +388,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
 			tableModelDownload.clear();
-			for (SlskdSearchFile file : searchResponse.files) {
+			for (SlskdSearchFile file : searchResponse.getFilteredFiles()) {
 				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
 			}
 		}
@@ -403,29 +399,20 @@ public class DialogSlsk extends javax.swing.JDialog {
 		if(selectedRow>=0) { 
 			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-
 			SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
-
 			List<String> searchPaths = searchResponse.getPaths();
-			List<String> allowedExtensions = new ArrayList<>();
-			allowedExtensions.add("mp3");
-			allowedExtensions.add("flac");
-					
+			List<SlskFile> rows = tableModelDownload.getRows();
 			
 			Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
 			.stream()
 			.filter(directory -> 
 				searchPaths.stream().anyMatch(path -> directory.directory.startsWith(path)))
-			.flatMap(directory -> directory.files.stream()
-//				.filter(file -> allowedExtensions.contains(FilenameUtils.getExtension(file.filename))) //FIXME: Filter by ext, but right after search, not here
-			)
+			.flatMap(directory -> directory.files.stream())
 			.collect(Collectors.toMap(
-				SlskdDownloadFile::getKey, // Key comes from the SlskdDownloadFile
+				SlskdDownloadFile::getKey,
 				Function.identity(),
 				(existing, replacement) -> existing
 			));
-			
-			List<SlskFile> rows = tableModelDownload.getRows();
 			
 			for (int i = 0; i < rows.size(); i++) {
 				SlskFile rowFile = rows.get(i);

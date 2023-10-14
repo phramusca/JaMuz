@@ -57,7 +57,7 @@ public class TableModelSlskdSearch extends TableModelGeneric {
         SlskdSearchResponse searchResponse = results.get(rowIndex);
         switch (columnIndex) {
 			case 0: return searchResponse.getDate();
-            case 1: return searchResponse.fileCount;
+            case 1: return searchResponse.getFilteredFiles().size();
 			case 2: return searchResponse.getBitrate();
 			case 3: return searchResponse.getSize();
 			case 4: return searchResponse.getSpeed();

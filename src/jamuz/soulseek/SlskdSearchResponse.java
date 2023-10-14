@@ -17,6 +17,8 @@
 package jamuz.soulseek;
 
 import jamuz.utils.DateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
@@ -36,15 +38,32 @@ public class SlskdSearchResponse {
 	public double uploadSpeed;
 	public String username;	
 	
+	private List<SlskdSearchFile> filteredFiles;
 	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
+
+	//FIXME !!!!!! use existing option
+	private static final List<String> ALLOWED_EXTENSIONS 
+			= Collections.unmodifiableList(
+					Arrays.asList("mp3", "flac"));
 	
 	public String getDate() {
 		return date;
 	}
+	
+	public void filterFiles() {
+		filteredFiles = files.stream().filter(file -> 
+				ALLOWED_EXTENSIONS.contains(
+						FilenameUtils.getExtension(file.filename)))
+				.collect(Collectors.toList());
+	}
 
+	public List<SlskdSearchFile> getFilteredFiles() {
+		return filteredFiles;
+	}
+	
 	public double getBitrate() {
-		if(files!=null & !files.isEmpty()) {
-			return Math.round(files.stream()
+		if(getFilteredFiles()!=null & !getFilteredFiles().isEmpty()) {
+			return Math.round(getFilteredFiles().stream()
                 .mapToDouble(file -> file.bitRate)
                 .average()
                 .orElse(0.0));
@@ -54,8 +73,8 @@ public class SlskdSearchResponse {
 	}
 
 	public double getSize() {
-		if(files!=null & !files.isEmpty()) {
-			double meanSize = files.stream()
+		if(getFilteredFiles()!=null & !getFilteredFiles().isEmpty()) {
+			double meanSize = getFilteredFiles().stream()
 				.mapToDouble(file -> file.size)
 				.sum();
 			return meanSize;
@@ -71,8 +90,8 @@ public class SlskdSearchResponse {
 		return path;
 	}
 	
-	List<String> getPaths() {
-		List<String> paths = files.stream()
+	public List<String> getPaths() {
+		List<String> paths = getFilteredFiles().stream()
                 .map(file -> FilenameUtils.getFullPathNoEndSeparator(file.filename))
                 .distinct()
                 .collect(Collectors.toList());
@@ -96,5 +115,4 @@ public class SlskdSearchResponse {
 		sb.append('}');
 		return sb.toString();
 	}
-	
 }
