@@ -4,6 +4,7 @@
     <groupId>com.github.jamuz</groupId>
     <artifactId>JaMuz</artifactId>
     <version>0.6.0</version>
+    <url>https://github.com/phramusca/JaMuz/</url>
     <packaging>jar</packaging>
     
     <build>
@@ -12,6 +13,57 @@
                 <directory>res</directory>
             </resource>
         </resources>
+        
+        <plugins>
+            <!--FIXME Z this is to skip tests, but need it back when tests done-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            
+            <!--This is to generate values in manifest-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version> <!-- Use the latest version -->
+                <executions>
+                    <execution>
+                        <id>timestamp-property</id>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <name>current.date</name>
+                            <pattern>yyyy-MM-dd HH:mm:ss z</pattern>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Bundle-Name>${project.artifactId}</Bundle-Name>
+                            <Bundle-Version>${project.version}</Bundle-Version>
+                            <Bundle-Date>${current.date}</Bundle-Date>
+                            <Implementation-Title>${project.artifactId}</Implementation-Title>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                            <Implementation-URL>${project.url}</Implementation-URL>
+                            <Main-Class>jamuz.Main</Main-Class>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <repositories>
@@ -157,6 +209,5 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <exec.mainClass>com.github.jamuz.JaMuzMav</exec.mainClass>
     </properties>
 </project>

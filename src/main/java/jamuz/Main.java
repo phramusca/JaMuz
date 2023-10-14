@@ -80,12 +80,12 @@ import java.io.File;
 import java.util.logging.Handler;
 
 //FIXME ! pom.xml
+//    : dist (build.xml => github actions OR maven style)
+    // => CONTRIBUTING: release process accordingly
+
+//TODO pom.xml
 //    : essayer de remplacer les jar locaux par des maven
 //    : update maven packages
-//dist (build.xml => maven style)
-//doc (keys.properties)
-//CONTRIBUTING: release process
-
 
 //FIXME !!! Start (and check errors) docker image slskd
 //                DockerClient dockerClient = DockerClientBuilder.getInstance().build();
