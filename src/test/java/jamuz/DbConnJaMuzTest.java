@@ -449,7 +449,7 @@ public class DbConnJaMuzTest {
 		assertEquals(1, defaultListModel.size()); //Only current machine left
 		element = (ListElement) defaultListModel.get(0);
 		assertNull(element.getFile());
-		assertNotEquals(machineName, element.getValue());
+		assertNotSame(machineName, element.getValue());
 
 		//FIXME TEST Negative cases
 		//FIXME TEST Check other constraints

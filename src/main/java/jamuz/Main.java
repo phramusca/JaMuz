@@ -83,8 +83,8 @@ import java.util.logging.Handler;
 //    : essayer de remplacer les jar locaux par des maven
 //    : update maven packages
 //dist (build.xml => maven style)
-//tests
 //doc (keys.properties)
+//CONTRIBUTING: release process
 
 
 //FIXME !!! Start (and check errors) docker image slskd
