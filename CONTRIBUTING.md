@@ -61,10 +61,10 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
     - Check that JaMuz properly handles update.
       - Export prod schema and compare with JaMuz_creation.sql.
 
-1. Update build.xml
+1. Update pom.xml
 
     ```xml
-    <property name="version.num" value="x.y.z" />
+    <version>x.y.z</version>
     ```
 
 1. Update release notes
@@ -102,10 +102,10 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
     - Drop 7z built earlier
     - [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release
 
-1. Update build.xml
+1. Update pom.xml
 
     ```xml
-    <property name="version.num" value="x.y.z+1-dev" />
+    <version>x.y.z+1-dev</version>
     ```
 
 1. Commit (named vx.y.z-dev) & PUSH
