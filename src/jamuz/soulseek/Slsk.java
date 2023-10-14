@@ -47,6 +47,38 @@ public class Slsk {
 		return process(query);
 	}
 	
+	/**
+	 * @return  
+	 */
+	private List<SlskdSearchResponse> process(String query) {
+		try {
+				SlskdSearchResult search = slskdClient.search(query);
+				while(!search.isComplete) {
+					search = slskdClient.getSearch(search.id);
+					Thread.sleep(1000);
+				}
+	
+				List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id);
+				List<SlskdSearchResponse> validSearchResponses = new ArrayList<>();
+				for (SlskdSearchResponse searchResponse : searchResponses) {
+					//FIXME !!!! sort by path and file
+					searchResponse.filterFiles();
+					if(!searchResponse.getFilteredFiles().isEmpty()) {
+						validSearchResponses.add(searchResponse);
+					}
+				}
+				//FIXME !!! Remove search from server
+				return validSearchResponses;	
+		} catch (IOException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (SlskdClient.ServerException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (InterruptedException ex) {
+			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return null;
+	}
+	
 	SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) {
 		try {
 			return slskdClient.getDownloads(searchResponse);
@@ -76,37 +108,5 @@ public class Slsk {
 		if(process!=null) {
 			process.destroyForcibly();
 		}
-	}
-	
-	/**
-	 * @return  
-	 */
-	private List<SlskdSearchResponse> process(String query) {
-		try {
-				SlskdSearchResult search = slskdClient.search(query);
-				while(!search.isComplete) {
-					search = slskdClient.getSearch(search.id);
-					Thread.sleep(1000);
-				}
-	
-				List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id);
-				List<SlskdSearchResponse> validSearchResponses = new ArrayList<>();
-				for (SlskdSearchResponse searchResponse : searchResponses) {
-					//FIXME !!!! sort by path and file
-					searchResponse.filterFiles();
-					if(!searchResponse.getFilteredFiles().isEmpty()) {
-						validSearchResponses.add(searchResponse);
-					}
-				}
-				
-				return validSearchResponses;	
-		} catch (IOException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (SlskdClient.ServerException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (InterruptedException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		return null;
 	}
 }

@@ -84,6 +84,7 @@ public class SlskdSearchResponse {
 		return 0;
 	}
 
+	//FIXME ! Split by path: one line by path (and we can then also remove the path in download table)
 	public String getPath() {
 		List<String> paths = getPaths();
 		String path = !paths.isEmpty()?"["+paths.size()+"] "+paths.get(0):"N/A";

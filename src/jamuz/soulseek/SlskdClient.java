@@ -48,7 +48,7 @@ public class SlskdClient {
 		getToken();
 	}
 
-	public void getToken() throws IOException, ServerException {
+	public final void getToken() throws IOException, ServerException {
 		HttpUrl.Builder urlBuilder = getUrlBuilder("session"); //NON-NLS
 		
 		JSONObject obj = new JSONObject();

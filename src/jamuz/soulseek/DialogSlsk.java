@@ -384,6 +384,8 @@ public class DialogSlsk extends javax.swing.JDialog {
 					
 					positionUpdater = new Updater();
 					positionUpdater.start();
+					
+					//FIXME !! Add to a list of downloads to be monitored, and on completetion: move to destination & remove transfers on server
 				}
 			}
 		}
@@ -488,6 +490,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
     }//GEN-LAST:event_jButtonSelectDownloadedFolderActionPerformed
 
+	//FIXME !!! Remove this, once timer is well restarted as needed
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         displayDownloads();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -520,8 +523,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 //					-v /home/xxx/yyy/SlskdData:/app \
 //					--name slskd \
 //					slskd/slskd:latest
-		  
-				// docker ps -a 
+				// docker ps -a
 				
 				List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), destinationNoTrailingSlash);
 				for (SlskdSearchResponse slskdSearchResponse : searchResponses) {
