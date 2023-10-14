@@ -510,21 +510,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 				progressBar.reset();
 				String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
 						.substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
-				
-				//FIXME !!! Start (and check errors) docker image slskd
-//				docker run -d \
-//					-p 5030:5030 \
-//					-p 5031:5031 \
-//					-p 50300:50300 \
-//					-e SLSKD_REMOTE_CONFIGURATION=true \
-//					-e SLSKD_SLSK_USERNAME=xxx \
-//					-e SLSKD_SLSK_PASSWORD="xxx" \
-//					-e SLSKD_SWAGGER=true \
-//					-v /home/xxx/yyy/SlskdData:/app \
-//					--name slskd \
-//					slskd/slskd:latest
-				// docker ps -a
-				
+							
 				List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), destinationNoTrailingSlash);
                 if(searchResponses!=null) {
                     for (SlskdSearchResponse slskdSearchResponse : searchResponses) {

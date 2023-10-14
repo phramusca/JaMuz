@@ -73,20 +73,46 @@ package jamuz;
 //          => Doing this, merge options to copy/move files b/w "Sync" and "Video" (export)
 //TODO: List used librairies (source, version, how to compile if needed,...)
 //TODO: Consider using Maven
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.model.Bind;
-import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.HostConfig;
-import com.github.dockerjava.api.model.PortBinding;
-import com.github.dockerjava.api.model.Ports;
-import com.github.dockerjava.core.DockerClientBuilder;
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
-import jamuz.soulseek.DialogSlsk;
 import jamuz.utils.Popup;
 import java.io.File;
 import java.util.logging.Handler;
+
+//FIXME ! pom.xml
+//    : renommer local-repo en lib
+//    : modelVersion, groupId, artifactId, version
+//    : essayer de remplacer les jar locaux par des maven
+//    : update maven packages
+//dist (build.xml => maven style)
+//tests
+//doc (keys.properties)
+
+
+//FIXME !!! Start (and check errors) docker image slskd
+//                DockerClient dockerClient = DockerClientBuilder.getInstance().build();
+//                CreateContainerResponse container
+//                  = dockerClient.createContainerCmd("slskd/slskd:latest")
+//                    .withName("slskd")
+//                    .withEnv("SLSKD_REMOTE_CONFIGURATION=true",
+//                            "SLSKD_SLSK_USERNAME=xxxxx",
+//                            "SLSKD_SLSK_PASSWORD=xxxxxx",
+//                            "SLSKD_SWAGGER=true")
+//                    .withExposedPorts(ExposedPort.tcp(5030), ExposedPort.tcp(5031), ExposedPort.tcp(50300))
+//                    .withHostConfig(HostConfig.newHostConfig()
+//                        .withPortBindings(
+//                            new PortBinding(Ports.Binding.bindIpAndPort("0.0.0.0", 5030), ExposedPort.tcp(5030)),
+//                            new PortBinding(Ports.Binding.bindIpAndPort("0.0.0.0", 5031), ExposedPort.tcp(5031)),
+//                            new PortBinding(Ports.Binding.bindIpAndPort("0.0.0.0", 50300), ExposedPort.tcp(50300))
+//                        )
+//                        .withBinds(Bind.parse("/home/raph/Documents/04-Creations/Dev/Repos/SlskLocalServer:/app"))
+//                    )
+//                    .exec();
+//                dockerClient.startContainerCmd(container.getId()).exec();
+			
+//			shares:
+//			directories:
+//			  - /home/xxx/Musique/Archive/
 
 /**
  * JaMuz main class
@@ -131,6 +157,7 @@ public class Main {
 
 			//Start GUI
 			PanelMain.main();
+//			DialogSlsk.main(null, "The White Stripes Elephant");
 
 		} catch (Exception ex) {
 			Popup.error(ex);
