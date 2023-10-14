@@ -41,7 +41,7 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 			"State", //NOI18N
 			"Size", //NOI18N
 			"Speed", //NOI18N
-			"Completed", //NOI18N //FIXME !!! Replace with a progressbar
+			"Progress", //NOI18N
             "File",  //NOI18N
 			"Path",  //NOI18N
         });
@@ -63,7 +63,7 @@ public Object getValueAt(int rowIndex, int columnIndex) {
 		case 3: return searchResponse.state;
 		case 4: return searchResponse.size;
 		case 5: return searchResponse.averageSpeed;
-		case 6: return searchResponse.percentComplete;
+		case 6: return searchResponse.getProgressBar();
 		case 7: return FilenameUtils.getName(searchResponse.filename);
 		case 8: return FilenameUtils.getFullPath(searchResponse.filename);
     }

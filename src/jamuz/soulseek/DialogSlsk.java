@@ -18,7 +18,9 @@ package jamuz.soulseek;
 
 import jamuz.Options;
 import jamuz.gui.swing.ProgressBar;
+import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
+import jamuz.remote.PanelRemote;
 import jamuz.utils.DateTime;
 import jamuz.utils.Popup;
 import jamuz.utils.Swing;
@@ -93,7 +95,9 @@ public class DialogSlsk extends javax.swing.JDialog {
 		setColumn(columnModelDownload, 3, 80);     // State
 		setColumn(columnModelDownload, 4, 50);     // Size
 		setColumn(columnModelDownload, 5, 50);     // Speed
-		setColumn(columnModelDownload, 6, 50);     // Completed
+		TableColumn column = setColumn(columnModelDownload, 6, 80);     // Completed
+		column.setCellRenderer(new ProgressCellRender());
+		
 		setColumn(columnModelDownload, 7, 300);    // File
 		setColumn(columnModelDownload, 8, 400);    // Path
 		
@@ -130,11 +134,12 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
     }
 	
-	private void setColumn(TableColumnModel columnModel, int index, int width) {
+	private TableColumn setColumn(TableColumnModel columnModel, int index, int width) {
         TableColumn column = columnModel.getColumn(index);
 		column.setMinWidth(width);
         column.setPreferredWidth(width);
         column.setMaxWidth(width*3);
+		return column;
     }
 	
 	/**

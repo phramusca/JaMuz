@@ -16,6 +16,7 @@
  */
 package jamuz.soulseek;
 
+import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.DateTime;
 import java.util.Date;
 
@@ -80,6 +81,16 @@ public class SlskFile {
 	public double percentComplete;
 	public double averageSpeed;
 	
+	private final ProgressBar progressBar;
+	
+	/**
+	 *
+	 * @return
+	 */
+	public ProgressBar getProgressBar() {
+		return progressBar;
+	}
+	
 	//FIXME !!! Display those below
 		public int bytesTransferred;
 		public int bytesRemaining;
@@ -100,6 +111,10 @@ public class SlskFile {
 		this.username=username;
 		this.searchedAt=searchedAt;
 		this.state="Searched";
+		
+		this.progressBar = new ProgressBar();
+		this.progressBar.setup(100);
+		this.progressBar.displayAsPercent();
 	}
 
 	void update(SlskdDownloadFile filteredFile) {
@@ -115,11 +130,14 @@ public class SlskFile {
 		this.enqueuedAt=filteredFile.enqueuedAt;
 		this.id=filteredFile.id;
 		this.percentComplete=filteredFile.percentComplete;
+		
 		this.remainingTime=filteredFile.remainingTime;
 		this.requestedAt=filteredFile.requestedAt;
 		this.startOffset=filteredFile.startOffset;
 		this.startedAt=filteredFile.startedAt;
 		this.state=filteredFile.state;
+		this.progressBar.progress(remainingTime, (int) Math.round(percentComplete));
+		
 	}
 
 	public String getKey() {
