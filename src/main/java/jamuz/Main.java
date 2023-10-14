@@ -80,7 +80,6 @@ import java.io.File;
 import java.util.logging.Handler;
 
 //FIXME ! pom.xml
-//    : renommer local-repo en lib
 //    : modelVersion, groupId, artifactId, version
 //    : essayer de remplacer les jar locaux par des maven
 //    : update maven packages
