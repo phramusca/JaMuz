@@ -70,7 +70,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		//Assigning XTableColumnModel to allow show/hide columns
 		jTableResults.setColumnModel(columnModelResults);
 		jTableResults.createDefaultColumnsFromModel();
-		setColumn(columnModelResults, 0, 140);	// Date
+		setColumn(columnModelResults, 0, 120);	// Date
         setColumn(columnModelResults, 1, 40);	// # files
 		setColumn(columnModelResults, 2, 50);	// BitRate
 		setColumn(columnModelResults, 3, 50);	// Size
@@ -87,14 +87,14 @@ public class DialogSlsk extends javax.swing.JDialog {
 		//Assigning XTableColumnModel to allow show/hide columns
 		jTableDownload.setColumnModel(columnModelDownload);
 		jTableDownload.createDefaultColumnsFromModel();
-		setColumn(columnModelDownload, 0, 140);    // Date
+		setColumn(columnModelDownload, 0, 120);    // Date
 		setColumn(columnModelDownload, 1, 50);     // BitRate
 		setColumn(columnModelDownload, 2, 50);     // Length
-		setColumn(columnModelDownload, 3, 50);     // State
+		setColumn(columnModelDownload, 3, 80);     // State
 		setColumn(columnModelDownload, 4, 50);     // Size
 		setColumn(columnModelDownload, 5, 50);     // Speed
 		setColumn(columnModelDownload, 6, 50);     // Completed
-		setColumn(columnModelDownload, 7, 200);    // File
+		setColumn(columnModelDownload, 7, 300);    // File
 		setColumn(columnModelDownload, 8, 400);    // Path
 		
 		
@@ -137,7 +137,6 @@ public class DialogSlsk extends javax.swing.JDialog {
         column.setMaxWidth(width*3);
     }
 	
-	//FIXME !! Sort downloads too
 	/**
 	 *
 	 * @param enable
@@ -154,7 +153,8 @@ public class DialogSlsk extends javax.swing.JDialog {
 				sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING)); // nb of files
 				sortKeys.add(new RowSorter.SortKey(2, SortOrder.DESCENDING)); // BitRate
 				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // Speed
-//FIXME !!! Filter by queue then
+				sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Queue
+				
 // FIXME !!!! Filter out locked and without free slots
 				
 				tableSorter.setSortKeys(sortKeys);
@@ -326,7 +326,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldDownloadingFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -388,7 +388,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
 			tableModelDownload.clear();
 			for (SlskdSearchFile file : searchResponse.files) {
-				tableModelDownload.addRow(new SlskFile(file, searchResponse.username));
+				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
 			}
 		}
 	}
@@ -429,7 +429,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 					SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
 					rowFile.update(filteredFile); //FIXME !!!!! update search result too in tableModel
 				} else {
-					Popup.error("<> files"); //FIXME !! remove this, but before check that it always work, or better use a Map
+					Popup.error("<> files"); //FIXME !! remove this. Why would this happen ?
 				}
 			}
 			tableModelDownload.fireTableDataChanged();

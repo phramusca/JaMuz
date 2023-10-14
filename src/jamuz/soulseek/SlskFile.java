@@ -16,6 +16,9 @@
  */
 package jamuz.soulseek;
 
+import jamuz.utils.DateTime;
+import java.util.Date;
+
 /**
  *
  * @author raph
@@ -46,6 +49,7 @@ public class SlskFile {
 	public String enqueuedAt="null";
 	public String startedAt="null";
 	public String endedAt="null";
+	public String searchedAt="null";
 	
 	String getDate() {
 		String date = 
@@ -54,7 +58,23 @@ public class SlskFile {
 				:!enqueuedAt.equals("null")?enqueuedAt
 				:!requestedAt.equals("null")?requestedAt
 				:"--";
+		if(date.equals("--")) {
+			date = searchedAt;
+		} else {
+			//Parse and convert to local time
+			Date parseUTC = DateTime.parseUTC(removeDotAndAfter(date), DateTime.DateTimeFormat.MS);
+			date = DateTime.formatUTC(parseUTC, DateTime.DateTimeFormat.HUMAN, true);
+		}
 		return date;
+	}
+	
+	private static String removeDotAndAfter(String input) {
+		int dotIndex = input.indexOf('.');
+		if (dotIndex >= 0) {
+			return input.substring(0, dotIndex);
+		} else {
+			return input;
+		}
 	}
 		
 	public double percentComplete;
@@ -66,7 +86,7 @@ public class SlskFile {
 		public String elapsedTime="null";
 		public String remainingTime="null";
 
-	SlskFile(SlskdSearchFile file, String username) {
+	SlskFile(SlskdSearchFile file, String username, String searchedAt) {
 		this.bitDepth=file.bitDepth;
 		this.bitRate=file.bitRate;
 		this.code=file.code;
@@ -78,6 +98,8 @@ public class SlskFile {
 		this.sampleRate=file.sampleRate;
 		this.size=file.size;
 		this.username=username;
+		this.searchedAt=searchedAt;
+		this.state="Searched";
 	}
 
 	void update(SlskdDownloadFile filteredFile) {

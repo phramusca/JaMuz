@@ -76,8 +76,10 @@ package jamuz;
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
 import jamuz.soulseek.DialogSlsk;
+import jamuz.utils.DateTime;
 import jamuz.utils.Popup;
 import java.io.File;
+import java.util.Date;
 import java.util.logging.Handler;
 
 /**
