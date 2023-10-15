@@ -67,18 +67,11 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
     <version>x.y.z</version>
     ```
 
-1. Update release notes
+1. Update CHANGELOG.md
 
-    - [French LISEZMOI.TXT](dist-data/doc/LISEZMOI.TXT)
-    - [English README.TXT](dist-data/doc/README.TXT)
+1. Tag last commit "vx.y.z" and push. This will trigger the [release github action](https://github.com/phramusca/JaMuz/actions/workflows/maven.yml).
 
-1. Create metadata/{language}/changelogs/{versionCode}.txt and list changes.
-
-    - {language}: https://en.wikipedia.org/wiki/IETF_language_tag
-
-1. Tag last commit "vx.y.z" and push. This will trigger the [release github action](https://github.com/phramusca/JaMuz-Remote/actions/workflows/release.yml).
-
-1. Check [created release](https://github.com/phramusca/JaMuz-Remote/releases).
+1. Check [created release](https://github.com/phramusca/JaMuz/releases).
 
 1. [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release.
 
