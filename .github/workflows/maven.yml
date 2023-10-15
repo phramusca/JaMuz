@@ -51,7 +51,7 @@ jobs:
         sqlite3 dist/myMovieDb.db < database/myMovieDb_creation.sql
       working-directory: ${{ github.workspace }}
 
-    - name: Copy dist-data to data
+    - name: Create dist
       run: |
         cp -r target/*.jar dist
         cp -r dist-data/* dist
@@ -69,7 +69,7 @@ jobs:
         7z a -r JaMuz_v1.0.7z JaMuz_v1.0
  
     - name: List Workspace Directory
-      run: ls -la ${{ github.workspace }}/dist
+      run: ls -la ${{ github.workspace }}
     
     - name: Publish Release
       id: publish_release
