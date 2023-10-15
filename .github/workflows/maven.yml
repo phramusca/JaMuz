@@ -42,6 +42,7 @@ jobs:
 
     - name: Run SQLite Script
       run: |
+        sqlite3 dist/JaMuz.db  # Create an empty database if it doesn't exist
         sqlite3 dist/JaMuz.db < database/JaMuz_creation.sql
       working-directory: ${{ github.workspace }}
     
