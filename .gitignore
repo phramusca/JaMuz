@@ -15,7 +15,8 @@ hs_err_pid*
 #JaMuz specifics
 /dist/
 logs/*
-
+!/lib/**/*.jar
+/slskd/
 data/devices/
 data/temp/*
 data/cache/*

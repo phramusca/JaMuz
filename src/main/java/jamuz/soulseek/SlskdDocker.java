@@ -2,6 +2,7 @@ package jamuz.soulseek;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.RemoveContainerCmd;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.ExposedPort;
@@ -11,6 +12,8 @@ import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.core.DockerClientBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -53,16 +56,20 @@ public class SlskdDocker {
             switch (state) {
                 case dead:
                 case exited:
-                    dockerClient.killContainerCmd(container.getId()).exec();
-                    createAndStartContainer();
+                    reCreateAndStartContainer(container);
                     return true;
                 case paused:
-                    dockerClient.stopContainerCmd(container.getId()).exec();
-                    dockerClient.startContainerCmd(container.getId()).exec();
+                    //This works, but since container should never pause, better recreating it
+//                    dockerClient.stopContainerCmd(container.getId()).exec();
+//                    wait2s();
+//                    dockerClient.startContainerCmd(container.getId()).exec();
+//                    wait2s();
+                    reCreateAndStartContainer(container);
                     return true;
                 case created:
                 case restarting:
-                    //FIXME !! Wait
+                    //TODO: Wait for container to be started
+                    reCreateAndStartContainer(container);
                     break;
                 case running:
                     return true;
@@ -73,6 +80,16 @@ public class SlskdDocker {
         }
     }
     
+    private void reCreateAndStartContainer(Container container) {
+        removeContainer(container);
+        createAndStartContainer();
+    }
+    
+    private void removeContainer(Container container) {
+        RemoveContainerCmd removeContainerCmd = dockerClient.removeContainerCmd(container.getId());
+        removeContainerCmd.withForce(true).withRemoveVolumes(true).exec();
+    }
+       
     private void createAndStartContainer() {
         CreateContainerResponse container
           = dockerClient.createContainerCmd("slskd/slskd:latest")
@@ -92,6 +109,13 @@ public class SlskdDocker {
             )
             .exec();
         dockerClient.startContainerCmd(container.getId()).exec();
+        
+        //FIXME !!!! Wait for health check instead (but takes 60s !!)
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SlskdDocker.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private Container getContainer() {

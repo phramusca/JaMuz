@@ -148,8 +148,8 @@ public class Main {
 			});
 
 			//Start GUI
-			PanelMain.main();
-//            DialogSlsk.main(null, "The White Stripes Elephant");
+//			PanelMain.main();
+            DialogSlsk.main(null, "The White Stripes Elephant");
             
 		} catch (Exception ex) {
 			Popup.error(ex);

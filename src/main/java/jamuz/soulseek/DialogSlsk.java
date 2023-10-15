@@ -37,6 +37,7 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+import org.jaxen.util.SelfAxisIterator;
 
 /**
  *
@@ -118,6 +119,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
 		jTextFieldDownloadingFolder.setText(options.get("slsk.downloading.folder"));
 		
+        //FIXME !! Display progressbar indefinite while starting container
+        
+        if(!Jamuz.getSlskdDocker().start()) {
+            Popup.warning("Could not start slskd");
+            dispose();
+        }
+        
 		soulseek = new Slsk();
 		
 		addWindowListener(new java.awt.event.WindowAdapter() {
@@ -483,11 +491,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 		new Thread() {
 			@Override
 			public void run() {
-                if(!Jamuz.getSlskdDocker().start()) {
-                    Popup.warning("Could not start slskd");
-                    return;
-                }
-                
 				File SlskDownloadingFolder = new File(jTextFieldDownloadingFolder.getText());
 				if(!SlskDownloadingFolder.exists()) {
 					return;
