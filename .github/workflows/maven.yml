@@ -24,12 +24,6 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
 
-    - name: List Workspace Directory
-      run: ls -la ${{ github.workspace }}
-
-    - name: List Root Directory
-      run: ls -la /
-
     #- uses: actions/checkout@v3
     - name: Set up JDK 17
       uses: actions/setup-java@v3
@@ -46,11 +40,19 @@ jobs:
         sudo apt-get install sqlite3 -y
       shell: bash
 
-    - name: Run SQLite Script
+    - name: Create JaMuz.db & myMovieDb.db
       run: |
+        mkdir dist
         sqlite3 dist/JaMuz.db  # Create an empty database if it doesn't exist
         sqlite3 dist/JaMuz.db < database/JaMuz_creation.sql
+        sqlite3 dist/JaMuz.db < database/JaMuz_insertion_minimal.sql
+        sqlite3 dist/JaMuz.db < database/JaMuz_insertion_optional.sql
+        sqlite3 dist/myMovieDb.db  # Create an empty database if it doesn't exist
+        sqlite3 dist/myMovieDb.db < database/myMovieDb_creation.sql
       working-directory: ${{ github.workspace }}
+ 
+    - name: List Workspace Directory
+      run: ls -la ${{ github.workspace }}/dist
     
     - name: Publish Release
       id: publish_release
