@@ -25,82 +25,85 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-
-    - name: Setup SQLite
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install sqlite3 -y
-      shell: bash
-
-    - name: Create JaMuz.db & myMovieDb.db
-      run: |
-        mkdir dist
-        sqlite3 dist/JaMuz.db  # Create an empty database if it doesn't exist
-        sqlite3 dist/JaMuz.db < database/JaMuz_creation.sql
-        sqlite3 dist/JaMuz.db < database/JaMuz_insertion_minimal.sql
-        sqlite3 dist/JaMuz.db < database/JaMuz_insertion_optional.sql
-        sqlite3 dist/myMovieDb.db  # Create an empty database if it doesn't exist
-        sqlite3 dist/myMovieDb.db < database/myMovieDb_creation.sql
-      working-directory: ${{ github.workspace }}
-
-    - name: Create dist
-      run: |
-        cp -r target/JaMuz-jar-with-dependencies.jar dist/JaMuz.jar
-        cp -r dist-data/* dist
-        mkdir -p dist/data/icon
-        cp -r data/icon/* dist/data/icon
-        mkdir -p dist/data/system/sql
-        cp -r data/system/sql/* dist/data/system/sql
-        cp data/BookLinks.txt dist/data/
-        cp data/metaflac.exe dist/data/
-        cp data/mp3gain.exe dist/data/
-        cp data/mplayer.exe dist/data/
-      working-directory: ${{ github.workspace }}
-
-    - name: 7zip dist
-      run: |
-        mv dist JaMuz_${{ github.ref_name }}
-        7z a -r JaMuz_${{ github.ref_name }}.7z JaMuz_${{ github.ref_name }}
- 
-    # - name: List Workspace Directory
-    #   run: ls -la ${{ github.workspace }}
-
-    # - name: "Read file contents"
-    #   id: read_file
-    #   uses: andstor/file-reader-action@v1
+    # - name: Setup JDK 17
+    #   uses: actions/setup-java@v3
     #   with:
-    #     path: dist-data/doc/README.TXT
+    #     java-version: '17'
+    #     distribution: 'temurin'
+    #     cache: maven
+    # - name: Build with Maven
+    #   run: mvn -B package --file pom.xml
 
-    # - name: File contents
-    #   run: echo "${{ steps.read_file.outputs.contents }}"
+    # - name: Setup SQLite
+    #   run: |
+    #     sudo apt-get update -y
+    #     sudo apt-get install sqlite3 -y
+    #   shell: bash
+
+    # - name: Create JaMuz.db & myMovieDb.db
+    #   run: |
+    #     mkdir dist
+    #     sqlite3 dist/JaMuz.db  # Create an empty database if it doesn't exist
+    #     sqlite3 dist/JaMuz.db < database/JaMuz_creation.sql
+    #     sqlite3 dist/JaMuz.db < database/JaMuz_insertion_minimal.sql
+    #     sqlite3 dist/JaMuz.db < database/JaMuz_insertion_optional.sql
+    #     sqlite3 dist/myMovieDb.db  # Create an empty database if it doesn't exist
+    #     sqlite3 dist/myMovieDb.db < database/myMovieDb_creation.sql
+    #   working-directory: ${{ github.workspace }}
+
+    # - name: Create dist
+    #   run: |
+    #     cp -r target/JaMuz-jar-with-dependencies.jar dist/JaMuz.jar
+    #     cp -r dist-data/* dist
+    #     mkdir -p dist/data/icon
+    #     cp -r data/icon/* dist/data/icon
+    #     mkdir -p dist/data/system/sql
+    #     cp -r data/system/sql/* dist/data/system/sql
+    #     cp data/BookLinks.txt dist/data/
+    #     cp data/metaflac.exe dist/data/
+    #     cp data/mp3gain.exe dist/data/
+    #     cp data/mplayer.exe dist/data/
+    #   working-directory: ${{ github.workspace }}
+
+    # - name: 7zip dist
+    #   run: |
+    #     mv dist JaMuz_${{ github.ref_name }}
+    #     7z a -r JaMuz_${{ github.ref_name }}.7z JaMuz_${{ github.ref_name }}
+ 
+    # # - name: List Workspace Directory
+    # #   run: ls -la ${{ github.workspace }}
+
+    # # - name: "Read file contents"
+    # #   id: read_file
+    # #   uses: andstor/file-reader-action@v1
+    # #   with:
+    # #     path: dist-data/doc/README.TXT
+
+    # # - name: File contents
+    # #   run: echo "${{ steps.read_file.outputs.contents }}"
     
     - name: Extract body from CHANGELOG
       id: extract_body
       run: |
         # Extract body for the current version from CHANGELOG.md
-        current_version="${{ github.ref_name }}"
-        echo "RELEASE_BODY=$(awk -v version=\"$current_version\" '$0 ~ \"## \" version {p=1} p && !/^## / {print}' CHANGELOG.md)" >> $GITHUB_ENV
+        current_version="${GITHUB_REF_NAME}"
+        echo ::set-output name=release_body::$(awk -v version=\"$current_version\" '$0 ~ \"## \" version {p=1} p && !/^## / {print}' CHANGELOG.md)
       shell: bash
 
-    - name: Publish Release
-      id: publish_release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          JaMuz_${{ github.ref_name }}.7z
-        tag_name: ${{ github.ref_name }}
-        body: ${{ env.RELEASE_BODY }}
-        draft: true
-      env:
-       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: File contents
+      run: echo "${{ steps.extract_body.outputs.release_body }}"
+
+    # - name: Publish Release
+    #   id: publish_release
+    #   uses: softprops/action-gh-release@v1
+    #   with:
+    #     files: |
+    #       JaMuz_${{ github.ref_name }}.7z
+    #     tag_name: ${{ github.ref_name }}
+    #     body: ${{ steps.extract_body.outputs.release_body }}
+    #     draft: true
+    #   env:
+    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
