@@ -22,7 +22,7 @@ public class SlskdDocker {
 //    https://github.com/docker-java/docker-java/blob/main/docs/getting_started.md
 //    https://www.baeldung.com/docker-java-api
     
-    //FIXME !! Turn this into options
+    //FIXME ! Turn this into options
     private final boolean SLSKD_SWAGGER ;
     private final String SLSKD_SLSK_USERNAME;
     private final String SLSKD_SLSK_PASSWORD;
@@ -40,8 +40,7 @@ public class SlskdDocker {
     }
     
     public boolean start() {
-        //FIXME ! Start (and check errors) docker image slskd
-        // And also, set sharing
+// FIXME !!! Set sharing, to not get banned
 //			shares:
 //			directories:
 //			  - /home/xxx/Musique/Archive/

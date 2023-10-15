@@ -16,6 +16,7 @@
  */
 package jamuz.soulseek;
 
+import jamuz.Jamuz;
 import jamuz.Options;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.ProgressCellRender;
@@ -195,7 +196,6 @@ public class DialogSlsk extends javax.swing.JDialog {
         jTextFieldDownloadedFolder = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableDownload = new jamuz.gui.swing.TableHorizontal();
 
@@ -231,8 +231,7 @@ public class DialogSlsk extends javax.swing.JDialog {
         });
 
         jButtonSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search_plus.png"))); // NOI18N
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
-        jButtonSearch.setText(bundle1.getString("Button.Search")); // NOI18N
+        jButtonSearch.setText(bundle.getString("Button.Search")); // NOI18N
         jButtonSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSearchActionPerformed(evt);
@@ -269,13 +268,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 
         jLabel2.setText("DownloadED folder:");
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         jTableDownload.setAutoCreateColumnsFromModel(false);
         jTableDownload.setModel(new jamuz.soulseek.TableModelSlskdDownload());
         jTableDownload.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -308,13 +300,11 @@ public class DialogSlsk extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonCancel)
                             .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPaneCheckTags3)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.PREFERRED_SIZE, 1164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPaneCheckTags3))
+                        .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.PREFERRED_SIZE, 1271, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -325,9 +315,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                     .addComponent(jTextFieldQuery, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSearch))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -491,15 +479,15 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
     }//GEN-LAST:event_jButtonSelectDownloadedFolderActionPerformed
 
-	//FIXME !!! Remove this, once timer is well restarted as needed
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        displayDownloads();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
 	private void startSoulseekSearch() {
 		new Thread() {
 			@Override
 			public void run() {
+                if(!Jamuz.getSlskdDocker().start()) {
+                    Popup.warning("Could not start slskd");
+                    return;
+                }
+                
 				File SlskDownloadingFolder = new File(jTextFieldDownloadingFolder.getText());
 				if(!SlskDownloadingFolder.exists()) {
 					return;
@@ -554,7 +542,6 @@ public class DialogSlsk extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonDownload;
     private javax.swing.JButton jButtonSearch;
