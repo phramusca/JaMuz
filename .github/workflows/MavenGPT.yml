@@ -1,6 +1,7 @@
-name: Maven Build
+name: Maven GPT
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main  # Replace with the branch you want to trigger the workflow on
