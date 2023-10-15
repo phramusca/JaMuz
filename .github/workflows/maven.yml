@@ -67,8 +67,8 @@ jobs:
 
     - name: 7zip dist
       run: |
-        mv dist JaMuz_${{ github.ref }}
-        7z a -r JaMuz_${{ github.ref }}.7z JaMuz_${{ github.ref }}
+        mv dist JaMuz_${{ github.ref_name }}
+        7z a -r JaMuz_${{ github.ref_name }}.7z JaMuz_${{ github.ref_name }}
  
     # - name: List Workspace Directory
     #   run: ls -la ${{ github.workspace }}
@@ -87,8 +87,8 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          JaMuz_${{ github.ref }}.7z
-        tag_name: ${{ github.ref }}
+          JaMuz_${{ github.ref_name }}.7z
+        tag_name: ${{ github.ref_name }}
         draft: true
         body_path: ${{ github.workspace }}/dist-data/doc/README.TXT
       env:
