@@ -82,14 +82,14 @@ jobs:
     # - name: File contents
     #   run: echo "${{ steps.read_file.outputs.contents }}"
     
-    - name: Extract body from CHANGELOG.md
+    - name: Extract body from CHANGELOG
+      id: extract_body
       run: |
         # Extract body for the current version from CHANGELOG.md
         current_version="${{ github.ref_name }}"
-        body=$(awk -v version="$current_version" '$0 ~ "## " version {p=1} p && !/^## / {print}' CHANGELOG.md)
-        echo "::set-env name=RELEASE_BODY::$body"
-      id: extract_body
-
+        echo "RELEASE_BODY=$(awk -v version=\"$current_version\" '$0 ~ \"## \" version {p=1} p && !/^## / {print}' CHANGELOG.md)" >> $GITHUB_ENV
+      shell: bash
+      
     - name: Publish Release
       id: publish_release
       uses: softprops/action-gh-release@v1
@@ -97,7 +97,7 @@ jobs:
         files: |
           JaMuz_${{ github.ref_name }}.7z
         tag_name: ${{ github.ref_name }}
-        body_path: RELEASE_BODY
+        body_path: ${{ env.RELEASE_BODY }}
         draft: true
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
