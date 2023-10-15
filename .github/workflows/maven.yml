@@ -21,7 +21,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    #- uses: actions/checkout@v3
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -30,13 +33,52 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-      
+
+    - name: Set up SQLite
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install sqlite3 -y
+      shell: bash
+
+    - name: Create JaMuz.db & myMovieDb.db
+      run: |
+        mkdir dist
+        sqlite3 dist/JaMuz.db  # Create an empty database if it doesn't exist
+        sqlite3 dist/JaMuz.db < database/JaMuz_creation.sql
+        sqlite3 dist/JaMuz.db < database/JaMuz_insertion_minimal.sql
+        sqlite3 dist/JaMuz.db < database/JaMuz_insertion_optional.sql
+        sqlite3 dist/myMovieDb.db  # Create an empty database if it doesn't exist
+        sqlite3 dist/myMovieDb.db < database/myMovieDb_creation.sql
+      working-directory: ${{ github.workspace }}
+
+    - name: Create dist
+      run: |
+        cp -r target/*.jar dist
+        cp -r dist-data/* dist
+        mkdir -p dist/data/system/sql
+        cp -r data/system/sql/* dist/data/system/sql
+        cp data/BookLinks.txt dist/data/
+        cp data/metaflac.exe dist/data/
+        cp data/mp3gain.exe dist/data/
+        cp data/mplayer.exe dist/data/
+      working-directory: ${{ github.workspace }}
+
+    - name: 7zip dist
+      run: |
+        mv dist JaMuz_v1.0
+        7z a -r JaMuz_v1.0.7z JaMuz_v1.0
+ 
+    - name: List Workspace Directory
+      run: ls -la ${{ github.workspace }}
+    
     - name: Publish Release
       id: publish_release
       uses: softprops/action-gh-release@v1
       with:
-       files: target/*.jar
-       tag_name: v1.0  # Use the same tag name created in the previous step
+        files: |
+          JaMuz_v1.0.7z
+        tag_name: v1.0
+        draft: true
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
