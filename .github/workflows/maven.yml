@@ -86,7 +86,7 @@ jobs:
       id: extract_body
       run: |
         current_version="${{ github.ref_name }}"  # Use GitHub's ref name as the current version
-        echo "RELEASE_BODY=$(awk -v version='${current_version}' '$0 ~ \"^## \" version {p=1} p && !/^## / {print}' CHANGELOG.md)" >> $GITHUB_ENV
+        echo "RELEASE_BODY=$(awk -v version=${current_version} '$0 ~ \"^## \" version {p=1} p && !/^## / {print}' CHANGELOG.md)" >> $GITHUB_ENV
       shell: bash
 
     - name: File contents
