@@ -85,11 +85,12 @@ jobs:
     - name: Extract body from CHANGELOG
       id: extract_body
       run: |
-        echo "RELEASE_BODY=$(awk -v version=\"${GITHUB_REF_NAME}\" '$0 ~ \"## \" version {p=1} p && !/^## / {print}' CHANGELOG.md)" >> $GITHUB_ENV
+        current_version="${{ github.ref_name }}"  # Use GitHub's ref name as the current version
+        echo "RELEASE_BODY=$(awk -v version='${current_version}' '$0 ~ \"^## \" version {p=1} p && !/^## / {print}' CHANGELOG.md)" >> $GITHUB_ENV
       shell: bash
 
     - name: File contents
-      run: echo "${env_RELEASE_BODY}"
+      run: echo "$RELEASE_BODY"
 
     # - name: Publish Release
     #   id: publish_release
@@ -98,7 +99,7 @@ jobs:
     #     files: |
     #       JaMuz_${{ github.ref_name }}.7z
     #     tag_name: ${{ github.ref_name }}
-    #     body: ${{ env.release_body }}
+    #     body: ${{ env.RELEASE_BODY }}
     #     draft: true
     #   env:
     #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
