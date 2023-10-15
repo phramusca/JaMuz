@@ -33,7 +33,7 @@ Please submit to the `master` branch.
 - [Get a TheMovieDb API key for free](https://www.themoviedb.org/faq/api)
 - [Get a LastFm API key for free](http://www.last.fm/api/account/create)
 - [Get an AcoustId API key for free](https://acoustid.org/)
-- Create a keys.properties file in {Repo}/res
+- Create/update keys.properties file in {Repo}/res
 
   ```text
   TheMovieDb={yourKey}
