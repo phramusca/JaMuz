@@ -4,7 +4,7 @@
 
 - Release notes for version 4.9.0
 
-## master ##
+## v3.0.0 ##
 
 ***Compatible with JaMuz Remote v0.5.x minimum***
 
