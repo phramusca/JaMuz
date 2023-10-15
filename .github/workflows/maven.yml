@@ -92,7 +92,7 @@ jobs:
         files: |
           JaMuz_${{ github.ref_name }}.7z
         tag_name: ${{ github.ref_name }}
-        body_path: ${{ github.workspace }}release_body.txt
+        body_path: ${{ github.workspace }}/release_body.txt
         draft: true
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
