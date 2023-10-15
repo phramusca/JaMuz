@@ -92,6 +92,7 @@ jobs:
         files: |
           JaMuz_${{ github.ref_name }}.7z
         tag_name: ${{ github.ref_name }}
+        name: JaMuz Desktop ${{ github.ref_name }}
         body_path: ${{ github.workspace }}/release_body.txt
         draft: true
       env:
