@@ -22,10 +22,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out code
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up JDK 17
+    - name: Setup JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
@@ -34,7 +34,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Set up SQLite
+    - name: Setup SQLite
       run: |
         sudo apt-get update -y
         sudo apt-get install sqlite3 -y
@@ -82,6 +82,14 @@ jobs:
     # - name: File contents
     #   run: echo "${{ steps.read_file.outputs.contents }}"
     
+    - name: Extract body from CHANGELOG.md
+      run: |
+        # Extract body for the current version from CHANGELOG.md
+        current_version="${{ github.ref_name }}"
+        body=$(awk -v version="$current_version" '$0 ~ "## " version {p=1} p && !/^## / {print}' CHANGELOG.md)
+        echo "::set-env name=RELEASE_BODY::$body"
+      id: extract_body
+
     - name: Publish Release
       id: publish_release
       uses: softprops/action-gh-release@v1
@@ -89,8 +97,8 @@ jobs:
         files: |
           JaMuz_${{ github.ref_name }}.7z
         tag_name: ${{ github.ref_name }}
+        body_path: RELEASE_BODY
         draft: true
-        body_path: ${{ github.workspace }}/dist-data/doc/README.TXT
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
