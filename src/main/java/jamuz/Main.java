@@ -75,42 +75,13 @@ package jamuz;
 //TODO: Consider using Maven
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
+import jamuz.soulseek.DialogSlsk;
 import jamuz.utils.Popup;
 import java.io.File;
 import java.util.logging.Handler;
 
-//FIXME ! pom.xml
-//    : dist (build.xml => github actions OR maven style)
-    // => CONTRIBUTING: release process accordingly
-
-//TODO pom.xml
-//    : essayer de remplacer les jar locaux par des maven
-//    : update maven packages
-
-//FIXME !!! Start (and check errors) docker image slskd
-//                DockerClient dockerClient = DockerClientBuilder.getInstance().build();
-//                CreateContainerResponse container
-//                  = dockerClient.createContainerCmd("slskd/slskd:latest")
-//                    .withName("slskd")
-//                    .withEnv("SLSKD_REMOTE_CONFIGURATION=true",
-//                            "SLSKD_SLSK_USERNAME=xxxxx",
-//                            "SLSKD_SLSK_PASSWORD=xxxxxx",
-//                            "SLSKD_SWAGGER=true")
-//                    .withExposedPorts(ExposedPort.tcp(5030), ExposedPort.tcp(5031), ExposedPort.tcp(50300))
-//                    .withHostConfig(HostConfig.newHostConfig()
-//                        .withPortBindings(
-//                            new PortBinding(Ports.Binding.bindIpAndPort("0.0.0.0", 5030), ExposedPort.tcp(5030)),
-//                            new PortBinding(Ports.Binding.bindIpAndPort("0.0.0.0", 5031), ExposedPort.tcp(5031)),
-//                            new PortBinding(Ports.Binding.bindIpAndPort("0.0.0.0", 50300), ExposedPort.tcp(50300))
-//                        )
-//                        .withBinds(Bind.parse("/home/raph/Documents/04-Creations/Dev/Repos/SlskLocalServer:/app"))
-//                    )
-//                    .exec();
-//                dockerClient.startContainerCmd(container.getId()).exec();
-			
-//			shares:
-//			directories:
-//			  - /home/xxx/Musique/Archive/
+// FIXME TEST pom.xml Re-enable tests, when tests done
+// TODO pom.xml essayer de remplacer les jar locaux par des maven
 
 /**
  * JaMuz main class
@@ -154,9 +125,11 @@ public class Main {
 			});
 
 			//Start GUI
-			PanelMain.main();
-//			DialogSlsk.main(null, "The White Stripes Elephant");
-
+//			PanelMain.main();
+            
+            if(Jamuz.getSlskdDocker().start()) {
+                DialogSlsk.main(null, "The White Stripes Elephant");
+            }
 		} catch (Exception ex) {
 			Popup.error(ex);
 			System.exit(99);

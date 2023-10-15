@@ -16,7 +16,6 @@
         </resources>
         
         <plugins>
-            <!--FIXME Z this is to skip tests, but need it back when tests done-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -178,7 +177,7 @@
             <version>4.5.14</version>
         </dependency>
 
-        <!--Local jar dependencies TODO: find maven alternative-->
+        <!--Local jar dependencies -->
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>beaglebuddy_mp3</artifactId>

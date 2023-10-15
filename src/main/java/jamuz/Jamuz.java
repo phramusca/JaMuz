@@ -17,6 +17,7 @@
 package jamuz;
 
 import jamuz.DbInfo.LibType;
+import jamuz.soulseek.SlskdDocker;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
@@ -57,6 +58,7 @@ public class Jamuz {
 	private static Machine machine;
 	private static DbConnJaMuz db;
 	private static HashMap<Integer, Playlist> playlists;
+    private static SlskdDocker slskdDocker;
 	
 	/**
 	 *
@@ -151,6 +153,9 @@ public class Jamuz {
 		//Set library location (JaMuz's rootPath)
 		db.setRootPath(getMachine().getOptionValue("location.library"));  //NOI18N
 		
+        //FIXME ! make those options !!
+        slskdDocker = new SlskdDocker(true, "xxxx", "xxxx", "xxxxx");
+                
 		return true;
 	}
 
@@ -443,6 +448,10 @@ public class Jamuz {
 		}
 	}
 
+    public static SlskdDocker getSlskdDocker() {
+        return slskdDocker;
+    }
+    
 	/**
 	 * Get LOG instance.
 	 */
