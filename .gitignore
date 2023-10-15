@@ -14,11 +14,6 @@ hs_err_pid*
 
 #JaMuz specifics
 /dist/
-/build/
-nbproject/private/*
-manifest.mf
-
-build/*
 logs/*
 !/lib/**/*.jar
 
@@ -58,4 +53,5 @@ Test.session.sql
 Prod.session.sql
 JaMuz_*-*-*--*-*-*.db
 
-
+target/
+/nbproject/private/
