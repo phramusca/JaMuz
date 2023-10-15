@@ -10,8 +10,10 @@ name: Java CI with Maven
 
 on:
   workflow_dispatch:
-  #push:
-  #  branches: [ "master" ]
+    # branches: [ "master" ]
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
   #pull_request:
   #  branches: [ "master" ]
 
@@ -72,6 +74,15 @@ jobs:
  
     - name: List Workspace Directory
       run: ls -la ${{ github.workspace }}
+
+    - name: "Read file contents"
+      id: read_file
+      uses: andstor/file-reader-action@v1
+      with:
+        path: dist-data/doc/README.TXT
+
+    - name: File contents
+      run: echo "${{ steps.read_file.outputs.contents }}"
     
     - name: Publish Release
       id: publish_release
@@ -81,6 +92,7 @@ jobs:
           JaMuz_v1.0.7z
         tag_name: v1.0
         draft: true
+        body_path: ${{ github.workspace }}/dist-data/doc/README.TXT
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
