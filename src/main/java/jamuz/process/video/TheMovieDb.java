@@ -50,7 +50,6 @@ import java.util.Map;
  */
 public class TheMovieDb {
 
-    //FIXME: how to set language now ? changed from 1.10 to 1.12
     private String language = ""; 
     
     private final TmdbApi tmdbApi;

@@ -25,7 +25,6 @@ public class SlskdDocker {
 //    https://github.com/docker-java/docker-java/blob/main/docs/getting_started.md
 //    https://www.baeldung.com/docker-java-api
     
-    //FIXME ! Turn this into options
     private final boolean SLSKD_SWAGGER ;
     private final String SLSKD_SLSK_USERNAME;
     private final String SLSKD_SLSK_PASSWORD;
@@ -77,6 +76,13 @@ public class SlskdDocker {
                     throw new AssertionError();
             }
             return false;
+        }
+    }
+    
+    public void stop() {
+        Container container = getContainer();
+        if(container != null) {
+            removeContainer(container);
         }
     }
     

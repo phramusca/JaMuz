@@ -842,7 +842,9 @@ public class PanelSelect extends javax.swing.JPanel {
 	 */
 	public static void stopMplayer() {
 		mplayer.stop();
-		jLabelPreviewDisplay.setText("");
+        if(jLabelPreviewDisplay!=null) {
+            jLabelPreviewDisplay.setText("");
+        }
 	}
     
 	/**

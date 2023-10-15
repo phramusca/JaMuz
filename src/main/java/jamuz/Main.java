@@ -144,6 +144,9 @@ public class Main {
 					}
 					PanelMain.stopMplayer();
 					PanelSelect.stopMplayer();
+                    
+                    //TODO: Make this an option as server could be left running for dowloads ...
+                    Jamuz.getSlskdDocker().stop();
 				}
 			});
 
