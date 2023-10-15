@@ -55,6 +55,8 @@ jobs:
       run: |
         cp -r target/*.jar dist
         cp -r dist-data/* dist
+        mkdir -p dist/data/icon
+        cp -r data/icon/* dist/data/icon
         mkdir -p dist/data/system/sql
         cp -r data/system/sql/* dist/data/system/sql
         cp data/BookLinks.txt dist/data/
