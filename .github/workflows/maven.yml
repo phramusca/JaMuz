@@ -50,6 +50,19 @@ jobs:
         sqlite3 dist/myMovieDb.db  # Create an empty database if it doesn't exist
         sqlite3 dist/myMovieDb.db < database/myMovieDb_creation.sql
       working-directory: ${{ github.workspace }}
+
+    - name: Copy dist-data to data
+      run: |
+        cp dist-data/* dist/
+        cp dist-data/doc dist/
+        cp dist-data/data dist/
+        cp data/icon dist/data/
+        cp data/system/sql dist/data/system/sql
+        cp data/BookLinks.txt dist/data/
+        cp data/metaflac.exe dist/data/
+        cp data/mp3gain.exe dist/data/
+        cp data/mplayer.exe dist/data/
+      working-directory: ${{ github.workspace }}
  
     - name: List Workspace Directory
       run: ls -la ${{ github.workspace }}/dist
@@ -61,7 +74,8 @@ jobs:
         files: |
           target/*.jar
           dist/JaMuz.db 
-        tag_name: v1.0  # Use the same tag name created in the previous step
+        tag_name: v1.0
+        draft: true
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
