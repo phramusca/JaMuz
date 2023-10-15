@@ -54,6 +54,7 @@ jobs:
     - name: Copy dist-data to data
       run: |
         cp -r dist-data/* dist
+        mkdir -p dist/data/system/sql
         cp -r data/system/sql/* dist/data/system/sql
         cp data/BookLinks.txt dist/data/
         cp data/metaflac.exe dist/data/
