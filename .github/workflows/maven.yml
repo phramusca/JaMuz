@@ -53,7 +53,7 @@ jobs:
 
     - name: Copy dist-data to data
       run: |
-        cp dist-data/* dist/
+        cp dist-data/* dist
         cp -r data/icon dist/data/
         cp data/system/sql/* dist/data/system/sql/
         cp data/BookLinks.txt dist/data/
