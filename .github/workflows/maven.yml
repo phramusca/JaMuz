@@ -80,7 +80,7 @@ jobs:
         awk_script='$0 ~ "^## " version {p=1} p && !/^## / {print}'
         RELEASE_BODY=$(awk -v version="${current_version}" "${awk_script}" CHANGELOG.md)
         echo "RELEASE_BODY: $RELEASE_BODY"
-        echo "body=${RELEASE_BODY}" >> $GITHUB_OUTPUT
+        echo 'body="${RELEASE_BODY}"' >> $GITHUB_OUTPUT
       shell: bash
 
     - name: CHANGELOG contents
