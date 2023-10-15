@@ -33,7 +33,6 @@ database/*_for_comparison.sql
 JaMuz\.db
 JaMuz\.xml\.bak
 logs\.bak/
-keys.properties
 myMovieDb.db
 yGuard.log
 
