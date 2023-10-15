@@ -89,7 +89,7 @@ jobs:
         current_version="${{ github.ref_name }}"
         echo "RELEASE_BODY=$(awk -v version=\"$current_version\" '$0 ~ \"## \" version {p=1} p && !/^## / {print}' CHANGELOG.md)" >> $GITHUB_ENV
       shell: bash
-      
+
     - name: Publish Release
       id: publish_release
       uses: softprops/action-gh-release@v1
@@ -97,7 +97,7 @@ jobs:
         files: |
           JaMuz_${{ github.ref_name }}.7z
         tag_name: ${{ github.ref_name }}
-        body_path: ${{ env.RELEASE_BODY }}
+        body: ${{ env.RELEASE_BODY }}
         draft: true
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
