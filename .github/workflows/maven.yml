@@ -78,8 +78,9 @@ jobs:
       run: |
         current_version="${{ github.ref_name }}"
         awk_script='$0 ~ "^## " version {p=1} p && !/^## / {print}'
-        RELEASE_BODY=$(awk -v version="${current_version}" "${awk_script}" CHANGELOG.md)
-        echo ::set-output name=body::"${RELEASE_BODY}"
+        # RELEASE_BODY=$(awk -v version="${current_version}" "${awk_script}" CHANGELOG.md)
+        RELEASE_BODY=$(awk -v version="${current_version}" -v ORS='\n' "${awk_script}" CHANGELOG.md)
+        echo ::set-output name=body::"${RELEASE_BODY}""
       shell: bash
 
     - name: CHANGELOG contents
