@@ -54,10 +54,10 @@ jobs:
     - name: Copy dist-data to data
       run: |
         cp dist-data/* dist/
-        cp dist-data/doc dist/
-        cp dist-data/data dist/
-        cp data/icon dist/data/
-        cp data/system/sql dist/data/system/sql
+        cp -r dist-data/doc dist/
+        cp -r dist-data/data dist/
+        cp -r data/icon dist/data/
+        cp data/system/sql/* dist/data/system/sql/
         cp data/BookLinks.txt dist/data/
         cp data/metaflac.exe dist/data/
         cp data/mp3gain.exe dist/data/
