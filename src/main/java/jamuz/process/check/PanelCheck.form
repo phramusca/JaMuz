@@ -127,7 +127,7 @@
         <Component class="javax.swing.JButton" name="jButtonCheckAbort">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Button.Abort" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Button.Abort" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
@@ -141,7 +141,7 @@
         <Component class="javax.swing.JButton" name="jButtonMergeSources">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Label.Options" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Label.Options" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -151,7 +151,7 @@
         <Component class="javax.swing.JButton" name="jButtonCheckNew">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Label.Scan.CheckNew" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Label.Scan.CheckNew" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -164,7 +164,7 @@
         <Component class="javax.swing.JButton" name="jButtonCheckLibrary">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Label.Scan.CheckLibrary" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Label.Scan.CheckLibrary" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -177,7 +177,7 @@
         <Component class="javax.swing.JButton" name="jButtonScanLibrary">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Label.Scan" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Label.Scan" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -190,7 +190,7 @@
         <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckFull">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Label.Scan.Full" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Label.Scan.Full" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <AuxValues>
@@ -301,7 +301,7 @@
         <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckKO">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Button.KO" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Button.KO" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
@@ -312,7 +312,7 @@
         <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckWarning">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK.Warning" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Check.OK.Warning" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>

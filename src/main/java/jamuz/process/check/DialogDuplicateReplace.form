@@ -92,7 +92,7 @@
     <Component class="javax.swing.JButton" name="jButtonCheckUp">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/jamuz/ressources/arrow_up.png"/>
+          <Image iconType="3" name="/icons/arrow_up.png"/>
         </Property>
       </Properties>
       <Events>
@@ -102,7 +102,7 @@
     <Component class="javax.swing.JButton" name="jButtonCheckDown">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/jamuz/ressources/arrow_down.png"/>
+          <Image iconType="3" name="/icons/arrow_down.png"/>
         </Property>
       </Properties>
       <Events>
@@ -112,7 +112,7 @@
     <Component class="javax.swing.JProgressBar" name="jProgressBarCheckDialog">
       <Properties>
         <Property name="string" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
         <Property name="stringPainted" type="boolean" value="true"/>
       </Properties>
@@ -123,7 +123,7 @@
     <Component class="javax.swing.JButton" name="jButtonCancel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Cancel" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Button.Cancel" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>

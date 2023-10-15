@@ -64,10 +64,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Select">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelSelect.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="PanelMain.panelSelect.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/music.png"/>
+                      <Image iconType="3" name="/icons/music.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -78,10 +78,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Merge">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Merge" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.Merge" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/arrow_refresh.png"/>
+                      <Image iconType="3" name="/icons/arrow_refresh.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -92,10 +92,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Export">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelSync.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="PanelMain.panelSync.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/arrow_turn_right.png"/>
+                      <Image iconType="3" name="/icons/arrow_turn_right.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -110,10 +110,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Check">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Check" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.Check" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/search_plus.png"/>
+                      <Image iconType="3" name="/icons/search_plus.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -124,10 +124,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Playlists">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelPlaylists.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="PanelMain.panelPlaylists.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/application_view_list.png"/>
+                      <Image iconType="3" name="/icons/application_view_list.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -138,10 +138,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Lyrics">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Lyrics" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.Lyrics" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/text.png"/>
+                      <Image iconType="3" name="/icons/text.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -152,10 +152,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Stats">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelStats.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="PanelMain.panelStats.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/statistics.png"/>
+                      <Image iconType="3" name="/icons/statistics.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -166,10 +166,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Server">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelRemote.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="PanelMain.panelRemote.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/android.png"/>
+                      <Image iconType="3" name="/icons/android.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -180,10 +180,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Options">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Options" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.Options" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/selected.png"/>
+                      <Image iconType="3" name="/icons/selected.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -194,10 +194,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Video">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelVideo.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="PanelMain.panelVideo.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/movies.png"/>
+                      <Image iconType="3" name="/icons/movies.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -208,10 +208,10 @@
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                   <JTabbedPaneConstraints tabName="Book">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.panelBook.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="PanelMain.panelBook.TabConstraints.tabTitle" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/book_open.png"/>
+                      <Image iconType="3" name="/icons/book_open.png"/>
                     </Property>
                   </JTabbedPaneConstraints>
                 </Constraint>
@@ -346,7 +346,7 @@
             <Component class="javax.swing.JButton" name="jButtonPlayerClear">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Button.Clear" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Button.Clear" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -432,7 +432,7 @@
                 <Component class="javax.swing.JButton" name="jButtonPlayerPrevious">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/resultset-premier-icone-4160-16.png"/>
+                      <Image iconType="3" name="/icons/resultset-premier-icone-4160-16.png"/>
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
@@ -446,7 +446,7 @@
                 <Component class="javax.swing.JButton" name="jButtonPlayerPlay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Button.Play" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Button.Play" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -459,7 +459,7 @@
                 <Component class="javax.swing.JButton" name="jButtonPlayerNext">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/last-resultset-icone-5121-16.png"/>
+                      <Image iconType="3" name="/icons/last-resultset-icone-5121-16.png"/>
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
@@ -488,7 +488,7 @@
             <Component class="javax.swing.JToggleButton" name="jToggleButtonPlayerInfo">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/external.png"/>
+                  <Image iconType="3" name="/icons/external.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -662,7 +662,7 @@
                 <Component class="javax.swing.JButton" name="jButtonTags">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Tags" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.Tags" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
@@ -678,7 +678,7 @@
             <Component class="javax.swing.JButton" name="jButtonQueueUp">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/arrow_up.png"/>
+                  <Image iconType="3" name="/icons/arrow_up.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -688,7 +688,7 @@
             <Component class="javax.swing.JButton" name="jButtonQueueDown">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/arrow_down.png"/>
+                  <Image iconType="3" name="/icons/arrow_down.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -717,7 +717,7 @@
             <Component class="javax.swing.JButton" name="jButtonRefreshHiddenQueue">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/update.png"/>
+                  <Image iconType="3" name="/icons/update.png"/>
                 </Property>
               </Properties>
               <Events>

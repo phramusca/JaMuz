@@ -128,7 +128,7 @@
         <Component class="javax.swing.JButton" name="jButtonStart">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Button.Start" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Button.Start" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -138,7 +138,7 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.jLabel1.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="PanelMain.jLabel1.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -146,7 +146,7 @@
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.jCheckBoxServerStartOnStartup.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="PanelMain.jCheckBoxServerStartOnStartup.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="jamuz/gui/Bundle.properties" key="PanelMain.jCheckBoxServerStartOnStartup.toolTipText" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
@@ -164,7 +164,7 @@
         <Component class="javax.swing.JButton" name="jButtonQRcode">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.jButtonQRcode.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="PanelMain.jButtonQRcode.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -202,7 +202,7 @@
         <Component class="javax.swing.JButton" name="jButtonRefreshIP">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jamuz/ressources/update.png"/>
+              <Image iconType="3" name="/icons/update.png"/>
             </Property>
           </Properties>
           <Events>
@@ -213,7 +213,7 @@
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="PanelMain.jCheckBoxEnableByDefault.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="PanelMain.jCheckBoxEnableByDefault.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>

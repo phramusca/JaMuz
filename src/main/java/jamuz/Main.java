@@ -126,10 +126,8 @@ public class Main {
 
 			//Start GUI
 //			PanelMain.main();
+            DialogSlsk.main(null, "The White Stripes Elephant");
             
-            if(Jamuz.getSlskdDocker().start()) {
-                DialogSlsk.main(null, "The White Stripes Elephant");
-            }
 		} catch (Exception ex) {
 			Popup.error(ex);
 			System.exit(99);

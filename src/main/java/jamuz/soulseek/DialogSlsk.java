@@ -231,7 +231,8 @@ public class DialogSlsk extends javax.swing.JDialog {
         });
 
         jButtonSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search_plus.png"))); // NOI18N
-        jButtonSearch.setText(bundle.getString("Button.Search")); // NOI18N
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
+        jButtonSearch.setText(bundle1.getString("Button.Search")); // NOI18N
         jButtonSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSearchActionPerformed(evt);

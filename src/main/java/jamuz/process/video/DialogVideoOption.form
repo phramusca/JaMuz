@@ -119,7 +119,7 @@
         <Component class="javax.swing.JLabel" name="jLabelVideoLocation">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Label.Location" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Label.Location" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -135,10 +135,10 @@
         <Component class="javax.swing.JButton" name="jButtonSelectSouce">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jamuz/ressources/folder_explore.png"/>
+              <Image iconType="3" name="/icons/folder_explore.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -148,10 +148,10 @@
         <Component class="javax.swing.JButton" name="jButtonSelectSouce1">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jamuz/ressources/folder_explore.png"/>
+              <Image iconType="3" name="/icons/folder_explore.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
@@ -164,10 +164,10 @@
     <Component class="javax.swing.JButton" name="jButtonCancel">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/jamuz/ressources/cancel.png"/>
+          <Image iconType="3" name="/icons/cancel.png"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Cancel" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Button.Cancel" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -177,10 +177,10 @@
     <Component class="javax.swing.JButton" name="jButtonSave">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/jamuz/ressources/accept.png"/>
+          <Image iconType="3" name="/icons/accept.png"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Save" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Button.Save" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -345,10 +345,10 @@
         <Component class="javax.swing.JButton" name="jButtonSelectLibraryLocation">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jamuz/ressources/folder_explore.png"/>
+              <Image iconType="3" name="/icons/folder_explore.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="jamuz/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+              <ResourceString bundle="inter/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>

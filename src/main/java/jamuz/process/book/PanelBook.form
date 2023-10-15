@@ -240,10 +240,10 @@
                       <Font name="DejaVu Sans" size="18" style="1"/>
                     </Property>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/external.png"/>
+                      <Image iconType="3" name="/icons/external.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Button.Export" replaceFormat="Inter.get(&quot;{key}&quot;)+&quot; ...&quot;"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Button.Export" replaceFormat="Inter.get(&quot;{key}&quot;)+&quot; ...&quot;"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -256,7 +256,7 @@
                 <Component class="javax.swing.JButton" name="jButtonVideoList">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Button.Start" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Button.Start" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -269,7 +269,7 @@
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxVideoGet">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="MainGUI.jCheckBoxVideoGet.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="MainGUI.jCheckBoxVideoGet.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <AuxValues>
@@ -338,7 +338,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/selected.png"/>
+                      <Image iconType="3" name="/icons/selected.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">

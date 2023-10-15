@@ -456,7 +456,7 @@
                         <Component class="javax.swing.JLabel" name="jLabel2">
                           <Properties>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                              <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Year" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                              <ResourceString bundle="inter/Bundle.properties" key="Tag.Year" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                             </Property>
                           </Properties>
                         </Component>
@@ -564,7 +564,7 @@
                           <Properties>
                             <Property name="selected" type="boolean" value="true"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                              <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                              <ResourceString bundle="inter/Bundle.properties" key="Check.OK" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                             </Property>
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
@@ -576,7 +576,7 @@
                           <Properties>
                             <Property name="selected" type="boolean" value="true"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                              <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                              <ResourceString bundle="inter/Bundle.properties" key="Check.OK" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                             </Property>
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
@@ -588,7 +588,7 @@
                           <Properties>
                             <Property name="selected" type="boolean" value="true"/>
                             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                              <ResourceString bundle="jamuz/Bundle.properties" key="Check.KO" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                              <ResourceString bundle="inter/Bundle.properties" key="Check.KO" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                             </Property>
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
@@ -669,10 +669,10 @@
                           <Properties>
                             <Property name="selected" type="boolean" value="true"/>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/1starU.png"/>
+                              <Image iconType="3" name="/icons/1starU.png"/>
                             </Property>
                             <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/1starC.png"/>
+                              <Image iconType="3" name="/icons/1starC.png"/>
                             </Property>
                           </Properties>
                           <AuxValues>
@@ -683,10 +683,10 @@
                           <Properties>
                             <Property name="selected" type="boolean" value="true"/>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/2starU.png"/>
+                              <Image iconType="3" name="/icons/2starU.png"/>
                             </Property>
                             <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/2starC.png"/>
+                              <Image iconType="3" name="/icons/2starC.png"/>
                             </Property>
                           </Properties>
                           <AuxValues>
@@ -697,10 +697,10 @@
                           <Properties>
                             <Property name="selected" type="boolean" value="true"/>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/3starU.png"/>
+                              <Image iconType="3" name="/icons/3starU.png"/>
                             </Property>
                             <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/3starC.png"/>
+                              <Image iconType="3" name="/icons/3starC.png"/>
                             </Property>
                           </Properties>
                           <AuxValues>
@@ -711,10 +711,10 @@
                           <Properties>
                             <Property name="selected" type="boolean" value="true"/>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/4starU.png"/>
+                              <Image iconType="3" name="/icons/4starU.png"/>
                             </Property>
                             <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/4starC.png"/>
+                              <Image iconType="3" name="/icons/4starC.png"/>
                             </Property>
                           </Properties>
                           <AuxValues>
@@ -726,10 +726,10 @@
                             <Property name="selected" type="boolean" value="true"/>
                             <Property name="toolTipText" type="java.lang.String" value=""/>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/5starU.png"/>
+                              <Image iconType="3" name="/icons/5starU.png"/>
                             </Property>
                             <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/jamuz/ressources/5star.png"/>
+                              <Image iconType="3" name="/icons/5star.png"/>
                             </Property>
                           </Properties>
                           <AuxValues>
@@ -741,7 +741,7 @@
                     <Component class="javax.swing.JButton" name="jCheckBoxSelectUpdate">
                       <Properties>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/jamuz/ressources/update.png"/>
+                          <Image iconType="3" name="/icons/update.png"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -861,7 +861,7 @@
                     <Component class="javax.swing.JButton" name="jButtonPreviewStop">
                       <Properties>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Stop" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="inter/Bundle.properties" key="Button.Stop" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -957,7 +957,7 @@
                 <Component class="javax.swing.JToggleButton" name="jToggleButtonSelectShowExtra">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Extra" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.Extra" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -967,7 +967,7 @@
                 <Component class="javax.swing.JToggleButton" name="jToggleButtonSelectShowFile">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.File" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.File" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -978,7 +978,7 @@
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Basic" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.Basic" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -991,14 +991,14 @@
                 <Component class="javax.swing.JLabel" name="jLabelSelectDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Display" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.Display" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JToggleButton" name="jToggleButtonSelectShowStats">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Label.Statistics" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Label.Statistics" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                   <Events>

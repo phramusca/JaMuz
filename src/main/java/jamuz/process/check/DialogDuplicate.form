@@ -167,10 +167,10 @@
                     <Component class="javax.swing.JButton" name="jButtonCheckOpen">
                       <Properties>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/jamuz/ressources/folder.png"/>
+                          <Image iconType="3" name="/icons/folder.png"/>
                         </Property>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Open" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="inter/Bundle.properties" key="Button.Open" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -180,10 +180,10 @@
                     <Component class="javax.swing.JButton" name="jButtonCheckSingleFolder">
                       <Properties>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/jamuz/ressources/arrow_refresh.png"/>
+                          <Image iconType="3" name="/icons/arrow_refresh.png"/>
                         </Property>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Refresh" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="inter/Bundle.properties" key="Button.Refresh" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -199,10 +199,10 @@
                           <Color blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
                         </Property>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/jamuz/ressources/bin.png"/>
+                          <Image iconType="3" name="/icons/bin.png"/>
                         </Property>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Delete" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="inter/Bundle.properties" key="Button.Delete" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -371,10 +371,10 @@
                     <Component class="javax.swing.JButton" name="jButtonCheckOpen1">
                       <Properties>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/jamuz/ressources/folder.png"/>
+                          <Image iconType="3" name="/icons/folder.png"/>
                         </Property>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Open" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="inter/Bundle.properties" key="Button.Open" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -384,10 +384,10 @@
                     <Component class="javax.swing.JButton" name="jButtonCheckSingleFolder1">
                       <Properties>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/jamuz/ressources/arrow_refresh.png"/>
+                          <Image iconType="3" name="/icons/arrow_refresh.png"/>
                         </Property>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Refresh" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="inter/Bundle.properties" key="Button.Refresh" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -403,10 +403,10 @@
                           <Color blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
                         </Property>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/jamuz/ressources/bin.png"/>
+                          <Image iconType="3" name="/icons/bin.png"/>
                         </Property>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Delete" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                          <ResourceString bundle="inter/Bundle.properties" key="Button.Delete" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
                       <Events>

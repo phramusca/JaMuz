@@ -157,10 +157,10 @@
             <Component class="javax.swing.JButton" name="jButtonCheckOK">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/accept.png"/>
+                  <Image iconType="3" name="/icons/accept.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Check.OK" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -173,10 +173,10 @@
                   <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/cancel.png"/>
+                  <Image iconType="3" name="/icons/cancel.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.KO" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Check.KO" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -192,10 +192,10 @@
                   <Color blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/bin.png"/>
+                  <Image iconType="3" name="/icons/bin.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Button.Delete" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Button.Delete" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -208,7 +208,7 @@
                   <Font name="Ubuntu" size="15" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Button.Save" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Button.Save" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -218,7 +218,7 @@
             <Component class="javax.swing.JProgressBar" name="jProgressBarCheckDialog">
               <Properties>
                 <Property name="string" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="stringPainted" type="boolean" value="true"/>
               </Properties>
@@ -232,10 +232,10 @@
                   <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/document_insert.png"/>
+                  <Image iconType="3" name="/icons/document_insert.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.KO" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Check.KO" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -248,10 +248,10 @@
                   <Color blue="0" green="c8" id="orange" palette="1" red="ff" type="palette"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/document_insert.png"/>
+                  <Image iconType="3" name="/icons/document_insert.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Check.OK" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -472,7 +472,7 @@
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="text" type="java.lang.String" value="99" noResource="true"/>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tooltip.NumberOfMatchTracks" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tooltip.NumberOfMatchTracks" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
@@ -490,7 +490,7 @@
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="text" type="java.lang.String" value="99" noResource="true"/>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tooltip.NumberOfFiles" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tooltip.NumberOfFiles" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
@@ -513,14 +513,14 @@
                 <Component class="javax.swing.JLabel" name="jLabelArtist">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Artist" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Artist" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabelTitle">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Title" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Title" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -578,7 +578,7 @@
                 <Component class="javax.swing.JButton" name="jButtonCheckApplyYear">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/apply_to_all.png"/>
+                      <Image iconType="3" name="/icons/apply_to_all.png"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -593,7 +593,7 @@
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckYearDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Year" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Year" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -785,7 +785,7 @@
                 <Component class="javax.swing.JButton" name="jButtonCheckSearch">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/search_plus.png"/>
+                      <Image iconType="3" name="/icons/search_plus.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Query Last.FM and MusicBrainz for matches"/>
                   </Properties>
@@ -800,14 +800,14 @@
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Album" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Album" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="jButtonCheckApplyArtist">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/apply_to_all.png"/>
+                      <Image iconType="3" name="/icons/apply_to_all.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Apply Artist"/>
                   </Properties>
@@ -818,7 +818,7 @@
                 <Component class="javax.swing.JButton" name="jButtonCheckApplyAlbum">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/apply_to_all.png"/>
+                      <Image iconType="3" name="/icons/apply_to_all.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Apply Album"/>
                   </Properties>
@@ -829,7 +829,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel1">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Artist" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Artist" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -854,7 +854,7 @@
                 <Component class="javax.swing.JButton" name="jButtonCheckApplyAlbumArtist">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/jamuz/ressources/apply_to_all.png"/>
+                      <Image iconType="3" name="/icons/apply_to_all.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Apply Album Artist"/>
                   </Properties>
@@ -986,7 +986,7 @@
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckGenreDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Genre" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Genre" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -1074,28 +1074,28 @@
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckFormatDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Format" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Format" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckLengthDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Length" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Length" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckSizeDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Size" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Size" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckBitRateDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.BitRate" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.BitRate" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -1117,14 +1117,14 @@
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckBPMDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.BPM" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.BPM" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="jCheckBoxCheckCommentDisplay">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Comment" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                      <ResourceString bundle="inter/Bundle.properties" key="Tag.Comment" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
                 </Component>
@@ -1173,7 +1173,7 @@
             <Component class="javax.swing.JButton" name="jButtonSelectOriginal">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/cancel.png"/>
+                  <Image iconType="3" name="/icons/cancel.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -1183,7 +1183,7 @@
             <Component class="javax.swing.JButton" name="jButtonCheckScanner">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/application_form_edit.png"/>
+                  <Image iconType="3" name="/icons/application_form_edit.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -1230,7 +1230,7 @@
         <Component class="javax.swing.JButton" name="jButtonCheckUp">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jamuz/ressources/arrow_up.png"/>
+              <Image iconType="3" name="/icons/arrow_up.png"/>
             </Property>
           </Properties>
           <Events>
@@ -1240,7 +1240,7 @@
         <Component class="javax.swing.JButton" name="jButtonCheckDown">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jamuz/ressources/arrow_down.png"/>
+              <Image iconType="3" name="/icons/arrow_down.png"/>
             </Property>
           </Properties>
           <Events>
@@ -1288,10 +1288,10 @@
             <Component class="javax.swing.JButton" name="jButtonCheckOpen">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/folder.png"/>
+                  <Image iconType="3" name="/icons/folder.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Button.Open" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Button.Open" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -1301,10 +1301,10 @@
             <Component class="javax.swing.JButton" name="jButtonCheckSingleFolder">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/restart_services.png"/>
+                  <Image iconType="3" name="/icons/restart_services.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Button.ReCheck" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Button.ReCheck" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -1360,7 +1360,7 @@
             <Component class="javax.swing.JButton" name="jButtonPlayerPrevious">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/resultset-premier-icone-4160-16.png"/>
+                  <Image iconType="3" name="/icons/resultset-premier-icone-4160-16.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -1370,10 +1370,10 @@
             <Component class="javax.swing.JButton" name="jButtonCheckPreview">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/music.png"/>
+                  <Image iconType="3" name="/icons/music.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -1383,7 +1383,7 @@
             <Component class="javax.swing.JButton" name="jButtonPlayerForward">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/resultset_next.png"/>
+                  <Image iconType="3" name="/icons/resultset_next.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -1393,7 +1393,7 @@
             <Component class="javax.swing.JButton" name="jButtonPlayerNext">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/last-resultset-icone-5121-16.png"/>
+                  <Image iconType="3" name="/icons/last-resultset-icone-5121-16.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -1405,7 +1405,7 @@
         <Component class="javax.swing.JButton" name="jButtonSetNumbers">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jamuz/ressources/page_number.png"/>
+              <Image iconType="3" name="/icons/page_number.png"/>
             </Property>
           </Properties>
           <Events>
@@ -1415,7 +1415,7 @@
         <Component class="javax.swing.JButton" name="jButtonDelete">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/jamuz/ressources/delete.png"/>
+              <Image iconType="3" name="/icons/delete.png"/>
             </Property>
           </Properties>
           <Events>

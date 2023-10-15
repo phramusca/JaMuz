@@ -209,7 +209,7 @@
     <Component class="javax.swing.JButton" name="jButtonStatsSelect">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Button.Select" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -222,7 +222,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Stat.RatingRated" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Stat.RatingRated" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -235,7 +235,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Stat.Rating" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Stat.Rating" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -248,7 +248,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Stat.CheckedChecked" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Stat.CheckedChecked" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -261,7 +261,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Stat.Checked" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Stat.Checked" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -274,7 +274,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Genre" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Tag.Genre" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -287,7 +287,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Year" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Tag.Year" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -300,7 +300,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Stat.Decade" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Stat.Decade" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -313,7 +313,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Album" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Tag.Album" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -326,7 +326,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Tag.Artist" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Tag.Artist" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -336,7 +336,7 @@
     <Component class="javax.swing.JButton" name="jButtonRefresh">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/jamuz/ressources/update.png"/>
+          <Image iconType="3" name="/icons/update.png"/>
         </Property>
       </Properties>
       <Events>
@@ -349,7 +349,7 @@
           <ComponentRef name="buttonGroupStat"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="jamuz/Bundle.properties" key="Stat.PercentRated" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+          <ResourceString bundle="inter/Bundle.properties" key="Stat.PercentRated" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -450,7 +450,7 @@
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Check.OK" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
                 <Property name="opaque" type="boolean" value="true"/>
@@ -463,7 +463,7 @@
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.OK" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Check.OK" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
                 <Property name="opaque" type="boolean" value="true"/>
@@ -475,7 +475,7 @@
             <Component class="javax.swing.JCheckBox" name="jCheckBoxSelectCheckedFlag1">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="jamuz/Bundle.properties" key="Check.KO" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+                  <ResourceString bundle="inter/Bundle.properties" key="Check.KO" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
                 <Property name="opaque" type="boolean" value="true"/>
@@ -559,10 +559,10 @@
             <Component class="javax.swing.JCheckBox" name="jCheckBoxSelectRating1">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/1starU.png"/>
+                  <Image iconType="3" name="/icons/1starU.png"/>
                 </Property>
                 <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/1starC.png"/>
+                  <Image iconType="3" name="/icons/1starC.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -575,10 +575,10 @@
             <Component class="javax.swing.JCheckBox" name="jCheckBoxSelectRating2">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/2starU.png"/>
+                  <Image iconType="3" name="/icons/2starU.png"/>
                 </Property>
                 <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/2starC.png"/>
+                  <Image iconType="3" name="/icons/2starC.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -592,10 +592,10 @@
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/3starU.png"/>
+                  <Image iconType="3" name="/icons/3starU.png"/>
                 </Property>
                 <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/3starC.png"/>
+                  <Image iconType="3" name="/icons/3starC.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -609,10 +609,10 @@
               <Properties>
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/4starU.png"/>
+                  <Image iconType="3" name="/icons/4starU.png"/>
                 </Property>
                 <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/4starC.png"/>
+                  <Image iconType="3" name="/icons/4starC.png"/>
                 </Property>
               </Properties>
               <Events>
@@ -627,10 +627,10 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/5starU.png"/>
+                  <Image iconType="3" name="/icons/5starU.png"/>
                 </Property>
                 <Property name="selectedIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/jamuz/ressources/5star.png"/>
+                  <Image iconType="3" name="/icons/5star.png"/>
                 </Property>
               </Properties>
               <Events>
