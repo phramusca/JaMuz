@@ -61,7 +61,7 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
     - Check that JaMuz properly handles update.
       - Export prod schema and compare with JaMuz_creation.sql.
 
-1. Update pom.xml
+1. Update pom.xml (remove "-dev" suffix)
 
     ```xml
     <version>x.y.z</version>
@@ -72,35 +72,15 @@ In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monk
     - [French LISEZMOI.TXT](dist-data/doc/LISEZMOI.TXT)
     - [English README.TXT](dist-data/doc/README.TXT)
 
-1. Build `dist` folder with NetBeans: `Run / Clean and build project (JaMuz)`
+1. Create metadata/{language}/changelogs/{versionCode}.txt and list changes.
 
-1. Install 7zip, if not already done
+    - {language}: https://en.wikipedia.org/wiki/IETF_language_tag
 
-    ```bash
-    sudo apt install p7zip-full
-    ```
+1. Tag last commit "vx.y.z" and push. This will trigger the [release github action](https://github.com/phramusca/JaMuz-Remote/actions/workflows/release.yml).
 
-1. Create 7z release file
+1. Check [created release](https://github.com/phramusca/JaMuz-Remote/releases).
 
-    ```bash
-    sh ./release.sh 10.50.4056 ../../ReposSides/JaMuz/Backup_Releases/
-
-    Usage:
-
-      sh ./release.sh <version> <backup path>
-
-    <version> must be of type x.y.z (ex: 0.5.41)
-    <backup path> is the path to the releases backup folder
-      Ex: 1.0.51
-      Regex: ^[0-9]+\.[0-9]+\.[0-9]+$
-    ```
-
-1. **TEST**
-1. Commit (named vx.y.z) & PUSH
-1. [Create release on github](https://github.com/phramusca/JaMuz/releases/new) based on [previous ones](https://github.com/phramusca/JaMuz/releases)
-
-    - Drop 7z built earlier
-    - [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release
+1. [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release.
 
 1. Update pom.xml
 
