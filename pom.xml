@@ -8,6 +8,7 @@
     <packaging>jar</packaging>
     
     <build>
+        <finalName>${project.artifactId}</finalName>
         <resources>
             <resource>
                 <directory>res</directory>
@@ -25,44 +26,39 @@
                 </configuration>
             </plugin>
             
-            <!--This is to generate values in manifest-->
+            <!--This is to include dependencies and generate manifest in a JaMuz-jar-with-dependencies.jar-->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.2.0</version> <!-- Use the latest version -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
-                        <id>timestamp-property</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>timestamp-property</goal>
+                            <goal>single</goal>
                         </goals>
-                        <phase>initialize</phase>
                         <configuration>
-                            <name>current.date</name>
-                            <pattern>yyyy-MM-dd HH:mm:ss z</pattern>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <mainClass>jamuz.Main</mainClass>
+                                </manifest>
+                                <manifestEntries>
+                                    <Bundle-Name>${project.artifactId}</Bundle-Name>
+                                    <Bundle-Version>${project.version}</Bundle-Version>
+                                    <Bundle-Date>${current.date}</Bundle-Date>
+                                    <Implementation-Title>${project.artifactId}</Implementation-Title>
+                                    <Implementation-Version>${project.version}</Implementation-Version>
+                                    <Implementation-URL>${project.url}</Implementation-URL>
+                                </manifestEntries>
+                            </archive>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Bundle-Name>${project.artifactId}</Bundle-Name>
-                            <Bundle-Version>${project.version}</Bundle-Version>
-                            <Bundle-Date>${current.date}</Bundle-Date>
-                            <Implementation-Title>${project.artifactId}</Implementation-Title>
-                            <Implementation-Version>${project.version}</Implementation-Version>
-                            <Implementation-URL>${project.url}</Implementation-URL>
-                            <Main-Class>jamuz.Main</Main-Class>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
+ 
         </plugins>
     </build>
 
