@@ -30,13 +30,22 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-      
+
+    - uses: actions/checkout@v3
+    - uses: actions/setup-sqlite@v1
+      with:
+        sqlite-version: 3.40.0
+        sqlite-year: 2022
+    - run: sqlite3 dist/JaMuz.db < database/JaMuz_creation.sql
+    
     - name: Publish Release
       id: publish_release
       uses: softprops/action-gh-release@v1
       with:
-       files: target/*.jar
-       tag_name: v1.0  # Use the same tag name created in the previous step
+        files: |
+          target/*.jar
+          dist/JaMuz.db 
+        tag_name: v1.0  # Use the same tag name created in the previous step
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
