@@ -26,15 +26,26 @@ public class SlskdDocker {
 //    https://www.baeldung.com/docker-java-api
     
     private final boolean SLSKD_SWAGGER ;
+    private final boolean SLSKD_NO_AUTH;
     private final String SLSKD_SLSK_USERNAME;
     private final String SLSKD_SLSK_PASSWORD;
     private final String serverPath;
-    private DockerClient dockerClient;
+    private final DockerClient dockerClient;
     
     private static final String CONTAINER_NAME = "jamuz-slskd";
 
-    public SlskdDocker(boolean SLSKD_SWAGGER, String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath) {
+    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH) {
         this.SLSKD_SWAGGER = SLSKD_SWAGGER;
+        this.SLSKD_NO_AUTH = SLSKD_NO_AUTH;
+        this.SLSKD_SLSK_USERNAME = SLSKD_SLSK_USERNAME;
+        this.SLSKD_SLSK_PASSWORD = SLSKD_SLSK_PASSWORD;
+        this.serverPath = serverPath;
+        this.dockerClient = DockerClientBuilder.getInstance().build();
+    }
+    
+    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath) {
+        this.SLSKD_SWAGGER = true; //FIXME !!!!!!!!!!!!!!!!! set to false when done
+        this.SLSKD_NO_AUTH = true;
         this.SLSKD_SLSK_USERNAME = SLSKD_SLSK_USERNAME;
         this.SLSKD_SLSK_PASSWORD = SLSKD_SLSK_PASSWORD;
         this.serverPath = serverPath;
@@ -42,10 +53,6 @@ public class SlskdDocker {
     }
     
     public boolean start() {
-// FIXME !!! Set sharing, to not get banned
-//			shares:
-//			directories:
-//			  - /home/xxx/Musique/Archive/
         Container container = getContainer();
         if(container == null) {
             createAndStartContainer();
@@ -95,12 +102,23 @@ public class SlskdDocker {
         RemoveContainerCmd removeContainerCmd = dockerClient.removeContainerCmd(container.getId());
         removeContainerCmd.withForce(true).withRemoveVolumes(true).exec();
     }
-       
+
+    // FIXME !!! Set sharing, to not get banned
+//shares:
+//  directories:
+//    - /music
+//    - /ebooks
+    
+//       -v /home/JohnDoe/Music:/music \
+//  -v /home/JohnDoe/eBooks:/ebooks \
+//  -e "SLSKD_SHARED_DIR=/music;/ebooks" \
+    
     private void createAndStartContainer() {
         CreateContainerResponse container
           = dockerClient.createContainerCmd("slskd/slskd:latest")
             .withName(CONTAINER_NAME)
             .withEnv("SLSKD_REMOTE_CONFIGURATION=true",
+                    "SLSKD_NO_AUTH="+SLSKD_NO_AUTH,
                     "SLSKD_SLSK_USERNAME="+SLSKD_SLSK_USERNAME,
                     "SLSKD_SLSK_PASSWORD="+SLSKD_SLSK_PASSWORD,
                     "SLSKD_SWAGGER="+SLSKD_SWAGGER)
