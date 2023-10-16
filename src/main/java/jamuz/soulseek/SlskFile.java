@@ -118,6 +118,7 @@ public class SlskFile {
 		
 		this.progressBar = new ProgressBar();
 		this.progressBar.setup(100);
+        this.progressBar.setMsgMax(500);
 		this.progressBar.displayAsPercent();
         this.progressBar.setString(state);
 	}
@@ -147,7 +148,7 @@ public class SlskFile {
                 StringManager.humanReadableByteCount(bytesRemaining, true) + ")";
         
         if(!elapsedTime.equals("null") && !remainingTime.equals("null")) {
-            msg = msg + " [" + removeDotAndAfter(elapsedTime)+"/"+removeDotAndAfter(remainingTime)+"]";
+            msg = msg + " [" + removeDotAndAfter(elapsedTime)+" @ "+StringManager.humanReadableByteCount(averageSpeed, true)+"/s / "+removeDotAndAfter(remainingTime)+"]";
         }
         
 		this.progressBar.progress(msg, (int) Math.round(percentComplete));

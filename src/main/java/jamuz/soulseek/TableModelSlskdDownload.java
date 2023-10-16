@@ -39,12 +39,9 @@ public class TableModelSlskdDownload extends TableModelGeneric {
             "Date", //NOI18N
 			"BitRate", //NOI18N
 			"Length", //NOI18N
-//			"State", //NOI18N
-			"Size", //NOI18N //FIXME !!!! human readable size
-//			"Speed", //NOI18N //FIXME !!!! human readable speed
-			"Progress", //NOI18N
+			"Size", //NOI18N
             "File",  //NOI18N
-			"Path",  //NOI18N
+			"Progress", //NOI18N
         });
 	}
 
@@ -61,12 +58,9 @@ public Object getValueAt(int rowIndex, int columnIndex) {
         case 0: return searchResponse.getDate();
 		case 1: return searchResponse.bitRate;
 		case 2: return StringManager.humanReadableSeconds(searchResponse.length);
-//		case 3: return searchResponse.state;
 		case 3: return StringManager.humanReadableByteCount(searchResponse.size, true);
-//		case 5: return StringManager.humanReadableByteCount(searchResponse.averageSpeed, true)+"/s?" ;
-		case 4: return searchResponse.getProgressBar();
-		case 5: return FilenameUtils.getName(searchResponse.filename);
-		case 6: return FilenameUtils.getFullPath(searchResponse.filename);
+		case 4: return FilenameUtils.getName(searchResponse.filename);
+        case 5: return searchResponse.getProgressBar();
     }
     return null;
 }

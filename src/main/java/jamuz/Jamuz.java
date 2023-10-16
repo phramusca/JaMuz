@@ -154,7 +154,7 @@ public class Jamuz {
 		db.setRootPath(getMachine().getOptionValue("location.library"));  //NOI18N
 		
         //FIXME ! make those options !!
-        slskdDocker = new SlskdDocker("xxxx", "xxxx", appPath+"slskd");
+        slskdDocker = new SlskdDocker("xxxx", "xxxx", appPath+"slskd", "/home/toto/music");
             
 		return true;
 	}

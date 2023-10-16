@@ -30,25 +30,28 @@ public class SlskdDocker {
     private final String SLSKD_SLSK_USERNAME;
     private final String SLSKD_SLSK_PASSWORD;
     private final String serverPath;
+    private final String musicPath;
     private final DockerClient dockerClient;
     
     private static final String CONTAINER_NAME = "jamuz-slskd";
 
-    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH) {
+    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH) {
         this.SLSKD_SWAGGER = SLSKD_SWAGGER;
         this.SLSKD_NO_AUTH = SLSKD_NO_AUTH;
         this.SLSKD_SLSK_USERNAME = SLSKD_SLSK_USERNAME;
         this.SLSKD_SLSK_PASSWORD = SLSKD_SLSK_PASSWORD;
         this.serverPath = serverPath;
+        this.musicPath = musicPath;
         this.dockerClient = DockerClientBuilder.getInstance().build();
     }
     
-    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath) {
+    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath) {
         this.SLSKD_SWAGGER = true; //FIXME !!!!!!!!!!!!!!!!! set to false when done
         this.SLSKD_NO_AUTH = true;
         this.SLSKD_SLSK_USERNAME = SLSKD_SLSK_USERNAME;
         this.SLSKD_SLSK_PASSWORD = SLSKD_SLSK_PASSWORD;
         this.serverPath = serverPath;
+        this.musicPath = musicPath;
         this.dockerClient = DockerClientBuilder.getInstance().build();
     }
     
@@ -121,7 +124,8 @@ public class SlskdDocker {
                     "SLSKD_NO_AUTH="+SLSKD_NO_AUTH,
                     "SLSKD_SLSK_USERNAME="+SLSKD_SLSK_USERNAME,
                     "SLSKD_SLSK_PASSWORD="+SLSKD_SLSK_PASSWORD,
-                    "SLSKD_SWAGGER="+SLSKD_SWAGGER)
+                    "SLSKD_SWAGGER="+SLSKD_SWAGGER,
+                    "SLSKD_SHARED_DIR=/music")
             .withExposedPorts(ExposedPort.tcp(5030), ExposedPort.tcp(5031), ExposedPort.tcp(50300))
             .withHostConfig(HostConfig.newHostConfig()
                 .withPortBindings(
@@ -130,13 +134,14 @@ public class SlskdDocker {
                     new PortBinding(Ports.Binding.bindIpAndPort("0.0.0.0", 50300), ExposedPort.tcp(50300))
                 )
                 .withBinds(Bind.parse(serverPath+":/app"))
+                .withBinds(Bind.parse(musicPath+":/music"))
             )
             .exec();
         dockerClient.startContainerCmd(container.getId()).exec();
         
         //FIXME !!!! Wait for health check instead (but takes 60s !!)
         try {
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         } catch (InterruptedException ex) {
             Logger.getLogger(SlskdDocker.class.getName()).log(Level.SEVERE, null, ex);
         }

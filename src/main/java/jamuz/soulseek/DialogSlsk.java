@@ -95,12 +95,10 @@ public class DialogSlsk extends javax.swing.JDialog {
 		setColumn(columnModelDownload, 1, 35);     // BitRate
 		setColumn(columnModelDownload, 2, 80);     // Length
 		setColumn(columnModelDownload, 3, 50);     // Size
-		TableColumn column = 
-        setColumn(columnModelDownload, 4, 350);     // Completed
+		setColumn(columnModelDownload, 4, 300);    // File
+        TableColumn column = 
+        setColumn(columnModelDownload, 5, 400);     // Completed
 		column.setCellRenderer(new ProgressCellRender());
-		setColumn(columnModelDownload, 5, 300);    // File
-		setColumn(columnModelDownload, 6, 80);    // Path
-		
 		progressBar = (ProgressBar)jProgressBarSlsk;
 
 		//Get current application folder
@@ -129,7 +127,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
             public void windowClosing(java.awt.event.WindowEvent e) {
-                soulseek.cancel();
 				options.save();
             }
         });
@@ -354,9 +351,10 @@ public class DialogSlsk extends javax.swing.JDialog {
 	}
 	
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-		jButtonDownload.setEnabled(false);
+        //FIXME !!! really cancel something !
+        
+        jButtonDownload.setEnabled(false);
 		jButtonCancel.setEnabled(false);
-		soulseek.cancel();
 		enableGui(true);
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
