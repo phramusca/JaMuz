@@ -37,7 +37,6 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
-import org.jaxen.util.SelfAxisIterator;
 
 /**
  *
@@ -93,15 +92,14 @@ public class DialogSlsk extends javax.swing.JDialog {
 		jTableDownload.setColumnModel(columnModelDownload);
 		jTableDownload.createDefaultColumnsFromModel();
 		setColumn(columnModelDownload, 0, 120);    // Date
-		setColumn(columnModelDownload, 1, 50);     // BitRate
+		setColumn(columnModelDownload, 1, 35);     // BitRate
 		setColumn(columnModelDownload, 2, 50);     // Length
-		setColumn(columnModelDownload, 3, 80);     // State
-		setColumn(columnModelDownload, 4, 50);     // Size
-		setColumn(columnModelDownload, 5, 50);     // Speed
-		TableColumn column = setColumn(columnModelDownload, 6, 80);     // Completed
+		setColumn(columnModelDownload, 3, 50);     // Size
+		TableColumn column = 
+        setColumn(columnModelDownload, 4, 320);     // Completed
 		column.setCellRenderer(new ProgressCellRender());
-		setColumn(columnModelDownload, 7, 300);    // File
-		setColumn(columnModelDownload, 8, 400);    // Path
+		setColumn(columnModelDownload, 5, 300);    // File
+		setColumn(columnModelDownload, 6, 100);    // Path
 		
 		progressBar = (ProgressBar)jProgressBarSlsk;
 
@@ -414,6 +412,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}
 	}
 
+    private void stopTimer() {
+        if(positionUpdater!=null) {
+            positionUpdater.cancel();
+            positionUpdater.purge();
+        }
+    }
+    
 	private void displaySearchFiles() {
 		int selectedRow = jTableResults.getSelectedRow(); 			
 		if(selectedRow>=0) { 
@@ -422,10 +427,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 			tableModelDownload.clear();
 			
 			//FIXME !! Need to restart it if download is already started
-			if(positionUpdater!=null) {
-				positionUpdater.cancel();
-				positionUpdater.purge();
-			}
+			stopTimer();
 			
 			for (SlskdSearchFile file : searchResponse.getFilteredFiles()) {
 				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
@@ -453,7 +455,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 					Function.identity(),
 					(existing, replacement) -> existing
 				));
-
+                
 				for (int i = 0; i < rows.size(); i++) {
 					SlskFile rowFile = rows.get(i);
 
@@ -461,10 +463,23 @@ public class DialogSlsk extends javax.swing.JDialog {
 						SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
 						rowFile.update(filteredFile); //FIXME !!!!! update search result too in tableModel
 					} else {
-						Popup.error("<> files"); //FIXME !!! remove this. Why would this happen ?
+						stopTimer();
+                        Popup.info("Download might have been cleaned.");
 					}
 				}
 				tableModelDownload.fireTableDataChanged();
+                
+                boolean allFilesComplete = filteredFiles.values()
+                    .stream()
+                    .allMatch(file -> file.percentComplete == 100);
+                if(allFilesComplete) {
+                    stopTimer();
+                    Popup.info("Download complete");
+                    
+                    //FIXME ! Move files to destination
+                    // + enable Cancel (need rewritre)
+                    // + Disable changing search result while downloading
+                }
 			}
 		}
 	}

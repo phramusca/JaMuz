@@ -18,6 +18,7 @@ package jamuz.soulseek;
 
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.DateTime;
+import jamuz.utils.StringManager;
 import java.util.Date;
 
 /**
@@ -63,12 +64,16 @@ public class SlskFile {
 			date = searchedAt;
 		} else {
 			//Parse and convert to local time
-			Date parseUTC = DateTime.parseUTC(removeDotAndAfter(date), DateTime.DateTimeFormat.MS);
-			date = DateTime.formatUTC(parseUTC, DateTime.DateTimeFormat.HUMAN, true);
+			date = convertDate(date);
 		}
 		return date;
 	}
 	
+    private String convertDate(String date) {
+        Date parseUTC = DateTime.parseUTC(removeDotAndAfter(date), DateTime.DateTimeFormat.MS);
+        return DateTime.formatUTC(parseUTC, DateTime.DateTimeFormat.HUMAN, true);
+    }
+    
 	private static String removeDotAndAfter(String input) {
 		int dotIndex = input.indexOf('.');
 		if (dotIndex >= 0) {
@@ -91,7 +96,6 @@ public class SlskFile {
 		return progressBar;
 	}
 	
-	//FIXME ! Display bytesTransferred, bytesRemaining, elapsedTime and remainingTime
 		public int bytesTransferred;
 		public int bytesRemaining;
 		public String elapsedTime="null";
@@ -115,6 +119,7 @@ public class SlskFile {
 		this.progressBar = new ProgressBar();
 		this.progressBar.setup(100);
 		this.progressBar.displayAsPercent();
+        this.progressBar.setString(state);
 	}
 
 	void update(SlskdDownloadFile filteredFile) {
@@ -136,8 +141,16 @@ public class SlskFile {
 		this.startOffset=filteredFile.startOffset;
 		this.startedAt=filteredFile.startedAt;
 		this.state=filteredFile.state;
-		this.progressBar.progress(remainingTime, (int) Math.round(percentComplete));
-		
+        
+        String msg = state + " (" +
+            StringManager.humanReadableByteCount(bytesTransferred, true) + " / " +
+                StringManager.humanReadableByteCount(bytesRemaining, true) + ")";
+        
+        if(!elapsedTime.equals("null") && !remainingTime.equals("null")) {
+            msg = msg + " [" + removeDotAndAfter(elapsedTime)+"/"+removeDotAndAfter(remainingTime)+"]";
+        }
+        
+		this.progressBar.progress(msg, (int) Math.round(percentComplete));
 	}
 
 	public String getKey() {

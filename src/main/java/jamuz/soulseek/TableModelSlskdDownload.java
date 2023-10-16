@@ -17,6 +17,7 @@
 package jamuz.soulseek;
 
 import jamuz.gui.swing.TableModelGeneric;
+import jamuz.utils.StringManager;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FilenameUtils;
@@ -38,9 +39,9 @@ public class TableModelSlskdDownload extends TableModelGeneric {
             "Date", //NOI18N
 			"BitRate", //NOI18N
 			"Length", //NOI18N
-			"State", //NOI18N
+//			"State", //NOI18N
 			"Size", //NOI18N //FIXME !!!! human readable size
-			"Speed", //NOI18N //FIXME !!!! human readable speed
+//			"Speed", //NOI18N //FIXME !!!! human readable speed
 			"Progress", //NOI18N
             "File",  //NOI18N
 			"Path",  //NOI18N
@@ -59,13 +60,13 @@ public Object getValueAt(int rowIndex, int columnIndex) {
     switch (columnIndex) {
         case 0: return searchResponse.getDate();
 		case 1: return searchResponse.bitRate;
-		case 2: return searchResponse.length;
-		case 3: return searchResponse.state;
-		case 4: return searchResponse.size;
-		case 5: return searchResponse.averageSpeed;
-		case 6: return searchResponse.getProgressBar();
-		case 7: return FilenameUtils.getName(searchResponse.filename);
-		case 8: return FilenameUtils.getFullPath(searchResponse.filename);
+		case 2: return StringManager.humanReadableSeconds(searchResponse.length);
+//		case 3: return searchResponse.state;
+		case 3: return StringManager.humanReadableByteCount(searchResponse.size, true);
+//		case 5: return StringManager.humanReadableByteCount(searchResponse.averageSpeed, true)+"/s?" ;
+		case 4: return searchResponse.getProgressBar();
+		case 5: return FilenameUtils.getName(searchResponse.filename);
+		case 6: return FilenameUtils.getFullPath(searchResponse.filename);
     }
     return null;
 }
