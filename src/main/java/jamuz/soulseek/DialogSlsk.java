@@ -93,13 +93,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 		jTableDownload.createDefaultColumnsFromModel();
 		setColumn(columnModelDownload, 0, 120);    // Date
 		setColumn(columnModelDownload, 1, 35);     // BitRate
-		setColumn(columnModelDownload, 2, 50);     // Length
+		setColumn(columnModelDownload, 2, 80);     // Length
 		setColumn(columnModelDownload, 3, 50);     // Size
 		TableColumn column = 
-        setColumn(columnModelDownload, 4, 320);     // Completed
+        setColumn(columnModelDownload, 4, 350);     // Completed
 		column.setCellRenderer(new ProgressCellRender());
 		setColumn(columnModelDownload, 5, 300);    // File
-		setColumn(columnModelDownload, 6, 100);    // Path
+		setColumn(columnModelDownload, 6, 80);    // Path
 		
 		progressBar = (ProgressBar)jProgressBarSlsk;
 
