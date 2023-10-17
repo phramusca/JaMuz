@@ -19,7 +19,9 @@ package jamuz.soulseek;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,13 +43,6 @@ public class Slsk {
     }
 
 	public List<SlskdSearchResponse> search(String query, String destination) {
-		return process(query);
-	}
-	
-	/**
-	 * @return  
-	 */
-	private List<SlskdSearchResponse> process(String query) {
 		try {
             SlskdSearchResult search = slskdClient.search(query);
             while(!search.isComplete) {
@@ -56,16 +51,34 @@ public class Slsk {
             }
 
             List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id);
-            List<SlskdSearchResponse> validSearchResponses = new ArrayList<>();
+
+            //Sort, filter (authorized extensions) and group by path
+            Map<String, List<SlskdSearchFile>> pathToFileMap = new HashMap<>();
             for (SlskdSearchResponse searchResponse : searchResponses) {
-                //FIXME !!!! sort by path and file
-                searchResponse.filterFiles();
-                if(!searchResponse.getFilteredFiles().isEmpty()) {
-                    validSearchResponses.add(searchResponse);
+                searchResponse.filterAndSortFiles();
+                if (!searchResponse.getFiles().isEmpty()) {
+                    for (SlskdSearchFile file : searchResponse.getFiles()) {
+                        String path = file.getPath();
+                        if (pathToFileMap.containsKey(path)) {
+                            pathToFileMap.get(path).add(file);
+                        } else {
+                            List<SlskdSearchFile> fileList = new ArrayList<>();
+                            fileList.add(file);
+                            pathToFileMap.put(path, fileList);
+                        }
+                    }
                 }
             }
+            List<SlskdSearchResponse> groupedResponses = new ArrayList<>();
+            for (Map.Entry<String, List<SlskdSearchFile>> entry : pathToFileMap.entrySet()) {
+                SlskdSearchResponse response = searchResponses.get(0).cloneWithoutFiles();
+                response.fileCount = entry.getValue().size();
+                response.files = entry.getValue();
+                groupedResponses.add(response);
+            }
+
             //FIXME !!! Remove search from server
-            return validSearchResponses;	
+            return groupedResponses;	
 		} catch (IOException ex) {
 			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (SlskdClient.ServerException ex) {

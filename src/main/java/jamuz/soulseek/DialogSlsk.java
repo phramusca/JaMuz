@@ -48,7 +48,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 	private final TableModelSlskdDownload tableModelDownload;
 	private final TableColumnModel columnModelResults;
 	private final TableColumnModel columnModelDownload;
-	private Slsk soulseek;
+	private final Slsk soulseek;
 	private final ProgressBar progressBar;
 	private Options options;
 	private Updater positionUpdater;
@@ -359,31 +359,32 @@ public class DialogSlsk extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDownloadActionPerformed
-        startSoulseekDownload();
+        new Thread() {
+			@Override
+			public void run() {
+				int selectedRow = jTableResults.getSelectedRow(); 			
+                if(selectedRow>=0) { 
+                    if((new File(jTextFieldDownloadingFolder.getText())).exists()) {
+                        jButtonDownload.setEnabled(false);
+                        selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
+                        SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
+                        progressBar.setup(searchResponse.fileCount);
+                        if(soulseek.download(searchResponse)) {
+                            displayDownloads();
+                            jButtonDownload.setEnabled(true); //FIXME !! Do not unable if download has already been started
+
+
+                            positionUpdater = new Updater();
+                            positionUpdater.start();
+
+                            //FIXME !! Add to a list of downloads to be monitored, and on completetion: move to destination & remove transfers on server
+                        }
+                    }
+                }
+			}
+		}.start();
     }//GEN-LAST:event_jButtonDownloadActionPerformed
 
-	private void startSoulseekDownload() {
-		int selectedRow = jTableResults.getSelectedRow(); 			
-		if(selectedRow>=0) { 
-			if((new File(jTextFieldDownloadingFolder.getText())).exists()) {
-				jButtonDownload.setEnabled(false);
-				selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
-				SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-				progressBar.setup(searchResponse.fileCount);
-				if(soulseek.download(searchResponse)) {
-					displayDownloads();
-					jButtonDownload.setEnabled(true); //FIXME !! Do not unable if download has already been started
-					
-					
-					positionUpdater = new Updater();
-					positionUpdater.start();
-					
-					//FIXME !! Add to a list of downloads to be monitored, and on completetion: move to destination & remove transfers on server
-				}
-			}
-		}
-	}
-	
 	/**
 	 * Position updater class
 	 */
@@ -391,7 +392,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		
 		/**
 		 * Update period:
-		 * 800: too much, 500 looks OK
+         * TODO: Make this an option
 		 */
 		private static final long UPDATE_PERIODE = 500;
 		
@@ -427,7 +428,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 			//FIXME !! Need to restart it if download is already started
 			stopTimer();
 			
-			for (SlskdSearchFile file : searchResponse.getFilteredFiles()) {
+			for (SlskdSearchFile file : searchResponse.getFiles()) {
 				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
 			}
 		}
@@ -440,13 +441,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
 			SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
 			if(downloads!=null) {
-				List<String> searchPaths = searchResponse.getPaths();
+				String searchPath = searchResponse.getPath();
 				List<SlskFile> rows = tableModelDownload.getRows();
 
 				Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
 				.stream()
 				.filter(directory -> 
-					searchPaths.stream().anyMatch(path -> directory.directory.startsWith(path)))
+					directory.directory.startsWith(searchPath))
 				.flatMap(directory -> directory.files.stream())
 				.collect(Collectors.toMap(
 					SlskdDownloadFile::getKey,
@@ -485,7 +486,6 @@ public class DialogSlsk extends javax.swing.JDialog {
     private void jButtonSelectDownloadingFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDownloadingFolderActionPerformed
 		if(Swing.selectFolder(jTextFieldDownloadingFolder, "Soulseek temporary download folder", true)) {
 			options.set("slsk.downloading.folder", jTextFieldDownloadingFolder.getText());
-			
 		}
     }//GEN-LAST:event_jButtonSelectDownloadingFolderActionPerformed
 
@@ -496,7 +496,6 @@ public class DialogSlsk extends javax.swing.JDialog {
     private void jButtonSelectDownloadedFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDownloadedFolderActionPerformed
         if(Swing.selectFolder(jTextFieldDownloadedFolder, "Soulseek final download folder", true)) {
 			options.set("slsk.downloaded.folder", jTextFieldDownloadedFolder.getText());
-			
 		}
     }//GEN-LAST:event_jButtonSelectDownloadedFolderActionPerformed
 

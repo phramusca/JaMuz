@@ -76,7 +76,7 @@ public class SlskdClient {
 	
 	public boolean download(SlskdSearchResponse searchResponse) throws IOException, ServerException {
 		JSONArray jsonArray = new JSONArray();
-		for (SlskdSearchFile file : searchResponse.getFilteredFiles()) {
+		for (SlskdSearchFile file : searchResponse.getFiles()) {
 			JSONObject fileObj = new JSONObject();
 			fileObj.put("filename", file.filename);
 			fileObj.put("size", file.size);
@@ -114,8 +114,7 @@ public class SlskdClient {
 //		obj.put("maximumPeerQueueLength", 1000000);	//  integer($int32) //the maximum queue depth a peer may have in order for a response to be processed. (Default = 1000000).
 //		obj.put("minimumPeerUploadSpeed", 0);		//	integer($int32) //the minimum upload speed a peer must have in order for a response to be processed. (Default = 0).
 //		obj.put("minimumResponseFileCount", 1);	//	integer($int32)	//the minimum number of files a response must contain in order to be processed. (Default = 1).
-        //FIXME !!!!!!!!!!!!!!!! Comment responseLimit when done
-		obj.put("responseLimit", 5);				//	integer($int32)	//the maximum number of search results to accept before the search is considered complete. (Default = 100).
+//		obj.put("responseLimit", 5);				//	integer($int32)	//the maximum number of search results to accept before the search is considered complete. (Default = 100).
 		obj.put("searchText", queryText);			//	string			//the search text.
 //		obj.put("searchTimeout", 15);				//	integer($int32)	//the search timeout value, in seconds, used to determine when the search is complete. (Default = 15).
 //		obj.put("token", 0);						//	integer($int32)	//the search token.

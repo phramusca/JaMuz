@@ -16,6 +16,8 @@
  */
 package jamuz.soulseek;
 
+import org.apache.commons.io.FilenameUtils;
+
 /**
  *
  * @author raph
@@ -32,4 +34,12 @@ class SlskdSearchFile {
 	public int length;
 	public int sampleRate;
 	public boolean isLocked;	
+
+    public String getFilename() {
+        return filename;
+    }
+
+    String getPath() {
+        return FilenameUtils.getFullPathNoEndSeparator(filename);
+    }
 }

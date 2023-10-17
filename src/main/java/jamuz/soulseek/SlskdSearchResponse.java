@@ -17,8 +17,10 @@
 package jamuz.soulseek;
 
 import jamuz.utils.DateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
@@ -37,33 +39,48 @@ public class SlskdSearchResponse {
 	public int token;
 	public double uploadSpeed;
 	public String username;	
-	
-	private List<SlskdSearchFile> filteredFiles;
 	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
 
 	//FIXME !!!!!! use existing option
 	private static final List<String> ALLOWED_EXTENSIONS 
 			= Collections.unmodifiableList(
 					Arrays.asList("mp3", "flac"));
-	
-	public String getDate() {
+   
+    public void filterAndSortFiles() {
+        files = files.stream()
+            .filter(file -> ALLOWED_EXTENSIONS.contains(FilenameUtils.getExtension(file.filename)))
+            .sorted(Comparator.comparing(SlskdSearchFile::getFilename))
+            .collect(Collectors.toList());
+}
+   
+	public List<SlskdSearchFile> getFiles() {
+		return files;
+	}
+    
+    public SlskdSearchResponse cloneWithoutFiles() {
+        SlskdSearchResponse clone = new SlskdSearchResponse();
+         // Clear files
+        clone.fileCount = 0;
+        clone.files = new ArrayList<>();
+        clone.lockedFileCount = 0;
+        clone.lockedFiles = new ArrayList<>();
+
+        clone.hasFreeUploadSlot = this.hasFreeUploadSlot;
+        clone.queueLength = this.queueLength;
+        clone.token = this.token;
+        clone.uploadSpeed = this.uploadSpeed;
+        clone.username = this.username;
+        clone.date = this.date;
+        return clone;
+    }
+
+    public String getDate() {
 		return date;
 	}
-	
-	public void filterFiles() {
-		filteredFiles = files.stream().filter(file -> 
-				ALLOWED_EXTENSIONS.contains(
-						FilenameUtils.getExtension(file.filename)))
-				.collect(Collectors.toList());
-	}
-
-	public List<SlskdSearchFile> getFilteredFiles() {
-		return filteredFiles;
-	}
-	
+    
 	public double getBitrate() {
-		if(getFilteredFiles()!=null & !getFilteredFiles().isEmpty()) {
-			return Math.round(getFilteredFiles().stream()
+		if(files!=null & !files.isEmpty()) {
+			return Math.round(files.stream()
                 .mapToDouble(file -> file.bitRate)
                 .average()
                 .orElse(0.0));
@@ -73,30 +90,19 @@ public class SlskdSearchResponse {
 	}
 
 	public double getSize() {
-		if(getFilteredFiles()!=null & !getFilteredFiles().isEmpty()) {
-			double meanSize = getFilteredFiles().stream()
+		if(files!=null & !files.isEmpty()) {
+			double meanSize = files.stream()
 				.mapToDouble(file -> file.size)
 				.sum();
 			return meanSize;
-//			//FIXME !!!!!! Check displayed matches slskd, and think of row sorting before changing
-//			return StringManager.humanReadableByteCount(meanSize, false);
+//			//FIXME !!!!!! and think of row sorting before changing to return StringManager.humanReadableByteCount(meanSize, false);
 		}
 		return 0;
 	}
 
-	//FIXME !! Split by path: one line by path (and we can then also remove the path in download table)
 	public String getPath() {
-		List<String> paths = getPaths();
-		String path = !paths.isEmpty()?"["+paths.size()+"] "+paths.get(0):"N/A";
-		return path;
-	}
-	
-	public List<String> getPaths() {
-		List<String> paths = getFilteredFiles().stream()
-                .map(file -> FilenameUtils.getFullPathNoEndSeparator(file.filename))
-                .distinct()
-                .collect(Collectors.toList());
-		return paths;
+		// Since files have been grouped by path, if any, there is one and only one
+		return files.get(0).getPath();
 	}
 
 	public double getSpeed() {
