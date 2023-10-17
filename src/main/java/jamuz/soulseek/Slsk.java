@@ -17,6 +17,7 @@
 
 package jamuz.soulseek;
 
+import jamuz.utils.Popup;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +56,6 @@ public class Slsk {
             // Sort, filter (authorized extensions), and group by path
             Map<String, List<SlskdSearchFile>> pathToFileMap = new HashMap<>();
             Map<String, SlskdSearchResponse> pathToResponseMap = new HashMap<>();
-
             for (SlskdSearchResponse searchResponse : searchResponses) {
                 searchResponse.filterAndSortFiles();
                 if (!searchResponse.getFiles().isEmpty()) {
@@ -72,7 +72,6 @@ public class Slsk {
                     }
                 }
             }
-
             List<SlskdSearchResponse> groupedResponses = new ArrayList<>();
             for (Map.Entry<String, List<SlskdSearchFile>> entry : pathToFileMap.entrySet()) {
                 SlskdSearchResponse response = pathToResponseMap.get(entry.getKey());
@@ -83,23 +82,19 @@ public class Slsk {
 
             //FIXME !!! Remove search from server
             return groupedResponses;	
-		} catch (IOException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (SlskdClient.ServerException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException | SlskdClient.ServerException ex) {
+			         Popup.error(ex);
 		} catch (InterruptedException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-		}
+            Logger.getLogger(Slsk.class.getName()).log(Level.WARNING, null, ex);
+        }
 		return null;
 	}
 	
 	SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) {
 		try {
 			return slskdClient.getDownloads(searchResponse);
-		} catch (IOException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (SlskdClient.ServerException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException | SlskdClient.ServerException ex) {
+            Popup.error(ex);
 		}
 		return null;
 	}
@@ -107,10 +102,8 @@ public class Slsk {
 	boolean download(SlskdSearchResponse searchResponse) {
 		try {
 			return slskdClient.download(searchResponse);
-		} catch (IOException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
-		} catch (SlskdClient.ServerException ex) {
-			Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException | SlskdClient.ServerException ex) {
+            Popup.error(ex);
 		}
 		return false;
 	}

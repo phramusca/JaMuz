@@ -58,7 +58,6 @@ public class Jamuz {
 	private static Machine machine;
 	private static DbConnJaMuz db;
 	private static HashMap<Integer, Playlist> playlists;
-    private static SlskdDocker slskdDocker;
 	
 	/**
 	 *
@@ -152,10 +151,7 @@ public class Jamuz {
 
 		//Set library location (JaMuz's rootPath)
 		db.setRootPath(getMachine().getOptionValue("location.library"));  //NOI18N
-		
-        //FIXME ! make those options !!
-        slskdDocker = new SlskdDocker("xxxx", "xxxx", appPath+"slskd", "/home/toto/music");
-            
+
 		return true;
 	}
 
@@ -447,10 +443,6 @@ public class Jamuz {
 			return new Playlist(0, Inter.get("Playlist.FullLibrary"), false, 1, Playlist.LimitUnit.Gio, false, Playlist.Type.Songs, Playlist.Match.All, false, ""); //NOI18N
 		}
 	}
-
-    public static SlskdDocker getSlskdDocker() {
-        return slskdDocker;
-    }
     
 	/**
 	 * Get LOG instance.
