@@ -52,8 +52,10 @@ public class Slsk {
 
             List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id);
 
-            //Sort, filter (authorized extensions) and group by path
+            // Sort, filter (authorized extensions), and group by path
             Map<String, List<SlskdSearchFile>> pathToFileMap = new HashMap<>();
+            Map<String, SlskdSearchResponse> pathToResponseMap = new HashMap<>();
+
             for (SlskdSearchResponse searchResponse : searchResponses) {
                 searchResponse.filterAndSortFiles();
                 if (!searchResponse.getFiles().isEmpty()) {
@@ -65,13 +67,15 @@ public class Slsk {
                             List<SlskdSearchFile> fileList = new ArrayList<>();
                             fileList.add(file);
                             pathToFileMap.put(path, fileList);
+                            pathToResponseMap.put(path, searchResponse.cloneWithoutFiles());
                         }
                     }
                 }
             }
+
             List<SlskdSearchResponse> groupedResponses = new ArrayList<>();
             for (Map.Entry<String, List<SlskdSearchFile>> entry : pathToFileMap.entrySet()) {
-                SlskdSearchResponse response = searchResponses.get(0).cloneWithoutFiles();
+                SlskdSearchResponse response = pathToResponseMap.get(entry.getKey());
                 response.fileCount = entry.getValue().size();
                 response.files = entry.getValue();
                 groupedResponses.add(response);
