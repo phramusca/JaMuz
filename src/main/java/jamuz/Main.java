@@ -83,6 +83,9 @@ import java.util.logging.Handler;
 // FIXME TEST pom.xml Re-enable tests, when tests done
 // TODO pom.xml essayer de remplacer les jar locaux par des maven
 
+//FIXME Z https://github.com/phramusca/JaMuz/security/dependabot
+//FIXME !!!! TODO: <https://docs.github.com/fr/actions/using-workflows/reusing-workflows>**
+
 /**
  * JaMuz main class
  *
@@ -97,11 +100,31 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
+			String jarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        
+			// The path obtained might be URL-encoded, so you need to decode it
+			try {
+				jarPath = java.net.URLDecoder.decode(jarPath, "UTF-8");
+			} catch (java.io.UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+
+			File jarFile = new File(jarPath);
+			File jarFolder = jarFile.getParentFile();
+
+			System.out.println("Folder of the running JAR: " + jarFolder.getAbsolutePath());
+			
 			//Get current application folder
 			File f = new File(".");  //NOI18N
 			Jamuz.getLogger().finest(f.getAbsolutePath());
 			String appPath = f.getAbsolutePath();
 			appPath = appPath.substring(0, appPath.length() - 1);
+			
+			System.out.println("appPath: " + appPath);
+
+			appPath = jarFolder.getAbsolutePath() + File.separator;
+			
+			System.out.println("new appPath: " + appPath);
 			
 			//Configure application
 			if (!Jamuz.configure(appPath)) {

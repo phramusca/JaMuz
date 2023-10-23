@@ -289,6 +289,7 @@ public class PanelCheck extends javax.swing.JPanel {
         jSpinnerCheckAnalysisNbThreads = new javax.swing.JSpinner();
 
         jPanelCheckProcess.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder("Process")));
+        jPanelCheckProcess.setName("PanelCheckProcess"); // NOI18N
 
         jProgressBarFolders.setString(""); // NOI18N
         jProgressBarFolders.setStringPainted(true);
@@ -317,6 +318,7 @@ public class PanelCheck extends javax.swing.JPanel {
         });
 
         jButtonCheckLibrary.setText(Inter.get("Label.Scan.CheckLibrary")); // NOI18N
+        jButtonCheckLibrary.setName("PanelCheckCheckLibraryButton"); // NOI18N
         jButtonCheckLibrary.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCheckLibraryActionPerformed(evt);

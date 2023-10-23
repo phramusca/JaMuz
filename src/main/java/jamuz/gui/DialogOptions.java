@@ -254,11 +254,14 @@ public class DialogOptions extends javax.swing.JDialog {
         jButtonOptionSave = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
 
+        setName("DialogOptions"); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
             }
         });
+
+        jTabbedPane1.setName("DialogOptionsTabbedPane"); // NOI18N
 
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -293,6 +296,7 @@ public class DialogOptions extends javax.swing.JDialog {
         jButtonOptionSelectFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder_explore.png"))); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jButtonOptionSelectFolder.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonOptionSelectFolder.setName("DialogOptionsLibrarySelectButton"); // NOI18N
         jButtonOptionSelectFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOptionSelectFolderActionPerformed(evt);
@@ -302,6 +306,7 @@ public class DialogOptions extends javax.swing.JDialog {
         jLabelOptionLocationLibrary.setText(Inter.get("Options.Comment.location.library")); // NOI18N
 
         jCheckBoxOptionLibraryIsMaster.setText("Master library ?");
+        jCheckBoxOptionLibraryIsMaster.setName("DialogOptionsLibraryMasterCheckBox"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -362,6 +367,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jButtonOptionSelectFolderNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder_explore.png"))); // NOI18N
         jButtonOptionSelectFolderNew.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonOptionSelectFolderNew.setName("DialogOptionsCheckLocationsSelectNew"); // NOI18N
         jButtonOptionSelectFolderNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOptionSelectFolderNewActionPerformed(evt);
@@ -402,6 +408,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jButtonOptionSelectFolderManual.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder_explore.png"))); // NOI18N
         jButtonOptionSelectFolderManual.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonOptionSelectFolderManual.setName("DialogOptionsCheckLocationsSelectManual"); // NOI18N
         jButtonOptionSelectFolderManual.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOptionSelectFolderManualActionPerformed(evt);
@@ -442,6 +449,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jButtonOptionSelectFolderOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder_explore.png"))); // NOI18N
         jButtonOptionSelectFolderOK.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonOptionSelectFolderOK.setName("DialogOptionsCheckLocationsSelectOK"); // NOI18N
         jButtonOptionSelectFolderOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOptionSelectFolderOKActionPerformed(evt);
@@ -482,6 +490,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jButtonOptionSelectFolderKO.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder_explore.png"))); // NOI18N
         jButtonOptionSelectFolderKO.setText(bundle.getString("Button.Select")); // NOI18N
+        jButtonOptionSelectFolderKO.setName("DialogOptionsCheckLocationsSelectKO"); // NOI18N
         jButtonOptionSelectFolderKO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOptionSelectFolderKOActionPerformed(evt);
@@ -1021,6 +1030,7 @@ public class DialogOptions extends javax.swing.JDialog {
 
         jButtonOptionSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/accept.png"))); // NOI18N
         jButtonOptionSave.setText(bundle.getString("DialogOptions.jButtonOptionSaveDescription.text")); // NOI18N
+        jButtonOptionSave.setName("DialogOptionsSaveButton"); // NOI18N
         jButtonOptionSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOptionSaveActionPerformed(evt);

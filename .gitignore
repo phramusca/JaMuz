@@ -15,7 +15,6 @@ hs_err_pid*
 #JaMuz specifics
 /dist/
 logs/*
-!/lib/**/*.jar
 
 data/devices/
 data/temp/*
@@ -54,3 +53,10 @@ JaMuz_*-*-*--*-*-*.db
 
 target/
 /nbproject/private/
+
+robot/logs/
+!/robot/**/*.jar
+
+slskd/
+
+Slsk (copie).properties

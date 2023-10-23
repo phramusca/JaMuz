@@ -203,6 +203,7 @@ public class PanelOptions extends javax.swing.JPanel {
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
+        jPanelOptionsMachines.setName("PanelOptionsMachines"); // NOI18N
 
         jListMachines.setModel(new DefaultListModel());
         jListMachines.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -210,6 +211,7 @@ public class PanelOptions extends javax.swing.JPanel {
 
         jButtonMachinesEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/application_form_edit.png"))); // NOI18N
         jButtonMachinesEdit.setText(bundle.getString("Button.Edit")); // NOI18N
+        jButtonMachinesEdit.setName("PanelOptionsMachinesEditButton"); // NOI18N
         jButtonMachinesEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonMachinesEditActionPerformed(evt);
