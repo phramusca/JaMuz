@@ -13,6 +13,14 @@
             <resource>
                 <directory>res</directory>
             </resource>
+            <resource>
+                <directory>target-data</directory>
+                <targetPath>${project.build.directory}</targetPath>
+            </resource>
+            <resource>
+                <directory>data</directory>
+                <targetPath>${project.build.directory}/data</targetPath>
+            </resource>
         </resources>
         
         <plugins>

@@ -17,7 +17,6 @@
 package jamuz;
 
 import jamuz.DbInfo.LibType;
-import jamuz.soulseek.SlskdDocker;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
