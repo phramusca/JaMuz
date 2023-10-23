@@ -1,19 +1,28 @@
 package jamuz.soulseek;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.HealthState;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.RemoveContainerCmd;
+import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.core.DockerClientBuilder;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -32,7 +41,7 @@ public class SlskdDocker {
     private final String serverPath;
     private final String musicPath;
     private final DockerClient dockerClient;
-    
+
     private static final String CONTAINER_NAME = "jamuz-slskd";
 
     public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH) {
@@ -134,6 +143,68 @@ public class SlskdDocker {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
             Logger.getLogger(SlskdDocker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public String checkContainerHealthAndFetchLogs(JTextArea logTextArea) {
+        try {
+            Container container = getContainer();
+            
+            final ResultCallback<Frame> resultCallback = new ResultCallback<Frame>() {
+                @Override
+                public void onStart(Closeable closeable) {
+                    SwingUtilities.invokeLater(() -> {
+                        logTextArea.append("Starting ...\n"); 
+                    });
+                }
+
+                @Override
+                public void onNext(com.github.dockerjava.api.model.Frame object) {
+                    SwingUtilities.invokeLater(() -> {
+                        logTextArea.append(new String(object.getPayload()));
+                    });
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    SwingUtilities.invokeLater(() -> {
+                        logTextArea.append("ERROR: " + throwable.getLocalizedMessage() + "\n");
+                    });
+                }
+
+                @Override
+                public void onComplete() {
+                    SwingUtilities.invokeLater(() -> {
+                        logTextArea.append("Complete !\n"); 
+                    });
+                }
+
+                @Override
+                public void close() throws IOException {
+                    SwingUtilities.invokeLater(() -> {
+                        logTextArea.append("Closed.\n"); 
+                    });
+                }
+            };
+            dockerClient.logContainerCmd(container.getId())
+                .withFollowStream(true)
+                .withStdOut(true)
+                .withStdErr(true)
+                .exec(resultCallback);
+
+            while (true) {
+                InspectContainerResponse containerRes = dockerClient.inspectContainerCmd(container.getId()).exec();
+                HealthState health = containerRes.getState().getHealth();
+                
+                if (health != null && "healthy".equalsIgnoreCase(health.getStatus())) {
+                    resultCallback.close(); // Close log streaming
+                    return "Container is healthy!";
+                }
+
+                Thread.sleep(1000);
+            }
+        } catch (NotFoundException | IOException | InterruptedException e) {
+            return "Error: " + e.getMessage();
         }
     }
     

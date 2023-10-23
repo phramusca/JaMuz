@@ -43,7 +43,7 @@ public class Slsk {
 		slskdClient = new SlskdClient();
     }
 
-	public List<SlskdSearchResponse> search(String query, String destination) {
+	public List<SlskdSearchResponse> search(String query) {
 		try {
             SlskdSearchResult search = slskdClient.search(query);
             while(!search.isComplete) {

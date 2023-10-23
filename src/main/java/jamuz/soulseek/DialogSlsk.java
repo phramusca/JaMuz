@@ -50,7 +50,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 	private final TableColumnModel columnModelDownload;
 	private final ProgressBar progressBar;
     private Slsk soulseek;
-	private Options options;
 	private Updater positionUpdater;
 	
     /**
@@ -63,7 +62,6 @@ public class DialogSlsk extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
-        jTextFieldPassword.setToolTipText("Warning: Password is stored as plain text in properties file !");
 		jTextFieldQuery.setText(query);
 		
 		//Setup Search results table
@@ -98,50 +96,14 @@ public class DialogSlsk extends javax.swing.JDialog {
         TableColumn column = 
         setColumn(columnModelDownload, 5, 400);     // Completed
 		column.setCellRenderer(new ProgressCellRender());
+        
 		progressBar = (ProgressBar)jProgressBarSlsk;
 
-		//Get current application folder
-		File f = new File(".");  //NOI18N
-		String appPath = f.getAbsolutePath();
-		appPath = appPath.substring(0, appPath.length() - 1);
-        
-        //Get and display options
-        String filename = appPath + "Slsk.properties";
-		options = new Options(filename);
-		if (options.read()) {
-			jTextFieldDownloadedFolder.setText(options.get("slsk.downloaded.folder"));
-		}
-		if(!(new File(options.get("slsk.downloading.folder"))).exists()) {
-			options.set("slsk.downloading.folder", appPath);
-		}
-		jTextFieldDownloadingFolder.setText(options.get("slsk.downloading.folder"));
-        
-		jTextFieldUsername.setText(options.get("slsk.username"));
-		jTextFieldPassword.setText(options.get("slsk.password"));
-		
-        //Start slskd server, if not already running
-        SlskdDocker slskdDocker = new SlskdDocker(jTextFieldUsername.getText(), jTextFieldPassword.getText(), appPath+"slskd", Jamuz.getMachine().getOptionValue("location.library"));
-        //FIXME !!! Display an looping progressbar (and a message) while starting container
-        if(!slskdDocker.start()) {
-            Popup.warning("Could not start slskd");
-            dispose();
-        }
-		
-		addWindowListener(new java.awt.event.WindowAdapter() {
-			@Override
-            public void windowClosing(java.awt.event.WindowEvent e) {
-				options.save();
-            }
-        });
-        
-		//FIXME !!! Check username and password
-        if(new File(options.get("slsk.downloading.folder")).exists()) {
-            try {
-                soulseek = new Slsk();
-                startSoulseekSearch();
-            } catch (IOException | SlskdClient.ServerException ex) {
-                Popup.error(ex);
-            }
+		try {
+            soulseek = new Slsk();
+            startSoulseekSearch();
+        } catch (IOException | SlskdClient.ServerException ex) {
+            Popup.error(ex);
         }
     }
 	
@@ -201,20 +163,9 @@ public class DialogSlsk extends javax.swing.JDialog {
         jButtonDownload = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonSearch = new javax.swing.JButton();
-        jTextFieldDownloadingFolder = new javax.swing.JTextField();
-        jButtonSelectDownloadingFolder = new javax.swing.JButton();
         jProgressBarSlsk = new jamuz.gui.swing.ProgressBar();
-        jButtonSelectDownloadedFolder = new javax.swing.JButton();
-        jTextFieldDownloadedFolder = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableDownload = new jamuz.gui.swing.TableHorizontal();
-        jLabel3 = new javax.swing.JLabel();
-        jTextFieldUsername = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextFieldPassword = new jamuz.gui.swing.PasswordFieldWithToggle();
-        jButtonSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -255,54 +206,14 @@ public class DialogSlsk extends javax.swing.JDialog {
             }
         });
 
-        jTextFieldDownloadingFolder.setEditable(false);
-        jTextFieldDownloadingFolder.setToolTipText("");
-
-        jButtonSelectDownloadingFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder_explore.png"))); // NOI18N
-        jButtonSelectDownloadingFolder.setText(bundle.getString("Button.Select")); // NOI18N
-        jButtonSelectDownloadingFolder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSelectDownloadingFolderActionPerformed(evt);
-            }
-        });
-
         jProgressBarSlsk.setMinimumSize(new java.awt.Dimension(1, 23));
         jProgressBarSlsk.setString(" "); // NOI18N
         jProgressBarSlsk.setStringPainted(true);
-
-        jButtonSelectDownloadedFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder_explore.png"))); // NOI18N
-        jButtonSelectDownloadedFolder.setText(bundle.getString("Button.Select")); // NOI18N
-        jButtonSelectDownloadedFolder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSelectDownloadedFolderActionPerformed(evt);
-            }
-        });
-
-        jTextFieldDownloadedFolder.setEditable(false);
-        jTextFieldDownloadedFolder.setToolTipText("");
-
-        jLabel1.setText("DownloadING folder:");
-
-        jLabel2.setText("DownloadED folder:");
 
         jTableDownload.setAutoCreateColumnsFromModel(false);
         jTableDownload.setModel(new jamuz.soulseek.TableModelSlskdDownload());
         jTableDownload.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane2.setViewportView(jTableDownload);
-
-        jLabel3.setText("Username");
-
-        jLabel4.setText("Password");
-
-        jTextFieldPassword.setToolTipText("");
-
-        jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/accept.png"))); // NOI18N
-        jButtonSave.setText(bundle.getString("Button.Save")); // NOI18N
-        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSaveActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -316,37 +227,12 @@ public class DialogSlsk extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSearch))
                     .addComponent(jScrollPaneCheckTags3)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonSelectDownloadedFolder)
-                            .addComponent(jButtonSelectDownloadingFolder))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldDownloadingFolder)
-                            .addComponent(jTextFieldDownloadedFolder))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonCancel)
-                            .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.PREFERRED_SIZE, 1271, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButtonCancel)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(65, 65, 65)
-                        .addComponent(jButtonSave)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1220, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -361,27 +247,11 @@ public class DialogSlsk extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldDownloadingFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSelectDownloadingFolder)
                     .addComponent(jButtonDownload)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonCancel)
-                    .addComponent(jTextFieldDownloadedFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSelectDownloadedFolder)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3))
-                    .addComponent(jButtonSave))
+                    .addComponent(jButtonCancel))
                 .addContainerGap())
         );
 
@@ -411,21 +281,19 @@ public class DialogSlsk extends javax.swing.JDialog {
 			public void run() {
 				int selectedRow = jTableResults.getSelectedRow(); 			
                 if(selectedRow>=0) { 
-                    if((new File(jTextFieldDownloadingFolder.getText())).exists()) {
-                        jButtonDownload.setEnabled(false);
-                        selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
-                        SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-                        progressBar.setup(searchResponse.fileCount);
-                        if(soulseek.download(searchResponse)) {
-                            displayDownloads();
-                            jButtonDownload.setEnabled(true); //FIXME !! Do not unable if download has already been started
+                    jButtonDownload.setEnabled(false);
+                    selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
+                    SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
+                    progressBar.setup(searchResponse.fileCount);
+                    if(soulseek.download(searchResponse)) {
+                        displayDownloads();
+                        jButtonDownload.setEnabled(true); //FIXME !! Do not unable if download has already been started
 
 
-                            positionUpdater = new Updater();
-                            positionUpdater.start();
+                        positionUpdater = new Updater();
+                        positionUpdater.start();
 
-                            //FIXME !! Add to a list of downloads to be monitored, and on completetion: move to destination & remove transfers on server
-                        }
+                        //FIXME !! Add to a list of downloads to be monitored, and on completetion: move to destination & remove transfers on server
                     }
                 }
 			}
@@ -534,43 +402,18 @@ public class DialogSlsk extends javax.swing.JDialog {
 		displaySearchFiles();
     }//GEN-LAST:event_jTableResultsMouseClicked
 
-    private void jButtonSelectDownloadedFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDownloadedFolderActionPerformed
-        if(Swing.selectFolder(jTextFieldDownloadedFolder, "Soulseek final download folder", true)) {
-            options.set("slsk.downloaded.folder", jTextFieldDownloadedFolder.getText());
-        }
-    }//GEN-LAST:event_jButtonSelectDownloadedFolderActionPerformed
-
-    private void jButtonSelectDownloadingFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDownloadingFolderActionPerformed
-        if(Swing.selectFolder(jTextFieldDownloadingFolder, "Soulseek temporary download folder", true)) {
-            options.set("slsk.downloading.folder", jTextFieldDownloadingFolder.getText());
-        }
-    }//GEN-LAST:event_jButtonSelectDownloadingFolderActionPerformed
-
-    private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        options.set("slsk.username", jTextFieldUsername.getText());
-        options.set("slsk.password", jTextFieldPassword.getText());
-        options.save();
-    }//GEN-LAST:event_jButtonSaveActionPerformed
-
 	private void startSoulseekSearch() {
 		new Thread() {
 			@Override
 			public void run() {
-                
-                if(soulseek !=null && !jTextFieldUsername.getText().equals("") && !jTextFieldPassword.getText().equals("")) {
-                    File SlskDownloadingFolder = new File(jTextFieldDownloadingFolder.getText());
-                    if(!SlskDownloadingFolder.exists()) {
-                        return;
-                    }
+                if(soulseek !=null) {
                     enableRowSorter(false);
                     enableGui(false);
                     jButtonDownload.setEnabled(false);
                     tableModelResults.clear();
                     progressBar.reset();
-                    String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
-                            .substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
 
-                    List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), destinationNoTrailingSlash);
+                    List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText());
                     if(searchResponses!=null) {
                         for (SlskdSearchResponse slskdSearchResponse : searchResponses) {
                             tableModelResults.addRow(slskdSearchResponse);
@@ -618,23 +461,12 @@ public class DialogSlsk extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonDownload;
-    private javax.swing.JButton jButtonSave;
     private javax.swing.JButton jButtonSearch;
-    private javax.swing.JButton jButtonSelectDownloadedFolder;
-    private javax.swing.JButton jButtonSelectDownloadingFolder;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JProgressBar jProgressBarSlsk;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneCheckTags3;
     private javax.swing.JTable jTableDownload;
     private javax.swing.JTable jTableResults;
-    private javax.swing.JTextField jTextFieldDownloadedFolder;
-    private javax.swing.JTextField jTextFieldDownloadingFolder;
-    private jamuz.gui.swing.PasswordFieldWithToggle jTextFieldPassword;
     private javax.swing.JTextField jTextFieldQuery;
-    private javax.swing.JTextField jTextFieldUsername;
     // End of variables declaration//GEN-END:variables
 }

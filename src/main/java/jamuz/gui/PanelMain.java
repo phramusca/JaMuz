@@ -747,6 +747,7 @@ public class PanelMain extends javax.swing.JFrame {
         panelOptions = new jamuz.gui.PanelOptions();
         panelVideo = new jamuz.process.video.PanelVideo();
         panelBook = new jamuz.process.book.PanelBook();
+        panelSlsk = new jamuz.soulseek.PanelSlsk();
         jPanelPlayer = new javax.swing.JPanel();
         jLabelPlayerTitle = new javax.swing.JLabel();
         jLabelPlayerAlbum = new javax.swing.JLabel();
@@ -796,6 +797,7 @@ public class PanelMain extends javax.swing.JFrame {
         jTabbedPane.addTab(Inter.get("Label.Options"), new javax.swing.ImageIcon(getClass().getResource("/icons/selected.png")), panelOptions); // NOI18N
         jTabbedPane.addTab(Inter.get("PanelMain.panelVideo.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/movies.png")), panelVideo); // NOI18N
         jTabbedPane.addTab(Inter.get("PanelMain.panelBook.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/book_open.png")), panelBook); // NOI18N
+        jTabbedPane.addTab(Inter.get("PanelMain.panelSlsk.TabConstraints.tabTitle"), panelSlsk); // NOI18N
 
         jSplitPaneMain.setRightComponent(jTabbedPane);
 
@@ -1106,7 +1108,7 @@ public class PanelMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1184, Short.MAX_VALUE)
+            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1228, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1820,6 +1822,7 @@ public class PanelMain extends javax.swing.JFrame {
     private jamuz.gui.PanelPlaylists panelPlaylists;
     private jamuz.remote.PanelRemote panelRemote;
     private jamuz.gui.PanelSelect panelSelect;
+    private jamuz.soulseek.PanelSlsk panelSlsk;
     private jamuz.gui.PanelStats panelStats;
     private jamuz.process.sync.PanelSync panelSync;
     private jamuz.process.video.PanelVideo panelVideo;

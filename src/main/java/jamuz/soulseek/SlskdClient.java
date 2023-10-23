@@ -58,8 +58,7 @@ public class SlskdClient {
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
                     .post(RequestBody.create(obj.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
 		String body = getBodyString(request, client);
-		
-		
+
 		SlskdTokenResponse fromJson = null;
 		if (!body.equals("")) {
 			fromJson = gson.fromJson(body, SlskdTokenResponse.class);
