@@ -778,10 +778,12 @@ public class PanelMain extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JaMuz"); // NOI18N
         setExtendedState(1);
+        setName("PanelMain"); // NOI18N
 
         jSplitPaneMain.setOneTouchExpandable(true);
 
         jTabbedPane.setMinimumSize(new java.awt.Dimension(0, 0));
+        jTabbedPane.setName("PanelMainTabbedPane"); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jTabbedPane.addTab(bundle.getString("PanelMain.panelSelect.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/music.png")), panelSelect); // NOI18N
         jTabbedPane.addTab(bundle.getString("Label.Merge"), new javax.swing.ImageIcon(getClass().getResource("/icons/arrow_refresh.png")), panelMerge); // NOI18N
