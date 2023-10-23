@@ -73,26 +73,23 @@ public class SlskdDocker {
             State state = getState(container);
             switch (state) {
                 case dead:
+                    removeAndStartContainer(container);
+                    return true;
                 case exited:
-                    reCreateAndStartContainer(container);
+                    dockerClient.startContainerCmd(container.getId()).exec();
                     return true;
                 case paused:
                     //This works, but since container should never pause, better recreating it
-//                    dockerClient.stopContainerCmd(container.getId()).exec();
+                    dockerClient.stopContainerCmd(container.getId()).exec();
 //                    wait2s();
-//                    dockerClient.startContainerCmd(container.getId()).exec();
+                    dockerClient.startContainerCmd(container.getId()).exec();
 //                    wait2s();
-                    reCreateAndStartContainer(container);
+//                    reCreateAndStartContainer(container);
                     return true;
                 case created:
                 case restarting:
-                    //TODO: Wait for container to be started
-                    reCreateAndStartContainer(container);
-                    break;
                 case running:
                     return true;
-                default:
-                    throw new AssertionError();
             }
             return false;
         }
@@ -101,18 +98,15 @@ public class SlskdDocker {
     public void stop() {
         Container container = getContainer();
         if(container != null) {
-            removeContainer(container);
+            dockerClient.stopContainerCmd(container.getId()).exec();
         }
     }
     
-    private void reCreateAndStartContainer(Container container) {
-        removeContainer(container);
+    private void removeAndStartContainer(Container container) {
+        stop();
+        dockerClient.killContainerCmd(container.getId()).exec();
+        dockerClient.removeContainerCmd(container.getId()).withForce(true).withRemoveVolumes(true).exec();
         createAndStartContainer();
-    }
-    
-    private void removeContainer(Container container) {
-        RemoveContainerCmd removeContainerCmd = dockerClient.removeContainerCmd(container.getId());
-        removeContainerCmd.withForce(true).withRemoveVolumes(true).exec();
     }
     
     private void createAndStartContainer() {
@@ -137,13 +131,6 @@ public class SlskdDocker {
             )
             .exec();
         dockerClient.startContainerCmd(container.getId()).exec();
-        
-        //FIXME !!!! Wait for health check instead (but takes 60s !!) and display logs meantime
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SlskdDocker.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public String checkContainerHealthAndFetchLogs(JTextArea logTextArea) {

@@ -131,10 +131,13 @@ public class PanelSlsk extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jButtonSelectDownloadingFolder = new javax.swing.JButton();
         jTextFieldDownloadingFolder = new javax.swing.JTextField();
-        jScrollPaneCheckTags3 = new javax.swing.JScrollPane();
-        jTableResults = new jamuz.gui.swing.TableHorizontal();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableDownload = new jamuz.gui.swing.TableHorizontal();
+        jSplitPaneLogs = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPaneCheckTags3 = new javax.swing.JScrollPane();
+        jTableResults = new jamuz.gui.swing.TableHorizontal();
+        jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaLog = new javax.swing.JTextArea();
 
@@ -176,6 +179,13 @@ public class PanelSlsk extends javax.swing.JPanel {
         jTextFieldDownloadingFolder.setEditable(false);
         jTextFieldDownloadingFolder.setToolTipText("");
 
+        jTableDownload.setAutoCreateColumnsFromModel(false);
+        jTableDownload.setModel(new jamuz.soulseek.TableModelSlskdDownload());
+        jTableDownload.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jScrollPane2.setViewportView(jTableDownload);
+
+        jSplitPaneLogs.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
         jTableResults.setAutoCreateColumnsFromModel(false);
         jTableResults.setModel(new jamuz.soulseek.TableModelSlskdSearch());
         jTableResults.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -186,23 +196,44 @@ public class PanelSlsk extends javax.swing.JPanel {
         });
         jScrollPaneCheckTags3.setViewportView(jTableResults);
 
-        jTableDownload.setAutoCreateColumnsFromModel(false);
-        jTableDownload.setModel(new jamuz.soulseek.TableModelSlskdDownload());
-        jTableDownload.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jScrollPane2.setViewportView(jTableDownload);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 789, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+        );
+
+        jSplitPaneLogs.setLeftComponent(jPanel1);
 
         jTextAreaLog.setColumns(20);
         jTextAreaLog.setRows(5);
         jScrollPane1.setViewportView(jTextAreaLog);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+        );
+
+        jSplitPaneLogs.setRightComponent(jPanel2);
 
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelRemoteLayout.createSequentialGroup()
                                 .addComponent(jLabel3)
@@ -222,11 +253,8 @@ public class PanelSlsk extends javax.swing.JPanel {
                                 .addComponent(jTextFieldDownloadingFolder)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2)
-                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jSplitPaneLogs)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanelRemoteLayout.setVerticalGroup(
@@ -249,11 +277,9 @@ public class PanelSlsk extends javax.swing.JPanel {
                         .addComponent(jButtonStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jCheckBoxServerStartOnStartup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                .addComponent(jSplitPaneLogs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -275,9 +301,11 @@ public class PanelSlsk extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
-        
+
+        jSplitPaneLogs.setDividerLocation(0.0);
+            
         enableGui(false);
-        
+
         //Start slskd server, if not already running
         SlskdDocker slskdDocker = new SlskdDocker(
                 jTextFieldUsername.getText(), 
@@ -285,46 +313,58 @@ public class PanelSlsk extends javax.swing.JPanel {
                 Jamuz.getFile("", "slskd").getAbsolutePath(), 
                 Jamuz.getMachine().getOptionValue("location.library"));
         
-        String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
-                            .substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
-        
-        jTextAreaLog.setText("Checking slsk status and restart if needed...");
-        if(!slskdDocker.start()) {
-            Popup.warning("Could not start slskd");
-        }
-        
-        //Wait for container to be healthy and display logs
-        SwingWorker<String, String> worker = new SwingWorker<>() {
-            @Override
-            protected String doInBackground() {
-                return slskdDocker.checkContainerHealthAndFetchLogs(jTextAreaLog);
+        if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
+            jButtonStart.setText("Starting ...");
+            
+            //FIXME !!!! use destinationNoTrailingSlash
+            String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
+                                .substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
+
+            jTextAreaLog.setText("Checking slsk status and restart if needed...");
+            if(!slskdDocker.start()) {
+                Popup.warning("Could not start slskd");
             }
 
-            @Override
-            protected void process(java.util.List<String> chunks) {
-                for (String log : chunks) {
-                    jTextAreaLog.append(log);
+            //Wait for container to be healthy and display logs
+            SwingWorker<String, String> worker = new SwingWorker<>() {
+                @Override
+                protected String doInBackground() {
+                    return slskdDocker.checkContainerHealthAndFetchLogs(jTextAreaLog);
                 }
-            }
 
-            @Override
-            protected void done() {
-                try {
-                    String result = get();
-                    jTextAreaLog.append(result);
-                    
-                    try {
-                        soulseek = new Slsk();
-                    } catch (IOException | SlskdClient.ServerException ex) {
-                        Popup.error(ex);
+                @Override
+                protected void process(java.util.List<String> chunks) {
+                    for (String log : chunks) {
+                        jTextAreaLog.append(log);
                     }
-                } catch (InterruptedException | ExecutionException ex) {
-                    jTextAreaLog.append("Error: " + ex.getMessage());
                 }
-                enableGui(true);
-            }
-        };
-        worker.execute();
+
+                @Override
+                protected void done() {
+                    try {
+                        String result = get();
+                        jTextAreaLog.append(result);
+
+                        try {
+                            soulseek = new Slsk();
+                        } catch (IOException | SlskdClient.ServerException ex) {
+                            Popup.error(ex);
+                        }
+                    } catch (InterruptedException | ExecutionException ex) {
+                        jTextAreaLog.append("Error: " + ex.getMessage());
+                    }
+                    jButtonStart.setText(Inter.get("Button.Stop"));
+                    jSplitPaneLogs.setDividerLocation(1.0);
+                    enableGui(true);
+                }
+            };
+            worker.execute();
+        } else {
+            slskdDocker.stop();
+            jButtonStart.setText(Inter.get("Button.Start"));
+            jSplitPaneLogs.setDividerLocation(0.0);
+            enableGui(true);
+        }
     }//GEN-LAST:event_jButtonStartActionPerformed
 
     public void enableGui(boolean enable) {
@@ -380,11 +420,14 @@ public class PanelSlsk extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelRemote;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneCheckTags3;
+    private javax.swing.JSplitPane jSplitPaneLogs;
     private javax.swing.JTable jTableDownload;
     private javax.swing.JTable jTableResults;
     private javax.swing.JTextArea jTextAreaLog;

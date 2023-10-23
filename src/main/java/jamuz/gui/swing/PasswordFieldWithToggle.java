@@ -65,4 +65,13 @@ public class PasswordFieldWithToggle extends JPanel {
     public String getText() {
         return new String(passwordField.getPassword());
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        passwordField.setEnabled(enabled);
+        toggleButton.setEnabled(enabled);
+    }
+    
+    
 }
