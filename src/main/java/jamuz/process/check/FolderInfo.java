@@ -491,7 +491,9 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		for(String string : Jamuz.getMachine().getOptionValue("files.convert")
 				.split(",")) { //NOI18N
             String[] strings = string.split(":"); //NOI18N
-			filesConvertibleExtensions.put(strings[0], strings[1]);
+			if(strings.length==2) {
+				filesConvertibleExtensions.put(strings[0], strings[1]);
+			}
         }
 		
 		filesAudio.clear();
