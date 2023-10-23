@@ -1,0 +1,68 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Local runner on master
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+  #pull_request:
+  #  branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: [self-hosted, linux, X64]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: feature/local-runner
+
+    - name: Setup JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    - name: Create JaMuz.db & myMovieDb.db
+      run: |
+        mkdir dist
+        sqlite3 dist/JaMuz.db  # Create an empty database if it doesn't exist
+        sqlite3 dist/JaMuz.db < database/JaMuz_creation.sql
+        sqlite3 dist/JaMuz.db < database/JaMuz_insertion_minimal.sql
+        sqlite3 dist/JaMuz.db < database/JaMuz_insertion_optional.sql
+        sqlite3 dist/myMovieDb.db  # Create an empty database if it doesn't exist
+        sqlite3 dist/myMovieDb.db < database/myMovieDb_creation.sql
+      working-directory: ${{ github.workspace }}
+
+    - name: Create dist
+      run: |
+        cp -r target/JaMuz-jar-with-dependencies.jar dist/JaMuz.jar
+        cp -r dist-data/* dist
+        mkdir -p dist/data/icon
+        cp -r data/icon/* dist/data/icon
+        mkdir -p dist/data/system/sql
+        cp -r data/system/sql/* dist/data/system/sql
+        cp data/BookLinks.txt dist/data/
+        cp data/metaflac.exe dist/data/
+        cp data/mp3gain.exe dist/data/
+        cp data/mplayer.exe dist/data/
+      working-directory: ${{ github.workspace }}
+
+    - name: Copy dist to Windows
+      run: |
+        cp -r dist /mnt/c
+      working-directory: ${{ github.workspace }}
