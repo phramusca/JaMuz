@@ -172,7 +172,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // Speed
 				sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Queue
 				
-// FIXME !!!! Filter out locked and without free slots
+// FIXME !!!! Filter out locked (done, right?) and without free slots
 				
 				tableSorter.setSortKeys(sortKeys);
 				jTableResults.getSelectionModel().setSelectionInterval(0, 0);
@@ -580,7 +580,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                         jButtonDownload.setEnabled(true);
                     }
                 } else {
-                    //FIXME !! Offer a button to connect (ad manage gui enabled/disabled components)
+                    //FIXME !! Offer a button to connect (and manage gui enabled/disabled components)
                     Popup.warning("You must set a username and a password and be connected");
                 }
 			}

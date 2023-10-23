@@ -105,16 +105,6 @@ public class SlskdDocker {
         RemoveContainerCmd removeContainerCmd = dockerClient.removeContainerCmd(container.getId());
         removeContainerCmd.withForce(true).withRemoveVolumes(true).exec();
     }
-
-    // FIXME !!! Set sharing, to not get banned
-//shares:
-//  directories:
-//    - /music
-//    - /ebooks
-    
-//       -v /home/JohnDoe/Music:/music \
-//  -v /home/JohnDoe/eBooks:/ebooks \
-//  -e "SLSKD_SHARED_DIR=/music;/ebooks" \
     
     private void createAndStartContainer() {
         CreateContainerResponse container
@@ -139,7 +129,7 @@ public class SlskdDocker {
             .exec();
         dockerClient.startContainerCmd(container.getId()).exec();
         
-        //FIXME !!!! Wait for health check instead (but takes 60s !!)
+        //FIXME !!!! Wait for health check instead (but takes 60s !!) and display logs meantime
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {

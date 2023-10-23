@@ -80,7 +80,7 @@ import jamuz.utils.Popup;
 import java.io.File;
 import java.util.logging.Handler;
 
-// FIXME TEST pom.xml Re-enable tests, when tests done
+// FIXME TEST ! pom.xml Re-enable tests at build
 // TODO pom.xml essayer de remplacer les jar locaux par des maven
 
 //FIXME Z https://github.com/phramusca/JaMuz/security/dependabot
