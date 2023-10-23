@@ -326,6 +326,7 @@ public class PanelCheck extends javax.swing.JPanel {
         });
 
         jButtonScanLibrary.setText(Inter.get("Label.Scan")); // NOI18N
+        jButtonScanLibrary.setName("PanelCheckScanLibraryButton"); // NOI18N
         jButtonScanLibrary.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonScanLibraryActionPerformed(evt);

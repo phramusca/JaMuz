@@ -31,5 +31,5 @@ My Test Case
     Select Tab Pane    PanelMainTabbedPane
     Select Tab As Context    Check
     Select Context    PanelCheckProcess
-    Push Button     PanelCheckCheckLibraryButton
+    Push Button     PanelCheckScanLibraryButton
     
