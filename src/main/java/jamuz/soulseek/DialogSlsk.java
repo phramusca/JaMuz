@@ -262,7 +262,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		startSoulseekSearch();
     }//GEN-LAST:event_jButtonSearchActionPerformed
 
-	private void enableGui(boolean enable) {
+	private void enableSearch(boolean enable) {
 		jButtonSearch.setEnabled(enable);
 		jTextFieldQuery.setEnabled(enable);
 	}
@@ -272,7 +272,7 @@ public class DialogSlsk extends javax.swing.JDialog {
         
         jButtonDownload.setEnabled(false);
 		jButtonCancel.setEnabled(false);
-		enableGui(true);
+		enableSearch(true);
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDownloadActionPerformed
@@ -408,23 +408,27 @@ public class DialogSlsk extends javax.swing.JDialog {
 			public void run() {
                 if(soulseek !=null) {
                     enableRowSorter(false);
-                    enableGui(false);
+                    enableSearch(false);
                     jButtonDownload.setEnabled(false);
                     tableModelResults.clear();
                     progressBar.reset();
 
                     List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText());
                     if(searchResponses!=null) {
-                        for (SlskdSearchResponse slskdSearchResponse : searchResponses) {
-                            tableModelResults.addRow(slskdSearchResponse);
+                        if(!searchResponses.isEmpty()) {
+                            for (SlskdSearchResponse slskdSearchResponse : searchResponses) {
+                                tableModelResults.addRow(slskdSearchResponse);
+                            }
+                            enableRowSorter(true);
+                            displaySearchFiles();
+                            jButtonDownload.setEnabled(true);
+                        } else {
+                            Popup.info("No results!");
+                            enableSearch(true);
                         }
-                        enableRowSorter(true);
-                        displaySearchFiles();
-                        jButtonDownload.setEnabled(true);
                     }
                 } else {
-                    //FIXME !! Offer a button to connect (and manage gui enabled/disabled components)
-                    Popup.warning("You must set a username and a password and be connected");
+                    Popup.warning("You are not connected.");
                 }
 			}
 		}.start();

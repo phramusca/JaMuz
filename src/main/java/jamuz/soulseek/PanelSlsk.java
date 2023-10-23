@@ -20,6 +20,7 @@ import jamuz.Jamuz;
 import jamuz.Options;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
+import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.Swing;
@@ -110,7 +111,7 @@ public class PanelSlsk extends javax.swing.JPanel {
         column.setMaxWidth(width*3);
 		return column;
     }
-
+   
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
@@ -140,6 +141,7 @@ public class PanelSlsk extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaLog = new javax.swing.JTextArea();
+        jButtonWebSlskd = new javax.swing.JButton();
 
         jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder("Soulseek"));
 
@@ -217,7 +219,7 @@ public class PanelSlsk extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,6 +227,13 @@ public class PanelSlsk extends javax.swing.JPanel {
         );
 
         jSplitPaneLogs.setRightComponent(jPanel2);
+
+        jButtonWebSlskd.setText("Web Interface");
+        jButtonWebSlskd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonWebSlskdActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
@@ -252,7 +261,9 @@ public class PanelSlsk extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextFieldDownloadingFolder)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonWebSlskd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonStart))
                     .addComponent(jSplitPaneLogs)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
@@ -260,22 +271,22 @@ public class PanelSlsk extends javax.swing.JPanel {
         jPanelRemoteLayout.setVerticalGroup(
             jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                            .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))
-                                .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2)
-                                .addComponent(jButtonSelectDownloadingFolder)
-                                .addComponent(jTextFieldDownloadingFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(jButtonStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jCheckBoxServerStartOnStartup))
+                                .addComponent(jLabel3)
+                                .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4))
+                            .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jButtonSelectDownloadingFolder)
+                            .addComponent(jTextFieldDownloadingFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jCheckBoxServerStartOnStartup)
+                    .addComponent(jButtonWebSlskd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSplitPaneLogs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -389,6 +400,10 @@ public class PanelSlsk extends javax.swing.JPanel {
     private void jTableResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultsMouseClicked
         displaySearchFiles();
     }//GEN-LAST:event_jTableResultsMouseClicked
+
+    private void jButtonWebSlskdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonWebSlskdActionPerformed
+        Desktop.openBrowser("http://localhost:5030");
+    }//GEN-LAST:event_jButtonWebSlskdActionPerformed
 	
     private void displaySearchFiles() {
 		int selectedRow = jTableResults.getSelectedRow(); 			
@@ -416,6 +431,7 @@ public class PanelSlsk extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonSelectDownloadingFolder;
     private javax.swing.JButton jButtonStart;
+    private javax.swing.JButton jButtonWebSlskd;
     private javax.swing.JCheckBox jCheckBoxServerStartOnStartup;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

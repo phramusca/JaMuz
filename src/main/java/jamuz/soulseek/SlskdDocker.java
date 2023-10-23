@@ -5,7 +5,6 @@ import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.HealthState;
 import com.github.dockerjava.api.command.InspectContainerResponse;
-import com.github.dockerjava.api.command.RemoveContainerCmd;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Container;
@@ -19,8 +18,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
@@ -34,6 +31,7 @@ public class SlskdDocker {
 //    https://github.com/docker-java/docker-java/blob/main/docs/getting_started.md
 //    https://www.baeldung.com/docker-java-api
     
+    //FIXME !!! Need to apply new config to running container (if any) if anything below changes in gui (apply button ? or restart ?)
     private final boolean SLSKD_SWAGGER ;
     private final boolean SLSKD_NO_AUTH;
     private final String SLSKD_SLSK_USERNAME;
@@ -79,12 +77,8 @@ public class SlskdDocker {
                     dockerClient.startContainerCmd(container.getId()).exec();
                     return true;
                 case paused:
-                    //This works, but since container should never pause, better recreating it
                     dockerClient.stopContainerCmd(container.getId()).exec();
-//                    wait2s();
                     dockerClient.startContainerCmd(container.getId()).exec();
-//                    wait2s();
-//                    reCreateAndStartContainer(container);
                     return true;
                 case created:
                 case restarting:

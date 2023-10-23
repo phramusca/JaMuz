@@ -43,6 +43,7 @@ public class Slsk {
 		slskdClient = new SlskdClient();
     }
 
+    //FIXME !!! Use a callback (or pass jprogressbar) to display search progress to progressbar
 	public List<SlskdSearchResponse> search(String query) {
 		try {
             SlskdSearchResult search = slskdClient.search(query);
