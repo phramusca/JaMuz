@@ -71,7 +71,7 @@ public class PanelPlaylistsTest {
 	public void testInitExtended() {
 		System.out.println("initExtended");
 		PanelPlaylists instance = new PanelPlaylists();
-		instance.initExtended();
+		instance.initExtended(null);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

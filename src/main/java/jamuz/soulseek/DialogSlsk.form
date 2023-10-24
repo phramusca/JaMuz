@@ -34,9 +34,10 @@
                   <Component id="jScrollPaneCheckTags3" alignment="0" max="32767" attributes="2"/>
                   <Component id="jScrollPane2" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="jButtonCancel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jButtonDownload" min="-2" pref="90" max="-2" attributes="0"/>
+                      <Component id="jButtonAddToDownloads" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jProgressBarSlsk" alignment="1" pref="1220" max="32767" attributes="1"/>
               </Group>
@@ -60,7 +61,7 @@
               <Component id="jScrollPane2" pref="261" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButtonDownload" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonAddToDownloads" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButtonCancel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -98,13 +99,13 @@
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonDownload">
+    <Component class="javax.swing.JButton" name="jButtonAddToDownloads">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Download"/>
+        <Property name="text" type="java.lang.String" value="Add to downloads"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDownloadActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAddToDownloadsActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonCancel">

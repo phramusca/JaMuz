@@ -215,8 +215,8 @@ public class PanelMain extends javax.swing.JFrame {
         PanelCheck.setOptions(); //Needs to be static (for now at least)
 		panelCheck.initExtended(this);
         panelStats.initExtended();
-        panelSelect.initExtended();
-        panelPlaylists.initExtended();
+        panelSelect.initExtended(panelSlsk);
+        panelPlaylists.initExtended(panelSlsk);
 		panelRemote.initExtended(this, new CallBackServer());
 		panelVideo.initExtended(this);
 		panelBook.initExtended(this);

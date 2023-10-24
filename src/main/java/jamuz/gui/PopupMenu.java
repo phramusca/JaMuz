@@ -25,6 +25,7 @@ import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
 import jamuz.process.check.PanelCheck;
 import jamuz.soulseek.DialogSlsk;
+import jamuz.soulseek.PanelSlsk;
 import jamuz.soulseek.SlskdClient;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
@@ -60,6 +61,8 @@ import javax.swing.SwingUtilities;
  * @author raph
  */
 public class PopupMenu {
+
+    private final PanelSlsk panelSlsk;
 	
 	JPopupMenu jPopupMenu1;
 	JTable jTableSelect;
@@ -71,6 +74,7 @@ public class PopupMenu {
 
 	/**
 	 *
+     * @param panelSlsk
 	 * @param jPopupMenu1
 	 * @param jTableSelect
 	 * @param tableModel
@@ -78,9 +82,10 @@ public class PopupMenu {
 	 * @param mplayer
 	 * @param popupMenuListener
 	 */
-	public PopupMenu(JPopupMenu jPopupMenu1, JTable jTableSelect, 
+	public PopupMenu(PanelSlsk panelSlsk, JPopupMenu jPopupMenu1, JTable jTableSelect, 
 			TableModel tableModel, ArrayList<FileInfoInt> fileInfoList, 
 			Mplayer mplayer, PopupMenuListener popupMenuListener) {
+        this.panelSlsk = panelSlsk;
 		
 		this.jPopupMenu1 = jPopupMenu1;
 		this.jTableSelect = jTableSelect;
@@ -265,7 +270,7 @@ public class PopupMenu {
 						if(selected!=null) {
 							try {
 								//TODO: set parent frame
-								DialogSlsk.main(null, selected.getAlbumArtist().concat(" ").concat(selected.getAlbum()));
+								DialogSlsk.main(panelSlsk, null, selected.getAlbumArtist().concat(" ").concat(selected.getAlbum()));
 							} catch (IOException ex) {
 								Logger.getLogger(PopupMenu.class.getName()).log(Level.SEVERE, null, ex);
 							} catch (SlskdClient.ServerException ex) {

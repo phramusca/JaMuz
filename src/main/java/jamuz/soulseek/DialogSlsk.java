@@ -16,23 +16,14 @@
  */
 package jamuz.soulseek;
 
-import jamuz.Jamuz;
-import jamuz.Options;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.utils.Popup;
-import jamuz.utils.Swing;
 import java.awt.Dialog;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableColumn;
@@ -50,15 +41,16 @@ public class DialogSlsk extends javax.swing.JDialog {
 	private final TableColumnModel columnModelDownload;
 	private final ProgressBar progressBar;
     private Slsk soulseek;
-	private Updater positionUpdater;
+    private final PanelSlsk panelSlsk;
 	
     /**
      * Creates new form DialogSoulseek
+     * @param panelSlsk
      * @param parent
      * @param modal
 	 * @param query
      */
-    public DialogSlsk(Dialog parent, boolean modal, String query) {
+    public DialogSlsk(PanelSlsk panelSlsk, Dialog parent, boolean modal, String query) {
         super(parent, modal);
         initComponents();
 
@@ -105,6 +97,7 @@ public class DialogSlsk extends javax.swing.JDialog {
         } catch (IOException | SlskdClient.ServerException ex) {
             Popup.error(ex);
         }
+        this.panelSlsk = panelSlsk;
     }
 	
 	private TableColumn setColumn(TableColumnModel columnModel, int index, int width) {
@@ -160,7 +153,7 @@ public class DialogSlsk extends javax.swing.JDialog {
         jScrollPaneCheckTags3 = new javax.swing.JScrollPane();
         jTableResults = new jamuz.gui.swing.TableHorizontal();
         jTextFieldQuery = new javax.swing.JTextField();
-        jButtonDownload = new javax.swing.JButton();
+        jButtonAddToDownloads = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonSearch = new javax.swing.JButton();
         jProgressBarSlsk = new jamuz.gui.swing.ProgressBar();
@@ -181,11 +174,11 @@ public class DialogSlsk extends javax.swing.JDialog {
 
         jTextFieldQuery.setToolTipText("");
 
-        jButtonDownload.setText("Download");
-        jButtonDownload.setEnabled(false);
-        jButtonDownload.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAddToDownloads.setText("Add to downloads");
+        jButtonAddToDownloads.setEnabled(false);
+        jButtonAddToDownloads.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDownloadActionPerformed(evt);
+                jButtonAddToDownloadsActionPerformed(evt);
             }
         });
 
@@ -229,9 +222,10 @@ public class DialogSlsk extends javax.swing.JDialog {
                     .addComponent(jScrollPaneCheckTags3)
                     .addComponent(jScrollPane2)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonCancel)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonDownload, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonAddToDownloads))
                     .addComponent(jProgressBarSlsk, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1220, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -250,7 +244,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonDownload)
+                    .addComponent(jButtonAddToDownloads)
                     .addComponent(jButtonCancel))
                 .addContainerGap())
         );
@@ -270,133 +264,39 @@ public class DialogSlsk extends javax.swing.JDialog {
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         //FIXME !!! really cancel something (or remove button)
         
-        jButtonDownload.setEnabled(false);
+        jButtonAddToDownloads.setEnabled(false);
 		jButtonCancel.setEnabled(false);
 		enableSearch(true);
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
-    private void jButtonDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDownloadActionPerformed
-        
-        //FIXME ! Instead, Add to a list of downloads to be monitored on main panel, and there, on completetion: move to destination & remove transfers on server
-        
+    private void jButtonAddToDownloadsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddToDownloadsActionPerformed
         new Thread() {
 			@Override
 			public void run() {
 				int selectedRow = jTableResults.getSelectedRow(); 			
                 if(selectedRow>=0) { 
-                    jButtonDownload.setEnabled(false);
+                    jButtonAddToDownloads.setEnabled(false);
                     selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
                     SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-                    progressBar.setup(searchResponse.fileCount);
-                    if(soulseek.download(searchResponse)) {
-                        displayDownloads();
-                        jButtonDownload.setEnabled(true); //FIXME !! Do not unable if download has already been started
-
-
-                        positionUpdater = new Updater();
-                        positionUpdater.start();
-
-                        
-                    }
-                }
+                    panelSlsk.addDownload(searchResponse);
+                 }
 			}
 		}.start();
-    }//GEN-LAST:event_jButtonDownloadActionPerformed
+    }//GEN-LAST:event_jButtonAddToDownloadsActionPerformed
 
 	/**
 	 * Position updater class
 	 */
-	public class Updater extends Timer {
-		
-		/**
-		 * Update period:
-         * TODO: Make this an option
-		 */
-		private static final long UPDATE_PERIODE = 500;
-		
-		/**
-		 * Starts position updater
-		 */
-		public void start() {
-			schedule(new displayPosition(), 0, UPDATE_PERIODE);
-		}
+	
 
-		private class displayPosition extends TimerTask {
-			@Override
-			public void run() {
-				displayDownloads();
-			}
-		}
-	}
-
-    private void stopTimer() {
-        if(positionUpdater!=null) {
-            positionUpdater.cancel();
-            positionUpdater.purge();
-        }
-    }
-    
 	private void displaySearchFiles() {
 		int selectedRow = jTableResults.getSelectedRow(); 			
 		if(selectedRow>=0) { 
 			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
 			tableModelDownload.clear();
-			
-			//FIXME !! Need to restart it if download is already started
-			stopTimer();
-			
 			for (SlskdSearchFile file : searchResponse.getFiles()) {
 				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
-			}
-		}
-	}
-	
-	private void displayDownloads() {
-		int selectedRow = jTableResults.getSelectedRow(); 			
-		if(selectedRow>=0) { 
-			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
-			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-			SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
-			if(downloads!=null) {
-				String searchPath = searchResponse.getPath();
-				List<SlskFile> rows = tableModelDownload.getRows();
-
-				Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
-				.stream()
-				.filter(directory -> 
-					directory.directory.startsWith(searchPath))
-				.flatMap(directory -> directory.files.stream())
-				.collect(Collectors.toMap(
-					SlskdDownloadFile::getKey,
-					Function.identity(),
-					(existing, replacement) -> existing
-				));
-                
-				for (int i = 0; i < rows.size(); i++) {
-					SlskFile rowFile = rows.get(i);
-
-					if(filteredFiles.containsKey(rowFile.getKey())) {
-						SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
-						rowFile.update(filteredFile); //FIXME !!!!! update search result too in tableModel
-					} else {
-						stopTimer();
-                        Popup.info("Download might have been cleaned.");
-					}
-				}
-				tableModelDownload.fireTableDataChanged();
-                
-                boolean allFilesComplete = filteredFiles.values()
-                    .stream()
-                    .allMatch(file -> file.percentComplete == 100);
-                if(allFilesComplete) {
-                    stopTimer();
-                    Popup.info("Download complete");
-                    
-                    //FIXME !! Move files to destination
-                    // + enable Cancel (need rewritre)
-                    // + Disable changing search result while downloading
-                }
 			}
 		}
 	}
@@ -412,7 +312,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                 if(soulseek !=null) {
                     enableRowSorter(false);
                     enableSearch(false);
-                    jButtonDownload.setEnabled(false);
+                    jButtonAddToDownloads.setEnabled(false);
                     tableModelResults.clear();
                     progressBar.reset();
 
@@ -424,7 +324,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                             }
                             enableRowSorter(true);
                             displaySearchFiles();
-                            jButtonDownload.setEnabled(true);
+                            jButtonAddToDownloads.setEnabled(true);
                         } else {
                             Popup.info("No results!");
                             enableSearch(true);
@@ -438,12 +338,13 @@ public class DialogSlsk extends javax.swing.JDialog {
 	}
 	
     /**
+     * @param panelSlsk
 	 * @param parent
 	 * @param query
 	 * @throws java.io.IOException
 	 * @throws jamuz.soulseek.SlskdClient.ServerException
      */
-    public static void main(Dialog parent, String query) throws IOException, SlskdClient.ServerException {
+    public static void main(PanelSlsk panelSlsk, Dialog parent, String query) throws IOException, SlskdClient.ServerException {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -460,14 +361,14 @@ public class DialogSlsk extends javax.swing.JDialog {
         }
         //</editor-fold>
 
-        DialogSlsk dialog = new DialogSlsk(parent, false, query);
+        DialogSlsk dialog = new DialogSlsk(panelSlsk, parent, false, query);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonAddToDownloads;
     private javax.swing.JButton jButtonCancel;
-    private javax.swing.JButton jButtonDownload;
     private javax.swing.JButton jButtonSearch;
     private javax.swing.JProgressBar jProgressBarSlsk;
     private javax.swing.JScrollPane jScrollPane2;

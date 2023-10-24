@@ -29,7 +29,13 @@ import jamuz.utils.Swing;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumn;
 
@@ -45,7 +51,7 @@ public class PanelSlsk extends javax.swing.JPanel {
 	private final TableModelSlskdDownload tableModelDownload;
 	private final TableColumnModel columnModelResults;
 	private final TableColumnModel columnModelDownload;
-    private DialogSlsk.Updater positionUpdater;
+    private Updater positionUpdater;
 
 	/**
 	 * Creates new form PanelRemote
@@ -105,6 +111,8 @@ public class PanelSlsk extends javax.swing.JPanel {
                 jCheckBoxServerStartOnStartup.setSelected(onStartup);
             }
         }
+        
+        startTimer();
 	}
 
     private TableColumn setColumn(TableColumnModel columnModel, int index, int width) {
@@ -453,16 +461,113 @@ public class PanelSlsk extends javax.swing.JPanel {
 		if(selectedRow>=0) { 
 			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-			tableModelDownload.clear();
-			
-			//FIXME !! Need to restart it if download is already started
 			stopTimer();
-			
+            tableModelDownload.clear();
 			for (SlskdSearchFile file : searchResponse.getFiles()) {
 				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
 			}
+            startTimer();
 		}
 	}
+    
+    void addDownload(SlskdSearchResponse searchResponse) {
+        
+        //Add search result
+        tableModelResults.addRow(searchResponse);
+        
+        //Select it and display files
+        int lastModelIndex = tableModelResults.getRowCount() - 1;
+        int lastViewIndex = jTableResults.convertRowIndexToView(lastModelIndex);
+        jTableResults.setRowSelectionInterval(lastViewIndex, lastViewIndex);
+        displaySearchFiles();
+        
+        //Start download
+        if(soulseek.download(searchResponse)) {
+            displayDownloads();
+            
+        }
+    }
+    
+    public class Updater extends Timer {
+		
+		/**
+		 * Update period:
+         * TODO: Make this an option
+		 */
+		private static final long UPDATE_PERIODE = 500;
+		
+		/**
+		 * Starts position updater
+		 */
+		public void start() {
+			schedule(new displayPosition(), 0, UPDATE_PERIODE);
+		}
+
+		private class displayPosition extends TimerTask {
+			@Override
+			public void run() {
+				displayDownloads();
+			}
+		}
+	}
+    
+    private void displayDownloads() {
+		int selectedRow = jTableResults.getSelectedRow(); 			
+		if(selectedRow>=0) { 
+			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
+			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
+			SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
+			if(downloads!=null) {
+				String searchPath = searchResponse.getPath();
+				List<SlskFile> rows = tableModelDownload.getRows();
+
+				Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
+				.stream()
+				.filter(directory -> 
+					directory.directory.startsWith(searchPath))
+				.flatMap(directory -> directory.files.stream())
+				.collect(Collectors.toMap(
+					SlskdDownloadFile::getKey,
+					Function.identity(),
+					(existing, replacement) -> existing
+				));
+                
+				for (int i = 0; i < rows.size(); i++) {
+					SlskFile rowFile = rows.get(i);
+
+					if(filteredFiles.containsKey(rowFile.getKey())) {
+						SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
+						rowFile.update(filteredFile); //FIXME !!!!! update search result too in tableModel
+					} else {
+                        //FIXME ! Why this happens that much ??
+						stopTimer();
+                        Popup.info("Download might have been cleaned.");
+                        return;
+					}
+				}
+				tableModelDownload.fireTableDataChanged();
+                
+                boolean allFilesComplete = filteredFiles.values()
+                    .stream()
+                    .allMatch(file -> file.percentComplete == 100);
+                if(allFilesComplete) {
+                    stopTimer();
+                    Popup.info("Download complete");
+                    
+                    //FIXME !! Move files to destination
+                    // + enable Cancel (need rewritre)
+                    // + Disable changing search result while downloading
+                }
+			}
+		}
+	}
+	
+    private void startTimer() {
+//        if(positionUpdater==null) {
+            positionUpdater = new Updater();
+            positionUpdater.start();
+//        }
+    }
     
     private void stopTimer() {
         if(positionUpdater!=null) {
@@ -494,4 +599,6 @@ public class PanelSlsk extends javax.swing.JPanel {
     private jamuz.gui.swing.PasswordFieldWithToggle jTextFieldPassword;
     private javax.swing.JTextField jTextFieldUsername;
     // End of variables declaration//GEN-END:variables
+
+    
 }

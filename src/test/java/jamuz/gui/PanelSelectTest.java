@@ -85,7 +85,7 @@ public class PanelSelectTest {
 	public void testInitExtended() {
 		System.out.println("initExtended");
 		PanelSelect instance = new PanelSelect();
-		instance.initExtended();
+		instance.initExtended(null);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
