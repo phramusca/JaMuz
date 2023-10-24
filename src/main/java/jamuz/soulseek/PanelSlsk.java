@@ -30,7 +30,6 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumn;
 
@@ -332,7 +331,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                 if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
                     jButtonStart.setText("Starting ...");
 
-                    //FIXME ! use destinationNoTrailingSlash
+                    //FIXME !! use destinationNoTrailingSlash
                     String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
                                         .substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
 

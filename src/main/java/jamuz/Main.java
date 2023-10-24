@@ -16,7 +16,6 @@
  */
 package jamuz;
 
-//TODO: Ant (build.xml):  copy configuration and other required files, make 7z package.
 //----------------------------------------------------------
 // - General TODO:
 //      - TODO: manage database backups in logs
@@ -39,10 +38,6 @@ package jamuz;
 // - Player:
 //		- TODO: transitions
 //	- Merge tab:
-//		- TODO: Support Clementine. It is sqlite, cross-platform, amarok1.4 fork, BUT :
-//			- filename is stored as blob and URL encoded (with %20 as space at least) :(
-//			- cannot find addedDate
-//		- TODO: Support JaJUK: sounds promising (DJ, ambiances,...) but XML database :(
 //		- TODO: Support rating=-1:
 //			Guayadeque default rating is -1, but cannnot be set back to -1 in GUI (only from 0 to 5)
 //			MediaMonkey default is -1 (not rated), 0 is used to mark a file as "to be deleted" (bomb icon)
@@ -72,10 +67,9 @@ package jamuz;
 //		- TODO: Enable export over SSH (on remote machine to an device plugged on that remote machine : Intel NUC to friend USB key/HDD for instance)
 //          => Doing this, merge options to copy/move files b/w "Sync" and "Video" (export)
 //TODO: List used librairies (source, version, how to compile if needed,...)
-//TODO: Consider using Maven
+
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
-import jamuz.soulseek.DialogSlsk;
 import jamuz.utils.Popup;
 import java.io.File;
 import java.util.logging.Handler;
@@ -145,7 +139,6 @@ public class Main {
 
 			//Start GUI
 			PanelMain.main();
-//            DialogSlsk.main(null, "The White Stripes Elephant");
             
 		} catch (Exception ex) {
 			Popup.error(ex);

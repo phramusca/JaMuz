@@ -276,6 +276,9 @@ public class DialogSlsk extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDownloadActionPerformed
+        
+        //FIXME ! Instead, Add to a list of downloads to be monitored on main panel, and there, on completetion: move to destination & remove transfers on server
+        
         new Thread() {
 			@Override
 			public void run() {
@@ -293,7 +296,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                         positionUpdater = new Updater();
                         positionUpdater.start();
 
-                        //FIXME !! Add to a list of downloads to be monitored, and on completetion: move to destination & remove transfers on server
+                        
                     }
                 }
 			}
@@ -390,7 +393,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                     stopTimer();
                     Popup.info("Download complete");
                     
-                    //FIXME ! Move files to destination
+                    //FIXME !! Move files to destination
                     // + enable Cancel (need rewritre)
                     // + Disable changing search result while downloading
                 }

@@ -80,8 +80,8 @@ public class Slsk {
                 response.files = entry.getValue();
                 groupedResponses.add(response);
             }
+            slskdClient.deleteSearch(search.id);
 
-            //FIXME ! Remove search from server
             return groupedResponses;	
 		} catch (IOException | SlskdClient.ServerException ex) {
 			         Popup.error(ex);
