@@ -16,6 +16,8 @@
  */
 package jamuz.soulseek;
 
+import com.github.dockerjava.api.async.ResultCallback;
+import com.github.dockerjava.api.model.Frame;
 import jamuz.Jamuz;
 import jamuz.Options;
 import jamuz.gui.swing.ProgressCellRender;
@@ -24,9 +26,11 @@ import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.Swing;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumn;
 
@@ -97,7 +101,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                 jTextFieldUsername.setText(options.get("slsk.username"));
                 jTextFieldPassword.setText(options.get("slsk.password"));
 
-                //FIXME !!!!
+                //FIXME !!!! slskd onStartup
                 boolean onStartup = Boolean.parseBoolean(options.get("server.on.startup", "false"));
                 jCheckBoxServerStartOnStartup.setSelected(onStartup);
             }
@@ -312,70 +316,99 @@ public class PanelSlsk extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
+        new Thread() {
+            @Override
+            public void run() {
+                jSplitPaneLogs.setDividerLocation(0.0);
+                enableGui(false);
 
-        jSplitPaneLogs.setDividerLocation(0.0);
-            
-        enableGui(false);
+                //Start slskd server, if not already running
+                SlskdDocker slskdDocker = new SlskdDocker(
+                        jTextFieldUsername.getText(), 
+                        jTextFieldPassword.getText(), 
+                        Jamuz.getFile("", "slskd").getAbsolutePath(), 
+                        Jamuz.getMachine().getOptionValue("location.library"));
 
-        //Start slskd server, if not already running
-        SlskdDocker slskdDocker = new SlskdDocker(
-                jTextFieldUsername.getText(), 
-                jTextFieldPassword.getText(), 
-                Jamuz.getFile("", "slskd").getAbsolutePath(), 
-                Jamuz.getMachine().getOptionValue("location.library"));
-        
-        if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
-            jButtonStart.setText("Starting ...");
-            
-            //FIXME !!!! use destinationNoTrailingSlash
-            String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
-                                .substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
+                if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
+                    jButtonStart.setText("Starting ...");
 
-            jTextAreaLog.setText("Checking slsk status and restart if needed...");
-            if(!slskdDocker.start()) {
-                Popup.warning("Could not start slskd");
-            }
+                    //FIXME ! use destinationNoTrailingSlash
+                    String destinationNoTrailingSlash = jTextFieldDownloadingFolder.getText()
+                                        .substring(0, jTextFieldDownloadingFolder.getText().length() - (jTextFieldDownloadingFolder.getText().endsWith("/") ? 1 : 0));
 
-            //Wait for container to be healthy and display logs
-            SwingWorker<String, String> worker = new SwingWorker<>() {
-                @Override
-                protected String doInBackground() {
-                    return slskdDocker.checkContainerHealthAndFetchLogs(jTextAreaLog);
-                }
-
-                @Override
-                protected void process(java.util.List<String> chunks) {
-                    for (String log : chunks) {
-                        jTextAreaLog.append(log);
+                    jTextAreaLog.setText("Checking slsk status and restart if needed...\n");
+                    if(!slskdDocker.start()) {
+                        Popup.warning("Could not start slskd");
                     }
-                }
 
-                @Override
-                protected void done() {
-                    try {
-                        String result = get();
-                        jTextAreaLog.append(result);
+                    //Wait for container to be healthy and display logs
+                    SwingWorker<String, String> worker = new SwingWorker<>() {
+                        @Override
+                        protected String doInBackground() {
+                            return slskdDocker.checkContainerHealthAndFetchLogs(new ResultCallback<Frame>() {
+                                @Override
+                                public void onStart(Closeable closeable) {
+                                    appendText("Starting ...\n");
+                                }
 
-                        try {
-                            soulseek = new Slsk();
-                        } catch (IOException | SlskdClient.ServerException ex) {
-                            Popup.error(ex);
+                                @Override
+                                public void onNext(com.github.dockerjava.api.model.Frame object) {
+                                    appendText(new String(object.getPayload()));
+                                }
+
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    appendText("ERROR: " + throwable.getLocalizedMessage() + "\n");
+                                    enableStart();
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                    appendText("Complete !\n");
+                                    enableStart();
+                                }
+
+                                @Override
+                                public void close() throws IOException {
+                                    appendText("Closed.\n");
+                                }
+                            });
                         }
-                    } catch (InterruptedException | ExecutionException ex) {
-                        jTextAreaLog.append("Error: " + ex.getMessage());
-                    }
-                    jButtonStart.setText(Inter.get("Button.Stop"));
-                    jSplitPaneLogs.setDividerLocation(1.0);
-                    enableGui(true);
+
+                        //TODO: This is never called. How to call it and can it replace ResultCallback ?
+                        @Override
+                        protected void process(java.util.List<String> chunks) {
+                            for (String log : chunks) {
+                                appendText(log + "\n");
+                            }
+                        }
+
+                        @Override
+                        protected void done() {
+                            try {
+                                String result = get();
+                                appendText(result);
+
+                                try {
+                                    soulseek = new Slsk();
+                                } catch (IOException | SlskdClient.ServerException ex) {
+                                    Popup.error(ex);
+                                }
+                            } catch (InterruptedException | ExecutionException ex) {
+                                appendText("Error: " + ex.getMessage());
+                            }
+                            jButtonStart.setText(Inter.get("Button.Stop"));
+                            jSplitPaneLogs.setDividerLocation(1.0);
+                            enableGui(true);
+                        }
+                    };
+                    worker.execute();
+                } else {
+                    slskdDocker.stop();
+                    enableStart();
                 }
-            };
-            worker.execute();
-        } else {
-            slskdDocker.stop();
-            jButtonStart.setText(Inter.get("Button.Start"));
-            jSplitPaneLogs.setDividerLocation(0.0);
-            enableGui(true);
-        }
+            }
+        }.start();
     }//GEN-LAST:event_jButtonStartActionPerformed
 
     public void enableGui(boolean enable) {
@@ -384,6 +417,17 @@ public class PanelSlsk extends javax.swing.JPanel {
         jTextFieldPassword.setEnabled(enable);
         jButtonSelectDownloadingFolder.setEnabled(enable);
         jCheckBoxServerStartOnStartup.setEnabled(enable);
+    }
+    
+    private void enableStart() {
+        jButtonStart.setText(Inter.get("Button.Start"));
+        jSplitPaneLogs.setDividerLocation(0.0);
+        enableGui(true);
+    }
+    
+    private void appendText(String text) {
+        jTextAreaLog.append(text);
+        jTextAreaLog.setCaretPosition(jTextAreaLog.getDocument().getLength()); //Scroll to bottom
     }
     
     private void jCheckBoxServerStartOnStartupItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxServerStartOnStartupItemStateChanged

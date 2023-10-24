@@ -268,7 +268,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 	}
 	
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        //FIXME !!! really cancel something !
+        //FIXME !!! really cancel something (or remove button)
         
         jButtonDownload.setEnabled(false);
 		jButtonCancel.setEnabled(false);

@@ -127,46 +127,9 @@ public class SlskdDocker {
         dockerClient.startContainerCmd(container.getId()).exec();
     }
     
-    public String checkContainerHealthAndFetchLogs(JTextArea logTextArea) {
+    public String checkContainerHealthAndFetchLogs(ResultCallback<Frame> resultCallback) {
         try {
             Container container = getContainer();
-            
-            final ResultCallback<Frame> resultCallback = new ResultCallback<Frame>() {
-                @Override
-                public void onStart(Closeable closeable) {
-                    SwingUtilities.invokeLater(() -> {
-                        logTextArea.append("Starting ...\n"); 
-                    });
-                }
-
-                @Override
-                public void onNext(com.github.dockerjava.api.model.Frame object) {
-                    SwingUtilities.invokeLater(() -> {
-                        logTextArea.append(new String(object.getPayload()));
-                    });
-                }
-
-                @Override
-                public void onError(Throwable throwable) {
-                    SwingUtilities.invokeLater(() -> {
-                        logTextArea.append("ERROR: " + throwable.getLocalizedMessage() + "\n");
-                    });
-                }
-
-                @Override
-                public void onComplete() {
-                    SwingUtilities.invokeLater(() -> {
-                        logTextArea.append("Complete !\n"); 
-                    });
-                }
-
-                @Override
-                public void close() throws IOException {
-                    SwingUtilities.invokeLater(() -> {
-                        logTextArea.append("Closed.\n"); 
-                    });
-                }
-            };
             dockerClient.logContainerCmd(container.getId())
                 .withFollowStream(true)
                 .withStdOut(true)
@@ -174,15 +137,26 @@ public class SlskdDocker {
                 .exec(resultCallback);
 
             while (true) {
-                InspectContainerResponse containerRes = dockerClient.inspectContainerCmd(container.getId()).exec();
-                HealthState health = containerRes.getState().getHealth();
-                
-                if (health != null && "healthy".equalsIgnoreCase(health.getStatus())) {
-                    resultCallback.close(); // Close log streaming
-                    return "Container is healthy!";
+                State state = getState(container);
+                switch (state) {
+                    case created:
+                    case restarting:
+                    case running:
+                        InspectContainerResponse containerRes = dockerClient.inspectContainerCmd(container.getId()).exec();
+                        HealthState health = containerRes.getState().getHealth();
+                        if (health != null && "healthy".equalsIgnoreCase(health.getStatus())) {
+                            resultCallback.close(); // Close log streaming
+                            return "Container is healthy!";
+                        }
+                        Thread.sleep(1000);
+                        break;
+                    case dead:
+                    case exited:
+                    case paused:
+                        return "Container is " + state;
+                    default:
+                        throw new AssertionError();
                 }
-
-                Thread.sleep(1000);
             }
         } catch (NotFoundException | IOException | InterruptedException e) {
             return "Error: " + e.getMessage();

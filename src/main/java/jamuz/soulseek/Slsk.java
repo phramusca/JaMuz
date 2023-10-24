@@ -81,7 +81,7 @@ public class Slsk {
                 groupedResponses.add(response);
             }
 
-            //FIXME !!! Remove search from server
+            //FIXME ! Remove search from server
             return groupedResponses;	
 		} catch (IOException | SlskdClient.ServerException ex) {
 			         Popup.error(ex);
