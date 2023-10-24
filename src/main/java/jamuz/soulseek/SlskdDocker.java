@@ -14,12 +14,9 @@ import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.core.DockerClientBuilder;
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -120,8 +117,7 @@ public class SlskdDocker {
                     new PortBinding(Ports.Binding.bindIpAndPort("0.0.0.0", 5031), ExposedPort.tcp(5031)),
                     new PortBinding(Ports.Binding.bindIpAndPort("0.0.0.0", 50300), ExposedPort.tcp(50300))
                 )
-                .withBinds(Bind.parse(serverPath+":/app"))
-                .withBinds(Bind.parse(musicPath+":/music"))
+                .withBinds(Bind.parse(serverPath+":/app"), Bind.parse(musicPath+":/music"))
             )
             .exec();
         dockerClient.startContainerCmd(container.getId()).exec();

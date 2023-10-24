@@ -88,12 +88,11 @@ public class SlskdClient {
 		HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/"+searchResponse.username); //NON-NLS
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
 				.post(RequestBody.create(jsonArray.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
-
-		Response response = timeoutClient.newCall(request).execute();
+        
+        Response response = timeoutClient.newCall(request).execute();
 		return response.isSuccessful();
 	}
 	
-	//TODO: download only audio files ?
 	public SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
 		String bodyString = getBodyString("transfers/downloads/" + searchResponse.username, client);
 		
