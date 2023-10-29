@@ -17,8 +17,8 @@
 package jamuz.soulseek;
 
 import jamuz.gui.swing.TableModelGeneric;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
@@ -32,7 +32,7 @@ public class TableModelSlskdSearch extends TableModelGeneric {
 	 * Create the table model
 	 */
 	public TableModelSlskdSearch() {
-        this.results = new ArrayList<>();
+        this.results = new CopyOnWriteArrayList<>();
         this.setColumnNames(new String [] {
             "Date", //NOI18N
 			"Nb", //NOI18N
@@ -171,7 +171,7 @@ public class TableModelSlskdSearch extends TableModelGeneric {
 	 * Clears the table
 	 */
 	public void clear() {
-        this.results = new ArrayList<>();
+        this.results = new CopyOnWriteArrayList<>();
         this.fireTableDataChanged();
     }
 }
