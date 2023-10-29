@@ -53,7 +53,7 @@ public class PanelSlsk extends javax.swing.JPanel {
 	private Slsk soulseek;
     private Options options;
     private final TableModelSlskdSearch tableModelResults;
-	private final TableModelSlskdDownload tableModelDownload;
+	private TableModelSlskdDownload tableModelDownload;
 	private final TableColumnModel columnModelResults;
 	private final TableColumnModel columnModelDownload;
     private final Updater positionUpdater;
@@ -413,26 +413,32 @@ public class PanelSlsk extends javax.swing.JPanel {
 		if(selectedRow>=0) { 
 			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-            tableModelDownload.clear();
-			for (SlskdSearchFile file : searchResponse.getFiles()) {
-				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
-			}
+            
+            tableModelDownload = searchResponse.getTableModel();
+            jTableDownload.setModel(tableModelDownload);
+//            tableModelDownload.clear();
+//			for (SlskdSearchFile file : searchResponse.getFiles()) {
+//				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
+//			}
 		}
 	}
     
     void addDownload(SlskdSearchResponse searchResponse) {
-        
-        //Add search result
-        tableModelResults.addRow(searchResponse);
-        
-        //Select it and display files
-        int lastModelIndex = tableModelResults.getRowCount() - 1;
-        int lastViewIndex = jTableResults.convertRowIndexToView(lastModelIndex);
-        jTableResults.setRowSelectionInterval(lastViewIndex, lastViewIndex);
-        displaySearchFiles();
-        
-        //Start download
-        soulseek.download(searchResponse);
+        if(soulseek!=null) {
+            //Add search result
+            tableModelResults.addRow(searchResponse);
+
+            //Select it and display files
+            int lastModelIndex = tableModelResults.getRowCount() - 1;
+            int lastViewIndex = jTableResults.convertRowIndexToView(lastModelIndex);
+            jTableResults.setRowSelectionInterval(lastViewIndex, lastViewIndex);
+            displaySearchFiles();
+
+            //Start download
+            soulseek.download(searchResponse);
+        } else {
+            Popup.warning("You must connect first!");
+        }
     }
     
     public class Updater extends Timer {
@@ -454,7 +460,7 @@ public class PanelSlsk extends javax.swing.JPanel {
 			@Override
 			public void run() {
                 for (SlskdSearchResponse searchResponse : tableModelResults.getRows()) {
-                    if(!searchResponse.isCompleted()) {
+                    if(soulseek!=null && !searchResponse.isCompleted()) {
                         //Get downloads for username
                         SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
                         if(downloads!=null) {
@@ -495,19 +501,15 @@ public class PanelSlsk extends javax.swing.JPanel {
                                         Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                 }
-
                             }
 
                             //FIXME ! Display progress for the CURRENTLY displayed searchResponse ONLY
-                            List<SlskFile> rows = tableModelDownload.getRows();
+                            List<SlskdSearchFile> rows = tableModelDownload.getRows();
                             for (int i = 0; i < rows.size(); i++) {
-                                SlskFile rowFile = rows.get(i);
-
+                                SlskdSearchFile rowFile = rows.get(i);
                                 if(filteredFiles.containsKey(rowFile.getKey())) {
                                     SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
                                     rowFile.update(filteredFile);
-                                    //FIXME !! update search result too in tableModel
-            //                        searchResponse.update(filteredFile);
                                 } 
     //                            else {
     //                                //FIXME !! Why this happens that much ??

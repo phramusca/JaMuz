@@ -132,4 +132,12 @@ public class SlskdSearchResponse {
     public boolean isCompleted() {
         return completed;
     }
+
+    TableModelSlskdDownload getTableModel() {
+        TableModelSlskdDownload tableModelDownload = new TableModelSlskdDownload();
+        for (SlskdSearchFile file : files) {
+            tableModelDownload.addRow(file);
+        }
+        return tableModelDownload;
+    }
 }

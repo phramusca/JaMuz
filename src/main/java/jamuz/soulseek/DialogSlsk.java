@@ -284,11 +284,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 		}.start();
     }//GEN-LAST:event_jButtonAddToDownloadsActionPerformed
 
-	/**
-	 * Position updater class
-	 */
-	
-
 	private void displaySearchFiles() {
 		int selectedRow = jTableResults.getSelectedRow(); 			
 		if(selectedRow>=0) { 
@@ -296,7 +291,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
 			tableModelDownload.clear();
 			for (SlskdSearchFile file : searchResponse.getFiles()) {
-				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
+				tableModelDownload.addRow(file);
 			}
 		}
 	}
