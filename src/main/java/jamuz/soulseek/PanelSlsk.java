@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumn;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -56,6 +57,7 @@ public class PanelSlsk extends javax.swing.JPanel {
 	private final TableColumnModel columnModelResults;
 	private final TableColumnModel columnModelDownload;
     private final Updater positionUpdater;
+    private final Base64 encoder = new Base64();
 
 	/**
 	 * Creates new form PanelRemote
@@ -452,69 +454,70 @@ public class PanelSlsk extends javax.swing.JPanel {
 			@Override
 			public void run() {
                 for (SlskdSearchResponse searchResponse : tableModelResults.getRows()) {
-                    
-                    //FIXME ! Only if !searchResponse.isCompleted() => when download is done and files moved to "New"
-                    
-                    //Get downloads for username
-                    SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
-                    if(downloads!=null) {
-
-                        //Filter downloads: keep only the ones from the same path
-                        Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
-                        .stream()
-                        .filter(directory -> 
-                            directory.directory.startsWith(searchResponse.getPath()))
-                        .flatMap(directory -> directory.files.stream())
-                        .collect(Collectors.toMap(
-                            SlskdDownloadFile::getKey,
-                            Function.identity(),
-                            (existing, replacement) -> existing
-                        ));
-
-                        boolean allFilesComplete = filteredFiles.values()
+                    if(!searchResponse.isCompleted()) {
+                        //Get downloads for username
+                        SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
+                        if(downloads!=null) {
+                            //Filter downloads: keep only the ones from the same path
+                            Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
                             .stream()
-                            .allMatch(file -> file.percentComplete == 100);
-                        if(allFilesComplete) {
-                            Location finalDestination = new Location("location.add");
-                            if(finalDestination.check()) {
-                                SlskdDownloadFile get = filteredFiles.values().stream().findFirst().get();                                
-                                String[] split = get.filename.split("\\\\");
-                                String subDirectoryName = split[split.length-2];
-                                String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
-                                File sourceFile = new File(FilenameUtils.concat(sourcePath, subDirectoryName));
-                                File destFile = new File(FilenameUtils.concat(finalDestination.getValue(), subDirectoryName));
-                                
-                                try {
-                                    FileUtils.copyDirectory(sourceFile, destFile);
-                                    //FIXME ! Remove sourceFile using API (as root so can't here) and 
-                                    //FIXME ! Set searchResponse.isCompleted() to true
-                                    
-                                } catch (IOException ex) {
-                                    Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
-                            
-                        }
-                        
-                        //FIXME ! Display progress for the CURRENTLY displayed searchResponse ONLY
-                        List<SlskFile> rows = tableModelDownload.getRows();
-                        for (int i = 0; i < rows.size(); i++) {
-                            SlskFile rowFile = rows.get(i);
+                            .filter(directory -> 
+                                directory.directory.startsWith(searchResponse.getPath()))
+                            .flatMap(directory -> directory.files.stream())
+                            .collect(Collectors.toMap(
+                                SlskdDownloadFile::getKey,
+                                Function.identity(),
+                                (existing, replacement) -> existing
+                            ));
 
-                            if(filteredFiles.containsKey(rowFile.getKey())) {
-                                SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
-                                rowFile.update(filteredFile);
-                                //FIXME !! update search result too in tableModel
-        //                        searchResponse.update(filteredFile);
-                            } 
-//                            else {
-//                                //FIXME !! Why this happens that much ??
-////                                stopTimer();
-//                                Popup.info("Download might have been cleaned.");
-//                                return;
-//                            }
+                            boolean allFilesComplete = filteredFiles.values()
+                                .stream()
+                                .allMatch(file -> file.percentComplete == 100);
+                            if(allFilesComplete) {
+                                Location finalDestination = new Location("location.add");
+                                if(finalDestination.check()) {
+                                    SlskdDownloadFile get = filteredFiles.values().stream().findFirst().get();
+                                    String[] split = get.filename.split("\\\\");
+                                    String subDirectoryName = split[split.length-2];
+                                    String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
+                                    File sourceFile = new File(FilenameUtils.concat(sourcePath, subDirectoryName));
+                                    File destFile = new File(FilenameUtils.concat(finalDestination.getValue(), subDirectoryName));
+
+                                    try {
+                                        FileUtils.copyDirectory(sourceFile, destFile);
+                                        for (SlskdDownloadFile downloadFile : filteredFiles.values()) {
+                                            soulseek.deleteTransfer(downloadFile);
+                                        }
+                                        String base64subDir = encoder.encodeToString(subDirectoryName.getBytes());
+                                        soulseek.deleteDirectory(base64subDir);
+                                        searchResponse.setCompleted();
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+
+                            }
+
+                            //FIXME ! Display progress for the CURRENTLY displayed searchResponse ONLY
+                            List<SlskFile> rows = tableModelDownload.getRows();
+                            for (int i = 0; i < rows.size(); i++) {
+                                SlskFile rowFile = rows.get(i);
+
+                                if(filteredFiles.containsKey(rowFile.getKey())) {
+                                    SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
+                                    rowFile.update(filteredFile);
+                                    //FIXME !! update search result too in tableModel
+            //                        searchResponse.update(filteredFile);
+                                } 
+    //                            else {
+    //                                //FIXME !! Why this happens that much ??
+    ////                                stopTimer();
+    //                                Popup.info("Download might have been cleaned.");
+    //                                return;
+    //                            }
+                            }
+                            tableModelDownload.fireTableDataChanged();
                         }
-                        tableModelDownload.fireTableDataChanged();
                     }
                 }
 			}

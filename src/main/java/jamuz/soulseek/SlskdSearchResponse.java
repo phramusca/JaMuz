@@ -40,11 +40,13 @@ public class SlskdSearchResponse {
 	public double uploadSpeed;
 	public String username;	
 	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
+    private boolean completed;
 
 	//FIXME !!!!!! use existing option
 	private static final List<String> ALLOWED_EXTENSIONS 
 			= Collections.unmodifiableList(
 					Arrays.asList("mp3", "flac"));
+    
    
     public void filterAndSortFiles() {
         files = files.stream()
@@ -122,4 +124,12 @@ public class SlskdSearchResponse {
 		sb.append('}');
 		return sb.toString();
 	}
+
+    void setCompleted() {
+        this.completed=true;
+    }    
+
+    public boolean isCompleted() {
+        return completed;
+    }
 }

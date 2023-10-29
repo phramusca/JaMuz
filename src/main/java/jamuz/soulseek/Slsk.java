@@ -108,4 +108,23 @@ public class Slsk {
 		}
 		return false;
 	}
+
+    boolean deleteDirectory(String base64subDir) {
+        try {
+            return slskdClient.deleteDirectory(base64subDir);
+        } catch (IOException ex) {
+            Popup.error(ex);
+        }
+        return false;
+    }
+
+    boolean deleteTransfer(SlskdDownloadFile downloadFile) {
+        try {
+            return slskdClient.deleteTransfer(downloadFile);
+        } catch (IOException ex) {
+            Popup.error(ex);
+        }
+        return false;
+    }
+
 }

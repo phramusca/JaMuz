@@ -105,6 +105,7 @@ public class SlskdDocker {
           = dockerClient.createContainerCmd("slskd/slskd:latest")
             .withName(CONTAINER_NAME)
             .withEnv("SLSKD_REMOTE_CONFIGURATION=true",
+                    "SLSKD_REMOTE_FILE_MANAGEMENT=true",
                     "SLSKD_NO_AUTH="+SLSKD_NO_AUTH,
                     "SLSKD_SLSK_USERNAME="+SLSKD_SLSK_USERNAME,
                     "SLSKD_SLSK_PASSWORD="+SLSKD_SLSK_PASSWORD,

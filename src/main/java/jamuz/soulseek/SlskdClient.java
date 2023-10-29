@@ -156,6 +156,20 @@ public class SlskdClient {
         Response response = client.newCall(request).execute();
 		return response.isSuccessful();
     }
+    
+    public boolean deleteTransfer(SlskdDownloadFile downloadFile) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/" + downloadFile.username + "/" + downloadFile.id + "?remove=true"); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).delete().build();
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+    }
+    
+    public boolean deleteDirectory(String base64subDir) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("files/downloads/directories/" + base64subDir); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).delete().build();
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+    }
 	
 	private HttpUrl.Builder getUrlBuilder(String url) {
         return Objects.requireNonNull(HttpUrl.parse(BASE_URL + "/" + url)).newBuilder(); //NON-NLS
