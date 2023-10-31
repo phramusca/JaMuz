@@ -106,7 +106,7 @@ public class SlskdSearchResponse {
 				.mapToDouble(file -> file.size)
 				.sum();
 			return meanSize;
-//			//FIXME !!!!!! and think of row sorting before changing to return StringManager.humanReadableByteCount(meanSize, false);
+			//TODO !!!!!! and think of row sorting before changing to return StringManager.humanReadableByteCount(meanSize, false);
 		}
 		return 0;
 	}

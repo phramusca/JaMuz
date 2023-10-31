@@ -17,6 +17,7 @@
 
 package jamuz.soulseek;
 
+import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.Popup;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 
 /**
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
@@ -32,7 +34,7 @@ import java.util.logging.Logger;
 public class Slsk {
 	
 	private final SlskdClient slskdClient;
-//FIXME !!! Manage exceptions and method returns		
+//FIXME !!!! Manage exceptions and method returns		
     /**
 	 * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
      *
@@ -43,12 +45,12 @@ public class Slsk {
 		slskdClient = new SlskdClient();
     }
 
-    //FIXME !!! Use a callback (or pass jprogressbar) to display search progress to progressbar
-	public List<SlskdSearchResponse> search(String query) {
+	public List<SlskdSearchResponse> search(String query, JLabel jLabelInfo) {
 		try {
             SlskdSearchResult search = slskdClient.search(query);
             while(!search.isComplete) {
                 search = slskdClient.getSearch(search.id);
+                jLabelInfo.setText("Found " + search.fileCount + " file(s), " + search.responseCount + " response(s) for \"" + query + "\" -- " + search.state);
                 Thread.sleep(1000);
             }
 

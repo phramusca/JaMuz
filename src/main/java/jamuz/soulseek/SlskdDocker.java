@@ -28,7 +28,7 @@ public class SlskdDocker {
 //    https://github.com/docker-java/docker-java/blob/main/docs/getting_started.md
 //    https://www.baeldung.com/docker-java-api
     
-    //FIXME !!! Need to apply new config to running container (if any) if anything below changes in gui (apply button ? or restart ?)
+    //FIXME !!!! Need to apply new config to running container (if any) if anything below changes in gui (apply button ? or restart ?)
     private final boolean SLSKD_SWAGGER ;
     private final boolean SLSKD_NO_AUTH;
     private final String SLSKD_SLSK_USERNAME;

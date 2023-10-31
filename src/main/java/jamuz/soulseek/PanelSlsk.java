@@ -111,7 +111,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                 jTextFieldUsername.setText(options.get("slsk.username"));
                 jTextFieldPassword.setText(options.get("slsk.password"));
 
-                //FIXME !!!! slskd onStartup
+                //FIXME !!! slskd onStartup
                 boolean onStartup = Boolean.parseBoolean(options.get("server.on.startup", "false"));
                 jCheckBoxServerStartOnStartup.setSelected(onStartup);
             }
@@ -468,7 +468,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                             
                             //FIXME !! We have several searchResponse having the same username and path but different file list (user is a mess and put multiple albums on the same folder)
                             // => This results in bad percentages (searhc response view), and probably other glitches
-                            // ====>> So, split by username and path in Panel's search results table, no more by search (THINK TWICE)
+                            // ====>> So, split by username and path in Panel's search results table, no more by search ? (THINK TWICE)
                             
                             
                             //Filter downloads: keep only the ones from the same path

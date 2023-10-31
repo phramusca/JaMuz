@@ -78,7 +78,7 @@ import java.util.logging.Handler;
 // TODO pom.xml essayer de remplacer les jar locaux par des maven
 
 //FIXME Z https://github.com/phramusca/JaMuz/security/dependabot
-//FIXME !!!! TODO: <https://docs.github.com/fr/actions/using-workflows/reusing-workflows>**
+//FIXME Z <https://docs.github.com/fr/actions/using-workflows/reusing-workflows>**
 
 /**
  * JaMuz main class
