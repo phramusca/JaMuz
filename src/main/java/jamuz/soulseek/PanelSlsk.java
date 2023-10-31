@@ -468,6 +468,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                             
                             //FIXME !! We have several searchResponse having the same username and path but different file list (user is a mess and put multiple albums on the same folder)
                             // => This results in bad percentages (searhc response view), and probably other glitches
+                            // ====>> So, split by username and path in Panel's search results table, no more by search (THINK TWICE)
                             
                             
                             //Filter downloads: keep only the ones from the same path
@@ -498,7 +499,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                             for (SlskdDownloadFile slskdDownloadFile : filteredFiles.values()) {
                                 percentComplete+=slskdDownloadFile.percentComplete;
                             }
-                            searchResponse.update("", ((int) Math.round(percentComplete)) / searchResponse.fileCount);
+                            searchResponse.update("", ((int) Math.round(percentComplete)) / filteredFiles.values().size() );
                             tableModelResults.fireTableCellUpdated(row, 9);
                             
                             boolean allFilesComplete = filteredFiles.values()
