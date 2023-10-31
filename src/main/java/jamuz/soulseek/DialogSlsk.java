@@ -16,7 +16,6 @@
  */
 package jamuz.soulseek;
 
-import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.utils.Popup;
@@ -156,7 +155,6 @@ public class DialogSlsk extends javax.swing.JDialog {
         jTableResults = new jamuz.gui.swing.TableHorizontal();
         jTextFieldQuery = new javax.swing.JTextField();
         jButtonAddToDownloads = new javax.swing.JButton();
-        jButtonCancel = new javax.swing.JButton();
         jButtonSearch = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableDownload = new jamuz.gui.swing.TableHorizontal();
@@ -184,16 +182,8 @@ public class DialogSlsk extends javax.swing.JDialog {
             }
         });
 
-        jButtonCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
-        jButtonCancel.setText(bundle.getString("Button.Cancel")); // NOI18N
-        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCancelActionPerformed(evt);
-            }
-        });
-
         jButtonSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/search_plus.png"))); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jButtonSearch.setText(bundle.getString("Button.Search")); // NOI18N
         jButtonSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -221,8 +211,6 @@ public class DialogSlsk extends javax.swing.JDialog {
                     .addComponent(jScrollPane2)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonCancel)
-                        .addGap(18, 18, 18)
                         .addComponent(jButtonAddToDownloads))
                     .addComponent(jLabelInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -241,9 +229,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonAddToDownloads)
-                    .addComponent(jButtonCancel))
+                .addComponent(jButtonAddToDownloads)
                 .addContainerGap())
         );
 
@@ -259,14 +245,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 		jTextFieldQuery.setEnabled(enable);
 	}
 	
-    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        //FIXME ! really cancel something (or remove button)
-        
-        jButtonAddToDownloads.setEnabled(false);
-		jButtonCancel.setEnabled(false);
-		enableSearch(true);
-    }//GEN-LAST:event_jButtonCancelActionPerformed
-
     private void jButtonAddToDownloadsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddToDownloadsActionPerformed
         new Thread() {
 			@Override
@@ -277,7 +255,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                     selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
                     SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
                     panelSlsk.addDownload(searchResponse);
-                    //FIXME !!! Re-enable the "Add to downloads" button, but only if not yet added 
+                    //FIXME ! Re-enable the "Add to downloads" button, but only if not yet added 
                     // => need to store that info, and display it on jTableResults (warning: same model as in Panel so will need to add and hide that column there
                  }
 			}
@@ -363,7 +341,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddToDownloads;
-    private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSearch;
     private javax.swing.JLabel jLabelInfo;
     private javax.swing.JScrollPane jScrollPane2;
