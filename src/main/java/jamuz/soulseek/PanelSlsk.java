@@ -81,6 +81,9 @@ public class PanelSlsk extends javax.swing.JPanel {
 		setColumn(columnModelResults, 6, 50);	// Queue length
 		setColumn(columnModelResults, 7, 150);	// Username
 		setColumn(columnModelResults, 8, 600);	// Path
+        TableColumn column = 
+        setColumn(columnModelResults, 9, 80);     // Completed
+        column.setCellRenderer(new ProgressCellRender());
 
 		//Setup download table
 		tableModelDownload = new TableModelSlskdDownload();
@@ -94,7 +97,7 @@ public class PanelSlsk extends javax.swing.JPanel {
 		setColumn(columnModelDownload, 2, 80);     // Length
 		setColumn(columnModelDownload, 3, 50);     // Size
 		setColumn(columnModelDownload, 4, 300);    // File
-        TableColumn column = 
+        column = 
         setColumn(columnModelDownload, 5, 400);     // Completed
 		column.setCellRenderer(new ProgressCellRender());
         
@@ -105,9 +108,6 @@ public class PanelSlsk extends javax.swing.JPanel {
         if(file.exists()) {
             options = new Options(file.getAbsolutePath());
             if(options.read()) {
-                if(!(new File(options.get("slsk.downloading.folder"))).exists()) {
-                    options.set("slsk.downloading.folder", "");
-                }
                 jTextFieldUsername.setText(options.get("slsk.username"));
                 jTextFieldPassword.setText(options.get("slsk.password"));
 
@@ -138,7 +138,6 @@ public class PanelSlsk extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPopupMenu1 = new javax.swing.JPopupMenu();
         jPanelRemote = new javax.swing.JPanel();
         jButtonStart = new javax.swing.JButton();
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
@@ -459,11 +458,18 @@ public class PanelSlsk extends javax.swing.JPanel {
 		private class displayPosition extends TimerTask {
 			@Override
 			public void run() {
-                for (SlskdSearchResponse searchResponse : tableModelResults.getRows()) {
+                
+                for (int row = 0; row < tableModelResults.getRows().size(); row++) {
+                    SlskdSearchResponse searchResponse = tableModelResults.getRow(row);
                     if(soulseek!=null && !searchResponse.isCompleted()) {
                         //Get downloads for username
                         SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
                         if(downloads!=null) {
+                            
+                            //FIXME !! We have several searchResponse having the same username and path but different file list (user is a mess and put multiple albums on the same folder)
+                            // => This results in bad percentages (searhc response view), and probably other glitches
+                            
+                            
                             //Filter downloads: keep only the ones from the same path
                             Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
                             .stream()
@@ -476,6 +482,25 @@ public class PanelSlsk extends javax.swing.JPanel {
                                 (existing, replacement) -> existing
                             ));
 
+                            if(tableModelDownload.getSearchResponse().equals(searchResponse)) {
+                                List<SlskdSearchFile> rows = tableModelDownload.getRows();
+                                for (int i = 0; i < rows.size(); i++) {
+                                    SlskdSearchFile rowFile = rows.get(i);
+                                    if(filteredFiles.containsKey(rowFile.getKey())) {
+                                        SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
+                                        rowFile.update(filteredFile);
+                                    }
+                                }
+                                tableModelDownload.fireTableDataChanged();
+                            }
+                            
+                            int percentComplete=0;
+                            for (SlskdDownloadFile slskdDownloadFile : filteredFiles.values()) {
+                                percentComplete+=slskdDownloadFile.percentComplete;
+                            }
+                            searchResponse.update("", ((int) Math.round(percentComplete)) / searchResponse.fileCount);
+                            tableModelResults.fireTableCellUpdated(row, 9);
+                            
                             boolean allFilesComplete = filteredFiles.values()
                                 .stream()
                                 .allMatch(file -> file.percentComplete == 100);
@@ -502,23 +527,6 @@ public class PanelSlsk extends javax.swing.JPanel {
                                     }
                                 }
                             }
-
-                            //FIXME ! Display progress for the CURRENTLY displayed searchResponse ONLY
-                            List<SlskdSearchFile> rows = tableModelDownload.getRows();
-                            for (int i = 0; i < rows.size(); i++) {
-                                SlskdSearchFile rowFile = rows.get(i);
-                                if(filteredFiles.containsKey(rowFile.getKey())) {
-                                    SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
-                                    rowFile.update(filteredFile);
-                                } 
-    //                            else {
-    //                                //FIXME !! Why this happens that much ??
-    ////                                stopTimer();
-    //                                Popup.info("Download might have been cleaned.");
-    //                                return;
-    //                            }
-                            }
-                            tableModelDownload.fireTableDataChanged();
                         }
                     }
                 }
@@ -534,7 +542,6 @@ public class PanelSlsk extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelRemote;
-    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneCheckTags3;

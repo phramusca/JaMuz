@@ -26,7 +26,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author raph
  */
-class SlskdSearchFile {
+public class SlskdSearchFile {
 	public String filename;
 	public int size;
 	public int bitDepth;

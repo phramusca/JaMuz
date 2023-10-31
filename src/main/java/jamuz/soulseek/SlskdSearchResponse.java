@@ -16,6 +16,7 @@
  */
 package jamuz.soulseek;
 
+import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.DateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +43,14 @@ public class SlskdSearchResponse {
 	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
     private boolean completed;
 
+    private transient ProgressBar progressBar = new ProgressBar();
+
+    public SlskdSearchResponse() {
+        this.progressBar.setup(100);
+        this.progressBar.setMsgMax(500);
+		this.progressBar.displayAsPercent();
+    }
+    
 	//FIXME !!!!!! use existing option
 	private static final List<String> ALLOWED_EXTENSIONS 
 			= Collections.unmodifiableList(
@@ -134,10 +143,18 @@ public class SlskdSearchResponse {
     }
 
     TableModelSlskdDownload getTableModel() {
-        TableModelSlskdDownload tableModelDownload = new TableModelSlskdDownload();
+        TableModelSlskdDownload tableModelDownload = new TableModelSlskdDownload(this);
         for (SlskdSearchFile file : files) {
             tableModelDownload.addRow(file);
         }
         return tableModelDownload;
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    void update(String msg, int index) {
+        this.progressBar.progress(msg, index);
     }
 }

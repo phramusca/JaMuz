@@ -29,11 +29,18 @@ import org.apache.commons.io.FilenameUtils;
 public class TableModelSlskdDownload extends TableModelGeneric {
 
     private List<SlskdSearchFile> results;
+    private SlskdSearchResponse searchResponse;
 
     /**
 	 * Create the table model
+     * @param searchResponse
 	 */
-	public TableModelSlskdDownload() {
+	public TableModelSlskdDownload(SlskdSearchResponse searchResponse) {
+        this();
+        this.searchResponse = searchResponse;
+	}
+
+    TableModelSlskdDownload() {
         this.results = new ArrayList<>();
         this.setColumnNames(new String [] {
             "Date", //NOI18N
@@ -43,7 +50,11 @@ public class TableModelSlskdDownload extends TableModelGeneric {
             "File",  //NOI18N
 			"Progress", //NOI18N
         });
-	}
+    }
+
+    public SlskdSearchResponse getSearchResponse() {
+        return searchResponse;
+    }
 
 	/**
 	 *
@@ -51,19 +62,19 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 	 * @param columnIndex
 	 * @return
 	 */
-@Override
-public Object getValueAt(int rowIndex, int columnIndex) {
-    SlskdSearchFile searchFile = results.get(rowIndex);
-    switch (columnIndex) {
-        case 0: return searchFile.getDate();
-		case 1: return searchFile.bitRate;
-		case 2: return StringManager.humanReadableSeconds(searchFile.length);
-		case 3: return StringManager.humanReadableByteCount(searchFile.size, true);
-		case 4: return FilenameUtils.getName(searchFile.filename);
-        case 5: return searchFile.getProgressBar();
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        SlskdSearchFile searchFile = results.get(rowIndex);
+        switch (columnIndex) {
+            case 0: return searchFile.getDate();
+            case 1: return searchFile.bitRate;
+            case 2: return StringManager.humanReadableSeconds(searchFile.length);
+            case 3: return StringManager.humanReadableByteCount(searchFile.size, true);
+            case 4: return FilenameUtils.getName(searchFile.filename);
+            case 5: return searchFile.getProgressBar();
+        }
+        return null;
     }
-    return null;
-}
 	
 	@Override
     public void setValueAt(Object value, int row, int col) {

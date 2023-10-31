@@ -72,7 +72,11 @@ public class DialogSlsk extends javax.swing.JDialog {
 		setColumn(columnModelResults, 6, 50);	// Queue length
 		setColumn(columnModelResults, 7, 150);	// Username
 		setColumn(columnModelResults, 8, 600);	// Path
-
+        TableColumn column = 
+        setColumn(columnModelResults, 9, 80);     // Completed
+        column.setCellRenderer(new ProgressCellRender());
+        columnModelResults.setColumnVisible(column, false);
+        
 		//Setup download table
 		tableModelDownload = new TableModelSlskdDownload();
 		jTableDownload.setModel(tableModelDownload);
@@ -85,9 +89,10 @@ public class DialogSlsk extends javax.swing.JDialog {
 		setColumn(columnModelDownload, 2, 80);     // Length
 		setColumn(columnModelDownload, 3, 50);     // Size
 		setColumn(columnModelDownload, 4, 300);    // File
-        TableColumn column = 
+        column = 
         setColumn(columnModelDownload, 5, 400);     // Completed
 		column.setCellRenderer(new ProgressCellRender());
+        columnModelDownload.setColumnVisible(column, false);
         
 		progressBar = (ProgressBar)jProgressBarSlsk;
 
@@ -279,6 +284,8 @@ public class DialogSlsk extends javax.swing.JDialog {
                     selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
                     SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
                     panelSlsk.addDownload(searchResponse);
+                    //FIXME !!!! Re-enable the "Add to downloads" button, but only if not yet added 
+                    // => need to store that info, and display it on jTableResults (warning: same model as in Panel so will need to add and hide that column there
                  }
 			}
 		}.start();

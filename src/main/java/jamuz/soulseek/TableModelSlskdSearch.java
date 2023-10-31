@@ -43,6 +43,7 @@ public class TableModelSlskdSearch extends TableModelGeneric {
 			"Queue length", //NOI18N
 			"User", //NOI18N
             "Path",  //NOI18N
+            "Progress", //NOI18N
         });
 	}
 
@@ -65,6 +66,7 @@ public class TableModelSlskdSearch extends TableModelGeneric {
 			case 6: return searchResponse.queueLength;
 			case 7: return searchResponse.username;
             case 8: return searchResponse.getPath();
+            case 9: return searchResponse.getProgressBar();
 		}
         return null;
     }
