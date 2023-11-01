@@ -19,8 +19,6 @@ package jamuz.soulseek;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.DateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +40,7 @@ public class SlskdSearchResponse {
 	public String username;	
 	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
     private boolean completed;
+    private boolean processed;
     private String searchText;
     private boolean queued;
     
@@ -59,6 +58,14 @@ public class SlskdSearchResponse {
 
     void setQueued() {
         queued = true;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
     }
     
     String getSearchText() {

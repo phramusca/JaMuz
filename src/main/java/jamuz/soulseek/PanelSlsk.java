@@ -48,11 +48,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumn;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *
@@ -67,7 +70,6 @@ public class PanelSlsk extends javax.swing.JPanel {
 	private final TableColumnModel columnModelResults;
 	private final TableColumnModel columnModelDownload;
     private final Updater positionUpdater;
-    private final Base64 encoder = new Base64();
 	
     /**
 	 * Creates new form PanelRemote
@@ -169,23 +171,49 @@ public class PanelSlsk extends javax.swing.JPanel {
 		if(sourceTxt.equals(Inter.get("Slsk.Retry"))) { //NOI18N
 			SlskdSearchResponse searchResponse = getSelected();
             if(searchResponse!=null) {
-                //FIXME ! do retry failed or other errored...
-                Popup.warning("TODO");
+                SwingUtilities.invokeLater(() -> {
+                    searchResponse.setProcessed(true);
+                    for (SlskdSearchFile file : searchResponse.files) {
+                        if (file.percentComplete<100) {
+                            soulseek.deleteTransfer(searchResponse.username, file);  
+                        }
+                    }
+                    soulseek.download(searchResponse);
+                    searchResponse.setProcessed(false);
+                });
             }
 		}
 		else if(sourceTxt.equals(Inter.get("Slsk.Remove"))) { //NOI18N
 			SlskdSearchResponse searchResponse = getSelected();
             if(searchResponse!=null) {
-                if(searchResponse.isCompleted()) {
-                    File file = getJsonFile(searchResponse);
-                    if(file.exists()) {
-                        file.delete();
+                SwingUtilities.invokeLater(() -> {
+                    searchResponse.setProcessed(true);
+                    if(searchResponse.isCompleted()) {
+                        File file = getJsonFile(searchResponse);
+                        if(file.exists()) {
+                            file.delete();
+                        }
+                        tableModelResults.removeRow(searchResponse);
+                    } else {
+                        int n = JOptionPane.showConfirmDialog(
+                                this, "Annuler et supprimer ?",
+                                Inter.get("Label.Confirm"),  //NOI18N
+                                JOptionPane.YES_NO_OPTION);
+                        if (n == JOptionPane.YES_OPTION) {
+                            for (SlskdSearchFile searchFile : searchResponse.files) {
+                                soulseek.deleteTransfer(searchResponse.username, searchFile);
+                                soulseek.deleteFile(searchFile);
+                            }
+                            File file = getJsonFile(searchResponse);
+                            if(file.exists()) {
+                                file.delete();
+                            }
+                            tableModelResults.removeRow(searchResponse);
+                        }                            
                     }
-                    tableModelResults.removeRow(searchResponse);
-                } else {
-                    Popup.warning("TODO");
-                    //FIXME ! prompt user for confirmation, then stop download, cancel it, remove transfers, cleanup files (downloaded and incomplete), and remove json file and table row
-                }
+                    displaySearchFiles();
+                    searchResponse.setProcessed(false);
+                });
             }
 		}
 		else {
@@ -523,8 +551,10 @@ public class PanelSlsk extends javax.swing.JPanel {
         SlskdSearchResponse searchResponse = getSelected();
         if(searchResponse!=null) {
             tableModelDownload = searchResponse.getTableModel();
-            jTableDownload.setModel(tableModelDownload);
+        } else {
+            tableModelDownload = new TableModelSlskdDownload();
         }
+        jTableDownload.setModel(tableModelDownload);
 	}
     
     private void saveJson(SlskdSearchResponse searchResponse) {
@@ -604,7 +634,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                 
                 for (int row = 0; row < tableModelResults.getRows().size(); row++) {
                     SlskdSearchResponse searchResponse = tableModelResults.getRow(row);
-                    if(soulseek!=null && !searchResponse.isCompleted()) {
+                    if(soulseek!=null && !searchResponse.isCompleted() && ! searchResponse.isProcessed()) {
                         //Get downloads for username
                         SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
                         if(downloads!=null) {
@@ -650,20 +680,22 @@ public class PanelSlsk extends javax.swing.JPanel {
                                 if(finalDestination.check()) {
                                     try {
                                         for (SlskdDownloadFile downloadFile : filteredFiles.values()) {
+                                            
                                             //Copy file
-                                            String[] split = downloadFile.filename.split("\\\\");
-                                            String subDirectoryName = split[split.length-2];
-                                            String filename = split[split.length-1];
+                                            Pair<String, String> directory = soulseek.getDirectory(downloadFile.filename);
+                                            String subDirectoryName = directory.getLeft();
+                                            String filename = directory.getRight();
+                                            
                                             String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
                                             File sourceFile = new File(FilenameUtils.concat(FilenameUtils.concat(sourcePath, subDirectoryName), filename));
                                             String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.username + "--" + searchResponse.getPath());
                                             File destFile = new File(FilenameUtils.concat(FilenameUtils.concat(finalDestination.getValue(), newSubDirectoryName), filename));
                                             FileUtils.copyFile(sourceFile, destFile);
+                                            
                                             //Delete transfer
                                             soulseek.deleteTransfer(downloadFile);
                                             //Delete file
-                                            String base64File = encoder.encodeToString(FilenameUtils.concat(subDirectoryName, filename).getBytes());
-                                            soulseek.deleteFile(base64File);
+                                            soulseek.deleteFile(downloadFile);
                                         }
                                         searchResponse.setCompleted();
                                         saveJson(searchResponse);

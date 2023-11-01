@@ -76,10 +76,12 @@ public class SlskdClient {
 	public boolean download(SlskdSearchResponse searchResponse) throws IOException, ServerException {
 		JSONArray jsonArray = new JSONArray();
 		for (SlskdSearchFile file : searchResponse.getFiles()) {
-			JSONObject fileObj = new JSONObject();
-			fileObj.put("filename", file.filename);
-			fileObj.put("size", file.size);
-			jsonArray.add(fileObj);
+			if(file.percentComplete<100) {
+                JSONObject fileObj = new JSONObject();
+                fileObj.put("filename", file.filename);
+                fileObj.put("size", file.size);
+                jsonArray.add(fileObj);
+            }
 		}
 		OkHttpClient timeoutClient = new OkHttpClient.Builder()
                     .readTimeout(30, TimeUnit.SECONDS)
@@ -157,8 +159,8 @@ public class SlskdClient {
 		return response.isSuccessful();
     }
     
-    public boolean deleteTransfer(SlskdDownloadFile downloadFile) throws IOException {
-        HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/" + downloadFile.username + "/" + downloadFile.id + "?remove=true"); //NON-NLS
+    public boolean deleteTransfer(String username, String id) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/" + username + "/" + id + "?remove=true"); //NON-NLS
 		Request request = getRequestBuilder(urlBuilder).delete().build();
         Response response = client.newCall(request).execute();
 		return response.isSuccessful();
@@ -173,6 +175,13 @@ public class SlskdClient {
 	
     public boolean deleteFile(String base64File) throws IOException {
         HttpUrl.Builder urlBuilder = getUrlBuilder("files/downloads/files/" + base64File); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).delete().build();
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+    }
+    
+    public boolean deleteIncompleteFile(String base64File) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("files/incomplete/files/" + base64File); //NON-NLS
 		Request request = getRequestBuilder(urlBuilder).delete().build();
         Response response = client.newCall(request).execute();
 		return response.isSuccessful();

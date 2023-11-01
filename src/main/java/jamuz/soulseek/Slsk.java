@@ -28,6 +28,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
@@ -36,6 +39,7 @@ public class Slsk {
 	
 	private final SlskdClient slskdClient;
     private final List<String> allowedExtensions;
+    private final Base64 encoder = new Base64();
 
     /**
 	 * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
@@ -128,20 +132,57 @@ public class Slsk {
 
     boolean deleteTransfer(SlskdDownloadFile downloadFile) {
         try {
-            return slskdClient.deleteTransfer(downloadFile);
+            return slskdClient.deleteTransfer(downloadFile.username, downloadFile.id);
         } catch (IOException ex) {
             Popup.error(ex);
         }
         return false;
     }
 
-    boolean deleteFile(String base64File) {
+    boolean deleteTransfer(String username, SlskdSearchFile downloadFile) {
         try {
-            return slskdClient.deleteFile(base64File);
+            return slskdClient.deleteTransfer(username, downloadFile.id);
         } catch (IOException ex) {
             Popup.error(ex);
         }
         return false;
     }
+    
+    boolean deleteFile(SlskdDownloadFile downloadFile) {
+        try {
+            return deleteFilename(downloadFile.filename, false);
+        } catch (IOException ex) {
+            Popup.error(ex);
+        }
+        return false;
+    }
+    
+    boolean deleteFile(SlskdSearchFile searchFile) {
+        try {
+            return deleteFilename(searchFile.filename, searchFile.percentComplete < 100);
+        } catch (IOException ex) {
+            Popup.error(ex);
+        }
+        return false;
+    }
+    
+    private boolean deleteFilename(String filename, boolean incomplete) throws IOException {
+        Pair<String, String> directory = getDirectory(filename);
+        String subDirectoryName = directory.getLeft();
+        String fileOnlyName = directory.getRight();
+        String base64File = encoder.encodeToString(FilenameUtils.concat(subDirectoryName, fileOnlyName).getBytes());
+        
+        if(incomplete) {
+            return slskdClient.deleteIncompleteFile(base64File);
+        } else {
+            return slskdClient.deleteFile(base64File);
+        }
+    }
+    
+    public Pair<String, String> getDirectory(String filename) {
+        String[] split = filename.split("\\\\");
+        return Pair.of(split[split.length-2], split[split.length-1]);
+    }
+    
 
 }
