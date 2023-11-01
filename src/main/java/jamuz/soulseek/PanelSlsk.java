@@ -514,22 +514,23 @@ public class PanelSlsk extends javax.swing.JPanel {
                             if(allFilesComplete) {
                                 Location finalDestination = new Location("location.add");
                                 if(finalDestination.check()) {
-                                    SlskdDownloadFile get = filteredFiles.values().stream().findFirst().get();
-                                    String[] split = get.filename.split("\\\\");
-                                    //FIXME !! Since subDirectoryName can contain more files than current searchResponse, need to copy files one by one
-                                    String subDirectoryName = split[split.length-2];
-                                    String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
-                                    File sourceFile = new File(FilenameUtils.concat(sourcePath, subDirectoryName));
-                                    String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.username + "--" + searchResponse.getPath());
-                                    File destFile = new File(FilenameUtils.concat(finalDestination.getValue(), newSubDirectoryName));
-
                                     try {
-                                        FileUtils.copyDirectory(sourceFile, destFile);
                                         for (SlskdDownloadFile downloadFile : filteredFiles.values()) {
+                                            //Copy file
+                                            String[] split = downloadFile.filename.split("\\\\");
+                                            String subDirectoryName = split[split.length-2];
+                                            String filename = split[split.length-1];
+                                            String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
+                                            File sourceFile = new File(FilenameUtils.concat(FilenameUtils.concat(sourcePath, subDirectoryName), filename));
+                                            String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.username + "--" + searchResponse.getPath());
+                                            File destFile = new File(FilenameUtils.concat(FilenameUtils.concat(finalDestination.getValue(), newSubDirectoryName), filename));
+                                            FileUtils.copyFile(sourceFile, destFile);
+                                            //Delete transfer
                                             soulseek.deleteTransfer(downloadFile);
+                                            //Delete file
+                                            String base64File = encoder.encodeToString(FilenameUtils.concat(subDirectoryName, filename).getBytes());
+                                            soulseek.deleteFile(base64File);
                                         }
-                                        String base64subDir = encoder.encodeToString(subDirectoryName.getBytes());
-                                        soulseek.deleteDirectory(base64subDir);
                                         searchResponse.setCompleted();
                                     } catch (IOException ex) {
                                         Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);

@@ -130,4 +130,13 @@ public class Slsk {
         return false;
     }
 
+    boolean deleteFile(String base64File) {
+        try {
+            return slskdClient.deleteFile(base64File);
+        } catch (IOException ex) {
+            Popup.error(ex);
+        }
+        return false;
+    }
+
 }

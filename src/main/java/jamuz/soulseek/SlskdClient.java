@@ -171,6 +171,13 @@ public class SlskdClient {
 		return response.isSuccessful();
     }
 	
+    public boolean deleteFile(String base64File) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("files/downloads/files/" + base64File); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).delete().build();
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+    }
+    
 	private HttpUrl.Builder getUrlBuilder(String url) {
         return Objects.requireNonNull(HttpUrl.parse(BASE_URL + "/" + url)).newBuilder(); //NON-NLS
     }
