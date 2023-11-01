@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import jamuz.Jamuz;
 import jamuz.Options;
+import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.process.check.Location;
@@ -30,7 +31,9 @@ import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
-import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -44,13 +47,12 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.swing.JMenuItem;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumn;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-
-//FIXME ! Alow monitored downloads to be removed or retried
 
 /**
  *
@@ -60,21 +62,21 @@ public class PanelSlsk extends javax.swing.JPanel {
 
 	private Slsk soulseek;
     private Options options;
-    private final TableModelSlskdSearch tableModelResults;
+    private final TableModelSlskdSearch tableModelResults = new TableModelSlskdSearch();
 	private TableModelSlskdDownload tableModelDownload;
 	private final TableColumnModel columnModelResults;
 	private final TableColumnModel columnModelDownload;
     private final Updater positionUpdater;
     private final Base64 encoder = new Base64();
-
-	/**
+	
+    /**
 	 * Creates new form PanelRemote
 	 */
 	public PanelSlsk() {
 		initComponents();
         
         //Setup Search results table
-		tableModelResults = new TableModelSlskdSearch();
+//		tableModelResults = new TableModelSlskdSearch();
 		jTableResults.setModel(tableModelResults);
 		columnModelResults = new TableColumnModel();
 		//Assigning XTableColumnModel to allow show/hide columns
@@ -129,6 +131,11 @@ public class PanelSlsk extends javax.swing.JPanel {
             }
         }
         
+        addMenuItem(Inter.get("Slsk.Retry")); //NOI18N
+        addMenuItem(Inter.get("Slsk.Remove")); //NOI18N
+        MouseListener popupListener = new PopupListener(jPopupMenu1);
+        jTableResults.addMouseListener(popupListener);
+        
         positionUpdater = new Updater();
         positionUpdater.start();
         
@@ -136,21 +143,12 @@ public class PanelSlsk extends javax.swing.JPanel {
         File slskCacheFolder = Jamuz.getFile("", "data", "cache", "slsk");
         for (File listFile : slskCacheFolder.listFiles()) {
             if(listFile.exists()) {
-                try {
-                    String readJson = FileSystem.readTextFile(listFile);
-                    if (!readJson.equals("")) {
-                        Gson gson = new Gson();
-                        Type mapType = new TypeToken<SlskdSearchResponse>(){}.getType();
-                        SlskdSearchResponse searchResponse = gson.fromJson(readJson, mapType);
-                        if(searchResponse.isCompleted()) {
-                            searchResponse.getProgressBar().progress("", 100);
-                            searchResponse.files.forEach(f -> f.getProgressBar().progress("", 100));
-                        }
-                        tableModelResults.addRow(searchResponse);
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
+                SlskdSearchResponse searchResponse = readJson(listFile);
+                if(searchResponse.isCompleted()) {
+                    searchResponse.getProgressBar().progress("", 100);
+                    searchResponse.files.forEach(f -> f.getProgressBar().progress("", 100));
                 }
+                tableModelResults.addRow(searchResponse);
             }
         }
         
@@ -159,6 +157,52 @@ public class PanelSlsk extends javax.swing.JPanel {
 		}
 	}
 
+    private void addMenuItem(String item) {
+        JMenuItem menuItem = new JMenuItem(item);
+        menuItem.addActionListener(menuListener);
+        jPopupMenu1.add(menuItem);
+    }
+    
+    ActionListener menuListener = (ActionEvent e) -> {
+		JMenuItem source = (JMenuItem)(e.getSource());
+		String sourceTxt=source.getText();
+		if(sourceTxt.equals(Inter.get("Slsk.Retry"))) { //NOI18N
+			SlskdSearchResponse searchResponse = getSelected();
+            if(searchResponse!=null) {
+                //FIXME ! do retry failed or other errored...
+                Popup.warning("TODO");
+            }
+		}
+		else if(sourceTxt.equals(Inter.get("Slsk.Remove"))) { //NOI18N
+			SlskdSearchResponse searchResponse = getSelected();
+            if(searchResponse!=null) {
+                if(searchResponse.isCompleted()) {
+                    File file = getJsonFile(searchResponse);
+                    if(file.exists()) {
+                        file.delete();
+                    }
+                    tableModelResults.removeRow(searchResponse);
+                } else {
+                    Popup.warning("TODO");
+                    //FIXME ! prompt user for confirmation, then stop download, cancel it, remove transfers, cleanup files (downloaded and incomplete), and remove json file and table row
+                }
+            }
+		}
+		else {
+			Popup.error("Unknown menu item: " + sourceTxt); //NOI18N
+		}
+	};
+    
+    private SlskdSearchResponse getSelected() {
+        int selectedRow = jTableResults.getSelectedRow(); 			
+		if(selectedRow>=0) { 
+			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
+			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
+            return searchResponse;
+		}
+        return null;
+	}
+    
     private TableColumn setColumn(TableColumnModel columnModel, int index, int width) {
         TableColumn column = columnModel.getColumn(index);
 		column.setMinWidth(width);
@@ -176,6 +220,7 @@ public class PanelSlsk extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jPanelSlsk = new javax.swing.JPanel();
         jButtonStart = new javax.swing.JButton();
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
@@ -475,24 +520,41 @@ public class PanelSlsk extends javax.swing.JPanel {
     }//GEN-LAST:event_jToggleShowLogsActionPerformed
 	
     private void displaySearchFiles() {
-		int selectedRow = jTableResults.getSelectedRow(); 			
-		if(selectedRow>=0) { 
-			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
-			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
+        SlskdSearchResponse searchResponse = getSelected();
+        if(searchResponse!=null) {
             tableModelDownload = searchResponse.getTableModel();
             jTableDownload.setModel(tableModelDownload);
-		}
+        }
 	}
     
     private void saveJson(SlskdSearchResponse searchResponse) {
         try {
             Gson gson = new Gson();
-            String uniqueFilename = StringManager.removeIllegal(searchResponse.getSearchText() + "_" + searchResponse.getDate() + "_" + searchResponse.username) + ".json";
-            File file = Jamuz.getFile(uniqueFilename, "data", "cache", "slsk");
+            File file = getJsonFile(searchResponse);
             FileSystem.writeTextFile(file, gson.toJson(searchResponse));
         } catch (IOException ex) {
             Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private File getJsonFile(SlskdSearchResponse searchResponse) {
+        String uniqueFilename = StringManager.removeIllegal(searchResponse.getSearchText() + "_" + searchResponse.getDate() + "_" + searchResponse.username) + ".json";
+        return Jamuz.getFile(uniqueFilename, "data", "cache", "slsk");
+    }
+    
+    private SlskdSearchResponse readJson(File listFile) {
+        try {
+            String readJson = FileSystem.readTextFile(listFile);
+            if (!readJson.equals("")) {
+                Gson gson = new Gson();
+                Type mapType = new TypeToken<SlskdSearchResponse>(){}.getType();
+                SlskdSearchResponse searchResponse = gson.fromJson(readJson, mapType);
+                return searchResponse;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     void addDownload(SlskdSearchResponse searchResponse) {
@@ -625,6 +687,7 @@ public class PanelSlsk extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelSlsk;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneCheckTags3;
     private javax.swing.JScrollPane jScrollPaneLog;
