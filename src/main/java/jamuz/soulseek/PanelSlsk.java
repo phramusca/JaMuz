@@ -114,20 +114,23 @@ public class PanelSlsk extends javax.swing.JPanel {
         
         //Get and display options
         File file = Jamuz.getFile("Slsk.properties");
+        boolean onStartup = false;
         if(file.exists()) {
             options = new Options(file.getAbsolutePath());
             if(options.read()) {
                 jTextFieldUsername.setText(options.get("slsk.username"));
                 jTextFieldPassword.setText(options.get("slsk.password"));
-
-                //FIXME !!! slskd onStartup
-                boolean onStartup = Boolean.parseBoolean(options.get("server.on.startup", "false"));
+                onStartup = Boolean.parseBoolean(options.get("slsk.on.startup", "false"));
                 jCheckBoxServerStartOnStartup.setSelected(onStartup);
             }
         }
         
         positionUpdater = new Updater();
         positionUpdater.start();
+        
+        if(onStartup) {
+			startStopSlsk();
+		}
 	}
 
     private TableColumn setColumn(TableColumnModel columnModel, int index, int width) {
@@ -197,6 +200,7 @@ public class PanelSlsk extends javax.swing.JPanel {
 
         jSplitPaneLogs.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
+        jTextAreaLog.setEditable(false);
         jTextAreaLog.setColumns(20);
         jTextAreaLog.setRows(5);
         jScrollPane1.setViewportView(jTextAreaLog);
@@ -295,18 +299,24 @@ public class PanelSlsk extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
+        startStopSlsk();
+    }//GEN-LAST:event_jButtonStartActionPerformed
+
+    private void startStopSlsk() {
         new Thread() {
             @Override
             public void run() {
                 jSplitPaneLogs.setDividerLocation(1.0);
                 enableGui(false);
 
+                boolean reCreate = (!options.get("slsk.username").equals(jTextFieldUsername.getText()) || !options.get("slsk.password").equals(jTextFieldPassword.getText()));
+                
                 //Start slskd server, if not already running
                 SlskdDocker slskdDocker = new SlskdDocker(
                         jTextFieldUsername.getText(), 
                         jTextFieldPassword.getText(), 
                         Jamuz.getFile("", "slskd").getAbsolutePath(), 
-                        Jamuz.getMachine().getOptionValue("location.library"));
+                        Jamuz.getMachine().getOptionValue("location.library"), reCreate);
 
                 if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
                     jButtonStart.setText("Starting ...");
@@ -315,6 +325,11 @@ public class PanelSlsk extends javax.swing.JPanel {
                         Popup.warning("Could not start slskd");
                     }
 
+                    //Save options
+                    options.set("slsk.username", jTextFieldUsername.getText());
+                    options.set("slsk.password", jTextFieldPassword.getText());
+                    options.save();
+                    
                     //Wait for container to be healthy and display logs
                     SwingWorker<String, String> worker = new SwingWorker<>() {
                         @Override
@@ -383,8 +398,8 @@ public class PanelSlsk extends javax.swing.JPanel {
                 }
             }
         }.start();
-    }//GEN-LAST:event_jButtonStartActionPerformed
-
+    }
+    
     public void enableGui(boolean enable) {
         jButtonStart.setEnabled(enable);
         jTextFieldUsername.setEnabled(enable);
@@ -403,11 +418,6 @@ public class PanelSlsk extends javax.swing.JPanel {
         jTextAreaLog.setCaretPosition(jTextAreaLog.getDocument().getLength()); //Scroll to bottom
     }
     
-    private void jCheckBoxServerStartOnStartupItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxServerStartOnStartupItemStateChanged
-//        Jamuz.getOptions().set("server.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
-//		Jamuz.getOptions().save();
-    }//GEN-LAST:event_jCheckBoxServerStartOnStartupItemStateChanged
-
     private void jTableResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultsMouseClicked
         displaySearchFiles();
     }//GEN-LAST:event_jTableResultsMouseClicked
@@ -415,6 +425,11 @@ public class PanelSlsk extends javax.swing.JPanel {
     private void jButtonWebSlskdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonWebSlskdActionPerformed
         Desktop.openBrowser("http://localhost:5030");
     }//GEN-LAST:event_jButtonWebSlskdActionPerformed
+
+    private void jCheckBoxServerStartOnStartupItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxServerStartOnStartupItemStateChanged
+        options.set("slsk.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
+		options.save();
+    }//GEN-LAST:event_jCheckBoxServerStartOnStartupItemStateChanged
 	
     private void displaySearchFiles() {
 		int selectedRow = jTableResults.getSelectedRow(); 			
@@ -506,7 +521,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                                 percentComplete+=slskdDownloadFile.percentComplete;
                             }
                             searchResponse.update("", ((int) Math.round(percentComplete)) / filteredFiles.values().size() );
-                            tableModelResults.fireTableCellUpdated(row, 9);
+                            tableModelResults.fireTableCellUpdated(row, 11);
                             
                             boolean allFilesComplete = filteredFiles.values()
                                 .stream()

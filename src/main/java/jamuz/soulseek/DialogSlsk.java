@@ -134,8 +134,6 @@ public class DialogSlsk extends javax.swing.JDialog {
 				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // Speed
 				sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Queue
 				
-// FIXME !!!! Filter out locked (done, right?) and without free slots
-				
 				tableSorter.setSortKeys(sortKeys);
 				jTableResults.getSelectionModel().setSelectionInterval(0, 0);
 			}

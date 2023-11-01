@@ -17,7 +17,6 @@
 
 package jamuz.soulseek;
 
-import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.Popup;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import javax.swing.JLabel;
 public class Slsk {
 	
 	private final SlskdClient slskdClient;
-//FIXME !!!! Manage exceptions and method returns		
+
     /**
 	 * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
      *
@@ -87,7 +86,7 @@ public class Slsk {
 
             return groupedResponses;	
 		} catch (IOException | SlskdClient.ServerException ex) {
-			         Popup.error(ex);
+            Popup.error(ex);
 		} catch (InterruptedException ex) {
             Logger.getLogger(Slsk.class.getName()).log(Level.WARNING, null, ex);
         }
@@ -98,7 +97,7 @@ public class Slsk {
 		try {
 			return slskdClient.getDownloads(searchResponse);
 		} catch (IOException | SlskdClient.ServerException ex) {
-            Popup.error(ex);
+            Logger.getLogger(Slsk.class.getName()).log(Level.WARNING, null, ex);
 		}
 		return null;
 	}

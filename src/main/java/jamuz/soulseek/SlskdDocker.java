@@ -14,6 +14,7 @@ import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.core.DockerClientBuilder;
+import jamuz.gui.swing.TriStateCheckBox;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,6 @@ public class SlskdDocker {
 //    https://github.com/docker-java/docker-java/blob/main/docs/getting_started.md
 //    https://www.baeldung.com/docker-java-api
     
-    //FIXME !!!! Need to apply new config to running container (if any) if anything below changes in gui (apply button ? or restart ?)
     private final boolean SLSKD_SWAGGER ;
     private final boolean SLSKD_NO_AUTH;
     private final String SLSKD_SLSK_USERNAME;
@@ -38,8 +38,19 @@ public class SlskdDocker {
     private final DockerClient dockerClient;
 
     private static final String CONTAINER_NAME = "jamuz-slskd";
+    private final boolean reCreate;
 
-    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH) {
+    /**
+     *
+     * @param SLSKD_SLSK_USERNAME
+     * @param SLSKD_SLSK_PASSWORD
+     * @param serverPath
+     * @param musicPath
+     * @param SLSKD_SWAGGER
+     * @param SLSKD_NO_AUTH
+     * @param reCreate
+     */
+    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH, boolean reCreate) {
         this.SLSKD_SWAGGER = SLSKD_SWAGGER;
         this.SLSKD_NO_AUTH = SLSKD_NO_AUTH;
         this.SLSKD_SLSK_USERNAME = SLSKD_SLSK_USERNAME;
@@ -47,22 +58,28 @@ public class SlskdDocker {
         this.serverPath = serverPath;
         this.musicPath = musicPath;
         this.dockerClient = DockerClientBuilder.getInstance().build();
+        this.reCreate = reCreate;
     }
     
-    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath) {
-        this.SLSKD_SWAGGER = true; //FIXME !!!!!!!!!!!!!!!!! set to false when done
-        this.SLSKD_NO_AUTH = true;
-        this.SLSKD_SLSK_USERNAME = SLSKD_SLSK_USERNAME;
-        this.SLSKD_SLSK_PASSWORD = SLSKD_SLSK_PASSWORD;
-        this.serverPath = serverPath;
-        this.musicPath = musicPath;
-        this.dockerClient = DockerClientBuilder.getInstance().build();
+    /**
+     *
+     * @param SLSKD_SLSK_USERNAME
+     * @param SLSKD_SLSK_PASSWORD
+     * @param serverPath
+     * @param musicPath
+     * @param reCreate
+     */
+    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean reCreate) {
+        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, false, true, reCreate);
     }
     
     public boolean start() {
         Container container = getContainer();
         if(container == null) {
             createAndStartContainer();
+            return true;
+        } else if(reCreate) {
+            removeAndStartContainer(container);
             return true;
         } else {
             State state = getState(container);
@@ -94,8 +111,10 @@ public class SlskdDocker {
     }
     
     private void removeAndStartContainer(Container container) {
-        stop();
-        dockerClient.killContainerCmd(container.getId()).exec();
+        if(container != null && ! getState(container).equals(State.exited)) {
+            stop();
+            dockerClient.killContainerCmd(container.getId()).exec();
+        }
         dockerClient.removeContainerCmd(container.getId()).withForce(true).withRemoveVolumes(true).exec();
         createAndStartContainer();
     }
