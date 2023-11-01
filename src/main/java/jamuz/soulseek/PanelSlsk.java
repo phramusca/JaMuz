@@ -30,6 +30,7 @@ import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
+import java.awt.BorderLayout;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -175,7 +176,7 @@ public class PanelSlsk extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanelRemote = new javax.swing.JPanel();
+        jPanelSlsk = new javax.swing.JPanel();
         jButtonStart = new javax.swing.JButton();
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
@@ -183,16 +184,17 @@ public class PanelSlsk extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jTextFieldPassword = new jamuz.gui.swing.PasswordFieldWithToggle();
         jButtonWebSlskd = new javax.swing.JButton();
-        jSplitPaneLogs = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jToggleShowLogs = new javax.swing.JToggleButton();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPaneLog = new javax.swing.JScrollPane();
         jTextAreaLog = new javax.swing.JTextArea();
-        jPanel2 = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPaneCheckTags3 = new javax.swing.JScrollPane();
         jTableResults = new jamuz.gui.swing.TableHorizontal();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableDownload = new jamuz.gui.swing.TableHorizontal();
 
-        jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder("Soulseek"));
+        jPanelSlsk.setBorder(javax.swing.BorderFactory.createTitledBorder("Soulseek"));
 
         jButtonStart.setText(Inter.get("Button.Start")); // NOI18N
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
@@ -223,14 +225,33 @@ public class PanelSlsk extends javax.swing.JPanel {
             }
         });
 
-        jSplitPaneLogs.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jToggleShowLogs.setSelected(true);
+        jToggleShowLogs.setText("Log");
+        jToggleShowLogs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleShowLogsActionPerformed(evt);
+            }
+        });
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jScrollPaneLog.setMinimumSize(new java.awt.Dimension(200, 200));
+        jScrollPaneLog.setName(""); // NOI18N
+        jScrollPaneLog.setPreferredSize(new java.awt.Dimension(232, 200));
 
         jTextAreaLog.setEditable(false);
         jTextAreaLog.setColumns(20);
+        jTextAreaLog.setLineWrap(true);
         jTextAreaLog.setRows(5);
-        jScrollPane1.setViewportView(jTextAreaLog);
+        jTextAreaLog.setText("Thisiid zdojaprg ajerpga ra ergn,");
+        jScrollPaneLog.setViewportView(jTextAreaLog);
 
-        jSplitPaneLogs.setTopComponent(jScrollPane1);
+        jPanel1.add(jScrollPaneLog, java.awt.BorderLayout.NORTH);
+
+        jSplitPane1.setDividerLocation(100);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(0.5);
+        jSplitPane1.setPreferredSize(new java.awt.Dimension(0, 0));
 
         jTableResults.setAutoCreateColumnsFromModel(false);
         jTableResults.setModel(new jamuz.soulseek.TableModelSlskdSearch());
@@ -242,36 +263,26 @@ public class PanelSlsk extends javax.swing.JPanel {
         });
         jScrollPaneCheckTags3.setViewportView(jTableResults);
 
+        jSplitPane1.setTopComponent(jScrollPaneCheckTags3);
+
         jTableDownload.setAutoCreateColumnsFromModel(false);
         jTableDownload.setModel(new jamuz.soulseek.TableModelSlskdDownload());
         jTableDownload.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane2.setViewportView(jTableDownload);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.DEFAULT_SIZE, 1149, Short.MAX_VALUE)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE))
-        );
+        jSplitPane1.setRightComponent(jScrollPane2);
 
-        jSplitPaneLogs.setRightComponent(jPanel2);
+        jPanel1.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
-        jPanelRemote.setLayout(jPanelRemoteLayout);
-        jPanelRemoteLayout.setHorizontalGroup(
-            jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                        .addContainerGap()
+        javax.swing.GroupLayout jPanelSlskLayout = new javax.swing.GroupLayout(jPanelSlsk);
+        jPanelSlsk.setLayout(jPanelSlskLayout);
+        jPanelSlskLayout.setHorizontalGroup(
+            jPanelSlskLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSlskLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelSlskLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanelSlskLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
                         .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -281,28 +292,30 @@ public class PanelSlsk extends javax.swing.JPanel {
                         .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jCheckBoxServerStartOnStartup)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
+                        .addComponent(jToggleShowLogs)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonWebSlskd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonStart))
-                    .addComponent(jSplitPaneLogs))
+                        .addComponent(jButtonStart)))
                 .addContainerGap())
         );
-        jPanelRemoteLayout.setVerticalGroup(
-            jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        jPanelSlskLayout.setVerticalGroup(
+            jPanelSlskLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSlskLayout.createSequentialGroup()
+                .addGroup(jPanelSlskLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelSlskLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
                         .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel4))
                     .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(jPanelSlskLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jCheckBoxServerStartOnStartup)
                         .addComponent(jButtonStart)
-                        .addComponent(jButtonWebSlskd)))
+                        .addComponent(jButtonWebSlskd)
+                        .addComponent(jToggleShowLogs)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPaneLogs, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -312,13 +325,14 @@ public class PanelSlsk extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelSlsk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelSlsk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -331,7 +345,7 @@ public class PanelSlsk extends javax.swing.JPanel {
         new Thread() {
             @Override
             public void run() {
-                jSplitPaneLogs.setDividerLocation(1.0);
+                displayLogs(true);
                 enableGui(false);
 
                 boolean reCreate = (!options.get("slsk.username").equals(jTextFieldUsername.getText()) || !options.get("slsk.password").equals(jTextFieldPassword.getText()));
@@ -412,7 +426,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                                 appendText("Error: " + ex.getMessage());
                             }
                             jButtonStart.setText(Inter.get("Button.Stop"));
-                            jSplitPaneLogs.setDividerLocation(0.0);
+                            displayLogs(false);
                             enableGui(true);
                         }
                     };
@@ -434,7 +448,7 @@ public class PanelSlsk extends javax.swing.JPanel {
     
     private void enableStart() {
         jButtonStart.setText(Inter.get("Button.Start"));
-        jSplitPaneLogs.setDividerLocation(1.0);
+        displayLogs(true);
         enableGui(true);
     }
     
@@ -455,19 +469,18 @@ public class PanelSlsk extends javax.swing.JPanel {
         options.set("slsk.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
 		options.save();
     }//GEN-LAST:event_jCheckBoxServerStartOnStartupItemStateChanged
+
+    private void jToggleShowLogsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleShowLogsActionPerformed
+        displayLogs(jToggleShowLogs.isSelected());
+    }//GEN-LAST:event_jToggleShowLogsActionPerformed
 	
     private void displaySearchFiles() {
 		int selectedRow = jTableResults.getSelectedRow(); 			
 		if(selectedRow>=0) { 
 			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
 			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-            
             tableModelDownload = searchResponse.getTableModel();
             jTableDownload.setModel(tableModelDownload);
-//            tableModelDownload.clear();
-//			for (SlskdSearchFile file : searchResponse.getFiles()) {
-//				tableModelDownload.addRow(new SlskFile(file, searchResponse.username, searchResponse.getDate()));
-//			}
 		}
 	}
     
@@ -499,6 +512,13 @@ public class PanelSlsk extends javax.swing.JPanel {
         } else {
             Popup.warning("You must connect first!");
         }
+    }
+
+    private void displayLogs(boolean b) {
+        jToggleShowLogs.setSelected(b);
+        jScrollPaneLog.setVisible(b);
+        this.revalidate();
+        this.repaint();
     }
     
     public class Updater extends Timer {
@@ -603,17 +623,18 @@ public class PanelSlsk extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBoxServerStartOnStartup;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanelRemote;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelSlsk;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneCheckTags3;
-    private javax.swing.JSplitPane jSplitPaneLogs;
+    private javax.swing.JScrollPane jScrollPaneLog;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTable jTableDownload;
     private javax.swing.JTable jTableResults;
     private javax.swing.JTextArea jTextAreaLog;
     private jamuz.gui.swing.PasswordFieldWithToggle jTextFieldPassword;
     private javax.swing.JTextField jTextFieldUsername;
+    private javax.swing.JToggleButton jToggleShowLogs;
     // End of variables declaration//GEN-END:variables
 
     
