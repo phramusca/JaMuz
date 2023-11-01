@@ -68,16 +68,10 @@ public class SlskdSearchResponse {
     void setSearchText(String query) {
         this.searchText = query;
     }
-    
-	//FIXME !!!!!! use existing option
-	private static final List<String> ALLOWED_EXTENSIONS 
-			= Collections.unmodifiableList(
-					Arrays.asList("mp3", "flac"));
-    
-   
-    public void filterAndSortFiles() {
+
+    public void filterAndSortFiles(List<String> allowedExtensions) {
         files = files.stream()
-            .filter(file -> ALLOWED_EXTENSIONS.contains(FilenameUtils.getExtension(file.filename)))
+            .filter(file -> allowedExtensions.contains(FilenameUtils.getExtension(file.filename)))
             .sorted(Comparator.comparing(SlskdSearchFile::getFilename))
             .collect(Collectors.toList());
 }

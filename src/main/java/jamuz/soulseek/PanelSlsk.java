@@ -18,18 +18,22 @@ package jamuz.soulseek;
 
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.model.Frame;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import jamuz.Jamuz;
 import jamuz.Options;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.process.check.Location;
 import jamuz.utils.Desktop;
+import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -45,8 +49,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-//FIXME !!!! Save and restore searches on app exit/start
-
+//FIXME ! Alow monitored downloads to be removed or retried
 
 /**
  *
@@ -113,10 +116,10 @@ public class PanelSlsk extends javax.swing.JPanel {
         jTextFieldPassword.setToolTipText("Warning: Password is stored as plain text in properties file !");
         
         //Get and display options
-        File file = Jamuz.getFile("Slsk.properties");
+        File propertiesFile = Jamuz.getFile("Slsk.properties");
         boolean onStartup = false;
-        if(file.exists()) {
-            options = new Options(file.getAbsolutePath());
+        if(propertiesFile.exists()) {
+            options = new Options(propertiesFile.getAbsolutePath());
             if(options.read()) {
                 jTextFieldUsername.setText(options.get("slsk.username"));
                 jTextFieldPassword.setText(options.get("slsk.password"));
@@ -127,6 +130,28 @@ public class PanelSlsk extends javax.swing.JPanel {
         
         positionUpdater = new Updater();
         positionUpdater.start();
+        
+        //Restore searches from cache
+        File slskCacheFolder = Jamuz.getFile("", "data", "cache", "slsk");
+        for (File listFile : slskCacheFolder.listFiles()) {
+            if(listFile.exists()) {
+                try {
+                    String readJson = FileSystem.readTextFile(listFile);
+                    if (!readJson.equals("")) {
+                        Gson gson = new Gson();
+                        Type mapType = new TypeToken<SlskdSearchResponse>(){}.getType();
+                        SlskdSearchResponse searchResponse = gson.fromJson(readJson, mapType);
+                        if(searchResponse.isCompleted()) {
+                            searchResponse.getProgressBar().progress("", 100);
+                            searchResponse.files.forEach(f -> f.getProgressBar().progress("", 100));
+                        }
+                        tableModelResults.addRow(searchResponse);
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
         
         if(onStartup) {
 			startStopSlsk();
@@ -446,9 +471,21 @@ public class PanelSlsk extends javax.swing.JPanel {
 		}
 	}
     
+    private void saveJson(SlskdSearchResponse searchResponse) {
+        try {
+            Gson gson = new Gson();
+            String uniqueFilename = StringManager.removeIllegal(searchResponse.getSearchText() + "_" + searchResponse.getDate() + "_" + searchResponse.username) + ".json";
+            File file = Jamuz.getFile(uniqueFilename, "data", "cache", "slsk");
+            FileSystem.writeTextFile(file, gson.toJson(searchResponse));
+        } catch (IOException ex) {
+            Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     void addDownload(SlskdSearchResponse searchResponse) {
         if(soulseek!=null) {
-            //Add search result
+
+            saveJson(searchResponse);
             tableModelResults.addRow(searchResponse);
 
             //Select it and display files
@@ -504,7 +541,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                                             (existing, replacement) -> existing
                                     ));
 
-                            if(tableModelDownload.getSearchResponse().equals(searchResponse)) {
+                            if(tableModelDownload.getSearchResponse() != null && tableModelDownload.getSearchResponse().equals(searchResponse)) {
                                 List<SlskdSearchFile> rows = tableModelDownload.getRows();
                                 for (int i = 0; i < rows.size(); i++) {
                                     SlskdSearchFile rowFile = rows.get(i);
@@ -547,6 +584,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                                             soulseek.deleteFile(base64File);
                                         }
                                         searchResponse.setCompleted();
+                                        saveJson(searchResponse);
                                     } catch (IOException ex) {
                                         Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
                                     }

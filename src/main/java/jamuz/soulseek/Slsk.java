@@ -17,9 +17,11 @@
 
 package jamuz.soulseek;
 
+import jamuz.Jamuz;
 import jamuz.utils.Popup;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ import javax.swing.JLabel;
 public class Slsk {
 	
 	private final SlskdClient slskdClient;
+    private final List<String> allowedExtensions;
 
     /**
 	 * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
@@ -42,6 +45,9 @@ public class Slsk {
      */  
     public Slsk() throws IOException, SlskdClient.ServerException {
 		slskdClient = new SlskdClient();
+        
+        allowedExtensions = new ArrayList(
+				Arrays.asList(Jamuz.getMachine().getOptionValue("files.audio").split(","))); //NOI18N;
     }
 
 	public List<SlskdSearchResponse> search(String query, JLabel jLabelInfo) {
@@ -59,7 +65,7 @@ public class Slsk {
             Map<String, List<SlskdSearchFile>> pathToFileMap = new HashMap<>();
             Map<String, SlskdSearchResponse> pathToResponseMap = new HashMap<>();
             for (SlskdSearchResponse searchResponse : searchResponses) {
-                searchResponse.filterAndSortFiles();
+                searchResponse.filterAndSortFiles(allowedExtensions);
                 if (!searchResponse.getFiles().isEmpty()) {
                     for (SlskdSearchFile file : searchResponse.getFiles()) {
                         String path = file.getPath();
