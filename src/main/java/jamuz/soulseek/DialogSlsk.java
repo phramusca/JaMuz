@@ -128,11 +128,11 @@ public class DialogSlsk extends javax.swing.JDialog {
 				jTableResults.setRowSorter(tableSorter);
 				List <RowSorter.SortKey> sortKeys = new ArrayList<>();
 
-                sortKeys.add(new RowSorter.SortKey(5, SortOrder.DESCENDING)); // Free upload spots
-				sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING)); // nb of files
-				sortKeys.add(new RowSorter.SortKey(2, SortOrder.DESCENDING)); // BitRate
-				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // Speed
-				sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Queue
+                sortKeys.add(new RowSorter.SortKey(7, SortOrder.DESCENDING)); // Free upload spots
+				sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING)); // nb of files
+				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // BitRate
+				sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Speed
+				sortKeys.add(new RowSorter.SortKey(8, SortOrder.DESCENDING)); // Queue
 				
 				tableSorter.setSortKeys(sortKeys);
 				jTableResults.getSelectionModel().setSelectionInterval(0, 0);
@@ -294,6 +294,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                     enableSearch(false);
                     jButtonAddToDownloads.setEnabled(false);
                     tableModelResults.clear();
+                    tableModelDownload.clear();
                     jLabelInfo.setText("Searching...");
 
                     List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), jLabelInfo);
@@ -307,9 +308,9 @@ public class DialogSlsk extends javax.swing.JDialog {
                             jButtonAddToDownloads.setEnabled(true);
                         } else {
                             jLabelInfo.setText("No results!");
-                            enableSearch(true);
                         }
                     }
+                    enableSearch(true);
                 } else {
                     Popup.warning("You are not connected.");
                 }
@@ -342,6 +343,7 @@ public class DialogSlsk extends javax.swing.JDialog {
         //</editor-fold>
 
         DialogSlsk dialog = new DialogSlsk(panelSlsk, parent, false, query);
+        dialog.setTitle("Search: " + query);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
     }

@@ -420,6 +420,7 @@ public class PanelSlsk extends javax.swing.JPanel {
             public void run() {
                 displayLogs(true);
                 enableGui(false);
+                enableOptions(false);
 
                 boolean reCreate = (!options.get("slsk.username").equals(jTextFieldUsername.getText()) || !options.get("slsk.password").equals(jTextFieldPassword.getText()));
                 
@@ -514,15 +515,19 @@ public class PanelSlsk extends javax.swing.JPanel {
     
     public void enableGui(boolean enable) {
         jButtonStart.setEnabled(enable);
+        jCheckBoxServerStartOnStartup.setEnabled(enable);
+    }
+    
+    public void enableOptions(boolean enable) {
         jTextFieldUsername.setEnabled(enable);
         jTextFieldPassword.setEnabled(enable);
-        jCheckBoxServerStartOnStartup.setEnabled(enable);
     }
     
     private void enableStart() {
         jButtonStart.setText(Inter.get("Button.Start"));
         displayLogs(true);
         enableGui(true);
+        enableOptions(true);
     }
     
     private void appendText(String text) {
