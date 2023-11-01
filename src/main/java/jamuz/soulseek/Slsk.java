@@ -50,7 +50,7 @@ public class Slsk {
             SlskdSearchResult search = slskdClient.search(query);
             while(!search.isComplete) {
                 search = slskdClient.getSearch(search.id);
-                jLabelInfo.setText("Found " + search.fileCount + " file(s), " + search.responseCount + " response(s) for \"" + query + "\" -- " + search.state);
+                jLabelInfo.setText("<html><b>" + search.state + "</b> -- Found <b>" + search.fileCount + "</b> file(s), <b>" + search.responseCount + "</b> response(s).</html>");
                 Thread.sleep(1000);
             }
 
@@ -80,6 +80,7 @@ public class Slsk {
                 SlskdSearchResponse response = pathToResponseMap.get(entry.getKey());
                 response.fileCount = entry.getValue().size();
                 response.files = entry.getValue();
+                response.setSearchText(query);
                 groupedResponses.add(response);
             }
             slskdClient.deleteSearch(search.id);

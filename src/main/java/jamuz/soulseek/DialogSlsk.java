@@ -62,18 +62,22 @@ public class DialogSlsk extends javax.swing.JDialog {
 		jTableResults.setColumnModel(columnModelResults);
 		jTableResults.createDefaultColumnsFromModel();
 		setColumn(columnModelResults, 0, 120);	// Date
-        setColumn(columnModelResults, 1, 40);	// # files
-		setColumn(columnModelResults, 2, 50);	// BitRate
-		setColumn(columnModelResults, 3, 50);	// Size
-		setColumn(columnModelResults, 4, 50);	// Speed
-		setColumn(columnModelResults, 5, 50);	// Free upload spots
-		setColumn(columnModelResults, 6, 50);	// Queue length
-		setColumn(columnModelResults, 7, 150);	// Username
-		setColumn(columnModelResults, 8, 600);	// Path
+        setColumn(columnModelResults, 1, 50);	// Queued
+        TableColumn columnSearchText =
+        setColumn(columnModelResults, 2, 150);	// Search text
+        setColumn(columnModelResults, 3, 40);	// # files
+		setColumn(columnModelResults, 4, 50);	// BitRate
+		setColumn(columnModelResults, 5, 50);	// Size
+		setColumn(columnModelResults, 6, 50);	// Speed
+		setColumn(columnModelResults, 7, 50);	// Free upload spots
+		setColumn(columnModelResults, 8, 50);	// Queue length
+		setColumn(columnModelResults, 9, 150);	// Username
+		setColumn(columnModelResults, 10, 600);	// Path
         TableColumn column = 
-        setColumn(columnModelResults, 9, 80);     // Completed
+        setColumn(columnModelResults, 11, 80);     // Completed
         column.setCellRenderer(new ProgressCellRender());
         columnModelResults.setColumnVisible(column, false);
+        columnModelResults.setColumnVisible(columnSearchText, false);
         
 		//Setup download table
 		tableModelDownload = new TableModelSlskdDownload();
@@ -82,6 +86,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 		//Assigning XTableColumnModel to allow show/hide columns
 		jTableDownload.setColumnModel(columnModelDownload);
 		jTableDownload.createDefaultColumnsFromModel();
+        TableColumn columnDate = 
 		setColumn(columnModelDownload, 0, 120);    // Date
 		setColumn(columnModelDownload, 1, 35);     // BitRate
 		setColumn(columnModelDownload, 2, 80);     // Length
@@ -91,6 +96,7 @@ public class DialogSlsk extends javax.swing.JDialog {
         setColumn(columnModelDownload, 5, 400);     // Completed
 		column.setCellRenderer(new ProgressCellRender());
         columnModelDownload.setColumnVisible(column, false);
+        columnModelDownload.setColumnVisible(columnDate, false);
         
 		try {
             soulseek = new Slsk();
@@ -196,6 +202,8 @@ public class DialogSlsk extends javax.swing.JDialog {
         jTableDownload.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane2.setViewportView(jTableDownload);
 
+        jLabelInfo.setText(" ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -227,7 +235,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                 .addGap(2, 2, 2)
                 .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonAddToDownloads)
                 .addContainerGap())
@@ -254,9 +262,9 @@ public class DialogSlsk extends javax.swing.JDialog {
                     jButtonAddToDownloads.setEnabled(false);
                     selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
                     SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
+                    searchResponse.setQueued();
+                    tableModelResults.fireTableCellUpdated(selectedRow, 1);
                     panelSlsk.addDownload(searchResponse);
-                    //FIXME ! Re-enable the "Add to downloads" button, but only if not yet added 
-                    // => need to store that info, and display it on jTableResults (warning: same model as in Panel so will need to add and hide that column there
                  }
 			}
 		}.start();
@@ -271,6 +279,7 @@ public class DialogSlsk extends javax.swing.JDialog {
 			for (SlskdSearchFile file : searchResponse.getFiles()) {
 				tableModelDownload.addRow(file);
 			}
+            jButtonAddToDownloads.setEnabled(!searchResponse.isQueued());
 		}
 	}
 	

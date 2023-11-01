@@ -42,13 +42,31 @@ public class SlskdSearchResponse {
 	public String username;	
 	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
     private boolean completed;
-
+    private String searchText;
+    private boolean queued;
+    
     private transient ProgressBar progressBar = new ProgressBar();
 
     public SlskdSearchResponse() {
         this.progressBar.setup(100);
         this.progressBar.setMsgMax(500);
 		this.progressBar.displayAsPercent();
+    }
+    
+    boolean isQueued() {
+        return queued;
+    }
+
+    void setQueued() {
+        queued = true;
+    }
+    
+    String getSearchText() {
+        return searchText;
+    }
+    
+    void setSearchText(String query) {
+        this.searchText = query;
     }
     
 	//FIXME !!!!!! use existing option
@@ -157,4 +175,6 @@ public class SlskdSearchResponse {
     void update(String msg, int index) {
         this.progressBar.progress(msg, index);
     }
+
+    
 }

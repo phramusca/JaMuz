@@ -35,6 +35,8 @@ public class TableModelSlskdSearch extends TableModelGeneric {
         this.results = new CopyOnWriteArrayList<>();
         this.setColumnNames(new String [] {
             "Date", //NOI18N
+            "Queued", //NOI18N
+            "Search", //NOI18N
 			"Nb", //NOI18N
 			"BitRate", //NOI18N
 			"Size", //NOI18N
@@ -58,15 +60,17 @@ public class TableModelSlskdSearch extends TableModelGeneric {
         SlskdSearchResponse searchResponse = results.get(rowIndex);
         switch (columnIndex) {
 			case 0: return searchResponse.getDate();
-            case 1: return searchResponse.getFiles().size();
-			case 2: return searchResponse.getBitrate();
-			case 3: return searchResponse.getSize();
-			case 4: return searchResponse.getSpeed();
-			case 5: return searchResponse.hasFreeUploadSlot;
-			case 6: return searchResponse.queueLength;
-			case 7: return searchResponse.username;
-            case 8: return searchResponse.getPath();
-            case 9: return searchResponse.getProgressBar();
+            case 1: return searchResponse.isQueued();
+            case 2: return searchResponse.getSearchText();
+            case 3: return searchResponse.getFiles().size();
+			case 4: return searchResponse.getBitrate();
+			case 5: return searchResponse.getSize();
+			case 6: return searchResponse.getSpeed();
+			case 7: return searchResponse.hasFreeUploadSlot;
+			case 8: return searchResponse.queueLength;
+			case 9: return searchResponse.username;
+            case 10: return searchResponse.getPath();
+            case 11: return searchResponse.getProgressBar();
 		}
         return null;
     }

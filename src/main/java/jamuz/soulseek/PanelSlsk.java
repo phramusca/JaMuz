@@ -26,6 +26,7 @@ import jamuz.process.check.Location;
 import jamuz.utils.Desktop;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
+import jamuz.utils.StringManager;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +44,9 @@ import javax.swing.table.TableColumn;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+
+//FIXME !!!! Save and restore searches on app exit/start
+
 
 /**
  *
@@ -73,18 +77,23 @@ public class PanelSlsk extends javax.swing.JPanel {
 		jTableResults.setColumnModel(columnModelResults);
 		jTableResults.createDefaultColumnsFromModel();
 		setColumn(columnModelResults, 0, 120);	// Date
-        setColumn(columnModelResults, 1, 40);	// # files
-		setColumn(columnModelResults, 2, 50);	// BitRate
-		setColumn(columnModelResults, 3, 50);	// Size
-		setColumn(columnModelResults, 4, 50);	// Speed
-		setColumn(columnModelResults, 5, 50);	// Free upload spots
-		setColumn(columnModelResults, 6, 50);	// Queue length
-		setColumn(columnModelResults, 7, 150);	// Username
-		setColumn(columnModelResults, 8, 600);	// Path
+        TableColumn columnQueued = 
+        setColumn(columnModelResults, 1, 50);	// Queued
+        
+        setColumn(columnModelResults, 2, 150);	// Search text
+        setColumn(columnModelResults, 3, 40);	// # files
+		setColumn(columnModelResults, 4, 50);	// BitRate
+		setColumn(columnModelResults, 5, 50);	// Size
+		setColumn(columnModelResults, 6, 50);	// Speed
+		setColumn(columnModelResults, 7, 50);	// Free upload spots
+		setColumn(columnModelResults, 8, 50);	// Queue length
+		setColumn(columnModelResults, 9, 150);	// Username
+		setColumn(columnModelResults, 10, 600);	// Path
         TableColumn column = 
-        setColumn(columnModelResults, 9, 80);     // Completed
+        setColumn(columnModelResults, 11, 80);     // Completed
         column.setCellRenderer(new ProgressCellRender());
-
+        columnModelResults.setColumnVisible(columnQueued, false);
+        
 		//Setup download table
 		tableModelDownload = new TableModelSlskdDownload();
 		jTableDownload.setModel(tableModelDownload);
@@ -465,23 +474,20 @@ public class PanelSlsk extends javax.swing.JPanel {
                         //Get downloads for username
                         SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
                         if(downloads!=null) {
-                            
-                            //FIXME !! We have several searchResponse having the same username and path but different file list (user is a mess and put multiple albums on the same folder)
-                            // => This results in bad percentages (searhc response view), and probably other glitches
-                            // ====>> So, split by username and path in Panel's search results table, no more by search ? (THINK TWICE)
-                            
-                            
-                            //Filter downloads: keep only the ones from the same path
+                            // Filter downloads: keep only the ones matching searchResponse (if username is a mess, he could have multiple albums on the same folder)
                             Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
-                            .stream()
-                            .filter(directory -> 
-                                directory.directory.startsWith(searchResponse.getPath()))
-                            .flatMap(directory -> directory.files.stream())
-                            .collect(Collectors.toMap(
-                                SlskdDownloadFile::getKey,
-                                Function.identity(),
-                                (existing, replacement) -> existing
-                            ));
+                                    .stream()
+                                    .flatMap(directory -> directory.files.stream()
+                                            .filter(downloadFile ->
+                                                    searchResponse.files.stream()
+                                                            .anyMatch(searchFile -> searchFile.filename.equals(downloadFile.filename))
+                                            )
+                                    )
+                                    .collect(Collectors.toMap(
+                                            SlskdDownloadFile::getKey,
+                                            Function.identity(),
+                                            (existing, replacement) -> existing
+                                    ));
 
                             if(tableModelDownload.getSearchResponse().equals(searchResponse)) {
                                 List<SlskdSearchFile> rows = tableModelDownload.getRows();
@@ -510,10 +516,12 @@ public class PanelSlsk extends javax.swing.JPanel {
                                 if(finalDestination.check()) {
                                     SlskdDownloadFile get = filteredFiles.values().stream().findFirst().get();
                                     String[] split = get.filename.split("\\\\");
+                                    //FIXME !! Since subDirectoryName can contain more files than current searchResponse, need to copy files one by one
                                     String subDirectoryName = split[split.length-2];
                                     String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
                                     File sourceFile = new File(FilenameUtils.concat(sourcePath, subDirectoryName));
-                                    File destFile = new File(FilenameUtils.concat(finalDestination.getValue(), subDirectoryName));
+                                    String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.username + "--" + searchResponse.getPath());
+                                    File destFile = new File(FilenameUtils.concat(finalDestination.getValue(), newSubDirectoryName));
 
                                     try {
                                         FileUtils.copyDirectory(sourceFile, destFile);
