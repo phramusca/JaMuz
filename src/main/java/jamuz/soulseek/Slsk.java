@@ -54,12 +54,12 @@ public class Slsk {
 				Arrays.asList(Jamuz.getMachine().getOptionValue("files.audio").split(","))); //NOI18N;
     }
 
-	public List<SlskdSearchResponse> search(String query, JLabel jLabelInfo) {
+	public List<SlskdSearchResponse> search(String query, ICallBackSearch callBackSearch) {
 		try {
             SlskdSearchResult search = slskdClient.search(query);
             while(!search.isComplete) {
                 search = slskdClient.getSearch(search.id);
-                jLabelInfo.setText("<html><b>" + search.state + "</b> -- Found <b>" + search.fileCount + "</b> file(s), <b>" + search.responseCount + "</b> response(s).</html>");
+                callBackSearch.searching(search);
                 Thread.sleep(1000);
             }
 

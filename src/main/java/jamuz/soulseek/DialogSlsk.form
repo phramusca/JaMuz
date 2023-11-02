@@ -37,7 +37,6 @@
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="jButtonAddToDownloads" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jLabelInfo" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -52,8 +51,6 @@
                   <Component id="jButtonSearch" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabelInfo" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
               <Component id="jScrollPaneCheckTags3" min="-2" pref="133" max="-2" attributes="2"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="jScrollPane2" pref="261" max="32767" attributes="0"/>
@@ -138,10 +135,5 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="jLabelInfo">
-      <Properties>
-        <Property name="text" type="java.lang.String" value=" "/>
-      </Properties>
-    </Component>
   </SubComponents>
 </Form>

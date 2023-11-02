@@ -165,7 +165,6 @@ public class DialogSlsk extends javax.swing.JDialog {
         jButtonSearch = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableDownload = new jamuz.gui.swing.TableHorizontal();
-        jLabelInfo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -206,8 +205,6 @@ public class DialogSlsk extends javax.swing.JDialog {
         jTableDownload.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane2.setViewportView(jTableDownload);
 
-        jLabelInfo.setText(" ");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -223,8 +220,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                     .addComponent(jScrollPane2)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonAddToDownloads))
-                    .addComponent(jLabelInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButtonAddToDownloads)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -235,8 +231,6 @@ public class DialogSlsk extends javax.swing.JDialog {
                     .addComponent(jTextFieldQuery, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSearch))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelInfo)
-                .addGap(2, 2, 2)
                 .addComponent(jScrollPaneCheckTags3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
@@ -312,9 +306,11 @@ public class DialogSlsk extends javax.swing.JDialog {
                     jButtonAddToDownloads.setEnabled(false);
                     tableModelResults.clear();
                     tableModelDownload.clear();
-                    jLabelInfo.setText("Searching...");
+                    setProgress("Searching...");
 
-                    List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), jLabelInfo);
+                    List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), (SlskdSearchResult search) -> {
+                        setProgress(search.state + " -- Found " + search.fileCount + " file(s), " + search.responseCount + " response(s).");
+                    });
                     if(searchResponses!=null) {
                         if(!searchResponses.isEmpty()) {
                             for (SlskdSearchResponse slskdSearchResponse : searchResponses) {
@@ -324,7 +320,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                             displaySearchFiles();
                             jButtonAddToDownloads.setEnabled(true);
                         } else {
-                            jLabelInfo.setText("No results!");
+                            setProgress("No results!");
                         }
                     }
                     enableSearch(true);
@@ -334,6 +330,11 @@ public class DialogSlsk extends javax.swing.JDialog {
 			}
 		}.start();
 	}
+
+    public void setProgress(String msg) {
+        msg = msg + " | " + jTextFieldQuery.getText();
+        setTitle(msg);
+    }
 	
     /**
      * @param panelSlsk
@@ -360,7 +361,7 @@ public class DialogSlsk extends javax.swing.JDialog {
         //</editor-fold>
 
         DialogSlsk dialog = new DialogSlsk(panelSlsk, parent, false, query);
-        dialog.setTitle("Search: " + query);
+        dialog.setTitle("Search | " + query);
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
     }
@@ -368,7 +369,6 @@ public class DialogSlsk extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddToDownloads;
     private javax.swing.JButton jButtonSearch;
-    private javax.swing.JLabel jLabelInfo;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneCheckTags3;
     private javax.swing.JTable jTableDownload;
