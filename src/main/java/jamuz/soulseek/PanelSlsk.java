@@ -31,6 +31,7 @@ import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -49,10 +50,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumn;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -171,49 +172,56 @@ public class PanelSlsk extends javax.swing.JPanel {
 		if(sourceTxt.equals(Inter.get("Slsk.Retry"))) { //NOI18N
 			SlskdSearchResponse searchResponse = getSelected();
             if(searchResponse!=null) {
-                SwingUtilities.invokeLater(() -> {
-                    searchResponse.setProcessed(true);
-                    for (SlskdSearchFile file : searchResponse.files) {
-                        if (file.percentComplete<100) {
-                            soulseek.deleteTransfer(searchResponse.username, file);  
+                new Thread() {
+                    @Override
+                    public void run() {
+                        searchResponse.setProcessed(true);
+                        for (SlskdSearchFile file : searchResponse.files) {
+                            if (file.percentComplete<100) {
+                                soulseek.deleteTransfer(searchResponse.username, file);  
+                            }
                         }
+                        soulseek.download(searchResponse);
+                        searchResponse.setProcessed(false);
                     }
-                    soulseek.download(searchResponse);
-                    searchResponse.setProcessed(false);
-                });
+                }.start();
             }
 		}
 		else if(sourceTxt.equals(Inter.get("Slsk.Remove"))) { //NOI18N
 			SlskdSearchResponse searchResponse = getSelected();
             if(searchResponse!=null) {
-                SwingUtilities.invokeLater(() -> {
-                    searchResponse.setProcessed(true);
-                    if(searchResponse.isCompleted()) {
-                        File file = getJsonFile(searchResponse);
-                        if(file.exists()) {
-                            file.delete();
-                        }
-                        tableModelResults.removeRow(searchResponse);
-                    } else {
-                        int n = JOptionPane.showConfirmDialog(
-                                this, "Annuler et supprimer ?",
-                                Inter.get("Label.Confirm"),  //NOI18N
-                                JOptionPane.YES_NO_OPTION);
-                        if (n == JOptionPane.YES_OPTION) {
-                            for (SlskdSearchFile searchFile : searchResponse.files) {
-                                soulseek.deleteTransfer(searchResponse.username, searchFile);
-                                soulseek.deleteFile(searchFile);
-                            }
+                PanelSlsk panelSlsk = this;
+                new Thread() {
+                    @Override
+                    public void run() {
+                        searchResponse.setProcessed(true);
+                        if(searchResponse.isCompleted()) {
                             File file = getJsonFile(searchResponse);
                             if(file.exists()) {
                                 file.delete();
                             }
                             tableModelResults.removeRow(searchResponse);
-                        }                            
+                        } else {
+                            int n = JOptionPane.showConfirmDialog(
+                                    panelSlsk, "Annuler et supprimer ?",
+                                    Inter.get("Label.Confirm"),  //NOI18N
+                                    JOptionPane.YES_NO_OPTION);
+                            if (n == JOptionPane.YES_OPTION) {
+                                for (SlskdSearchFile searchFile : searchResponse.files) {
+                                    soulseek.deleteTransfer(searchResponse.username, searchFile);
+                                    soulseek.deleteFile(searchFile);
+                                }
+                                File file = getJsonFile(searchResponse);
+                                if(file.exists()) {
+                                    file.delete();
+                                }
+                                tableModelResults.removeRow(searchResponse);
+                            }                            
+                        }
+                        displaySearchFiles();
+                        searchResponse.setProcessed(false);
                     }
-                    displaySearchFiles();
-                    searchResponse.setProcessed(false);
-                });
+                }.start();
             }
 		}
 		else {
@@ -321,10 +329,11 @@ public class PanelSlsk extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPaneLog, java.awt.BorderLayout.NORTH);
 
-        jSplitPane1.setDividerLocation(100);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(0.5);
         jSplitPane1.setPreferredSize(new java.awt.Dimension(0, 0));
+
+        jScrollPaneCheckTags3.setPreferredSize(new java.awt.Dimension(0, 0));
 
         jTableResults.setAutoCreateColumnsFromModel(false);
         jTableResults.setModel(new jamuz.soulseek.TableModelSlskdSearch());
@@ -333,17 +342,22 @@ public class PanelSlsk extends javax.swing.JPanel {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableResultsMouseClicked(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTableResultsMousePressed(evt);
+            }
         });
         jScrollPaneCheckTags3.setViewportView(jTableResults);
 
         jSplitPane1.setTopComponent(jScrollPaneCheckTags3);
+
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(0, 0));
 
         jTableDownload.setAutoCreateColumnsFromModel(false);
         jTableDownload.setModel(new jamuz.soulseek.TableModelSlskdDownload());
         jTableDownload.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane2.setViewportView(jTableDownload);
 
-        jSplitPane1.setRightComponent(jScrollPane2);
+        jSplitPane1.setBottomComponent(jScrollPane2);
 
         jPanel1.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
@@ -365,7 +379,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                         .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jCheckBoxServerStartOnStartup)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                         .addComponent(jToggleShowLogs)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonWebSlskd)
@@ -388,7 +402,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                         .addComponent(jButtonWebSlskd)
                         .addComponent(jToggleShowLogs)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -551,6 +565,17 @@ public class PanelSlsk extends javax.swing.JPanel {
     private void jToggleShowLogsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleShowLogsActionPerformed
         displayLogs(jToggleShowLogs.isSelected());
     }//GEN-LAST:event_jToggleShowLogsActionPerformed
+
+    private void jTableResultsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultsMousePressed
+        // If Right mouse click, select the line under mouse
+        if ( SwingUtilities.isRightMouseButton( evt ) )
+        {
+            Point p = evt.getPoint();
+            int rowNumber = jTableResults.rowAtPoint( p );
+            ListSelectionModel model = jTableResults.getSelectionModel();
+            model.setSelectionInterval( rowNumber, rowNumber );
+        }
+    }//GEN-LAST:event_jTableResultsMousePressed
 	
     private void displaySearchFiles() {
         SlskdSearchResponse searchResponse = getSelected();
@@ -695,7 +720,9 @@ public class PanelSlsk extends javax.swing.JPanel {
                                             File sourceFile = new File(FilenameUtils.concat(FilenameUtils.concat(sourcePath, subDirectoryName), filename));
                                             String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.username + "--" + searchResponse.getPath());
                                             File destFile = new File(FilenameUtils.concat(FilenameUtils.concat(finalDestination.getValue(), newSubDirectoryName), filename));
-                                            FileUtils.copyFile(sourceFile, destFile);
+                                            if(sourceFile.exists()) {
+                                                FileUtils.copyFile(sourceFile, destFile);
+                                            }
                                             
                                             //Delete transfer
                                             soulseek.deleteTransfer(downloadFile);

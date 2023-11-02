@@ -20,11 +20,14 @@ import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.utils.Popup;
 import java.awt.Dialog;
+import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
@@ -173,6 +176,9 @@ public class DialogSlsk extends javax.swing.JDialog {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableResultsMouseClicked(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTableResultsMousePressed(evt);
+            }
         });
         jScrollPaneCheckTags3.setViewportView(jTableResults);
 
@@ -284,6 +290,17 @@ public class DialogSlsk extends javax.swing.JDialog {
     private void jTableResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultsMouseClicked
 		displaySearchFiles();
     }//GEN-LAST:event_jTableResultsMouseClicked
+
+    private void jTableResultsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultsMousePressed
+        // If Right mouse click, select the line under mouse
+        if ( SwingUtilities.isRightMouseButton( evt ) )
+        {
+            Point p = evt.getPoint();
+            int rowNumber = jTableResults.rowAtPoint( p );
+            ListSelectionModel model = jTableResults.getSelectionModel();
+            model.setSelectionInterval( rowNumber, rowNumber );
+        }
+    }//GEN-LAST:event_jTableResultsMousePressed
 
 	private void startSoulseekSearch() {
 		new Thread() {
