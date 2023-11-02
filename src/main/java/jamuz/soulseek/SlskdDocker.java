@@ -15,6 +15,7 @@ import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.core.DockerClientBuilder;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,10 +146,13 @@ public class SlskdDocker {
     public String checkContainerHealthAndFetchLogs(ResultCallback<Frame> resultCallback) {
         try {
             Container container = getContainer();
+            Instant pastTime = Instant.now().minusSeconds(120);
+            int sinceTimestamp = (int) pastTime.getEpochSecond();
             dockerClient.logContainerCmd(container.getId())
                 .withFollowStream(true)
                 .withStdOut(true)
                 .withStdErr(true)
+                .withSince(sinceTimestamp)
                 .exec(resultCallback);
 
             while (true) {

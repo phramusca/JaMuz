@@ -41,9 +41,10 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,11 +68,16 @@ public class PanelSlsk extends javax.swing.JPanel {
 	private Slsk soulseek;
     private Options options;
     private final TableModelSlskdSearch tableModelResults = new TableModelSlskdSearch();
-	private TableModelSlskdDownload tableModelDownload;
 	private final TableColumnModel columnModelResults;
 	private final TableColumnModel columnModelDownload;
-    private final Updater positionUpdater;
-	
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+    /**
+    * Update period:
+    * TODO: Make this an option
+    */
+   private static final long UPDATE_PERIODE = 500; //ms
+    
     /**
 	 * Creates new form PanelRemote
 	 */
@@ -79,7 +85,6 @@ public class PanelSlsk extends javax.swing.JPanel {
 		initComponents();
         
         //Setup Search results table
-//		tableModelResults = new TableModelSlskdSearch();
 		jTableResults.setModel(tableModelResults);
 		columnModelResults = new TableColumnModel();
 		//Assigning XTableColumnModel to allow show/hide columns
@@ -104,8 +109,7 @@ public class PanelSlsk extends javax.swing.JPanel {
         columnModelResults.setColumnVisible(columnQueued, false);
         
 		//Setup download table
-		tableModelDownload = new TableModelSlskdDownload();
-		jTableDownload.setModel(tableModelDownload);
+		jTableDownload.setModel(new TableModelSlskdDownload());
 		columnModelDownload = new TableColumnModel();
 		//Assigning XTableColumnModel to allow show/hide columns
 		jTableDownload.setColumnModel(columnModelDownload);
@@ -139,8 +143,7 @@ public class PanelSlsk extends javax.swing.JPanel {
         MouseListener popupListener = new PopupListener(jPopupMenu1);
         jTableResults.addMouseListener(popupListener);
         
-        positionUpdater = new Updater();
-        positionUpdater.start();
+        startDownloadMonitoring();
         
         //Restore searches from cache
         File slskCacheFolder = Jamuz.getFile("", "data", "cache", "slsk");
@@ -159,13 +162,114 @@ public class PanelSlsk extends javax.swing.JPanel {
 			startStopSlsk();
 		}
 	}
+    
+    private void startDownloadMonitoring() {
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(new DownloadMonitoring(), 0, UPDATE_PERIODE, TimeUnit.MILLISECONDS);
+    }
+    
+    private void stopAndWaitDownloadMonitoring() {
+        scheduler.shutdown();
+        try {
+            scheduler.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    
+    private class DownloadMonitoring implements Runnable {
+        @Override
+        public void run() {
+
+            for (int row = 0; row < tableModelResults.getRows().size(); row++) {
+                SlskdSearchResponse searchResponse = tableModelResults.getRow(row);
+                if(soulseek!=null && !searchResponse.isCompleted()) {
+                    //Get downloads for username
+                    SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
+                    if(downloads!=null) {
+                        // Filter downloads: keep only the ones matching searchResponse (if username is a mess, he could have multiple albums on the same folder)
+                        Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
+                                .stream()
+                                .flatMap(directory -> directory.files.stream()
+                                        .filter(downloadFile ->
+                                                searchResponse.files.stream()
+                                                        .anyMatch(searchFile -> searchFile.filename.equals(downloadFile.filename))
+                                        )
+                                )
+                                .collect(Collectors.toMap(
+                                        SlskdDownloadFile::getKey,
+                                        Function.identity(),
+                                        (existing, replacement) -> existing
+                                ));
+                        
+                        if(searchResponse.getTableModel().getSearchResponse().equals(searchResponse)) {
+                            displayDownloadProgress(searchResponse, filteredFiles);
+                        }
+
+                        int percentComplete=0;
+                        for (SlskdDownloadFile slskdDownloadFile : filteredFiles.values()) {
+                            percentComplete+=slskdDownloadFile.percentComplete;
+                        }
+                        searchResponse.update("", ((int) Math.round(percentComplete)) / filteredFiles.values().size() );
+                        tableModelResults.fireTableCellUpdated(row, 11);
+
+                        boolean allFilesComplete = filteredFiles.values()
+                            .stream()
+                            .allMatch(file -> file.percentComplete == 100);
+                        if(allFilesComplete) {
+                            Location finalDestination = new Location("location.add");
+                            if(finalDestination.check()) {
+                                try {
+                                    //Redisplay (to show 100% on all files) [here all Files are Complete + to do before transfers are deleted]
+                                    displayDownloadProgress(searchResponse, filteredFiles);
+                                    String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
+                                    for (SlskdDownloadFile downloadFile : filteredFiles.values()) {
+                                        //Copy file
+                                        Pair<String, String> directory = soulseek.getDirectory(downloadFile.filename);
+                                        String subDirectoryName = directory.getLeft();
+                                        String filename = directory.getRight();
+                                        File sourceFile = new File(FilenameUtils.concat(FilenameUtils.concat(sourcePath, subDirectoryName), filename));
+                                        String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.username + "--" + searchResponse.getPath());
+                                        File destFile = new File(FilenameUtils.concat(FilenameUtils.concat(finalDestination.getValue(), newSubDirectoryName), filename));
+                                        if(sourceFile.exists() && (!destFile.exists() || sourceFile.length()!=destFile.length())) {
+                                            FileUtils.copyFile(sourceFile, destFile);
+                                        }
+                                        //Delete transfer
+                                        soulseek.deleteTransfer(downloadFile);
+                                        //Delete file
+                                        soulseek.deleteFile(downloadFile);
+                                    }
+                                    searchResponse.setCompleted();
+                                    saveJson(searchResponse);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void displayDownloadProgress(SlskdSearchResponse searchResponse, Map<String, SlskdDownloadFile> filteredFiles) {
+            List<SlskdSearchFile> rows = searchResponse.getTableModel().getRows();
+            for (int i = 0; i < rows.size(); i++) {
+                SlskdSearchFile rowFile = rows.get(i);
+                if(filteredFiles.containsKey(rowFile.getKey())) {
+                    SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
+                    rowFile.update(filteredFile);
+                }
+            }
+            searchResponse.getTableModel().fireTableDataChanged();
+        }
+    }
 
     private void addMenuItem(String item) {
         JMenuItem menuItem = new JMenuItem(item);
         menuItem.addActionListener(menuListener);
         jPopupMenu1.add(menuItem);
     }
-    
+
     ActionListener menuListener = (ActionEvent e) -> {
 		JMenuItem source = (JMenuItem)(e.getSource());
 		String sourceTxt=source.getText();
@@ -175,14 +279,14 @@ public class PanelSlsk extends javax.swing.JPanel {
                 new Thread() {
                     @Override
                     public void run() {
-                        searchResponse.setProcessed(true);
+                        stopAndWaitDownloadMonitoring();
                         for (SlskdSearchFile file : searchResponse.files) {
                             if (file.percentComplete<100) {
                                 soulseek.deleteTransfer(searchResponse.username, file);  
                             }
                         }
                         soulseek.download(searchResponse);
-                        searchResponse.setProcessed(false);
+                        startDownloadMonitoring();
                     }
                 }.start();
             }
@@ -194,7 +298,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                 new Thread() {
                     @Override
                     public void run() {
-                        searchResponse.setProcessed(true);
+                        stopAndWaitDownloadMonitoring();
                         if(searchResponse.isCompleted()) {
                             File file = getJsonFile(searchResponse);
                             if(file.exists()) {
@@ -219,7 +323,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                             }                            
                         }
                         displaySearchFiles();
-                        searchResponse.setProcessed(false);
+                        startDownloadMonitoring();
                     }
                 }.start();
             }
@@ -579,12 +683,8 @@ public class PanelSlsk extends javax.swing.JPanel {
 	
     private void displaySearchFiles() {
         SlskdSearchResponse searchResponse = getSelected();
-        if(searchResponse!=null) {
-            tableModelDownload = searchResponse.getTableModel();
-        } else {
-            tableModelDownload = new TableModelSlskdDownload();
-        }
-        jTableDownload.setModel(tableModelDownload);
+        jTableDownload.setModel((searchResponse != null) ? searchResponse.getTableModel() : new TableModelSlskdDownload());
+
 	}
     
     private void saveJson(SlskdSearchResponse searchResponse) {
@@ -642,107 +742,7 @@ public class PanelSlsk extends javax.swing.JPanel {
         this.revalidate();
         this.repaint();
     }
-    
-    public class Updater extends Timer {
-		
-		/**
-		 * Update period:
-         * TODO: Make this an option
-		 */
-		private static final long UPDATE_PERIODE = 500;
-		
-		/**
-		 * Starts position updater
-		 */
-		public void start() {
-			schedule(new displayPosition(), 0, UPDATE_PERIODE);
-		}
-
-		private class displayPosition extends TimerTask {
-			@Override
-			public void run() {
-                
-                for (int row = 0; row < tableModelResults.getRows().size(); row++) {
-                    SlskdSearchResponse searchResponse = tableModelResults.getRow(row);
-                    if(soulseek!=null && !searchResponse.isCompleted() && ! searchResponse.isProcessed()) {
-                        //Get downloads for username
-                        SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
-                        if(downloads!=null) {
-                            // Filter downloads: keep only the ones matching searchResponse (if username is a mess, he could have multiple albums on the same folder)
-                            Map<String, SlskdDownloadFile> filteredFiles = downloads.directories
-                                    .stream()
-                                    .flatMap(directory -> directory.files.stream()
-                                            .filter(downloadFile ->
-                                                    searchResponse.files.stream()
-                                                            .anyMatch(searchFile -> searchFile.filename.equals(downloadFile.filename))
-                                            )
-                                    )
-                                    .collect(Collectors.toMap(
-                                            SlskdDownloadFile::getKey,
-                                            Function.identity(),
-                                            (existing, replacement) -> existing
-                                    ));
-
-                            if(tableModelDownload.getSearchResponse() != null && tableModelDownload.getSearchResponse().equals(searchResponse)) {
-                                List<SlskdSearchFile> rows = tableModelDownload.getRows();
-                                for (int i = 0; i < rows.size(); i++) {
-                                    SlskdSearchFile rowFile = rows.get(i);
-                                    if(filteredFiles.containsKey(rowFile.getKey())) {
-                                        SlskdDownloadFile filteredFile = filteredFiles.get(rowFile.getKey());
-                                        rowFile.update(filteredFile);
-                                    }
-                                }
-                                tableModelDownload.fireTableDataChanged();
-                            }
-                            
-                            int percentComplete=0;
-                            for (SlskdDownloadFile slskdDownloadFile : filteredFiles.values()) {
-                                percentComplete+=slskdDownloadFile.percentComplete;
-                            }
-                            searchResponse.update("", ((int) Math.round(percentComplete)) / filteredFiles.values().size() );
-                            tableModelResults.fireTableCellUpdated(row, 11);
-                            
-                            boolean allFilesComplete = filteredFiles.values()
-                                .stream()
-                                .allMatch(file -> file.percentComplete == 100);
-                            if(allFilesComplete) {
-                                Location finalDestination = new Location("location.add");
-                                if(finalDestination.check()) {
-                                    try {
-                                        for (SlskdDownloadFile downloadFile : filteredFiles.values()) {
-                                            
-                                            //Copy file
-                                            Pair<String, String> directory = soulseek.getDirectory(downloadFile.filename);
-                                            String subDirectoryName = directory.getLeft();
-                                            String filename = directory.getRight();
-                                            
-                                            String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
-                                            File sourceFile = new File(FilenameUtils.concat(FilenameUtils.concat(sourcePath, subDirectoryName), filename));
-                                            String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.username + "--" + searchResponse.getPath());
-                                            File destFile = new File(FilenameUtils.concat(FilenameUtils.concat(finalDestination.getValue(), newSubDirectoryName), filename));
-                                            if(sourceFile.exists()) {
-                                                FileUtils.copyFile(sourceFile, destFile);
-                                            }
-                                            
-                                            //Delete transfer
-                                            soulseek.deleteTransfer(downloadFile);
-                                            //Delete file
-                                            soulseek.deleteFile(downloadFile);
-                                        }
-                                        searchResponse.setCompleted();
-                                        saveJson(searchResponse);
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(PanelSlsk.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-			}
-		}
-	}
-	   
+       
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonStart;
     private javax.swing.JButton jButtonWebSlskd;

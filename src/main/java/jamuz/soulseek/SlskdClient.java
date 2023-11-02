@@ -19,6 +19,8 @@ package jamuz.soulseek;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -96,7 +98,9 @@ public class SlskdClient {
 	}
 	
 	public SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
-		String bodyString = getBodyString("transfers/downloads/" + searchResponse.username, client);
+        String username = URLEncoder.encode(searchResponse.username, StandardCharsets.UTF_8.toString()); //FIXME ! Use this elsewhere ? Does it work ?
+        String url = "transfers/downloads/" + username;
+		String bodyString = getBodyString(url, client);
 		
 		SlskdDownloadUser fromJson = null;
 		if (!bodyString.equals("")) {

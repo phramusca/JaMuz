@@ -40,11 +40,11 @@ public class SlskdSearchResponse {
 	public String username;	
 	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
     private boolean completed;
-    private boolean processed;
     private String searchText;
     private boolean queued;
     
-    private transient ProgressBar progressBar = new ProgressBar();
+    private final transient ProgressBar progressBar = new ProgressBar();
+    private transient TableModelSlskdDownload tableModelDownload;
 
     public SlskdSearchResponse() {
         this.progressBar.setup(100);
@@ -59,15 +59,7 @@ public class SlskdSearchResponse {
     void setQueued() {
         queued = true;
     }
-
-    public boolean isProcessed() {
-        return processed;
-    }
-
-    public void setProcessed(boolean processed) {
-        this.processed = processed;
-    }
-    
+   
     String getSearchText() {
         return searchText;
     }
@@ -161,10 +153,12 @@ public class SlskdSearchResponse {
         return completed;
     }
 
-    TableModelSlskdDownload getTableModel() {
-        TableModelSlskdDownload tableModelDownload = new TableModelSlskdDownload(this);
-        for (SlskdSearchFile file : files) {
-            tableModelDownload.addRow(file);
+    public TableModelSlskdDownload getTableModel() {
+        if (tableModelDownload == null) {
+            tableModelDownload = new TableModelSlskdDownload(this);
+            for (SlskdSearchFile file : files) {
+                tableModelDownload.addRow(file);
+            }
         }
         return tableModelDownload;
     }
@@ -176,6 +170,4 @@ public class SlskdSearchResponse {
     void update(String msg, int index) {
         this.progressBar.progress(msg, index);
     }
-
-    
 }
