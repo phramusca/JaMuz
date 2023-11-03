@@ -17,6 +17,7 @@
 package jamuz.soulseek;
 
 import jamuz.gui.swing.TableModelGeneric;
+import jamuz.utils.StringManager;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FilenameUtils;
@@ -27,25 +28,33 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class TableModelSlskdDownload extends TableModelGeneric {
 
-    private List<SlskFile> results;
+    private List<SlskdSearchFile> results;
+    private SlskdSearchResponse searchResponse;
 
     /**
 	 * Create the table model
+     * @param searchResponse
 	 */
-	public TableModelSlskdDownload() {
+	public TableModelSlskdDownload(SlskdSearchResponse searchResponse) {
+        this();
+        this.searchResponse = searchResponse;
+	}
+
+    TableModelSlskdDownload() {
         this.results = new ArrayList<>();
         this.setColumnNames(new String [] {
             "Date", //NOI18N
 			"BitRate", //NOI18N
 			"Length", //NOI18N
-			"State", //NOI18N
-			"Size", //NOI18N //FIXME !!!! human readable size
-			"Speed", //NOI18N //FIXME !!!! human readable speed
-			"Progress", //NOI18N
+			"Size", //NOI18N
             "File",  //NOI18N
-			"Path",  //NOI18N
+			"Progress", //NOI18N
         });
-	}
+    }
+
+    public SlskdSearchResponse getSearchResponse() {
+        return searchResponse;
+    }
 
 	/**
 	 *
@@ -53,26 +62,23 @@ public class TableModelSlskdDownload extends TableModelGeneric {
 	 * @param columnIndex
 	 * @return
 	 */
-@Override
-public Object getValueAt(int rowIndex, int columnIndex) {
-    SlskFile searchResponse = results.get(rowIndex);
-    switch (columnIndex) {
-        case 0: return searchResponse.getDate();
-		case 1: return searchResponse.bitRate;
-		case 2: return searchResponse.length;
-		case 3: return searchResponse.state;
-		case 4: return searchResponse.size;
-		case 5: return searchResponse.averageSpeed;
-		case 6: return searchResponse.getProgressBar();
-		case 7: return FilenameUtils.getName(searchResponse.filename);
-		case 8: return FilenameUtils.getFullPath(searchResponse.filename);
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        SlskdSearchFile searchFile = results.get(rowIndex);
+        switch (columnIndex) {
+            case 0: return searchFile.getDate();
+            case 1: return searchFile.bitRate;
+            case 2: return StringManager.humanReadableSeconds(searchFile.length);
+            case 3: return StringManager.humanReadableByteCount(searchFile.size, true);
+            case 4: return FilenameUtils.getName(searchFile.filename);
+            case 5: return searchFile.getProgressBar();
+        }
+        return null;
     }
-    return null;
-}
 	
 	@Override
     public void setValueAt(Object value, int row, int col) {
-		SlskFile searchResponse = results.get(row);
+		SlskdSearchFile searchResponse = results.get(row);
 //        switch (col) {
 //			case 3: 
 //				searchResponse.setPath((String) value);
@@ -106,7 +112,7 @@ public Object getValueAt(int rowIndex, int columnIndex) {
     * Add a row to the table
 	 * @param searchResponse
     */
-    public void addRow(SlskFile searchResponse){
+    public void addRow(SlskdSearchFile searchResponse){
 		this.results.add(searchResponse);
 		this.fireTableDataChanged();
     }
@@ -116,7 +122,7 @@ public Object getValueAt(int rowIndex, int columnIndex) {
 	 * @param searchResponse
 	 * @param row
     */
-    public void replaceRow(SlskFile searchResponse, int row){
+    public void replaceRow(SlskdSearchFile searchResponse, int row){
 		this.results.set(row, searchResponse);
 		this.fireTableDataChanged();
     }
@@ -125,7 +131,7 @@ public Object getValueAt(int rowIndex, int columnIndex) {
 	 *
 	 * @param searchResponse
 	 */
-	public void removeRow(SlskFile searchResponse){
+	public void removeRow(SlskdSearchFile searchResponse){
 		this.results.remove(searchResponse);
 		this.fireTableDataChanged();
     }
@@ -134,7 +140,7 @@ public Object getValueAt(int rowIndex, int columnIndex) {
 	 * Return list of lines
 	 * @return
 	 */
-	public List<SlskFile> getRows() {
+	public List<SlskdSearchFile> getRows() {
 		return results;
 	}
 
@@ -143,7 +149,7 @@ public Object getValueAt(int rowIndex, int columnIndex) {
      * @param index
      * @return
      */
-    public SlskFile getRow(int index) {
+    public SlskdSearchFile getRow(int index) {
         return this.results.get(index);
     }
    

@@ -28,6 +28,7 @@ import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
 import jamuz.player.Mplayer;
 import jamuz.process.check.FolderInfo;
+import jamuz.soulseek.PanelSlsk;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
@@ -123,9 +124,10 @@ public class PanelSelect extends javax.swing.JPanel {
     
     /**
      * extended init
+     * @param panelSlsk
      */
-    public void initExtended() {
-
+    public void initExtended(PanelSlsk panelSlsk) {
+        
         jCheckBoxSelectCheckedFlag0.setBackground(
 				getColor(FolderInfo.CheckedFlag.UNCHECKED));
         jCheckBoxSelectCheckedFlag1.setBackground(
@@ -181,7 +183,7 @@ public class PanelSelect extends javax.swing.JPanel {
 		refreshTable();
 		
 		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
-		myPopupMenu = new PopupMenu(jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, new PopupMenuListener() {
+		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, new PopupMenuListener() {
 			@Override
 			public boolean deleteStarted() {
 				jTableSelect.setRowSorter(null);
@@ -842,7 +844,9 @@ public class PanelSelect extends javax.swing.JPanel {
 	 */
 	public static void stopMplayer() {
 		mplayer.stop();
-		jLabelPreviewDisplay.setText("");
+        if(jLabelPreviewDisplay!=null) {
+            jLabelPreviewDisplay.setText("");
+        }
 	}
     
 	/**

@@ -16,6 +16,8 @@
  */
 package jamuz.soulseek;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 /**
  *
  * @author raph

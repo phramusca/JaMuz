@@ -149,6 +149,7 @@ public class PanelMain extends javax.swing.JFrame {
         setTab("Label.Options", "selected");
         setTab("PanelMain.panelVideo.TabConstraints.tabTitle", "movies");
 		setTab("PanelMain.panelBook.TabConstraints.tabTitle", "book_open");
+        setTab("PanelMain.panelslsk.TabConstraints.tabTitle", "slsk");
 
 	//Left pane: player
         //Set queue model
@@ -215,8 +216,8 @@ public class PanelMain extends javax.swing.JFrame {
         PanelCheck.setOptions(); //Needs to be static (for now at least)
 		panelCheck.initExtended(this);
         panelStats.initExtended();
-        panelSelect.initExtended();
-        panelPlaylists.initExtended();
+        panelSelect.initExtended(panelSlsk);
+        panelPlaylists.initExtended(panelSlsk);
 		panelRemote.initExtended(this, new CallBackServer());
 		panelVideo.initExtended(this);
 		panelBook.initExtended(this);
@@ -741,6 +742,7 @@ public class PanelMain extends javax.swing.JFrame {
         panelMerge = new jamuz.process.merge.PanelMerge();
         panelSync = new jamuz.process.sync.PanelSync();
         panelPlaylists = new jamuz.gui.PanelPlaylists();
+        panelSlsk = new jamuz.soulseek.PanelSlsk();
         panelLyrics = new jamuz.gui.PanelLyrics();
         panelStats = new jamuz.gui.PanelStats();
         panelRemote = new jamuz.remote.PanelRemote();
@@ -784,12 +786,13 @@ public class PanelMain extends javax.swing.JFrame {
 
         jTabbedPane.setMinimumSize(new java.awt.Dimension(0, 0));
         jTabbedPane.setName("PanelMainTabbedPane"); // NOI18N
+        jTabbedPane.addTab(Inter.get("PanelMain.panelSelect.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/music.png")), panelSelect); // NOI18N
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
-        jTabbedPane.addTab(bundle.getString("PanelMain.panelSelect.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/music.png")), panelSelect); // NOI18N
         jTabbedPane.addTab(bundle.getString("Label.Merge"), new javax.swing.ImageIcon(getClass().getResource("/icons/arrow_refresh.png")), panelMerge); // NOI18N
         jTabbedPane.addTab(bundle.getString("PanelMain.panelSync.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/arrow_turn_right.png")), panelSync); // NOI18N
         jTabbedPane.addTab(bundle.getString("Label.Check"), new javax.swing.ImageIcon(getClass().getResource("/icons/search_plus.png")), panelCheck); // NOI18N
         jTabbedPane.addTab(Inter.get("PanelMain.panelPlaylists.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/application_view_list.png")), panelPlaylists); // NOI18N
+        jTabbedPane.addTab(Inter.get("PanelMain.panelslsk.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/slsk.png")), panelSlsk); // NOI18N
         jTabbedPane.addTab(bundle.getString("Label.Lyrics"), new javax.swing.ImageIcon(getClass().getResource("/icons/text.png")), panelLyrics); // NOI18N
         jTabbedPane.addTab(bundle.getString("PanelMain.panelStats.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/statistics.png")), panelStats); // NOI18N
         jTabbedPane.addTab(Inter.get("PanelMain.panelRemote.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/icons/android.png")), panelRemote); // NOI18N
@@ -1086,7 +1089,7 @@ public class PanelMain extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPanePlayerQueue, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                .addComponent(jScrollPanePlayerQueue, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonRefreshHiddenQueue)
@@ -1106,7 +1109,7 @@ public class PanelMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1184, Short.MAX_VALUE)
+            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1228, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1820,6 +1823,7 @@ public class PanelMain extends javax.swing.JFrame {
     private jamuz.gui.PanelPlaylists panelPlaylists;
     private jamuz.remote.PanelRemote panelRemote;
     private jamuz.gui.PanelSelect panelSelect;
+    private jamuz.soulseek.PanelSlsk panelSlsk;
     private jamuz.gui.PanelStats panelStats;
     private jamuz.process.sync.PanelSync panelSync;
     private jamuz.process.video.PanelVideo panelVideo;

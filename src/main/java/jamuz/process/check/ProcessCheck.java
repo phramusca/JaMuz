@@ -17,6 +17,9 @@
 
 package jamuz.process.check;
 
+//FIXME Z Use CountDownLatch to monitor the end of processes
+// https://stackoverflow.com/questions/51317317/java-wait-for-timer-thread-to-complete
+
 import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.FolderInfo.CheckedFlag;

@@ -173,6 +173,8 @@ public class PanelRemote extends javax.swing.JPanel {
 		return false;
 	}
 	
+    
+    //FIXME ! Fill a combo to display ips as "socket trick" does not always work + you may want to log from a specific network
 	private static InetAddress getLocalHostLANAddress() throws UnknownHostException {
 		try {
 			InetAddress candidateAddress = null;

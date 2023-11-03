@@ -16,7 +16,6 @@
  */
 package jamuz;
 
-//TODO: Ant (build.xml):  copy configuration and other required files, make 7z package.
 //----------------------------------------------------------
 // - General TODO:
 //      - TODO: manage database backups in logs
@@ -39,10 +38,6 @@ package jamuz;
 // - Player:
 //		- TODO: transitions
 //	- Merge tab:
-//		- TODO: Support Clementine. It is sqlite, cross-platform, amarok1.4 fork, BUT :
-//			- filename is stored as blob and URL encoded (with %20 as space at least) :(
-//			- cannot find addedDate
-//		- TODO: Support JaJUK: sounds promising (DJ, ambiances,...) but XML database :(
 //		- TODO: Support rating=-1:
 //			Guayadeque default rating is -1, but cannnot be set back to -1 in GUI (only from 0 to 5)
 //			MediaMonkey default is -1 (not rated), 0 is used to mark a file as "to be deleted" (bomb icon)
@@ -72,19 +67,18 @@ package jamuz;
 //		- TODO: Enable export over SSH (on remote machine to an device plugged on that remote machine : Intel NUC to friend USB key/HDD for instance)
 //          => Doing this, merge options to copy/move files b/w "Sync" and "Video" (export)
 //TODO: List used librairies (source, version, how to compile if needed,...)
-//TODO: Consider using Maven
+
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
-import jamuz.soulseek.DialogSlsk;
 import jamuz.utils.Popup;
 import java.io.File;
 import java.util.logging.Handler;
 
-// FIXME TEST pom.xml Re-enable tests, when tests done
+// FIXME TEST ! pom.xml Re-enable tests at build
 // TODO pom.xml essayer de remplacer les jar locaux par des maven
 
 //FIXME Z https://github.com/phramusca/JaMuz/security/dependabot
-//FIXME !!!! TODO: <https://docs.github.com/fr/actions/using-workflows/reusing-workflows>**
+//FIXME Z <https://docs.github.com/fr/actions/using-workflows/reusing-workflows>**
 
 /**
  * JaMuz main class
@@ -101,30 +95,23 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			String jarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        
 			// The path obtained might be URL-encoded, so you need to decode it
 			try {
 				jarPath = java.net.URLDecoder.decode(jarPath, "UTF-8");
-			} catch (java.io.UnsupportedEncodingException e) {
-				e.printStackTrace();
+			} catch (java.io.UnsupportedEncodingException ex) {
+				Popup.error("get jar folder", ex);
 			}
-
 			File jarFile = new File(jarPath);
 			File jarFolder = jarFile.getParentFile();
-
-			System.out.println("Folder of the running JAR: " + jarFolder.getAbsolutePath());
-			
+            String appPath = jarFolder.getAbsolutePath() + File.separator;
+			System.out.println("Folder of the running JAR : " + appPath);
+            
 			//Get current application folder
 			File f = new File(".");  //NOI18N
 			Jamuz.getLogger().finest(f.getAbsolutePath());
-			String appPath = f.getAbsolutePath();
-			appPath = appPath.substring(0, appPath.length() - 1);
-			
-			System.out.println("appPath: " + appPath);
-
-			appPath = jarFolder.getAbsolutePath() + File.separator;
-			
-			System.out.println("new appPath: " + appPath);
+			String dotPath = f.getAbsolutePath();
+			dotPath = dotPath.substring(0, dotPath.length() - 1);
+			System.out.println("Folder of . : " + dotPath);
 			
 			//Configure application
 			if (!Jamuz.configure(appPath)) {
@@ -144,12 +131,14 @@ public class Main {
 					}
 					PanelMain.stopMplayer();
 					PanelSelect.stopMplayer();
+                    
+                    //TODO: Make this an option as server could be left running for dowloads ...
+//                    Jamuz.getSlskdDocker().stop();
 				}
 			});
 
 			//Start GUI
 			PanelMain.main();
-//            DialogSlsk.main(null, "The White Stripes Elephant");
             
 		} catch (Exception ex) {
 			Popup.error(ex);

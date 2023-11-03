@@ -19,6 +19,8 @@ package jamuz.soulseek;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -58,8 +60,7 @@ public class SlskdClient {
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
                     .post(RequestBody.create(obj.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
 		String body = getBodyString(request, client);
-		
-		
+
 		SlskdTokenResponse fromJson = null;
 		if (!body.equals("")) {
 			fromJson = gson.fromJson(body, SlskdTokenResponse.class);
@@ -76,11 +77,13 @@ public class SlskdClient {
 	
 	public boolean download(SlskdSearchResponse searchResponse) throws IOException, ServerException {
 		JSONArray jsonArray = new JSONArray();
-		for (SlskdSearchFile file : searchResponse.getFilteredFiles()) {
-			JSONObject fileObj = new JSONObject();
-			fileObj.put("filename", file.filename);
-			fileObj.put("size", file.size);
-			jsonArray.add(fileObj);
+		for (SlskdSearchFile file : searchResponse.getFiles()) {
+			if(file.percentComplete<100) {
+                JSONObject fileObj = new JSONObject();
+                fileObj.put("filename", file.filename);
+                fileObj.put("size", file.size);
+                jsonArray.add(fileObj);
+            }
 		}
 		OkHttpClient timeoutClient = new OkHttpClient.Builder()
                     .readTimeout(30, TimeUnit.SECONDS)
@@ -89,14 +92,15 @@ public class SlskdClient {
 		HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/"+searchResponse.username); //NON-NLS
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
 				.post(RequestBody.create(jsonArray.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
-
-		Response response = timeoutClient.newCall(request).execute();
+        
+        Response response = timeoutClient.newCall(request).execute();
 		return response.isSuccessful();
 	}
 	
-	//TODO: download only audio files ?
 	public SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
-		String bodyString = getBodyString("transfers/downloads/" + searchResponse.username, client);
+        String username = URLEncoder.encode(searchResponse.username, StandardCharsets.UTF_8.toString()); //FIXME ! Use this elsewhere ? Does it work ?
+        String url = "transfers/downloads/" + username;
+		String bodyString = getBodyString(url, client);
 		
 		SlskdDownloadUser fromJson = null;
 		if (!bodyString.equals("")) {
@@ -114,7 +118,7 @@ public class SlskdClient {
 //		obj.put("maximumPeerQueueLength", 1000000);	//  integer($int32) //the maximum queue depth a peer may have in order for a response to be processed. (Default = 1000000).
 //		obj.put("minimumPeerUploadSpeed", 0);		//	integer($int32) //the minimum upload speed a peer must have in order for a response to be processed. (Default = 0).
 //		obj.put("minimumResponseFileCount", 1);	//	integer($int32)	//the minimum number of files a response must contain in order to be processed. (Default = 1).
-		obj.put("responseLimit", 5);				//	integer($int32)	//the maximum number of search results to accept before the search is considered complete. (Default = 100).
+//		obj.put("responseLimit", 5);				//	integer($int32)	//the maximum number of search results to accept before the search is considered complete. (Default = 100).
 		obj.put("searchText", queryText);			//	string			//the search text.
 //		obj.put("searchTimeout", 15);				//	integer($int32)	//the search timeout value, in seconds, used to determine when the search is complete. (Default = 15).
 //		obj.put("token", 0);						//	integer($int32)	//the search token.
@@ -152,7 +156,41 @@ public class SlskdClient {
 		return fromJson;
 	}
 	
+    public boolean deleteSearch(String id) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("searches/" + id); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).delete().build();
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+    }
+    
+    public boolean deleteTransfer(String username, String id) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/" + username + "/" + id + "?remove=true"); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).delete().build();
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+    }
+    
+    public boolean deleteDirectory(String base64subDir) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("files/downloads/directories/" + base64subDir); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).delete().build();
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+    }
 	
+    public boolean deleteFile(String base64File) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("files/downloads/files/" + base64File); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).delete().build();
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+    }
+    
+    public boolean deleteIncompleteFile(String base64File) throws IOException {
+        HttpUrl.Builder urlBuilder = getUrlBuilder("files/incomplete/files/" + base64File); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).delete().build();
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+    }
+    
 	private HttpUrl.Builder getUrlBuilder(String url) {
         return Objects.requireNonNull(HttpUrl.parse(BASE_URL + "/" + url)).newBuilder(); //NON-NLS
     }

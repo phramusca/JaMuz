@@ -27,6 +27,7 @@ import jamuz.Playlist.LimitUnit;
 import jamuz.Playlist.Match;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.gui.swing.TableModel;
+import jamuz.soulseek.PanelSlsk;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
@@ -63,8 +64,9 @@ public class PanelPlaylists extends javax.swing.JPanel {
 	
     /**
      * extended init
+     * @param panelSlsk
      */
-    public void initExtended() {
+    public void initExtended(PanelSlsk panelSlsk) {
 		enablePlaylistEdit(false);
         fillPlaylistCombo();
         tableModelPlaylist = (TableModel) jTablePlaylist.getModel();
@@ -74,7 +76,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
 		});
         jTablePlaylist.setRowSorter(null);
         tableModelPlaylist.clear();	
-		myPopupMenu = new PopupMenu(jPopupMenu1, jTablePlaylist, tableModelPlaylist, fileInfoList, null, new PopupMenuListener() {
+		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTablePlaylist, tableModelPlaylist, fileInfoList, null, new PopupMenuListener() {
 			@Override
 			public boolean deleteStarted() {
 				enablePlaylistEdit(false);
@@ -865,7 +867,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
 					}
 				}
 				Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-				if(playlist.getFilters().size()>0 || playlist.isLimit()) {
+				if(!playlist.getFilters().isEmpty() || playlist.isLimit()) {
 					// Démarrage du thread
 					tFillPlaylistTable = new FillPlaylistThread("Thread.PanelPlaylists.FillPlaylistTable");
 					tFillPlaylistTable.start();
