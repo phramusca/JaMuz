@@ -124,8 +124,10 @@ public class PanelSlsk extends javax.swing.JPanel {
 		column.setCellRenderer(new ProgressCellRender());
         
         jTextFieldPassword.setToolTipText("Warning: Password is stored as plain text in properties file !");
-        
-        //Get and display options
+	}
+	
+	public void initExtended() {
+		//Get and display options
         File propertiesFile = Jamuz.getFile("Slsk.properties");
         boolean onStartup = false;
         if(propertiesFile.exists()) {

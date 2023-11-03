@@ -221,6 +221,7 @@ public class PanelMain extends javax.swing.JFrame {
 		panelRemote.initExtended(this, new CallBackServer());
 		panelVideo.initExtended(this);
 		panelBook.initExtended(this);
+		panelSlsk.initExtended();
 		
         setKeyBindings();
 		
