@@ -7,6 +7,27 @@
     <url>https://github.com/phramusca/JaMuz/</url>
     <packaging>jar</packaging>
     
+    <profiles>
+        <profile>
+            <id>skip-tests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    
     <build>
         <finalName>${project.artifactId}</finalName>
         <resources>
@@ -28,9 +49,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
             </plugin>
             
             <!--This is to include dependencies and generate manifest in a JaMuz-jar-with-dependencies.jar-->
