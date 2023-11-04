@@ -33,7 +33,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.UncheckedIOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -41,7 +40,11 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuItem;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -97,6 +100,8 @@ public class PanelRemote extends javax.swing.JPanel {
         MouseListener popupListener = new PopupListener(jPopupMenu1);
         jTableRemote.addMouseListener(popupListener);
 		
+        fillIPsCombo();
+        
 		server.fillClients();
 		if(onStartup) {
 			startStopRemoteServer();
@@ -175,15 +180,16 @@ public class PanelRemote extends javax.swing.JPanel {
 	
     
     //FIXME ! Fill a combo to display ips as "socket trick" does not always work + you may want to log from a specific network
-	private static InetAddress getLocalHostLANAddress() throws UnknownHostException {
+	private Map<String, InetAddress> getIPs() throws UnknownHostException {
 		try {
-			InetAddress candidateAddress = null;
+            Map<String, InetAddress> IPs = new LinkedHashMap<>();
+
 			//First try using this method
 			//https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
 			try(final DatagramSocket socket = new DatagramSocket()){
 				socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
 				System.out.println("Socket trick: "+socket.getLocalAddress().getHostAddress());
-				candidateAddress = socket.getLocalAddress();
+                IPs.put("Pref. Outbound", socket.getLocalAddress());
 			}
 			//TODO: Support MacOS:
 //			Socket socket = new Socket();
@@ -198,9 +204,7 @@ public class PanelRemote extends javax.swing.JPanel {
 					InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
 					if (!inetAddr.isLoopbackAddress() && inetAddr.isSiteLocalAddress()) {
 						System.out.println("\t"+iface.getDisplayName()+": "+inetAddr.getHostAddress());
-						if (candidateAddress == null) {
-							candidateAddress = inetAddr;
-						}
+						IPs.put(iface.getDisplayName(), inetAddr);
 					}
 				}
 			}
@@ -208,17 +212,9 @@ public class PanelRemote extends javax.swing.JPanel {
 			//Finally, get the IP provided by java but it usually returns loopback ip so useless
 			InetAddress jdkSuppliedAddress = InetAddress.getLocalHost();
 			System.out.println("JDK supplied: "+jdkSuppliedAddress.getHostAddress());
-			if (candidateAddress == null) {
-				candidateAddress = jdkSuppliedAddress;
-			}
+            IPs.put("JDK supplied", jdkSuppliedAddress);
 		   
-			//Return whatever ip was found or throw an exception
-			if (candidateAddress == null) {
-				throw new UnknownHostException("The JDK InetAddress.getLocalHost() method unexpectedly returned null.");
-			}
-			else {
-				return candidateAddress;
-			}
+            return IPs;
 		}
 		catch (SocketException | UnknownHostException e) {
 		   UnknownHostException unknownHostException = new UnknownHostException("Failed to determine LAN address: " + e);
@@ -227,22 +223,27 @@ public class PanelRemote extends javax.swing.JPanel {
 		}
 	}
 
+    private void fillIPsCombo() {
+        try {
+            jButtonRefreshIP.setEnabled(false);
+            jButtonQRcode.setEnabled(false);
+            Map<String, InetAddress> IPs = getIPs();
+            DefaultComboBoxModel comboModelPlaylist = (DefaultComboBoxModel) jComboBoxIP.getModel();
+            comboModelPlaylist.removeAllElements();
+            for (Map.Entry<String, InetAddress> entry : IPs.entrySet()) {
+                comboModelPlaylist.addElement(entry);
+            }
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(PanelRemote.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        jButtonRefreshIP.setEnabled(true);
+        jButtonQRcode.setEnabled(true);
+    }
+    
 	private void enableConfig(boolean enable) {
 		jSpinnerPort.setEnabled(enable);
 	}
-   
-	private void setIpText() {
-	   StringBuilder IP = new StringBuilder();
-		IP.append("<html>Set \"<B>");
-		try {
-			IP.append(getLocalHostLANAddress().getHostAddress()).append(":").append(jSpinnerPort.getValue()); 
-		} catch (UncheckedIOException | UnknownHostException ex) {
-			IP.append("Undetermined !");
-		}
-		IP.append("\"</B> in JaMuz Remote as <B>\"&lt;IP&gt;:&lt;Port&gt;\"</B> or read QR code with your Android phone.</html>");
-		jLabelIP.setText(IP.toString());
-	}
-   
+      
 	private void startStopRemoteServer() {
 		enableConfig(false);
 		if(server!=null) {
@@ -253,7 +254,6 @@ public class PanelRemote extends javax.swing.JPanel {
 					Jamuz.getOptions().set("server.port", String.valueOf(server.getPort()));
 					Jamuz.getOptions().save();
 					enableConfig(false);
-					jButtonQRcode.setEnabled(true);
 					jButtonStart.setText(Inter.get("Button.Pause"));
 				} else {
 					enableConfig(true);
@@ -281,23 +281,18 @@ public class PanelRemote extends javax.swing.JPanel {
         jPanelRemote = new javax.swing.JPanel();
         jSpinnerPort = new javax.swing.JSpinner();
         jButtonStart = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
-        jLabelIP = new javax.swing.JLabel();
         jButtonQRcode = new javax.swing.JButton();
         jScrollPaneCheckTags1 = new javax.swing.JScrollPane();
         jTableRemote = new javax.swing.JTable();
         jButtonRefreshIP = new javax.swing.JButton();
         jCheckBoxEnableByDefault = new javax.swing.JCheckBox();
+        jComboBoxIP = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
 
         jPanelRemote.setBorder(javax.swing.BorderFactory.createTitledBorder("Jamuz Remote Server"));
 
         jSpinnerPort.setModel(new javax.swing.SpinnerNumberModel(2013, 2009, 65535, 1));
-        jSpinnerPort.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSpinnerPortStateChanged(evt);
-            }
-        });
 
         jButtonStart.setText(Inter.get("Button.Start")); // NOI18N
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
@@ -305,8 +300,6 @@ public class PanelRemote extends javax.swing.JPanel {
                 jButtonStartActionPerformed(evt);
             }
         });
-
-        jLabel1.setText(Inter.get("PanelMain.jLabel1.text")); // NOI18N
 
         jCheckBoxServerStartOnStartup.setSelected(true);
         jCheckBoxServerStartOnStartup.setText(Inter.get("PanelMain.jCheckBoxServerStartOnStartup.text")); // NOI18N
@@ -316,8 +309,6 @@ public class PanelRemote extends javax.swing.JPanel {
                 jCheckBoxServerStartOnStartupItemStateChanged(evt);
             }
         });
-
-        jLabelIP.setText("IP: xxx.xxx.xxx.xxx"); // NOI18N
 
         jButtonQRcode.setText(Inter.get("PanelMain.jButtonQRcode.text")); // NOI18N
         jButtonQRcode.addActionListener(new java.awt.event.ActionListener() {
@@ -353,6 +344,10 @@ public class PanelRemote extends javax.swing.JPanel {
             }
         });
 
+        jComboBoxIP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel2.setText(":");
+
         javax.swing.GroupLayout jPanelRemoteLayout = new javax.swing.GroupLayout(jPanelRemote);
         jPanelRemote.setLayout(jPanelRemoteLayout);
         jPanelRemoteLayout.setHorizontalGroup(
@@ -366,18 +361,18 @@ public class PanelRemote extends javax.swing.JPanel {
                             .addGroup(jPanelRemoteLayout.createSequentialGroup()
                                 .addComponent(jButtonRefreshIP)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelIP))
-                            .addGroup(jPanelRemoteLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
+                                .addComponent(jComboBoxIP, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonQRcode)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
-                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBoxServerStartOnStartup)
-                            .addComponent(jCheckBoxEnableByDefault))
-                        .addGap(32, 32, 32)
+                                .addComponent(jButtonQRcode))
+                            .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                                .addComponent(jCheckBoxServerStartOnStartup)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCheckBoxEnableByDefault)))
+                        .addGap(32, 399, Short.MAX_VALUE)
                         .addComponent(jButtonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -386,20 +381,20 @@ public class PanelRemote extends javax.swing.JPanel {
             .addGroup(jPanelRemoteLayout.createSequentialGroup()
                 .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanelRemoteLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
+                            .addComponent(jComboBoxIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jSpinnerPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
                             .addComponent(jButtonQRcode)
-                            .addComponent(jCheckBoxEnableByDefault))
+                            .addComponent(jButtonRefreshIP, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonRefreshIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabelIP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jCheckBoxServerStartOnStartup))))
+                        .addGroup(jPanelRemoteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCheckBoxServerStartOnStartup)
+                            .addComponent(jCheckBoxEnableByDefault)))
                     .addComponent(jButtonStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                .addComponent(jScrollPaneCheckTags1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -409,7 +404,8 @@ public class PanelRemote extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -421,17 +417,13 @@ public class PanelRemote extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonQRcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQRcodeActionPerformed
-        try {
-			setIpText();
-            String ip = getLocalHostLANAddress().getHostAddress();
-            int port = (Integer) jSpinnerPort.getValue();
-            String encrypted = Encryption.encrypt(ip+":"+port, "NOTeBrrhzrtestSecretK");
-            String url = "jamuzremote://"+encrypted;
-			//http://stackoverflow.com/questions/10258633/android-start-application-from-qr-code-with-params
-            BufferedImage bufferedImage = QRCode.create(url, 250);
-            DialogQRcode.main(parent, bufferedImage);
-        } catch (UnknownHostException ex) {
-        }
+        Map.Entry<String, InetAddress> selectedItem = (Map.Entry<String, InetAddress>) jComboBoxIP.getSelectedItem();
+        int port = (Integer) jSpinnerPort.getValue();
+        String encrypted = Encryption.encrypt(selectedItem.getValue().getHostAddress()+":"+port, "NOTeBrrhzrtestSecretK");
+        String url = "jamuzremote://"+encrypted;
+        //http://stackoverflow.com/questions/10258633/android-start-application-from-qr-code-with-params
+        BufferedImage bufferedImage = QRCode.create(url, 250);
+        DialogQRcode.main(parent, bufferedImage);
     }//GEN-LAST:event_jButtonQRcodeActionPerformed
 
     private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
@@ -449,17 +441,14 @@ public class PanelRemote extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jTableRemoteMousePressed
 
-    private void jSpinnerPortStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerPortStateChanged
-        setIpText();
-    }//GEN-LAST:event_jSpinnerPortStateChanged
-
     private void jCheckBoxServerStartOnStartupItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxServerStartOnStartupItemStateChanged
         Jamuz.getOptions().set("server.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
 		Jamuz.getOptions().save();
     }//GEN-LAST:event_jCheckBoxServerStartOnStartupItemStateChanged
 
     private void jButtonRefreshIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshIPActionPerformed
-        setIpText();
+//        setIpText();
+        fillIPsCombo();
     }//GEN-LAST:event_jButtonRefreshIPActionPerformed
 
     private void jCheckBoxEnableByDefaultItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxEnableByDefaultItemStateChanged
@@ -549,8 +538,8 @@ public class PanelRemote extends javax.swing.JPanel {
     private javax.swing.JButton jButtonStart;
     private javax.swing.JCheckBox jCheckBoxEnableByDefault;
     private javax.swing.JCheckBox jCheckBoxServerStartOnStartup;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabelIP;
+    private javax.swing.JComboBox<String> jComboBoxIP;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanelRemote;
     private javax.swing.JPopupMenu jPopupMenu1;
     private static javax.swing.JScrollPane jScrollPaneCheckTags1;

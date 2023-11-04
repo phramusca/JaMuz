@@ -25,8 +25,9 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanelRemote" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -59,25 +60,24 @@
                       <Component id="jScrollPaneCheckTags1" max="32767" attributes="2"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <Component id="jButtonRefreshIP" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabelIP" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jComboBoxIP" min="-2" pref="311" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jSpinnerPort" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jButtonQRcode" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jCheckBoxServerStartOnStartup" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jCheckBoxEnableByDefault" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace pref="101" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jCheckBoxServerStartOnStartup" min="-2" max="-2" attributes="0"/>
-                              <Component id="jCheckBoxEnableByDefault" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                          <EmptySpace min="32" pref="399" max="32767" attributes="0"/>
                           <Component id="jButtonStart" min="-2" pref="90" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -90,25 +90,24 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jComboBoxIP" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jSpinnerPort" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jButtonQRcode" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jCheckBoxEnableByDefault" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jButtonRefreshIP" min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jButtonRefreshIP" max="32767" attributes="0"/>
-                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                  <Component id="jLabelIP" alignment="3" max="32767" attributes="0"/>
-                                  <Component id="jCheckBoxServerStartOnStartup" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jCheckBoxServerStartOnStartup" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jCheckBoxEnableByDefault" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="jButtonStart" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPaneCheckTags1" pref="231" max="32767" attributes="2"/>
+                  <Component id="jScrollPaneCheckTags1" pref="318" max="32767" attributes="2"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -121,9 +120,6 @@
               <SpinnerModel initial="2013" maximum="65535" minimum="2009" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSpinnerPortStateChanged"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonStart">
           <Properties>
@@ -134,13 +130,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonStartActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel1">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="inter/Bundle.properties" key="PanelMain.jLabel1.text" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
-            </Property>
-          </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="jCheckBoxServerStartOnStartup">
           <Properties>
@@ -155,11 +144,6 @@
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jCheckBoxServerStartOnStartupItemStateChanged"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabelIP">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="IP: xxx.xxx.xxx.xxx" noResource="true"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonQRcode">
           <Properties>
@@ -219,6 +203,26 @@
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jCheckBoxEnableByDefaultItemStateChanged"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="jComboBoxIP">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="4">
+                <StringItem index="0" value="Item 1"/>
+                <StringItem index="1" value="Item 2"/>
+                <StringItem index="2" value="Item 3"/>
+                <StringItem index="3" value="Item 4"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value=":"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
