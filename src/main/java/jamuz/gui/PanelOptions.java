@@ -28,6 +28,7 @@ import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import java.awt.Frame;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -38,6 +39,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -51,27 +54,35 @@ public class PanelOptions extends javax.swing.JPanel {
 	 */
 	protected static ProgressBar progressBarCheckedFlag;
 	private Frame parent;
+    private String newVersionAssetName;
+    ProgressBar progressBar;
 	
 	/**
 	 * Creates new form PanelOptions
 	 */
 	public PanelOptions() {
 		initComponents();
+        progressBar = (ProgressBar)jProgressBarUpdate;
+        progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 	}
 
 	/**
      * extended init
 	 * @param parent
+     * @param newVersionAssetName
      */
-    public void initExtended(Frame parent) {
+    public void initExtended(Frame parent, String newVersionAssetName) {
 		this.parent = parent;
 		fillMachineList();
-		progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 		jListGenres.setModel(Jamuz.getGenreListModel());
 		long size = Long.valueOf(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
 		jSpinnerBytes.getModel().setValue(size);
 		jLabelBytes.setText("("+Inter.get("Label.Keep")+" "+StringManager.humanReadableByteCount(size, false)+")");
 		jListTags.setModel(Jamuz.getTagsModel());
+        this.newVersionAssetName = newVersionAssetName;
+        if(!newVersionAssetName.isBlank()) {
+            jLabelNewVersion.setText("<html><a href='#'>A new version is available: " + newVersionAssetName + ". Click to update.</a></html>");
+        }
 	}
 	
 	/**
@@ -200,6 +211,8 @@ public class PanelOptions extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPaneShortcuts = new javax.swing.JTextPane();
+        jLabelNewVersion = new javax.swing.JLabel();
+        jProgressBarUpdate = new jamuz.gui.swing.ProgressBar();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
@@ -527,6 +540,16 @@ public class PanelOptions extends javax.swing.JPanel {
         jTextPaneShortcuts.setFocusable(false);
         jScrollPane1.setViewportView(jTextPaneShortcuts);
 
+        jLabelNewVersion.setText(" "); // NOI18N
+        jLabelNewVersion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabelNewVersionMouseClicked(evt);
+            }
+        });
+
+        jProgressBarUpdate.setString("null");
+        jProgressBarUpdate.setStringPainted(true);
+
         javax.swing.GroupLayout jPanelOptionsLayout = new javax.swing.GroupLayout(jPanelOptions);
         jPanelOptions.setLayout(jPanelOptionsLayout);
         jPanelOptionsLayout.setHorizontalGroup(
@@ -546,7 +569,9 @@ public class PanelOptions extends javax.swing.JPanel {
                 .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanelSaveFiles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanelResetCheckedFlag, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelCleanupLogFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanelCleanupLogFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelNewVersion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelOptionsLayout.setVerticalGroup(
@@ -563,7 +588,10 @@ public class PanelOptions extends javax.swing.JPanel {
                             .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanelOptionsTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabelNewVersion)
+                        .addGap(10, 10, 10)
+                        .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanelCleanupLogFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelSaveFiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -748,6 +776,52 @@ public class PanelOptions extends javax.swing.JPanel {
 		jLabelBytes.setText("("+Inter.get("Label.Keep")+" "+StringManager.humanReadableByteCount(size, false)+")");
     }//GEN-LAST:event_jSpinnerBytesStateChanged
 
+    private void jLabelNewVersionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelNewVersionMouseClicked
+        File assetFile = Jamuz.getFile(newVersionAssetName, "data", "system", "update");
+        
+        progressBar.setIndeterminate("Couting files in " + newVersionAssetName);
+        
+        int entryCount = 0;
+        try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
+            while ((sevenZFile.getNextEntry()) != null) {
+                entryCount++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        progressBar.setup(entryCount);
+        try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
+            SevenZArchiveEntry entry;
+            while ((entry = sevenZFile.getNextEntry()) != null) {
+                File outputFile = Jamuz.getFile(entry.getName(), "data", "system", "update");
+                if (entry.isDirectory()) {
+                    if (!outputFile.exists()) {
+                        outputFile.mkdirs();
+                    }
+                } else {
+                    // Create parent directories if they don't exist
+                    File parentDir = outputFile.getParentFile();
+                    if (!parentDir.exists()) {
+                        parentDir.mkdirs();
+                    }
+
+                    // Create an output stream for the entry
+                    try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                        byte[] buffer = new byte[8192];
+                        int bytesRead;
+                        while ((bytesRead = sevenZFile.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+                    }
+                }
+                progressBar.progress(entry.getName());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jLabelNewVersionMouseClicked
+
 	/**
 	 *
 	 */
@@ -869,6 +943,7 @@ public class PanelOptions extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelBytes;
     private javax.swing.JLabel jLabelCleanup;
+    private javax.swing.JLabel jLabelNewVersion;
     private static javax.swing.JList jListGenres;
     private static javax.swing.JList jListMachines;
     private static javax.swing.JList jListTags;
@@ -881,6 +956,7 @@ public class PanelOptions extends javax.swing.JPanel {
     private static javax.swing.JProgressBar jProgressBarCleanupLogs;
     private static javax.swing.JProgressBar jProgressBarResetChecked;
     private static javax.swing.JProgressBar jProgressBarSaveTags;
+    private javax.swing.JProgressBar jProgressBarUpdate;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines;
     private javax.swing.JScrollPane jScrollPaneOptionsMachines1;

@@ -179,7 +179,6 @@ public class PanelRemote extends javax.swing.JPanel {
 	}
 	
     
-    //FIXME ! Fill a combo to display ips as "socket trick" does not always work + you may want to log from a specific network
 	private Map<String, InetAddress> getIPs() throws UnknownHostException {
 		try {
             Map<String, InetAddress> IPs = new LinkedHashMap<>();

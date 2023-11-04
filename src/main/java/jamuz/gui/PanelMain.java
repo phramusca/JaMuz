@@ -130,8 +130,9 @@ public class PanelMain extends javax.swing.JFrame {
 
     /**
      * Creates new form MainGUI
+     * @param newVersionAssetName
      */
-    public PanelMain() {
+    public PanelMain(String newVersionAssetName) {
 		
         comboGenre = new String[1];
         comboGenre[0] = ""; //NOI18N
@@ -208,9 +209,9 @@ public class PanelMain extends javax.swing.JFrame {
 		};
 		
 		MPLAYER.addListener(mPlaybackListener);
-		
+        
 		//Init tabs
-		panelOptions.initExtended(this);
+		panelOptions.initExtended(this, newVersionAssetName);
         panelSync.initExtended(this);
         panelMerge.initExtended(this);
         PanelCheck.setOptions(); //Needs to be static (for now at least)
@@ -1756,8 +1757,9 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
     /**
+     * @param newVersionAssetName
      */
-    public static void main() {
+    public static void main(String newVersionAssetName) {
         /* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         	/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1776,7 +1778,7 @@ public class PanelMain extends javax.swing.JFrame {
 		//</editor-fold>
 
         java.awt.EventQueue.invokeLater(() -> {
-			PanelMain panel = new PanelMain();
+			PanelMain panel = new PanelMain(newVersionAssetName);
 			panel.setLocationRelativeTo(null);
 			panel.setExtendedState(PanelMain.MAXIMIZED_BOTH);
 			String version = Main.class.getPackage().getImplementationVersion();
