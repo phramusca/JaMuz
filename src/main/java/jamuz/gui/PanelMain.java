@@ -94,8 +94,6 @@ public class PanelMain extends javax.swing.JFrame {
         return queueModel;
     }
     
-//    private static final PlayerMP3 mp3Player = new PlayerMP3();
-//    private static final PlayerFlac flacPlayer = new PlayerFlac();
 	private static Mplayer MPLAYER;
 
 	/**
@@ -130,9 +128,8 @@ public class PanelMain extends javax.swing.JFrame {
 
     /**
      * Creates new form MainGUI
-     * @param newVersionAssetName
      */
-    public PanelMain(String newVersionAssetName) {
+    public PanelMain() {
 		
         comboGenre = new String[1];
         comboGenre[0] = ""; //NOI18N
@@ -211,7 +208,7 @@ public class PanelMain extends javax.swing.JFrame {
 		MPLAYER.addListener(mPlaybackListener);
         
 		//Init tabs
-		panelOptions.initExtended(this, newVersionAssetName);
+		panelOptions.initExtended(this);
         panelSync.initExtended(this);
         panelMerge.initExtended(this);
         PanelCheck.setOptions(); //Needs to be static (for now at least)
@@ -1757,9 +1754,8 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
     /**
-     * @param newVersionAssetName
      */
-    public static void main(String newVersionAssetName) {
+    public static void main() {
         /* Set the Nimbus look and feel */
 		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         	/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -1778,7 +1774,7 @@ public class PanelMain extends javax.swing.JFrame {
 		//</editor-fold>
 
         java.awt.EventQueue.invokeLater(() -> {
-			PanelMain panel = new PanelMain(newVersionAssetName);
+			PanelMain panel = new PanelMain();
 			panel.setLocationRelativeTo(null);
 			panel.setExtendedState(PanelMain.MAXIMIZED_BOTH);
 			String version = Main.class.getPackage().getImplementationVersion();

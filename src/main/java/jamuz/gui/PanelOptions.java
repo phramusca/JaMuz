@@ -16,8 +16,11 @@
  */
 package jamuz.gui;
 
+import jamuz.AppVersion;
 import jamuz.FileInfoInt;
+import jamuz.ICallBackVersionCheck;
 import jamuz.Jamuz;
+import jamuz.AppVersionCheck;
 import jamuz.gui.swing.ListElement;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.FolderInfo;
@@ -54,24 +57,23 @@ public class PanelOptions extends javax.swing.JPanel {
 	 */
 	protected static ProgressBar progressBarCheckedFlag;
 	private Frame parent;
-    private String newVersionAssetName;
-    ProgressBar progressBar;
+    private ProgressBar progressBarVersionCheck;
+    private AppVersionCheck versionCheck;
 	
 	/**
 	 * Creates new form PanelOptions
 	 */
 	public PanelOptions() {
 		initComponents();
-        progressBar = (ProgressBar)jProgressBarUpdate;
+        progressBarVersionCheck = (ProgressBar)jProgressBarUpdate;
         progressBarCheckedFlag = (ProgressBar)jProgressBarResetChecked;
 	}
 
 	/**
      * extended init
 	 * @param parent
-     * @param newVersionAssetName
      */
-    public void initExtended(Frame parent, String newVersionAssetName) {
+    public void initExtended(Frame parent) {
 		this.parent = parent;
 		fillMachineList();
 		jListGenres.setModel(Jamuz.getGenreListModel());
@@ -79,10 +81,21 @@ public class PanelOptions extends javax.swing.JPanel {
 		jSpinnerBytes.getModel().setValue(size);
 		jLabelBytes.setText("("+Inter.get("Label.Keep")+" "+StringManager.humanReadableByteCount(size, false)+")");
 		jListTags.setModel(Jamuz.getTagsModel());
-        this.newVersionAssetName = newVersionAssetName;
-        if(!newVersionAssetName.isBlank()) {
-            jLabelNewVersion.setText("<html><a href='#'>A new version is available: " + newVersionAssetName + ". Click to update.</a></html>");
-        }
+        
+        versionCheck = new AppVersionCheck(new ICallBackVersionCheck() {
+            @Override
+            public void onNewVersion(AppVersion appVersion) {
+                jLabelNewVersion.setText("<html><a href='#'>"
+                        + appVersion.toString() 
+                        + "A new version is available! Click to update.</a></html>");
+            }
+
+            @Override
+            public void onCheck(AppVersion appVersion, String msg) {
+                msg = appVersion.toString() + msg;
+                jLabelNewVersion.setText(msg);
+            }
+        });
 	}
 	
 	/**
@@ -211,8 +224,9 @@ public class PanelOptions extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPaneShortcuts = new javax.swing.JTextPane();
-        jLabelNewVersion = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         jProgressBarUpdate = new jamuz.gui.swing.ProgressBar();
+        jLabelNewVersion = new javax.swing.JLabel();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
@@ -311,7 +325,7 @@ public class PanelOptions extends javax.swing.JPanel {
             jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelOptionsGenresLayout.createSequentialGroup()
                 .addGroup(jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneOptionsMachines1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneOptionsMachines1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                     .addGroup(jPanelOptionsGenresLayout.createSequentialGroup()
                         .addComponent(jButtonGenresAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -461,14 +475,14 @@ public class PanelOptions extends javax.swing.JPanel {
             jPanelOptionsTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelOptionsTagsLayout.createSequentialGroup()
                 .addGroup(jPanelOptionsTagsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneOptionsMachines2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneOptionsMachines2)
                     .addGroup(jPanelOptionsTagsLayout.createSequentialGroup()
                         .addComponent(jButtonTagsAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonTagsEdit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonTagsDel)
-                        .addGap(0, 51, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -512,7 +526,7 @@ public class PanelOptions extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCleanupLogFolderLayout.createSequentialGroup()
                         .addComponent(jLabelCleanup)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSpinnerBytes, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                        .addComponent(jSpinnerBytes, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1))
                     .addComponent(jProgressBarCleanupLogs, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -540,6 +554,11 @@ public class PanelOptions extends javax.swing.JPanel {
         jTextPaneShortcuts.setFocusable(false);
         jScrollPane1.setViewportView(jTextPaneShortcuts);
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Version"));
+
+        jProgressBarUpdate.setString(""); // NOI18N
+        jProgressBarUpdate.setStringPainted(true);
+
         jLabelNewVersion.setText(" "); // NOI18N
         jLabelNewVersion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -547,8 +566,25 @@ public class PanelOptions extends javax.swing.JPanel {
             }
         });
 
-        jProgressBarUpdate.setString("null");
-        jProgressBarUpdate.setStringPainted(true);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelNewVersion, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+                    .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabelNewVersion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanelOptionsLayout = new javax.swing.GroupLayout(jPanelOptions);
         jPanelOptions.setLayout(jPanelOptionsLayout);
@@ -570,8 +606,7 @@ public class PanelOptions extends javax.swing.JPanel {
                     .addComponent(jPanelSaveFiles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanelResetCheckedFlag, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanelCleanupLogFolder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabelNewVersion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelOptionsLayout.setVerticalGroup(
@@ -588,9 +623,7 @@ public class PanelOptions extends javax.swing.JPanel {
                             .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanelOptionsTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                        .addComponent(jLabelNewVersion)
-                        .addGap(10, 10, 10)
-                        .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanelCleanupLogFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -608,7 +641,9 @@ public class PanelOptions extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanelOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -776,22 +811,40 @@ public class PanelOptions extends javax.swing.JPanel {
 		jLabelBytes.setText("("+Inter.get("Label.Keep")+" "+StringManager.humanReadableByteCount(size, false)+")");
     }//GEN-LAST:event_jSpinnerBytesStateChanged
 
+    private boolean lockUpdate = false;
+    
     private void jLabelNewVersionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelNewVersionMouseClicked
-        File assetFile = Jamuz.getFile(newVersionAssetName, "data", "system", "update");
-        
-        progressBar.setIndeterminate("Couting files in " + newVersionAssetName);
-        
+        if(!lockUpdate) {
+            lockUpdate = true;
+            AppVersion appVersion = this.versionCheck.getAppVersion();
+            if(appVersion.isNewVersion()) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        unzipAsset(appVersion);
+                        //FIXME ! Copy files listed in a update.txt file (to be made and included in release 7z asset)
+                        
+                        
+//                        lockUpdate = false;
+                    }
+                }.start();
+            }
+        }
+    }//GEN-LAST:event_jLabelNewVersionMouseClicked
+
+    private void unzipAsset(AppVersion appVersion) {
+        progressBarVersionCheck.setIndeterminate("Couting files in " + appVersion.getAssetFile().getName());
         int entryCount = 0;
-        try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
+        try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
             while ((sevenZFile.getNextEntry()) != null) {
                 entryCount++;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        progressBar.setup(entryCount);
-        try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
+
+        progressBarVersionCheck.setup(entryCount);
+        try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZFile.getNextEntry()) != null) {
                 File outputFile = Jamuz.getFile(entry.getName(), "data", "system", "update");
@@ -815,13 +868,13 @@ public class PanelOptions extends javax.swing.JPanel {
                         }
                     }
                 }
-                progressBar.progress(entry.getName());
+                progressBarVersionCheck.progress(entry.getName());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jLabelNewVersionMouseClicked
-
+    }
+    
 	/**
 	 *
 	 */
@@ -947,6 +1000,7 @@ public class PanelOptions extends javax.swing.JPanel {
     private static javax.swing.JList jListGenres;
     private static javax.swing.JList jListMachines;
     private static javax.swing.JList jListTags;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelCleanupLogFolder;
     private javax.swing.JPanel jPanelOptionsGenres;
     private javax.swing.JPanel jPanelOptionsMachines;

@@ -68,20 +68,11 @@ package jamuz;
 //          => Doing this, merge options to copy/move files b/w "Sync" and "Video" (export)
 //TODO: List used librairies (source, version, how to compile if needed,...)
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import jamuz.gui.PanelMain;
 import jamuz.gui.PanelSelect;
 import jamuz.utils.Popup;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Handler;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 // TODO pom.xml essayer de remplacer les jar locaux par des maven
 
@@ -145,85 +136,12 @@ public class Main {
 				}
 			});
 
-            String newVersionAssetName = checkNewVersion();
 			//Start GUI
-			PanelMain.main(newVersionAssetName);
+			PanelMain.main();
             
 		} catch (Exception ex) {
 			Popup.error(ex);
 			System.exit(99);
 		}
 	}
-    
-    private static String checkNewVersion() {
-        try {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url("https://api.github.com/repos/phramusca/jamuz/releases/latest")
-                    .build();
-            Response response = client.newCall(request).execute();
-            String responseBody = response.body().string();
-            Gson gson = new Gson();
-            JsonObject releaseData = gson.fromJson(responseBody, JsonObject.class);
-            String latestVersion = releaseData.get("tag_name").getAsString();
-            JsonArray assets = releaseData.getAsJsonArray("assets");
-            if (!assets.isJsonNull() && assets.size() > 0) {
-                String downloadURL = assets.get(0).getAsJsonObject().get("browser_download_url").getAsString();
-                String assetName = assets.get(0).getAsJsonObject().get("name").getAsString();
-                String version = Main.class.getPackage().getImplementationVersion();
-                String currentVersion = "v"+version;
-                currentVersion = "v0.5.61"; //FIXME ! Remove when done with tests
-                File assetFile = Jamuz.getFile(assetName, "data", "system", "update");
-                
-                //FIXME ! Check versions first and log latestVersion
-                if (!currentVersion.equals("vnull") 
-                        && compareVersionStrings(latestVersion, currentVersion) > 0) {
-                    if(!assetFile.exists() ) {
-                        Request downloadRequest = new Request.Builder()
-                            .url(downloadURL)
-                            .build();
-                        Response downloadResponse = client.newCall(downloadRequest).execute();
-                        byte[] zipBytes = downloadResponse.body().bytes();
-                        FileUtils.writeByteArrayToFile(assetFile, zipBytes);
-                    }
-                    return assetName;
-                } else {
-                    System.out.println("No updates available or already downloaded. Current version: " + currentVersion);
-                }
-            } else {
-                System.out.println("No release assets found.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-    
-    //FIXME TEST this one compareVersionStrings
-    public static int compareVersionStrings(String version1, String version2) {
-        String[] parts1 = version1.split("\\.");
-        String[] parts2 = version2.split("\\.");
-
-        int minLength = Math.min(parts1.length, parts2.length);
-
-        for (int i = 0; i < minLength; i++) {
-            int v1 = Integer.parseInt(parts1[i].replaceAll("\\D", ""));
-            int v2 = Integer.parseInt(parts2[i].replaceAll("\\D", ""));
-
-            if (v1 < v2) {
-                return -1; // version1 is lower
-            } else if (v1 > v2) {
-                return 1; // version1 is higher
-            }
-        }
-
-        // If all common parts are equal, the longer version is higher
-        if (parts1.length < parts2.length) {
-            return -1; // version1 is lower
-        } else if (parts1.length > parts2.length) {
-            return 1; // version1 is higher
-        }
-
-        return 0; // versions are equal
-    }
 }
