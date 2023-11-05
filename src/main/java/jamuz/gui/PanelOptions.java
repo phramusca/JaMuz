@@ -45,6 +45,7 @@ import javax.swing.JOptionPane;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -325,7 +326,7 @@ public class PanelOptions extends javax.swing.JPanel {
             jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelOptionsGenresLayout.createSequentialGroup()
                 .addGroup(jPanelOptionsGenresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneOptionsMachines1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                    .addComponent(jScrollPaneOptionsMachines1, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                     .addGroup(jPanelOptionsGenresLayout.createSequentialGroup()
                         .addComponent(jButtonGenresAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -613,15 +614,7 @@ public class PanelOptions extends javax.swing.JPanel {
             jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelOptionsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1)
-                            .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanelOptionsTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelOptionsLayout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -629,8 +622,16 @@ public class PanelOptions extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelSaveFiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelResetCheckedFlag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(jPanelResetCheckedFlag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(jPanelOptionsLayout.createSequentialGroup()
+                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jPanelOptionsMachines, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanelOptionsGenres, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanelOptionsTags, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -641,9 +642,7 @@ public class PanelOptions extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanelOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanelOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -824,14 +823,57 @@ public class PanelOptions extends javax.swing.JPanel {
                         unzipAsset(appVersion);
                         //FIXME ! Copy files listed in a update.txt file (to be made and included in release 7z asset)
                         
+                        copyFilesToTarget(appVersion, "data", "icon", "genre");
+                        copyFilesToTarget(appVersion, "data", "icon", "tag");
+                        copyFilesToTarget(appVersion, "data", "system", "sql");
+                        copyFilesToTarget(appVersion, "data");
+                        copyFilesToTarget(appVersion);
+                        copyFileToTarget(appVersion, "JaMuz.jar", true);
                         
-//                        lockUpdate = false;
                     }
                 }.start();
             }
         }
     }//GEN-LAST:event_jLabelNewVersionMouseClicked
+   
+    public void copyFilesToTarget(AppVersion appVersion, String... targetSubfolders) {
+        String assetFolderName = FilenameUtils.getBaseName(appVersion.getAssetFile().getAbsolutePath());
+        String[] assetPath = concatenateDirectoryNames(new String[] {"data", "system", "update", assetFolderName}, targetSubfolders);
+        File[] files = Jamuz.getFiles(assetPath);
+        for (File fileUpdate : files) {
+            File fileCurrent = Jamuz.getFile(FilenameUtils.getName(fileUpdate.getAbsolutePath()), targetSubfolders);
+            if (!fileCurrent.exists()) {
+                try {
+                    FileUtils.copyFile(fileUpdate, fileCurrent);
+                } catch (IOException ex) {
+                    Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
+    public void copyFileToTarget(AppVersion appVersion, String fileName, boolean force) {
+        String assetFolderName = FilenameUtils.getBaseName(appVersion.getAssetFile().getAbsolutePath());
+        File fileUpdate = Jamuz.getFile(fileName, "data", "system", "update", assetFolderName);
+        File fileCurrent = Jamuz.getFile(FilenameUtils.getName(fileUpdate.getAbsolutePath()));
+        if (force || !fileCurrent.exists()) {
+            try {
+                FileUtils.copyFile(fileUpdate, fileCurrent);
+            } catch (IOException ex) {
+                Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public String[] concatenateDirectoryNames(String[] firstNames, String[] secondNames) {
+        String[] combinedNames = new String[firstNames.length + secondNames.length];
 
+        System.arraycopy(firstNames, 0, combinedNames, 0, firstNames.length);
+        System.arraycopy(secondNames, 0, combinedNames, firstNames.length, secondNames.length);
+
+        return combinedNames;
+    }
+    
     private void unzipAsset(AppVersion appVersion) {
         progressBarVersionCheck.setIndeterminate("Couting files in " + appVersion.getAssetFile().getName());
         int entryCount = 0;

@@ -23,8 +23,8 @@ import org.apache.commons.io.FileUtils;
  */
 public class AppVersionCheck {
     
-    private ICallBackVersionCheck callBackVersionCheck;
-    private AppVersion appVersion;
+    private final ICallBackVersionCheck callBackVersionCheck;
+    private final AppVersion appVersion;
 
     public AppVersionCheck(ICallBackVersionCheck callBackVersionCheck) {
         this.callBackVersionCheck = callBackVersionCheck;

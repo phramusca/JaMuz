@@ -73,6 +73,6 @@ public class AppVersion {
 
     @Override
     public String toString() {
-        return "Current: " + currentVersion +". Latest:" + latestVersion + ". ";
+        return "Current: " + currentVersion +". Latest: " + latestVersion + ". ";
     }
 }
