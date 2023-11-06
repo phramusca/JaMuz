@@ -55,6 +55,7 @@ buildNumber.properties
 /data/AudioLinks.txt
 
 /database/*_for_comparison.sql
+/database/JaMuz*.db*
 
 /res/JaMuz.db
 /res/JaMuz.xml

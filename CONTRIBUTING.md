@@ -28,8 +28,6 @@ Please submit to the `master` branch.
 ### Get Started
 
 - Clone repository to {Repo}
-- Open project using [NetBeans](https://netbeans.org/downloads/)
-- Build project
 - [Get a TheMovieDb API key for free](https://www.themoviedb.org/faq/api)
 - [Get a LastFm API key for free](http://www.last.fm/api/account/create)
 - [Get an AcoustId API key for free](https://acoustid.org/)
@@ -41,14 +39,23 @@ Please submit to the `master` branch.
   AcoustId={yourKey}
   ```
 
-- Copy from {Repo}/dist to {Repo}:
-  - JaMuz.db
-  - JaMuz.properties
+- Create JaMuz.db by running:
+  - on Windows: `database\create_db.bat`.
+    - (If sqlite3 is not installed, script will install it using Chocolatey, but you need to "Run as administrator")
+  - on Linux: `database/create_db.sh`
+- Create folder {Repo}/target-data and copy there your files from:
+  - database/JaMuz.db
+  - dist-data/JaMuz.properties
+
+> WARNING ! Each time you will do a `mvn clean`, files in {Repo}/target will be replaced with those (TO BE VERIFIED !!)
+
+- Open project using [NetBeans](https://netbeans.org/downloads/)
+- Build project
 - You can now run and enjoy (hopefully)
 
 ### Stat sources
 
-In addition to the currently suported stat sources (Guayadeque, Kodi, Media Monkey, Mixxx, MyTunes) you can add one simply by extending the jamuz.StatSourceAbstract class and adding entry to database.
+In addition to the currently supported stat sources (Guayadeque, Kodi, Media Monkey, Mixxx, MyTunes) you can add one simply by extending the jamuz.StatSourceAbstract class and adding entry to database.
 
 ## Release process
 
