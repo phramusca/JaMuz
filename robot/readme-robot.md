@@ -63,37 +63,6 @@ Since we only need this python version for this use case, we will install it onl
   }
   ```
 
-### Github self-hosted runner ###
-
-- [Create a new self-hosted runner](https://github.com/phramusca/JaMuz/settings/actions/runners/new) on WSL or directly on linux
-
-- Install dependencies:
-  - (If required): Install Custom SSL Certificate
-
-    ```bash
-    sudo cp /mnt/c/IT/netskope/rootcacert.pem /usr/local/share/ca-certificates/
-    sudo update-ca-certificates
-    ```
-
-  - Install maven
-
-    ```bash
-    sudo apt install maven
-    ```
-
-  - Install sqlite3
-
-    ```bash
-    sudo apt install sqlite3
-    ```
-
-- Start the runner
-
-  ```bash
-  ./run.sh
-  ```
-
-
 ## Swing explorer / JSpy ##
 
 In order to determine identifiers for your test, you can use either Swing explorer or JSpy.

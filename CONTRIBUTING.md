@@ -2,6 +2,8 @@
 
 By contributing to this project you agree to license your contribution under the terms of the [GNU GPLv3](LICENSE).
 
+[[_TOC_]]
+
 ## Issues
 
 [Open an issue](https://github.com/phramusca/JaMuz/issues?state=open) for anything you would like to see in JaMuz, but please check other issues first.
@@ -68,6 +70,10 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
     - Check that JaMuz properly handles update.
       - Export prod schema and compare with JaMuz_creation.sql.
 
+1. Create the `data/system/update/`$version`.txt`.
+  
+    - Create a new local release candidate with [local self-hosted runner](#github-self-hosted-runner)
+
 1. Update pom.xml (remove "-dev" suffix)
 
     ```xml
@@ -89,6 +95,36 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
     ```
 
 1. Commit (named vx.y.z-dev) & PUSH
+
+### Github self-hosted runner
+
+- [Create a new self-hosted runner](https://github.com/phramusca/JaMuz/settings/actions/runners/new) on WSL or directly on linux
+
+- Install dependencies:
+  - (If required): Install Custom SSL Certificate
+
+    ```bash
+    sudo cp /mnt/c/IT/netskope/rootcacert.pem /usr/local/share/ca-certificates/
+    sudo update-ca-certificates
+    ```
+
+  - Install maven
+
+    ```bash
+    sudo apt install maven
+    ```
+
+  - Install sqlite3
+
+    ```bash
+    sudo apt install sqlite3
+    ```
+
+- Start the runner
+
+  ```bash
+  ./run.sh
+  ```
 
 ## Roadmap to Release version 1.0
 
