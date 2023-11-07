@@ -70,9 +70,11 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
     - Check that JaMuz properly handles update.
       - Export prod schema and compare with JaMuz_creation.sql.
 
-1. Create the `data/system/update/`$version`.txt`.
+1. Check changes to release content:
   
     - Create a new local release candidate with [local self-hosted runner](#github-self-hosted-runner)
+    - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
+    - Create the `data/system/update/`$previousVersion`->`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released).
 
 1. Update pom.xml (remove "-dev" suffix)
 

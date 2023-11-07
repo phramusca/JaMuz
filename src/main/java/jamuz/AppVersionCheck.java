@@ -63,7 +63,7 @@ public class AppVersionCheck {
                 if (!assets.isJsonNull() && assets.size() > 0) {
                     String downloadURL = assets.get(0).getAsJsonObject().get("browser_download_url").getAsString();
                     String assetName = assets.get(0).getAsJsonObject().get("name").getAsString();
-                    File assetFile = Jamuz.getFile(assetName, "data", "system", "update");
+                    File assetFile = Jamuz.getFile(assetName, "cache", "system", "update");
                     appVersion.setAsset(assetFile);
                     if(!assetFile.exists() ) {
                         Request downloadRequest = new Request.Builder()

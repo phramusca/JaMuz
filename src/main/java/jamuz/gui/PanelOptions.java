@@ -58,7 +58,7 @@ public class PanelOptions extends javax.swing.JPanel {
 	 */
 	protected static ProgressBar progressBarCheckedFlag;
 	private Frame parent;
-    private ProgressBar progressBarVersionCheck;
+    private final ProgressBar progressBarVersionCheck;
     private AppVersionCheck versionCheck;
 	
 	/**
@@ -820,15 +820,13 @@ public class PanelOptions extends javax.swing.JPanel {
                 new Thread() {
                     @Override
                     public void run() {
+                        //FIXME ! Unzip right after download (and only once)
                         unzipAsset(appVersion);
-                        //FIXME ! Copy files listed in a update.txt file (to be made and included in release 7z asset)
-                        
-                        copyFilesToTarget(appVersion, "data", "icon", "genre");
-                        copyFilesToTarget(appVersion, "data", "icon", "tag");
-                        copyFilesToTarget(appVersion, "data", "system", "sql");
-                        copyFilesToTarget(appVersion, "data");
-                        copyFilesToTarget(appVersion);
-                        copyFileToTarget(appVersion, "JaMuz.jar", true);
+                        try {
+                            appVersion.update();
+                        } catch (IOException ex) {
+                            Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         
                     }
                 }.start();
@@ -836,43 +834,7 @@ public class PanelOptions extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jLabelNewVersionMouseClicked
    
-    public void copyFilesToTarget(AppVersion appVersion, String... targetSubfolders) {
-        String assetFolderName = FilenameUtils.getBaseName(appVersion.getAssetFile().getAbsolutePath());
-        String[] assetPath = concatenateDirectoryNames(new String[] {"data", "system", "update", assetFolderName}, targetSubfolders);
-        File[] files = Jamuz.getFiles(assetPath);
-        for (File fileUpdate : files) {
-            File fileCurrent = Jamuz.getFile(FilenameUtils.getName(fileUpdate.getAbsolutePath()), targetSubfolders);
-            if (!fileCurrent.exists()) {
-                try {
-                    FileUtils.copyFile(fileUpdate, fileCurrent);
-                } catch (IOException ex) {
-                    Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
     
-    public void copyFileToTarget(AppVersion appVersion, String fileName, boolean force) {
-        String assetFolderName = FilenameUtils.getBaseName(appVersion.getAssetFile().getAbsolutePath());
-        File fileUpdate = Jamuz.getFile(fileName, "data", "system", "update", assetFolderName);
-        File fileCurrent = Jamuz.getFile(FilenameUtils.getName(fileUpdate.getAbsolutePath()));
-        if (force || !fileCurrent.exists()) {
-            try {
-                FileUtils.copyFile(fileUpdate, fileCurrent);
-            } catch (IOException ex) {
-                Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    public String[] concatenateDirectoryNames(String[] firstNames, String[] secondNames) {
-        String[] combinedNames = new String[firstNames.length + secondNames.length];
-
-        System.arraycopy(firstNames, 0, combinedNames, 0, firstNames.length);
-        System.arraycopy(secondNames, 0, combinedNames, firstNames.length, secondNames.length);
-
-        return combinedNames;
-    }
     
     private void unzipAsset(AppVersion appVersion) {
         progressBarVersionCheck.setIndeterminate("Couting files in " + appVersion.getAssetFile().getName());
@@ -889,7 +851,7 @@ public class PanelOptions extends javax.swing.JPanel {
         try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZFile.getNextEntry()) != null) {
-                File outputFile = Jamuz.getFile(entry.getName(), "data", "system", "update");
+                File outputFile = Jamuz.getFile(entry.getName(), "cache", "system", "update");
                 if (entry.isDirectory()) {
                     if (!outputFile.exists()) {
                         outputFile.mkdirs();
