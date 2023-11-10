@@ -83,15 +83,16 @@ public class PanelOptions extends javax.swing.JPanel {
             @Override
             public void onNewVersion(AppVersion appVersion) {
                 progressBarVersionCheck.reset();
-                jLabelNewVersion.setText("<html><a href='#'>"
+                jLabelVersionCheck.setText("<html><a href='#'>"
                         + appVersion.toString() 
                         + "<BR/>A new version is available! Click to update.</a></html>");
             }
 
             @Override
             public void onCheck(AppVersion appVersion, String msg) {
-                msg = appVersion.toString() + msg;
-                jLabelNewVersion.setText(msg);
+                jLabelVersionCheck.setText("<html>"
+                        + appVersion.toString() 
+                        + "<BR/>" + msg + "</html>");
             }
 
             @Override
@@ -111,7 +112,7 @@ public class PanelOptions extends javax.swing.JPanel {
 
             @Override
             public void onDownloading(AppVersion appVersion) {
-                jLabelNewVersion.setText(appVersion.toString());
+                jLabelVersionCheck.setText(appVersion.toString());
                 progressBarVersionCheck.setIndeterminate("Downloading " + appVersion.getAssetFile().getName());
             }
         });
@@ -245,7 +246,7 @@ public class PanelOptions extends javax.swing.JPanel {
         jTextPaneShortcuts = new javax.swing.JTextPane();
         jPanel1 = new javax.swing.JPanel();
         jProgressBarUpdate = new jamuz.gui.swing.ProgressBar();
-        jLabelNewVersion = new javax.swing.JLabel();
+        jLabelVersionCheck = new javax.swing.JLabel();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
@@ -578,10 +579,10 @@ public class PanelOptions extends javax.swing.JPanel {
         jProgressBarUpdate.setString(""); // NOI18N
         jProgressBarUpdate.setStringPainted(true);
 
-        jLabelNewVersion.setText(" "); // NOI18N
-        jLabelNewVersion.addMouseListener(new java.awt.event.MouseAdapter() {
+        jLabelVersionCheck.setText(" "); // NOI18N
+        jLabelVersionCheck.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabelNewVersionMouseClicked(evt);
+                jLabelVersionCheckMouseClicked(evt);
             }
         });
 
@@ -592,14 +593,14 @@ public class PanelOptions extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelNewVersion, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+                    .addComponent(jLabelVersionCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
                     .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabelNewVersion)
+                .addComponent(jLabelVersionCheck)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -830,7 +831,7 @@ public class PanelOptions extends javax.swing.JPanel {
 
     private boolean lockUpdate = false;
     
-    private void jLabelNewVersionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelNewVersionMouseClicked
+    private void jLabelVersionCheckMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelVersionCheckMouseClicked
         if(!lockUpdate) {
             lockUpdate = true;
             AppVersion appVersion = this.versionCheck.getAppVersion();
@@ -840,17 +841,17 @@ public class PanelOptions extends javax.swing.JPanel {
                     public void run() {
                         try {
                             appVersion.update();
-                            jLabelNewVersion.setText("<html>Update to " + appVersion.getLatestVersion() + " has completed."
+                            jLabelVersionCheck.setText("<html>Update to " + appVersion.getLatestVersion() + " has completed."
                                     + "<BR/><b>Restart application to run new version.</b></html>");
                         } catch (IOException ex) {
-                            jLabelNewVersion.setText("<html>Update to " + appVersion.getLatestVersion() + " has <b>failed</b>:"
+                            jLabelVersionCheck.setText("<html>Update to " + appVersion.getLatestVersion() + " has <b>failed</b>:"
                                     + "<BR/>" + ex.getLocalizedMessage() + " </html>");
                         }
                     }
                 }.start();
             }
         }
-    }//GEN-LAST:event_jLabelNewVersionMouseClicked
+    }//GEN-LAST:event_jLabelVersionCheckMouseClicked
 
 	/**
 	 *
@@ -973,7 +974,7 @@ public class PanelOptions extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelBytes;
     private javax.swing.JLabel jLabelCleanup;
-    private javax.swing.JLabel jLabelNewVersion;
+    private javax.swing.JLabel jLabelVersionCheck;
     private static javax.swing.JList jListGenres;
     private static javax.swing.JList jListMachines;
     private static javax.swing.JList jListTags;
