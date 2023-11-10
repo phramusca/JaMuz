@@ -2,6 +2,8 @@
 
 By contributing to this project you agree to license your contribution under the terms of the [GNU GPLv3](LICENSE).
 
+[[_TOC_]]
+
 ## Issues
 
 [Open an issue](https://github.com/phramusca/JaMuz/issues?state=open) for anything you would like to see in JaMuz, but please check other issues first.
@@ -10,7 +12,7 @@ By contributing to this project you agree to license your contribution under the
 
 Using [weblate.org](https://hosted.weblate.org/engage/jamuz/)
 
-**Notes if you consider manual edition (ie: without weblate):**
+**Warning! if you consider manual edition (ie: without weblate):**
 
 - The **bundle\*\*.properties** files are **ISO 8859-1** encoded.
 
@@ -47,7 +49,7 @@ Please submit to the `master` branch.
   - database/JaMuz.db
   - dist-data/JaMuz.properties
 
-> WARNING ! Each time you will do a `mvn clean`, files in {Repo}/target will be replaced with those (TO BE VERIFIED !!)
+> ! WARNING ! Each time you will do a `mvn clean`, files in {Repo}/target will be replaced with those!
 
 - Open project using [NetBeans](https://netbeans.org/downloads/)
 - Build project
@@ -67,6 +69,29 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
     - Update `database/JaMuz_insertion_minimal.sql` to set an entry with $version.
     - Check that JaMuz properly handles update.
       - Export prod schema and compare with JaMuz_creation.sql.
+
+1. Check changes to release content:
+  
+    - Create a new local release candidate with [local self-hosted runner](#github-self-hosted-runner)
+    - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
+    - Create the `data/system/update/`$previousVersion`->`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released). Example:
+
+      ```csv
+      //action,fileOrDirectory
+      rm,doc/LISEZMOI.TXT
+      rm,doc/README.TXT
+      rm,lib/*
+      cpo,data/icon/genre
+      cp,Slsk.properties
+      cpo,JaMuz.jar
+      ```
+
+      - action can be:
+        - `rm` to remove a file or directory.
+        - `cp` to copy a file or directory only if it doesn't exist.
+        - `cpo` to either:
+          - copy a file, overwriting it if it already exists.
+          - recursively merge directory to destination, with the source taking precedence.
 
 1. Update pom.xml (remove "-dev" suffix)
 
@@ -90,7 +115,37 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Commit (named vx.y.z-dev) & PUSH
 
-## Roadmap to Release version 1.0
+### Github self-hosted runner
+
+- [Create a new self-hosted runner](https://github.com/phramusca/JaMuz/settings/actions/runners/new) on WSL or directly on linux
+
+- Install dependencies:
+  - (If required): Install Custom SSL Certificate
+
+    ```bash
+    sudo cp /mnt/c/IT/netskope/rootcacert.pem /usr/local/share/ca-certificates/
+    sudo update-ca-certificates
+    ```
+
+  - Install maven
+
+    ```bash
+    sudo apt install maven
+    ```
+
+  - Install sqlite3
+
+    ```bash
+    sudo apt install sqlite3
+    ```
+
+- Start the runner
+
+  ```bash
+  ./run.sh
+  ```
+
+## Roadmap to release v1.0.0
 
 - Test Plan:
   - add unit tests

@@ -47,9 +47,8 @@ public class SlskdSearchResponse {
     private transient TableModelSlskdDownload tableModelDownload;
 
     public SlskdSearchResponse() {
-        this.progressBar.setup(100);
         this.progressBar.setMsgMax(500);
-		this.progressBar.displayAsPercent();
+		this.progressBar.setupAsPercentage();
     }
     
     boolean isQueued() {

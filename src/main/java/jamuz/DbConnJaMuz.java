@@ -3850,7 +3850,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// <editor-fold defaultstate="collapsed" desc="Schema">
 	
 	boolean updateSchema(int requestedVersion) {
-		ArrayList<Version> versions = new ArrayList<>();
+		ArrayList<DbVersion> versions = new ArrayList<>();
 		if(!getVersionHistory(versions)) {
 			return false;
 		}
@@ -3858,7 +3858,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 			return updateVersion(0, requestedVersion);
 		}
 		else {
-			Optional<Version> currentVersion = versions.stream().filter((t) -> {
+			Optional<DbVersion> currentVersion = versions.stream().filter((t) -> {
 				return t.getUpgradeEnd().after(new Date(0));
 			}).findFirst();
 			if(!currentVersion.isPresent()) {
@@ -3948,7 +3948,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		}
 	}
 	
-	private boolean getVersionHistory(ArrayList<Version> versions) {
+	private boolean getVersionHistory(ArrayList<DbVersion> versions) {
 		Pair existsTableVersionHistory = existsTableVersionHistory();
 		if(!(Boolean)existsTableVersionHistory.getKey()) {
 			//Method did not succeeded.
@@ -3956,7 +3956,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		}
 		if(!(Boolean)existsTableVersionHistory.getValue()) {
 			//Table does not exists.
-			versions.add(new Version(0, new Date(0), new Date(0)));
+			versions.add(new DbVersion(0, new Date(0), new Date(0)));
 			return true;
 		}
 		ResultSet rs = null;
@@ -3970,7 +3970,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				int version = rs.getInt("version");  //NOI18N		
 				Date upgradeStart = DateTime.parseSqlUtc(rs.getString("upgradeStart"));
 				Date upgradeEnd = DateTime.parseSqlUtc(rs.getString("upgradeEnd"));
-				versions.add(new Version(version, upgradeStart, upgradeEnd));
+				versions.add(new DbVersion(version, upgradeStart, upgradeEnd));
 			}
 			return true;
 		} catch (SQLException ex) {

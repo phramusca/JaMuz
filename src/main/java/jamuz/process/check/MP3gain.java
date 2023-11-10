@@ -176,8 +176,7 @@ public class MP3gain {
 		final Process process;
 
 		try {
-			progressBar.setup(100);
-			progressBar.displayAsPercent();
+			progressBar.setupAsPercentage();
 
 			//Start process
 			String[] stockArr = new String[cmdArray.size()];

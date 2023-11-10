@@ -277,6 +277,12 @@ public class Jamuz {
 		}
 	}
 
+    public static File[] getFiles(String... args) {
+        File folder = getFile("", args);
+        return folder.listFiles((File dir, String name) -> 
+										!new File(dir, name).isDirectory());
+    }
+    
 	/**
 	 *
 	 * @param filename

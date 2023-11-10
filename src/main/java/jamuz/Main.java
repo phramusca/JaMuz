@@ -74,7 +74,6 @@ import jamuz.utils.Popup;
 import java.io.File;
 import java.util.logging.Handler;
 
-// FIXME TEST ! pom.xml Re-enable tests at build
 // TODO pom.xml essayer de remplacer les jar locaux par des maven
 
 //FIXME Z https://github.com/phramusca/JaMuz/security/dependabot
@@ -112,13 +111,13 @@ public class Main {
 			String dotPath = f.getAbsolutePath();
 			dotPath = dotPath.substring(0, dotPath.length() - 1);
 			System.out.println("Folder of . : " + dotPath);
-			
+            
 			//Configure application
 			if (!Jamuz.configure(appPath)) {
 				System.exit(1);
 			}
 
-			//Add a listnerer on application exit
+            //Add a listnerer on application exit
 			Runtime.getRuntime().addShutdownHook(new Thread("Thread.Main.main.addShutdownHook") {
 				@Override
 				public void run() {

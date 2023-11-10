@@ -94,8 +94,6 @@ public class PanelMain extends javax.swing.JFrame {
         return queueModel;
     }
     
-//    private static final PlayerMP3 mp3Player = new PlayerMP3();
-//    private static final PlayerFlac flacPlayer = new PlayerFlac();
 	private static Mplayer MPLAYER;
 
 	/**
@@ -208,7 +206,7 @@ public class PanelMain extends javax.swing.JFrame {
 		};
 		
 		MPLAYER.addListener(mPlaybackListener);
-		
+        
 		//Init tabs
 		panelOptions.initExtended(this);
         panelSync.initExtended(this);

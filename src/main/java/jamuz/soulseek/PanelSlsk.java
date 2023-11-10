@@ -430,7 +430,6 @@ public class PanelSlsk extends javax.swing.JPanel {
         jTextAreaLog.setColumns(20);
         jTextAreaLog.setLineWrap(true);
         jTextAreaLog.setRows(5);
-        jTextAreaLog.setText("Thisiid zdojaprg ajerpga ra ergn,");
         jScrollPaneLog.setViewportView(jTextAreaLog);
 
         jPanel1.add(jScrollPaneLog, java.awt.BorderLayout.NORTH);

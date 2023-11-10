@@ -22,12 +22,12 @@ import java.util.Date;
  *
  * @author raph
  */
-public class Version {
+public class DbVersion {
 	private final int version;
 	private final Date upgradeStart;
 	private final Date upgradeEnd;
 
-	public Version(int version, Date upgradeStart, Date upgradeEnd) {
+	public DbVersion(int version, Date upgradeStart, Date upgradeEnd) {
 		this.version = version;
 		this.upgradeStart = upgradeStart;
 		this.upgradeEnd = upgradeEnd;
