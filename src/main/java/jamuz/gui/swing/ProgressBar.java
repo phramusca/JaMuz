@@ -60,7 +60,15 @@ public class ProgressBar extends JProgressBar {
 		this.reset();
 		this.setMaximum(max);
 	}
-	
+
+    /**
+	 * Display text as percentage
+	 */
+	public void setupAsPercentage() {
+        setup(100);
+		this.displayAsPercent = true;
+	}
+    
 	/**
 	 * Set the message maximum length
 	 * @param msgMax
@@ -71,13 +79,6 @@ public class ProgressBar extends JProgressBar {
 //		this.msgMax=this.msgMax/2;
 	}
 
-	/**
-	 * Display text as percentage
-	 */
-	public void displayAsPercent() {
-		this.displayAsPercent = true;
-	}
-	
 	/**
 	 * Progress by 1
 	 * @param msg
@@ -98,6 +99,7 @@ public class ProgressBar extends JProgressBar {
 		this.index=index;
 		this.setValue(this.index);
 		this.setMsg(msg);
+        this.setIndeterminate(false);
 	}
 	
 	/**

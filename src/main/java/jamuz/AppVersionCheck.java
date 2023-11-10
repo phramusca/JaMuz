@@ -35,7 +35,6 @@ public class AppVersionCheck {
         this.callBackVersionCheck = callBackVersionCheck;
         String version = Main.class.getPackage().getImplementationVersion();
         String currentVersion = "v"+version;
-        currentVersion = "v0.5.61"; //FIXME !!! Remove when done with tests
         appVersion = new AppVersion(currentVersion, "Unknown");
         callBackVersionCheck.onCheck(appVersion, "Checking version ...");
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();

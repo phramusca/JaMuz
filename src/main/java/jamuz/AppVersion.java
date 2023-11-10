@@ -29,13 +29,28 @@ public class AppVersion {
         this.latestVersion = latestVersion;
     }
 
-    //FIXME ! Introduce a callback to display update progress in progressbar (%)
     //FIXME ! Test with a real update on a running jar
-    public void update() throws IOException {
+    public void update(ICallBackVersionUpdate callBackVersionUpdate) throws IOException {
         String assetFolderName = FilenameUtils.getBaseName(assetFile.getAbsolutePath());
         File source = Jamuz.getFile("", "cache", "system", "update", assetFolderName);
         File folder = Jamuz.getFile("", "cache", "system", "update", assetFolderName, "data", "system", "update");
         final File[] filteredFiles = filterAndSortUpdateFiles(folder);
+        int numberOfChanges = 0;
+
+        // Count the number of changes
+        callBackVersionUpdate.onSetup();
+        for (File file : filteredFiles) {
+            Path path = Paths.get(file.getAbsolutePath());
+            List<String> lines = Files.readAllLines(path);
+            for (String line : lines) {
+                if (!line.trim().startsWith("//")) {
+                    numberOfChanges++;
+                }
+            }
+        }
+
+        // Now iterate again to apply changes
+        int currentChange = 0;
         for (File file : filteredFiles) {
             Path path = Paths.get(file.getAbsolutePath());
             List<String> lines = Files.readAllLines(path);
@@ -47,6 +62,9 @@ public class AppVersion {
                     File destination = Jamuz.getFile("");
                     File destinationFile = new File(FilenameUtils.concat(destination.getAbsolutePath(), actionFile));
                     performAction(action, actionFile, source, destinationFile);
+                    currentChange++;
+                    int progress = (int) Math.round((double) currentChange / numberOfChanges * 100.0);
+                    callBackVersionUpdate.onFileUpdated(progress);
                 }
             }
         }

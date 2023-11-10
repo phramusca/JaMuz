@@ -58,9 +58,8 @@ public class SlskdSearchFile {
 
     public SlskdSearchFile() {
 		this.state="Searched";
-		this.progressBar.setup(100);
         this.progressBar.setMsgMax(500);
-		this.progressBar.displayAsPercent();
+		this.progressBar.setupAsPercentage();
         this.progressBar.setString(state);
     }
     

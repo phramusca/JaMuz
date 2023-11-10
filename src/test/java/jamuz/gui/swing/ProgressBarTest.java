@@ -108,7 +108,7 @@ public class ProgressBarTest {
 	public void testDisplayAsPercent() {
 		System.out.println("displayAsPercent");
 		ProgressBar instance = new ProgressBar();
-		instance.displayAsPercent();
+		instance.setupAsPercentage();
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
