@@ -12,7 +12,7 @@ By contributing to this project you agree to license your contribution under the
 
 Using [weblate.org](https://hosted.weblate.org/engage/jamuz/)
 
-**Notes if you consider manual edition (ie: without weblate):**
+**Warning! if you consider manual edition (ie: without weblate):**
 
 - The **bundle\*\*.properties** files are **ISO 8859-1** encoded.
 
@@ -49,7 +49,7 @@ Please submit to the `master` branch.
   - database/JaMuz.db
   - dist-data/JaMuz.properties
 
-> WARNING ! Each time you will do a `mvn clean`, files in {Repo}/target will be replaced with those (TO BE VERIFIED !!)
+> ! WARNING ! Each time you will do a `mvn clean`, files in {Repo}/target will be replaced with those!
 
 - Open project using [NetBeans](https://netbeans.org/downloads/)
 - Build project
@@ -74,7 +74,24 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
   
     - Create a new local release candidate with [local self-hosted runner](#github-self-hosted-runner)
     - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
-    - Create the `data/system/update/`$previousVersion`->`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released).
+    - Create the `data/system/update/`$previousVersion`->`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released). Example:
+
+      ```csv
+      //action,fileOrDirectory
+      rm,doc/LISEZMOI.TXT
+      rm,doc/README.TXT
+      rm,lib/*
+      cpo,data/icon/genre
+      cp,Slsk.properties
+      cpo,JaMuz.jar
+      ```
+
+      - action can be:
+        - `rm` to remove a file or directory.
+        - `cp` to copy a file or directory only if it doesn't exist.
+        - `cpo` to either:
+          - copy a file, overwriting it if it already exists.
+          - recursively merge directory to destination, with the source taking precedence.
 
 1. Update pom.xml (remove "-dev" suffix)
 
@@ -128,7 +145,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
   ./run.sh
   ```
 
-## Roadmap to Release version 1.0
+## Roadmap to release v1.0.0
 
 - Test Plan:
   - add unit tests

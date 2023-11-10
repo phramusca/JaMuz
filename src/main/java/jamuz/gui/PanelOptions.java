@@ -840,10 +840,12 @@ public class PanelOptions extends javax.swing.JPanel {
                     public void run() {
                         try {
                             appVersion.update();
+                            jLabelNewVersion.setText("<html>Update to " + appVersion.getLatestVersion() + " has completed."
+                                    + "<BR/><b>Restart application to run new version.</b></html>");
                         } catch (IOException ex) {
-                            Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
+                            jLabelNewVersion.setText("<html>Update to " + appVersion.getLatestVersion() + " has <b>failed</b>:"
+                                    + "<BR/>" + ex.getLocalizedMessage() + " </html>");
                         }
-                        
                     }
                 }.start();
             }

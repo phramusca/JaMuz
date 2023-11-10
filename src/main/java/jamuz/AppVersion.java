@@ -29,6 +29,8 @@ public class AppVersion {
         this.latestVersion = latestVersion;
     }
 
+    //FIXME ! Introduce a callback to display update progress in progressbar (%)
+    //FIXME ! Test with a real update on a running jar
     public void update() throws IOException {
         String assetFolderName = FilenameUtils.getBaseName(assetFile.getAbsolutePath());
         File source = Jamuz.getFile("", "cache", "system", "update", assetFolderName);
@@ -38,34 +40,32 @@ public class AppVersion {
             Path path = Paths.get(file.getAbsolutePath());
             List<String> lines = Files.readAllLines(path);
             for (String line : lines) {
-                String[] split = line.split(",");
-                String action = split[0];
-                String actionFile = split[1];
-                File destination = Jamuz.getFile("");
-                File destinationFile = new File(FilenameUtils.concat(destination.getAbsolutePath(), actionFile));
-                performAction(action, actionFile, source, destinationFile);
+                if (!line.trim().startsWith("//")) {
+                    String[] split = line.split(",");
+                    String action = split[0];
+                    String actionFile = split[1];
+                    File destination = Jamuz.getFile("");
+                    File destinationFile = new File(FilenameUtils.concat(destination.getAbsolutePath(), actionFile));
+                    performAction(action, actionFile, source, destinationFile);
+                }
             }
         }
     }
 
-    //FIXME ! Test those new actions
     private void performAction(String action, String actionFile, File source, File destinationFile) throws IOException {
         switch (action) {
             case "rm":
-                deleteFileOrDirectory(destinationFile);
+                FileUtils.deleteQuietly(destinationFile); //file or folder
                 break;
             case "cp":
                 copyFileOrFolder(actionFile, source, destinationFile, false);
+                break;
             case "cpo":
                 copyFileOrFolder(actionFile, source, destinationFile, true);
                 break;
             default:
                 throw new AssertionError();
         }
-    }
-
-    private void deleteFileOrDirectory(File file) throws IOException {
-        FileUtils.deleteQuietly(file);
     }
 
     private void copyFileOrFolder(String actionFile, File source, File destinationFile, boolean force) throws IOException {
