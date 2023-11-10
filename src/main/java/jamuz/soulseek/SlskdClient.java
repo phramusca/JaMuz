@@ -98,7 +98,7 @@ public class SlskdClient {
 	}
 	
 	public SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
-        String username = URLEncoder.encode(searchResponse.username, StandardCharsets.UTF_8.toString()); //FIXME ! Use this elsewhere ? Does it work ?
+        String username = URLEncoder.encode(searchResponse.username, StandardCharsets.UTF_8.toString()); //FIXME !!!! Use this elsewhere ? Does it work ?
         String url = "transfers/downloads/" + username;
 		String bodyString = getBodyString(url, client);
 		

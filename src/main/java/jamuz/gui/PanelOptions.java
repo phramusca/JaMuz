@@ -31,7 +31,6 @@ import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import java.awt.Frame;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -42,10 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
-import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -853,11 +849,7 @@ public class PanelOptions extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_jLabelNewVersionMouseClicked
-   
-    
-    
-    
-    
+
 	/**
 	 *
 	 */

@@ -1,4 +1,4 @@
-/*
+/* //FIXME ZZZ Check templates ...
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -35,7 +35,7 @@ public class AppVersionCheck {
         this.callBackVersionCheck = callBackVersionCheck;
         String version = Main.class.getPackage().getImplementationVersion();
         String currentVersion = "v"+version;
-        currentVersion = "v0.5.61"; //FIXME ! Remove when done with tests
+        currentVersion = "v0.5.61"; //FIXME !!! Remove when done with tests
         appVersion = new AppVersion(currentVersion, "Unknown");
         callBackVersionCheck.onCheck(appVersion, "Checking version ...");
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -44,6 +44,7 @@ public class AppVersionCheck {
         scheduler.scheduleAtFixedRate(this::checkNewVersion, initialDelay, period, TimeUnit.SECONDS);
     }
     
+    //TODO: Move scheduler startup out of constructor !
 //    public void checkVersions() {
 //        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 //        long initialDelay = 0; // Delay before the first run (0 for immediate execution)

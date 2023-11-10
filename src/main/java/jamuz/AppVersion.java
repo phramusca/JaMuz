@@ -1,6 +1,8 @@
 package jamuz;
 
-import jamuz.utils.FileSystem;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,14 +10,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 /**
+ * AppVersion class for handling application version updates.
  *
  * @author phramusca
  */
@@ -44,60 +43,42 @@ public class AppVersion {
                 String actionFile = split[1];
                 File destination = Jamuz.getFile("");
                 File destinationFile = new File(FilenameUtils.concat(destination.getAbsolutePath(), actionFile));
-                switch (action) {
-                    case "rm":
-                        //FIXME ! Can't delete a folder (lib in example) with File
-                        // => either support rm folder
-                        // Or rm file by file (but folder would remain :( )
-                        destinationFile.delete();
-                        break;
-                    case "cp":
-                        File sourceFile = new File(FilenameUtils.concat(source.getAbsolutePath(), actionFile));
-                        //FIXME ! Support (if not already) copying folder (restore removed methods)
-                        FileSystem.copyFile(sourceFile, destinationFile);
-                    default:
-                        throw new AssertionError();
-                }
+                performAction(action, actionFile, source, destinationFile);
             }
         }
     }
-    
-    private void copyFilesToTarget(AppVersion appVersion, String... targetSubfolders) {
-        String assetFolderName = FilenameUtils.getBaseName(appVersion.getAssetFile().getAbsolutePath());
-        String[] assetPath = concatenateDirectoryNames(new String[] {"cache", "system", "update", assetFolderName}, targetSubfolders);
-        File[] files = Jamuz.getFiles(assetPath);
-        for (File fileUpdate : files) {
-            File fileCurrent = Jamuz.getFile(FilenameUtils.getName(fileUpdate.getAbsolutePath()), targetSubfolders);
-            if (!fileCurrent.exists()) {
-                try {
-                    FileUtils.copyFile(fileUpdate, fileCurrent);
-                } catch (IOException ex) {
-                    Logger.getLogger(AppVersion.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
-    
-    private void copyFileToTarget(AppVersion appVersion, String fileName, boolean force) {
-        String assetFolderName = FilenameUtils.getBaseName(appVersion.getAssetFile().getAbsolutePath());
-        File fileUpdate = Jamuz.getFile(fileName, "cache", "system", "update", assetFolderName);
-        File fileCurrent = Jamuz.getFile(FilenameUtils.getName(fileUpdate.getAbsolutePath()));
-        if (force || !fileCurrent.exists()) {
-            try {
-                FileUtils.copyFile(fileUpdate, fileCurrent);
-            } catch (IOException ex) {
-                Logger.getLogger(AppVersion.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    private String[] concatenateDirectoryNames(String[] firstNames, String[] secondNames) {
-        String[] combinedNames = new String[firstNames.length + secondNames.length];
 
-        System.arraycopy(firstNames, 0, combinedNames, 0, firstNames.length);
-        System.arraycopy(secondNames, 0, combinedNames, firstNames.length, secondNames.length);
+    //FIXME ! Test those new actions
+    private void performAction(String action, String actionFile, File source, File destinationFile) throws IOException {
+        switch (action) {
+            case "rm":
+                deleteFileOrDirectory(destinationFile);
+                break;
+            case "cp":
+                copyFileOrFolder(actionFile, source, destinationFile, false);
+            case "cpo":
+                copyFileOrFolder(actionFile, source, destinationFile, true);
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }
 
-        return combinedNames;
+    private void deleteFileOrDirectory(File file) throws IOException {
+        FileUtils.deleteQuietly(file);
+    }
+
+    private void copyFileOrFolder(String actionFile, File source, File destinationFile, boolean force) throws IOException {
+        File sourceFile = new File(FilenameUtils.concat(source.getAbsolutePath(), actionFile));
+        if (sourceFile.exists() && (force || !destinationFile.exists())) {
+            if (sourceFile.isDirectory()) {
+                FileUtils.copyDirectory(sourceFile, destinationFile);
+            } else {
+                FileUtils.copyFile(sourceFile, destinationFile);
+            }
+        } else if (!sourceFile.exists()) {
+            throw new IOException("Source file does not exist: " + sourceFile.getAbsolutePath());
+        }
     }
 
     private File[] filterAndSortUpdateFiles(File folder) {
