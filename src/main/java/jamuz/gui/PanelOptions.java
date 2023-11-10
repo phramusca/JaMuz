@@ -86,15 +86,37 @@ public class PanelOptions extends javax.swing.JPanel {
         versionCheck = new AppVersionCheck(new ICallBackVersionCheck() {
             @Override
             public void onNewVersion(AppVersion appVersion) {
+                progressBarVersionCheck.reset();
                 jLabelNewVersion.setText("<html><a href='#'>"
                         + appVersion.toString() 
-                        + "A new version is available! Click to update.</a></html>");
+                        + "<BR/>A new version is available! Click to update.</a></html>");
             }
 
             @Override
             public void onCheck(AppVersion appVersion, String msg) {
                 msg = appVersion.toString() + msg;
                 jLabelNewVersion.setText(msg);
+            }
+
+            @Override
+            public void onStartUnzipCount(AppVersion appVersion) {
+                progressBarVersionCheck.setIndeterminate("Couting files in " + appVersion.getAssetFile().getName());
+            }
+
+            @Override
+            public void onStartUnzip(int entryCount) {
+                progressBarVersionCheck.setup(entryCount);
+            }
+
+            @Override
+            public void onUnzippedFile(String name) {
+                progressBarVersionCheck.progress("Unzipping " + name);
+            }
+
+            @Override
+            public void onDownloading(AppVersion appVersion) {
+                jLabelNewVersion.setText(appVersion.toString());
+                progressBarVersionCheck.setIndeterminate("Downloading " + appVersion.getAssetFile().getName());
             }
         });
 	}
@@ -820,8 +842,6 @@ public class PanelOptions extends javax.swing.JPanel {
                 new Thread() {
                     @Override
                     public void run() {
-                        //FIXME ! Unzip right after download (and only once)
-                        unzipAsset(appVersion);
                         try {
                             appVersion.update();
                         } catch (IOException ex) {
@@ -836,48 +856,7 @@ public class PanelOptions extends javax.swing.JPanel {
    
     
     
-    private void unzipAsset(AppVersion appVersion) {
-        progressBarVersionCheck.setIndeterminate("Couting files in " + appVersion.getAssetFile().getName());
-        int entryCount = 0;
-        try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
-            while ((sevenZFile.getNextEntry()) != null) {
-                entryCount++;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        progressBarVersionCheck.setup(entryCount);
-        try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
-            SevenZArchiveEntry entry;
-            while ((entry = sevenZFile.getNextEntry()) != null) {
-                File outputFile = Jamuz.getFile(entry.getName(), "cache", "system", "update");
-                if (entry.isDirectory()) {
-                    if (!outputFile.exists()) {
-                        outputFile.mkdirs();
-                    }
-                } else {
-                    // Create parent directories if they don't exist
-                    File parentDir = outputFile.getParentFile();
-                    if (!parentDir.exists()) {
-                        parentDir.mkdirs();
-                    }
-
-                    // Create an output stream for the entry
-                    try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-                        byte[] buffer = new byte[8192];
-                        int bytesRead;
-                        while ((bytesRead = sevenZFile.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, bytesRead);
-                        }
-                    }
-                }
-                progressBarVersionCheck.progress(entry.getName());
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    
     
 	/**
 	 *

@@ -8,13 +8,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -66,12 +71,14 @@ public class AppVersionCheck {
                     File assetFile = Jamuz.getFile(assetName, "cache", "system", "update");
                     appVersion.setAsset(assetFile);
                     if(!assetFile.exists() ) {
+                        callBackVersionCheck.onDownloading(appVersion);
                         Request downloadRequest = new Request.Builder()
                             .url(downloadURL)
                             .build();
                         Response downloadResponse = client.newCall(downloadRequest).execute();
                         byte[] zipBytes = downloadResponse.body().bytes();
                         FileUtils.writeByteArrayToFile(assetFile, zipBytes);
+                        unzipAsset(appVersion);
                     }
                     callBackVersionCheck.onNewVersion(appVersion);
                 } else {
@@ -85,6 +92,49 @@ public class AppVersionCheck {
         }
     }
 
+    private void unzipAsset(AppVersion appVersion) {
+        callBackVersionCheck.onStartUnzipCount(appVersion);
+        int entryCount = 0;
+        try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
+            while ((sevenZFile.getNextEntry()) != null) {
+                entryCount++;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(AppVersionCheck.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        callBackVersionCheck.onStartUnzip(entryCount);
+        try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
+            SevenZArchiveEntry entry;
+            while ((entry = sevenZFile.getNextEntry()) != null) {
+                File outputFile = Jamuz.getFile(entry.getName(), "cache", "system", "update");
+                if (entry.isDirectory()) {
+                    if (!outputFile.exists()) {
+                        outputFile.mkdirs();
+                    }
+                } else {
+                    // Create parent directories if they don't exist
+                    File parentDir = outputFile.getParentFile();
+                    if (!parentDir.exists()) {
+                        parentDir.mkdirs();
+                    }
+
+                    // Create an output stream for the entry
+                    try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                        byte[] buffer = new byte[8192];
+                        int bytesRead;
+                        while ((bytesRead = sevenZFile.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+                    }
+                }
+                callBackVersionCheck.onUnzippedFile(entry.getName());
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(AppVersionCheck.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public AppVersion getAppVersion() {
         return appVersion;
     }
