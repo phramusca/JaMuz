@@ -73,6 +73,8 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 1. Check changes to release content:
   
     - Create a new local release candidate with [local self-hosted runner](#github-self-hosted-runner)
+      - [Start job](https://github.com/phramusca/JaMuz/actions/workflows/maven_local.yml)
+      - Get `dist` folder in ~/actions-runner/_work/JaMuz/JaMuz/
     - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
     - Create the `data/system/update/`$previousVersion`->`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released). Example:
 

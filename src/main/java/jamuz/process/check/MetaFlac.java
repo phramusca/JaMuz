@@ -41,6 +41,9 @@ public class MetaFlac {
 		this.path = path;
     }
 
+    //FIXME !! Delete JaMuz.sh, no more needed
+    //FIXME !! Move metaflac.exe, mp3gain.exe and mplayer.exe to system/bin
+    
 	/**
 	 * Compute ReplayGain for FLAC files
 	 * @return  

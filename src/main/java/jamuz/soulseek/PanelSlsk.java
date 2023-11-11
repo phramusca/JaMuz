@@ -549,6 +549,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                         jTextFieldPassword.getText(), 
                         Jamuz.getFile("", "slskd").getAbsolutePath(), 
                         Jamuz.getMachine().getOptionValue("location.library"), reCreate);
+                //FIXME ! Make an option for soulseek share folder
 
                 if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
                     jButtonStart.setText("Starting ...");

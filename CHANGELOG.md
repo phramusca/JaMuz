@@ -1,29 +1,43 @@
 # JaMuz change log #
 
-## v0.6.1-dev ##
+## v0.7.0 ##
 
 ***Compatible with JaMuz Remote v0.5.x minimum***
 
 ### What's new ? ###
 
-- TODO
-
+- Version check and auto-update
+- Jamuz Android:
+  - API 2.0 : add model as name (called by Jamuz Android since v0.6.6)
+  - New option to activate new clients by default
+  - Combobox to select IP
+  - Send current playlist name to remote
+- Dependencies check (metaflac, mp3gain, mplayer) on linux (as windows executables are already included in package)
+- Soulseek support (using [slskd](https://github.com/slskd/slskd))
+  - Refer to Soulseek's [rules](https://www.slsknet.org/news/node/681): "(...)Soulseek® [and so do I] does not endorse nor condone the sharing of copyrighted materials. **You should only share and download files which you are legally allowed to or have otherwise received permission to share**. Soulseek®. was created to encourage the sharing of public domain music from unsigned, independent artists willing to share their work and communicate with a large audience in an efficient way. (...)"
+- Keyboard shortcuts documented in options panel (though present since the beginning)
+- Translation updates
+- Various fixes
 - Moved to maven
 - New release process with github actions
 
 ### Package content ###
 
-Path              | Description
-------------------|------------------------------------------------------------
-/data             | Data files (configurable)
-/doc              | Documentation
-/logs             | LOG files (and databases backups)
-***/JaMuz.db***   | ***Your new music library (back it up regularly !)***
-/JaMuz.jar        | Program itself
-/JaMuz.properties | Configuration file
-/JaMuz.sh         | Linux launch script
-/myMovieDb.db     | Database fro Video tab
-/JaMuz.xml        | Configuration file (optional). See /doc/JaMuz.xml template.
+| Path              | Description                                                                                            |
+| ----------------- | ------------------------------------------------------------------------------------------------------ |
+| /data             | AudioLinks.txt, BookLinks.txt and VideoLinks.txt: You can edit those and and or remove external links. |
+|                   | Patterns.txt : saved patterns for music file scanner. If you want to clean it up. Not required.         |
+|                   | /icon/genre/ : Genre icons. You can add more                                                              |
+|                   | /icon/tag/ : Tag icons. You can add more                                                                  |
+|                   | /system/ : System files. You should not touch this.                                                      |
+| /doc              | Includes sample JaMuz.xml.                                                                             |
+| /logs             | LOG files (and databases backups)                                                                      |
+| ***/JaMuz.db***   | ***Your new music library (back it up regularly !)***                                                  |
+| ***/JaMuz.jar***  | ***Program itself*** (*on linux, set execution permission*)                                            |
+| /JaMuz.properties | Configuration file (avoid manual edition)                                                              |
+| /JaMuz.sh         | Linux launch script                                                                                    |
+| /JaMuz.xml        | Configuration file (optional). Used to setup your database location.See /doc/JaMuz.xml template.       |
+| /myMovieDb.db     | Database for Video tab                                                                                 |
 
 ## v0.6.0 ##
 
@@ -41,18 +55,18 @@ Path              | Description
 
 ### Package content ###
 
-Path              | Description
-------------------|------------------------------------------------------
-/data             | Data files (configurable)
-/doc              | Documentation
-/lib              | Required libraries
-/logs             | LOG files (and databases backups)
-***/JaMuz.db***   | ***Your new music library (back it up regularly !)***
-/JaMuz.jar        | Program itself
-/JaMuz.properties | Configuration file
-/JaMuz.sh         | Linux launch script
-/myMovieDb.db     | Database fro Video tab
-/JaMuz.xml        | Configuration file (optional). See template in /doc
+| Path              | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| /data             | Data files (configurable)                             |
+| /doc              | Documentation                                         |
+| /lib              | Required libraries                                    |
+| /logs             | LOG files (and databases backups)                     |
+| ***/JaMuz.db***   | ***Your new music library (back it up regularly !)*** |
+| /JaMuz.jar        | Program itself                                        |
+| /JaMuz.properties | Configuration file                                    |
+| /JaMuz.sh         | Linux launch script                                   |
+| /myMovieDb.db     | Database fro Video tab                                |
+| /JaMuz.xml        | Configuration file (optional). See template in /doc   |
 
 ## v0.5.1 ##
 
@@ -66,18 +80,18 @@ Path              | Description
 
 ### Package content ###
 
-Path              | Description
-------------------|------------------------------------------------------
-/data             | Data files (configurable)
-/doc              | Documentation
-/lib              | Required libraries
-/logs             | LOG files (and databases backups)
-***/JaMuz.db***   | ***Your new music library (back it up regularly !)***
-/JaMuz.jar        | Program itself
-/JaMuz.properties | Configuration file
-/JaMuz.sh         | Linux launch script
-/myMovieDb.db     | Database fro Video tab
-/JaMuz.xml        | Configuration file (optional). See template in /doc
+| Path              | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| /data             | Data files (configurable)                             |
+| /doc              | Documentation                                         |
+| /lib              | Required libraries                                    |
+| /logs             | LOG files (and databases backups)                     |
+| ***/JaMuz.db***   | ***Your new music library (back it up regularly !)*** |
+| /JaMuz.jar        | Program itself                                        |
+| /JaMuz.properties | Configuration file                                    |
+| /JaMuz.sh         | Linux launch script                                   |
+| /myMovieDb.db     | Database fro Video tab                                |
+| /JaMuz.xml        | Configuration file (optional). See template in /doc   |
 
 ## v0.5.0-beta ##
 
@@ -105,18 +119,18 @@ Path              | Description
 
 ### Package content ###
 
-Path              | Description
-------------------|------------------------------------------------------
-/data             | Data files (configurable)
-/doc              | Documentation
-/lib              | Required libraries
-/logs             | LOG files (and databases backups)
-***/JaMuz.db***   | ***Your new music library (back it up regularly !)***
-/JaMuz.jar        | Program itself
-/JaMuz.properties | Configuration file
-/JaMuz.sh         | Linux launch script
-/myMovieDb.db     | Database fro Video tab
-/JaMuz.xml        | Configuration file (optional). See template in /doc
+| Path              | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| /data             | Data files (configurable)                             |
+| /doc              | Documentation                                         |
+| /lib              | Required libraries                                    |
+| /logs             | LOG files (and databases backups)                     |
+| ***/JaMuz.db***   | ***Your new music library (back it up regularly !)*** |
+| /JaMuz.jar        | Program itself                                        |
+| /JaMuz.properties | Configuration file                                    |
+| /JaMuz.sh         | Linux launch script                                   |
+| /myMovieDb.db     | Database fro Video tab                                |
+| /JaMuz.xml        | Configuration file (optional). See template in /doc   |
 
 ## v0.4.1-beta ##
 
@@ -135,17 +149,17 @@ Path              | Description
 
 ### Package content ###
 
-Path              | Description
-------------------|------------------------------------------------------
-/data             | Data files (configurable)
-/doc              | Documentation
-/lib              | Required libraries
-/logs             | LOG files (and databases backups)
-***/JaMuz.db***   | ***Your new music library (back it up regularly !)***
-/JaMuz.jar        | Program itself
-/JaMuz.sh         | Linux launch script
-/JaMuz.properties | Configuration file
-/JaMuz.xml        | Configuration file (optional)
+| Path              | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| /data             | Data files (configurable)                             |
+| /doc              | Documentation                                         |
+| /lib              | Required libraries                                    |
+| /logs             | LOG files (and databases backups)                     |
+| ***/JaMuz.db***   | ***Your new music library (back it up regularly !)*** |
+| /JaMuz.jar        | Program itself                                        |
+| /JaMuz.sh         | Linux launch script                                   |
+| /JaMuz.properties | Configuration file                                    |
+| /JaMuz.xml        | Configuration file (optional)                         |
 
 ## v0.4.0-beta ##
 
@@ -158,17 +172,17 @@ Path              | Description
 
 ### Package content ###
 
-Path              | Description
-------------------|------------------------------------------------------
-/data             | Data files (configurable)
-/doc              | Documentation
-/lib              | Required libraries
-/logs             | LOG files (and databases backups)
-***/JaMuz.db***   | ***Your new music library (back it up regularly !)***
-/JaMuz.jar        | Program itself
-/JaMuz.sh         | Linux launch script
-/JaMuz.properties | Configuration file
-/JaMuz.xml        | Configuration file (optional)
+| Path              | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| /data             | Data files (configurable)                             |
+| /doc              | Documentation                                         |
+| /lib              | Required libraries                                    |
+| /logs             | LOG files (and databases backups)                     |
+| ***/JaMuz.db***   | ***Your new music library (back it up regularly !)*** |
+| /JaMuz.jar        | Program itself                                        |
+| /JaMuz.sh         | Linux launch script                                   |
+| /JaMuz.properties | Configuration file                                    |
+| /JaMuz.xml        | Configuration file (optional)                         |
 
 ## v0.3.0-beta ##
 
@@ -182,17 +196,17 @@ Path              | Description
 
 ### Package content ###
 
-Path              | Description
-------------------|------------------------------------------------------
-/data             | Data files (configurable)
-/doc              | Documentation
-/lib              | Required libraries
-/logs             | LOG files (and databases backups)
-***/JaMuz.db***   | ***Your new music library (back it up regularly !)***
-/JaMuz.jar        | Program itself
-/JaMuz.sh         | Linux launch script
-/JaMuz.properties | Configuration file
-/JaMuz.xml        | Configuration file (optional)
+| Path              | Description                                           |
+| ----------------- | ----------------------------------------------------- |
+| /data             | Data files (configurable)                             |
+| /doc              | Documentation                                         |
+| /lib              | Required libraries                                    |
+| /logs             | LOG files (and databases backups)                     |
+| ***/JaMuz.db***   | ***Your new music library (back it up regularly !)*** |
+| /JaMuz.jar        | Program itself                                        |
+| /JaMuz.sh         | Linux launch script                                   |
+| /JaMuz.properties | Configuration file                                    |
+| /JaMuz.xml        | Configuration file (optional)                         |
 
 ## v0.2.2-beta ##
 

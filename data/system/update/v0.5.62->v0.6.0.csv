@@ -1,6 +1,0 @@
-//action,fileOrDirectory
-rm,doc/LISEZMOI.TXT
-rm,doc/README.TXT
-rm,lib
-cp,Slsk.properties
-cpo,JaMuz.jar
