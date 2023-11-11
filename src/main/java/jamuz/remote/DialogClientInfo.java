@@ -114,7 +114,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
         jTextFieldPwd.setEnabled(false);
 
         jLabelPwd.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabelPwd.setText(Inter.get("DialogClientInfo.jLabelPwd.text")); // NOI18N
+        jLabelPwd.setText(Inter.get("Label.Password")); // NOI18N
 
         jTextFieldRootPath.setEditable(false);
         jTextFieldRootPath.setEnabled(false);

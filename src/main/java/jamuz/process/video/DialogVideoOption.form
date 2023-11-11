@@ -364,7 +364,6 @@
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldVideoLibraryLocation">
           <Properties>
-            <Property name="text" type="java.lang.String" value="/home/raph/Vid&#xe9;os/Films/" noResource="true"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>

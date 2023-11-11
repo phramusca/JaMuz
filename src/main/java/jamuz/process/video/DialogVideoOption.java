@@ -251,7 +251,6 @@ public class DialogVideoOption extends javax.swing.JDialog {
         jLabelVideoLibraryLocation.setText("Library location");
         jLabelVideoLibraryLocation.setToolTipText("");
 
-        jTextFieldVideoLibraryLocation.setText("/home/raph/Vidéos/Films/"); // NOI18N
         jTextFieldVideoLibraryLocation.setEnabled(false);
 
         jCheckBoxRemoteRepository.setText("Files are in a remote location");
