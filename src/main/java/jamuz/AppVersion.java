@@ -32,8 +32,8 @@ public class AppVersion {
     //FIXME ! Test with a real update on a running jar
     public void update(ICallBackVersionUpdate callBackVersionUpdate) throws IOException {
         String assetFolderName = FilenameUtils.getBaseName(assetFile.getAbsolutePath());
-        File source = Jamuz.getFile("", "cache", "system", "update", assetFolderName);
-        File folder = Jamuz.getFile("", "cache", "system", "update", assetFolderName, "data", "system", "update");
+        File source = Jamuz.getFile("", "data", "cache", "system", "update", assetFolderName);
+        File folder = Jamuz.getFile("", "data", "cache", "system", "update", assetFolderName, "data", "system", "update");
         final File[] filteredFiles = filterAndSortUpdateFiles(folder);
         int numberOfChanges = 0;
 
