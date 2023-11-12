@@ -82,7 +82,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
       //action,fileOrDirectory
       rm,doc/LISEZMOI.TXT
       rm,doc/README.TXT
-      rm,lib/*
+      rm,lib
       cpo,data/icon/genre
       cp,Slsk.properties
       cpo,JaMuz.jar

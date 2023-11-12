@@ -220,7 +220,6 @@ public class DialogSlskOption extends javax.swing.JDialog {
         setOptions();
         if(options.save()) {
             this.dispose();
-            //FIXME ! Re-read options in parent
         }
     }//GEN-LAST:event_jButtonSaveActionPerformed
 

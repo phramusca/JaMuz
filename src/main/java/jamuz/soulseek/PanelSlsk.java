@@ -147,19 +147,25 @@ public class PanelSlsk extends javax.swing.JPanel {
         }
 
         //Get options
+        if (readOptions()) {
+            boolean onStartup = Boolean.parseBoolean(options.get("slsk.on.startup", "false"));
+            File file = new File(options.get("slsk.location.shared"));
+            onStartup = onStartup && file.exists();
+            if (onStartup) {
+                startStopSlsk();
+            }
+        }
+    }
+
+    private boolean readOptions() {
         File propertiesFile = Jamuz.getFile("Slsk.properties");
-        boolean onStartup = false;
         if (propertiesFile.exists()) {
             options = new Options(propertiesFile.getAbsolutePath());
             if (options.read()) {
-                onStartup = Boolean.parseBoolean(options.get("slsk.on.startup", "false"));
-                File file = new File(options.get("slsk.location.shared"));
-                onStartup = onStartup && file.exists();
+                return true;
             }
         }
-        if (onStartup) {
-            startStopSlsk();
-        }
+        return false;
     }
 
     private void startDownloadMonitoring() {
@@ -512,8 +518,19 @@ public class PanelSlsk extends javax.swing.JPanel {
                 enableGui(false);
                 enableOptions(false);
 
-                //FIXME ! reCreate : check if options changed
-                boolean reCreate = true; //(!options.get("slsk.username").equals(jTextFieldUsername.getText()) || !options.get("slsk.password").equals(jTextFieldPassword.getText()));
+                String username = options.get("slsk.username");
+                String password = options.get("slsk.password");
+                String sharedFolder = options.get("slsk.location.shared");
+
+                if (!readOptions()) {
+                    enableStart();
+                    return;
+                }
+
+                //FIXME ! Check and store boolean reCreate in DisalogSlskOption so that it persists
+                boolean reCreate = (!options.get("slsk.username").equals(username)
+                        || !options.get("slsk.password").equals(password)
+                        || !options.get("slsk.location.shared").equals(sharedFolder));
 
                 //Start slskd server, if not already running
                 SlskdDocker slskdDocker = new SlskdDocker(
@@ -525,13 +542,11 @@ public class PanelSlsk extends javax.swing.JPanel {
                 if (jButtonStart.getText().equals(Inter.get("Button.Start"))) {
                     jButtonStart.setText("Starting ...");
                     jTextAreaLog.setText("Checking slsk status and restart if needed...\n");
-//                    File file = new File(options.get("slsk.location.shared"));
-//                    if (!file.exists()) {
-//                        Popup.warning("Shared folder does not exist: "+ file);
-//                        enableStart();
-//                    }
-//                    else 
-                        if (!slskdDocker.start()) {
+                    File file = new File(options.get("slsk.location.shared"));
+                    if (!file.exists()) {
+                        Popup.warning("Shared folder does not exist: " + file);
+                        enableStart();
+                    } else if (!slskdDocker.start()) {
                         Popup.warning("Could not start slskd");
                         enableStart();
                     } else {
@@ -585,6 +600,12 @@ public class PanelSlsk extends javax.swing.JPanel {
 
                                     try {
                                         soulseek = new Slsk();
+                                        if (reCreate) {
+                                            if(!soulseek.rescanShares()) {
+                                                //FIXME ! Reset boolean reCreate here
+                                                Popup.error("Could not rescan share. Refer to slsk logs.");
+                                            }
+                                        }
                                     } catch (IOException | SlskdClient.ServerException ex) {
                                         Popup.error(ex);
                                     }

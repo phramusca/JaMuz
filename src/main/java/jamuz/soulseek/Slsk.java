@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz.soulseek;
 
 import jamuz.Jamuz;
@@ -36,28 +35,28 @@ import org.apache.commons.lang3.tuple.Pair;
  * @author phramusca ( https://github.com/phramusca/JaMuz/ )
  */
 public class Slsk {
-	
-	private final SlskdClient slskdClient;
+
+    private final SlskdClient slskdClient;
     private final List<String> allowedExtensions;
     private final Base64 encoder = new Base64();
 
     /**
-	 * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
+     * Wrapper for Soulseek CLI (https://github.com/aeyoll/soulseek-cli)
      *
-	 * @throws java.io.IOException
-	 * @throws jamuz.soulseek.SlskdClient.ServerException
-     */  
+     * @throws java.io.IOException
+     * @throws jamuz.soulseek.SlskdClient.ServerException
+     */
     public Slsk() throws IOException, SlskdClient.ServerException {
-		slskdClient = new SlskdClient();
-        
+        slskdClient = new SlskdClient();
+
         allowedExtensions = new ArrayList(
-				Arrays.asList(Jamuz.getMachine().getOptionValue("files.audio").split(","))); //NOI18N;
+                Arrays.asList(Jamuz.getMachine().getOptionValue("files.audio").split(","))); //NOI18N;
     }
 
-	public List<SlskdSearchResponse> search(String query, ICallBackSearch callBackSearch) {
-		try {
+    public List<SlskdSearchResponse> search(String query, ICallBackSearch callBackSearch) {
+        try {
             SlskdSearchResult search = slskdClient.search(query);
-            while(!search.isComplete) {
+            while (!search.isComplete) {
                 search = slskdClient.getSearch(search.id);
                 callBackSearch.searching(search);
                 Thread.sleep(1000);
@@ -94,32 +93,32 @@ public class Slsk {
             }
             slskdClient.deleteSearch(search.id);
 
-            return groupedResponses;	
-		} catch (IOException | SlskdClient.ServerException ex) {
+            return groupedResponses;
+        } catch (IOException | SlskdClient.ServerException ex) {
             Popup.error("search " + query, ex);
-		} catch (InterruptedException ex) {
+        } catch (InterruptedException ex) {
             Logger.getLogger(Slsk.class.getName()).log(Level.WARNING, null, ex);
         }
-		return null;
-	}
-	
-	SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) {
-		try {
-			return slskdClient.getDownloads(searchResponse);
-		} catch (IOException | SlskdClient.ServerException ex) {
+        return null;
+    }
+
+    SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) {
+        try {
+            return slskdClient.getDownloads(searchResponse);
+        } catch (IOException | SlskdClient.ServerException ex) {
             Logger.getLogger(Slsk.class.getName()).log(Level.WARNING, null, ex);
-		}
-		return null;
-	}
-	
-	boolean download(SlskdSearchResponse searchResponse) {
-		try {
-			return slskdClient.download(searchResponse);
-		} catch (IOException | SlskdClient.ServerException ex) {
+        }
+        return null;
+    }
+
+    boolean download(SlskdSearchResponse searchResponse) {
+        try {
+            return slskdClient.postDownloads(searchResponse);
+        } catch (IOException | SlskdClient.ServerException ex) {
             Popup.error("download " + searchResponse.getSearchText(), ex);
-		}
-		return false;
-	}
+        }
+        return false;
+    }
 
     boolean deleteDirectory(String base64subDir) {
         try {
@@ -147,7 +146,7 @@ public class Slsk {
         }
         return false;
     }
-    
+
     boolean deleteFile(SlskdDownloadFile downloadFile) {
         try {
             return deleteFilename(downloadFile.filename, false);
@@ -156,7 +155,7 @@ public class Slsk {
         }
         return false;
     }
-    
+
     boolean deleteFile(SlskdSearchFile searchFile) {
         try {
             return deleteFilename(searchFile.filename, searchFile.percentComplete < 100);
@@ -165,24 +164,33 @@ public class Slsk {
         }
         return false;
     }
-    
+
     private boolean deleteFilename(String filename, boolean incomplete) throws IOException {
         Pair<String, String> directory = getDirectory(filename);
         String subDirectoryName = directory.getLeft();
         String fileOnlyName = directory.getRight();
         String base64File = encoder.encodeToString(FilenameUtils.concat(subDirectoryName, fileOnlyName).getBytes());
-        
-        if(incomplete) {
+
+        if (incomplete) {
             return slskdClient.deleteIncompleteFile(base64File);
         } else {
             return slskdClient.deleteFile(base64File);
         }
     }
-    
+
     public Pair<String, String> getDirectory(String filename) {
         String[] split = filename.split("\\\\");
-        return Pair.of(split[split.length-2], split[split.length-1]);
+        return Pair.of(split[split.length - 2], split[split.length - 1]);
     }
-    
 
+    boolean rescanShares() {
+        try {
+            return slskdClient.putShareScan();
+        } catch (IOException ex) {
+            Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SlskdClient.ServerException ex) {
+            Logger.getLogger(Slsk.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }

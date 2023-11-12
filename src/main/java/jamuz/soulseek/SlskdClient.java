@@ -75,7 +75,7 @@ public class SlskdClient {
 		return true; //TODO: return true or false based on http result
 	}
 	
-	public boolean download(SlskdSearchResponse searchResponse) throws IOException, ServerException {
+	public boolean postDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
 		JSONArray jsonArray = new JSONArray();
 		for (SlskdSearchFile file : searchResponse.getFiles()) {
 			if(file.percentComplete<100) {
@@ -97,6 +97,14 @@ public class SlskdClient {
 		return response.isSuccessful();
 	}
 	
+    public boolean putShareScan() throws IOException, ServerException {
+		HttpUrl.Builder urlBuilder = getUrlBuilder("shares"); //NON-NLS
+		Request request = getRequestBuilder(urlBuilder).put(RequestBody.create("", null)).build(); //NON-NLS
+        
+        Response response = client.newCall(request).execute();
+		return response.isSuccessful();
+	}
+    
 	public SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
         String username = URLEncoder.encode(searchResponse.username, StandardCharsets.UTF_8.toString()); //FIXME !!!! Use this elsewhere ? Does it work ?
         String url = "transfers/downloads/" + username;

@@ -126,7 +126,6 @@ public class Options {
 		try {
 			properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
 			return true;
-
 		} catch (IOException ex) {
 			Popup.error(ex);
 			return false;
