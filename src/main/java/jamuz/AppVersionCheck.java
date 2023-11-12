@@ -69,7 +69,7 @@ public class AppVersionCheck {
                     String assetName = assets.get(0).getAsJsonObject().get("name").getAsString();
                     File assetFile = Jamuz.getFile(assetName, "data", "cache", "system", "update");
                     appVersion.setAsset(assetFile);
-                    if (assetFile.exists()) {
+                    if (assetFile.exists()) { //FIXME ! Need to check that assetFile and extracted too are valid !!
                         callBackVersionCheck.onNewVersion(appVersion);
                     } else {
                         callBackVersionCheck.onDownloadRequest(appVersion);
@@ -96,6 +96,7 @@ public class AppVersionCheck {
                             unzipAsset(appVersion);
                             callBackVersionCheck.onNewVersion(appVersion);
                         } else {
+                            appVersion.getAssetFile().delete();
                             callBackVersionCheck.onCheck(appVersion, "Error: " + downloadResponse.message());
                         }
                     }
@@ -106,8 +107,8 @@ public class AppVersionCheck {
                 callBackVersionCheck.onCheck(appVersion, "You are running the latest version.");
             }
         } catch (IOException ex) {
+            appVersion.getAssetFile().delete();
             callBackVersionCheck.onCheck(appVersion, ex.getLocalizedMessage());
-            //FIXME ! Clean data/cache/system/update
         }
     }
 

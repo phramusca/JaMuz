@@ -29,7 +29,7 @@ public class AppVersion {
         this.latestVersion = latestVersion;
     }
 
-    //FIXME ! Test with a real update on a running jar
+    //FIXME !! Test with a real update on a running jar
     public void update(ICallBackVersionUpdate callBackVersionUpdate) throws IOException {
         String assetFolderName = FilenameUtils.getBaseName(assetFile.getAbsolutePath());
         File source = Jamuz.getFile("", "data", "cache", "system", "update", assetFolderName);
@@ -69,9 +69,8 @@ public class AppVersion {
             }
         }
         
-        //FIXME ! Cleanup data/cache/system/update
-        //FIXME ! Rename folder in 7z to "JaMuz" !
-        
+        FileUtils.deleteQuietly(source);
+        assetFile.delete();
     }
 
     private void performAction(String action, String actionFile, File source, File destinationFile) throws IOException {
