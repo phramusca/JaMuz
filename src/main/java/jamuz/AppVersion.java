@@ -23,15 +23,16 @@ public class AppVersion {
     private final String currentVersion;
     private String latestVersion;
     private File assetFile;
+    private int assetSize;
 
     public AppVersion(String currentVersion, String latestVersion) {
         this.currentVersion = currentVersion;
         this.latestVersion = latestVersion;
     }
 
-    //FIXME ! Test with a real update on a running jar
+    //FIXME !! Test with a real update on a running jar
     public void update(ICallBackVersionUpdate callBackVersionUpdate) throws IOException {
-        String assetFolderName = FilenameUtils.getBaseName(assetFile.getAbsolutePath());
+        String assetFolderName = "JaMuz";
         File source = Jamuz.getFile("", "data", "cache", "system", "update", assetFolderName);
         File folder = Jamuz.getFile("", "data", "cache", "system", "update", assetFolderName, "data", "system", "update");
         final File[] filteredFiles = filterAndSortUpdateFiles(folder);
@@ -68,6 +69,9 @@ public class AppVersion {
                 }
             }
         }
+        
+        FileUtils.deleteQuietly(source);
+        assetFile.delete();
     }
 
     private void performAction(String action, String actionFile, File source, File destinationFile) throws IOException {
@@ -141,8 +145,9 @@ public class AppVersion {
         return false;
     }
 
-    void setAsset(File assetFile) {
+    void setAsset(File assetFile, int size) {
         this.assetFile = assetFile;
+        this.assetSize = size;
     }
 
     public void setLatestVersion(String latestVersion) {
@@ -192,5 +197,9 @@ public class AppVersion {
     @Override
     public String toString() {
         return "Current: " + currentVersion + ". Latest: " + latestVersion + ". ";
+    }
+
+    boolean isAssetValid() {
+        return assetFile.exists() && assetFile.length() == assetSize;
     }
 }
