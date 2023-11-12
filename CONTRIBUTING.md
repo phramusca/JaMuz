@@ -107,8 +107,6 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Check [created release](https://github.com/phramusca/JaMuz/releases).
 
-1. [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release.
-
 1. Update pom.xml
 
     ```xml
@@ -116,6 +114,10 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
     ```
 
 1. Commit (named vx.y.z-dev) & PUSH
+
+1. Edit [created release](https://github.com/phramusca/JaMuz/releases) and discard draft.
+
+1. [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release.
 
 ### Github self-hosted runner
 
