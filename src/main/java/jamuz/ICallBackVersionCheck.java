@@ -15,11 +15,15 @@ public interface ICallBackVersionCheck {
 
     public void onCheck(AppVersion appVersion, String msg);
 
-    public void onStartUnzipCount(AppVersion appVersion);
+    public void onUnzipCount(AppVersion appVersion);
 
-    public void onStartUnzip(int entryCount);
+    public void onUnzipStart(int entryCount);
 
-    public void onUnzippedFile(String name);
+    public void onUnzipProgress(String name);
 
-    public void onDownloading(AppVersion assetFile);
+    public void onDownloadRequest(AppVersion assetFile);
+
+    public void onDownloadStart();
+    
+    public void onDownloadProgress(AppVersion appVersion, int progress);
 }

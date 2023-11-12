@@ -98,25 +98,36 @@ public class PanelOptions extends javax.swing.JPanel {
             }
 
             @Override
-            public void onStartUnzipCount(AppVersion appVersion) {
-                progressBarVersionCheck.setIndeterminate("Couting files in " + appVersion.getAssetFile().getName());
+            public void onUnzipCount(AppVersion appVersion) {
+                progressBarVersionCheck.setIndeterminate("Counting files in " + appVersion.getAssetFile().getName());
             }
 
             @Override
-            public void onStartUnzip(int entryCount) {
+            public void onUnzipStart(int entryCount) {
                 progressBarVersionCheck.setup(entryCount);
             }
 
             @Override
-            public void onUnzippedFile(String name) {
+            public void onUnzipProgress(String name) {
                 progressBarVersionCheck.progress("Unzipping " + name);
             }
 
             @Override
-            public void onDownloading(AppVersion appVersion) {
+            public void onDownloadRequest(AppVersion appVersion) {
                 jLabelVersionCheck.setText(appVersion.toString());
                 progressBarVersionCheck.setIndeterminate("Downloading " + appVersion.getAssetFile().getName());
             }
+
+            @Override
+            public void onDownloadStart() {
+                progressBarVersionCheck.setupAsPercentage();
+            }
+
+            @Override
+            public void onDownloadProgress(AppVersion appVersion, int progress) {
+                progressBarVersionCheck.progress("Downloading " + appVersion.getAssetFile().getName(), progress);
+            }
+
         });
     }
 
@@ -857,6 +868,7 @@ public class PanelOptions extends javax.swing.JPanel {
                                 }
 
                             });
+                            progressBarVersionCheck.reset();
                             jLabelVersionCheck.setText("<html>Update to " + appVersion.getLatestVersion() + " has completed."
                                     + "<BR/><b>Restart application to run new version.</b></html>");
                         } catch (IOException ex) {
