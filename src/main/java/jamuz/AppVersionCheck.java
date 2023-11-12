@@ -68,7 +68,7 @@ public class AppVersionCheck {
                 if (!assets.isJsonNull() && assets.size() > 0) {
                     String downloadURL = assets.get(0).getAsJsonObject().get("browser_download_url").getAsString();
                     String assetName = assets.get(0).getAsJsonObject().get("name").getAsString();
-                    File assetFile = Jamuz.getFile(assetName, "cache", "system", "update");
+                    File assetFile = Jamuz.getFile(assetName, "data", "cache", "system", "update");
                     appVersion.setAsset(assetFile);
                     if(!assetFile.exists() ) {
                         callBackVersionCheck.onDownloading(appVersion);
@@ -107,7 +107,7 @@ public class AppVersionCheck {
         try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZFile.getNextEntry()) != null) {
-                File outputFile = Jamuz.getFile(entry.getName(), "cache", "system", "update");
+                File outputFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update");
                 if (entry.isDirectory()) {
                     if (!outputFile.exists()) {
                         outputFile.mkdirs();
