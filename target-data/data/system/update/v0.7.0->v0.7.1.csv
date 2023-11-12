@@ -1,0 +1,11 @@
+//This csv is useless since v0.6.0 does not have updater.
+//To be used for testing purposes with a v0.6.1 custom
+//action,fileOrDirectory
+rm,data/cache/slsk
+cpo,data/system/bin
+cpo,data/system/update
+cpo,data/AudioLinks.txt
+rm,data/metaflac.exe
+rm,data/mp3gain.exe
+rm,data/mplayer.exe
+rm,JaMuz.sh
