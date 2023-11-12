@@ -59,8 +59,8 @@ jobs:
 
     - name: 7zip dist
       run: |
-        mv dist JaMuz_${{ github.ref_name }}
-        7z a -r JaMuz_${{ github.ref_name }}.7z JaMuz_${{ github.ref_name }}
+        mv dist JaMuz
+        7z a -r JaMuz_${{ github.ref_name }}.7z JaMuz
  
     # - name: List Workspace Directory
     #   run: ls -la ${{ github.workspace }}
