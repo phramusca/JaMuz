@@ -14,8 +14,6 @@ import java.io.InputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -68,8 +66,11 @@ public class AppVersionCheck {
                     String downloadURL = assets.get(0).getAsJsonObject().get("browser_download_url").getAsString();
                     String assetName = assets.get(0).getAsJsonObject().get("name").getAsString();
                     File assetFile = Jamuz.getFile(assetName, "data", "cache", "system", "update");
-                    appVersion.setAsset(assetFile);
-                    if (assetFile.exists()) { //FIXME ! Need to check that assetFile and extracted too are valid !!
+                    int size = assets.get(0).getAsJsonObject().get("size").getAsInt();
+                    appVersion.setAsset(assetFile, size);
+                    if (appVersion.isAssetValid()) {
+                        //Unzip again as unzip may have failed on previous version check
+                        unzipAsset(appVersion);
                         callBackVersionCheck.onNewVersion(appVersion);
                     } else {
                         callBackVersionCheck.onDownloadRequest(appVersion);
@@ -112,18 +113,18 @@ public class AppVersionCheck {
         }
     }
 
-    private void unzipAsset(AppVersion appVersion) {
+    private void unzipAsset(AppVersion appVersion) throws IOException {
         callBackVersionCheck.onUnzipCount(appVersion);
         int entryCount = 0;
+
         try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
             while ((sevenZFile.getNextEntry()) != null) {
                 entryCount++;
             }
-        } catch (IOException ex) {
-            Logger.getLogger(AppVersionCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         callBackVersionCheck.onUnzipStart(entryCount);
+
         try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZFile.getNextEntry()) != null) {
@@ -150,8 +151,6 @@ public class AppVersionCheck {
                 }
                 callBackVersionCheck.onUnzipProgress(entry.getName());
             }
-        } catch (IOException ex) {
-            Logger.getLogger(AppVersionCheck.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
