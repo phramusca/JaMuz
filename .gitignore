@@ -50,18 +50,8 @@ buildNumber.properties
 
 #JaMuz specifics
 
-/data/Patterns.txt
-/data/VideoLinks.txt
-/data/AudioLinks.txt
-
 /database/*_for_comparison.sql
 /database/JaMuz*.db*
-
-/res/JaMuz.db
-/res/JaMuz.xml
-/res/JaMuz.properties
-/res/Slsk.properties
-/res/myMovieDb.db
 
 /testenv/AppFolder/data/cache/
 /testenv/AppFolder/logs/
@@ -82,5 +72,4 @@ JaMuz_*-*-*--*-*-*.db
 /robot/logs/
 !/robot/**/*.jar
 
-/slskd/
-/target-data/
+/target-data-local/

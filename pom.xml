@@ -34,13 +34,14 @@
             <resource>
                 <directory>res</directory>
             </resource>
+            <!--Files in the target-data-local directory will take precedence over files in the target-data directory.-->
             <resource>
-                <directory>target-data</directory>
+                <directory>target-data-local</directory>
                 <targetPath>${project.build.directory}</targetPath>
             </resource>
             <resource>
-                <directory>data</directory>
-                <targetPath>${project.build.directory}/data</targetPath>
+                <directory>target-data</directory>
+                <targetPath>${project.build.directory}</targetPath>
             </resource>
         </resources>
         

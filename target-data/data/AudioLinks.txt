@@ -1,0 +1,2 @@
+qobuz|http://www.qobuz.com/fr-fr/search?i=boutique&q=<album>
+7digital|https://fr.7digital.com/search?q=<album>
