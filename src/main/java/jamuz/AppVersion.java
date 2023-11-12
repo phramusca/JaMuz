@@ -68,6 +68,10 @@ public class AppVersion {
                 }
             }
         }
+        
+        //FIXME ! Cleanup data/cache/system/update
+        //FIXME ! Rename folder in 7z to "JaMuz" !
+        
     }
 
     private void performAction(String action, String actionFile, File source, File destinationFile) throws IOException {
@@ -135,10 +139,11 @@ public class AppVersion {
     }
 
     public boolean isNewVersion() {
-        if (!currentVersion.equals("vnull")) {
-            return compareVersionStrings(latestVersion, currentVersion) > 0;
-        }
-        return false;
+        return true; //FIXME ! Remove this
+//        if (!currentVersion.equals("vnull")) {
+//            return compareVersionStrings(latestVersion, currentVersion) > 0;
+//        }
+//        return false;
     }
 
     void setAsset(File assetFile) {
