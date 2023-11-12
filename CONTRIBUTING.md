@@ -115,7 +115,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Commit (named vx.y.z-dev) & PUSH
 
-1. Edit [created release](https://github.com/phramusca/JaMuz/releases) and discard draft.
+1. Edit [created release](https://github.com/phramusca/JaMuz/releases) and "Publish release".
 
 1. [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release.
 

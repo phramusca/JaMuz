@@ -9,3 +9,5 @@ rm,data/metaflac.exe
 rm,data/mp3gain.exe
 rm,data/mplayer.exe
 rm,JaMuz.sh
+//This last line should always be there
+cpo,JaMuz.jar
