@@ -139,11 +139,10 @@ public class AppVersion {
     }
 
     public boolean isNewVersion() {
-        return true; //FIXME ! Remove this
-//        if (!currentVersion.equals("vnull")) {
-//            return compareVersionStrings(latestVersion, currentVersion) > 0;
-//        }
-//        return false;
+        if (!currentVersion.equals("vnull")) {
+            return compareVersionStrings(latestVersion, currentVersion) > 0;
+        }
+        return false;
     }
 
     void setAsset(File assetFile, int size) {
