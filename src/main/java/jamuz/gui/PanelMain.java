@@ -1778,8 +1778,7 @@ public class PanelMain extends javax.swing.JFrame {
 			panel.setLocationRelativeTo(null);
 			panel.setExtendedState(PanelMain.MAXIMIZED_BOTH);
 			String version = Main.class.getPackage().getImplementationVersion();
-			String title1 = panel.getTitle() + " " + version; //NOI18N
-			panel.setTitle(title1 + " [" + Jamuz.getDb().getDbConn().getInfo().getLocationOri() + "]"); //NOI18N
+			panel.setTitle(panel.getTitle() + " " + version); //NOI18N
 			panel.setVisible(true);
 		});
     }

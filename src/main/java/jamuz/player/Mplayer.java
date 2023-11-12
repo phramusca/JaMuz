@@ -250,7 +250,7 @@ public class Mplayer implements Runnable {
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
-			cmdArray.add("data\\mplayer.exe");
+			cmdArray.add("data\\system\\bin\\mplayer.exe");
 //			cmdArray.add("-ao");
 //			cmdArray.add("dsound:device=1");
 		}

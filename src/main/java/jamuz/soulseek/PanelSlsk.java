@@ -411,6 +411,7 @@ public class PanelSlsk extends javax.swing.JPanel {
 
         jTextAreaLog.setEditable(false);
         jTextAreaLog.setColumns(20);
+        jTextAreaLog.setFont(new java.awt.Font("DejaVu Sans Mono", 0, 13)); // NOI18N
         jTextAreaLog.setLineWrap(true);
         jTextAreaLog.setRows(5);
         jScrollPaneLog.setViewportView(jTextAreaLog);

@@ -32,29 +32,21 @@ jobs:
         sudo apt-get install sqlite3 -y
       shell: bash
 
-    - name: Create JaMuz.db & myMovieDb.db
+    - name: Create dist
       run: |
         mkdir dist
+        cp -r target/JaMuz-jar-with-dependencies.jar dist/JaMuz.jar
+        cp -r target-data/* dist
+      working-directory: ${{ github.workspace }}
+
+    - name: Create JaMuz.db & myMovieDb.db in dist
+      run: |
         sqlite3 dist/JaMuz.db  # Create an empty database if it doesn't exist
         sqlite3 dist/JaMuz.db < database/JaMuz_creation.sql
         sqlite3 dist/JaMuz.db < database/JaMuz_insertion_minimal.sql
         sqlite3 dist/JaMuz.db < database/JaMuz_insertion_optional.sql
         sqlite3 dist/myMovieDb.db  # Create an empty database if it doesn't exist
         sqlite3 dist/myMovieDb.db < database/myMovieDb_creation.sql
-      working-directory: ${{ github.workspace }}
-
-    - name: Create dist
-      run: |
-        cp -r target/JaMuz-jar-with-dependencies.jar dist/JaMuz.jar
-        cp -r dist-data/* dist
-        mkdir -p dist/data/icon
-        cp -r data/icon/* dist/data/icon
-        mkdir -p dist/data/system/sql
-        cp -r data/system/sql/* dist/data/system/sql
-        cp data/BookLinks.txt dist/data/
-        cp data/metaflac.exe dist/data/
-        cp data/mp3gain.exe dist/data/
-        cp data/mplayer.exe dist/data/
       working-directory: ${{ github.workspace }}
 
     - name: 7zip dist

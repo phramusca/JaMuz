@@ -76,7 +76,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
       - [Start job](https://github.com/phramusca/JaMuz/actions/workflows/maven_local.yml)
       - Get `dist` folder in ~/actions-runner/_work/JaMuz/JaMuz/
     - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
-    - Create the `data/system/update/`$previousVersion`->`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released). Example:
+    - Create the `target-data/data/system/update/`$previousVersion`->`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released). Example:
 
       ```csv
       //action,fileOrDirectory
@@ -107,8 +107,6 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Check [created release](https://github.com/phramusca/JaMuz/releases).
 
-1. [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release.
-
 1. Update pom.xml
 
     ```xml
@@ -116,6 +114,10 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
     ```
 
 1. Commit (named vx.y.z-dev) & PUSH
+
+1. Edit [created release](https://github.com/phramusca/JaMuz/releases) and "Publish release".
+
+1. [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release.
 
 ### Github self-hosted runner
 

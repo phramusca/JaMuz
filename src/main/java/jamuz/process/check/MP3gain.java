@@ -114,7 +114,7 @@ public class MP3gain {
 		//Build mp3gain command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
-			cmdArray.add("data\\mp3gain.exe");
+			cmdArray.add("data\\system\\bin\\mp3gain.exe");
 		}
 		else {
 			//TODO: Test if it works in MacOS for instance
@@ -311,7 +311,7 @@ public class MP3gain {
 			//Build mp3gain command array
 			List<String> cmdArray = new ArrayList<>();
 			if(OS.isWindows()) {
-				cmdArray.add("data\\mp3gain.exe");
+				cmdArray.add("data\\system\\bin\\mp3gain.exe");
 			}
             else {
                 //TODO: Test if it works in MacOS for instance
@@ -364,7 +364,7 @@ public class MP3gain {
 			//Build mp3gain command array
 			List<String> cmdArray = new ArrayList<>();
 			if(OS.isWindows()) {
-				cmdArray.add("data\\mp3gain.exe");
+				cmdArray.add("data\\system\\bin\\mp3gain.exe");
 			}
             else {
                 //TODO: Test if it works in MacOS for instance

@@ -41,9 +41,6 @@ public class MetaFlac {
 		this.path = path;
     }
 
-    //FIXME !! Delete JaMuz.sh, no more needed
-    //FIXME !! Move metaflac.exe, mp3gain.exe and mplayer.exe to system/bin
-    
 	/**
 	 * Compute ReplayGain for FLAC files
 	 * @return  
@@ -54,7 +51,7 @@ public class MetaFlac {
 		if (files != null) {
 			List<String> cmdArray = new ArrayList<>();
 			if(OS.isWindows()) {
-				cmdArray.add("data\\metaflac.exe");
+				cmdArray.add("data\\system\\bin\\metaflac.exe");
 			}
             else {
                 //TODO: Test if it works in MacOS for instance
