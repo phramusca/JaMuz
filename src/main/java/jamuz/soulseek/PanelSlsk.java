@@ -149,7 +149,7 @@ public class PanelSlsk extends javax.swing.JPanel {
         //Get options
         if (readOptions()) {
             boolean onStartup = Boolean.parseBoolean(options.get("slsk.on.startup", "false"));
-            File file = new File(options.get("slsk.location.shared"));
+            File file = new File(options.get("slsk.shared.location"));
             onStartup = onStartup && file.exists();
             if (onStartup) {
                 startStopSlsk();
@@ -518,31 +518,24 @@ public class PanelSlsk extends javax.swing.JPanel {
                 enableGui(false);
                 enableOptions(false);
 
-                String username = options.get("slsk.username");
-                String password = options.get("slsk.password");
-                String sharedFolder = options.get("slsk.location.shared");
-
+                //Re-read options as they could have changed
                 if (!readOptions()) {
                     enableStart();
                     return;
                 }
-
-                //FIXME ! Check and store boolean reCreate in DisalogSlskOption so that it persists
-                boolean reCreate = (!options.get("slsk.username").equals(username)
-                        || !options.get("slsk.password").equals(password)
-                        || !options.get("slsk.location.shared").equals(sharedFolder));
 
                 //Start slskd server, if not already running
                 SlskdDocker slskdDocker = new SlskdDocker(
                         options.get("slsk.username"),
                         options.get("slsk.password"),
                         Jamuz.getFile("", "slskd").getAbsolutePath(),
-                        options.get("slsk.location.shared"), reCreate);
+                        options.get("slsk.shared.location"),
+                        Boolean.parseBoolean(options.get("slsk.reCreate", "true")));
 
                 if (jButtonStart.getText().equals(Inter.get("Button.Start"))) {
                     jButtonStart.setText("Starting ...");
                     jTextAreaLog.setText("Checking slsk status and restart if needed...\n");
-                    File file = new File(options.get("slsk.location.shared"));
+                    File file = new File(options.get("slsk.shared.location"));
                     if (!file.exists()) {
                         Popup.warning("Shared folder does not exist: " + file);
                         enableStart();
@@ -600,9 +593,11 @@ public class PanelSlsk extends javax.swing.JPanel {
 
                                     try {
                                         soulseek = new Slsk();
-                                        if (reCreate) {
-                                            if(!soulseek.rescanShares()) {
-                                                //FIXME ! Reset boolean reCreate here
+                                        if (Boolean.parseBoolean(options.get("slsk.reCreate", "true"))) {
+                                            if (soulseek.rescanShares()) {
+                                                options.set("slsk.reCreate", "false");
+                                                options.save();
+                                            } else {
                                                 Popup.error("Could not rescan share. Refer to slsk logs.");
                                             }
                                         }

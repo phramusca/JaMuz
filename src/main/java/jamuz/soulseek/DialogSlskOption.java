@@ -51,18 +51,11 @@ public class DialogSlskOption extends javax.swing.JDialog {
                 jTextFieldPassword.setText(options.get("slsk.password"));
                 boolean onStartup = Boolean.parseBoolean(options.get("slsk.on.startup", "false"));
                 jCheckBoxServerStartOnStartup.setSelected(onStartup);
-                jTextFieldSharedLocation.setText(options.get("slsk.location.shared"));
+                jTextFieldSharedLocation.setText(options.get("slsk.shared.location"));
             }
         }
     }
-    
-    private void setOptions() {
-        options.set("slsk.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
-        options.set("slsk.username", jTextFieldUsername.getText());
-        options.set("slsk.password", jTextFieldPassword.getText());
-        options.set("slsk.location.shared", jTextFieldSharedLocation.getText());
-    }
-    
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -217,7 +210,17 @@ public class DialogSlskOption extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        setOptions();
+        boolean reCreate = (!options.get("slsk.username").equals(jTextFieldUsername.getText())
+                || !options.get("slsk.password").equals(jTextFieldPassword.getText())
+                || !options.get("slsk.shared.location").equals(jTextFieldSharedLocation.getText()));
+        if(reCreate) {
+            //This will be reset to false only when putSharedScan is done
+            options.set("slsk.reCreate", String.valueOf(reCreate));     
+        }
+        options.set("slsk.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
+        options.set("slsk.username", jTextFieldUsername.getText());
+        options.set("slsk.password", jTextFieldPassword.getText());
+        options.set("slsk.shared.location", jTextFieldSharedLocation.getText());
         if(options.save()) {
             this.dispose();
         }
