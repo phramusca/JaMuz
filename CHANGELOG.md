@@ -1,5 +1,34 @@
 # JaMuz change log #
 
+## v0.7.1 ##
+
+***Compatible with JaMuz Remote v0.5.x minimum***
+
+### What's new ? ###
+
+- Minor, moved data files.
+
+### Package content ###
+
+| Path                 | Incl. | Description                                                                                       |
+| -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
+| /data/cache          | No    | Cache folder. You can remove it, files will be re-created.                                        |
+| /data/icon/genre     | Yes   | Genre icons. You can add more.                                                                    |
+| /data/icon/tag       | Yes   | Tag icons. You can add more.                                                                      |
+| /data/system         | Yes   | System files. You should not touch this.                                                          |
+| /data/AudioLinks.txt | Yes   | You can edit links to your favorite audio information providers.                                  |
+| /data/BookLinks.txt  | Yes   | You can edit links to your favorite book information providers.                                   |
+| /data/VideoLinks.txt | Yes   | You can edit links to your favorite video information providers.                                  |
+| /data/Patterns.txt   | No    | Saved patterns for music file scanner. If you want to clean it up.                                |
+| /doc                 | Yes   | Includes sample JaMuz.xml.                                                                        |
+| /logs                | No    | LOG files (and databases backups).                                                                |
+| ***/JaMuz.db***      | Yes   | ***Your new music library (back it up regularly !)***.                                            |
+| ***/JaMuz.jar***     | Yes   | ***Program itself*** (*on linux, set execution permission*).                                      |
+| /JaMuz.properties    | Yes   | Configuration file (avoid manual edition).                                                        |
+| /JaMuz.xml           | No    | Configuration file (optional). Used to setup your database location. See /doc/JaMuz.xml template. |
+| /myMovieDb.db        | Yes   | Database for Video tab.                                                                           |
+| /Slsk.properties     | Yes   | Configuration file for slskd (avoid manual edition).                                              |
+
 ## v0.7.0 ##
 
 ***Compatible with JaMuz Remote v0.5.x minimum***
@@ -26,10 +55,10 @@
 | Path              | Description                                                                                            |
 | ----------------- | ------------------------------------------------------------------------------------------------------ |
 | /data             | AudioLinks.txt, BookLinks.txt and VideoLinks.txt: You can edit those and and or remove external links. |
-|                   | Patterns.txt : saved patterns for music file scanner. If you want to clean it up. Not required.         |
-|                   | /icon/genre/ : Genre icons. You can add more                                                              |
-|                   | /icon/tag/ : Tag icons. You can add more                                                                  |
-|                   | /system/ : System files. You should not touch this.                                                      |
+|                   | Patterns.txt : saved patterns for music file scanner. If you want to clean it up. Not required.        |
+|                   | /icon/genre/ : Genre icons. You can add more                                                           |
+|                   | /icon/tag/ : Tag icons. You can add more                                                               |
+|                   | /system/ : System files. You should not touch this.                                                    |
 | /doc              | Includes sample JaMuz.xml.                                                                             |
 | /logs             | LOG files (and databases backups)                                                                      |
 | ***/JaMuz.db***   | ***Your new music library (back it up regularly !)***                                                  |
