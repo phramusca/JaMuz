@@ -105,7 +105,7 @@ public class AppVersion {
 
     private File[] filterAndSortUpdateFiles(File folder) {
         // Define a pattern for the file names, assuming they are in the format "previousVersion--nextVersion.csv"
-        Pattern pattern = Pattern.compile("v\\d+\\.\\d+\\.\\d+->v\\d+\\.\\d+\\.\\d+.csv");
+        Pattern pattern = Pattern.compile("v\\d+\\.\\d+\\.\\d+--v\\d+\\.\\d+\\.\\d+.csv");
 
         File[] allFiles = folder.listFiles();
         List<File> updateFiles = new ArrayList<>();
@@ -119,8 +119,8 @@ public class AppVersion {
 
         // Sort the files to ensure they are in the correct order
         updateFiles.sort((file1, file2) -> {
-            String version1 = file1.getName().split("->")[0];
-            String version2 = file2.getName().split("->")[0];
+            String version1 = file1.getName().split("--")[0];
+            String version2 = file2.getName().split("--")[0];
             return compareVersionStrings(version1, version2);
         });
 
