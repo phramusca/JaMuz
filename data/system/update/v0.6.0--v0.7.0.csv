@@ -1,8 +1,0 @@
-//This csv is useless since v0.6.0 does not have updater.
-//To be used for testing purposes with a v0.6.1 custom
-//action,fileOrDirectory
-rm,doc/LISEZMOI.TXT
-rm,doc/README.TXT
-rm,lib
-cp,Slsk.properties
-cpo,JaMuz.jar

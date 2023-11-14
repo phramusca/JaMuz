@@ -21,23 +21,29 @@ import jamuz.FileInfoInt;
 import jamuz.ICallBackVersionCheck;
 import jamuz.Jamuz;
 import jamuz.AppVersionCheck;
-import jamuz.ICallBackVersionUpdate;
 import jamuz.gui.swing.ListElement;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.FolderInfo;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
+import jamuz.utils.OS;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import java.awt.Frame;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -852,26 +858,72 @@ public class PanelOptions extends javax.swing.JPanel {
                     @Override
                     public void run() {
                         try {
-                            appVersion.update(new ICallBackVersionUpdate() {
-                                @Override
-                                public void onSetup() {
-                                    jLabelVersionCheck.setText("<html>"
-                                            + appVersion.toString()
-                                            + "<BR/>Updating to " + appVersion.getLatestVersion() + "</html>");
-                                    progressBarVersionCheck.setupAsPercentage();
-                                    progressBarVersionCheck.setIndeterminate("Preparing update to " + appVersion.getLatestVersion());
+                            String command = null;
+                            if (OS.isUnix()) {
+                                File update_script = Jamuz.getFile("update_linux.sh", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
+                                Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(Path.of(update_script.getAbsolutePath()));
+                                if (!permissions.contains(PosixFilePermission.OWNER_EXECUTE)) {
+                                    permissions.add(PosixFilePermission.OWNER_EXECUTE);
+                                    Files.setPosixFilePermissions(Path.of(update_script.getAbsolutePath()), permissions);
                                 }
+                                command = "sh " + update_script.getAbsolutePath();
+                            } else if (OS.isWindows()) {
+                                File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
+                                command = update_script.getAbsolutePath();
+                            }
+                            if (command != null) {
+                                Process process = Runtime.getRuntime().exec(command);
 
-                                @Override
-                                public void onFileUpdated(int progress) {
-                                    progressBarVersionCheck.progress("", progress);
+                                new Thread("Thread.PanelOptions.jLabelVersionCheckMouseClicked") {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            BufferedReader reader = new BufferedReader(
+                                                    new InputStreamReader(
+                                                            process.getInputStream()));
+                                            String line;
+                                            try {
+                                                while ((line = reader.readLine()) != null) {
+                                                    Jamuz.getLogger().log(Level.INFO, "{0}: {1}", new Object[]{process.info().command(), line});  //NOI18N
+                                                }
+                                            } finally {
+                                                reader.close();
+                                            }
+                                        } catch (IOException ex) {
+                                            Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
+                                        }
+                                    }
+                                }.start();
+
+                                int exitCode = process.waitFor();
+                                if (exitCode == 0) {
+                                    Jamuz.getLogger().log(Level.INFO, "Exiting application after update");  //NOI18N
+                                    System.exit(0); // Exit the current instance
+                                } else {
+                                    Jamuz.getLogger().log(Level.INFO, "Update to {0} has failed:{1} returned {2}", new Object[]{appVersion.getLatestVersion(), command, exitCode});  //NOI18N
                                 }
+                            }
 
-                            });
-                            progressBarVersionCheck.reset();
-                            jLabelVersionCheck.setText("<html>Update to " + appVersion.getLatestVersion() + " has completed."
-                                    + "<BR/><b>Restart application to run new version.</b></html>");
-                        } catch (IOException ex) {
+//                            appVersion.update(new ICallBackVersionUpdate() {
+//                                @Override
+//                                public void onSetup() {
+//                                    jLabelVersionCheck.setText("<html>"
+//                                            + appVersion.toString()
+//                                            + "<BR/>Updating to " + appVersion.getLatestVersion() + "</html>");
+//                                    progressBarVersionCheck.setupAsPercentage();
+//                                    progressBarVersionCheck.setIndeterminate("Preparing update to " + appVersion.getLatestVersion());
+//                                }
+//
+//                                @Override
+//                                public void onFileUpdated(int progress) {
+//                                    progressBarVersionCheck.progress("", progress);
+//                                }
+//
+//                            });
+//                            progressBarVersionCheck.reset();
+//                            jLabelVersionCheck.setText("<html>Update to " + appVersion.getLatestVersion() + " has completed."
+//                                    + "<BR/><b>Restart application to run new version.</b></html>");
+                        } catch (InterruptedException | IOException ex) {
                             jLabelVersionCheck.setText("<html>Update to " + appVersion.getLatestVersion() + " has <b>failed</b>:"
                                     + "<BR/>" + ex.getLocalizedMessage() + " </html>");
                         }
