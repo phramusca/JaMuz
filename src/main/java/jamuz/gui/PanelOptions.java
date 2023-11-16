@@ -885,7 +885,7 @@ public class PanelOptions extends javax.swing.JPanel {
 			AppVersion appVersion = this.versionCheck.getAppVersion();
 			if (appVersion.isNewVersion()) {
 				int n = JOptionPane.showConfirmDialog(
-						this, "Make sure that you do not have any running process running (merge, export, check, server, ...).\n\nProceed with update anyway?", //NOI18N
+						this, "Make sure that you do not have any process running (merge, export, check, server, ...).\n\nProceed with update?", //NOI18N
 						Inter.get("Label.Confirm"), //NOI18N
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.WARNING_MESSAGE);
@@ -902,10 +902,10 @@ public class PanelOptions extends javax.swing.JPanel {
 										permissions.add(PosixFilePermission.OWNER_EXECUTE);
 										Files.setPosixFilePermissions(Path.of(update_script.getAbsolutePath()), permissions);
 									}
-									command = "sh " + update_script.getAbsolutePath() + " &";
+                                    command = "x-terminal-emulator -e sh " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion();
 								} else if (OS.isWindows()) {
 									File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
-									command = "cmd /c start " + update_script.getAbsolutePath();
+                                    command = "cmd /c start " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion();
 								}
 								if (command != null) {
 									Runtime.getRuntime().exec(command);
