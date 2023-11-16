@@ -31,10 +31,8 @@ import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import java.awt.Frame;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
@@ -86,7 +84,6 @@ public class PanelOptions extends javax.swing.JPanel {
 		jSpinnerBytes.getModel().setValue(size);
 		jLabelBytes.setText("(" + Inter.get("Label.Keep") + " " + StringManager.humanReadableByteCount(size, false) + ")");
 		jListTags.setModel(Jamuz.getTagsModel());
-
 		versionCheck = new AppVersionCheck(new ICallBackVersionCheck() {
 			@Override
 			public void onNewVersion(AppVersion appVersion) {
@@ -109,13 +106,13 @@ public class PanelOptions extends javax.swing.JPanel {
 			}
 
 			@Override
-			public void onUnzipStart(int entryCount) {
-				progressBarVersionCheck.setup(entryCount);
+			public void onUnzipStart(int totalBytes) {
+				progressBarVersionCheck.setup(totalBytes);
 			}
 
 			@Override
-			public void onUnzipProgress(String name) {
-				progressBarVersionCheck.progress("Unzipping " + name);
+			public void onUnzipProgress(String name, int totalBytesRead) {
+				progressBarVersionCheck.progress("Unzipping " + name, totalBytesRead);
 			}
 
 			@Override
@@ -133,8 +130,12 @@ public class PanelOptions extends javax.swing.JPanel {
 			public void onDownloadProgress(AppVersion appVersion, int progress) {
 				progressBarVersionCheck.progress("Downloading " + appVersion.getAssetFile().getName(), progress);
 			}
-
 		});
+		startVersionCheck();
+	}
+
+	private void startVersionCheck() {
+		versionCheck.start(jCheckBoxVersionPreRelease.isSelected());
 	}
 
 	/**
@@ -266,6 +267,7 @@ public class PanelOptions extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jProgressBarUpdate = new jamuz.gui.swing.ProgressBar();
         jLabelVersionCheck = new javax.swing.JLabel();
+        jCheckBoxVersionPreRelease = new javax.swing.JCheckBox();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
@@ -605,6 +607,13 @@ public class PanelOptions extends javax.swing.JPanel {
             }
         });
 
+        jCheckBoxVersionPreRelease.setText("Pre-release ?");
+        jCheckBoxVersionPreRelease.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxVersionPreReleaseItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -612,14 +621,19 @@ public class PanelOptions extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelVersionCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelVersionCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxVersionPreRelease))
                     .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabelVersionCheck)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelVersionCheck)
+                    .addComponent(jCheckBoxVersionPreRelease))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -872,7 +886,7 @@ public class PanelOptions extends javax.swing.JPanel {
 										permissions.add(PosixFilePermission.OWNER_EXECUTE);
 										Files.setPosixFilePermissions(Path.of(update_script.getAbsolutePath()), permissions);
 									}
-									command = "sh " + update_script.getAbsolutePath();
+									command = "sh " + update_script.getAbsolutePath() + " &";
 								} else if (OS.isWindows()) {
 									File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
 									command = "cmd /c start " + update_script.getAbsolutePath();
@@ -894,6 +908,10 @@ public class PanelOptions extends javax.swing.JPanel {
 			}
 		}
     }//GEN-LAST:event_jLabelVersionCheckMouseClicked
+
+    private void jCheckBoxVersionPreReleaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxVersionPreReleaseItemStateChanged
+		startVersionCheck();
+    }//GEN-LAST:event_jCheckBoxVersionPreReleaseItemStateChanged
 
 	/**
 	 *
@@ -1014,6 +1032,7 @@ public class PanelOptions extends javax.swing.JPanel {
     private javax.swing.JButton jButtonTagsAdd;
     private javax.swing.JButton jButtonTagsDel;
     private javax.swing.JButton jButtonTagsEdit;
+    private javax.swing.JCheckBox jCheckBoxVersionPreRelease;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelBytes;
     private javax.swing.JLabel jLabelCleanup;
