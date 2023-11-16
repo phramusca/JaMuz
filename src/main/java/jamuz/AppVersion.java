@@ -27,7 +27,6 @@ public class AppVersion {
     private String latestVersion;
     private File assetFile;
     private int assetSize;
-    private boolean unzipped;
 
     public AppVersion(String currentVersion, String latestVersion) {
         this.currentVersion = currentVersion;
@@ -203,14 +202,32 @@ public class AppVersion {
         return "Current: " + currentVersion + ". Latest: " + latestVersion + ". ";
     }
 
-    boolean isReadyForUpdate() {
-        return assetFile.exists() && assetFile.length() == assetSize && unzipped;
+    boolean isAssetValid() {
+        return assetFile.exists() && assetFile.length() == assetSize;
     }
 
+   
+    boolean isUnzippedAssetValid() {
+        try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
+            SevenZArchiveEntry entry;
+            while ((entry = sevenZFile.getNextEntry()) != null) {
+                File entryFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update");
+                if (!entry.isDirectory()) {
+                    if (!entryFile.exists() || entryFile.length() != entry.getSize()) {
+                        return false;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+    
     void unzipAsset(ICallBackVersionCheck callBackVersionCheck) throws IOException {
         callBackVersionCheck.onUnzipCount(this);
         long totalBytes = 0;
-        try (SevenZFile sevenZFile = new SevenZFile(this.getAssetFile())) {
+        try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZFile.getNextEntry()) != null) {
                 if (!entry.isDirectory()) {
@@ -220,7 +237,7 @@ public class AppVersion {
         }
         callBackVersionCheck.onUnzipStart();
         long totalBytesRead = 0;
-        try (SevenZFile sevenZFile = new SevenZFile(this.getAssetFile())) {
+        try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZFile.getNextEntry()) != null) {
                 File outputFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update");
@@ -248,6 +265,5 @@ public class AppVersion {
                 }
             }
         }
-        unzipped = true;
     }
 }
