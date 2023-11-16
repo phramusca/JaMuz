@@ -1108,7 +1108,7 @@ public class PanelMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1228, Short.MAX_VALUE)
+            .addComponent(jSplitPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1296, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -854,59 +854,43 @@ public class PanelOptions extends javax.swing.JPanel {
 			lockUpdate = true;
 			AppVersion appVersion = this.versionCheck.getAppVersion();
 			if (appVersion.isNewVersion()) {
-				new Thread() {
-					@Override
-					public void run() {
-						try {
-							String command = null;
-							if (OS.isUnix()) {
-								File update_script = Jamuz.getFile("update_linux.sh", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
-								Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(Path.of(update_script.getAbsolutePath()));
-								if (!permissions.contains(PosixFilePermission.OWNER_EXECUTE)) {
-									permissions.add(PosixFilePermission.OWNER_EXECUTE);
-									Files.setPosixFilePermissions(Path.of(update_script.getAbsolutePath()), permissions);
-								}
-								command = "sh " + update_script.getAbsolutePath();
-							} else if (OS.isWindows()) {
-								File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
-								command = update_script.getAbsolutePath();
-							}
-							if (command != null) {
-								Process process = Runtime.getRuntime().exec(command);
-								//Log potential output from script (though there should not be any as script should log to a file)
-								new Thread("Thread.PanelOptions.jLabelVersionCheckMouseClicked") {
-									@Override
-									public void run() {
-										try {
-											BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-											String line;
-											try {
-												while ((line = reader.readLine()) != null) {
-													Jamuz.getLogger().log(Level.INFO, "{0}: {1}", new Object[]{process.info().command(), line});  //NOI18N
-												}
-											} finally {
-												reader.close();
-											}
-										} catch (IOException ex) {
-											Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
-										}
+				int n = JOptionPane.showConfirmDialog(
+						this, "Make sure that you do not have any running process running (merge, export, check, server, ...).\n\nProceed with update anyway?", //NOI18N
+						Inter.get("Label.Confirm"), //NOI18N
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
+				if (n == JOptionPane.YES_OPTION) {
+					new Thread() {
+						@Override
+						public void run() {
+							try {
+								String command = null;
+								if (OS.isUnix()) {
+									File update_script = Jamuz.getFile("update_linux.sh", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
+									Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(Path.of(update_script.getAbsolutePath()));
+									if (!permissions.contains(PosixFilePermission.OWNER_EXECUTE)) {
+										permissions.add(PosixFilePermission.OWNER_EXECUTE);
+										Files.setPosixFilePermissions(Path.of(update_script.getAbsolutePath()), permissions);
 									}
-								}.start();
-
-								int exitCode = process.waitFor();
-								if (exitCode == 0) {
-									Jamuz.getLogger().log(Level.INFO, "Exiting application after update");  //NOI18N
-									System.exit(0); // Exit the current instance
-								} else {
-									Jamuz.getLogger().log(Level.INFO, "Update to {0} has failed:{1} returned {2}", new Object[]{appVersion.getLatestVersion(), command, exitCode});  //NOI18N
+									command = "sh " + update_script.getAbsolutePath();
+								} else if (OS.isWindows()) {
+									File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
+									command = "cmd /c start " + update_script.getAbsolutePath();
 								}
+								if (command != null) {
+									Runtime.getRuntime().exec(command);
+									System.exit(0);
+								}
+							} catch (IOException ex) {
+								jLabelVersionCheck.setText("<html>Launching update to " + appVersion.getLatestVersion() + " has <b>failed</b>:"
+										+ "<BR/>" + ex.getLocalizedMessage() + " </html>");
+								lockUpdate = false;
 							}
-						} catch (InterruptedException | IOException ex) {
-							jLabelVersionCheck.setText("<html>Update to " + appVersion.getLatestVersion() + " has <b>failed</b>:"
-									+ "<BR/>" + ex.getLocalizedMessage() + " </html>");
 						}
-					}
-				}.start();
+					}.start();
+				} else {
+					lockUpdate = false;
+				}
 			}
 		}
     }//GEN-LAST:event_jLabelVersionCheckMouseClicked
