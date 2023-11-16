@@ -80,7 +80,8 @@ public class PanelRemote extends javax.swing.JPanel {
 		boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
 		jCheckBoxEnableByDefault.setSelected(enableNewClients);
 		
-		int port = Integer.parseInt(Jamuz.getOptions().get("server.port", "2013"));
+        String getPort = Jamuz.getOptions().get("server.port", "2013");
+		int port = getPort.isBlank()?2013:Integer.parseInt(Jamuz.getOptions().get("server.port", "2013"));
 		jSpinnerPort.setValue(port);
 		server = new Server(port, callback);
 

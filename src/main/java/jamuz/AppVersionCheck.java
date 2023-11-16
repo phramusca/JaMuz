@@ -17,8 +17,6 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
-import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 
 /**
  *
@@ -38,7 +36,7 @@ public class AppVersionCheck {
 	public AppVersionCheck(ICallBackVersionCheck callBackVersionCheck) {
 		this.callBackVersionCheck = callBackVersionCheck;
 		String version = Main.class.getPackage().getImplementationVersion();
-		String currentVersion = "v" + version;
+		String currentVersion = "v0.7.0";// + version; //FIXME ! SET IT BACK !!!!
 		appVersion = new AppVersion(currentVersion, "Unknown");
 		callBackVersionCheck.onCheck(appVersion, "");
 	}
@@ -105,9 +103,7 @@ public class AppVersionCheck {
 					File assetFile = Jamuz.getFile(assetName, "data", "cache", "system", "update");
 					int size = assets.get(0).getAsJsonObject().get("size").getAsInt();
 					appVersion.setAsset(assetFile, size);
-					if (appVersion.isAssetValid()) {
-						//Unzip again as unzip may have failed on previous version check
-						unzipAsset(appVersion);
+					if (appVersion.isReadyForUpdate()) {
 						callBackVersionCheck.onNewVersion(appVersion);
 					} else {
 						callBackVersionCheck.onDownloadRequest(appVersion);
@@ -130,7 +126,7 @@ public class AppVersionCheck {
 								int progress = (int) ((bytesRead * 100) / fileSize);
 								callBackVersionCheck.onDownloadProgress(appVersion, progress);
 							}
-							unzipAsset(appVersion);
+                            appVersion.unzipAsset(callBackVersionCheck);
 							callBackVersionCheck.onNewVersion(appVersion);
 						} else {
 							appVersion.getAssetFile().delete();
@@ -146,53 +142,6 @@ public class AppVersionCheck {
 		} catch (IOException ex) {
 			appVersion.getAssetFile().delete();
 			callBackVersionCheck.onCheckResult(appVersion, ex.getLocalizedMessage());
-		}
-	}
-
-	private void unzipAsset(AppVersion appVersion) throws IOException {
-		callBackVersionCheck.onUnzipCount(appVersion);
-		long totalBytes = 0;
-
-		try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
-			SevenZArchiveEntry entry;
-			while ((entry = sevenZFile.getNextEntry()) != null) {
-				if (!entry.isDirectory()) {
-					totalBytes += entry.getSize();
-				}
-			}
-		}
-
-		callBackVersionCheck.onUnzipStart();
-
-		long totalBytesRead = 0;
-		try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
-			SevenZArchiveEntry entry;
-			while ((entry = sevenZFile.getNextEntry()) != null) {
-				File outputFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update");
-				if (entry.isDirectory()) {
-					if (!outputFile.exists()) {
-						outputFile.mkdirs();
-					}
-				} else {
-					// Create parent directories if they don't exist
-					File parentDir = outputFile.getParentFile();
-					if (!parentDir.exists()) {
-						parentDir.mkdirs();
-					}
-
-					// Create an output stream for the entry
-					try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-						byte[] buffer = new byte[8192];
-						int bytesRead;
-						while ((bytesRead = sevenZFile.read(buffer)) != -1) {
-							outputStream.write(buffer, 0, bytesRead);
-							totalBytesRead += bytesRead;
-							int progress = (int) ((totalBytesRead * 100) / totalBytes);
-							callBackVersionCheck.onUnzipProgress(appVersion, entry.getName(), progress);
-						}
-					}
-				}
-			}
 		}
 	}
 
