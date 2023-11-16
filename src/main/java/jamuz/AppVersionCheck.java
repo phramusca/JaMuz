@@ -6,7 +6,6 @@ package jamuz;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -137,20 +136,20 @@ public class AppVersionCheck {
 
 	private void unzipAsset(AppVersion appVersion) throws IOException {
 		callBackVersionCheck.onUnzipCount(appVersion);
-		int entryCount = 0;
+		long totalBytes = 0;
 
 		try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
 			SevenZArchiveEntry entry;
 			while ((entry = sevenZFile.getNextEntry()) != null) {
 				if (!entry.isDirectory()) {
-					entryCount += entry.getSize();
+					totalBytes += entry.getSize();
 				}
 			}
 		}
 
-		callBackVersionCheck.onUnzipStart(entryCount);
+		callBackVersionCheck.onUnzipStart();
 
-		int totalBytesRead = 0;
+		long totalBytesRead = 0;
 		try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
 			SevenZArchiveEntry entry;
 			while ((entry = sevenZFile.getNextEntry()) != null) {
@@ -173,7 +172,8 @@ public class AppVersionCheck {
 						while ((bytesRead = sevenZFile.read(buffer)) != -1) {
 							outputStream.write(buffer, 0, bytesRead);
 							totalBytesRead += bytesRead;
-							callBackVersionCheck.onUnzipProgress(entry.getName(), totalBytesRead);
+							int progress = (int) ((totalBytesRead * 100) / totalBytes);
+							callBackVersionCheck.onUnzipProgress(entry.getName(), progress);
 						}
 					}
 				}

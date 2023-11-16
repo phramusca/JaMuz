@@ -106,13 +106,13 @@ public class PanelOptions extends javax.swing.JPanel {
 			}
 
 			@Override
-			public void onUnzipStart(int totalBytes) {
-				progressBarVersionCheck.setup(totalBytes);
+			public void onUnzipStart() {
+				progressBarVersionCheck.setupAsPercentage();
 			}
 
 			@Override
-			public void onUnzipProgress(String name, int totalBytesRead) {
-				progressBarVersionCheck.progress("Unzipping " + name, totalBytesRead);
+			public void onUnzipProgress(String name, int percentComplete) {
+				progressBarVersionCheck.progress("Unzipping " + name, percentComplete);
 			}
 
 			@Override

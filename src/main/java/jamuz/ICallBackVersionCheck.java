@@ -17,9 +17,9 @@ public interface ICallBackVersionCheck {
 
     public void onUnzipCount(AppVersion appVersion);
 
-    public void onUnzipStart(int totalBytes);
+    public void onUnzipStart();
 
-    public void onUnzipProgress(String name, int totalBytesRead);
+    public void onUnzipProgress(String name, int percentComplete);
 
     public void onDownloadRequest(AppVersion assetFile);
 
