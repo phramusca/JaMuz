@@ -80,7 +80,7 @@ public class PanelOptions extends javax.swing.JPanel {
 		this.parent = parent;
 		fillMachineList();
 		jListGenres.setModel(Jamuz.getGenreListModel());
-		long size = Long.valueOf(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
+		long size = Long.parseLong(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
 		jSpinnerBytes.getModel().setValue(size);
 		jLabelBytes.setText("(" + Inter.get("Label.Keep") + " " + StringManager.humanReadableByteCount(size, false) + ")");
 		jListTags.setModel(Jamuz.getTagsModel());
@@ -91,6 +91,7 @@ public class PanelOptions extends javax.swing.JPanel {
 				jLabelVersionCheck.setText("<html><a href='#'>"
 						+ appVersion.toString()
 						+ "<BR/>A new version is available! Click to update.</a></html>");
+				enableVersionCheck(true);
 			}
 
 			@Override
@@ -98,6 +99,14 @@ public class PanelOptions extends javax.swing.JPanel {
 				jLabelVersionCheck.setText("<html>"
 						+ appVersion.toString()
 						+ "<BR/>" + msg + "</html>");
+			}
+			
+			@Override
+			public void onCheckResult(AppVersion appVersion, String msg) {
+				jLabelVersionCheck.setText("<html>"
+						+ appVersion.toString()
+						+ "<BR/>" + msg + "</html>");
+				enableVersionCheck(true);
 			}
 
 			@Override
@@ -111,8 +120,8 @@ public class PanelOptions extends javax.swing.JPanel {
 			}
 
 			@Override
-			public void onUnzipProgress(String name, int percentComplete) {
-				progressBarVersionCheck.progress("Unzipping " + name, percentComplete);
+			public void onUnzipProgress(AppVersion appVersion, String filename, int percentComplete) {
+				progressBarVersionCheck.progress("Unzipping " + appVersion.getAssetFile().getName() + " (" + filename + ")", percentComplete);
 			}
 
 			@Override
@@ -135,6 +144,7 @@ public class PanelOptions extends javax.swing.JPanel {
 	}
 
 	private void startVersionCheck() {
+		enableVersionCheck(false);
 		versionCheck.start(jCheckBoxVersionPreRelease.isSelected());
 	}
 
@@ -268,6 +278,7 @@ public class PanelOptions extends javax.swing.JPanel {
         jProgressBarUpdate = new jamuz.gui.swing.ProgressBar();
         jLabelVersionCheck = new javax.swing.JLabel();
         jCheckBoxVersionPreRelease = new javax.swing.JCheckBox();
+        jButtonVersionCheck = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
@@ -608,9 +619,11 @@ public class PanelOptions extends javax.swing.JPanel {
         });
 
         jCheckBoxVersionPreRelease.setText("Pre-release ?");
-        jCheckBoxVersionPreRelease.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxVersionPreReleaseItemStateChanged(evt);
+
+        jButtonVersionCheck.setText("Check");
+        jButtonVersionCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVersionCheckActionPerformed(evt);
             }
         });
 
@@ -622,7 +635,9 @@ public class PanelOptions extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabelVersionCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                        .addComponent(jLabelVersionCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonVersionCheck)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBoxVersionPreRelease))
                     .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE))
@@ -633,7 +648,8 @@ public class PanelOptions extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelVersionCheck)
-                    .addComponent(jCheckBoxVersionPreRelease))
+                    .addComponent(jCheckBoxVersionPreRelease)
+                    .addComponent(jButtonVersionCheck))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -909,9 +925,14 @@ public class PanelOptions extends javax.swing.JPanel {
 		}
     }//GEN-LAST:event_jLabelVersionCheckMouseClicked
 
-    private void jCheckBoxVersionPreReleaseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxVersionPreReleaseItemStateChanged
+	private void enableVersionCheck(boolean enable) {
+		jCheckBoxVersionPreRelease.setEnabled(enable);
+		jButtonVersionCheck.setEnabled(enable);
+	}
+	
+    private void jButtonVersionCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVersionCheckActionPerformed
 		startVersionCheck();
-    }//GEN-LAST:event_jCheckBoxVersionPreReleaseItemStateChanged
+    }//GEN-LAST:event_jButtonVersionCheckActionPerformed
 
 	/**
 	 *
@@ -1032,6 +1053,7 @@ public class PanelOptions extends javax.swing.JPanel {
     private javax.swing.JButton jButtonTagsAdd;
     private javax.swing.JButton jButtonTagsDel;
     private javax.swing.JButton jButtonTagsEdit;
+    private javax.swing.JButton jButtonVersionCheck;
     private javax.swing.JCheckBox jCheckBoxVersionPreRelease;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelBytes;

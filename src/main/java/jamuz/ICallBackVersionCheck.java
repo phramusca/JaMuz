@@ -14,12 +14,14 @@ public interface ICallBackVersionCheck {
 	public void onNewVersion(AppVersion appVersion);
 
     public void onCheck(AppVersion appVersion, String msg);
+	
+	public void onCheckResult(AppVersion appVersion, String msg);
 
     public void onUnzipCount(AppVersion appVersion);
 
     public void onUnzipStart();
 
-    public void onUnzipProgress(String name, int percentComplete);
+    public void onUnzipProgress(AppVersion appVersion, String filename, int percentComplete);
 
     public void onDownloadRequest(AppVersion assetFile);
 

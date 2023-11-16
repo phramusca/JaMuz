@@ -29,6 +29,7 @@ public class AppVersionCheck {
 	private final ICallBackVersionCheck callBackVersionCheck;
 	private final AppVersion appVersion;
 	private boolean includePreRelease = false;
+	private ScheduledExecutorService scheduler;
 
 	/**
 	 *
@@ -37,22 +38,36 @@ public class AppVersionCheck {
 	public AppVersionCheck(ICallBackVersionCheck callBackVersionCheck) {
 		this.callBackVersionCheck = callBackVersionCheck;
 		String version = Main.class.getPackage().getImplementationVersion();
-		String currentVersion = "v0.7.0"; //"v" + version; //FIXME ! Remove
+		String currentVersion = "v" + version;
 		appVersion = new AppVersion(currentVersion, "Unknown");
 		callBackVersionCheck.onCheck(appVersion, "");
 	}
 
 	public void start(boolean includePreRelease) {
-		callBackVersionCheck.onCheck(appVersion, "Checking version ...");
-		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-		long initialDelay = 0; // Delay before the first run (0 for immediate execution)
-		long period = 24 * 60 * 60; // 24 hours in seconds
-		scheduler.scheduleAtFixedRate(this::checkNewVersion, initialDelay, period, TimeUnit.SECONDS);
 		this.includePreRelease = includePreRelease;
+		new Thread() {
+			@Override
+			public void run() {
+				if (scheduler != null && !scheduler.isShutdown()) {
+					try {
+						scheduler.shutdown();
+						scheduler.awaitTermination(30, TimeUnit.MINUTES);
+					} catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+				}
+				callBackVersionCheck.onCheck(appVersion, "Initiating ...");
+				scheduler = Executors.newSingleThreadScheduledExecutor();
+				long initialDelay = 0; // Delay before the first run (0 for immediate execution)
+				long period = 24 * 60 * 60; // 24 hours in seconds
+				scheduler.scheduleAtFixedRate(() -> {checkNewVersion();}, initialDelay, period, TimeUnit.SECONDS);
+			}
+		}.start();
 	}
 
 	private void checkNewVersion() {
 		try {
+			callBackVersionCheck.onCheck(appVersion, "Checking for new version ...");
 			OkHttpClient client = new OkHttpClient();
 			JsonArray assets = new JsonArray(0);
 			if (includePreRelease) {
@@ -84,6 +99,7 @@ public class AppVersionCheck {
 
 			if (appVersion.isNewVersion()) {
 				if (!assets.isJsonNull() && assets.size() > 0) {
+					callBackVersionCheck.onCheck(appVersion, "Getting new version ...");
 					String downloadURL = assets.get(0).getAsJsonObject().get("browser_download_url").getAsString();
 					String assetName = assets.get(0).getAsJsonObject().get("name").getAsString();
 					File assetFile = Jamuz.getFile(assetName, "data", "cache", "system", "update");
@@ -114,23 +130,22 @@ public class AppVersionCheck {
 								int progress = (int) ((bytesRead * 100) / fileSize);
 								callBackVersionCheck.onDownloadProgress(appVersion, progress);
 							}
-
 							unzipAsset(appVersion);
 							callBackVersionCheck.onNewVersion(appVersion);
 						} else {
 							appVersion.getAssetFile().delete();
-							callBackVersionCheck.onCheck(appVersion, "Error: " + downloadResponse.message());
+							callBackVersionCheck.onCheckResult(appVersion, "Error: " + downloadResponse.message());
 						}
 					}
 				} else {
-					callBackVersionCheck.onCheck(appVersion, "No asset found in release!");
+					callBackVersionCheck.onCheckResult(appVersion, "No asset found in release!");
 				}
 			} else {
-				callBackVersionCheck.onCheck(appVersion, "You are running the latest version.");
+				callBackVersionCheck.onCheckResult(appVersion, "You are running the latest version.");
 			}
 		} catch (IOException ex) {
 			appVersion.getAssetFile().delete();
-			callBackVersionCheck.onCheck(appVersion, ex.getLocalizedMessage());
+			callBackVersionCheck.onCheckResult(appVersion, ex.getLocalizedMessage());
 		}
 	}
 
@@ -173,7 +188,7 @@ public class AppVersionCheck {
 							outputStream.write(buffer, 0, bytesRead);
 							totalBytesRead += bytesRead;
 							int progress = (int) ((totalBytesRead * 100) / totalBytes);
-							callBackVersionCheck.onUnzipProgress(entry.getName(), progress);
+							callBackVersionCheck.onUnzipProgress(appVersion, entry.getName(), progress);
 						}
 					}
 				}

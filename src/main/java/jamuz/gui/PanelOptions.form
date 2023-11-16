@@ -695,7 +695,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabelVersionCheck" pref="384" max="32767" attributes="0"/>
+                              <Component id="jLabelVersionCheck" pref="306" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButtonVersionCheck" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jCheckBoxVersionPreRelease" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -711,6 +713,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabelVersionCheck" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jCheckBoxVersionPreRelease" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonVersionCheck" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jProgressBarUpdate" min="-2" max="-2" attributes="0"/>
@@ -741,8 +744,13 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Pre-release ?"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButtonVersionCheck">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Check"/>
+              </Properties>
               <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jCheckBoxVersionPreReleaseItemStateChanged"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonVersionCheckActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
