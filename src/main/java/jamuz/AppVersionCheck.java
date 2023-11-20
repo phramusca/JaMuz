@@ -36,7 +36,7 @@ public class AppVersionCheck {
     public AppVersionCheck(ICallBackVersionCheck callBackVersionCheck) {
         this.callBackVersionCheck = callBackVersionCheck;
         String version = Main.class.getPackage().getImplementationVersion();
-        String currentVersion = "v0.7.0";// + version; //FIXME ! SET IT BACK !!!!
+        String currentVersion = "v" + version;
         appVersion = new AppVersion(currentVersion, "Unknown");
         callBackVersionCheck.onCheck(appVersion, "");
     }

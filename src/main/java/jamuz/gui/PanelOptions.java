@@ -107,6 +107,10 @@ public class PanelOptions extends javax.swing.JPanel {
 						+ appVersion.toString()
 						+ "<BR/>" + msg + "</html>");
 				enableVersionCheck(true);
+				if(!appVersion.isNewVersion()) {
+					File updateCacheFolder = Jamuz.getFile("", "data", "cache", "system", "update");
+					FileUtils.deleteQuietly(updateCacheFolder);
+				}
 			}
 
 			@Override
@@ -896,7 +900,7 @@ public class PanelOptions extends javax.swing.JPanel {
 							try {
 								String command = null;
 								if (OS.isUnix()) {
-									File update_script = Jamuz.getFile("update_linux.sh", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
+									File update_script = Jamuz.getFile("update_linux.sh", "data", "cache", "system", "update", appVersion.getLatestVersion(), "JaMuz", "data", "system", "update");
 									Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(Path.of(update_script.getAbsolutePath()));
 									if (!permissions.contains(PosixFilePermission.OWNER_EXECUTE)) {
 										permissions.add(PosixFilePermission.OWNER_EXECUTE);
@@ -904,7 +908,7 @@ public class PanelOptions extends javax.swing.JPanel {
 									}
                                     command = "x-terminal-emulator -e sh " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion();
 								} else if (OS.isWindows()) {
-									File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", "JaMuz", "data", "system", "update");
+									File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", appVersion.getLatestVersion(), "JaMuz", "data", "system", "update");
                                     command = "cmd /c start " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion();
 								}
 								if (command != null) {
