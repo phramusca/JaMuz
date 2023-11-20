@@ -18,8 +18,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-//FIXME ! unzip to a "vx.y.z" folder
-//FIXME ! Pass the fromVersion to update scripts
 /**
  *
  * @author raph
@@ -104,7 +102,7 @@ public class AppVersionCheck {
                     callBackVersionCheck.onCheck(appVersion, "Getting new version ...");
                     String downloadURL = assets.get(0).getAsJsonObject().get("browser_download_url").getAsString();
                     String assetName = assets.get(0).getAsJsonObject().get("name").getAsString();
-                    File assetFile = Jamuz.getFile(assetName, "data", "cache", "system", "update");
+                    File assetFile = Jamuz.getFile(assetName, "data", "cache", "system", "update", appVersion.getLatestVersion());
                     int size = assets.get(0).getAsJsonObject().get("size").getAsInt();
                     appVersion.setAsset(assetFile, size);
                     if (appVersion.isAssetValid()) {

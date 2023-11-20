@@ -36,8 +36,8 @@ public class AppVersion {
     //FIXME !! Test with a real update on a running jar
     public void update(ICallBackVersionUpdate callBackVersionUpdate) throws IOException {
         String assetFolderName = "JaMuz";
-        File source = Jamuz.getFile("", "data", "cache", "system", "update", assetFolderName);
-        File folder = Jamuz.getFile("", "data", "cache", "system", "update", assetFolderName, "data", "system", "update");
+        File source = Jamuz.getFile("", "data", "cache", "system", "update", latestVersion, assetFolderName);
+        File folder = Jamuz.getFile("", "data", "cache", "system", "update", latestVersion, assetFolderName, "data", "system", "update");
         final File[] filteredFiles = filterAndSortUpdateFiles(folder);
         int numberOfChanges = 0;
 
@@ -211,7 +211,7 @@ public class AppVersion {
         try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZFile.getNextEntry()) != null) {
-                File entryFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update");
+                File entryFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update", latestVersion);
                 if (!entry.isDirectory()) {
                     if (!entryFile.exists() || entryFile.length() != entry.getSize()) {
                         return false;
@@ -240,7 +240,7 @@ public class AppVersion {
         try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZFile.getNextEntry()) != null) {
-                File outputFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update");
+                File outputFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update", latestVersion);
                 if (entry.isDirectory()) {
                     if (!outputFile.exists()) {
                         outputFile.mkdirs();
