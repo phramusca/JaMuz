@@ -909,7 +909,7 @@ public class PanelOptions extends javax.swing.JPanel {
                                     command = "x-terminal-emulator -e sh " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion();
 								} else if (OS.isWindows()) {
 									File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", appVersion.getLatestVersion(), "JaMuz", "data", "system", "update");
-                                    command = "cmd /c start " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion();
+                                    command = "cmd /c start " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion() + " " + appVersion.getLatestVersion();
 								}
 								if (command != null) {
 									Runtime.getRuntime().exec(command);
