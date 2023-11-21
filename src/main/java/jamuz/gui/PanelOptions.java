@@ -21,23 +21,27 @@ import jamuz.FileInfoInt;
 import jamuz.ICallBackVersionCheck;
 import jamuz.Jamuz;
 import jamuz.AppVersionCheck;
-import jamuz.ICallBackVersionUpdate;
 import jamuz.gui.swing.ListElement;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.process.check.FolderInfo;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
+import jamuz.utils.OS;
 import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -50,175 +54,192 @@ import org.apache.commons.io.FileUtils;
  */
 public class PanelOptions extends javax.swing.JPanel {
 
-    /**
-     *
-     */
-    protected static ProgressBar progressBarCheckedFlag;
-    private Frame parent;
-    private final ProgressBar progressBarVersionCheck;
-    private AppVersionCheck versionCheck;
+	/**
+	 *
+	 */
+	protected static ProgressBar progressBarCheckedFlag;
+	private Frame parent;
+	private final ProgressBar progressBarVersionCheck;
+	private AppVersionCheck versionCheck;
 
-    /**
-     * Creates new form PanelOptions
-     */
-    public PanelOptions() {
-        initComponents();
-        progressBarVersionCheck = (ProgressBar) jProgressBarUpdate;
-        progressBarCheckedFlag = (ProgressBar) jProgressBarResetChecked;
-    }
+	/**
+	 * Creates new form PanelOptions
+	 */
+	public PanelOptions() {
+		initComponents();
+		progressBarVersionCheck = (ProgressBar) jProgressBarUpdate;
+		progressBarCheckedFlag = (ProgressBar) jProgressBarResetChecked;
+	}
 
-    /**
-     * extended init
-     *
-     * @param parent
-     */
-    public void initExtended(Frame parent) {
-        this.parent = parent;
-        fillMachineList();
-        jListGenres.setModel(Jamuz.getGenreListModel());
-        long size = Long.valueOf(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
-        jSpinnerBytes.getModel().setValue(size);
-        jLabelBytes.setText("(" + Inter.get("Label.Keep") + " " + StringManager.humanReadableByteCount(size, false) + ")");
-        jListTags.setModel(Jamuz.getTagsModel());
+	/**
+	 * extended init
+	 *
+	 * @param parent
+	 */
+	public void initExtended(Frame parent) {
+		this.parent = parent;
+		fillMachineList();
+		jListGenres.setModel(Jamuz.getGenreListModel());
+		long size = Long.parseLong(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
+		jSpinnerBytes.getModel().setValue(size);
+		jLabelBytes.setText("(" + Inter.get("Label.Keep") + " " + StringManager.humanReadableByteCount(size, false) + ")");
+		jListTags.setModel(Jamuz.getTagsModel());
+		versionCheck = new AppVersionCheck(new ICallBackVersionCheck() {
+			@Override
+			public void onNewVersion(AppVersion appVersion) {
+				progressBarVersionCheck.reset();
+				jLabelVersionCheck.setText("<html><a href='#'>"
+						+ appVersion.toString()
+						+ "<BR/>A new version is available! Click to update.</a></html>");
+				enableVersionCheck(true);
+			}
 
-        versionCheck = new AppVersionCheck(new ICallBackVersionCheck() {
-            @Override
-            public void onNewVersion(AppVersion appVersion) {
-                progressBarVersionCheck.reset();
-                jLabelVersionCheck.setText("<html><a href='#'>"
-                        + appVersion.toString()
-                        + "<BR/>A new version is available! Click to update.</a></html>");
-            }
+			@Override
+			public void onCheck(AppVersion appVersion, String msg) {
+				jLabelVersionCheck.setText("<html>"
+						+ appVersion.toString()
+						+ "<BR/>" + msg + "</html>");
+			}
+			
+			@Override
+			public void onCheckResult(AppVersion appVersion, String msg) {
+				jLabelVersionCheck.setText("<html>"
+						+ appVersion.toString()
+						+ "<BR/>" + msg + "</html>");
+				enableVersionCheck(true);
+				if(!appVersion.isNewVersion()) {
+					File updateCacheFolder = Jamuz.getFile("", "data", "cache", "system", "update");
+					FileUtils.deleteQuietly(updateCacheFolder);
+				}
+			}
 
-            @Override
-            public void onCheck(AppVersion appVersion, String msg) {
-                jLabelVersionCheck.setText("<html>"
-                        + appVersion.toString()
-                        + "<BR/>" + msg + "</html>");
-            }
+			@Override
+			public void onUnzipCount(AppVersion appVersion) {
+				progressBarVersionCheck.setIndeterminate("Counting files in " + appVersion.getAssetFile().getName());
+			}
 
-            @Override
-            public void onUnzipCount(AppVersion appVersion) {
-                progressBarVersionCheck.setIndeterminate("Counting files in " + appVersion.getAssetFile().getName());
-            }
+			@Override
+			public void onUnzipStart() {
+				progressBarVersionCheck.setupAsPercentage();
+			}
 
-            @Override
-            public void onUnzipStart(int entryCount) {
-                progressBarVersionCheck.setup(entryCount);
-            }
+			@Override
+			public void onUnzipProgress(AppVersion appVersion, String filename, int percentComplete) {
+				progressBarVersionCheck.progress("Unzipping " + appVersion.getAssetFile().getName() + " (" + filename + ")", percentComplete);
+			}
 
-            @Override
-            public void onUnzipProgress(String name) {
-                progressBarVersionCheck.progress("Unzipping " + name);
-            }
+			@Override
+			public void onDownloadRequest(AppVersion appVersion) {
+				jLabelVersionCheck.setText(appVersion.toString());
+				progressBarVersionCheck.setIndeterminate("Downloading " + appVersion.getAssetFile().getName());
+			}
 
-            @Override
-            public void onDownloadRequest(AppVersion appVersion) {
-                jLabelVersionCheck.setText(appVersion.toString());
-                progressBarVersionCheck.setIndeterminate("Downloading " + appVersion.getAssetFile().getName());
-            }
+			@Override
+			public void onDownloadStart() {
+				progressBarVersionCheck.setupAsPercentage();
+			}
 
-            @Override
-            public void onDownloadStart() {
-                progressBarVersionCheck.setupAsPercentage();
-            }
+			@Override
+			public void onDownloadProgress(AppVersion appVersion, int progress) {
+				progressBarVersionCheck.progress("Downloading " + appVersion.getAssetFile().getName(), progress);
+			}
+		});
+		startVersionCheck();
+	}
 
-            @Override
-            public void onDownloadProgress(AppVersion appVersion, int progress) {
-                progressBarVersionCheck.progress("Downloading " + appVersion.getAssetFile().getName(), progress);
-            }
+	private void startVersionCheck() {
+		enableVersionCheck(false);
+		versionCheck.start(jCheckBoxVersionPreRelease.isSelected());
+	}
 
-        });
-    }
+	/**
+	 *
+	 */
+	public static void fillMachineList() {
+		fillMachineList((DefaultListModel) jListMachines.getModel());  //NOI18N
+		jListMachines.setSelectedValue(new ListElement(Jamuz.getMachine().getName(), ""), true);
+	}
 
-    /**
-     *
-     */
-    public static void fillMachineList() {
-        fillMachineList((DefaultListModel) jListMachines.getModel());  //NOI18N
-        jListMachines.setSelectedValue(new ListElement(Jamuz.getMachine().getName(), ""), true);
-    }
+	private static void fillMachineList(DefaultListModel listModel) {
+		listModel.clear();
+		Jamuz.getDb().getMachineListModel(listModel);
+	}
 
-    private static void fillMachineList(DefaultListModel listModel) {
-        listModel.clear();
-        Jamuz.getDb().getMachineListModel(listModel);
-    }
+	private void resetCheckedFlag(FolderInfo.CheckedFlag checkedFlag) {
 
-    private void resetCheckedFlag(FolderInfo.CheckedFlag checkedFlag) {
+		//TODO: Update message to display checkedFlag
+		int n = JOptionPane.showConfirmDialog(null,
+				Inter.get("Question.Scan.ResetCheckFlag"), //NOI18N
+				Inter.get("Question.Scan.ResetCheckFlag.Title"), //NOI18N
+				JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+		if (n == JOptionPane.YES_OPTION) {
+			enableResetCheckedFlagButtons(false);
+			progressBarCheckedFlag.setIndeterminate(Inter.get("Msg.Check.Scan.ResetCheckedFlag")); //NOI18N
+			Jamuz.getDb().setCheckedFlagReset(checkedFlag);
+			progressBarCheckedFlag.reset();
+			enableResetCheckedFlagButtons(true);
+		}
+	}
 
-        //TODO: Update message to display checkedFlag
-        int n = JOptionPane.showConfirmDialog(null,
-                Inter.get("Question.Scan.ResetCheckFlag"), //NOI18N
-                Inter.get("Question.Scan.ResetCheckFlag.Title"), //NOI18N
-                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if (n == JOptionPane.YES_OPTION) {
-            enableResetCheckedFlagButtons(false);
-            progressBarCheckedFlag.setIndeterminate(Inter.get("Msg.Check.Scan.ResetCheckedFlag")); //NOI18N
-            Jamuz.getDb().setCheckedFlagReset(checkedFlag);
-            progressBarCheckedFlag.reset();
-            enableResetCheckedFlagButtons(true);
-        }
-    }
+	private void enableResetCheckedFlagButtons(boolean enable) {
+		jButtonResetCheckedFlagKO.setEnabled(enable);
+		jButtonResetCheckedFlagOK.setEnabled(enable);
+		jButtonResetCheckedFlagWarning.setEnabled(enable);
+	}
 
-    private void enableResetCheckedFlagButtons(boolean enable) {
-        jButtonResetCheckedFlagKO.setEnabled(enable);
-        jButtonResetCheckedFlagOK.setEnabled(enable);
-        jButtonResetCheckedFlagWarning.setEnabled(enable);
-    }
+	/**
+	 *
+	 */
+	public class SaveTags extends ProcessAbstract {
 
-    /**
-     *
-     */
-    public class SaveTags extends ProcessAbstract {
+		/**
+		 *
+		 */
+		public SaveTags() {
+			super("Thread.PanelOptions.SaveTags");
+		}
 
-        /**
-         *
-         */
-        public SaveTags() {
-            super("Thread.PanelOptions.SaveTags");
-        }
+		/**
+		 *
+		 */
+		@Override
+		public void run() {
+			try {
+				ArrayList<FileInfoInt> filesToSave = new ArrayList<>();
+				String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
+						+ " FROM file F JOIN path P ON F.idPath=P.idPath WHERE saved=0";
+				ProgressBar progressBar = (ProgressBar) jProgressBarSaveTags;
 
-        /**
-         *
-         */
-        @Override
-        public void run() {
-            try {
-                ArrayList<FileInfoInt> filesToSave = new ArrayList<>();
-                String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
-                        + " FROM file F JOIN path P ON F.idPath=P.idPath WHERE saved=0";
-                ProgressBar progressBar = (ProgressBar) jProgressBarSaveTags;
+				progressBar.setIndeterminate("Retrieving list");
+				Jamuz.getDb().getFiles(filesToSave, sql);
 
-                progressBar.setIndeterminate("Retrieving list");
-                Jamuz.getDb().getFiles(filesToSave, sql);
-
-                progressBar.setup(filesToSave.size());
-                for (Iterator<FileInfoInt> iterator = filesToSave.iterator(); iterator.hasNext();) {
-                    FileInfoInt file = iterator.next();
-                    //TODO: Maybe offer not to read tags. 
-                    //This would be speed up the process but needs a scan library first
-                    //Can also be useful (why is that?) so we can modify tags in dB and save that to tags.
-                    file.readMetadata(true);
+				progressBar.setup(filesToSave.size());
+				for (Iterator<FileInfoInt> iterator = filesToSave.iterator(); iterator.hasNext();) {
+					FileInfoInt file = iterator.next();
+					//TODO: Maybe offer not to read tags. 
+					//This would be speed up the process but needs a scan library first
+					//Can also be useful (why is that?) so we can modify tags in dB and save that to tags.
+					file.readMetadata(true);
 //					file.getCoverImage(); //NOTE: This is needed if above not done
-                    file.getLyrics();
-                    file.saveTags(true);
-                    progressBar.progress(file.getFilename());
-                    iterator.remove();
-                    checkAbort();
-                }
-                progressBar.reset();
-            } catch (InterruptedException ex) {
-                Popup.info("Aborted by user");
-            }
-        }
-    }
+					file.getLyrics();
+					file.saveTags(true);
+					progressBar.progress(file.getFilename());
+					iterator.remove();
+					checkAbort();
+				}
+				progressBar.reset();
+			} catch (InterruptedException ex) {
+				Popup.info("Aborted by user");
+			}
+		}
+	}
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
+	/**
+	 * This method is called from within the constructor to initialize the form.
+	 * WARNING: Do NOT modify this code. The content of this method is always
+	 * regenerated by the Form Editor.
+	 */
+	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -260,6 +281,8 @@ public class PanelOptions extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jProgressBarUpdate = new jamuz.gui.swing.ProgressBar();
         jLabelVersionCheck = new javax.swing.JLabel();
+        jCheckBoxVersionPreRelease = new javax.swing.JCheckBox();
+        jButtonVersionCheck = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("inter/Bundle"); // NOI18N
         jPanelOptionsMachines.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("PanelMain.jPanelOptionsMachines.border.title"))); // NOI18N
@@ -599,6 +622,15 @@ public class PanelOptions extends javax.swing.JPanel {
             }
         });
 
+        jCheckBoxVersionPreRelease.setText("Pre-release ?");
+
+        jButtonVersionCheck.setText("Check");
+        jButtonVersionCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVersionCheckActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -606,14 +638,22 @@ public class PanelOptions extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelVersionCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelVersionCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonVersionCheck)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBoxVersionPreRelease))
                     .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabelVersionCheck)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelVersionCheck)
+                    .addComponent(jCheckBoxVersionPreRelease)
+                    .addComponent(jButtonVersionCheck))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -679,312 +719,329 @@ public class PanelOptions extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonResetCheckedFlagKOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetCheckedFlagKOActionPerformed
-        resetCheckedFlag(FolderInfo.CheckedFlag.KO);
+		resetCheckedFlag(FolderInfo.CheckedFlag.KO);
     }//GEN-LAST:event_jButtonResetCheckedFlagKOActionPerformed
 
     private void jButtonMachinesEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMachinesEditActionPerformed
-        DialogOptions.main(parent, ((ListElement) jListMachines.getSelectedValue()).getValue());
+		DialogOptions.main(parent, ((ListElement) jListMachines.getSelectedValue()).getValue());
     }//GEN-LAST:event_jButtonMachinesEditActionPerformed
 
     private void jButtonMachinesDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMachinesDelActionPerformed
-        if (jListMachines.getSelectedIndex() > -1) {
-            String machineToDelete = (((ListElement) jListMachines.getSelectedValue()).getValue());
+		if (jListMachines.getSelectedIndex() > -1) {
+			String machineToDelete = (((ListElement) jListMachines.getSelectedValue()).getValue());
 //            String machineToDelete = jListMachines.getSelectedValue().toString(); 
-            if (!machineToDelete.equals(Jamuz.getMachine().getName())) {
-                int n = JOptionPane.showConfirmDialog(
-                        this, Inter.get("Question.DeleteMachineConfirm"), //NOI18N 
-                        Inter.get("Label.Confirm"), //NOI18N 
-                        JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.YES_OPTION) {
-                    Jamuz.getDb().deleteMachine(machineToDelete);
-                    fillMachineList();
-                }
-            } else {
-                Popup.warning(Inter.get("Error.CannotDeleteCurrentMachine")); //NOI18N 
-            }
-        }
+			if (!machineToDelete.equals(Jamuz.getMachine().getName())) {
+				int n = JOptionPane.showConfirmDialog(
+						this, Inter.get("Question.DeleteMachineConfirm"), //NOI18N 
+						Inter.get("Label.Confirm"), //NOI18N 
+						JOptionPane.YES_NO_OPTION);
+				if (n == JOptionPane.YES_OPTION) {
+					Jamuz.getDb().deleteMachine(machineToDelete);
+					fillMachineList();
+				}
+			} else {
+				Popup.warning(Inter.get("Error.CannotDeleteCurrentMachine")); //NOI18N 
+			}
+		}
     }//GEN-LAST:event_jButtonMachinesDelActionPerformed
 
     private void jButtonGenresAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenresAddActionPerformed
-        String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.EnterGenre"), "");  //NOI18N 
-        DefaultListModel model = (DefaultListModel) jListGenres.getModel();
-        if (model.contains(input)) {
-            Popup.warning(MessageFormat.format(Inter.get("Msg.Options.GenreExists"), input));  //NOI18N 
-        } else if (!input.isBlank()) {  //NOI18N 
-            Jamuz.getDb().insertGenre(input);
-            PanelMain.fillGenreLists();
-            jListGenres.setModel(Jamuz.getGenreListModel());
-        }
+		String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.EnterGenre"), "");  //NOI18N 
+		DefaultListModel model = (DefaultListModel) jListGenres.getModel();
+		if (model.contains(input)) {
+			Popup.warning(MessageFormat.format(Inter.get("Msg.Options.GenreExists"), input));  //NOI18N 
+		} else if (!input.isBlank()) {  //NOI18N 
+			Jamuz.getDb().insertGenre(input);
+			PanelMain.fillGenreLists();
+			jListGenres.setModel(Jamuz.getGenreListModel());
+		}
     }//GEN-LAST:event_jButtonGenresAddActionPerformed
 
     private void jButtonGenresEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenresEditActionPerformed
-        if (jListGenres.getSelectedIndex() > -1) {
-            String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.NewGenre"), jListGenres.getSelectedValue());  //NOI18N 
-            if (input != null) {
-                int n = JOptionPane.showConfirmDialog(
-                        this, MessageFormat.format(Inter.get("Msg.Options.UpdateGenre"), jListGenres.getSelectedValue(), input), //NOI18N 
-                        Inter.get("Label.Confirm"), //NOI18N 
-                        JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.YES_OPTION) {
-                    Jamuz.getDb().updateGenre((String) jListGenres.getSelectedValue(), input);
-                    PanelMain.fillGenreLists();
-                    jListGenres.setModel(Jamuz.getGenreListModel());
-                }
-            }
-        }
+		if (jListGenres.getSelectedIndex() > -1) {
+			String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.NewGenre"), jListGenres.getSelectedValue());  //NOI18N 
+			if (input != null) {
+				int n = JOptionPane.showConfirmDialog(
+						this, MessageFormat.format(Inter.get("Msg.Options.UpdateGenre"), jListGenres.getSelectedValue(), input), //NOI18N 
+						Inter.get("Label.Confirm"), //NOI18N 
+						JOptionPane.YES_NO_OPTION);
+				if (n == JOptionPane.YES_OPTION) {
+					Jamuz.getDb().updateGenre((String) jListGenres.getSelectedValue(), input);
+					PanelMain.fillGenreLists();
+					jListGenres.setModel(Jamuz.getGenreListModel());
+				}
+			}
+		}
     }//GEN-LAST:event_jButtonGenresEditActionPerformed
 
     private void jButtonGenresDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenresDelActionPerformed
-        if (jListGenres.getSelectedIndex() > -1) {
-            int n = JOptionPane.showConfirmDialog(
-                    this, MessageFormat.format(
-                            Inter.get("Msg.Options.DeleteGenre"),
-                            jListGenres.getSelectedValue()), //NOI18N 
-                    Inter.get("Label.Confirm"), //NOI18N 
-                    JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
-                Jamuz.getDb().deleteGenre((String) jListGenres.getSelectedValue());
-                PanelMain.fillGenreLists();
-                jListGenres.setModel(Jamuz.getGenreListModel());
-            }
-        }
+		if (jListGenres.getSelectedIndex() > -1) {
+			int n = JOptionPane.showConfirmDialog(
+					this, MessageFormat.format(
+							Inter.get("Msg.Options.DeleteGenre"),
+							jListGenres.getSelectedValue()), //NOI18N 
+					Inter.get("Label.Confirm"), //NOI18N 
+					JOptionPane.YES_NO_OPTION);
+			if (n == JOptionPane.YES_OPTION) {
+				Jamuz.getDb().deleteGenre((String) jListGenres.getSelectedValue());
+				PanelMain.fillGenreLists();
+				jListGenres.setModel(Jamuz.getGenreListModel());
+			}
+		}
     }//GEN-LAST:event_jButtonGenresDelActionPerformed
 
     private void jButtonRetagAllFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRetagAllFilesActionPerformed
-        //To re-save all files and remove all remaining unwanted tags, 
-        //	especially ID3v1 and POPM (popularity meter) that Guayadeque can use and  
-        //messes up with the syncing if not used with extra care 
-        //TODO: Add a reset "saved" field in file table, as done for CheckedFlag 
+		//To re-save all files and remove all remaining unwanted tags, 
+		//	especially ID3v1 and POPM (popularity meter) that Guayadeque can use and  
+		//messes up with the syncing if not used with extra care 
+		//TODO: Add a reset "saved" field in file table, as done for CheckedFlag 
 
-        int n = JOptionPane.showConfirmDialog(
-                this, "Save all files ?", //NOI18N 
-                Inter.get("Label.Confirm"), //NOI18N 
-                JOptionPane.YES_NO_OPTION);
-        if (n == JOptionPane.YES_OPTION) {
-            SaveTags saveTags = new SaveTags();
-            saveTags.start();
-        }
+		int n = JOptionPane.showConfirmDialog(
+				this, "Save all files ?", //NOI18N 
+				Inter.get("Label.Confirm"), //NOI18N 
+				JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			SaveTags saveTags = new SaveTags();
+			saveTags.start();
+		}
     }//GEN-LAST:event_jButtonRetagAllFilesActionPerformed
 
     private void jButtonResetCheckedFlagWarningActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetCheckedFlagWarningActionPerformed
-        resetCheckedFlag(FolderInfo.CheckedFlag.OK_WARNING);
+		resetCheckedFlag(FolderInfo.CheckedFlag.OK_WARNING);
     }//GEN-LAST:event_jButtonResetCheckedFlagWarningActionPerformed
 
     private void jButtonResetCheckedFlagOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetCheckedFlagOKActionPerformed
-        resetCheckedFlag(FolderInfo.CheckedFlag.OK);
+		resetCheckedFlag(FolderInfo.CheckedFlag.OK);
     }//GEN-LAST:event_jButtonResetCheckedFlagOKActionPerformed
 
     private void jButtonTagsEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsEditActionPerformed
-        if (jListTags.getSelectedIndex() > -1) {
-            String input = JOptionPane.showInputDialog(null,
-                    Inter.get("Msg.Options.Tag.New"),
-                    jListTags.getSelectedValue());  //NOI18N 
-            if (input != null) {
-                int n = JOptionPane.showConfirmDialog(
-                        this, MessageFormat.format(
-                                Inter.get("Msg.Options.Tag.Update"),
-                                jListTags.getSelectedValue(), input), //NOI18N 
-                        Inter.get("Label.Confirm"), //NOI18N 
-                        JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.YES_OPTION) {
-                    Jamuz.getDb().updateTag((String) jListTags.getSelectedValue(), input);
-                    refreshListTagsModel();
-                }
-            }
-        }
+		if (jListTags.getSelectedIndex() > -1) {
+			String input = JOptionPane.showInputDialog(null,
+					Inter.get("Msg.Options.Tag.New"),
+					jListTags.getSelectedValue());  //NOI18N 
+			if (input != null) {
+				int n = JOptionPane.showConfirmDialog(
+						this, MessageFormat.format(
+								Inter.get("Msg.Options.Tag.Update"),
+								jListTags.getSelectedValue(), input), //NOI18N 
+						Inter.get("Label.Confirm"), //NOI18N 
+						JOptionPane.YES_NO_OPTION);
+				if (n == JOptionPane.YES_OPTION) {
+					Jamuz.getDb().updateTag((String) jListTags.getSelectedValue(), input);
+					refreshListTagsModel();
+				}
+			}
+		}
     }//GEN-LAST:event_jButtonTagsEditActionPerformed
 
-    /**
-     *
-     */
-    public static void refreshListTagsModel() {
-        Jamuz.readTags();
-        jListTags.setModel(Jamuz.getTagsModel());
-    }
+	/**
+	 *
+	 */
+	public static void refreshListTagsModel() {
+		Jamuz.readTags();
+		jListTags.setModel(Jamuz.getTagsModel());
+	}
 
     private void jButtonTagsDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsDelActionPerformed
-        if (jListTags.getSelectedIndex() > -1) {
-            int n = JOptionPane.showConfirmDialog(
-                    this, MessageFormat.format(
-                            Inter.get("Msg.Options.Tag.Delete"),
-                            jListTags.getSelectedValue()), //NOI18N 
-                    Inter.get("Label.Confirm"), //NOI18N 
-                    JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
-                if (Jamuz.getDb().deleteTag((String) jListTags.getSelectedValue())) {
-                    Popup.warning("Problem deleting tag. It is probably applied to at least a track, so cannot delete it.");  //NOI18N
-                    refreshListTagsModel();
-                }
-            }
-        }
+		if (jListTags.getSelectedIndex() > -1) {
+			int n = JOptionPane.showConfirmDialog(
+					this, MessageFormat.format(
+							Inter.get("Msg.Options.Tag.Delete"),
+							jListTags.getSelectedValue()), //NOI18N 
+					Inter.get("Label.Confirm"), //NOI18N 
+					JOptionPane.YES_NO_OPTION);
+			if (n == JOptionPane.YES_OPTION) {
+				if (Jamuz.getDb().deleteTag((String) jListTags.getSelectedValue())) {
+					Popup.warning("Problem deleting tag. It is probably applied to at least a track, so cannot delete it.");  //NOI18N
+					refreshListTagsModel();
+				}
+			}
+		}
     }//GEN-LAST:event_jButtonTagsDelActionPerformed
 
     private void jButtonTagsAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsAddActionPerformed
-        String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.Tag.Enter"), "");  //NOI18N 
-        DefaultListModel model = (DefaultListModel) jListTags.getModel();
-        if (model.contains(input)) {
-            Popup.warning(MessageFormat.format(Inter.get("Msg.Options.Tag.Exists"), input));  //NOI18N 
-        } else if (!input.isBlank()) {  //NOI18N 
-            Jamuz.getDb().insertTag(input);
-            refreshListTagsModel();
-        }
+		String input = JOptionPane.showInputDialog(null, Inter.get("Msg.Options.Tag.Enter"), "");  //NOI18N 
+		DefaultListModel model = (DefaultListModel) jListTags.getModel();
+		if (model.contains(input)) {
+			Popup.warning(MessageFormat.format(Inter.get("Msg.Options.Tag.Exists"), input));  //NOI18N 
+		} else if (!input.isBlank()) {  //NOI18N 
+			Jamuz.getDb().insertTag(input);
+			refreshListTagsModel();
+		}
     }//GEN-LAST:event_jButtonTagsAddActionPerformed
 
     private void jButtonCleanupLogsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCleanupLogsActionPerformed
-        CleanupLog cleanupLog = new CleanupLog();
-        cleanupLog.start();
+		CleanupLog cleanupLog = new CleanupLog();
+		cleanupLog.start();
     }//GEN-LAST:event_jButtonCleanupLogsActionPerformed
 
     private void jSpinnerBytesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerBytesStateChanged
-        long size = (Long) jSpinnerBytes.getValue();
-        Jamuz.getOptions().set("log.cleanup.keep.size.bytes", String.valueOf(size));
-        jLabelBytes.setText("(" + Inter.get("Label.Keep") + " " + StringManager.humanReadableByteCount(size, false) + ")");
+		long size = (Long) jSpinnerBytes.getValue();
+		Jamuz.getOptions().set("log.cleanup.keep.size.bytes", String.valueOf(size));
+		jLabelBytes.setText("(" + Inter.get("Label.Keep") + " " + StringManager.humanReadableByteCount(size, false) + ")");
     }//GEN-LAST:event_jSpinnerBytesStateChanged
 
-    private boolean lockUpdate = false;
+	private boolean lockUpdate = false;
 
     private void jLabelVersionCheckMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelVersionCheckMouseClicked
-        if (!lockUpdate) {
-            lockUpdate = true;
-            AppVersion appVersion = this.versionCheck.getAppVersion();
-            if (appVersion.isNewVersion()) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            appVersion.update(new ICallBackVersionUpdate() {
-                                @Override
-                                public void onSetup() {
-                                    jLabelVersionCheck.setText("<html>"
-                                            + appVersion.toString()
-                                            + "<BR/>Updating to " + appVersion.getLatestVersion() + "</html>");
-                                    progressBarVersionCheck.setupAsPercentage();
-                                    progressBarVersionCheck.setIndeterminate("Preparing update to " + appVersion.getLatestVersion());
-                                }
-
-                                @Override
-                                public void onFileUpdated(int progress) {
-                                    progressBarVersionCheck.progress("", progress);
-                                }
-
-                            });
-                            progressBarVersionCheck.reset();
-                            jLabelVersionCheck.setText("<html>Update to " + appVersion.getLatestVersion() + " has completed."
-                                    + "<BR/><b>Restart application to run new version.</b></html>");
-                        } catch (IOException ex) {
-                            jLabelVersionCheck.setText("<html>Update to " + appVersion.getLatestVersion() + " has <b>failed</b>:"
-                                    + "<BR/>" + ex.getLocalizedMessage() + " </html>");
-                        }
-                    }
-                }.start();
-            }
-        }
+		if (!lockUpdate) {
+			lockUpdate = true;
+			AppVersion appVersion = this.versionCheck.getAppVersion();
+			if (appVersion.isNewVersion()) {
+				int n = JOptionPane.showConfirmDialog(
+						this, "Make sure that you do not have any process running (merge, export, check, server, ...).\n\nProceed with update?", //NOI18N
+						Inter.get("Label.Confirm"), //NOI18N
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
+				if (n == JOptionPane.YES_OPTION) {
+					new Thread() {
+						@Override
+						public void run() {
+							try {
+								String command = null;
+								if (OS.isUnix()) {
+									File update_script = Jamuz.getFile("update_linux.sh", "data", "cache", "system", "update", appVersion.getLatestVersion(), "JaMuz", "data", "system", "update");
+									Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(Path.of(update_script.getAbsolutePath()));
+									if (!permissions.contains(PosixFilePermission.OWNER_EXECUTE)) {
+										permissions.add(PosixFilePermission.OWNER_EXECUTE);
+										Files.setPosixFilePermissions(Path.of(update_script.getAbsolutePath()), permissions);
+									}
+                                    command = "x-terminal-emulator -e sh " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion();
+								} else if (OS.isWindows()) {
+									File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", appVersion.getLatestVersion(), "JaMuz", "data", "system", "update");
+                                    command = "cmd /c start " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion() + " " + appVersion.getLatestVersion();
+								}
+								if (command != null) {
+									Runtime.getRuntime().exec(command);
+									System.exit(0);
+								}
+							} catch (IOException ex) {
+								jLabelVersionCheck.setText("<html>Launching update to " + appVersion.getLatestVersion() + " has <b>failed</b>:"
+										+ "<BR/>" + ex.getLocalizedMessage() + " </html>");
+								lockUpdate = false;
+							}
+						}
+					}.start();
+				} else {
+					lockUpdate = false;
+				}
+			}
+		}
     }//GEN-LAST:event_jLabelVersionCheckMouseClicked
 
-    /**
-     *
-     */
-    public class CleanupLog extends ProcessAbstract {
+	private void enableVersionCheck(boolean enable) {
+		jCheckBoxVersionPreRelease.setEnabled(enable);
+		jButtonVersionCheck.setEnabled(enable);
+	}
+	
+    private void jButtonVersionCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVersionCheckActionPerformed
+		startVersionCheck();
+    }//GEN-LAST:event_jButtonVersionCheckActionPerformed
 
-        /**
-         *
-         */
-        public CleanupLog() {
-            super("Thread.PanelOptions.CleanupLog");
-        }
+	/**
+	 *
+	 */
+	public class CleanupLog extends ProcessAbstract {
 
-        /**
-         *
-         */
-        @Override
-        public void run() {
-            try {
-                File logPath = new File(Jamuz.getLogPath());
-                if (logPath.exists() && logPath.isDirectory()) {
-                    ProgressBar progressBar = (ProgressBar) jProgressBarCleanupLogs;
-                    File[] logFolders = logPath.listFiles();
-                    progressBar.setup(0);
-                    int index = 0;
-                    if (logFolders != null) {
-                        //List sub-folders and delete empty ones
-                        checkAbort();
-                        ArrayList<File> folders = new ArrayList<>();
-                        for (File logFolder : logFolders) {
-                            checkAbort();
-                            if (logFolder.isDirectory()) {
-                                index++;
-                                if (index > progressBar.getMaximum()) {
-                                    progressBar.setMaximum(index + 10);
-                                }
-                                progressBar.progress(logFolder.getName());
-                                if (logFolder.list().length > 0) {
-                                    folders.add(logFolder);
-                                } else {
-                                    logFolder.delete();
-                                }
-                            }
-                        }
-                        //Sort and get folders sizes
-                        checkAbort();
-                        Collections.sort(folders, Comparator.reverseOrder());
-                        ArrayList<FolderInfo> foldersInfo = new ArrayList<>();
-                        progressBar.setup(folders.size());
-                        for (File logFolder : folders) {
-                            checkAbort();
-                            foldersInfo.add(new FolderInfo(logFolder));
-                            progressBar.progress(logFolder.getName());
-                        }
-                        //Delete if over maxSize
-                        checkAbort();
-                        progressBar.setup(foldersInfo.size());
-                        long totalSize = 0;
-                        long totalDeleted = 0;
+		/**
+		 *
+		 */
+		public CleanupLog() {
+			super("Thread.PanelOptions.CleanupLog");
+		}
 
-                        long maxSize = Long.parseLong(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
-                        int nbFoldersDeleted = 0;
-                        for (FolderInfo folderInfo : foldersInfo) {
-                            checkAbort();
-                            progressBar.progress(folderInfo.folder.getName());
-                            totalSize += folderInfo.size;
-                            //FIXME ZZZ GLOBAL Replace all System.out and .err by JaMuz.getLogger
-                            System.out.println(folderInfo.folder.getName()
-                                    + " (" + StringManager.humanReadableByteCount(
-                                            folderInfo.size, true) + ")"
-                                    + " [" + StringManager.humanReadableByteCount(
-                                            totalSize, true) + "]");
-                            if (totalSize > maxSize) {
-                                folderInfo.folder.delete();
-                                try {
-                                    FileUtils.deleteDirectory(folderInfo.folder);
-                                    totalDeleted += folderInfo.size;
-                                    nbFoldersDeleted++;
-                                } catch (IOException ex) {
-                                    Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
-                        }
-                        progressBar.reset();
-                        progressBar.setString("Cleanup complete : deleted "
-                                + StringManager.humanReadableByteCount(totalDeleted, true)
-                                + " (" + nbFoldersDeleted + "/" + foldersInfo.size() + ")");
-                    }
-                }
-            } catch (InterruptedException ex) {
-                Popup.info("Aborted by user");
-            }
-        }
+		/**
+		 *
+		 */
+		@Override
+		public void run() {
+			try {
+				File logPath = new File(Jamuz.getLogPath());
+				if (logPath.exists() && logPath.isDirectory()) {
+					ProgressBar progressBar = (ProgressBar) jProgressBarCleanupLogs;
+					File[] logFolders = logPath.listFiles();
+					progressBar.setup(0);
+					int index = 0;
+					if (logFolders != null) {
+						//List sub-folders and delete empty ones
+						checkAbort();
+						ArrayList<File> folders = new ArrayList<>();
+						for (File logFolder : logFolders) {
+							checkAbort();
+							if (logFolder.isDirectory()) {
+								index++;
+								if (index > progressBar.getMaximum()) {
+									progressBar.setMaximum(index + 10);
+								}
+								progressBar.progress(logFolder.getName());
+								if (logFolder.list().length > 0) {
+									folders.add(logFolder);
+								} else {
+									logFolder.delete();
+								}
+							}
+						}
+						//Sort and get folders sizes
+						checkAbort();
+						Collections.sort(folders, Comparator.reverseOrder());
+						ArrayList<FolderInfo> foldersInfo = new ArrayList<>();
+						progressBar.setup(folders.size());
+						for (File logFolder : folders) {
+							checkAbort();
+							foldersInfo.add(new FolderInfo(logFolder));
+							progressBar.progress(logFolder.getName());
+						}
+						//Delete if over maxSize
+						checkAbort();
+						progressBar.setup(foldersInfo.size());
+						long totalSize = 0;
+						long totalDeleted = 0;
 
-        class FolderInfo {
+						long maxSize = Long.parseLong(Jamuz.getOptions().get("log.cleanup.keep.size.bytes", "2000000000"));
+						int nbFoldersDeleted = 0;
+						for (FolderInfo folderInfo : foldersInfo) {
+							checkAbort();
+							progressBar.progress(folderInfo.folder.getName());
+							totalSize += folderInfo.size;
+							//FIXME ZZZ GLOBAL Replace all System.out and .err by JaMuz.getLogger
+							System.out.println(folderInfo.folder.getName()
+									+ " (" + StringManager.humanReadableByteCount(
+											folderInfo.size, true) + ")"
+									+ " [" + StringManager.humanReadableByteCount(
+											totalSize, true) + "]");
+							if (totalSize > maxSize) {
+								folderInfo.folder.delete();
+								try {
+									FileUtils.deleteDirectory(folderInfo.folder);
+									totalDeleted += folderInfo.size;
+									nbFoldersDeleted++;
+								} catch (IOException ex) {
+									Logger.getLogger(PanelOptions.class.getName()).log(Level.SEVERE, null, ex);
+								}
+							}
+						}
+						progressBar.reset();
+						progressBar.setString("Cleanup complete : deleted "
+								+ StringManager.humanReadableByteCount(totalDeleted, true)
+								+ " (" + nbFoldersDeleted + "/" + foldersInfo.size() + ")");
+					}
+				}
+			} catch (InterruptedException ex) {
+				Popup.info("Aborted by user");
+			}
+		}
 
-            public File folder;
-            public long size;
+		class FolderInfo {
 
-            FolderInfo(File folder) {
-                this.folder = folder;
-                this.size = FileSystem.size(folder.toPath());
-            }
-        }
-    }
+			public File folder;
+			public long size;
+
+			FolderInfo(File folder) {
+				this.folder = folder;
+				this.size = FileSystem.size(folder.toPath());
+			}
+		}
+	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCleanupLogs;
@@ -1000,6 +1057,8 @@ public class PanelOptions extends javax.swing.JPanel {
     private javax.swing.JButton jButtonTagsAdd;
     private javax.swing.JButton jButtonTagsDel;
     private javax.swing.JButton jButtonTagsEdit;
+    private javax.swing.JButton jButtonVersionCheck;
+    private javax.swing.JCheckBox jCheckBoxVersionPreRelease;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelBytes;
     private javax.swing.JLabel jLabelCleanup;

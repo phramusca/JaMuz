@@ -17,8 +17,6 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
-import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 
 /**
  *
@@ -28,50 +26,94 @@ public class AppVersionCheck {
 
     private final ICallBackVersionCheck callBackVersionCheck;
     private final AppVersion appVersion;
+    private boolean includePreRelease = false;
+    private ScheduledExecutorService scheduler;
 
+    /**
+     *
+     * @param callBackVersionCheck
+     */
     public AppVersionCheck(ICallBackVersionCheck callBackVersionCheck) {
         this.callBackVersionCheck = callBackVersionCheck;
         String version = Main.class.getPackage().getImplementationVersion();
         String currentVersion = "v" + version;
         appVersion = new AppVersion(currentVersion, "Unknown");
-        callBackVersionCheck.onCheck(appVersion, "Checking version ...");
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        long initialDelay = 0; // Delay before the first run (0 for immediate execution)
-        long period = 24 * 60 * 60; // 24 hours in seconds
-        scheduler.scheduleAtFixedRate(this::checkNewVersion, initialDelay, period, TimeUnit.SECONDS);
+        callBackVersionCheck.onCheck(appVersion, "");
     }
 
-    //TODO: Move scheduler startup out of constructor !
-//    public void checkVersions() {
-//        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-//        long initialDelay = 0; // Delay before the first run (0 for immediate execution)
-//        long period = 24 * 60 * 60; // 24 hours in seconds
-//        scheduler.scheduleAtFixedRate(this::checkNewVersion, initialDelay, period, TimeUnit.SECONDS);
-//    }
+    public void start(boolean includePreRelease) {
+        this.includePreRelease = includePreRelease;
+        new Thread() {
+            @Override
+            public void run() {
+                if (scheduler != null && !scheduler.isShutdown()) {
+                    try {
+                        scheduler.shutdown();
+                        scheduler.awaitTermination(30, TimeUnit.MINUTES);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                callBackVersionCheck.onCheck(appVersion, "Initiating ...");
+                scheduler = Executors.newSingleThreadScheduledExecutor();
+                long initialDelay = 0; // Delay before the first run (0 for immediate execution)
+                long period = 24 * 60 * 60; // 24 hours in seconds
+                scheduler.scheduleAtFixedRate(() -> {
+                    checkNewVersion();
+                }, initialDelay, period, TimeUnit.SECONDS);
+            }
+        }.start();
+    }
+
     private void checkNewVersion() {
         try {
+            callBackVersionCheck.onCheck(appVersion, "Checking for new version ...");
             OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url("https://api.github.com/repos/phramusca/jamuz/releases/latest")
-                    .build();
-            Response response = client.newCall(request).execute();
-            String responseBody = response.body().string();
-            Gson gson = new Gson();
-            JsonObject releaseData = gson.fromJson(responseBody, JsonObject.class);
-            String latestVersion = releaseData.get("tag_name").getAsString();
-            JsonArray assets = releaseData.getAsJsonArray("assets");
-            appVersion.setLatestVersion(latestVersion);
+            JsonArray assets = new JsonArray(0);
+            if (includePreRelease) {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/phramusca/jamuz/releases?per_page=1&page=1")
+                        .build();
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                Gson gson = new Gson();
+                JsonArray releasesArray = gson.fromJson(responseBody, JsonArray.class);
+                if (releasesArray.size() > 0) {
+                    JsonObject latestRelease = releasesArray.get(0).getAsJsonObject();
+                    String latestVersion = latestRelease.get("tag_name").getAsString();
+                    assets = latestRelease.getAsJsonArray("assets");
+                    appVersion.setLatestVersion(latestVersion);
+                }
+            } else {
+                Request request = new Request.Builder()
+                        .url("https://api.github.com/repos/phramusca/jamuz/releases/latest")
+                        .build();
+                Response response = client.newCall(request).execute();
+                String responseBody = response.body().string();
+                Gson gson = new Gson();
+                JsonObject releaseData = gson.fromJson(responseBody, JsonObject.class);
+                String latestVersion = releaseData.get("tag_name").getAsString();
+                assets = releaseData.getAsJsonArray("assets");
+                appVersion.setLatestVersion(latestVersion);
+            }
+
             if (appVersion.isNewVersion()) {
                 if (!assets.isJsonNull() && assets.size() > 0) {
+                    callBackVersionCheck.onCheck(appVersion, "Getting new version ...");
                     String downloadURL = assets.get(0).getAsJsonObject().get("browser_download_url").getAsString();
                     String assetName = assets.get(0).getAsJsonObject().get("name").getAsString();
-                    File assetFile = Jamuz.getFile(assetName, "data", "cache", "system", "update");
+                    File assetFile = Jamuz.getFile(assetName, "data", "cache", "system", "update", appVersion.getLatestVersion());
                     int size = assets.get(0).getAsJsonObject().get("size").getAsInt();
                     appVersion.setAsset(assetFile, size);
                     if (appVersion.isAssetValid()) {
-                        //Unzip again as unzip may have failed on previous version check
-                        unzipAsset(appVersion);
-                        callBackVersionCheck.onNewVersion(appVersion);
+                        if (!appVersion.isUnzippedAssetValid()) {
+                            appVersion.unzipAsset(callBackVersionCheck);
+                        }
+                        if (appVersion.isUnzippedAssetValid()) {
+                            callBackVersionCheck.onNewVersion(appVersion);
+                        } else {
+                            callBackVersionCheck.onCheckResult(appVersion, "Unzip failed.");
+                        }
                     } else {
                         callBackVersionCheck.onDownloadRequest(appVersion);
                         Request downloadRequest = new Request.Builder()
@@ -93,64 +135,26 @@ public class AppVersionCheck {
                                 int progress = (int) ((bytesRead * 100) / fileSize);
                                 callBackVersionCheck.onDownloadProgress(appVersion, progress);
                             }
-
-                            unzipAsset(appVersion);
-                            callBackVersionCheck.onNewVersion(appVersion);
+                            appVersion.unzipAsset(callBackVersionCheck);
+                            if (appVersion.isUnzippedAssetValid()) {
+                                callBackVersionCheck.onNewVersion(appVersion);
+                            } else {
+                                callBackVersionCheck.onCheckResult(appVersion, "Unzip failed.");
+                            }
                         } else {
                             appVersion.getAssetFile().delete();
-                            callBackVersionCheck.onCheck(appVersion, "Error: " + downloadResponse.message());
+                            callBackVersionCheck.onCheckResult(appVersion, "Error: " + downloadResponse.message());
                         }
                     }
                 } else {
-                    callBackVersionCheck.onCheck(appVersion, "No asset found in release!");
+                    callBackVersionCheck.onCheckResult(appVersion, "No asset found in release!");
                 }
             } else {
-                callBackVersionCheck.onCheck(appVersion, "You are running the latest version.");
+                callBackVersionCheck.onCheckResult(appVersion, "You are running the latest version.");
             }
         } catch (IOException ex) {
             appVersion.getAssetFile().delete();
-            callBackVersionCheck.onCheck(appVersion, ex.getLocalizedMessage());
-        }
-    }
-
-    private void unzipAsset(AppVersion appVersion) throws IOException {
-        callBackVersionCheck.onUnzipCount(appVersion);
-        int entryCount = 0;
-
-        try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
-            while ((sevenZFile.getNextEntry()) != null) {
-                entryCount++;
-            }
-        }
-
-        callBackVersionCheck.onUnzipStart(entryCount);
-
-        try (SevenZFile sevenZFile = new SevenZFile(appVersion.getAssetFile())) {
-            SevenZArchiveEntry entry;
-            while ((entry = sevenZFile.getNextEntry()) != null) {
-                File outputFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update");
-                if (entry.isDirectory()) {
-                    if (!outputFile.exists()) {
-                        outputFile.mkdirs();
-                    }
-                } else {
-                    // Create parent directories if they don't exist
-                    File parentDir = outputFile.getParentFile();
-                    if (!parentDir.exists()) {
-                        parentDir.mkdirs();
-                    }
-
-                    // Create an output stream for the entry
-                    try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-                        byte[] buffer = new byte[8192];
-                        int bytesRead;
-                        while ((bytesRead = sevenZFile.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, bytesRead);
-                        }
-                    }
-                }
-                callBackVersionCheck.onUnzipProgress(entry.getName());
-            }
+            callBackVersionCheck.onCheckResult(appVersion, ex.getLocalizedMessage());
         }
     }
 

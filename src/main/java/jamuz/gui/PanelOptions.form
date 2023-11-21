@@ -694,7 +694,13 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabelVersionCheck" alignment="0" pref="479" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabelVersionCheck" pref="306" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButtonVersionCheck" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jCheckBoxVersionPreRelease" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Component id="jProgressBarUpdate" alignment="0" pref="479" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -704,7 +710,11 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jLabelVersionCheck" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabelVersionCheck" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jCheckBoxVersionPreRelease" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonVersionCheck" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jProgressBarUpdate" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -728,6 +738,19 @@
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabelVersionCheckMouseClicked"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="jCheckBoxVersionPreRelease">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Pre-release ?"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButtonVersionCheck">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Check"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonVersionCheckActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

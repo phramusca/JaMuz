@@ -76,7 +76,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
       - [Start job](https://github.com/phramusca/JaMuz/actions/workflows/maven_local.yml)
       - Get `dist` folder in ~/actions-runner/_work/JaMuz/JaMuz/
     - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
-    - Create the `target-data/data/system/update/`$previousVersion`->`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released). Example:
+    - Create the `target-data/data/system/update/`$previousVersion`--`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released). Example:
 
       ```csv
       //action,fileOrDirectory
