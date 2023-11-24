@@ -1,1 +1,1 @@
-l1-current
+l1-latest

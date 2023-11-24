@@ -72,7 +72,34 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Check changes to release content:
   
-Not yet
+    - Create a new local release candidate with [local self-hosted runner](#github-self-hosted-runner)
+      - [Start job](https://github.com/phramusca/JaMuz/actions/workflows/maven_local.yml)
+      - Get `dist` folder in ~/actions-runner/_work/JaMuz/JaMuz/
+    - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
+    - Create the `target-data/data/system/update/update.csv` file for updating from previous version to current (the one being released).
+
+      ```csv
+      Copy,data/system/tests/empty/testCopy DirNoSlashNoOverwrite,false
+      Copy,data/system/tests/empty/testCopy DirSlashOverwrite/,true
+      Copy,data/system/tests/empty/testCopy FileNoOverwrite/existing.txt,false
+      Copy,data/system/tests/empty/testCopy FileOverwrite/new.txt,true
+      Remove,data/system/tests/empty/testRemove DirNoSlash
+      Remove,data/system/tests/empty/testRemove File/existing.txt
+      Copy,data/system/tests/filled/testCopy DirNoSlashNoOverwrite,false
+      Copy,data/system/tests/filled/testCopy DirSlashOverwrite/,true
+      Copy,data/system/tests/filled/testCopy FileNoOverwrite/existing.txt,false
+      Copy,data/system/tests/filled/testCopy FileOverwrite/new.txt,true
+      Remove,data/system/tests/filled/testRemove DirNoSlash
+      Remove,data/system/tests/filled/testRemove File/new.txt
+      ```
+
+        1. `Action` can be:
+            - `Remove`.
+            - `Copy`.
+        2. `Relative path` of a file or directory.
+        3. `Overwrite` bool (`Copy` action only), to overwrite, or not, files already in destination (version being updated).
+
+    - **Update script to manage updates from different previous versions**, using first and second parameters received by scripts.
 
 1. Update pom.xml (remove "-dev" suffix)
 
