@@ -72,28 +72,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Check changes to release content:
   
-    - Create a new local release candidate with [local self-hosted runner](#github-self-hosted-runner)
-      - [Start job](https://github.com/phramusca/JaMuz/actions/workflows/maven_local.yml)
-      - Get `dist` folder in ~/actions-runner/_work/JaMuz/JaMuz/
-    - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
-    - Create the `target-data/data/system/update/`$previousVersion`--`x.y.z`.csv` file for updating from $previousVersion to x.y.z (the one being released). Example:
-
-      ```csv
-      //action,fileOrDirectory
-      rm,doc/LISEZMOI.TXT
-      rm,doc/README.TXT
-      rm,lib
-      cpo,data/icon/genre
-      cp,Slsk.properties
-      cpo,JaMuz.jar
-      ```
-
-      - action can be:
-        - `rm` to remove a file or directory.
-        - `cp` to copy a file or directory only if it doesn't exist.
-        - `cpo` to either:
-          - copy a file, overwriting it if it already exists.
-          - recursively merge directory to destination, with the source taking precedence.
+Not yet
 
 1. Update pom.xml (remove "-dev" suffix)
 

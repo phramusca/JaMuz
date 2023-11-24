@@ -1,12 +1,22 @@
 # JaMuz change log #
 
-## v0.7.1 ##
-
-***Compatible with JaMuz Remote v0.5.x minimum***
+## v0.7.0 ##
 
 ### What's new ? ###
 
-- Minor, moved data files.
+- Version check and auto-update
+- Jamuz Android sync:
+  - API 2.0 : add model as name (called by Jamuz Android since v0.6.6)
+  - New option to activate new clients by default
+  - Combobox to select IP
+  - Send current playlist name to remote
+- Dependencies check (metaflac, mp3gain, mplayer) on linux (as windows executables are already included in package)
+- Soulseek support (using [slskd](https://github.com/slskd/slskd). Also, please refer to Soulseek's [rules](https://www.slsknet.org/news/node/681))
+- Keyboard shortcuts documented in options panel (though present since the beginning)
+- Translation updates
+- Various fixes
+- Moved to maven
+- New release process with github actions
 
 ### Package content ###
 
@@ -29,44 +39,7 @@
 | /myMovieDb.db        | Yes   | Database for Video tab.                                                                           |
 | /Slsk.properties     | Yes   | Configuration file for slskd (avoid manual edition).                                              |
 
-## v0.7.0 ##
-
 ***Compatible with JaMuz Remote v0.5.x minimum***
-
-### What's new ? ###
-
-- Version check and auto-update
-- Jamuz Android:
-  - API 2.0 : add model as name (called by Jamuz Android since v0.6.6)
-  - New option to activate new clients by default
-  - Combobox to select IP
-  - Send current playlist name to remote
-- Dependencies check (metaflac, mp3gain, mplayer) on linux (as windows executables are already included in package)
-- Soulseek support (using [slskd](https://github.com/slskd/slskd))
-  - Refer to Soulseek's [rules](https://www.slsknet.org/news/node/681): "(...)Soulseek® [and so do I] does not endorse nor condone the sharing of copyrighted materials. **You should only share and download files which you are legally allowed to or have otherwise received permission to share**. Soulseek®. was created to encourage the sharing of public domain music from unsigned, independent artists willing to share their work and communicate with a large audience in an efficient way. (...)"
-- Keyboard shortcuts documented in options panel (though present since the beginning)
-- Translation updates
-- Various fixes
-- Moved to maven
-- New release process with github actions
-
-### Package content ###
-
-| Path              | Description                                                                                            |
-| ----------------- | ------------------------------------------------------------------------------------------------------ |
-| /data             | AudioLinks.txt, BookLinks.txt and VideoLinks.txt: You can edit those and and or remove external links. |
-|                   | Patterns.txt : saved patterns for music file scanner. If you want to clean it up. Not required.        |
-|                   | /icon/genre/ : Genre icons. You can add more                                                           |
-|                   | /icon/tag/ : Tag icons. You can add more                                                               |
-|                   | /system/ : System files. You should not touch this.                                                    |
-| /doc              | Includes sample JaMuz.xml.                                                                             |
-| /logs             | LOG files (and databases backups)                                                                      |
-| ***/JaMuz.db***   | ***Your new music library (back it up regularly !)***                                                  |
-| ***/JaMuz.jar***  | ***Program itself*** (*on linux, set execution permission*)                                            |
-| /JaMuz.properties | Configuration file (avoid manual edition)                                                              |
-| /JaMuz.sh         | Linux launch script                                                                                    |
-| /JaMuz.xml        | Configuration file (optional). Used to setup your database location.See /doc/JaMuz.xml template.       |
-| /myMovieDb.db     | Database for Video tab                                                                                 |
 
 ## v0.6.0 ##
 

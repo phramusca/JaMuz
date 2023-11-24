@@ -906,10 +906,10 @@ public class PanelOptions extends javax.swing.JPanel {
 										permissions.add(PosixFilePermission.OWNER_EXECUTE);
 										Files.setPosixFilePermissions(Path.of(update_script.getAbsolutePath()), permissions);
 									}
-                                    command = "x-terminal-emulator -e sh " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion();
+                                    command = "x-terminal-emulator -e bash " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion() + " " + appVersion.getLatestVersion();
 								} else if (OS.isWindows()) {
-									File update_script = Jamuz.getFile("update_windows.bat", "data", "cache", "system", "update", appVersion.getLatestVersion(), "JaMuz", "data", "system", "update");
-                                    command = "cmd /c start " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion() + " " + appVersion.getLatestVersion();
+									File update_script = Jamuz.getFile("update_windows.ps1", "data", "cache", "system", "update", appVersion.getLatestVersion(), "JaMuz", "data", "system", "update");
+                                    command = "cmd /c start powershell.exe -ExecutionPolicy Bypass -File " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion() + " " + appVersion.getLatestVersion();
 								}
 								if (command != null) {
 									Runtime.getRuntime().exec(command);
