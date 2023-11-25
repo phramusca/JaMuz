@@ -1,8 +1,9 @@
 title: Jamuz
 description: Music library manager, player and more
+# theme: jekyll-theme-leap-day
+theme: minima
 google_analytics: 
 show_downloads: false
-theme: jekyll-theme-leap-day
 github:
   zip_url: https://github.com/phramusca/JaMuz/archive/master.zip
   tar_url: https://github.com/phramusca/JaMuz/archive/master.tar.gz
