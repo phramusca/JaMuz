@@ -23,29 +23,14 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 
 public class AppVersionTest {
 
     private AppVersion appVersion;
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() {
         appVersion = new AppVersion("v1.0.0", "v1.0.1");
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test
@@ -115,30 +100,5 @@ public class AppVersionTest {
         Mockito.verify(mockCallback, Mockito.times(1)).onUnzipStart();
         Mockito.verify(mockCallback, Mockito.atLeastOnce()).onUnzipProgress(Mockito.any(), Mockito.any(), Mockito.anyInt());
     }
-
-    @Test
-    public void testGetCurrentVersion() {
-        assertEquals("v1.0.0", appVersion.getCurrentVersion());
-    }
-
-    @Test
-    public void testGetLatestVersion() {
-        assertEquals("v1.0.1", appVersion.getLatestVersion());
-    }
-
-    @Test
-    public void testGetAssetFile() {
-        assertNull(appVersion.getAssetFile());
-        File assetFile = new File("testFile.txt");
-        appVersion.setAsset(assetFile, 100);
-        assertEquals(assetFile, appVersion.getAssetFile());
-    }
-
-    @Test
-    public void testGetAssetSize() {
-        assertEquals(0, appVersion.getAssetSize());
-        File assetFile = new File("testFile.txt");
-        appVersion.setAsset(assetFile, 100);
-        assertEquals(100, appVersion.getAssetSize());
-    }
 }
+

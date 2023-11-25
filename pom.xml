@@ -209,7 +209,12 @@
             <artifactId>xz</artifactId>
             <version>1.9</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
 
         <!--Local jar dependencies -->
         <dependency>
