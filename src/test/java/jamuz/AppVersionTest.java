@@ -116,60 +116,29 @@ public class AppVersionTest {
         Mockito.verify(mockCallback, Mockito.atLeastOnce()).onUnzipProgress(Mockito.any(), Mockito.any(), Mockito.anyInt());
     }
 
-    /**
-     * Test of getCurrentVersion method, of class AppVersion.
-     */
     @Test
     public void testGetCurrentVersion() {
-        System.out.println("getCurrentVersion");
-        AppVersion instance = null;
-        String expResult = "";
-        String result = instance.getCurrentVersion();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("v1.0.0", appVersion.getCurrentVersion());
     }
 
-    /**
-     * Test of getLatestVersion method, of class AppVersion.
-     */
     @Test
     public void testGetLatestVersion() {
-        System.out.println("getLatestVersion");
-        AppVersion instance = null;
-        String expResult = "";
-        String result = instance.getLatestVersion();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("v1.0.1", appVersion.getLatestVersion());
     }
 
-    /**
-     * Test of getAssetFile method, of class AppVersion.
-     */
     @Test
     public void testGetAssetFile() {
-        System.out.println("getAssetFile");
-        AppVersion instance = null;
-        File expResult = null;
-        File result = instance.getAssetFile();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNull(appVersion.getAssetFile());
+        File assetFile = new File("testFile.txt");
+        appVersion.setAsset(assetFile, 100);
+        assertEquals(assetFile, appVersion.getAssetFile());
     }
 
-    /**
-     * Test of getAssetSize method, of class AppVersion.
-     */
     @Test
     public void testGetAssetSize() {
-        System.out.println("getAssetSize");
-        AppVersion instance = null;
-        int expResult = 0;
-        int result = instance.getAssetSize();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(0, appVersion.getAssetSize());
+        File assetFile = new File("testFile.txt");
+        appVersion.setAsset(assetFile, 100);
+        assertEquals(100, appVersion.getAssetSize());
     }
 }
-
