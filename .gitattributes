@@ -1,0 +1,2 @@
+* text=auto eol=lf
+target-data/data/system/update/update_windows.bat text eol=crlf
