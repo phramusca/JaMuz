@@ -1,0 +1,8 @@
+
+.vscode/
+
+nbproject/
+
+target/
+
+*.sql
