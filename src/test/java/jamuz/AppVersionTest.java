@@ -23,14 +23,29 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 public class AppVersionTest {
 
     private AppVersion appVersion;
 
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
     @Before
     public void setUp() {
         appVersion = new AppVersion("v1.0.0", "v1.0.1");
+    }
+
+    @After
+    public void tearDown() throws Exception {
     }
 
     @Test
@@ -99,6 +114,62 @@ public class AppVersionTest {
         Mockito.verify(mockCallback, Mockito.times(1)).onUnzipCount(Mockito.any());
         Mockito.verify(mockCallback, Mockito.times(1)).onUnzipStart();
         Mockito.verify(mockCallback, Mockito.atLeastOnce()).onUnzipProgress(Mockito.any(), Mockito.any(), Mockito.anyInt());
+    }
+
+    /**
+     * Test of getCurrentVersion method, of class AppVersion.
+     */
+    @Test
+    public void testGetCurrentVersion() {
+        System.out.println("getCurrentVersion");
+        AppVersion instance = null;
+        String expResult = "";
+        String result = instance.getCurrentVersion();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getLatestVersion method, of class AppVersion.
+     */
+    @Test
+    public void testGetLatestVersion() {
+        System.out.println("getLatestVersion");
+        AppVersion instance = null;
+        String expResult = "";
+        String result = instance.getLatestVersion();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getAssetFile method, of class AppVersion.
+     */
+    @Test
+    public void testGetAssetFile() {
+        System.out.println("getAssetFile");
+        AppVersion instance = null;
+        File expResult = null;
+        File result = instance.getAssetFile();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getAssetSize method, of class AppVersion.
+     */
+    @Test
+    public void testGetAssetSize() {
+        System.out.println("getAssetSize");
+        AppVersion instance = null;
+        int expResult = 0;
+        int result = instance.getAssetSize();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 }
 
