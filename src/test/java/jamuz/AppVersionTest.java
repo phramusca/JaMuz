@@ -16,175 +16,89 @@
  */
 package jamuz;
 
-import java.io.File;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
 
-/**
- *
- * @author raph
- */
+import java.io.File;
+import java.io.IOException;
+
 public class AppVersionTest {
-    
-    public AppVersionTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
+
+    private AppVersion appVersion;
+
     @Before
     public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        appVersion = new AppVersion("v1.0.0", "v1.0.1");
     }
 
-    /**
-     * Test of isNewVersion method, of class AppVersion.
-     */
     @Test
     public void testIsNewVersion() {
-        System.out.println("isNewVersion");
-        AppVersion instance = null;
-        boolean expResult = false;
-        boolean result = instance.isNewVersion();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(appVersion.isNewVersion());
+        appVersion.setLatestVersion("v0.9.9");
+        assertFalse(appVersion.isNewVersion());
     }
 
-    /**
-     * Test of setAsset method, of class AppVersion.
-     */
     @Test
     public void testSetAsset() {
-        System.out.println("setAsset");
-        File assetFile = null;
-        int size = 0;
-        AppVersion instance = null;
-        instance.setAsset(assetFile, size);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        File assetFile = new File("testFile.txt");
+        appVersion.setAsset(assetFile, 100);
+        assertEquals(assetFile, appVersion.getAssetFile());
+        assertEquals(100, appVersion.getAssetSize());
     }
 
-    /**
-     * Test of setLatestVersion method, of class AppVersion.
-     */
     @Test
     public void testSetLatestVersion() {
-        System.out.println("setLatestVersion");
-        String latestVersion = "";
-        AppVersion instance = null;
-        instance.setLatestVersion(latestVersion);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        appVersion.setLatestVersion("v1.0.2");
+        assertEquals("v1.0.2", appVersion.getLatestVersion());
     }
 
-    /**
-     * Test of getCurrentVersion method, of class AppVersion.
-     */
     @Test
-    public void testGetCurrentVersion() {
-        System.out.println("getCurrentVersion");
-        AppVersion instance = null;
-        String expResult = "";
-        String result = instance.getCurrentVersion();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testCompareVersionStrings() {
+        assertEquals(0, AppVersion.compareVersionStrings("v1.0.0", "v1.0.0"));
+        assertTrue(AppVersion.compareVersionStrings("v1.0.1", "v1.0.0") > 0);
+        assertTrue(AppVersion.compareVersionStrings("v1.0.0", "v1.0.1") < 0);
     }
 
-    /**
-     * Test of getLatestVersion method, of class AppVersion.
-     */
-    @Test
-    public void testGetLatestVersion() {
-        System.out.println("getLatestVersion");
-        AppVersion instance = null;
-        String expResult = "";
-        String result = instance.getLatestVersion();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getAssetFile method, of class AppVersion.
-     */
-    @Test
-    public void testGetAssetFile() {
-        System.out.println("getAssetFile");
-        AppVersion instance = null;
-        File expResult = null;
-        File result = instance.getAssetFile();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toString method, of class AppVersion.
-     */
     @Test
     public void testToString() {
-        System.out.println("toString");
-        AppVersion instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("Current: v1.0.0. Latest: v1.0.1. ", appVersion.toString());
     }
 
-    /**
-     * Test of isAssetValid method, of class AppVersion.
-     */
     @Test
-    public void testIsAssetValid() {
-        System.out.println("isAssetValid");
-        AppVersion instance = null;
-        boolean expResult = false;
-        boolean result = instance.isAssetValid();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testIsAssetValid() throws IOException {
+        File tempFile = File.createTempFile("tempFile", null);
+        appVersion.setAsset(tempFile, (int) tempFile.length());
+        assertTrue(appVersion.isAssetValid());
     }
 
-    /**
-     * Test of isUnzippedAssetValid method, of class AppVersion.
-     */
     @Test
-    public void testIsUnzippedAssetValid() {
-        System.out.println("isUnzippedAssetValid");
-        AppVersion instance = null;
-        boolean expResult = false;
-        boolean result = instance.isUnzippedAssetValid();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testIsUnzippedAssetValid() throws IOException {
+        File tempFile = File.createTempFile("tempFile", null);
+        appVersion.setAsset(tempFile, (int) tempFile.length());
+
+        ICallBackVersionCheck mockCallback = Mockito.mock(ICallBackVersionCheck.class);
+
+        assertTrue(appVersion.isUnzippedAssetValid());
+
+        Mockito.verify(mockCallback, Mockito.times(0)).onUnzipCount(Mockito.any());
+        Mockito.verify(mockCallback, Mockito.times(0)).onUnzipStart();
+        Mockito.verify(mockCallback, Mockito.times(0)).onUnzipProgress(Mockito.any(), Mockito.any(), Mockito.anyInt());
     }
 
-    /**
-     * Test of unzipAsset method, of class AppVersion.
-     */
     @Test
-    public void testUnzipAsset() throws Exception {
-        System.out.println("unzipAsset");
-        ICallBackVersionCheck callBackVersionCheck = null;
-        AppVersion instance = null;
-        instance.unzipAsset(callBackVersionCheck);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testUnzipAsset() throws IOException {
+        File tempFile = File.createTempFile("tempFile", null);
+        appVersion.setAsset(tempFile, (int) tempFile.length());
+
+        ICallBackVersionCheck mockCallback = Mockito.mock(ICallBackVersionCheck.class);
+
+        appVersion.unzipAsset(mockCallback);
+
+        Mockito.verify(mockCallback, Mockito.times(1)).onUnzipCount(Mockito.any());
+        Mockito.verify(mockCallback, Mockito.times(1)).onUnzipStart();
+        Mockito.verify(mockCallback, Mockito.atLeastOnce()).onUnzipProgress(Mockito.any(), Mockito.any(), Mockito.anyInt());
     }
-    
 }
+

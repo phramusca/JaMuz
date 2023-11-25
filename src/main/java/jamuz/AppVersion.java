@@ -78,6 +78,10 @@ public class AppVersion {
         return assetFile;
     }
 
+    public int getAssetSize() {
+        return assetSize;
+    }
+
     @Override
     public String toString() {
         return "Current: " + currentVersion + ". Latest: " + latestVersion + ". ";
@@ -146,4 +150,7 @@ public class AppVersion {
             }
         }
     }
+
+
+
 }
