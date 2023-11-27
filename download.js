@@ -1,9 +1,9 @@
-async function getLatestRelease() {
-    const apiUrl = 'https://api.github.com/repos/phramusca/JaMuz/releases/latest';
+async function getLatestRelease(repoName) {
+    const apiUrl = `https://api.github.com/repos/${repoName}/releases/latest`;
     const response = await fetch(apiUrl);
     const data = await response.json();
-    const assetName = data.assets[0].name; // Assuming the asset you want is the first one
-    const downloadUrl = `https://github.com/phramusca/JaMuz/releases/latest/download/${assetName}`;
+    const assetName = data.assets[0].name;
+    const downloadUrl = `https://github.com/${repoName}/releases/latest/download/${assetName}`;
     
     // Create an invisible link
     const link = document.createElement('a');
