@@ -8,7 +8,7 @@ title: Your Page Title
 
 | JaMuz Android                                                                                                                                                                                                                                | JaMuz Desktop                                                                           |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">](https://f-droid.org/packages/org.phramusca.jamuz/)<BR/>or [get latest apk](#){: onclick="getLatestRelease("phramusca/JaMuz"); return false;" } | [Latest release 7z package](#){: onclick="getLatestRelease("phramusca/JaMuz"); return false;" } |
+| [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">](https://f-droid.org/packages/org.phramusca.jamuz/)<BR/>or [get latest apk](#){: onclick="getLatestRelease("phramusca/JaMuz-Remote"); return false;" } | [Latest release 7z package](#){: onclick="getLatestRelease("phramusca/JaMuz"); return false;" } |
 
 ## 
 
