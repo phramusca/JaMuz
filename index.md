@@ -11,5 +11,3 @@ JaMuz will help you managing and enjoying your music collection.
 | ![French](img/flag_france.png) [Version française](index_fr.md) | ![English](img/flag_england.png) [English version](index_en.md) |
 
 <script src="./download.js"></script>
-
-<div id="download-container-2"></div>
