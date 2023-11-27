@@ -1,8 +1,3 @@
-# Welcome to JaMuz
-
-| JaMuz Android                                                                                                                                             | JaMuz Desktop                                                                              |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">](https://f-droid.org/packages/org.phramusca.jamuz/)<BR/>or [get latest apk](https://github.com/phramusca/JaMuz-Remote/releases/latest) | [Get latest release 7z package](https://github.com/phramusca/JaMuz/releases/download/v0.7.1/JaMuz_v0.7.1.7z) |
 
 ## JaMuz Android
 
@@ -74,6 +69,8 @@ JaMuz Desktop is available in the following languages:
 </a>
 
 Please help out translating by using [WebLate](https://hosted.weblate.org/engage/jamuz/).
+
+## [Wiki (Help)](https://github.com/phramusca/JaMuz/wiki)
 
 ## Donate
 
