@@ -6,10 +6,9 @@ js_include: /path/to/download.js
 
 # Welcome to JaMuz
 
-| JaMuz Android                                                                                                                                                                                                                                | JaMuz Desktop                                                                                            |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">](https://f-droid.org/packages/org.phramusca.jamuz/)<BR/>or [get latest apk](https://github.com/phramusca/JaMuz-Remote/releases/latest) | [Latest release 7z package](#){: onclick="getLatestRelease(); return false;" download }
- |
+| JaMuz Android                                                                                                                                                                                                                                | JaMuz Desktop                                                                           |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">](https://f-droid.org/packages/org.phramusca.jamuz/)<BR/>or [get latest apk](https://github.com/phramusca/JaMuz-Remote/releases/latest) | [Latest release 7z package](#){: onclick="getLatestRelease(); return false;" } |
 
 ## 
 
