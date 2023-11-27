@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Your Page Title
-# js_include: ./download.js
+js_include: ./download.js
 ---
 
 # Welcome to JaMuz
@@ -22,7 +22,7 @@ title: Your Page Title
   - Recurrent donations using Liberapay.com: <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
   - One time donation with PayPal.com: <a href="https://paypal.me/RaphaelCamus"><img alt="Donate using PayPal" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"></a>
 
-<script>
+<!-- <script>
   async function getLatestRelease() {
     const apiUrl = 'https://api.github.com/repos/phramusca/JaMuz/releases/latest';
     const response = await fetch(apiUrl);
@@ -42,4 +42,4 @@ title: Your Page Title
     // Remove the link from the document
     document.body.removeChild(link);
 }
-</script>
+</script> -->
