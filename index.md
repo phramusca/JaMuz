@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Your Page Title
-js_include: download.js
+js_include: ./download.js
 ---
 
 # Welcome to JaMuz
