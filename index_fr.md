@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Bienvenue dans JaMuz
 
 | JaMuz Android                                                                                                                                             | JaMuz Desktop                                                                              |
