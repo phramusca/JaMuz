@@ -1,44 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <script src="./download.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JaMuz - Music Collection Management</title>
+    <title>JaMuz - Rediscover your music</title>
+
+    <style>
+        body {
+            text-align: center;
+        }
+
+        h3 {
+            margin: 0;
+            /* Remove default margin to center more accurately */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table,
+        th,
+        td {
+            border: none;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th:not(:last-child),
+        td:not(:last-child) {
+            border-right: 1px solid #ddd;
+            /* Add a right border for each cell except the last one */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .f-droid-image {
+            max-width: 100%;
+            max-height: 60px;
+            height: auto;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>JaMuz - Music Collection Management</h1>
+    <h3>JaMuz will help you managing and enjoying your music collection.</h3>
 
-<table>
-    <tr>
-        <td>JaMuz Android</td>
-        <td>JaMuz Desktop</td>
-    </tr>
-    <tr>
-        <td><img src="img/android75.png" alt="JaMuz Android"></td>
-        <td><img src="img/linux75.png" alt="JaMuz Desktop">, <img src="img/windows75.png" alt="JaMuz Desktop"></td>
-    </tr>
-    <tr>
-        <td>
-            <a href="https://f-droid.org/packages/org.phramusca.jamuz/">
-                <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">
-            </a><br>
-            or <div id="download-container-jamuz-android"></div> (but you will not get updates)
-        </td>
-        <td><div id="download-container-jamuz-desktop"></div></td>
-    </tr>
-    <tr>
-        <td><img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status"></td>
-        <td><img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status"></td>
-    </tr>
-</table>
-
-<p>
-    <img src="img/flag_france.png" alt="French Flag"> <a href="index_fr.md">Version française</a>
-    <img src="img/flag_england.png" alt="English Flag"> <a href="index_en.md">English version</a>
-</p>
-
-<script src="./download.js"></script>
+    </br></br>
+    <table>
+        <tr>
+            <td>JaMuz Android <img src="img/android.png" alt="JaMuz Android"></td>
+            <td>JaMuz Desktop (Linux <img src="img/linux.png" alt="JaMuz Desktop Linux">, Windows <img class="f-droid-image"
+                    src="img/windows.png" alt="JaMuz Desktop Windows">, Raspberry <img class="f-droid-image"
+                    src="img/raspberry.png" alt="JaMuz Desktop Raspberry">)</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://f-droid.org/packages/org.phramusca.jamuz/">
+                    <img class="f-droid-image" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+                        alt="Get it on F-Droid">
+                </a><br>
+                or <div id="download-container-jamuz-android"></div> (but you will not get updates)
+            </td>
+            <td>
+                <div id="download-container-jamuz-desktop"></div>
+            </td>
+        </tr>
+        <tr><td><img src="img/output.gif"></td><td></td></tr>
+        <tr>
+            <td><img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg"
+                    alt="Translation status"></td>
+            <td><img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg"
+                    alt="Translation status"></td>
+        </tr>
+    </table>
+    </br></br>
+    <img src="img/flag_france.png" alt="French Flag"> <a href="index_fr.md">Installation, Utilisation, ... La suite en français ...</a>
+</br></br>
+    <img src="img/flag_england.png" alt="English Flag"> <a href="index_en.md">Installation, Usage ... continue in English ...</a>
 
 </body>
 </html>
