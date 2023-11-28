@@ -1,4 +1,8 @@
 
+---
+layout: default
+---
+
 ## JaMuz Android
 
 - Your new Android music player
