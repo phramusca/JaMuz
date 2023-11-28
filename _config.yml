@@ -15,3 +15,5 @@ show_downloads: false
 gems:
   - jekyll-relative-links
 markdown: kramdown
+kramdown:
+  parse_block_html: true
