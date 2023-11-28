@@ -12,3 +12,5 @@ plugins:
 - jekyll-remote-theme
 google_analytics: 
 show_downloads: false
+gems:
+  - jekyll-relative-links
