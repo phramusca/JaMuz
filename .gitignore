@@ -1,14 +1,7 @@
-
 .vscode/
-
 nbproject/
-
 target/
-
 *.sql
-
 database/
-
 robot/
-
 testenv/
