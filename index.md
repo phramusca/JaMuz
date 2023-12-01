@@ -15,8 +15,7 @@ full_description_url: "https://raw.githubusercontent.com/phramusca/JaMuz-Remote/
 
 ## JaMuz Android
 
-{% assign full_description_content = site.full_description_content | default: "" %}
-{% include full_description.html %}
+{% remote_include https://raw.githubusercontent.com/phramusca/JaMuz-Remote/master/metadata/en/full_description.txt %}
 
 - Your new Android music player
 - Easily sync a playlist over WiFi from [JaMuz](https://github.com/phramusca/JaMuz) to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)

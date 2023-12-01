@@ -1,8 +1,0 @@
-{% assign full_description_url = page.full_description_url %}
-{% assign full_description_content = "" %}
-
-{% if full_description_url %}
-  {% capture full_description_content %}{% include full_description.txt %}{% endcapture %}
-{% endif %}
-
-{{ full_description_content }}

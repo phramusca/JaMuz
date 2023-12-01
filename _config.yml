@@ -12,10 +12,3 @@ plugins:
 - jekyll-remote-theme
 google_analytics: 
 show_downloads: false
-defaults:
-  -
-    scope:
-      path: ""
-    values:
-      full_description_url: "https://raw.githubusercontent.com/phramusca/JaMuz-Remote/master/metadata/en/full_description.txt"
-
