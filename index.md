@@ -70,5 +70,8 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 
 ## Donate
 
-<script src="https://liberapay.com/phramusca/widgets/button.js"></script>
-<noscript><a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
+I'll always be pleased if you offer me a beer (or a cup of tea, or more) to support my contribution :)
+
+<a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
+
+<iframe frameborder="0"><script src="https://liberapay.com/phramusca/widgets/button.js"></script></iframe>
