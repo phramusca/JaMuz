@@ -1,5 +1,6 @@
 ---
 layout: default
+full_description_url: "https://raw.githubusercontent.com/phramusca/JaMuz-Remote/master/metadata/en/full_description.txt"
 ---
 
 <script src="./download.js"></script>
@@ -14,6 +15,7 @@ layout: default
 
 ## JaMuz Android
 
+{% assign full_description_content = site.full_description_content | default: "" %}
 {% include full_description.html %}
 
 - Your new Android music player
