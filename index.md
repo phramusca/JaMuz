@@ -79,3 +79,27 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 I'll always be pleased if you offer me a beer (or a cup of tea, or more) to support my contribution :)
 
 <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
+
+
+<!-- Slick Carousel CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css"/>
+
+<!-- Carousel Container -->
+<div class="carousel">
+    <div><img src="img/android.png" alt="Image 1"></div>
+    <div><img src="img/linux.png" alt="Image 2"></div>
+    <div><img src="img/raspberry.png" alt="Image 2"></div>
+    <div><img src="img/windows.png" alt="Image 2"></div>
+    <!-- Add more slides as needed -->
+</div>
+
+<!-- jQuery and Slick Carousel JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+<!-- Initialize Slick Carousel -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('.carousel').slick();
+    });
+</script>
