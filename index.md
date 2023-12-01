@@ -11,13 +11,12 @@ layout: default
     max-width: 600px;
     margin: 0 auto; /* Center the carousel */
   }
-</style>
 
-<style>
   .carousel-container-new {
     max-width: 250px;
     max-height: 600px; /* Adjust to your preference */
     margin: 0 auto; /* Center the carousel */
+    overflow: hidden; /* Hide overflowing content */
   }
 </style>
 
@@ -27,8 +26,8 @@ layout: default
 
 <!-- Initialize Slick Carousel -->
 <script type="text/javascript">
-    $(document).ready(function(){
-      // Define an array of image URLs
+  $(document).ready(function(){
+    // Define an array of image URLs
     var images = [
       'img/desktop/Choisir.png',
       'img/desktop/Fusionner.png',
@@ -57,7 +56,7 @@ layout: default
         cssEase: 'linear'
       });
     });
-  </script>
+</script>
 
 <script type="text/javascript">
   $(document).ready(function(){
