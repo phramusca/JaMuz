@@ -2,11 +2,57 @@
 layout: default
 ---
 
+<!-- Slick Carousel CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+<style>
+  .carousel-container {
+    max-width: 300px; /* Set your desired width here */
+    margin: 0 auto; /* Center the carousel */
+  }
+</style>
+
+<!-- jQuery and Slick Carousel JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+<!-- Initialize Slick Carousel -->
+<script type="text/javascript">
+    $(document).ready(function(){
+      // Define an array of image URLs
+    var images = [
+      'img/android.png',
+      'img/linux.png',
+      'img/raspberry.png',
+      'img/windows.png'
+    ];
+
+    // Reference to the carousel div
+    var carousel = $('.carousel');
+
+    // Populate the carousel with images
+    images.forEach(function(imageUrl) {
+      carousel.append('<div><img src="' + imageUrl + '" alt="Image"></div>');
+    });
+
+    carousel.slick({
+        dots: true,
+        infinite: true,
+        autoplay: true,
+        speed: 500,
+        fade: true,
+        cssEase: 'linear'
+      });
+    });
+  </script>
+
 <script src="./download.js"></script>
 
 |                         | JaMuz Android                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | JaMuz Desktop                                                                                                                 |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Platform(s)             | <img src="img/android.png" alt="JaMuz Android">                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> |
+| Overview | <div class="carousel-container"><div class="carousel"></div></div> | ![img](img/output.gif) |
 | Download & installation | [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/org.phramusca.jamuz/)<br>- [Get F-Droid](https://f-droid.org/F-Droid.apk) and [install it](https://www.androidauthority.com/how-to-install-apks-31494/).<br>- Open F-Droid, search for `JaMuz` and install it.<br><br>OR <span id="download-container-jamuz-android"></span> and [install it](https://www.androidauthority.com/how-to-install-apks-31494/), but you will not get updates! | - <span id="download-container-jamuz-desktop"></span><br>- Extract 7z archive<br>- Double-click on `JaMuz.jar`                |
 | Available in            | <img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status">                                                                                                                                                                                                                                                                                                                                                                                                            | <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status">                   |
 
@@ -79,49 +125,3 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 I'll always be pleased if you offer me a beer (or a cup of tea, or more) to support my contribution :)
 
 <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
-
-
-<!-- Slick Carousel CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css"/>
-
-<!-- Carousel Container -->
-<div class="carousel">
-    <div><img src="img/android.png" alt="Image 1"></div>
-    <div><img src="img/linux.png" alt="Image 2"></div>
-    <div><img src="img/raspberry.png" alt="Image 2"></div>
-    <div><img src="img/windows.png" alt="Image 2"></div>
-    <!-- Add more slides as needed -->
-</div>
-
-<!-- jQuery and Slick Carousel JS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-
-<!-- Initialize Slick Carousel -->
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        $('.carousel').slick();
-    });
-</script> -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        $('.carousel').slick({
-            autoplay: true,         // Auto-start slideshow
-            autoplaySpeed: 2000,    // Set autoplay speed in milliseconds
-            dots: false,            // Hide navigation dots
-            arrows: false,          // Hide default arrow navigation
-            draggable: true,        // Enable dragging to navigate
-            infinite: true,         // Enable infinite loop
-            swipe: true,            // Enable swipe navigation on touch devices
-            touchMove: true,        // Enable touch movements
-            variableWidth: false,    // Set to true if your slides have varying widths
-            centerMode: false,      // Set to true for center mode
-            focusOnSelect: true     // Enable focus on selected slide
-        });
-
-        // Click on the image to navigate to the next slide
-        $('.carousel').on('click', '.slick-slide', function () {
-            $('.carousel').slick('slickNext');
-        });
-    });
-</script>
