@@ -98,8 +98,30 @@ I'll always be pleased if you offer me a beer (or a cup of tea, or more) to supp
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 
 <!-- Initialize Slick Carousel -->
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         $('.carousel').slick();
+    });
+</script> -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('.carousel').slick({
+            autoplay: true,         // Auto-start slideshow
+            autoplaySpeed: 2000,    // Set autoplay speed in milliseconds
+            dots: false,            // Hide navigation dots
+            arrows: false,          // Hide default arrow navigation
+            draggable: true,        // Enable dragging to navigate
+            infinite: true,         // Enable infinite loop
+            swipe: true,            // Enable swipe navigation on touch devices
+            touchMove: true,        // Enable touch movements
+            variableWidth: false,    // Set to true if your slides have varying widths
+            centerMode: false,      // Set to true for center mode
+            focusOnSelect: true     // Enable focus on selected slide
+        });
+
+        // Click on the image to navigate to the next slide
+        $('.carousel').on('click', '.slick-slide', function () {
+            $('.carousel').slick('slickNext');
+        });
     });
 </script>
