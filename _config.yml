@@ -1,8 +1,14 @@
-title: Jamuz
-description: Music library manager, player and more
+title: JaMuz
+description: Keep your music in check and enjoy it too!
+# https://pages.github.com/themes/
+# theme: jekyll-theme-leap-day
+# theme: minima
+# remote_theme: pages-themes/midnight@v0.2.0
+# remote_theme: pages-themes/minimal@v0.2.0
+# remote_theme: pages-themes/tactile@v0.2.0
+# remote_theme: pages-themes/time-machine@v0.2.0
+remote_theme: pages-themes/slate@v0.2.0
+plugins:
+- jekyll-remote-theme
 google_analytics: 
-show_downloads: true
-theme: jekyll-theme-leap-day
-github:
-  zip_url: https://github.com/phramusca/JaMuz/archive/master.zip
-  tar_url: https://github.com/phramusca/JaMuz/archive/master.tar.gz
+show_downloads: false
