@@ -8,7 +8,14 @@ layout: default
 
 <style>
   .carousel-container {
-    max-width: 300px; /* Set your desired width here */
+    max-width: 600px;
+    margin: 0 auto; /* Center the carousel */
+  }
+</style>
+
+<style>
+  .carousel-container-new {
+    max-width: 200px;
     margin: 0 auto; /* Center the carousel */
   }
 </style>
@@ -22,10 +29,14 @@ layout: default
     $(document).ready(function(){
       // Define an array of image URLs
     var images = [
-      'img/android.png',
-      'img/linux.png',
-      'img/raspberry.png',
-      'img/windows.png'
+      'img/desktop/Choisir.png',
+      'img/desktop/Fusionner.png',
+      'img/desktop/Exporter.png',
+      'img/desktop/Verifier.png',
+      'img/desktop/Slsk.png',
+      'img/desktop/Stats.png',
+      'img/desktop/Serveur.png',
+      'img/desktop/Options.png',
     ];
 
     // Reference to the carousel div
@@ -47,12 +58,37 @@ layout: default
     });
   </script>
 
+<script type="text/javascript">
+  $(document).ready(function(){
+    // Define the number of images in the carousel
+    var numberOfImages = 15;
+
+    // Reference to the second carousel div
+    var secondCarousel = $('.second-carousel'); // Change the class name
+
+    // Generate image URLs and populate the second carousel
+    for (var i = 1; i <= numberOfImages; i++) {
+      var imageUrl = 'img/phoneScreenshots/' + i + '.png';
+      secondCarousel.append('<div><img src="' + imageUrl + '" alt="Image"></div>');
+    }
+
+    secondCarousel.slick({
+      dots: true,
+      infinite: true,
+      autoplay: true,
+      speed: 500,
+      fade: true,
+      cssEase: 'linear'
+    });
+  });
+</script>
+
 <script src="./download.js"></script>
 
 |                         | JaMuz Android                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | JaMuz Desktop                                                                                                                 |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Platform(s)             | <img src="img/android.png" alt="JaMuz Android">                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> |
-| Overview | {::nomarkdown}<div class="carousel-container"><div class="carousel"></div></div>{:/nomarkdown} | ![img](img/output.gif) |
+| Overview                |  {::nomarkdown}<div class="carousel-container-new"><div class="second-carousel"></div></div>{:/nomarkdown}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | {::nomarkdown}<div class="carousel-container"><div class="carousel"></div></div>{:/nomarkdown}                                |
 | Download & installation | [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/org.phramusca.jamuz/)<br>- [Get F-Droid](https://f-droid.org/F-Droid.apk) and [install it](https://www.androidauthority.com/how-to-install-apks-31494/).<br>- Open F-Droid, search for `JaMuz` and install it.<br><br>OR <span id="download-container-jamuz-android"></span> and [install it](https://www.androidauthority.com/how-to-install-apks-31494/), but you will not get updates! | - <span id="download-container-jamuz-desktop"></span><br>- Extract 7z archive<br>- Double-click on `JaMuz.jar`                |
 | Available in            | <img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status">                                                                                                                                                                                                                                                                                                                                                                                                            | <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status">                   |
 
