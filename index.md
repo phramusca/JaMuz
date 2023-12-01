@@ -4,22 +4,29 @@ layout: default
 
 <script src="./download.js"></script>
 
-|              | JaMuz Android                                                                                                                                                                                                                                      | JaMuz Desktop                                                                                                                 |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Platform(s)  | <img src="img/android.png" alt="JaMuz Android">                                                                                                                                                                                                    | <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> |
-| Download & installation      |- [Get F-Droid](https://f-droid.org/F-Droid.apk) and [install it](https://www.androidauthority.com/how-to-install-apks-31494/).<br>- Open F-Droid, search for `JaMuz` and install it.<br><br>or <span id="download-container-jamuz-android"></span><br>(but you will not get updates)                                                              | - <span id="download-container-jamuz-desktop"></span><br>- Unzip 7z archive<br>- Double-click on `JaMuz.jar`                                      |
-| Available in | <img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status">                                                                                                                                 | <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status">                   |
+|                         | JaMuz Android                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | JaMuz Desktop                                                                                                                 |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Platform(s)             | <img src="img/android.png" alt="JaMuz Android">                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> |
+| Download & installation | [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/org.phramusca.jamuz/)<br>- [Get F-Droid](https://f-droid.org/F-Droid.apk) and [install it](https://www.androidauthority.com/how-to-install-apks-31494/).<br>- Open F-Droid, search for `JaMuz` and install it.<br><br>OR <span id="download-container-jamuz-android"></span> and [install it](https://www.androidauthority.com/how-to-install-apks-31494/), but you will not get updates! | - <span id="download-container-jamuz-desktop"></span><br>- Extract 7z archive<br>- Double-click on `JaMuz.jar`                |
+| Available in            | <img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status">                                                                                                                                                                                                                                                                                                                                                                                                            | <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status">                   |
 
 ``JaMuz Android`` and ``JaMuz Desktop`` can be used independently but it is recommended to use both together.
 
 ## JaMuz Android
 
-- Your new Android music player
-- Easily sync a playlist over WiFi from [JaMuz](https://github.com/phramusca/JaMuz) to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
-- Easily merge your ratings, tags, genre and play statistics
-- Remote control [JaMuz](https://github.com/phramusca/JaMuz)
+- Audio Player:
+  - Playlist editor (user tags, rating and genre)
+  - Tag editor (user tags, rating and genre)
+  - Replaygain support (MP3 only, FLAC on its way)
+  - One finger control
+  - Voice commands
+- Merge your statistics with [JaMuz Desktop](https://github.com/phramusca/JaMuz)
+  - And so with all players JaMuz Desktop can merge with (Mixxx, Kodi, guayadeque,...)
+- Sync files from [JaMuz Desktop](https://github.com/phramusca/JaMuz) over WiFi
+  - Select a playlist on JaMuz, connect JaMuz Remote sync, and wait for your files.
+- Remote control for [JaMuz Desktop](https://github.com/phramusca/JaMuz)
 
-## JaMuz Desktop (Windows / Linux)
+## JaMuz Desktop
 
 A **music** library **manager**, **player** and more, for **Linux**, **Raspberry** and **Windows**.
 
@@ -72,5 +79,3 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 I'll always be pleased if you offer me a beer (or a cup of tea, or more) to support my contribution :)
 
 <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
-
-<iframe frameborder="0"><script src="https://liberapay.com/phramusca/widgets/button.js"></script></iframe>
