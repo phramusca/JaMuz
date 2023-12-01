@@ -15,7 +15,8 @@ layout: default
 
 <style>
   .carousel-container-new {
-    max-width: 200px;
+    max-width: 250px;
+    max-height: 600px; /* Adjust to your preference */
     margin: 0 auto; /* Center the carousel */
   }
 </style>
