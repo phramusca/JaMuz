@@ -20,7 +20,9 @@ layout: default
   }
 
   .carousel-container-new .second-carousel {
-    width: 100%; /* Ensure the carousel takes full width */
+    max-width: 100%; /* Ensure the carousel takes full width within the container */
+    max-height: 100%; /* Ensure the carousel takes full height within the container */
+    width: auto; /* Allow the width to adjust based on the height */
     height: auto; /* Allow the height to adjust based on the width */
   }
 </style>
