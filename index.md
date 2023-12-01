@@ -7,13 +7,21 @@ layout: default
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
 <style>
-  .carouselImage {
+  .carousel-android-image {
     margin:0 auto;
+    height: 500px;
+    width: auto;
   }
 
-  .slick-slide {
-    height:500px;
+  .carousel-desktop-image {
+    margin:0 auto;
+    width: 500px;
+    height: auto;
   }
+
+  /* .slick-slide {
+    height:500px;
+  } */
 </style>
 
 <!-- jQuery and Slick Carousel JS -->
@@ -28,13 +36,13 @@ layout: default
     var carouselAndroid = $('.carousel-android');
     for (var i = 1; i <= numberOfImages; i++) {
       var imageUrl = 'img/phoneScreenshots/' + i + '.png';
-      carouselAndroid.append('<div><img src="' + imageUrl + '" alt="Image" class="carouselImage"></div>');
+      carouselAndroid.append('<div><img src="' + imageUrl + '" alt="Image" class="carousel-android-image"></div>');
     }
     carouselAndroid.slick({
       dots: true,
       infinite: true,
       autoplay: true,
-      speed: 500,
+      autoplaySpeed: 3000,
       fade: true,
       cssEase: 'linear'
     });
@@ -53,13 +61,13 @@ layout: default
     ];
     var carouselDesktop = $('.carousel-desktop');
       images.forEach(function(imageUrl) {
-      carouselDesktop.append('<div><img src="' + imageUrl + '" alt="Image" class="carouselImage"></div>');
+      carouselDesktop.append('<div><img src="' + imageUrl + '" alt="Image" class="carousel-desktop-image"></div>');
     });
     carouselDesktop.slick({
         dots: true,
         infinite: true,
         autoplay: true,
-        speed: 500,
+        autoplaySpeed: 3000,
         fade: true,
         cssEase: 'linear'
       });
