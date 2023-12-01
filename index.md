@@ -18,6 +18,11 @@ layout: default
     margin: 0 auto; /* Center the carousel */
     overflow: hidden; /* Hide overflowing content */
   }
+
+  .carousel-container-new .second-carousel {
+    width: 100%; /* Ensure the carousel takes full width */
+    height: auto; /* Allow the height to adjust based on the width */
+  }
 </style>
 
 <!-- jQuery and Slick Carousel JS -->
