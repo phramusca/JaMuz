@@ -7,13 +7,14 @@ layout: default
 |              | JaMuz Android                                                                                                                                                                                                                                      | JaMuz Desktop                                                                                                                 |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Platform(s)  | <img src="img/android.png" alt="JaMuz Android">                                                                                                                                                                                                    | <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> |
-| Download     | [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/org.phramusca.jamuz)<br> or <span id="download-container-jamuz-android"></span> (but you will not get updates) | <span id="download-container-jamuz-desktop"></span>                                                                           |
-| Install      | - [Get F-Droid](https://f-droid.org/F-Droid.apk) and [install it](https://www.androidauthority.com/how-to-install-apks-31494/).<br>- Open F-Droid, search for `JaMuz` and install it.                                                              | - Download latest with link above<br>- Unzip 7z archive<br>- Double-click on `JaMuz.jar`                                      |
+| Download & installation      | - [Get F-Droid](https://f-droid.org/F-Droid.apk) and [install it](https://www.androidauthority.com/how-to-install-apks-31494/).<br>- Open F-Droid, search for `JaMuz` and install it.<br><br>or <span id="download-container-jamuz-android"></span><br>(but you will not get updates)                                                              | - <span id="download-container-jamuz-desktop"></span><br>- Unzip 7z archive<br>- Double-click on `JaMuz.jar`                                      |
 | Available in | <img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status">                                                                                                                                 | <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status">                   |
 
 ``JaMuz Android`` and ``JaMuz Desktop`` can be used independently but it is recommended to use both together.
 
 ## JaMuz Android
+
+{% include full_description.html %}
 
 - Your new Android music player
 - Easily sync a playlist over WiFi from [JaMuz](https://github.com/phramusca/JaMuz) to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
