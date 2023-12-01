@@ -48,131 +48,132 @@ import javax.swing.KeyStroke;
  */
 public class DialogOptions extends javax.swing.JDialog {
 
-	/**
-	 * A return status code - returned if Cancel button has been pressed
-	 */
-	public static final int RET_CANCEL = 0;
-	/**
-	 * A return status code - returned if OK button has been pressed
-	 */
-	public static final int RET_OK = 1;
+    /**
+     * A return status code - returned if Cancel button has been pressed
+     */
+    public static final int RET_CANCEL = 0;
+    /**
+     * A return status code - returned if OK button has been pressed
+     */
+    public static final int RET_OK = 1;
 
-	private static String machineName;
-	private static Machine selOptions;
-	
-	/**
-	 * Creates new form NewOkCancelDialog
-	 * @param parent
-	 * @param modal
-	 * @param myMachineName
-	 */
-	public DialogOptions(java.awt.Frame parent, boolean modal, String myMachineName) {
-		super(parent, modal);
-		initComponents();
-		machineName=myMachineName;
+    private static String machineName;
+    private static Machine selOptions;
 
-		// Close the dialog when Esc is pressed
-		String cancelName = "cancel";
-		InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelName);
-		ActionMap actionMap = rootPane.getActionMap();
-		actionMap.put(cancelName, new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				doClose(RET_CANCEL);
-			}
-		});
-		
-		displayOptions();
-		displayStatSources();
-		displayDevices();
-	}
+    /**
+     * Creates new form NewOkCancelDialog
+     *
+     * @param parent
+     * @param modal
+     * @param myMachineName
+     */
+    public DialogOptions(java.awt.Frame parent, boolean modal, String myMachineName) {
+        super(parent, modal);
+        initComponents();
+        machineName = myMachineName;
 
-	/**
-	 * Displays options and stat sources
-	 */
-	public static void displayOptions() {
-		//Get selected machine name options
-		selOptions = new Machine(machineName);
-		selOptions.read();
-		
+        // Close the dialog when Esc is pressed
+        String cancelName = "cancel";
+        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelName);
+        ActionMap actionMap = rootPane.getActionMap();
+        actionMap.put(cancelName, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                doClose(RET_CANCEL);
+            }
+        });
+
+        displayOptions();
+        displayStatSources();
+        displayDevices();
+    }
+
+    /**
+     * Displays options and stat sources
+     */
+    public static void displayOptions() {
+        //Get selected machine name options
+        selOptions = new Machine(machineName);
+        selOptions.read();
+
         jTextFieldDescription.setText(selOptions.getDescription());
-		
-		jLabelDescription.setText("<html><b>"+Inter.get("Options.Title.Description")+"</b> : "
-				+MessageFormat.format(Inter.get("Options.Comment.Description"), 
-						machineName)+"</html>");  //NOI18N
+
+        jLabelDescription.setText("<html><b>" + Inter.get("Options.Title.Description") + "</b> : "
+                + MessageFormat.format(Inter.get("Options.Comment.Description"),
+                        machineName) + "</html>");  //NOI18N
 
         jButtonOptionSave.setEnabled(true);
 
-		displayOption("location.library", jTextFieldOptionLocationLibrary, jLabelOptionLocationLibrary);
-		displayOptionCheckbox("library.isMaster", jCheckBoxOptionLibraryIsMaster);
-		displayOption("location.add", jTextFieldOptionLocationAdd, jLabelOptionLocationAdd);
-		displayOption("location.ko", jTextFieldOptionLocationKO, jLabelOptionLocationKO);
-		displayOption("location.manual", jTextFieldOptionLocationManual, jLabelOptionLocationManual);
-		displayOption("location.ok", jTextFieldOptionLocationOK, jLabelOptionLocationOK);
-		displayOption("location.transcoded", jTextFieldOptionLocationTranscoded, jLabelOptionLocationTranscoded);
-		displayOption("location.mask", jTextFieldOptionMask, jLabelOptionMask);
-		displayOption("files.audio", jTextFieldOptionsFilesAudio, jLabelOptionsFilesAudio);
-		displayOption("files.convert", jTextFieldOptionsFilesConvert, jLabelOptionsFilesConvert);
-		displayOption("files.delete", jTextFieldOptionsFilesDelete, jLabelOptionsFilesDelete);
-		displayOption("files.image", jTextFieldOptionsFilesImage, jLabelOptionsFilesImage);
-		displayOptionCheckbox("files.image.delete", jCheckBoxOptionDeleteImages);
-		displayOption("log.count", jTextFieldOptionsLogCount, jLabelOptionsLogCount);
-		displayOption("log.level", jTextFieldOptionsLogLevel, jLabelOptionsLogLevel);
-		displayOption("log.limit", jTextFieldOptionsLogLimit, jLabelOptionsLogLimit);
-		displayOption("network.proxy", jTextFieldOptionsProxy, jLabelOptionsProxy);
-	}
-	
-	/**
-	 *
-	 */
-	public static void displayStatSources() {
-		//Show stat source list for selected machine
-		DefaultListModel listModel=(DefaultListModel) jListStatSources.getModel();
-		listModel.clear();
-		//TODO: Order by name
-		selOptions.getStatSources(true).stream().forEach((statSource) -> {
-			listModel.addElement(statSource);
-		});
-	}
-	
-	/**
-	 *
-	 */
-	public static void displayDevices() {
-		//Show device list for selected machine
-		DefaultListModel devicesModel=(DefaultListModel) jListDevices.getModel();
-		devicesModel.clear();
-		selOptions.getDevices(true).stream().forEach((device) -> {
-			devicesModel.addElement(device);
-		});
-	}
-	
-	private static void displayOption(String id, JTextField textField, JLabel label) {
-		Option option = selOptions.getOption(id);
-		textField.setText(option.getValue());
-		label.setText(option.getComment());
-	}
-	
-	private static void displayOptionCheckbox(String id, JCheckBox checkBox) {
-		Option option = selOptions.getOption(id);
-		checkBox.setSelected(option.getValue().equals("true"));
-		checkBox.setText(option.getComment());
-	}
-	
-	/**
-	 * @return the return status of this dialog - one of RET_OK or RET_CANCEL
-	 */
-	public int getReturnStatus() {
-		return returnStatus;
-	}
+        displayOption("location.library", jTextFieldOptionLocationLibrary, jLabelOptionLocationLibrary);
+        displayOptionCheckbox("library.isMaster", jCheckBoxOptionLibraryIsMaster);
+        displayOption("location.add", jTextFieldOptionLocationAdd, jLabelOptionLocationAdd);
+        displayOption("location.ko", jTextFieldOptionLocationKO, jLabelOptionLocationKO);
+        displayOption("location.manual", jTextFieldOptionLocationManual, jLabelOptionLocationManual);
+        displayOption("location.ok", jTextFieldOptionLocationOK, jLabelOptionLocationOK);
+        displayOption("location.transcoded", jTextFieldOptionLocationTranscoded, jLabelOptionLocationTranscoded);
+        displayOption("location.mask", jTextFieldOptionMask, jLabelOptionMask);
+        displayOption("files.audio", jTextFieldOptionsFilesAudio, jLabelOptionsFilesAudio);
+        displayOption("files.convert", jTextFieldOptionsFilesConvert, jLabelOptionsFilesConvert);
+        displayOption("files.delete", jTextFieldOptionsFilesDelete, jLabelOptionsFilesDelete);
+        displayOption("files.image", jTextFieldOptionsFilesImage, jLabelOptionsFilesImage);
+        displayOptionCheckbox("files.image.delete", jCheckBoxOptionDeleteImages);
+        displayOption("log.count", jTextFieldOptionsLogCount, jLabelOptionsLogCount);
+        displayOption("log.level", jTextFieldOptionsLogLevel, jLabelOptionsLogLevel);
+        displayOption("log.limit", jTextFieldOptionsLogLimit, jLabelOptionsLogLimit);
+        displayOption("network.proxy", jTextFieldOptionsProxy, jLabelOptionsProxy);
+    }
 
-	/**
-	 * This method is called from within the constructor to initialize the form.
-	 * WARNING: Do NOT modify this code. The content of this method is always
-	 * regenerated by the Form Editor.
-	 */
-	@SuppressWarnings("unchecked")
+    /**
+     *
+     */
+    public static void displayStatSources() {
+        //Show stat source list for selected machine
+        DefaultListModel listModel = (DefaultListModel) jListStatSources.getModel();
+        listModel.clear();
+        //TODO: Order by name
+        selOptions.getStatSources(true).stream().forEach((statSource) -> {
+            listModel.addElement(statSource);
+        });
+    }
+
+    /**
+     *
+     */
+    public static void displayDevices() {
+        //Show device list for selected machine
+        DefaultListModel devicesModel = (DefaultListModel) jListDevices.getModel();
+        devicesModel.clear();
+        selOptions.getDevices(true).stream().forEach((device) -> {
+            devicesModel.addElement(device);
+        });
+    }
+
+    private static void displayOption(String id, JTextField textField, JLabel label) {
+        Option option = selOptions.getOption(id);
+        textField.setText(option.getValue());
+        label.setText(option.getComment());
+    }
+
+    private static void displayOptionCheckbox(String id, JCheckBox checkBox) {
+        Option option = selOptions.getOption(id);
+        checkBox.setSelected(option.getValue().equals("true"));
+        checkBox.setText(option.getComment());
+    }
+
+    /**
+     * @return the return status of this dialog - one of RET_OK or RET_CANCEL
+     */
+    public int getReturnStatus() {
+        return returnStatus;
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -1071,97 +1072,101 @@ public class DialogOptions extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	/**
-	 * Closes the dialog
-	 */
+    /**
+     * Closes the dialog
+     */
     private void closeDialog(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeDialog
-		doClose(RET_CANCEL);
+        doClose(RET_CANCEL);
     }//GEN-LAST:event_closeDialog
 
     private void jButtonOptionSelectFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSelectFolderActionPerformed
         selectFolder(jTextFieldOptionLocationLibrary, "Library Location");
     }//GEN-LAST:event_jButtonOptionSelectFolderActionPerformed
 
-	private void selectFolder(JTextField textField, String title) {
-		Swing.selectFolder(textField, title, false);
-	}
-	
-    private void jButtonOptionSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSaveActionPerformed
-        
-		String locationLibrary = jTextFieldOptionLocationLibrary.getText();
-		File locationLibraryFile = new File(locationLibrary);
+    private void selectFolder(JTextField textField, String title) {
+        Swing.selectFolder(textField, title, false);
+    }
 
-		boolean validLocations = true;
-		
-		String locationAdd = jTextFieldOptionLocationAdd.getText();
-		if(!checkLocation(locationLibraryFile, locationAdd)) {
-			validLocations = false;
-		}
-		
-		String locationKO = jTextFieldOptionLocationKO.getText();
-		if(!checkLocation(locationLibraryFile, locationKO)) {
-		validLocations = false;
-		}
-		
-		String locationManual = jTextFieldOptionLocationManual.getText();
-		if(!checkLocation(locationLibraryFile, locationManual)) {
-		validLocations = false;
-		}
-		
-		String locationOK = jTextFieldOptionLocationOK.getText();
-		if(!checkLocation(locationLibraryFile, locationOK)) {
-		validLocations = false;
-		}
-		
-		String locationTranscoded = jTextFieldOptionLocationTranscoded.getText();
-		if(!checkLocation(locationLibraryFile, locationTranscoded)) {
-			validLocations = false;
-		}
-		
-		if(!validLocations) {
-			return;
-		}
-		
-		selOptions.getOption("location.library").setValue(locationLibrary);
-		selOptions.getOption("location.add").setValue(locationAdd);
-		selOptions.getOption("location.ko").setValue(locationKO);
-		selOptions.getOption("location.manual").setValue(locationManual);
-		selOptions.getOption("location.ok").setValue(locationOK);
-		selOptions.getOption("location.transcoded").setValue(locationTranscoded);
-		
-		selOptions.getOption("library.isMaster").setValue(jCheckBoxOptionLibraryIsMaster.isSelected()?"true":"false");
-		selOptions.getOption("location.mask").setValue(jTextFieldOptionMask.getText());
-		selOptions.getOption("files.audio").setValue(jTextFieldOptionsFilesAudio.getText());
-		selOptions.getOption("files.convert").setValue(jTextFieldOptionsFilesConvert.getText());
-		selOptions.getOption("files.delete").setValue(jTextFieldOptionsFilesDelete.getText());
-		selOptions.getOption("files.image").setValue(jTextFieldOptionsFilesImage.getText());
-		selOptions.getOption("files.image.delete").setValue(jCheckBoxOptionDeleteImages.isSelected()?"true":"false");
-		selOptions.getOption("log.count").setValue(jTextFieldOptionsLogCount.getText());
-		selOptions.getOption("log.level").setValue(jTextFieldOptionsLogLevel.getText());
-		selOptions.getOption("log.limit").setValue(jTextFieldOptionsLogLimit.getText());
-		selOptions.getOption("network.proxy").setValue(jTextFieldOptionsProxy.getText());
-		
-		Jamuz.getDb().updateOptions(selOptions);
-		Jamuz.getDb().updateMachine(selOptions.getOption(0).getIdMachine(), jTextFieldDescription.getText());
-		
-		PanelMain.setOptions();
-		PanelOptions.fillMachineList();
-		doClose(RET_OK);
+    private void jButtonOptionSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSaveActionPerformed
+
+        String locationLibrary = jTextFieldOptionLocationLibrary.getText();
+        File locationLibraryFile = new File(locationLibrary);
+
+        boolean validLocations = true;
+
+        String locationAdd = jTextFieldOptionLocationAdd.getText();
+        if (!checkLocation(locationLibraryFile, locationAdd, "location.add")) {
+            validLocations = false;
+        }
+
+        String locationKO = jTextFieldOptionLocationKO.getText();
+        if (!checkLocation(locationLibraryFile, locationKO, "location.ko")) {
+            validLocations = false;
+        }
+
+        String locationManual = jTextFieldOptionLocationManual.getText();
+        if (!checkLocation(locationLibraryFile, locationManual, "location.manual")) {
+            validLocations = false;
+        }
+
+        String locationOK = jTextFieldOptionLocationOK.getText();
+        File locationOkFile = new File(locationOK);
+        if (!jCheckBoxOptionLibraryIsMaster.isSelected() || !locationOkFile.equals(locationLibraryFile)) {
+            if (!checkLocation(locationLibraryFile, locationOK, "location.ok")) {
+                validLocations = false;
+            }
+        }
+
+        String locationTranscoded = jTextFieldOptionLocationTranscoded.getText();
+        if (!checkLocation(locationLibraryFile, locationTranscoded, "location.transcoded")) {
+            validLocations = false;
+        }
+
+        if (!validLocations) {
+            return;
+        }
+
+        selOptions.getOption("location.library").setValue(locationLibrary);
+        selOptions.getOption("location.add").setValue(locationAdd);
+        selOptions.getOption("location.ko").setValue(locationKO);
+        selOptions.getOption("location.manual").setValue(locationManual);
+        selOptions.getOption("location.ok").setValue(locationOK);
+        selOptions.getOption("location.transcoded").setValue(locationTranscoded);
+
+        selOptions.getOption("library.isMaster").setValue(jCheckBoxOptionLibraryIsMaster.isSelected() ? "true" : "false");
+        selOptions.getOption("location.mask").setValue(jTextFieldOptionMask.getText());
+        selOptions.getOption("files.audio").setValue(jTextFieldOptionsFilesAudio.getText());
+        selOptions.getOption("files.convert").setValue(jTextFieldOptionsFilesConvert.getText());
+        selOptions.getOption("files.delete").setValue(jTextFieldOptionsFilesDelete.getText());
+        selOptions.getOption("files.image").setValue(jTextFieldOptionsFilesImage.getText());
+        selOptions.getOption("files.image.delete").setValue(jCheckBoxOptionDeleteImages.isSelected() ? "true" : "false");
+        selOptions.getOption("log.count").setValue(jTextFieldOptionsLogCount.getText());
+        selOptions.getOption("log.level").setValue(jTextFieldOptionsLogLevel.getText());
+        selOptions.getOption("log.limit").setValue(jTextFieldOptionsLogLimit.getText());
+        selOptions.getOption("network.proxy").setValue(jTextFieldOptionsProxy.getText());
+
+        Jamuz.getDb().updateOptions(selOptions);
+        Jamuz.getDb().updateMachine(selOptions.getOption(0).getIdMachine(), jTextFieldDescription.getText());
+
+        PanelMain.setOptions();
+        PanelOptions.fillMachineList();
+        doClose(RET_OK);
     }//GEN-LAST:event_jButtonOptionSaveActionPerformed
 
-	private boolean checkLocation(File base, String child) {
-		try {
-			if(FileSystem.isSubDirectory(base, new File(child))) {
-				Popup.error("\"" + child + "\" is a sub folder of \"" + base.getAbsolutePath() + "\". Please change.");
-				return false;
-			}
-			return true;
-		} catch (IOException ex) {
-			Popup.error(ex);
-			return false;
-		}
-	}
-	
+    private boolean checkLocation(File base, String child, String optionId) {
+        try {
+            if (FileSystem.isSubDirectory(base, new File(child))) {
+                String get = Inter.get("Options.Title." + optionId);
+                Popup.error(get + ": \"" + child + "\" is a sub folder of \"" + base.getAbsolutePath() + "\". Please change.");
+                return false;
+            }
+            return true;
+        } catch (IOException ex) {
+            Popup.error(ex);
+            return false;
+        }
+    }
+
     private void jButtonOptionSelectFolderNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSelectFolderNewActionPerformed
         selectFolder(jTextFieldOptionLocationAdd, Inter.get("Options.Title.location.add"));
     }//GEN-LAST:event_jButtonOptionSelectFolderNewActionPerformed
@@ -1171,7 +1176,7 @@ public class DialogOptions extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonOptionSelectFolderManualActionPerformed
 
     private void jButtonOptionSelectFolderOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSelectFolderOKActionPerformed
-		selectFolder(jTextFieldOptionLocationOK, Inter.get("Options.Title.location.ok"));
+        selectFolder(jTextFieldOptionLocationOK, Inter.get("Options.Title.location.ok"));
     }//GEN-LAST:event_jButtonOptionSelectFolderOKActionPerformed
 
     private void jButtonOptionSelectFolderKOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSelectFolderKOActionPerformed
@@ -1183,18 +1188,18 @@ public class DialogOptions extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonStatSouceAddActionPerformed
 
     private void jButtonStatSouceEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStatSouceEditActionPerformed
-        if(jListStatSources.getSelectedIndex()>-1) {
+        if (jListStatSources.getSelectedIndex() > -1) {
             StatSource statSource = (StatSource) jListStatSources.getSelectedValue();
             DialogStatSource.main(this, statSource);
         }
     }//GEN-LAST:event_jButtonStatSouceEditActionPerformed
 
     private void jButtonStatSouceDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStatSouceDelActionPerformed
-        if(jListStatSources.getSelectedIndex()>-1) {
+        if (jListStatSources.getSelectedIndex() > -1) {
             int n = JOptionPane.showConfirmDialog(
-                this, Inter.get("Question.DeleteStatSource"),  //NOI18N
-                Inter.get("Label.Confirm"),  //NOI18N
-                JOptionPane.YES_NO_OPTION);
+                    this, Inter.get("Question.DeleteStatSource"), //NOI18N
+                    Inter.get("Label.Confirm"), //NOI18N
+                    JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 StatSource statSource = (StatSource) jListStatSources.getSelectedValue();
                 Jamuz.getDb().deleteStatSource(statSource.getId());
@@ -1208,18 +1213,18 @@ public class DialogOptions extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonDeviceAddActionPerformed
 
     private void jButtonDeviceEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeviceEditActionPerformed
-        if(jListDevices.getSelectedIndex()>-1) {
+        if (jListDevices.getSelectedIndex() > -1) {
             Device device = (Device) jListDevices.getSelectedValue();
             DialogDevice.main(this, device);
         }
     }//GEN-LAST:event_jButtonDeviceEditActionPerformed
 
     private void jButtonDeviceDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeviceDelActionPerformed
-        if(jListDevices.getSelectedIndex()>-1) {
+        if (jListDevices.getSelectedIndex() > -1) {
             int n = JOptionPane.showConfirmDialog(
-                this, Inter.get("Question.DeleteDevice"),  //NOI18N
-                Inter.get("Label.Confirm"),  //NOI18N
-                JOptionPane.YES_NO_OPTION);
+                    this, Inter.get("Question.DeleteDevice"), //NOI18N
+                    Inter.get("Label.Confirm"), //NOI18N
+                    JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 Device device = (Device) jListDevices.getSelectedValue();
                 Jamuz.getDb().deleteDevice(device.getId());
@@ -1235,43 +1240,43 @@ public class DialogOptions extends javax.swing.JDialog {
     private void jButtonOptionSelectFolderTranscodedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionSelectFolderTranscodedActionPerformed
         selectFolder(jTextFieldOptionLocationTranscoded, Inter.get("Options.Title.location.transcoded"));
     }//GEN-LAST:event_jButtonOptionSelectFolderTranscodedActionPerformed
-	
-	private void doClose(int retStatus) {
-		returnStatus = retStatus;
-		setVisible(false);
-		dispose();
-	}
 
-	/**
-	 * @param parent
-	 * @param machineName
-	 */
-	public static void main(Frame parent, final String machineName) {
-		/* Set the Nimbus look and feel */
-		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    private void doClose(int retStatus) {
+        returnStatus = retStatus;
+        setVisible(false);
+        dispose();
+    }
+
+    /**
+     * @param parent
+     * @param machineName
+     */
+    public static void main(Frame parent, final String machineName) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-		 */
-		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(DialogOptions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		}
-		//</editor-fold>
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DialogOptions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
 
-		/* Create and display the dialog */
-		java.awt.EventQueue.invokeLater(() -> {
-			DialogOptions dialog = new DialogOptions(parent, true, machineName);
-			dialog.setTitle(Inter.get("Label.Options") + " - " + machineName);  //NOI18N
-			dialog.setLocationRelativeTo(parent);
-			dialog.setVisible(true);
-		});
-	}
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(() -> {
+            DialogOptions dialog = new DialogOptions(parent, true, machineName);
+            dialog.setTitle(Inter.get("Label.Options") + " - " + machineName);  //NOI18N
+            dialog.setLocationRelativeTo(parent);
+            dialog.setVisible(true);
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
@@ -1353,5 +1358,5 @@ public class DialogOptions extends javax.swing.JDialog {
     private static javax.swing.JTextField jTextFieldOptionsProxy;
     // End of variables declaration//GEN-END:variables
 
-	private int returnStatus = RET_CANCEL;
+    private int returnStatus = RET_CANCEL;
 }
