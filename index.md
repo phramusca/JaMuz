@@ -9,18 +9,18 @@ layout: default
 <style>
   .carousel-android-image {
     margin:0 auto;
-    height: 500px;
+    height: 700px;
     width: auto;
   }
 
   .carousel-desktop-image {
     margin:0 auto;
-    width: 500px;
+    width: 700px;
     height: auto;
   }
 
   /* .slick-slide {
-    height:500px;
+    height:700px;
   } */
 </style>
 
@@ -79,7 +79,7 @@ layout: default
 |                         | JaMuz Android                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | JaMuz Desktop                                                                                                                 |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Platform(s)             | <img src="img/android.png" alt="JaMuz Android">                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> |
-| Overview                | <img src="img/phoneScreenshots/1.png" alt="JaMuz Android" height="300">                                                                                                                                                                                                                                                                                                                                                                                                                                                       | <img src="img/desktop/Choisir.png" alt="JaMuz Desktop" width="300">                                                           |
+| Overview                | <img src="img/phoneScreenshots/1.png" alt="JaMuz Android" height="400">                                                                                                                                                                                                                                                                                                                                                                                                                                                       | <img src="img/desktop/Choisir.png" alt="JaMuz Desktop" width="400">                                                           |
 | Download & installation | [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/org.phramusca.jamuz/)<br>- [Get F-Droid](https://f-droid.org/F-Droid.apk) and [install it](https://www.androidauthority.com/how-to-install-apks-31494/).<br>- Open F-Droid, search for `JaMuz` and install it.<br><br>OR <span id="download-container-jamuz-android"></span> and [install it](https://www.androidauthority.com/how-to-install-apks-31494/), but you will not get updates! | - <span id="download-container-jamuz-desktop"></span><br>- Extract 7z archive<br>- Double-click on `JaMuz.jar`                |
 | Available in            | <img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status">                                                                                                                                                                                                                                                                                                                                                                                                            | <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status">                   |
 
