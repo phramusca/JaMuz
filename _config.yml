@@ -12,3 +12,4 @@ plugins:
 - jekyll-remote-theme
 google_analytics: 
 show_downloads: false
+full_description_content: "{% include_relative _includes/full_description.html %}"
