@@ -1,6 +1,5 @@
 ---
 layout: default
-full_description_url: "https://raw.githubusercontent.com/phramusca/JaMuz-Remote/master/metadata/en/full_description.txt"
 ---
 
 <script src="./download.js"></script>
@@ -14,8 +13,6 @@ full_description_url: "https://raw.githubusercontent.com/phramusca/JaMuz-Remote/
 ``JaMuz Android`` and ``JaMuz Desktop`` can be used independently but it is recommended to use both together.
 
 ## JaMuz Android
-
-{% remote_include https://raw.githubusercontent.com/phramusca/JaMuz-Remote/master/metadata/en/full_description.txt %}
 
 - Your new Android music player
 - Easily sync a playlist over WiFi from [JaMuz](https://github.com/phramusca/JaMuz) to [JaMuz Remote](https://github.com/phramusca/JaMuz-Remote)
