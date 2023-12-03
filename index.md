@@ -9,7 +9,7 @@ layout: default
 <style>
   .carousel-android-image {
     margin:0 auto;
-    height: 500px;
+    height: 400px;
     width: auto;
   }
 
@@ -25,82 +25,69 @@ layout: default
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <!-- Initialize Slick Carousel -->
-<script type="text/javascript">
-  $(document).ready(function(){
-    // JaMuz Android
-    var numberOfImages = 15;
-    var carouselAndroid = $('.carousel-android');
-    for (var i = 1; i <= numberOfImages; i++) {
-      var imageUrl = 'img/phoneScreenshots/' + i + '.png';
-      carouselAndroid.append('<div><img src="' + imageUrl + '" alt="Image" class="carousel-android-image"></div>');
-    }
-    carouselAndroid.slick({
-      dots: true,
-      infinite: true,
-      autoplay: true,
-      autoplaySpeed: 3000,
-      fade: true,
-      cssEase: 'linear'
-    });
+<script src="./scripts/carousel.js"></script>
 
-    // JaMuz Desktop
-    var images = [
-      'img/desktop/Choisir.png',
-      'img/desktop/Fusionner.png',
-      'img/desktop/Exporter.png',
-      'img/desktop/Verifier.png',
-      'img/desktop/Listes.png',
-      'img/desktop/Slsk.png',
-      'img/desktop/Stats.png',
-      'img/desktop/Serveur.png',
-      'img/desktop/Options.png',
-    ];
-    var carouselDesktop = $('.carousel-desktop');
-      images.forEach(function(imageUrl) {
-      carouselDesktop.append('<div><img src="' + imageUrl + '" alt="Image" class="carousel-desktop-image"></div>');
-    });
-    carouselDesktop.slick({
-        dots: true,
-        infinite: true,
-        autoplay: true,
-        autoplaySpeed: 3000,
-        fade: true,
-        cssEase: 'linear'
-      });
-    });
-</script>
+<!-- Initialize download links -->
+<script src="./scripts/download.js"></script>
 
-<script src="./download.js"></script>
+JaMuz consits of:
 
-| JaMuz Android                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | JaMuz Desktop                                                                                                                 |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| <img src="img/android.png" alt="JaMuz Android">                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> |
-| [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/org.phramusca.jamuz/)<br>- [Get F-Droid](https://f-droid.org/F-Droid.apk) and [install it](https://www.androidauthority.com/how-to-install-apks-31494/).<br>- Open F-Droid, search for `JaMuz` and install it.<br><br>OR <span id="download-container-jamuz-android"></span> and [install it](https://www.androidauthority.com/how-to-install-apks-31494/), but you will not get updates! | - <span id="download-container-jamuz-desktop"></span><br>- Extract 7z archive<br>- Double-click on `JaMuz.jar`                |
-| <img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status" width="350">                                                                                                                                                                                                                                                                                                                                                                                                            | <img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status" width="350">                   |
-
-``JaMuz Android`` and ``JaMuz Desktop`` can be used independently but it is recommended to use both together.
+- [JaMuz Desktop](#jamuz-desktop): a Java application that will help you managing your digital music collection.
+- [JaMuz Android](#jamuz-android): an Android audio player, connected to [JaMuz Desktop](#jamuz-desktop).
 
 ## JaMuz Android
 
+<img src="img/android.png" alt="JaMuz Android"> 
+
+An Android **Audio Player** and also a **Remote** for [JaMuz Desktop](#jamuz-desktop).
+
 <div class="carousel-android"></div>
+
+### Installation
+
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/org.phramusca.jamuz/)
+
+- [Get F-Droid](https://f-droid.org/F-Droid.apk) and [install it](https://www.androidauthority.com/how-to-install-apks-31494/).
+- Open F-Droid, search for `JaMuz` and install it.
+
+OR <span id="download-container-jamuz-android"></span> and [install it](https://www.androidauthority.com/how-to-install-apks-31494/), but you will not get updates!
+
+### Features
 
 - Audio Player:
   - Playlist editor (user tags, rating and genre)
   - Tag editor (user tags, rating and genre)
-  - Replaygain support (MP3 only, FLAC on its way)
+  - Replaygain support (MP3 and FLAC, if from JaMuz Desktop)
   - One finger control
-  - Voice commands
-- Merge your statistics with [JaMuz Desktop](https://github.com/phramusca/JaMuz)
+  - [Voice commands](https://github.com/phramusca/JaMuz-Remote/blob/master/data/voiceCommands.md)
+- Merge your statistics with [JaMuz Desktop](#jamuz-desktop)
   - And so with all players JaMuz Desktop can merge with (Mixxx, Kodi, guayadeque,...)
-- Sync files from [JaMuz Desktop](https://github.com/phramusca/JaMuz) over WiFi
+- Sync files from [JaMuz Desktop](#jamuz-desktop) over WiFi
   - Select a playlist on JaMuz, connect JaMuz Remote sync, and wait for your files.
-- Remote control for [JaMuz Desktop](https://github.com/phramusca/JaMuz)
+- Remote control for [JaMuz Desktop](#jamuz-desktop)
+
+### International
+
+JaMuz Android is available in the following languages:
+
+<img src="https://hosted.weblate.org/widgets/jamuz-remote/-/translations/multi-auto.svg" alt="Translation status">
+
+Please help out translating by using [WebLate](https://hosted.weblate.org/engage/jamuz-remote/).
 
 ## JaMuz Desktop
+
+<img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> 
 
 A **music** library **manager**, **player** and more, for **Linux**, **Raspberry** and **Windows**.
 
 <div class="carousel-desktop"></div>
+
+### Installation
+
+- [Install Java](https://www.java.com/en/download/help/download_options_fr.html) if you have not already.
+- <span id="download-container-jamuz-desktop"></span>
+- Extract 7z archive
+- Double-click on `JaMuz.jar`
 
 ### Features
 
@@ -112,7 +99,7 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 - [Kodi](https://kodi.tv/) (Linux / Windows)
 - [Media Monkey](https://www.mediamonkey.com/) (Windows)
 - [Mixxx](https://mixxx.org/) (Linux / Windows)
-- [JaMuz Android](https://github.com/phramusca/JaMuz-Remote)
+- **[JaMuz Android](#jamuz-android)**
 - ... please [contribute](CONTRIBUTING.md) to add some more.
 
 #### Sync files to devices
@@ -120,9 +107,9 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 - Select a playlist and a destination (Phone, USB Key/HDD, MP3 player, ...).
 - Process deletes unwanted files on destination then copy new files.
 
-#### Sync with [JaMuz Android](https://github.com/phramusca/JaMuz-Remote)
+#### Sync with [JaMuz Android](#jamuz-android)
 
-- Using [JaMuz Android](https://github.com/phramusca/JaMuz-Remote), you can combine both above features, but **over WiFi**.
+- Using [JaMuz Android](#jamuz-android), you can combine both above features, but **over WiFi**.
 - You can also **remote control** JaMuz Desktop audio player.
 
 #### Manage, Organize and Convert
@@ -144,8 +131,18 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
   - Kodi helper to manage your videos.
   - Calibre helper to manage your ebooks.
 
+### International
+
+JaMuz Desktop is available in the following languages:
+
+<a href="https://hosted.weblate.org/engage/jamuz/?utm_source=widget">
+<img src="https://hosted.weblate.org/widgets/jamuz/-/translations/multi-auto.svg" alt="Translation status" />
+</a>
+
+Please help out translating by using [WebLate](https://hosted.weblate.org/engage/jamuz/).
+
 ## Donate
 
-I'll always be pleased if you offer me a beer (or a cup of tea, or more) to support my contribution :)
+I'll always be pleased if you give me a little something to support my contribution :)
 
 <a href="https://liberapay.com/phramusca/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
