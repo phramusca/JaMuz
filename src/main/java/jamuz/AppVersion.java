@@ -1,9 +1,9 @@
 package jamuz;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 
@@ -25,13 +25,13 @@ public class AppVersion {
     }
 
     public boolean isNewVersion() {
-        if (!currentVersion.equals("vnull")) {
-            return compareVersionStrings(latestVersion, currentVersion) > 0;
-        }
-        return false;
+        return !currentVersion.equals("vnull") && compareVersionStrings(latestVersion, currentVersion) > 0;
     }
 
     void setAsset(File assetFile, int size) {
+        if (assetFile == null) {
+            throw new IllegalArgumentException("Asset file cannot be null");
+        }
         this.assetFile = assetFile;
         this.assetSize = size;
     }
@@ -40,8 +40,7 @@ public class AppVersion {
         this.latestVersion = latestVersion;
     }
 
-    //FIXME TEST this one compareVersionStrings
-    private static int compareVersionStrings(String version1, String version2) {
+    public static int compareVersionStrings(String version1, String version2) {
         String[] parts1 = version1.split("\\.");
         String[] parts2 = version2.split("\\.");
 
@@ -52,20 +51,19 @@ public class AppVersion {
             int v2 = Integer.parseInt(parts2[i].replaceAll("\\D", ""));
 
             if (v1 < v2) {
-                return -1; // version1 is lower
+                return -1;
             } else if (v1 > v2) {
-                return 1; // version1 is higher
+                return 1;
             }
         }
 
-        // If all common parts are equal, the longer version is higher
         if (parts1.length < parts2.length) {
-            return -1; // version1 is lower
+            return -1;
         } else if (parts1.length > parts2.length) {
-            return 1; // version1 is higher
+            return 1;
         }
 
-        return 0; // versions are equal
+        return 0;
     }
 
     public String getCurrentVersion() {
@@ -105,7 +103,7 @@ public class AppVersion {
         }
         return true;
     }
-    
+
     void unzipAsset(ICallBackVersionCheck callBackVersionCheck) throws IOException {
         callBackVersionCheck.onUnzipCount(this);
         long totalBytes = 0;
