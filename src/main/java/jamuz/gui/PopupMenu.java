@@ -58,7 +58,7 @@ import javax.swing.SwingUtilities;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class PopupMenu {
 

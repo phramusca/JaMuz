@@ -18,7 +18,7 @@ package jamuz.soulseek;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class SlskdTokenResponse {
 	public int expires;

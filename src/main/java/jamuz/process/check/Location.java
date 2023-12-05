@@ -23,7 +23,7 @@ import java.io.File;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class Location {
 

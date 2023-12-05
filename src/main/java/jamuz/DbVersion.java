@@ -20,7 +20,7 @@ import java.util.Date;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DbVersion {
 	private final int version;

@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class SocketEmission extends ProcessAbstract {
 

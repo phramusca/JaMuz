@@ -18,7 +18,7 @@ package jamuz.gui;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public interface PopupMenuListener {
 

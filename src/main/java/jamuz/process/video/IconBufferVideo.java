@@ -30,7 +30,7 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class IconBufferVideo {
     private static final Map<String, ImageIcon> icons = new HashMap<>();

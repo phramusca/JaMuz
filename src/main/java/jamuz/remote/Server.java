@@ -52,7 +52,7 @@ import org.json.simple.parser.ParseException;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class Server {
 

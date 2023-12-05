@@ -39,7 +39,7 @@ import javax.imageio.ImageIO;
  
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class QRCode {
 

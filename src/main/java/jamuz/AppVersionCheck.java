@@ -20,7 +20,7 @@ import okhttp3.Response;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class AppVersionCheck {
 

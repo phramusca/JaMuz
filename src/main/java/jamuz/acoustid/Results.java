@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class Results {
 	String status;
