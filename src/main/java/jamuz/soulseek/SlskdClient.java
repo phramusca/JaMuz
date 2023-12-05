@@ -36,7 +36,7 @@ import org.json.simple.JSONObject;
 
 /**
  * Wrapper for http://localhost:5030/swagger/index.html
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class SlskdClient {
 	

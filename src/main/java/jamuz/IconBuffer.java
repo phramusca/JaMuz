@@ -37,7 +37,7 @@ import javax.swing.ImageIcon;
 // So that "Classique" and "Musical" are no more mixed
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class IconBuffer {
 

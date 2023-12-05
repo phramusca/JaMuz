@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class SlskdDownloadDirectory {
 	public String directory;

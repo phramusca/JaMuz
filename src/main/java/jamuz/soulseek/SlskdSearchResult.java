@@ -18,7 +18,7 @@ package jamuz.soulseek;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class SlskdSearchResult {
 	public int fileCount;

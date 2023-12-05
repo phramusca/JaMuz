@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class TestAcoustId {
 

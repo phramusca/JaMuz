@@ -18,7 +18,7 @@ package jamuz.acoustid;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class AcoustIdResult {
 	

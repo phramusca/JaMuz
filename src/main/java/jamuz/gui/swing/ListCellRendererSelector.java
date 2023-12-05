@@ -26,7 +26,7 @@ import javax.swing.ListCellRenderer;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class ListCellRendererSelector extends JLabel implements ListCellRenderer
 {

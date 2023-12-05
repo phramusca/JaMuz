@@ -10,7 +10,7 @@ import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 /**
  * AppVersion class for handling application version updates.
  *
- * @author phramusca
+ * @author phramusca <phramusca@gmail.com>
  */
 public class AppVersion {
 

@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class SocketReception  extends ProcessAbstract {
 

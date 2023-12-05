@@ -26,7 +26,7 @@ import org.apache.commons.io.FilenameUtils;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class SlskdSearchResponse {
 	public int fileCount;

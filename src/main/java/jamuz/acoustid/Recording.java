@@ -23,7 +23,7 @@ import org.musicbrainz.model.entity.RecordingWs2;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 class Recording {
 	private final String id;

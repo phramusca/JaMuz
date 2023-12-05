@@ -23,7 +23,7 @@ import javax.swing.table.TableCellRenderer;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class ProgressCellRender extends JProgressBar implements TableCellRenderer {
 
