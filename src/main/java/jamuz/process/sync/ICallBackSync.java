@@ -18,7 +18,7 @@ package jamuz.process.sync;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public interface ICallBackSync {
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public interface ICallBackMerge {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 phramusca ( https://github.com/phramusca/JaMuz/ )
+ * Copyright (C) 2013 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import javax.swing.*;
  *
  *  The source of the Action is a TableCellListener instance.
  * Got from: http://tips4java.wordpress.com/2009/06/07/table-cell-listener/
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public class TableCellListener implements PropertyChangeListener, Runnable
 {
