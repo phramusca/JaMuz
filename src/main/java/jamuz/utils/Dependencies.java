@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 /*
- * Copyright (C) 2022 raph
+ * Copyright (C) 2022 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
