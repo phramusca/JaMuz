@@ -18,7 +18,7 @@ package jamuz.process.check;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public interface ICallBackReplace {
 

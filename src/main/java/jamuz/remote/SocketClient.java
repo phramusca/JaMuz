@@ -47,7 +47,7 @@ import org.json.simple.parser.ParseException;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public class SocketClient {
 	private final Socket socket;

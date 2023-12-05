@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public class SSH {
 

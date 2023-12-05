@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 phramusca ( https://github.com/phramusca/JaMuz/ )
+ * Copyright (C) 2016 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public class Desktop {
 	

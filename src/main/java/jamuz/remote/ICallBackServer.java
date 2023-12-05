@@ -18,7 +18,7 @@ package jamuz.remote;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public interface ICallBackServer {
 

@@ -20,7 +20,7 @@ import java.awt.image.BufferedImage;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public interface ICallBackCover {
 

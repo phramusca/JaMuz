@@ -18,7 +18,7 @@ package jamuz.soulseek;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public interface ICallBackSearch {
     public void searching(SlskdSearchResult search);
