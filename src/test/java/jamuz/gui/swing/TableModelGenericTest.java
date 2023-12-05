@@ -132,7 +132,7 @@ public class TableModelGenericTest {
 		 */
 		@Override
 		public int getRowCount() {
-			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+			throw new UnsupportedOperationException("Not supported yet.");
 		}
 
 		/**
@@ -143,7 +143,7 @@ public class TableModelGenericTest {
 		 */
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+			throw new UnsupportedOperationException("Not supported yet.");
 		}
 	}
 
