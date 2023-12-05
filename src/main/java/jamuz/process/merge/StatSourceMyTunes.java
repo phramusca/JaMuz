@@ -101,7 +101,7 @@ public class StatSourceMyTunes extends StatSourceSQL {
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		//TODO TAGS get tags from Guayadeque
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 
