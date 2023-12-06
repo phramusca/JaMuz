@@ -18,6 +18,8 @@ package jamuz;
 
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
+
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.logging.Level;
 import org.sqlite.SQLiteConfig;
@@ -72,7 +74,7 @@ public class DbConn {
 	public boolean connect() {
 		return connect(true);
 	}
-	
+
 	/**
 	 * Connect database
 	 *
@@ -83,25 +85,25 @@ public class DbConn {
 		try {
 			switch (this.info.libType) {
 				case Sqlite:
-					//NOI18N
-					Class.forName("org.sqlite.JDBC");  //NOI18N
-					//This is to enforce foreign keys usage
+					Class.forName("org.sqlite.JDBC"); // NOI18N
 					SQLiteConfig config = new SQLiteConfig();
 					config.enforceForeignKeys(enforceForeignKeys);
-					connection = DriverManager.getConnection("jdbc:sqlite:" + this.info.locationWork, config.toProperties()); //NOI18N //NOI18N
+					connection = DriverManager.getConnection("jdbc:sqlite:" + this.info.locationWork, // NOI18N
+							config.toProperties()); // NOI18N
 					break;
 				case MySQL:
-					//NOI18N
-					Class.forName("com.mysql.jdbc.Driver").newInstance();  //NOI18N
-					connection = DriverManager.getConnection("jdbc:mysql://" + this.info.locationWork, this.info.user, this.info.pwd); //NOI18N //NOI18N
+					Class.forName("com.mysql.jdbc.Driver").getDeclaredConstructor().newInstance(); // NOI18N
+					connection = DriverManager.getConnection("jdbc:mysql://" + this.info.locationWork, this.info.user, // NOI18N
+							this.info.pwd); // NOI18N
 					break;
 				default:
-					Popup.error(Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\"  " + " \"" + this.info.libType + "\"  ");  //NOI18N
+					Popup.error(Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\"  " + " \"" // NOI18N
+							+ this.info.libType + "\"  "); // NOI18N
 					return false;
 			}
 			return true;
-		} catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException ex) {
-			Popup.error(Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\"", ex);  //NOI18N
+		} catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+			Popup.error(Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\"", ex); // NOI18N
 			return false;
 		}
 	}
@@ -113,7 +115,7 @@ public class DbConn {
 		try {
 			connection.close();
 		} catch (SQLException ex) {
-			Jamuz.getLogger().log(Level.SEVERE, "DbConn.disconnect()", ex);  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "DbConn.disconnect()", ex); // NOI18N
 		}
 	}
 
@@ -128,7 +130,7 @@ public class DbConn {
 	 */
 	public String getStringValue(ResultSet rs, String source, String defaultValue) {
 		String value = getStringValue(rs, source);
-		if (value.isBlank()) {  //NOI18N
+		if (value.isBlank()) { // NOI18N
 			value = defaultValue;
 		}
 		return value;
@@ -144,17 +146,17 @@ public class DbConn {
 	public String getStringValue(ResultSet rs, String source) {
 		try {
 			if (source.isBlank()) {
-				source = "";  //NOI18N
+				source = ""; // NOI18N
 			} else {
 				source = rs.getString(source);
 				if (source == null) {
-					source = "";  //NOI18N
+					source = ""; // NOI18N
 				}
 			}
 			return source;
 		} catch (SQLException ex) {
 			Popup.error(ex);
-			return "";  //NOI18N
+			return ""; // NOI18N
 		}
 	}
 }
