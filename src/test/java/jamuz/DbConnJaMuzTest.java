@@ -144,7 +144,7 @@ public class DbConnJaMuzTest {
 		expectedGenres.add("Reggae");
 		checkGenreList(expectedGenres);
 
-		assertTrue("checkGenre", Jamuz.getDb().checkGenre("Reggae"));
+		assertTrue("checkGenre", Jamuz.getDb().isGenreSupported("Reggae"));
 
 		//Negative cases
 		assertFalse("updateGenre negative", Jamuz.getDb().updateGenre("NoSuchWeirdGenre", "Toto"));
@@ -156,7 +156,7 @@ public class DbConnJaMuzTest {
 		assertFalse("insertGenre negative", Jamuz.getDb().insertGenre("Reggae")); //As duplicate
 		checkGenreList(expectedGenres);
 
-		assertFalse("checkGenre negative", Jamuz.getDb().checkGenre("NoSuchWeirdGenre"));
+		assertFalse("checkGenre negative", Jamuz.getDb().isGenreSupported("NoSuchWeirdGenre"));
 
 		//FIXME TEST Check other constraints
 	}
