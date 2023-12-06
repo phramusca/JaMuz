@@ -138,14 +138,15 @@ public class AppVersionCheck {
                             int bufferSize = 8 * 1024; // 8 KB buffer, you can adjust this based on your needs
                             byte[] buffer = new byte[bufferSize];
                             InputStream inputStream = downloadResponse.body().byteStream();
-                            FileOutputStream outputStream = new FileOutputStream(assetFile);
-                            int read;
-                            callBackVersionCheck.onDownloadStart();
-                            while ((read = inputStream.read(buffer)) != -1) {
-                                outputStream.write(buffer, 0, read);
-                                bytesRead += read;
-                                int progress = (int) ((bytesRead * 100) / fileSize);
-                                callBackVersionCheck.onDownloadProgress(appVersion, progress);
+                            try (FileOutputStream outputStream = new FileOutputStream(assetFile)) {
+                                int read;
+                                callBackVersionCheck.onDownloadStart();
+                                while ((read = inputStream.read(buffer)) != -1) {
+                                    outputStream.write(buffer, 0, read);
+                                    bytesRead += read;
+                                    int progress = (int) ((bytesRead * 100) / fileSize);
+                                    callBackVersionCheck.onDownloadProgress(appVersion, progress);
+                                }
                             }
                             appVersion.unzipAsset(callBackVersionCheck);
                             if (appVersion.isUnzippedAssetValid()) {
