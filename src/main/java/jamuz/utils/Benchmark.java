@@ -46,22 +46,22 @@ public class Benchmark {
     }
 
     /**
-     * Return ellapsed and remaining
+     * Return elapsed and remaining
      * @return
      */
     public String get() {
         long currentTime=System.currentTimeMillis();
-        long ellapsedTime=currentTime-this.startTime;
+        long elapsedTime=currentTime-this.startTime;
         long actionTime=currentTime-this.partialTime;
         this.partialTime=currentTime;
         this.partialTimes.add(actionTime);
         long remainingTime = mean(this.partialTimes)*(this.size-this.index);
         this.index++;
         
-        String ellapsed = StringManager.humanReadableSeconds(ellapsedTime/1000);
+        String elapsed = StringManager.humanReadableSeconds(elapsedTime/1000);
         String remaining = StringManager.humanReadableSeconds(remainingTime/1000);
         
-        return MessageFormat.format("{0}: {2}, {1}: {3}", Inter.get("Label.ellapsed"), Inter.get("Label.remaining"), ellapsed, remaining); //NOI18N
+        return MessageFormat.format("{0}: {2}, {1}: {3}", Inter.get("Label.elapsed"), Inter.get("Label.remaining"), elapsed, remaining); //NOI18N
     }
 
 	/**
