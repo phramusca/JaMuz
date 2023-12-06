@@ -18,13 +18,18 @@ package jamuz.utils;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.apache.commons.io.FilenameUtils;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import test.helpers.TestSettings;
 
 /**
@@ -77,7 +82,7 @@ public class FileSystemTest {
 		destination.getParentFile().delete();
 	}
 
-	//TODO: Add negative cases
+	// TODO: Add negative cases
 	/**
 	 * Test of moveFile method, of class FileSystem.
 	 *
@@ -86,7 +91,7 @@ public class FileSystemTest {
 	@Test
 	public void testMoveFile() throws IOException {
 		System.out.println("moveFile");
-		//Given
+		// Given
 		File moveSource = new File(FilenameUtils.concat(TestSettings.getAppFolder(), "tempShouldBeDeleted.mp3"));
 		FileSystem.copyFile(source, moveSource);
 		assertTrue(moveSource.exists());
@@ -94,10 +99,10 @@ public class FileSystemTest {
 		assertTrue(!destination.getParentFile().exists());
 		assertTrue(!destination.exists());
 
-		//When
+		// When
 		FileSystem.moveFile(moveSource, destination);
 
-		//Then
+		// Then
 		assertTrue(source.exists());
 		assertTrue(source.length() == 961029);
 		assertTrue(destination.exists());
@@ -105,7 +110,7 @@ public class FileSystemTest {
 		assertTrue(!moveSource.exists());
 	}
 
-	//TODO: Add negative cases
+	// TODO: Add negative cases
 	/**
 	 * Test of copyFile method, of class FileSystem.
 	 *
@@ -115,47 +120,55 @@ public class FileSystemTest {
 	public void testCopyFile() throws Exception {
 		System.out.println("copyFile");
 
-		//Given
+		// Given
 		assertTrue(source.exists());
 		assertTrue(source.length() == 961029);
 		assertTrue(!destination.getParentFile().exists());
 		assertTrue(!destination.exists());
 
-		//When
+		// When
 		FileSystem.copyFile(source, destination);
 
-		//Then
+		// Then
 		assertTrue(source.exists());
 		assertTrue(source.length() == 961029);
 		assertTrue(destination.exists());
 		assertTrue(destination.length() == 961029);
 	}
 
-	/**
-	 * Test of replaceHome method, of class FileSystem.
-	 */
-	@Test
-	public void testReplaceHome_File() {
-		System.out.println("replaceHome");
-		File file = new File("~/toto/~tem/oh~/top.mp9");
-		File result = FileSystem.replaceHome(file);
-		assertTrue(result.getAbsolutePath().endsWith("/toto/~tem/oh~/top.mp9"));
-		assertTrue(result.getAbsolutePath().startsWith("/home/"));
-	}
-
-	/**
-	 * Test of replaceHome method, of class FileSystem.
-	 */
 	@Test
 	public void testReplaceHome_String() {
-		System.out.println("replaceHome");
-		File result = FileSystem.replaceHome("~/toto/~tem/oh~/top.mp9");
-		assertTrue(result.getAbsolutePath().endsWith("/toto/~tem/oh~/top.mp9"));
-		assertTrue(result.getAbsolutePath().startsWith("/home/"));
-
-		String filename = "/tmp/toto/~tem/oh~/top.mp9";
-		result = FileSystem.replaceHome(filename);
-		assertEquals(new File(filename), result);
+		testReplaceHome("~/toto/~tem/oh~/top.mp9");
+	}
+	
+	@Test
+	public void testReplaceHome_File() {
+		testReplaceHome(new File("~/toto/~tem/oh~/top.mp9"));
+	}
+	
+	private void testReplaceHome(Object input) {
+		boolean isWindows = false;
+		boolean isLinux = false;
+		if (OS.detect()) {
+			isWindows = OS.isWindows();
+			isLinux = OS.isUnix();
+		} else {
+			throw new UnsupportedOperationException("Operating system detection failed");
+		}
+		File file = (input instanceof File) ? (File) input : new File((String) input);
+		File result = FileSystem.replaceHome(file);
+		String expectedPath = "/toto/~tem/oh~/top.mp9";
+		if (isWindows) {
+			expectedPath = expectedPath.replace("/", "\\");
+			assertThat(result.getAbsolutePath(), Matchers.endsWith(expectedPath.replace("/", "\\")));
+		} else if (isLinux) {
+			assertThat(result.getAbsolutePath(), Matchers.endsWith(expectedPath));
+		}
+		if (isLinux) {
+			assertThat(result.getAbsolutePath(), Matchers.startsWith("/home/"));
+		} else if (isWindows) {
+			assertThat(result.getAbsolutePath(), Matchers.startsWith("C:\\Users\\"));
+		}
 	}
 
 	/**
