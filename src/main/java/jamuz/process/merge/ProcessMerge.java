@@ -1004,7 +1004,7 @@ public class ProcessMerge extends ProcessAbstract {
 			if(filesToUpdatePlayCounter.size()>0) {
 				//Remove potential duplicates 
 				filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter));
-				if(!dBJaMuz.updatePreviousPlayCounter(filesToUpdatePlayCounter, selectedStatSource.getId())) {
+				if(!dBJaMuz.playCounter().updatePreviousPlayCounter(filesToUpdatePlayCounter, selectedStatSource.getId())) {
 					return false;
 				}
 			}
