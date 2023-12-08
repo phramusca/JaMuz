@@ -1146,7 +1146,7 @@ public class DialogOptions extends javax.swing.JDialog {
         selOptions.getOption("network.proxy").setValue(jTextFieldOptionsProxy.getText());
 
         Jamuz.getDb().updateOptions(selOptions);
-        Jamuz.getDb().updateMachine(selOptions.getOption(0).getIdMachine(), jTextFieldDescription.getText());
+        Jamuz.getDb().machine().update(selOptions.getOption(0).getIdMachine(), jTextFieldDescription.getText());
 
         PanelMain.setOptions();
         PanelOptions.fillMachineList();
@@ -1202,7 +1202,7 @@ public class DialogOptions extends javax.swing.JDialog {
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 StatSource statSource = (StatSource) jListStatSources.getSelectedValue();
-                Jamuz.getDb().deleteStatSource(statSource.getId());
+                Jamuz.getDb().statSource().delete(statSource.getId());
                 displayStatSources();
             }
         }
@@ -1227,7 +1227,7 @@ public class DialogOptions extends javax.swing.JDialog {
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 Device device = (Device) jListDevices.getSelectedValue();
-                Jamuz.getDb().deleteDevice(device.getId());
+                Jamuz.getDb().device().delete(device.getId());
                 displayDevices();
             }
         }

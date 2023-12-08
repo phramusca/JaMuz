@@ -126,7 +126,7 @@ public class DbConnJaMuzTest {
 		expectedTags.add("Normal");
 		expectedTags.add("Joyeux");
 		for (String tag : expectedTags) {
-			assertTrue(Jamuz.getDb().insertTag(tag));
+			assertTrue(Jamuz.getDb().tag().insert(tag));
 		}
 		checkTagList(expectedTags);
 
@@ -134,33 +134,33 @@ public class DbConnJaMuzTest {
 		Jamuz.getDb().getTagListModel(myListModel);
 		assertArrayEquals(expectedTags.toArray(), myListModel.toArray());
 
-		assertTrue("updateTag", Jamuz.getDb().updateTag("Normal", "Tutu"));
+		assertTrue("updateTag", Jamuz.getDb().tag().update("Normal", "Tutu"));
 		expectedTags.set(2, "Tutu");
 		checkTagList(expectedTags);
 
-		assertTrue("deleteTag", Jamuz.getDb().deleteTag("Tutu"));
+		assertTrue("deleteTag", Jamuz.getDb().tag().delete("Tutu"));
 		expectedTags.remove("Tutu");
 		checkTagList(expectedTags);
 
-		assertTrue("insertTag", Jamuz.getDb().insertTag("Normal"));
+		assertTrue("insertTag", Jamuz.getDb().tag().insert("Normal"));
 		expectedTags.add("Normal");
 		checkTagList(expectedTags);
 
 		//Negative cases
-		assertFalse("updateTag negative", Jamuz.getDb().updateTag("NoSuchWeirdGenre", "Toto"));
+		assertFalse("updateTag negative", Jamuz.getDb().tag().update("NoSuchWeirdGenre", "Toto"));
 		checkTagList(expectedTags);
 
-		assertFalse("deleteTag negative", Jamuz.getDb().deleteTag("NoSuchWeirdGenre"));
+		assertFalse("deleteTag negative", Jamuz.getDb().tag().delete("NoSuchWeirdGenre"));
 		checkTagList(expectedTags);
 
-		assertFalse("insertTag negative", Jamuz.getDb().insertTag("Normal")); //As duplicate
+		assertFalse("insertTag negative", Jamuz.getDb().tag().insert("Normal")); //As duplicate
 		checkTagList(expectedTags);
 
 		//FIXME TEST Check other constraints
 	}
 
 	private void checkTagList(ArrayList<String> expectedTags) {
-		ArrayList<String> actualList = Jamuz.getDb().getTags();
+		ArrayList<String> actualList = Jamuz.getDb().tag().get();
 		Collections.sort(expectedTags); // getTags() return sorted
 		assertArrayEquals(expectedTags.toArray(), actualList.toArray());
 	}
@@ -173,7 +173,7 @@ public class DbConnJaMuzTest {
 		String newTag = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateTag(oldTag, newTag);
+		boolean result = instance.tag().update(oldTag, newTag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -186,7 +186,7 @@ public class DbConnJaMuzTest {
 		String tag = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.insertTag(tag);
+		boolean result = instance.tag().insert(tag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -199,7 +199,7 @@ public class DbConnJaMuzTest {
 		String tag = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.deleteTag(tag);
+		boolean result = instance.tag().delete(tag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -222,7 +222,7 @@ public class DbConnJaMuzTest {
 		System.out.println("getTags");
 		DbConnJaMuz instance = null;
 		ArrayList<String> expResult = null;
-		ArrayList<String> result = instance.getTags();
+		ArrayList<String> result = instance.tag().get();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -277,7 +277,7 @@ public class DbConnJaMuzTest {
 
 		//Set description
 		String description = "Waouh the great description!";
-		assertTrue(Jamuz.getDb().updateMachine(idMachine, description));
+		assertTrue(Jamuz.getDb().machine().update(idMachine, description));
 		zText = new StringBuilder();
 		assertTrue("isMachine updated", Jamuz.getDb().isMachine(machineName, zText, false));
 		assertEquals(description, zText.toString());
@@ -319,7 +319,7 @@ public class DbConnJaMuzTest {
 		checkOptionList(machineName, expectedOptions);
 
 		//Delete machine 
-		assertTrue(Jamuz.getDb().deleteMachine(machineName));
+		assertTrue(Jamuz.getDb().machine().delete(machineName));
 		defaultListModel = new DefaultListModel();
 		Jamuz.getDb().getMachineListModel(defaultListModel);
 		assertEquals(1, defaultListModel.size()); //Only current machine left
@@ -378,7 +378,7 @@ public class DbConnJaMuzTest {
 		String description = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateMachine(idMachine, description);
+		boolean result = instance.machine().update(idMachine, description);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -394,7 +394,7 @@ public class DbConnJaMuzTest {
 		String machineName = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.deleteMachine(machineName);
+		boolean result = instance.machine().delete(machineName);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -486,7 +486,7 @@ public class DbConnJaMuzTest {
 		expectedPlaylists.add(playlist3);
 		expectedPlaylists.add(playlist4);
 		for(Playlist playlist : expectedPlaylists) {
-			assertTrue(Jamuz.getDb().insertPlaylist(playlist));
+			assertTrue(Jamuz.getDb().playlist().insert(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
 
@@ -500,7 +500,7 @@ public class DbConnJaMuzTest {
 		playlist3.addOrder(new Playlist.Order(1, Playlist.Field.LASTPLAYED, true));
 		playlist3.addOrder(new Playlist.Order(2, Playlist.Field.TITLE, false));
 		for(Playlist playlist : expectedPlaylists) {
-			assertTrue(Jamuz.getDb().updatePlaylist(playlist));
+			assertTrue(Jamuz.getDb().playlist().update(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
 		
@@ -521,11 +521,11 @@ public class DbConnJaMuzTest {
 		playlist4.setTranscode(true);
 		playlist4.setType(Playlist.Type.Songs);		
 		for(Playlist playlist : expectedPlaylists) {
-			assertTrue(Jamuz.getDb().updatePlaylist(playlist));
+			assertTrue(Jamuz.getDb().playlist().update(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
 		
-		assertTrue(Jamuz.getDb().deletePlaylist(2));
+		assertTrue(Jamuz.getDb().playlist().delete(2));
 		expectedPlaylists.remove(playlist2);
 		checkPlaylistList(expectedPlaylists);
 
@@ -535,7 +535,7 @@ public class DbConnJaMuzTest {
 
 	private void checkPlaylistList(ArrayList<Playlist> expectedPlaylists) {
 		HashMap<Integer, Playlist> actualList = new HashMap<>();
-		assertTrue(Jamuz.getDb().getPlaylists(actualList));
+		assertTrue(Jamuz.getDb().playlist().get(actualList));
 		//Collections.sort(expectedPlaylists); // getPlaylists() return sorted ?
 		assertArrayEquals(expectedPlaylists.toArray(), actualList.values().toArray());
 	}
@@ -550,7 +550,7 @@ public class DbConnJaMuzTest {
 		Playlist playlist = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updatePlaylist(playlist);
+		boolean result = instance.playlist().update(playlist);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -566,7 +566,7 @@ public class DbConnJaMuzTest {
 		Playlist playlist = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.insertPlaylist(playlist);
+		boolean result = instance.playlist().insert(playlist);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -582,7 +582,7 @@ public class DbConnJaMuzTest {
 		int id = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.deletePlaylist(id);
+		boolean result = instance.playlist().delete(id);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -598,7 +598,7 @@ public class DbConnJaMuzTest {
 		HashMap<Integer, Playlist> playlists = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getPlaylists(playlists);
+		boolean result = instance.playlist().get(playlists);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -624,7 +624,7 @@ public class DbConnJaMuzTest {
 		expectedStatSources.add(statSource2);
 		expectedStatSources.add(statSource3);
 		for(StatSource statSource : expectedStatSources) {
-			assertTrue(Jamuz.getDb().insertOrUpdateStatSource(statSource));
+			assertTrue(Jamuz.getDb().statSource().insertOrUpdate(statSource));
 		}
 		// Needed in checkStatSourceList to get proper value
 		// and later on too, to be able to update them
@@ -638,12 +638,12 @@ public class DbConnJaMuzTest {
 		//statSource2.setIdStatement(1); // Need to update source in statSource2 if changing IdStatement
 		statSource3.setIsSelected(false);
 		for(StatSource statSource : expectedStatSources) {
-			assertTrue(Jamuz.getDb().insertOrUpdateStatSource(statSource));
+			assertTrue(Jamuz.getDb().statSource().insertOrUpdate(statSource));
 		}
 		checkStatSourceList(expectedStatSources);
 		
 		//Delete and check list
-		assertTrue(Jamuz.getDb().deleteStatSource(2));
+		assertTrue(Jamuz.getDb().statSource().delete(2));
 		expectedStatSources.remove(statSource2);
 		checkStatSourceList(expectedStatSources);
 
@@ -656,7 +656,7 @@ public class DbConnJaMuzTest {
 		//resulting in statSource3 to be returned finally
 		//Also, getStatSource is made for device remote, so stat source is hidden
 		statSource3.setHidden(true);
-		Assert.assertEquals(statSource3, Jamuz.getDb().getStatSource(Jamuz.getMachine().getName()));
+		Assert.assertEquals(statSource3, Jamuz.getDb().statSource().get(Jamuz.getMachine().getName()));
 		
 		//FIXME TEST Negative cases
 		//FIXME TEST Check other constraints
@@ -664,7 +664,7 @@ public class DbConnJaMuzTest {
 	
 	private void checkStatSourceList(ArrayList<StatSource> expectedStatSources) {
 		LinkedHashMap<Integer, StatSource> actualList = new LinkedHashMap<>();
-		assertTrue(Jamuz.getDb().getStatSources(actualList, Jamuz.getMachine().getName(), false));
+		assertTrue(Jamuz.getDb().statSource().get(actualList, Jamuz.getMachine().getName(), false));
 		for (StatSource value : actualList.values()) {
 			Optional<StatSource> findFirst = expectedStatSources.stream().filter(s -> s.getId()==value.getId()).findFirst();
 			assertTrue(findFirst.isPresent());
@@ -684,7 +684,7 @@ public class DbConnJaMuzTest {
 		boolean hidden = false;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getStatSources(statSources, hostname, hidden);
+		boolean result = instance.statSource().get(statSources, hostname, hidden);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -700,7 +700,7 @@ public class DbConnJaMuzTest {
 		StatSource statSource = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.insertOrUpdateStatSource(statSource);
+		boolean result = instance.statSource().insertOrUpdate(statSource);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -716,7 +716,7 @@ public class DbConnJaMuzTest {
 		int id = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.deleteStatSource(id);
+		boolean result = instance.statSource().delete(id);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -732,7 +732,7 @@ public class DbConnJaMuzTest {
 		String login = "";
 		DbConnJaMuz instance = null;
 		StatSource expResult = null;
-		StatSource result = instance.getStatSource(login);
+		StatSource result = instance.statSource().get(login);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -748,7 +748,7 @@ public class DbConnJaMuzTest {
 		int idStatSource = 0;
 		DbConnJaMuz instance = null;
 		String expResult = "";
-		String result = instance.updateStatSourceLastMergeDate(idStatSource);
+		String result = instance.statSource().updateLastMergeDate(idStatSource);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -881,7 +881,7 @@ public class DbConnJaMuzTest {
 		int id = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.deleteDevice(id);
+		boolean result = instance.device().delete(id);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -896,7 +896,7 @@ public class DbConnJaMuzTest {
 		String login = "";
 		DbConnJaMuz instance = null;
 		Device expResult = null;
-		Device result = instance.getDevice(login);
+		Device result = instance.device().get(login);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -913,7 +913,7 @@ public class DbConnJaMuzTest {
 		boolean hidden = false;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getDevices(devices, hostname, hidden);
+		boolean result = instance.device().get(devices, hostname, hidden);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -928,7 +928,7 @@ public class DbConnJaMuzTest {
 		Device device = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateDevice(device);
+		boolean result = instance.device().update(device);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -946,7 +946,7 @@ public class DbConnJaMuzTest {
 		ClientInfo clientInfo = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateClient(clientInfo);
+		boolean result = instance.client().update(clientInfo);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -961,7 +961,7 @@ public class DbConnJaMuzTest {
 		String login = "";
 		DbConnJaMuz instance = null;
 		ClientInfo expResult = null;
-		ClientInfo result = instance.getClient(login);
+		ClientInfo result = instance.client().get(login);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -976,7 +976,7 @@ public class DbConnJaMuzTest {
 		LinkedHashMap<Integer, ClientInfo> clients = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getClients(clients);
+		boolean result = instance.client().get(clients);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1696,7 +1696,7 @@ public class DbConnJaMuzTest {
 		int[] results = null;
 		DbConnJaMuz instance = null;
 		int[] expResult = null;
-		int[] result = instance.updateFileTags(files, results);
+		int[] result = instance.fileTag().update(files, results);
 		assertArrayEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1712,7 +1712,7 @@ public class DbConnJaMuzTest {
 		int idFile = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getTags(tags, idFile);
+		boolean result = instance.fileTag().get(tags, idFile);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

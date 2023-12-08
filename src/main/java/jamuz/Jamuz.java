@@ -380,7 +380,7 @@ public class Jamuz {
 	 *
 	 */
 	public static void readTags() {
-		tags = getDb().getTags();
+		tags = getDb().tag().get();
 		tagsModel = new DefaultListModel();
 		tags.forEach(tag -> {
 			tagsModel.addElement(tag);
@@ -410,7 +410,7 @@ public class Jamuz {
 	 */
 	public static boolean readPlaylists() {
 		playlists = new HashMap<>();
-		return getDb().getPlaylists(playlists);
+		return getDb().playlist().get(playlists);
 	}
 
 	/**
