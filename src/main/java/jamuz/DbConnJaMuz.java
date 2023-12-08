@@ -29,7 +29,6 @@ import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
 import java.io.File;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,14 +38,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Creates a new dbConn.connection to JaMuz database
@@ -82,6 +77,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 	private final DaoDevice daoDevice;
 	private final DaoClient daoClient;
 	private final DaoStatSource daoStatSource;
+	private final DaoSchema daoSchema;
+	private final DaoDeviceFile daoDeviceFile;
 
 	/**
 	 * Creates a database dbConn.connection.
@@ -98,6 +95,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 		daoDevice = new DaoDevice(dbConn);
 		daoStatSource = new DaoStatSource(dbConn);
 		daoClient = new DaoClient(dbConn, daoDevice, daoStatSource);
+		daoSchema = new DaoSchema(dbConn);
+		daoDeviceFile = new DaoDeviceFile(dbConn);
 	}
 
 	/**
@@ -200,12 +199,20 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return daoDevice;
 	}
 
+	public DaoDeviceFile deviceFile() {
+		return daoDeviceFile;
+	}
+	
 	public DaoClient client() {
 		return daoClient;
 	}
 
 	public DaoStatSource statSource() {
 		return daoStatSource;
+	}
+	
+	public DaoSchema schema() {
+		return daoSchema;
 	}
 
 	/**
@@ -533,171 +540,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="DeviceFile">
-	/**
-	 * Insert in deviceFile table
-	 *
-	 * @param files
-	 * @param idDevice
-	 * @return
-	 */
-	public synchronized ArrayList<FileInfoInt> insertOrUpdateDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
-		ArrayList<FileInfoInt> insertedOrUpdated = new ArrayList<>();
-		try {
-			if (files.size() > 0) {
-				long startTime = System.currentTimeMillis();
-				dbConn.connection.setAutoCommit(false);
-				int[] results;
-				// FIXME Z Use this ON CONFLICT syntax for other insertOrUpdateXXX methods, if
-				// applicable
-				PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
-						"INSERT INTO deviceFile "
-						+ " (idFile, idDevice, oriRelativeFullPath, status) " // NOI18N
-						+ " VALUES (?, ?, ?, \"NEW\") "
-						+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?, oriRelativeFullPath=?"); // NOI18N
-				for (FileInfoInt file : files) {
-					stInsertDeviceFile.setInt(1, file.idFile);
-					stInsertDeviceFile.setInt(2, idDevice);
-					stInsertDeviceFile.setString(3, file.relativeFullPath);
-					stInsertDeviceFile.setString(4, file.status.name());
-					stInsertDeviceFile.setString(5, file.relativeFullPath);
-					stInsertDeviceFile.addBatch();
-				}
-				results = stInsertDeviceFile.executeBatch();
-				dbConn.connection.commit();
-				// Check results
-				int result;
-				for (int i = 0; i < results.length; i++) {
-					result = results[i];
-					if (result > 0) {
-						insertedOrUpdated.add(files.get(i));
-					}
-				}
-				dbConn.connection.setAutoCommit(true);
-				long endTime = System.currentTimeMillis();
-				Jamuz.getLogger().log(Level.FINEST, "insertOrUpdateDeviceFiles // {0} // Total execution time: {1}ms",
-						new Object[]{results.length, endTime - startTime}); // NOI18N
-			}
-
-			return insertedOrUpdated;
-		} catch (SQLException ex) {
-			Popup.error("insertDeviceFile(" + idDevice + ")", ex); // NOI18N
-			return insertedOrUpdated;
-		}
-	}
-
-	/**
-	 * Insert in deviceFile table
-	 *
-	 * @param files
-	 * @param idDevice
-	 * @return
-	 */
-	public synchronized ArrayList<FileInfoInt> insertOrIgnoreDeviceFiles(ArrayList<FileInfoInt> files, int idDevice) {
-		ArrayList<FileInfoInt> inserted = new ArrayList<>();
-		try {
-			if (files.size() > 0) {
-				long startTime = System.currentTimeMillis();
-				dbConn.connection.setAutoCommit(false);
-				int[] results;
-				PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
-						"INSERT OR IGNORE INTO deviceFile "
-						+ "(idFile, idDevice, oriRelativeFullPath, status) " // NOI18N
-						+ "VALUES (?, ?, ?, \"NEW\")"); // NOI18N
-				for (FileInfoInt file : files) {
-					stInsertDeviceFile.setInt(1, file.idFile);
-					stInsertDeviceFile.setInt(2, idDevice);
-					stInsertDeviceFile.setString(3, file.relativeFullPath);
-					stInsertDeviceFile.addBatch();
-				}
-				results = stInsertDeviceFile.executeBatch();
-				dbConn.connection.commit();
-				// Check results
-				int result;
-				for (int i = 0; i < results.length; i++) {
-					result = results[i];
-					if (result > 0) {
-						inserted.add(files.get(i));
-					}
-				}
-				dbConn.connection.setAutoCommit(true);
-				long endTime = System.currentTimeMillis();
-				Jamuz.getLogger().log(Level.FINEST, "insertDeviceFiles // {0} // Total execution time: {1}ms",
-						new Object[]{results.length, endTime - startTime}); // NOI18N
-			}
-
-			return inserted;
-		} catch (SQLException ex) {
-			Popup.error("insertDeviceFile(" + idDevice + ")", ex); // NOI18N
-			return inserted;
-		}
-	}
-
-	/**
-	 * Insert in deviceFile table
-	 *
-	 * @param file
-	 * @param idDevice
-	 * @return
-	 */
-	public synchronized boolean insertOrIgnoreDeviceFile(int idDevice, FileInfoInt file) {
-		try {
-			int result;
-			PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
-					"INSERT OR IGNORE INTO deviceFile "
-					+ "(idFile, idDevice, oriRelativeFullPath) "
-					+ "VALUES (?, ?, ?)"); // NOI18N
-
-			stInsertDeviceFile.setInt(1, file.idFile);
-			stInsertDeviceFile.setInt(2, idDevice);
-			stInsertDeviceFile.setString(3, file.relativeFullPath);
-
-			long startTime = System.currentTimeMillis();
-			result = stInsertDeviceFile.executeUpdate();
-			long endTime = System.currentTimeMillis();
-			Jamuz.getLogger().log(Level.FINEST, "insertDeviceFile UPDATE // {0} "
-					+ "// Total execution time: {1}ms",
-					new Object[]{result, endTime - startTime}); // NOI18N
-
-			if (result < 0) {
-				Jamuz.getLogger().log(Level.SEVERE, "insertDeviceFile, "
-						+ "idFile={0}, idDevice={1}, result={2}",
-						new Object[]{file.getIdFile(), idDevice, result}); // NOI18N
-				return false;
-			}
-			return true;
-		} catch (SQLException ex) {
-			Popup.error("insertDeviceFile(" + idDevice + ", " + file.getIdFile() + ")", ex); // NOI18N
-			return false;
-		}
-	}
-
-	/**
-	 *
-	 * @param idDevice
-	 * @return
-	 */
-	public synchronized boolean deleteDeviceFiles(int idDevice) {
-		try {
-			PreparedStatement stDeleteDeviceFiles = dbConn.connection.prepareStatement(
-					"DELETE FROM deviceFile WHERE idDevice=?"); // NOI18N
-			stDeleteDeviceFiles.setInt(1, idDevice);
-			long startTime = System.currentTimeMillis();
-			int result = stDeleteDeviceFiles.executeUpdate();
-			long endTime = System.currentTimeMillis();
-			Jamuz.getLogger().log(Level.FINEST, "stDeleteDeviceFile DELETE "
-					+ "// Total execution time: {0}ms",
-					new Object[]{endTime - startTime}); // NOI18N
-			if (result < 0) {
-				Jamuz.getLogger().log(Level.SEVERE,
-						"stDeleteDeviceFile, idDevice={0}, result={1}",
-						new Object[]{idDevice, result}); // NOI18N
-			}
-			return true;
-		} catch (SQLException ex) {
-			Popup.error("deleteDeviceFiles()", ex); // NOI18N
-			return false;
-		}
-	}
+	
 
 	/**
 	 *
@@ -705,7 +548,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public synchronized void insertOrUpdateFilesTranslated(ArrayList<FileInfoInt> files) {
 		try {
-			if (files.size() > 0) {
+			if (!files.isEmpty()) {
 				long startTime = System.currentTimeMillis();
 				dbConn.connection.setAutoCommit(false);
 				int[] results;
@@ -2683,176 +2526,5 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return builder.toString();
 	}
 
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="Schema">
-	boolean updateSchema(int requestedVersion) {
-		ArrayList<DbVersion> versions = new ArrayList<>();
-		if (!getVersionHistory(versions)) {
-			return false;
-		}
-		if (versions.size() < 1) {
-			return updateVersion(0, requestedVersion);
-		} else {
-			Optional<DbVersion> currentVersion = versions.stream().filter((t) -> {
-				return t.getUpgradeEnd().after(new Date(0));
-			}).findFirst();
-			if (!currentVersion.isPresent()) {
-				return updateVersion(0, requestedVersion);
-			} else {
-				if (currentVersion.get().getVersion() == requestedVersion) {
-					return true;
-				}
-				return updateVersion(currentVersion.get().getVersion(), requestedVersion);
-			}
-		}
-	}
-
-	private boolean updateVersion(int oldVersion, int newVersion) {
-		Popup.info("Database requires an upgrade from version " + oldVersion + " to " + newVersion
-				+ ".\n\nDo not worry, a backup will be made.\nNo output is expected, just wait a little.\n\nClick OK to proceed.");
-		getDbConn().info.backupDB(FilenameUtils.getFullPath(getDbConn().info.getLocationWork()));
-		for (int currentVersion = oldVersion; currentVersion < newVersion; currentVersion++) {
-			int nextVersion = currentVersion + 1;
-			if (oldVersion != 0 && !insertVersionHistory(nextVersion)) {
-				return false;
-			}
-			if (!updateSchemaToNewVersion(nextVersion)) {
-				return false;
-			}
-			if (oldVersion == 0) {
-				if (!insertVersionHistory(nextVersion)) {
-					return false;
-				}
-			}
-			if (!updateVersionHistory(nextVersion)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private synchronized boolean updateSchemaToNewVersion(int newVersion) {
-		try {
-			File scriptFile = Jamuz.getFile(newVersion + ".sql", "data", "system", "sql");
-			String locationWork = this.dbConn.info.getLocationWork();
-			ProcessBuilder builder = new ProcessBuilder("sqlite3", locationWork);
-			builder.redirectInput(scriptFile);
-			Process process = builder.start();
-			process.waitFor();
-			return true;
-		} catch (IOException | InterruptedException ex) {
-			Logger.getLogger(DbConnJaMuz.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		return false;
-	}
-
-	private synchronized boolean insertVersionHistory(int version) {
-		try {
-			PreparedStatement stInsertVersionHistory = dbConn.connection.prepareStatement(
-					"INSERT INTO versionHistory (version, upgradeStart) "
-					+ "VALUES (?, datetime('now')) "); // NOI18N
-			stInsertVersionHistory.setInt(1, version);
-			int nbRowsAffected = stInsertVersionHistory.executeUpdate();
-			if (nbRowsAffected == 1) {
-				return true;
-			} else {
-				Jamuz.getLogger().log(Level.SEVERE, "stInsertVersionHistory, fileInfo={0} # row(s) affected: +{1}",
-						new Object[]{version, nbRowsAffected}); // NOI18N
-				return false;
-			}
-		} catch (SQLException ex) {
-			Popup.error("insertVersionHistory(" + version + ")", ex); // NOI18N
-			return false;
-		}
-	}
-
-	private synchronized boolean updateVersionHistory(int version) {
-		try {
-			PreparedStatement stUpdateVersionHistory = dbConn.connection.prepareStatement(
-					"UPDATE versionHistory SET upgradeEnd=datetime('now') "
-					+ "WHERE version=?"); // NOI18N
-			stUpdateVersionHistory.setInt(1, version);
-			int nbRowsAffected = stUpdateVersionHistory.executeUpdate();
-			if (nbRowsAffected == 1) {
-				return true;
-			} else {
-				Jamuz.getLogger().log(Level.SEVERE, "stUpdateVersionHistory, fileInfo={0} # row(s) affected: +{1}",
-						new Object[]{version, nbRowsAffected}); // NOI18N
-				return false;
-			}
-		} catch (SQLException ex) {
-			Popup.error("updateVersionHistory(" + version + ")", ex); // NOI18N
-			return false;
-		}
-	}
-
-	private boolean getVersionHistory(ArrayList<DbVersion> versions) {
-		Pair existsTableVersionHistory = existsTableVersionHistory();
-		if (!(Boolean) existsTableVersionHistory.getKey()) {
-			// Method did not succeeded.
-			return false;
-		}
-		if (!(Boolean) existsTableVersionHistory.getValue()) {
-			// Table does not exists.
-			versions.add(new DbVersion(0, new Date(0), new Date(0)));
-			return true;
-		}
-		ResultSet rs = null;
-		try {
-			String sql = """
-                SELECT version, upgradeStart, upgradeEnd
-                FROM versionHistory
-                ORDER BY version DESC
-                """;
-			PreparedStatement stSelectVersionHistory = dbConn.connection.prepareStatement(sql);
-			rs = stSelectVersionHistory.executeQuery();
-			while (rs.next()) {
-				int version = rs.getInt("version"); // NOI18N
-				Date upgradeStart = DateTime.parseSqlUtc(rs.getString("upgradeStart"));
-				Date upgradeEnd = DateTime.parseSqlUtc(rs.getString("upgradeEnd"));
-				versions.add(new DbVersion(version, upgradeStart, upgradeEnd));
-			}
-			return true;
-		} catch (SQLException ex) {
-			Popup.error("getVersionHistory", ex); // NOI18N
-			return false;
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-			} catch (SQLException ex) {
-				Jamuz.getLogger().warning("Failed to close ResultSet");
-			}
-		}
-	}
-
-	private Pair existsTableVersionHistory() {
-		Statement st = null;
-		ResultSet rs = null;
-		try {
-			st = dbConn.connection.createStatement();
-			rs = st.executeQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='versionHistory';");
-			return new ImmutablePair(true, rs.getInt(1) > 0);
-		} catch (SQLException ex) {
-			Popup.error("existsTableVersionHistory()", ex); // NOI18N
-			return new ImmutablePair(false, false);
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-			} catch (SQLException ex) {
-				Jamuz.getLogger().warning("Failed to close ResultSet");
-			}
-			try {
-				if (st != null) {
-					st.close();
-				}
-			} catch (SQLException ex) {
-				Jamuz.getLogger().warning("Failed to close Statement");
-			}
-		}
-	}
 	// </editor-fold>
 }
