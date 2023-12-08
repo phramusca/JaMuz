@@ -296,7 +296,7 @@ public class DbConnJaMuzTest {
 		String newValue;
 		for (Option expectedOption : expectedOptions) {
 			newValue = "New value " + i;
-			Jamuz.getDb().updateOption(expectedOption, newValue);
+			Jamuz.getDb().option().update(expectedOption, newValue);
 			if (expectedOption.getType().equals("path")) {   //NOI18N
 				newValue = FilenameUtils.normalizeNoEndSeparator(newValue.trim()) + File.separator;
 			}
@@ -312,7 +312,7 @@ public class DbConnJaMuzTest {
 		}
 		Machine machine = new Machine(machineName);
 		machine.setOptions(expectedOptions);
-		assertTrue(Jamuz.getDb().updateOptions(machine));
+		assertTrue(Jamuz.getDb().option().update(machine));
 		for (Option expectedOption : expectedOptions) {
 			if (expectedOption.getType().equals("path")) {   //NOI18N
 				expectedOption.setValue(FilenameUtils.normalizeNoEndSeparator(expectedOption.getValue().trim()) + File.separator);
@@ -335,7 +335,7 @@ public class DbConnJaMuzTest {
 
 	private void checkOptionList(String machineName, ArrayList<Option> expectedOptions) {
 		ArrayList<Option> options = new ArrayList<>();
-		assertTrue("getOptions", Jamuz.getDb().getOptions(options, machineName));
+		assertTrue("getOptions", Jamuz.getDb().option().get(options, machineName));
 		Option actualOption;
 		int i = 0;
 		for (Option expectedOption : expectedOptions) {
@@ -426,7 +426,7 @@ public class DbConnJaMuzTest {
 		Machine selOptions = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateOptions(selOptions);
+		boolean result = instance.option().update(selOptions);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -442,7 +442,7 @@ public class DbConnJaMuzTest {
 		String value = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateOption(myOption, value);
+		boolean result = instance.option().update(myOption, value);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -459,7 +459,7 @@ public class DbConnJaMuzTest {
 		String machineName = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getOptions(myOptions, machineName);
+		boolean result = instance.option().get(myOptions, machineName);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

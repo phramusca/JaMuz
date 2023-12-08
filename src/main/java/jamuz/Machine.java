@@ -57,7 +57,7 @@ public class Machine {
 		StringBuilder zText = new StringBuilder();
 		if (Jamuz.getDb().isMachine(this.name, zText, false)) {
 			this.description = zText.toString();
-			if (!Jamuz.getDb().getOptions(options, this.name)) {
+			if (!Jamuz.getDb().option().get(options, this.name)) {
 				return false;
 			}
 			if (!Jamuz.getDb().statSource().get(statSources, this.name, false)) {
