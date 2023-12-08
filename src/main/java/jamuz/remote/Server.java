@@ -472,8 +472,8 @@ public class Server {
 					"source", clientInfo.getLogin(), 
 					-1, 
 					clientInfo.getLogin(), true);
-			if(Jamuz.getDb().updateDevice(device)) {
-				Device deviceWithId = Jamuz.getDb().getDevice(clientInfo.getLogin());
+			if(Jamuz.getDb().device().update(device)) {
+				Device deviceWithId = Jamuz.getDb().device().get(clientInfo.getLogin());
 				clientInfo.setDevice(deviceWithId);
 				StatSource statSource = new StatSource(
 					-1, clientInfo.getLogin(), 6, 
@@ -481,11 +481,11 @@ public class Server {
 					clientInfo.getRootPath(), 
 					clientInfo.getLogin(), 
 					deviceWithId.getId(), false, "", true);
-				if(Jamuz.getDb().insertOrUpdateStatSource(statSource)) {
-					StatSource statSourceWithId = Jamuz.getDb().getStatSource(clientInfo.getLogin());
+				if(Jamuz.getDb().statSource().insertOrUpdate(statSource)) {
+					StatSource statSourceWithId = Jamuz.getDb().statSource().get(clientInfo.getLogin());
 					clientInfo.setStatSource(statSourceWithId);
-					if(Jamuz.getDb().updateClient(clientInfo)) {
-						ClientInfo clientInfoUpdated = Jamuz.getDb().getClient(clientInfo.getLogin());
+					if(Jamuz.getDb().client().update(clientInfo)) {
+						ClientInfo clientInfoUpdated = Jamuz.getDb().client().get(clientInfo.getLogin());
 						clientInfo.setId(clientInfoUpdated.getId());
 						tableModel.add(clientInfoUpdated);
 					}
@@ -614,7 +614,7 @@ public class Server {
 	public void fillClients() {
 		tableModel.clear();
 		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
-		Jamuz.getDb().getClients(clients);
+		Jamuz.getDb().client().get(clients);
 		for(ClientInfo clientInfo : clients.values()) {
 			tableModel.add(clientInfo);
 		}

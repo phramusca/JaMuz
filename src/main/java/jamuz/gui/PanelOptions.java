@@ -100,14 +100,14 @@ public class PanelOptions extends javax.swing.JPanel {
 						+ appVersion.toString()
 						+ "<BR/>" + msg + "</html>");
 			}
-			
+
 			@Override
 			public void onCheckResult(AppVersion appVersion, String msg) {
 				jLabelVersionCheck.setText("<html>"
 						+ appVersion.toString()
 						+ "<BR/>" + msg + "</html>");
 				enableVersionCheck(true);
-				if(!appVersion.isNewVersion()) {
+				if (!appVersion.isNewVersion()) {
 					File updateCacheFolder = Jamuz.getFile("", "data", "cache", "system", "update");
 					FileUtils.deleteQuietly(updateCacheFolder);
 				}
@@ -736,7 +736,7 @@ public class PanelOptions extends javax.swing.JPanel {
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					Jamuz.getDb().deleteMachine(machineToDelete);
+					Jamuz.getDb().machine().delete(machineToDelete);
 					fillMachineList();
 				}
 			} else {
@@ -816,19 +816,22 @@ public class PanelOptions extends javax.swing.JPanel {
 
     private void jButtonTagsEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTagsEditActionPerformed
 		if (jListTags.getSelectedIndex() > -1) {
-			String input = JOptionPane.showInputDialog(null,
+			String newTag = JOptionPane.showInputDialog(null,
 					Inter.get("Msg.Options.Tag.New"),
 					jListTags.getSelectedValue());  //NOI18N 
-			if (input != null) {
+			if (newTag != null) {
 				int n = JOptionPane.showConfirmDialog(
 						this, MessageFormat.format(
 								Inter.get("Msg.Options.Tag.Update"),
-								jListTags.getSelectedValue(), input), //NOI18N 
+								jListTags.getSelectedValue(), newTag), //NOI18N 
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					Jamuz.getDb().updateTag((String) jListTags.getSelectedValue(), input);
-					refreshListTagsModel();
+					if (Jamuz.getDb().tag().update((String) jListTags.getSelectedValue(), newTag)) {
+						if (Jamuz.getDb().fileTag().updateModifDate(newTag)) {
+							refreshListTagsModel();
+						}
+					}
 				}
 			}
 		}
@@ -851,7 +854,7 @@ public class PanelOptions extends javax.swing.JPanel {
 					Inter.get("Label.Confirm"), //NOI18N 
 					JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				if (Jamuz.getDb().deleteTag((String) jListTags.getSelectedValue())) {
+				if (Jamuz.getDb().tag().delete((String) jListTags.getSelectedValue())) {
 					Popup.warning("Problem deleting tag. It is probably applied to at least a track, so cannot delete it.");  //NOI18N
 					refreshListTagsModel();
 				}
@@ -865,7 +868,7 @@ public class PanelOptions extends javax.swing.JPanel {
 		if (model.contains(input)) {
 			Popup.warning(MessageFormat.format(Inter.get("Msg.Options.Tag.Exists"), input));  //NOI18N 
 		} else if (!input.isBlank()) {  //NOI18N 
-			Jamuz.getDb().insertTag(input);
+			Jamuz.getDb().tag().insert(input);
 			refreshListTagsModel();
 		}
     }//GEN-LAST:event_jButtonTagsAddActionPerformed
@@ -906,10 +909,10 @@ public class PanelOptions extends javax.swing.JPanel {
 										permissions.add(PosixFilePermission.OWNER_EXECUTE);
 										Files.setPosixFilePermissions(Path.of(update_script.getAbsolutePath()), permissions);
 									}
-                                    command = "x-terminal-emulator -e bash " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion() + " " + appVersion.getLatestVersion();
+									command = "x-terminal-emulator -e bash " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion() + " " + appVersion.getLatestVersion();
 								} else if (OS.isWindows()) {
 									File update_script = Jamuz.getFile("update_windows.ps1", "data", "cache", "system", "update", appVersion.getLatestVersion(), "JaMuz", "data", "system", "update");
-                                    command = "cmd /c start powershell.exe -ExecutionPolicy Bypass -File " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion() + " " + appVersion.getLatestVersion();
+									command = "cmd /c start powershell.exe -ExecutionPolicy Bypass -File " + update_script.getAbsolutePath() + " " + appVersion.getCurrentVersion() + " " + appVersion.getLatestVersion();
 								}
 								if (command != null) {
 									Runtime.getRuntime().exec(command);
@@ -933,7 +936,7 @@ public class PanelOptions extends javax.swing.JPanel {
 		jCheckBoxVersionPreRelease.setEnabled(enable);
 		jButtonVersionCheck.setEnabled(enable);
 	}
-	
+
     private void jButtonVersionCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVersionCheckActionPerformed
 		startVersionCheck();
     }//GEN-LAST:event_jButtonVersionCheckActionPerformed

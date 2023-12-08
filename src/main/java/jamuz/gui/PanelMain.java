@@ -246,7 +246,7 @@ public class PanelMain extends javax.swing.JFrame {
 					displayedFile.toggleTag(tag);
 					ArrayList<FileInfoInt> temp = new ArrayList<>();
 					temp.add(displayedFile);
-					Jamuz.getDb().updateFileTags(temp, null);
+					Jamuz.getDb().fileTag().update(temp, null);
 					displayTags();
 				}
 			}
