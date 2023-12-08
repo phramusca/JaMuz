@@ -770,7 +770,7 @@ public class DbConnJaMuzTest {
 		int idStatSource = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updatePreviousPlayCounter(files, idStatSource);
+		boolean result = instance.playCounter().updatePreviousPlayCounter(files, idStatSource);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
