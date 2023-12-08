@@ -1511,7 +1511,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			//Prevent duplicate strPath in database
 			int newIdPath = Jamuz.getDb().getIdPath(filesAudio.get(0).getRelativePath());
 			if(idPath>=0 && newIdPath>=0 && idPath!=newIdPath) {
-				if(Jamuz.getDb().updateFileIdPath(idPath, newIdPath)) {
+				if(Jamuz.getDb().file().updateIdPath(idPath, newIdPath)) {
 					idPath=newIdPath;
 					checkedFlag=CheckedFlag.UNCHECKED;
 				} else {
