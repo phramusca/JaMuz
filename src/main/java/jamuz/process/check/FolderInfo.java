@@ -342,7 +342,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		File path = new File(fullPath);
 		if(!path.exists()) {
 			//Path does not exist. Delete path and associated files from database
-			if(!Jamuz.getDb().deletePath(idPath)) {
+			if(!Jamuz.getDb().path().delete(idPath)) {
 				return false;
 			}
 		}
@@ -734,7 +734,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         if(isCheckingMasterLibrary()) {
             scanDeleted(progressBar);
 			if(getNumberOfFiles()==0) {
-				Jamuz.getDb().deletePath(idPath);
+				Jamuz.getDb().path().delete(idPath);
 			}
         }
 	}
