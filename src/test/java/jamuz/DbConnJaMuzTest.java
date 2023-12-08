@@ -1030,7 +1030,7 @@ public class DbConnJaMuzTest {
 		int[] key = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.insert(fileInfo, key);
+		boolean result = instance.file().insert(fileInfo, key);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1045,7 +1045,7 @@ public class DbConnJaMuzTest {
 		FileInfoInt fileInfo = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateFile(fileInfo);
+		boolean result = instance.file().update(fileInfo);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1060,7 +1060,7 @@ public class DbConnJaMuzTest {
 		FileInfoInt file = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateFileLastPlayedAndCounter(file);
+		boolean result = instance.file().updateLastPlayedAndCounter(file);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1075,7 +1075,7 @@ public class DbConnJaMuzTest {
 		FileInfoInt fileInfo = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateFileRating(fileInfo);
+		boolean result = instance.file().updateRating(fileInfo);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1106,7 +1106,7 @@ public class DbConnJaMuzTest {
 		int newIdPath = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateFileIdPath(idPath, newIdPath);
+		boolean result = instance.file().updateIdPath(idPath, newIdPath);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1123,7 +1123,7 @@ public class DbConnJaMuzTest {
 		String name = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateFileModifDate(idFile, modifDate, name);
+		boolean result = instance.file().updateModifDate(idFile, modifDate, name);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1138,7 +1138,7 @@ public class DbConnJaMuzTest {
 		int idFile = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.deleteFile(idFile);
+		boolean result = instance.file().delete(idFile);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1153,7 +1153,7 @@ public class DbConnJaMuzTest {
 		int idFile = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.setFileSaved(idFile);
+		boolean result = instance.file().setSaved(idFile);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

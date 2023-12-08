@@ -18,8 +18,6 @@ package jamuz.database;
 
 import jamuz.FileInfo;
 import jamuz.Jamuz;
-import jamuz.database.DbInfo;
-import jamuz.database.DbConn;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
