@@ -213,7 +213,34 @@ public class DaoFile {
             return false;
         }
     }
-
+/**
+	 * Update genre
+	 *
+	 * @param fileInfo
+	 * @return
+	 */
+	public synchronized boolean updateFileGenre(FileInfoInt fileInfo) {
+		try {
+			PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement(
+					"UPDATE file set genre=?, "
+					+ "genreModifDate=datetime('now') "
+					+ "WHERE idFile=?"); // NOI18N
+			stUpdateFileGenre.setString(1, fileInfo.getGenre());
+			stUpdateFileGenre.setInt(2, fileInfo.getIdFile());
+			int nbRowsAffected = stUpdateFileGenre.executeUpdate();
+			if (nbRowsAffected == 1) {
+				return true;
+			} else {
+				Jamuz.getLogger().log(Level.SEVERE, "stUpdateFileGenre, "
+						+ "fileInfo={0} # row(s) affected: +{1}",
+						new Object[]{fileInfo.toString(), nbRowsAffected}); // NOI18N
+				return false;
+			}
+		} catch (SQLException ex) {
+			Popup.error("updateGenre(" + fileInfo.toString() + ")", ex); // NOI18N
+			return false;
+		}
+	}
     /**
      * Updates all files with idPath to newIdPath
      *
