@@ -45,7 +45,7 @@ public class TestSettings {
 	 *
 	 * @return
 	 */
-	public static String getRessourcesPath() {
+	public static String getResourcesPath() {
 		return getFolder("Ressources");
 	}
 
@@ -81,7 +81,7 @@ public class TestSettings {
 	 */
 	public static void setupApplication() throws Exception {
 		//Refresh database (overwrite db test file with reference db)
-		File source = new File(getRessourcesPath() + "JaMuz_Minimal.db");
+		File source = new File(getResourcesPath() + "JaMuz_Minimal.db");
 		File destination = new File(getAppFolder() + "JaMuz.db");
 		FileSystem.copyFile(source, destination);
 
@@ -124,7 +124,7 @@ public class TestSettings {
 	}
 
 	public static String copyStatSourceDatabase(String sourceName, String destinationName) throws IOException {
-		File sourceFile = new File(getRessourcesPath() + "statSources/" + sourceName);
+		File sourceFile = new File(getResourcesPath() + "statSources/" + sourceName);
 		String destination = getStatSourcesFolder() + destinationName;
 		File destinationFile = new File(destination);
 		FileSystem.copyFile(sourceFile, destinationFile);

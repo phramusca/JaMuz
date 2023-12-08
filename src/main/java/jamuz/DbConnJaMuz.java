@@ -81,7 +81,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	// <editor-fold defaultstate="collapsed" desc="Setup">
 	private PreparedStatement stSelectFilesStats4Source;
 	private PreparedStatement stSelectFilesStats4SourceAndDevice;
-	private DaoGenre genreDao;
+	private final DaoGenre daoGenre;
 
 	/**
 	 * Creates a database dbConn.connection.
@@ -90,7 +90,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public DbConnJaMuz(DbInfo dbInfo) {
 		super(dbInfo, "JaMuz", "", true, true, true, true, false, true);
-		genreDao = new DaoGenre(dbConn);
+		daoGenre = new DaoGenre(dbConn);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				fullPath = "D.oriRelativeFullPath";
 			}
 
-			stSelectFilesStats4SourceAndDevice = dbConn.getConnnection().prepareStatement(
+			stSelectFilesStats4SourceAndDevice = dbConn.getConnection().prepareStatement(
 					"SELECT "
 							+ "F.idFile, F.idPath, " + fullPath + " AS fullPath, "
 							+ "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, " // NOI18N
@@ -130,7 +130,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 							+ "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
 							+ "ON F.idFile=C.idFile " // NOI18N //NOI18N
 							+ "WHERE D.idDevice=? AND D.status!='INFO'");
-			stSelectFilesStats4Source = dbConn.getConnnection().prepareStatement(
+			stSelectFilesStats4Source = dbConn.getConnection().prepareStatement(
 					"SELECT "
 							+ "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
 							+ "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, " // NOI18N
@@ -169,58 +169,10 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return true;
 	}
 
-
 	// <editor-fold defaultstate="collapsed" desc="Genre">
-	/**
-	 * Updates a genre in the genre table.
-	 *
-	 * @param oldGenre the old genre to be updated
-	 * @param newGenre the new genre to replace the old genre
-	 * @return true if the genre was successfully updated, false otherwise
-	 */
-	public synchronized boolean updateGenre(String oldGenre, String newGenre) {
-		return genreDao.updateGenre(oldGenre, newGenre);
-	}
 
-	/**
-	 * Deletes a genre from the genre table.
-	 *
-	 * @param genre the genre to be deleted
-	 * @return true if the genre was successfully deleted, false otherwise
-	 */
-	public synchronized boolean deleteGenre(String genre) {
-		return genreDao.deleteGenre(genre);
-	}
-
-	/**
-	 * Inserts a genre.
-	 *
-	 * @param genre the genre to be inserted
-	 * @return true if the genre was inserted successfully, false otherwise
-	 */
-	public synchronized boolean insertGenre(String genre) {
-		return genreDao.insertGenre(genre);
-	}
-
-	// FIXME! Move to file section
-	/**
-	 * Updates the genre of a file.
-	 *
-	 * @param fileInfo the file info object containing the genre information
-	 * @return true if the genre is successfully updated, false otherwise
-	 */
-	public synchronized boolean updateFileGenre(FileInfoInt fileInfo) {
-		return genreDao.updateFileGenre(fileInfo);
-	}
-
-	/**
-	 * Checks if a genre is in the list of supported genres.
-	 *
-	 * @param genre the genre to check
-	 * @return true if the genre is supported, false otherwise
-	 */
-	public boolean isGenreSupported(String genre) {
-		return genreDao.isGenreSupported(genre);
+	public DaoGenre genre() {
+		return daoGenre;
 	}
 
 	/**
@@ -263,7 +215,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 	private synchronized boolean updateFileTagsModifDate(String newTag) {
 		try {
-			PreparedStatement stUpdateTagsModifDate = dbConn.getConnnection().prepareStatement(
+			PreparedStatement stUpdateTagsModifDate = dbConn.getConnection().prepareStatement(
 					"UPDATE file SET tagsModifDate=datetime('now') "
 							+ "WHERE idFile=(SELECT TF.idFile\n"
 							+ "FROM tag T \n"
@@ -1753,6 +1705,38 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 	// </editor-fold>
 
+	
+	
+	
+	/**
+     * Update genre
+     *
+     * @param fileInfo
+     * @return
+     */
+    public synchronized boolean updateFileGenre(FileInfoInt fileInfo) {
+        try {
+            PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement(
+                    "UPDATE file set genre=?, "
+                            + "genreModifDate=datetime('now') "
+                            + "WHERE idFile=?"); // NOI18N
+            stUpdateFileGenre.setString(1, fileInfo.genre);
+            stUpdateFileGenre.setInt(2, fileInfo.idFile);
+            int nbRowsAffected = stUpdateFileGenre.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateFileGenre, "
+                        + "fileInfo={0} # row(s) affected: +{1}",
+                        new Object[] { fileInfo.toString(), nbRowsAffected }); // NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("updateGenre(" + fileInfo.toString() + ")", ex); // NOI18N
+            return false;
+        }
+    }
+	
 	// <editor-fold defaultstate="collapsed" desc="File">
 	/**
 	 *
@@ -2414,7 +2398,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		try {
 			// Only inserting in Linux style in database
 			relativePath = FilenameUtils.separatorsToUnix(relativePath);
-			PreparedStatement stInsertPath = dbConn.getConnnection().prepareStatement(
+			PreparedStatement stInsertPath = dbConn.getConnection().prepareStatement(
 					"INSERT INTO path "
 							+ "(strPath, modifDate, checked, mbId) " // NOI18N
 							+ "VALUES (?, ?, ?, ?)"); // NOI18N
@@ -3376,9 +3360,9 @@ public class DbConnJaMuz extends StatSourceSQL {
 	private synchronized boolean insertFileTags(ArrayList<String> tags, int idFile) {
 		try {
 			if (tags.size() > 0) {
-				dbConn.getConnnection().setAutoCommit(false);
+				dbConn.getConnection().setAutoCommit(false);
 				int[] results;
-				PreparedStatement stInsertTagFile = dbConn.getConnnection()
+				PreparedStatement stInsertTagFile = dbConn.getConnection()
 						.prepareStatement(
 								"INSERT OR IGNORE INTO tagFile "
 										+ "(idFile, idTag) " // NOI18N
@@ -3392,7 +3376,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 				}
 				long startTime = System.currentTimeMillis();
 				results = stInsertTagFile.executeBatch();
-				dbConn.getConnnection().commit();
+				dbConn.getConnection().commit();
 				long endTime = System.currentTimeMillis();
 				Jamuz.getLogger().log(Level.FINEST, "insertTagFiles UPDATE // {0} "
 						+ "// Total execution time: {1}ms",
@@ -3408,7 +3392,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 								new Object[] { idFile, result }); // NOI18N
 					}
 				}
-				dbConn.getConnnection().setAutoCommit(true);
+				dbConn.getConnection().setAutoCommit(true);
 			}
 			return true;
 		} catch (SQLException ex) {
@@ -3421,7 +3405,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		ResultSet rs = null;
 		ResultSet keys = null;
 		try {
-			PreparedStatement stSelectMachine = dbConn.getConnnection().prepareStatement(
+			PreparedStatement stSelectMachine = dbConn.getConnection().prepareStatement(
 					"SELECT COUNT(*) FROM tag WHERE value=?"); // NOI18N
 			stSelectMachine.setString(1, tag);
 			rs = stSelectMachine.executeQuery();
@@ -3454,7 +3438,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 	private synchronized boolean deleteFileTags(int idFile) {
 		try {
-			PreparedStatement stDeleteTagFiles = dbConn.getConnnection()
+			PreparedStatement stDeleteTagFiles = dbConn.getConnection()
 					.prepareStatement(
 							"DELETE FROM tagFile WHERE idFile=?"); // NOI18N
 			stDeleteTagFiles.setInt(1, idFile);
@@ -3487,7 +3471,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	private synchronized boolean updateFileTagsModifDate(FileInfo fileInfo) {
 		try {
-			PreparedStatement stUpdateTagsModifDate = dbConn.getConnnection().prepareStatement(
+			PreparedStatement stUpdateTagsModifDate = dbConn.getConnection().prepareStatement(
 					"UPDATE file SET tagsModifDate=datetime('now') "
 							+ "WHERE idFile=?"); // NOI18N
 			stUpdateTagsModifDate.setInt(1, fileInfo.getIdFile());

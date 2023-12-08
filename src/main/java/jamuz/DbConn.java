@@ -16,13 +16,17 @@
  */
 package jamuz;
 
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+
+import org.sqlite.SQLiteConfig;
+
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
-
-import java.lang.reflect.InvocationTargetException;
-import java.sql.*;
-import java.util.logging.Level;
-import org.sqlite.SQLiteConfig;
 
 /**
  * Used to connect to a database
@@ -40,7 +44,7 @@ public class DbConn {
 	 *
 	 * @return
 	 */
-	public Connection getConnnection() {
+	public Connection getConnection() {
 		return connection;
 	}
 
@@ -92,6 +96,7 @@ public class DbConn {
 							config.toProperties()); // NOI18N
 					break;
 				case MySQL:
+					//TODO: .getDeclaredConstructor().newInstance(); may be removed, can it ?
 					Class.forName("com.mysql.jdbc.Driver").getDeclaredConstructor().newInstance(); // NOI18N
 					connection = DriverManager.getConnection("jdbc:mysql://" + this.info.locationWork, this.info.user, // NOI18N
 							this.info.pwd); // NOI18N

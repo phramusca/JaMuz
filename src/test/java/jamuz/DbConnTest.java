@@ -75,7 +75,7 @@ public class DbConnTest {
 		System.out.println("getConnnection");
 		DbConn instance = null;
 		Connection expResult = null;
-		Connection result = instance.getConnnection();
+		Connection result = instance.getConnection();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
