@@ -16,8 +16,8 @@
  */
 package test.tools;
 
-import jamuz.DbConnJaMuz;
-import jamuz.DbInfo;
+import jamuz.database.DbConnJaMuz;
+import jamuz.database.DbInfo;
 import jamuz.FileInfoInt;
 import jamuz.utils.DateTime;
 import jamuz.utils.Desktop;

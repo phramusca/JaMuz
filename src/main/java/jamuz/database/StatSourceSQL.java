@@ -14,8 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz;
+package jamuz.database;
 
+import jamuz.FileInfo;
+import jamuz.Jamuz;
+import jamuz.database.DbInfo;
+import jamuz.database.DbConn;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -72,7 +76,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract {
 			boolean updateAddedDate, boolean updateLastPlayed,
 			boolean updateBPM, boolean updatePlayCounter,
 			boolean updateTags, boolean updateGenre) {
-		super(name, rootPath, dbInfo.locationOri, updateAddedDate,
+		super(name, rootPath, dbInfo.getLocationOri(), updateAddedDate,
 				updateLastPlayed, updateBPM, updatePlayCounter,
 				updateTags, updateGenre);
 		dbConn = new DbConn(dbInfo);
@@ -144,16 +148,16 @@ public abstract class StatSourceSQL extends StatSourceAbstract {
 	@Override
 	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
 		try {
-			dbConn.connection.setAutoCommit(false);
+			dbConn.getConnection().setAutoCommit(false);
 			for (FileInfo file : files) {
 				setUpdateStatisticsParameters(file);
 			}
 			long startTime = System.currentTimeMillis();
 			int[] results = this.stUpdateFileStatistics.executeBatch();
-			dbConn.connection.commit();
+			dbConn.getConnection().commit();
 			long endTime = System.currentTimeMillis();
 			Jamuz.getLogger().log(Level.FINEST, "updateStatistics // {0} // Total execution time: {1}ms", new Object[]{results.length, endTime - startTime});   //NOI18N
-			dbConn.connection.setAutoCommit(true);
+			dbConn.getConnection().setAutoCommit(true);
 			return results;
 		} catch (SQLException ex) {
 			Popup.error(ex);
@@ -191,7 +195,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract {
 	 */
 	@Override
 	public boolean check() {
-		return this.dbConn.info.check();
+		return this.dbConn.getInfo().check();
 	}
 
 	/**
@@ -201,7 +205,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract {
 	 */
 	@Override
 	public boolean getSource(String locationWork) {
-		return this.dbConn.info.copyDB(true, locationWork);
+		return this.dbConn.getInfo().copyDB(true, locationWork);
 	}
 
 	/**
@@ -211,7 +215,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract {
 	 */
 	@Override
 	public boolean sendSource(String locationWork) {
-		return this.dbConn.info.copyDB(false, locationWork);
+		return this.dbConn.getInfo().copyDB(false, locationWork);
 	}
 
 	/**
@@ -221,7 +225,7 @@ public abstract class StatSourceSQL extends StatSourceAbstract {
 	 */
 	@Override
 	public boolean backupSource(String locationWork) {
-		return this.dbConn.info.backupDB(locationWork);
+		return this.dbConn.getInfo().backupDB(locationWork);
 	}
 
 	/**

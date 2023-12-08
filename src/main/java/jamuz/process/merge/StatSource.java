@@ -17,10 +17,10 @@
 
 package jamuz.process.merge;
 
-import jamuz.DbInfo;
-import jamuz.DbInfo.LibType;
+import jamuz.database.DbInfo;
+import jamuz.database.DbInfo.LibType;
 import jamuz.Jamuz;
-import jamuz.StatSourceAbstract;
+import jamuz.database.StatSourceAbstract;
 import jamuz.process.sync.Device;
 import jamuz.utils.DateTime;
 import java.util.Date;

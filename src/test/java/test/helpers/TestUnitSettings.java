@@ -16,8 +16,8 @@
  */
 package test.helpers;
 
-import jamuz.DbConnJaMuz;
-import jamuz.DbInfo;
+import jamuz.database.DbConnJaMuz;
+import jamuz.database.DbInfo;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

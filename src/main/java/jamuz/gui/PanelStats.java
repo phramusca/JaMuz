@@ -17,7 +17,7 @@
 
 package jamuz.gui;
 
-import jamuz.DbConnJaMuz.StatItem;
+import jamuz.database.DbConnJaMuz.StatItem;
 import jamuz.Jamuz;
 import jamuz.gui.swing.PanelPieChart;
 import jamuz.gui.swing.TableModel;

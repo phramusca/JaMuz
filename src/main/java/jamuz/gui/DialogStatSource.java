@@ -17,7 +17,7 @@
 
 package jamuz.gui;
 
-import jamuz.DbInfo;
+import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.process.merge.StatSource;
 import jamuz.process.merge.StatSourceKodi;

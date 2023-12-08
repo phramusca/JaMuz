@@ -14,8 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz;
+package jamuz.database;
 
+import jamuz.FileInfo;
+import jamuz.FileInfoInt;
+import jamuz.Jamuz;
+import jamuz.Machine;
+import jamuz.Option;
 import jamuz.gui.swing.ListElement;
 import jamuz.process.check.DuplicateInfo;
 import jamuz.process.check.FolderInfo;
@@ -482,8 +487,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 			dbConn.connection.setAutoCommit(false);
 			for (Iterator<? super FileInfoInt> it = files.iterator(); it.hasNext();) {
 				FileInfo file = (FileInfo) it.next();
-				stUpdatePlayCounter.setInt(1, file.playCounter);
-				stUpdatePlayCounter.setInt(2, file.idFile);
+				stUpdatePlayCounter.setInt(1, file.getPlayCounter());
+				stUpdatePlayCounter.setInt(2, file.getIdFile());
 				stUpdatePlayCounter.setInt(3, idStatSource);
 				stUpdatePlayCounter.addBatch();
 			}
@@ -506,9 +511,9 @@ public class DbConnJaMuz extends StatSourceSQL {
 				result = results[i];
 				if (result != 1) {
 					file = (FileInfo) files.get(i);
-					stInsertPlayCounter.setInt(1, file.idFile);
+					stInsertPlayCounter.setInt(1, file.getIdFile());
 					stInsertPlayCounter.setInt(2, idStatSource);
-					stInsertPlayCounter.setInt(3, file.playCounter);
+					stInsertPlayCounter.setInt(3, file.getPlayCounter());
 					stInsertPlayCounter.addBatch();
 					doInsertBatch = true;
 				}
@@ -559,7 +564,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 						+ " ON CONFLICT(idFile, ext) DO UPDATE SET bitRate=?, format=?, length=?, size=?, trackGain=?, albumGain=?, modifDate=?"); // NOI18N
 				for (FileInfoInt file : files) {
 					// Insert
-					preparedStatement.setInt(1, file.idFile);
+					preparedStatement.setInt(1, file.getIdFile());
 					preparedStatement.setString(2, file.getExt());
 					preparedStatement.setString(3, file.getBitRate());
 					preparedStatement.setString(4, file.getFormat());
@@ -650,8 +655,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 					"UPDATE file set genre=?, "
 					+ "genreModifDate=datetime('now') "
 					+ "WHERE idFile=?"); // NOI18N
-			stUpdateFileGenre.setString(1, fileInfo.genre);
-			stUpdateFileGenre.setInt(2, fileInfo.idFile);
+			stUpdateFileGenre.setString(1, fileInfo.getGenre());
+			stUpdateFileGenre.setInt(2, fileInfo.getIdFile());
 			int nbRowsAffected = stUpdateFileGenre.executeUpdate();
 			if (nbRowsAffected == 1) {
 				return true;
@@ -818,23 +823,23 @@ public class DbConnJaMuz extends StatSourceSQL {
 			stInsertFileTag.setString(1, fileInfo.getFilename());
 			stInsertFileTag.setInt(2, fileInfo.getIdPath());
 			stInsertFileTag.setString(3, fileInfo.getFormat());
-			stInsertFileTag.setString(4, fileInfo.title);
+			stInsertFileTag.setString(4, fileInfo.getTitle());
 			stInsertFileTag.setString(5, fileInfo.getArtist());
 			stInsertFileTag.setString(6, fileInfo.getAlbum());
 			stInsertFileTag.setString(7, fileInfo.getAlbumArtist());
 			stInsertFileTag.setString(8, fileInfo.getGenre());
-			stInsertFileTag.setInt(9, fileInfo.discNo);
-			stInsertFileTag.setInt(10, fileInfo.trackNo);
+			stInsertFileTag.setInt(9, fileInfo.getDiscNo());
+			stInsertFileTag.setInt(10, fileInfo.getTrackNo());
 			stInsertFileTag.setString(11, fileInfo.getYear());
 			stInsertFileTag.setString(12, fileInfo.getComment());
-			stInsertFileTag.setInt(13, fileInfo.length);
+			stInsertFileTag.setInt(13, fileInfo.getLength());
 			stInsertFileTag.setString(14, fileInfo.getBitRate());
-			stInsertFileTag.setLong(15, fileInfo.size);
+			stInsertFileTag.setLong(15, fileInfo.getSize());
 			stInsertFileTag.setString(16, fileInfo.getFormattedModifDate());
-			stInsertFileTag.setInt(17, fileInfo.trackTotal);
-			stInsertFileTag.setInt(18, fileInfo.discTotal);
+			stInsertFileTag.setInt(17, fileInfo.getTrackTotal());
+			stInsertFileTag.setInt(18, fileInfo.getDiscTotal());
 			stInsertFileTag.setFloat(19, fileInfo.getBPM());
-			stInsertFileTag.setInt(20, fileInfo.nbCovers);
+			stInsertFileTag.setInt(20, fileInfo.getNbCovers());
 			stInsertFileTag.setString(21, fileInfo.getCoverHash());
 			GainValues gainValues = fileInfo.getReplayGain(false);
 			stInsertFileTag.setFloat(22, gainValues.getTrackGain());
@@ -875,30 +880,30 @@ public class DbConnJaMuz extends StatSourceSQL {
 					+ "nbCovers=?, coverHash=?, trackGain=?, albumGain=? " // NOI18N
 					+ "WHERE idPath=? AND idFile=?"); // NOI18N
 			stUpdateFileTag.setString(1, fileInfo.getFormat());
-			stUpdateFileTag.setString(2, fileInfo.title);
+			stUpdateFileTag.setString(2, fileInfo.getTitle());
 			stUpdateFileTag.setString(3, fileInfo.getArtist());
 			stUpdateFileTag.setString(4, fileInfo.getAlbum());
 			stUpdateFileTag.setString(5, fileInfo.getAlbumArtist());
 			stUpdateFileTag.setString(6, fileInfo.getGenre());
-			stUpdateFileTag.setInt(7, fileInfo.discNo);
-			stUpdateFileTag.setInt(8, fileInfo.trackNo);
+			stUpdateFileTag.setInt(7, fileInfo.getDiscNo());
+			stUpdateFileTag.setInt(8, fileInfo.getTrackNo());
 			stUpdateFileTag.setString(9, fileInfo.getYear());
 			stUpdateFileTag.setString(10, fileInfo.getComment());
-			stUpdateFileTag.setInt(11, fileInfo.length);
+			stUpdateFileTag.setInt(11, fileInfo.getLength());
 			stUpdateFileTag.setString(12, fileInfo.getBitRate());
-			stUpdateFileTag.setLong(13, fileInfo.size);
+			stUpdateFileTag.setLong(13, fileInfo.getSize());
 			stUpdateFileTag.setString(14, fileInfo.getFormattedModifDate());
-			stUpdateFileTag.setInt(15, fileInfo.trackTotal);
-			stUpdateFileTag.setInt(16, fileInfo.discTotal);
+			stUpdateFileTag.setInt(15, fileInfo.getTrackTotal());
+			stUpdateFileTag.setInt(16, fileInfo.getDiscTotal());
 			stUpdateFileTag.setFloat(17, fileInfo.getBPM());
-			stUpdateFileTag.setInt(18, fileInfo.nbCovers);
+			stUpdateFileTag.setInt(18, fileInfo.getNbCovers());
 			stUpdateFileTag.setString(19, fileInfo.getCoverHash());
 			GainValues gainValues = fileInfo.getReplayGain(false);
 			stUpdateFileTag.setFloat(20, gainValues.getTrackGain());
 			stUpdateFileTag.setFloat(21, gainValues.getAlbumGain());
 			// WHERE:
 			stUpdateFileTag.setInt(22, fileInfo.getIdPath());
-			stUpdateFileTag.setInt(23, fileInfo.idFile);
+			stUpdateFileTag.setInt(23, fileInfo.getIdFile());
 			int nbRowsAffected = stUpdateFileTag.executeUpdate();
 			if (nbRowsAffected == 1) {
 				return true;
@@ -926,8 +931,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 					+ "WHERE idFile=?");
 
 			stUpdateFileLastPlayedAndCounter.setString(1, DateTime.getCurrentUtcSql());
-			stUpdateFileLastPlayedAndCounter.setInt(2, file.playCounter + 1);
-			stUpdateFileLastPlayedAndCounter.setInt(3, file.idFile);
+			stUpdateFileLastPlayedAndCounter.setInt(2, file.getPlayCounter() + 1);
+			stUpdateFileLastPlayedAndCounter.setInt(3, file.getIdFile());
 			int nbRowsAffected = stUpdateFileLastPlayedAndCounter.executeUpdate();
 			if (nbRowsAffected == 1) {
 				return true;
@@ -955,8 +960,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 					"UPDATE file set rating=?, "
 					+ "ratingModifDate=datetime('now') "
 					+ "WHERE idFile=?"); // NOI18N
-			stUpdateFileRating.setInt(1, fileInfo.rating);
-			stUpdateFileRating.setInt(2, fileInfo.idFile);
+			stUpdateFileRating.setInt(1, fileInfo.getRating());
+			stUpdateFileRating.setInt(2, fileInfo.getIdFile());
 			int nbRowsAffected = stUpdateFileRating.executeUpdate();
 			if (nbRowsAffected == 1) {
 				return true;
@@ -1120,7 +1125,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @return
 	 */
 	@Override
-	protected FileInfo getFileStatistics(ResultSet rs) {
+	public FileInfo getFileStatistics(ResultSet rs) {
 		try {
 			// JaMuz database does not store rootPath in database, only relative one
 			String relativeFullPath = dbConn.getStringValue(rs, "fullPath"); // NOI18N
@@ -1154,22 +1159,22 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @throws SQLException
 	 */
 	@Override
-	protected synchronized void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
-		this.stUpdateFileStatistics.setInt(1, file.rating);
+	public synchronized void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
+		this.stUpdateFileStatistics.setInt(1, file.getRating());
 		this.stUpdateFileStatistics.setFloat(2, file.getBPM());
 		this.stUpdateFileStatistics.setString(3, file.getFormattedLastPlayed());
 		this.stUpdateFileStatistics.setString(4, file.getFormattedAddedDate());
-		this.stUpdateFileStatistics.setInt(5, file.playCounter);
+		this.stUpdateFileStatistics.setInt(5, file.getPlayCounter());
 		this.stUpdateFileStatistics.setString(6,
-				file.updateRatingModifDate
+				file.isUpdateRatingModifDate()
 						? DateTime.getCurrentUtcSql()
 						: file.getFormattedRatingModifDate());
 		this.stUpdateFileStatistics.setString(7,
-				file.updateGenreModifDate
+				file.isUpdateRatingModifDate()
 						? DateTime.getCurrentUtcSql()
 						: file.getFormattedGenreModifDate());
 		this.stUpdateFileStatistics.setString(8, file.getGenre());
-		this.stUpdateFileStatistics.setInt(9, file.idFile);
+		this.stUpdateFileStatistics.setInt(9, file.getIdFile());
 		this.stUpdateFileStatistics.addBatch();
 	}
 
@@ -2369,8 +2374,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 				+ dbConn.getStringValue(rs, "name"), // NOI18N
 				Jamuz.getMachine().getOptionValue("location.library")); // NOI18N
 		file.setCoverHash(dbConn.getStringValue(rs, "coverHash")); // NOI18N
-		file.nbCovers = 1;
-		file.albumArtist = dbConn.getStringValue(rs, "albumArtist"); // NOI18N
+		file.setNbCovers(1);
+		file.setAlbumArtist(dbConn.getStringValue(rs, "albumArtist")); // NOI18N
 		ListElement listElement = new ListElement((String) elementToAdd, file);
 		return listElement;
 	}

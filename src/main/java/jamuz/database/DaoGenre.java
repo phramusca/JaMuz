@@ -1,5 +1,6 @@
-package jamuz;
+package jamuz.database;
 
+import jamuz.Jamuz;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

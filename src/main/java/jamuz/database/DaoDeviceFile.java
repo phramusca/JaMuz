@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz;
+package jamuz.database;
 
+import jamuz.FileInfoInt;
+import jamuz.Jamuz;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -60,11 +62,11 @@ public class DaoDeviceFile {
 						+ " VALUES (?, ?, ?, \"NEW\") "
 						+ " ON CONFLICT(idFile, idDevice) DO UPDATE SET status=?, oriRelativeFullPath=?"); // NOI18N
 				for (FileInfoInt file : files) {
-					stInsertDeviceFile.setInt(1, file.idFile);
+					stInsertDeviceFile.setInt(1, file.getIdFile());
 					stInsertDeviceFile.setInt(2, idDevice);
-					stInsertDeviceFile.setString(3, file.relativeFullPath);
-					stInsertDeviceFile.setString(4, file.status.name());
-					stInsertDeviceFile.setString(5, file.relativeFullPath);
+					stInsertDeviceFile.setString(3, file.getRelativeFullPath());
+					stInsertDeviceFile.setString(4, file.getStatus().name());
+					stInsertDeviceFile.setString(5, file.getRelativeFullPath());
 					stInsertDeviceFile.addBatch();
 				}
 				results = stInsertDeviceFile.executeBatch();
@@ -109,9 +111,9 @@ public class DaoDeviceFile {
 						+ "(idFile, idDevice, oriRelativeFullPath, status) " // NOI18N
 						+ "VALUES (?, ?, ?, \"NEW\")"); // NOI18N
 				for (FileInfoInt file : files) {
-					stInsertDeviceFile.setInt(1, file.idFile);
+					stInsertDeviceFile.setInt(1, file.getIdFile());
 					stInsertDeviceFile.setInt(2, idDevice);
-					stInsertDeviceFile.setString(3, file.relativeFullPath);
+					stInsertDeviceFile.setString(3, file.getRelativeFullPath());
 					stInsertDeviceFile.addBatch();
 				}
 				results = stInsertDeviceFile.executeBatch();
@@ -152,9 +154,9 @@ public class DaoDeviceFile {
 					+ "(idFile, idDevice, oriRelativeFullPath) "
 					+ "VALUES (?, ?, ?)"); // NOI18N
 
-			stInsertDeviceFile.setInt(1, file.idFile);
+			stInsertDeviceFile.setInt(1, file.getIdFile());
 			stInsertDeviceFile.setInt(2, idDevice);
-			stInsertDeviceFile.setString(3, file.relativeFullPath);
+			stInsertDeviceFile.setString(3, file.getRelativeFullPath());
 
 			long startTime = System.currentTimeMillis();
 			result = stInsertDeviceFile.executeUpdate();

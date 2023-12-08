@@ -17,7 +17,7 @@
 
 package jamuz.process.book;
 
-import jamuz.DbInfo;
+import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;

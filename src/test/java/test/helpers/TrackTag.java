@@ -16,7 +16,7 @@
  */
 package test.helpers;
 
-import jamuz.DbConnJaMuz;
+import jamuz.database.DbConnJaMuz;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.process.check.FolderInfo;

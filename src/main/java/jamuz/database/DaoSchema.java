@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz;
+package jamuz.database;
 
+import jamuz.Jamuz;
 import jamuz.utils.DateTime;
 import jamuz.utils.Popup;
 import java.io.File;
@@ -49,7 +50,7 @@ public class DaoSchema {
 		this.dbConn = dbConn;
 	}
 	
-	boolean update(int requestedVersion) {
+	public boolean update(int requestedVersion) {
 		ArrayList<DbVersion> versions = new ArrayList<>();
 		if (!getVersionHistory(versions)) {
 			return false;

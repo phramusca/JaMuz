@@ -26,9 +26,9 @@
 
 package jamuz.process.merge;
 
-import jamuz.DbInfo;
+import jamuz.database.DbInfo;
 import jamuz.FileInfo;
-import jamuz.StatSourceSQL;
+import jamuz.database.StatSourceSQL;
 import jamuz.utils.Popup;
 import java.sql.SQLException;
 import java.util.ArrayList;
