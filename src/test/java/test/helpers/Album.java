@@ -610,7 +610,7 @@ public class Album {
 	}
 
 	private static File getFile(String mbId) {
-		return new File(TestSettings.getRessourcesPath() + "albumFiles" + File.separator + mbId + ".ods");
+		return new File(TestSettings.getResourcesPath() + "albumFiles" + File.separator + mbId + ".ods");
 	}
 
 	private File getFile() {

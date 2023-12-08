@@ -56,7 +56,7 @@ public class StatSourceMixxx extends StatSourceSQL {
 			//date is not changed
 			//So need to make some tests and check that we are always updating date 
 			//when modifying files (tags)
-            this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement(
+            this.stSelectFileStatistics = dbConn.getConnection().prepareStatement(
 					"SELECT L.location AS fullPath, F.rating, "
                     + "F.timesPlayed AS playCounter, "
 					+ "'1970-01-01 00:00:00' AS lastplayed, "
@@ -66,7 +66,7 @@ public class StatSourceMixxx extends StatSourceSQL {
                     + "AND fs_deleted=0 "
                     + "ORDER BY L.location");
             
-            this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement(
+            this.stUpdateFileStatistics = dbConn.getConnection().prepareStatement(
 					"UPDATE library SET rating=?, bpm=?, "
                     + "datetime_added=?, timesPlayed=? "
                     + "WHERE id=(SELECT id FROM track_locations WHERE location=?)");  //NOI18N
@@ -128,7 +128,7 @@ public class StatSourceMixxx extends StatSourceSQL {
         ResultSet rs = null;
         try {
             
-            PreparedStatement stSelectPath = dbConn.getConnnection().prepareStatement(
+            PreparedStatement stSelectPath = dbConn.getConnection().prepareStatement(
 					"SELECT directory FROM directories");   //NOI18N
             rs = stSelectPath.executeQuery();
             if (rs.next()) { //Check if we have a result, so we can move to this one
@@ -161,7 +161,7 @@ public class StatSourceMixxx extends StatSourceSQL {
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		try {
-            PreparedStatement stSelectPlaylists = dbConn.getConnnection().prepareStatement(
+            PreparedStatement stSelectPlaylists = dbConn.getConnection().prepareStatement(
                     "SELECT name FROM crates C "
 							+ " JOIN crate_tracks CT ON C.id=CT.crate_id "
 							+ " JOIN library L ON CT.track_id=L.id "
@@ -224,7 +224,7 @@ public class StatSourceMixxx extends StatSourceSQL {
 	 */
 	private boolean deleteTagFiles(FileInfo file) {
         try {
-            PreparedStatement stDeleteTagFiles = dbConn.getConnnection()
+            PreparedStatement stDeleteTagFiles = dbConn.getConnection()
 					.prepareStatement(
 					"DELETE FROM crate_tracks "
 							+ "WHERE track_id=(	SELECT id FROM track_locations WHERE location=? ) ");  //NOI18N
@@ -254,7 +254,7 @@ public class StatSourceMixxx extends StatSourceSQL {
         ResultSet rs=null;
         ResultSet keys=null;
         try {
-            PreparedStatement stSelectMachine = dbConn.getConnnection().prepareStatement(
+            PreparedStatement stSelectMachine = dbConn.getConnection().prepareStatement(
 					"SELECT COUNT(*) FROM crates "
 							+ "WHERE name=?");   //NOI18N
             stSelectMachine.setString(1, tag);
@@ -263,7 +263,7 @@ public class StatSourceMixxx extends StatSourceSQL {
                 return true;
             } else {
                 //Insert a new tag
-                PreparedStatement stInsertMachine = dbConn.getConnnection().prepareStatement(
+                PreparedStatement stInsertMachine = dbConn.getConnection().prepareStatement(
 						"INSERT INTO crates (name) VALUES (?)");   //NOI18N
                 stInsertMachine.setString(1, tag);
                 int nbRowsAffected = stInsertMachine.executeUpdate();
@@ -307,9 +307,9 @@ public class StatSourceMixxx extends StatSourceSQL {
 	private boolean insertTagFiles(ArrayList<String> tags, FileInfo file) {
         try {
             if (tags.size() > 0) {
-                dbConn.getConnnection().setAutoCommit(false);
+                dbConn.getConnection().setAutoCommit(false);
                 int[] results;
-                PreparedStatement stInsertTagFile = dbConn.getConnnection()
+                PreparedStatement stInsertTagFile = dbConn.getConnection()
 						.prepareStatement(
 					"INSERT INTO crate_tracks "
                     + "(track_id, crate_id) "    //NOI18N
@@ -324,7 +324,7 @@ public class StatSourceMixxx extends StatSourceSQL {
                 }
                 long startTime = System.currentTimeMillis();
                 results = stInsertTagFile.executeBatch();
-                dbConn.getConnnection().commit();
+                dbConn.getConnection().commit();
                 long endTime = System.currentTimeMillis();
                 Jamuz.getLogger().log(Level.FINEST, "insertTagFiles UPDATE // {0} "
 						+ "// Total execution time: {1}ms", 
@@ -339,7 +339,7 @@ public class StatSourceMixxx extends StatSourceSQL {
 						new Object[]{getRootPath()+getPath(file.getRelativePath()), file.getFilename(), result});   //NOI18N
                     }
                 }
-                dbConn.getConnnection().setAutoCommit(true);
+                dbConn.getConnection().setAutoCommit(true);
             }
             return true;
         } catch (SQLException ex) {

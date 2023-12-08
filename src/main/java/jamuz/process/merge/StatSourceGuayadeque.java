@@ -58,7 +58,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
         try {
             this.dbConn.connect();
             
-            this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement(
+            this.stSelectFileStatistics = dbConn.getConnection().prepareStatement(
 					"SELECT (song_path || song_filename) AS fullPath, "
 							+ "song_rating AS rating, "
                     + "song_playcount AS playCounter,  "
@@ -67,7 +67,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 							+ "'' AS genre  "
                     + "FROM songs ORDER BY song_path, song_filename");
             
-            this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement(
+            this.stUpdateFileStatistics = dbConn.getConnection().prepareStatement(
 					"UPDATE songs SET song_rating=?, "
 						+ "song_lastplay=strftime('%s',?), "
 						+ "song_addedtime=strftime('%s',?), "
@@ -112,7 +112,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 	@Override
 	public boolean getTags(ArrayList<String> tags, FileInfo file) {
 		try {
-            PreparedStatement stSelectPlaylists = dbConn.getConnnection().prepareStatement(
+            PreparedStatement stSelectPlaylists = dbConn.getConnection().prepareStatement(
                     "SELECT tag_name FROM tags T "
 							+ " JOIN settags ST ON T.tag_id=ST.settag_tagid "
 							+ " JOIN songs S ON ST.settag_songid=S.song_id "
@@ -176,7 +176,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 	 */
 	private boolean deleteTagFiles(FileInfo file) {
         try {
-            PreparedStatement stDeleteTagFiles = dbConn.getConnnection()
+            PreparedStatement stDeleteTagFiles = dbConn.getConnection()
 					.prepareStatement(
 					"DELETE FROM settags "
 							+ "WHERE settag_songid=("
@@ -209,7 +209,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
         ResultSet rs=null;
         ResultSet keys=null;
         try {
-            PreparedStatement stSelectMachine = dbConn.getConnnection().prepareStatement(
+            PreparedStatement stSelectMachine = dbConn.getConnection().prepareStatement(
 					"SELECT COUNT(*), tag_name FROM tags "
 							+ "WHERE tag_name=?");   //NOI18N
             stSelectMachine.setString(1, tag);
@@ -218,7 +218,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
                 return true;
             } else {
                 //Insert a new tag
-                PreparedStatement stInsertMachine = dbConn.getConnnection().prepareStatement(
+                PreparedStatement stInsertMachine = dbConn.getConnection().prepareStatement(
 						"INSERT INTO tags (tag_name) VALUES (?)");   //NOI18N
                 stInsertMachine.setString(1, tag);
                 int nbRowsAffected = stInsertMachine.executeUpdate();
@@ -262,9 +262,9 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 	private boolean insertTagFiles(ArrayList<String> tags, FileInfo file) {
         try {
             if (tags.size() > 0) {
-                dbConn.getConnnection().setAutoCommit(false);
+                dbConn.getConnection().setAutoCommit(false);
                 int[] results;
-                PreparedStatement stInsertTagFile = dbConn.getConnnection()
+                PreparedStatement stInsertTagFile = dbConn.getConnection()
 						.prepareStatement(
 					"INSERT  INTO settags "
                     + "(settag_songid, settag_tagid) "    //NOI18N
@@ -280,7 +280,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
                 }
                 long startTime = System.currentTimeMillis();
                 results = stInsertTagFile.executeBatch();
-                dbConn.getConnnection().commit();
+                dbConn.getConnection().commit();
                 long endTime = System.currentTimeMillis();
                 Jamuz.getLogger().log(Level.FINEST, "insertTagFiles UPDATE // {0} "
 						+ "// Total execution time: {1}ms", 
@@ -295,7 +295,7 @@ public class StatSourceGuayadeque extends StatSourceSQL {
 						new Object[]{getRootPath()+getPath(file.getRelativePath()), file.getFilename(), result});   //NOI18N
                     }
                 }
-                dbConn.getConnnection().setAutoCommit(true);
+                dbConn.getConnection().setAutoCommit(true);
             }
             return true;
         } catch (SQLException ex) {

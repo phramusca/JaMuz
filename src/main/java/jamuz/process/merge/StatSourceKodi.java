@@ -54,7 +54,7 @@ public class StatSourceKodi extends StatSourceSQL {
 
 			String ratingField = "userrating"; //TODO: When did it changed from rating to userrating AND from /5 to /10 ? Need to maange all cases (do we ? why not only latest ?)
 			
-            this.stSelectFileStatistics = dbConn.getConnnection().prepareStatement("SELECT (P.strPath || S.strFileName) AS fullPath, "
+            this.stSelectFileStatistics = dbConn.getConnection().prepareStatement("SELECT (P.strPath || S.strFileName) AS fullPath, "
                     + "S."+ratingField+"/2 AS rating, S.lastplayed, S.iTimesPlayed AS playCounter, "
 					+ "'1970-01-01 00:00:00' AS addedDate, '' AS genre "
                     + "FROM song S, path P WHERE S.idPath=P.idPath "
@@ -64,7 +64,7 @@ public class StatSourceKodi extends StatSourceSQL {
             //identical except case strPath, old ones now having strHash=''
             //so "SELECT idPath" returns more than 1 result (as a like st), first one being sadly the wrong old one
             //=> changed LIKE in select idPath into an =, but kept "strHash!=''" as such folders are kind of marked as deleted
-            this.stUpdateFileStatistics = dbConn.getConnnection().prepareStatement("UPDATE song SET "+ratingField+"=2*?, lastplayed=?, iTimesPlayed=? "
+            this.stUpdateFileStatistics = dbConn.getConnection().prepareStatement("UPDATE song SET "+ratingField+"=2*?, lastplayed=?, iTimesPlayed=? "
                     + "WHERE idPath=(SELECT idPath FROM path WHERE strPath=? AND strHash!='') AND strFileName=?");  //NOI18N
 
              return true;
@@ -97,7 +97,7 @@ public class StatSourceKodi extends StatSourceSQL {
 	public String guessRootPath() {
         ResultSet rs = null;
         try {
-            PreparedStatement stSelectPath = dbConn.getConnnection().prepareStatement(
+            PreparedStatement stSelectPath = dbConn.getConnection().prepareStatement(
 					"SELECT strPath FROM path ORDER BY length(strPath) ASC LIMIT 1");   //NOI18N
             rs = stSelectPath.executeQuery();
             if (rs.next()) { //Check if we have a result, so we can move to this one

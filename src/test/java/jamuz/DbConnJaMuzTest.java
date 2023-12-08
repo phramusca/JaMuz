@@ -99,133 +99,9 @@ public class DbConnJaMuzTest {
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Genre">
-	/**
-	 * Test of genre methods, of class DbConnJaMuz.
-	 */
-	@Test
-	public void testGenre() {
-
-		System.out.println("testGenre");
-
-		ArrayList<String> expectedGenres = new ArrayList<>();
-		expectedGenres.add("Blues");
-		expectedGenres.add("BO");
-		expectedGenres.add("Chanson");
-		expectedGenres.add("Dub");
-		expectedGenres.add("Electro");
-		expectedGenres.add("Folk");
-		expectedGenres.add("Funk");
-		expectedGenres.add("Jazz");
-		expectedGenres.add("Latino");
-		expectedGenres.add("Musical");
-		expectedGenres.add("Pop");
-		expectedGenres.add("Ragga");
-		expectedGenres.add("Rap");
-		expectedGenres.add("Reggae");
-		expectedGenres.add("Reggaeton");
-		expectedGenres.add("Rock");
-		expectedGenres.add("Salsa");
-		expectedGenres.add("Samba");
-		expectedGenres.add("Ska");
-		expectedGenres.add("Ska Punk");
-		expectedGenres.add("Soul");
-		expectedGenres.add("Trip Hop");
-		checkGenreList(expectedGenres);
-
-		assertTrue("updateGenre", Jamuz.getDb().updateGenre("Reggae", "Toto"));
-		expectedGenres.set(13, "Toto");
-		checkGenreList(expectedGenres);
-
-		assertTrue("deleteGenre", Jamuz.getDb().deleteGenre("Toto"));
-		expectedGenres.remove("Toto");
-		checkGenreList(expectedGenres);
-
-		assertTrue("insertGenre", Jamuz.getDb().insertGenre("Reggae"));
-		expectedGenres.add("Reggae");
-		checkGenreList(expectedGenres);
-
-		assertTrue("checkGenre", Jamuz.getDb().isGenreSupported("Reggae"));
-
-		//Negative cases
-		assertFalse("updateGenre negative", Jamuz.getDb().updateGenre("NoSuchWeirdGenre", "Toto"));
-		checkGenreList(expectedGenres);
-
-		assertFalse("deleteGenre negative", Jamuz.getDb().deleteGenre("NoSuchWeirdGenre"));
-		checkGenreList(expectedGenres);
-
-		assertFalse("insertGenre negative", Jamuz.getDb().insertGenre("Reggae")); //As duplicate
-		checkGenreList(expectedGenres);
-
-		assertFalse("checkGenre negative", Jamuz.getDb().isGenreSupported("NoSuchWeirdGenre"));
-
-		//FIXME TEST Check other constraints
-	}
-
-	private void checkGenreList(ArrayList<String> expectedGenres) {
-		DefaultListModel myListModel = new DefaultListModel();
-		Jamuz.getDb().getGenreListModel(myListModel);
-		Collections.sort(expectedGenres);
-		assertArrayEquals(expectedGenres.toArray(), myListModel.toArray());
-	}
-
-	/**
-	 * Test of updateGenre method, of class DbConnJaMuz.
-	 */
-	@Test
-	@Ignore //Refer to testGenre() above
-	public void testUpdateGenre() {
-		System.out.println("updateGenre");
-		String oldGenre = "";
-		String newGenre = "";
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.updateGenre(oldGenre, newGenre);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
 
 	@Test
-	@Ignore //Refer to testGenre() above
-	public void testDeleteGenre() {
-		System.out.println("deleteGenre");
-		String genre = "";
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.deleteGenre(genre);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	@Test
-	@Ignore //Refer to testGenre() above
-	public void testInsertGenre() {
-		System.out.println("insertGenre");
-		String genre = "";
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.insertGenre(genre);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	@Test
-	@Ignore //Refer to testGenre() above
-	public void testCheckGenre() {
-		System.out.println("checkGenre");
-		String genre = "";
-		DbConnJaMuz instance = null;
-		boolean expResult = false;
-		boolean result = instance.checkGenre(genre);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	@Test
-	@Ignore //Refer to testGenre() above
+	@Ignore //Refer to DaoGenreTest.java
 	public void testGetGenreListModel() {
 		System.out.println("getGenreListModel");
 		DefaultListModel myListModel = null;
@@ -234,7 +110,7 @@ public class DbConnJaMuzTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-
+	
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="Tag">
 	/**
