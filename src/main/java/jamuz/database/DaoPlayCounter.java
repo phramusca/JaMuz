@@ -42,13 +42,13 @@ public class DaoPlayCounter {
 	}
     
     /**
-	 * Sets previous playCounter in file table
+	 * Sets previous playCounter in playcounter table
 	 *
 	 * @param files
 	 * @param idStatSource
 	 * @return
 	 */
-	public synchronized boolean updatePreviousPlayCounter(ArrayList<? super FileInfoInt> files, int idStatSource) {
+	public synchronized boolean update(ArrayList<? super FileInfoInt> files, int idStatSource) {
 		try {
 			int[] results;
 			PreparedStatement stUpdatePlayCounter = dbConn.connection.prepareStatement(

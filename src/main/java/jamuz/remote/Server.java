@@ -468,7 +468,7 @@ public class Server {
 		//Creates a new machine, device and statSource
 		//and store the client
 		StringBuilder zText = new StringBuilder ();
-		if(Jamuz.getDb().isMachine(clientInfo.getLogin(), zText, true)) {
+		if(Jamuz.getDb().machine().getOrInsert(clientInfo.getLogin(), zText, true)) {
 			Device device = new Device(-1, 
 					clientInfo.getLogin(), 
 					"source", clientInfo.getLogin(), 

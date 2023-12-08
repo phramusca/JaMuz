@@ -687,7 +687,7 @@ public class PanelMain extends javax.swing.JFrame {
                 if (tcl.getColumn() == 21) { //ComboBox is here
 					FolderInfo.CopyRight copyRight = (FolderInfo.CopyRight)tcl.getNewValue();
                     FileInfoInt myFileInfo = fileInfoList.get(tcl.getRow());
-                    Jamuz.getDb().updatePathCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
+                    Jamuz.getDb().path().updateCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
 					callBackSelect.refresh();
                 }
             }

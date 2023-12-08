@@ -243,7 +243,7 @@ public class DbConnJaMuzTest {
 		//Create a new machine
 		StringBuilder zText = new StringBuilder();
 		String machineName = "000aaaa000"; //Hoping this this will be id 0 when sorted
-		assertTrue("isMachine", Jamuz.getDb().isMachine(machineName, zText, false));
+		assertTrue("isMachine", Jamuz.getDb().machine().getOrInsert(machineName, zText, false));
 
 		//Get machines
 		DefaultListModel defaultListModel = new DefaultListModel();
@@ -281,7 +281,7 @@ public class DbConnJaMuzTest {
 		String description = "Waouh the great description!";
 		assertTrue(Jamuz.getDb().machine().update(idMachine, description));
 		zText = new StringBuilder();
-		assertTrue("isMachine updated", Jamuz.getDb().isMachine(machineName, zText, false));
+		assertTrue("isMachine updated", Jamuz.getDb().machine().getOrInsert(machineName, zText, false));
 		assertEquals(description, zText.toString());
 		defaultListModel = new DefaultListModel();
 		Jamuz.getDb().getMachineListModel(defaultListModel);
@@ -363,7 +363,7 @@ public class DbConnJaMuzTest {
 		boolean hidden = false;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.isMachine(hostname, description, hidden);
+		boolean result = instance.machine().getOrInsert(hostname, description, hidden);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -770,7 +770,7 @@ public class DbConnJaMuzTest {
 		int idStatSource = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.playCounter().updatePreviousPlayCounter(files, idStatSource);
+		boolean result = instance.playCounter().update(files, idStatSource);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1363,7 +1363,7 @@ public class DbConnJaMuzTest {
 		int copyRight = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updatePathCopyRight(idPath, copyRight);
+		boolean result = instance.path().updateCopyRight(idPath, copyRight);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1502,7 +1502,7 @@ public class DbConnJaMuzTest {
 		int idPath = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.deletePath(idPath);
+		boolean result = instance.path().delete(idPath);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1608,7 +1608,7 @@ public class DbConnJaMuzTest {
 		int idPath = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.checkAlbumSimilar(myList, album, idPath);
+		boolean result = instance.album().checkSimilar(myList, album, idPath);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1625,7 +1625,7 @@ public class DbConnJaMuzTest {
 		int idPath = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.checkAlbumExact(myList, album, idPath);
+		boolean result = instance.album().checkExact(myList, album, idPath);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1641,7 +1641,7 @@ public class DbConnJaMuzTest {
 		String mbId = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.checkAlbumDuplicate(myList, mbId);
+		boolean result = instance.album().checkDuplicate(myList, mbId);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1661,7 +1661,7 @@ public class DbConnJaMuzTest {
 		int discTotal = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.checkAlbumDuplicate(myList, albumArtist, album, idPath, discNo, discTotal);
+		boolean result = instance.album().checkDuplicate(myList, albumArtist, album, idPath, discNo, discTotal);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1679,7 +1679,7 @@ public class DbConnJaMuzTest {
 		int idPath = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.checkAlbumDuplicate(myList, albumArtist, album, idPath);
+		boolean result = instance.album().checkDuplicate(myList, albumArtist, album, idPath);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
