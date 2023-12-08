@@ -21,7 +21,6 @@ import jamuz.Jamuz;
 import jamuz.StatItem;
 import static jamuz.database.DbUtils.getCSVlist;
 import static jamuz.database.DbUtils.getSqlWHERE;
-import jamuz.gui.swing.ListElement;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.ReplayGain;
 import jamuz.process.sync.SyncStatus;
@@ -34,10 +33,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
-import javax.swing.DefaultListModel;
 
 /**
  *

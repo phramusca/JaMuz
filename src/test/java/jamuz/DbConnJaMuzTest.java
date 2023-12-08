@@ -1248,7 +1248,7 @@ public class DbConnJaMuzTest {
 		FolderInfo.CheckedFlag checkedFlag = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getFolders(folders, checkedFlag);
+		boolean result = instance.path().get(folders, checkedFlag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1264,7 +1264,7 @@ public class DbConnJaMuzTest {
 		int idPath = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getFolder(folders, idPath);
+		boolean result = instance.path().get(folders, idPath);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1279,7 +1279,7 @@ public class DbConnJaMuzTest {
 		int idPath = 0;
 		DbConnJaMuz instance = null;
 		FolderInfo expResult = null;
-		FolderInfo result = instance.getFolder(idPath);
+		FolderInfo result = instance.path().get(idPath);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1294,7 +1294,7 @@ public class DbConnJaMuzTest {
 		ConcurrentHashMap<String, FolderInfo> folders = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.getFolders(folders);
+		boolean result = instance.path().get(folders);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1309,7 +1309,7 @@ public class DbConnJaMuzTest {
 		String path = "";
 		DbConnJaMuz instance = null;
 		int expResult = 0;
-		int result = instance.getIdPath(path);
+		int result = instance.path().getIdPath(path);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1328,7 +1328,7 @@ public class DbConnJaMuzTest {
 		int[] key = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.insertPath(relativePath, modifDate, checkedFlag, mbId, key);
+		boolean result = instance.path().insert(relativePath, modifDate, checkedFlag, mbId, key);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1347,7 +1347,7 @@ public class DbConnJaMuzTest {
 		String mbId = "";
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updatePath(idPath, modifDate, checkedFlag, path, mbId);
+		boolean result = instance.path().update(idPath, modifDate, checkedFlag, path, mbId);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1379,7 +1379,7 @@ public class DbConnJaMuzTest {
 		FolderInfo.CheckedFlag checkedFlag = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updatePathChecked(idPath, checkedFlag);
+		boolean result = instance.path().updateCheckedFlag(idPath, checkedFlag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1394,7 +1394,7 @@ public class DbConnJaMuzTest {
 		FolderInfo.CheckedFlag checkedFlag = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.setCheckedFlagReset(checkedFlag);
+		boolean result = instance.path().updateCheckedFlagReset(checkedFlag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

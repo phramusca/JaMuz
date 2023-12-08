@@ -90,6 +90,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	private final DaoDeviceFile daoDeviceFile;
     private final DaoFile daoFile;
     private final DaoFileTranscoded daoFileTranscoded;
+    private final DaoPath daoPath;
 
 	/**
 	 * Creates a database dbConn.connection.
@@ -110,6 +111,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		daoDeviceFile = new DaoDeviceFile(dbConn);
         daoFile = new DaoFile(dbConn);
         daoFileTranscoded = new DaoFileTranscoded(dbConn);
+        daoPath = new DaoPath(dbConn);
 	}
 
 	public DaoGenre genre() {
@@ -160,7 +162,9 @@ public class DbConnJaMuz extends StatSourceSQL {
         return daoFileTranscoded;
     }
 
-    
+    public DaoPath path() {
+        return daoPath;
+    }
     
 	/**
 	 *
@@ -481,445 +485,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 		} catch (SQLException ex) {
 			Popup.error("setPreviousPlayCounter(" + idStatSource + ")", ex); // NOI18N
-			return false;
-		}
-	}
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="File">
-	
-
-
-
-	/**
-	 * Get statistics for merge process
-	 *
-	 * @param files
-	 * @param statSource
-	 * @return
-	 */
-	public boolean getStatistics(ArrayList<FileInfo> files, StatSource statSource) {
-		try {
-			if (statSource.getIdDevice() > 0) {
-				this.stSelectFileStatistics = stSelectFilesStats4SourceAndDevice;
-				this.stSelectFileStatistics.setInt(1, statSource.getId());
-				this.stSelectFileStatistics.setInt(2, statSource.getIdDevice());
-			} else {
-				this.stSelectFileStatistics = stSelectFilesStats4Source;
-				this.stSelectFileStatistics.setInt(1, statSource.getId());
-			}
-			return getStatistics(files);
-
-		} catch (SQLException ex) {
-			Popup.error(ex);
-			Jamuz.getLogger().log(Level.SEVERE, "getStatistics: " + statSource, ex); // NOI18N
-			return false;
-		}
-
-	}
-    
-    	/**
-	 * Prepare the predefined SQL statements
-	 *
-	 * @param isRemote
-	 * @return
-	 */
-	@Override
-	public boolean setUp(boolean isRemote) {
-		try {
-			String fullPath;
-			if (isRemote) {
-				// We do not care to get original fullPath when merging with remote
-				// Moreover it avoids an issue writing metadata, that is still present for other
-				// merge types, see below
-				fullPath = "(P.strPath || F.name)";
-			} else {
-				this.dbConn.connect();
-				// TODO: Pb writing metadata after a change of fullPath (for instance when mp3
-				// replaced by flac)
-				// => Include both original path (for merge comparison) and current path on
-				// JaMuz side (for file metadata updates)
-				// => No need to have isRemote in setUp()
-				fullPath = "D.oriRelativeFullPath";
-			}
-
-			stSelectFilesStats4SourceAndDevice = dbConn.getConnection().prepareStatement(
-					"SELECT "
-					+ "F.idFile, F.idPath, " + fullPath + " AS fullPath, "
-					+ "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, " // NOI18N
-					+ "C.playcounter AS previousPlayCounter, " // NOI18N
-					+ "F.ratingModifDate, F.tagsModifDate, F.genre, F.genreModifDate  " // NOI18N
-					+ "FROM file F "
-					+ "JOIN path P ON F.idPath=P.idPath " // NOI18N
-					+ "JOIN devicefile D ON D.idFile=F.idFile "
-					+ "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
-					+ "ON F.idFile=C.idFile " // NOI18N //NOI18N
-					+ "WHERE D.idDevice=? AND D.status!='INFO'");
-			stSelectFilesStats4Source = dbConn.getConnection().prepareStatement(
-					"SELECT "
-					+ "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
-					+ "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, " // NOI18N
-					+ "C.playcounter AS previousPlayCounter, " // NOI18N
-					+ "F.ratingModifDate, F.tagsModifDate, F.genre, F.genreModifDate " // NOI18N
-					+ "FROM file F "
-					+ "JOIN path P ON F.idPath=P.idPath " // NOI18N
-					+ "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
-					+ "ON F.idFile=C.idFile ");
-
-			this.stSelectFileStatistics = this.stSelectFilesStats4Source; // by default, but not to be called directly
-
-			this.stUpdateFileStatistics = dbConn.connection.prepareStatement(
-					"UPDATE file "
-					+ "SET rating=?, bpm=?, lastplayed=?, addedDate=?, "
-					+ "playCounter=?, ratingModifDate=?, genreModifDate=?, genre=? "
-					+ "WHERE idFile=?");
-
-			return true;
-		} catch (SQLException ex) {
-			// Proper error handling. We should not have such an error unless above code
-			// changes
-			Popup.error("setUp", ex); // NOI18N
-			return false;
-		}
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	@Override
-	public boolean tearDown() {
-		// this.dbConn.disconnect();
-		// Never disconnecting from application database, no need (really ?)
-		return true;
-	}
-
-	/**
-	 * Return a FileInfo from given ResultSet
-	 *
-	 * @param rs
-	 * @return
-	 */
-	@Override
-	public FileInfo getFileStatistics(ResultSet rs) {
-		try {
-			// JaMuz database does not store rootPath in database, only relative one
-			String relativeFullPath = dbConn.getStringValue(rs, "fullPath"); // NOI18N
-			int rating = rs.getInt("rating"); // NOI18N
-			String lastPlayed = dbConn.getStringValue(rs, "lastplayed", "1970-01-01 00:00:00"); // NOI18N
-			String addedDate = dbConn.getStringValue(rs, "addedDate", "1970-01-01 00:00:00"); // NOI18N
-			int playCounter = rs.getInt("playCounter"); // NOI18N
-			float bpm = rs.getFloat("bpm");
-			int previousPlayCounter = rs.getInt("previousPlayCounter"); // NOI18N
-			String ratingModifDate = dbConn.getStringValue(rs, "ratingModifDate", "1970-01-01 00:00:00"); // NOI18N
-			String tagsModifDate = dbConn.getStringValue(rs, "tagsModifDate", "1970-01-01 00:00:00"); // NOI18N
-			String genreModifDate = dbConn.getStringValue(rs, "genreModifDate", "1970-01-01 00:00:00"); // NOI18N
-			int idFile = rs.getInt("idFile"); // NOI18N
-			int idPath = rs.getInt("idPath"); // NOI18N
-			String genre = dbConn.getStringValue(rs, "genre"); // NOI18N
-
-			return new FileInfo(idFile, idPath, relativeFullPath, rating,
-					lastPlayed, addedDate, playCounter, this.getName(),
-					previousPlayCounter, bpm, genre, ratingModifDate, tagsModifDate,
-					genreModifDate);
-		} catch (SQLException ex) {
-			Popup.error("getStats", ex); // NOI18N
-			return null;
-		}
-	}
-
-	/**
-	 * Set update statistics parameters
-	 *
-	 * @param file
-	 * @throws SQLException
-	 */
-	@Override
-	public synchronized void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
-		this.stUpdateFileStatistics.setInt(1, file.getRating());
-		this.stUpdateFileStatistics.setFloat(2, file.getBPM());
-		this.stUpdateFileStatistics.setString(3, file.getFormattedLastPlayed());
-		this.stUpdateFileStatistics.setString(4, file.getFormattedAddedDate());
-		this.stUpdateFileStatistics.setInt(5, file.getPlayCounter());
-		this.stUpdateFileStatistics.setString(6,
-				file.isUpdateRatingModifDate()
-						? DateTime.getCurrentUtcSql()
-						: file.getFormattedRatingModifDate());
-		this.stUpdateFileStatistics.setString(7,
-				file.isUpdateRatingModifDate()
-						? DateTime.getCurrentUtcSql()
-						: file.getFormattedGenreModifDate());
-		this.stUpdateFileStatistics.setString(8, file.getGenre());
-		this.stUpdateFileStatistics.setInt(9, file.getIdFile());
-		this.stUpdateFileStatistics.addBatch();
-	}
-
-	/**
-	 *
-	 * @param files
-	 * @return
-	 */
-	@Override
-	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
-		int[] results = super.updateFileStatistics(files);
-		return daoFileTag.update(files, results);
-	}
-
-	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="Path">
-	/**
-	 * Gets folders having given checked flag
-	 *
-	 * @param folders
-	 * @param checkedFlag
-	 * @return
-	 */
-	public boolean getFolders(ConcurrentHashMap<String, FolderInfo> folders,
-			CheckedFlag checkedFlag) {
-		return this.getFolders(folders, "WHERE checked="
-				+ checkedFlag.getValue());// NOI18N
-	}
-
-	/**
-	 * Return given folder for check (as a list to match check process)
-	 *
-	 * @param folders
-	 * @param idPath
-	 * @return
-	 */
-	public boolean getFolder(ConcurrentHashMap<String, FolderInfo> folders,
-			int idPath) {
-		return this.getFolders(folders, "WHERE idPath=" + idPath); // NOI18N
-	}
-
-	/**
-	 * Return given folder
-	 *
-	 * @param idPath
-	 * @return
-	 */
-	public FolderInfo getFolder(int idPath) {
-		ConcurrentHashMap<String, FolderInfo> folders = new ConcurrentHashMap<>();
-		if (getFolder(folders, idPath)) { // NOI18N
-			return folders.elements().nextElement(); // .get(0);
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Get folders for scan
-	 *
-	 * @param folders
-	 * @return
-	 */
-	public boolean getFolders(ConcurrentHashMap<String, FolderInfo> folders) {
-		return getFolders(folders, "");
-	}
-
-	private boolean getFolders(ConcurrentHashMap<String, FolderInfo> folders,
-			String sqlWhere) {
-		folders.clear();
-		String sql = "SELECT idPath, strPath, modifDate, checked "
-				+ "FROM path " + sqlWhere; // NOI18N
-		Statement st = null;
-		ResultSet rs = null;
-		try {
-			st = dbConn.connection.createStatement();
-			rs = st.executeQuery(sql);
-			String path;
-			while (rs.next()) {
-				Date dbModifDate = DateTime.parseSqlUtc(
-						dbConn.getStringValue(rs, "modifDate")); // NOI18N
-				path = FilenameUtils.separatorsToSystem(
-						dbConn.getStringValue(rs, "strPath")); // NOI18N
-				folders.put(path, new FolderInfo(rs.getInt("idPath"),
-						path, dbModifDate,
-						CheckedFlag.values()[rs.getInt("checked")])); // NOI18N
-			}
-			return true;
-		} catch (SQLException ex) {
-			Popup.error("getFolderInfoList(" + sqlWhere + ")", ex); // NOI18N
-			return false;
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-			} catch (SQLException ex) {
-				Jamuz.getLogger().warning("Failed to close ResultSet");
-			}
-			try {
-				if (st != null) {
-					st.close();
-				}
-			} catch (SQLException ex) {
-				Jamuz.getLogger().warning("Failed to close Statement");
-			}
-		}
-	}
-
-	/**
-	 * Checks if path exists in database
-	 *
-	 * @param path
-	 * @return
-	 */
-	public int getIdPath(String path) {
-		ResultSet rs = null;
-		try {
-			path = FilenameUtils.separatorsToUnix(path);
-
-			PreparedStatement stSelectPath = dbConn.connection.prepareStatement(
-					"SELECT idPath FROM path WHERE strPath=? ORDER BY idPath"); // NOI18N
-			stSelectPath.setString(1, path);
-			rs = stSelectPath.executeQuery();
-			if (rs.next()) { // Check if we have a result, so we can move to this one
-				return rs.getInt(1);
-			} else {
-				return -1;
-			}
-		} catch (SQLException ex) {
-			Popup.error("isPathExists(" + path + ")", ex); // NOI18N
-			return -1;
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-			} catch (SQLException ex) {
-				Jamuz.getLogger().warning("Failed to close ResultSet");
-			}
-
-		}
-	}
-
-	/**
-	 * Insert a path in database
-	 *
-	 * @param relativePath
-	 * @param modifDate
-	 * @param checkedFlag
-	 * @param mbId
-	 * @param key
-	 * @return
-	 */
-	public synchronized boolean insertPath(String relativePath, Date modifDate,
-			CheckedFlag checkedFlag, String mbId, int[] key) {
-		try {
-			// Only inserting in Linux style in database
-			relativePath = FilenameUtils.separatorsToUnix(relativePath);
-			PreparedStatement stInsertPath = dbConn.getConnection().prepareStatement(
-					"INSERT INTO path "
-					+ "(strPath, modifDate, checked, mbId) " // NOI18N
-					+ "VALUES (?, ?, ?, ?)"); // NOI18N
-
-			stInsertPath.setString(1, relativePath);
-			stInsertPath.setString(2, DateTime.formatUTCtoSqlUTC(modifDate));
-			stInsertPath.setInt(3, checkedFlag.getValue());
-			stInsertPath.setString(4, mbId);
-			int nbRowsAffected = stInsertPath.executeUpdate();
-			if (nbRowsAffected == 1) {
-				ResultSet keys = stInsertPath.getGeneratedKeys();
-				keys.next();
-				key[0] = keys.getInt(1);
-				return true;
-			} else {
-				Jamuz.getLogger().log(Level.SEVERE, "stInsertPath, relativePath=\"{0}\" "
-						+ "# row(s) affected: +{1}",
-						new Object[]{relativePath, nbRowsAffected}); // NOI18N
-				return false;
-			}
-		} catch (SQLException ex) {
-			Popup.error("insertPath(" + relativePath + ", " + modifDate.toString() + ")",
-					ex); // NOI18N
-			return false;
-		}
-	}
-
-	/**
-	 * Update a path in database
-	 *
-	 * @param idPath
-	 * @param modifDate
-	 * @param checkedFlag
-	 * @param path
-	 * @param mbId
-	 * @return
-	 */
-	public synchronized boolean updatePath(int idPath, Date modifDate,
-			CheckedFlag checkedFlag, String path, String mbId) {
-		try {
-			PreparedStatement stUpdatePath = dbConn.connection.prepareStatement(
-					"UPDATE path "
-					+ "SET modifDate=?, checked=?, strPath=?, mbId=? " // NOI18N
-					+ "WHERE idPath=?"); // NOI18N
-			stUpdatePath.setString(1, DateTime.formatUTCtoSqlUTC(modifDate));
-			stUpdatePath.setInt(2, checkedFlag.getValue());
-			path = FilenameUtils.separatorsToUnix(path);
-			stUpdatePath.setString(3, path);
-			stUpdatePath.setString(4, mbId);
-			stUpdatePath.setInt(5, idPath);
-			int nbRowsAffected = stUpdatePath.executeUpdate();
-			if (nbRowsAffected == 1) {
-				return true;
-			} else {
-				Jamuz.getLogger().log(Level.SEVERE, "stUpdatePath, idPath={0} "
-						+ "# row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected}); // NOI18N
-				return false;
-			}
-		} catch (SQLException ex) {
-			Popup.error("updatePath(" + idPath + ", " + modifDate.toString() + ")", ex); // NOI18N
-			return false;
-		}
-	}
-
-	/**
-	 * Sets a path as checked
-	 *
-	 * @param idPath
-	 * @param checkedFlag
-	 * @return
-	 */
-	public synchronized boolean updatePathChecked(int idPath, CheckedFlag checkedFlag) {
-		try {
-			PreparedStatement stUpdateCheckedFlag = dbConn.connection
-					.prepareStatement("UPDATE path set checked=? WHERE idPath=?"); // NOI18N
-
-			stUpdateCheckedFlag.setInt(1, checkedFlag.getValue());
-			stUpdateCheckedFlag.setInt(2, idPath);
-			int nbRowsAffected = stUpdateCheckedFlag.executeUpdate();
-			if (nbRowsAffected > 0) {
-				return true;
-			} else {
-				Jamuz.getLogger().log(Level.SEVERE,
-						"stUpdateCheckedFlag, idPath={0}, checkedFlag={1} # row(s) affected: +{2}",
-						new Object[]{idPath, checkedFlag, nbRowsAffected}); // NOI18N
-				return false;
-			}
-		} catch (SQLException ex) {
-			Popup.error("setCheckedFlag(" + idPath + "," + checkedFlag + ")", ex); // NOI18N
-			return false;
-		}
-	}
-
-	/**
-	 * Resets the check flag to UNCHECKED on path table for given checked flag
-	 *
-	 * @param checkedFlag
-	 * @return
-	 */
-	public synchronized boolean setCheckedFlagReset(CheckedFlag checkedFlag) {
-		try {
-			PreparedStatement stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
-					"UPDATE path SET checked=0 "
-					+ "WHERE checked=?"); // NOI18N
-			stUpdateCheckedFlagReset.setInt(1, checkedFlag.getValue());
-			stUpdateCheckedFlagReset.executeUpdate();
-			// we can have no rows affected if library is empty so not checking it
-			return true;
-		} catch (SQLException ex) {
-			Popup.error("setCheckedFlagReset()", ex); // NOI18N
 			return false;
 		}
 	}
@@ -1325,7 +890,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return listElement;
 	}
 
-
 	/**
 	 * Fill list of genre, artist or album
 	 *
@@ -1402,6 +966,184 @@ public class DbConnJaMuz extends StatSourceSQL {
 		if (field.equals("album") && myListModel.size() > 1) {
 			myListModel.insertElementAt(new ListElement("%", field), 0); // NOI18N
 		}
+	}
+
+	// </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="For Merge Process">
+	
+	/**
+	 * Get statistics for merge process
+	 *
+	 * @param files
+	 * @param statSource
+	 * @return
+	 */
+	public boolean getStatistics(ArrayList<FileInfo> files, StatSource statSource) {
+		try {
+			if (statSource.getIdDevice() > 0) {
+				this.stSelectFileStatistics = stSelectFilesStats4SourceAndDevice;
+				this.stSelectFileStatistics.setInt(1, statSource.getId());
+				this.stSelectFileStatistics.setInt(2, statSource.getIdDevice());
+			} else {
+				this.stSelectFileStatistics = stSelectFilesStats4Source;
+				this.stSelectFileStatistics.setInt(1, statSource.getId());
+			}
+			return getStatistics(files);
+
+		} catch (SQLException ex) {
+			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, "getStatistics: " + statSource, ex); // NOI18N
+			return false;
+		}
+
+	}
+    
+    	/**
+	 * Prepare the predefined SQL statements
+	 *
+	 * @param isRemote
+	 * @return
+	 */
+	@Override
+	public boolean setUp(boolean isRemote) {
+		try {
+			String fullPath;
+			if (isRemote) {
+				// We do not care to get original fullPath when merging with remote
+				// Moreover it avoids an issue writing metadata, that is still present for other
+				// merge types, see below
+				fullPath = "(P.strPath || F.name)";
+			} else {
+				this.dbConn.connect();
+				// TODO: Pb writing metadata after a change of fullPath (for instance when mp3
+				// replaced by flac)
+				// => Include both original path (for merge comparison) and current path on
+				// JaMuz side (for file metadata updates)
+				// => No need to have isRemote in setUp()
+				fullPath = "D.oriRelativeFullPath";
+			}
+
+			stSelectFilesStats4SourceAndDevice = dbConn.getConnection().prepareStatement(
+					"SELECT "
+					+ "F.idFile, F.idPath, " + fullPath + " AS fullPath, "
+					+ "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, " // NOI18N
+					+ "C.playcounter AS previousPlayCounter, " // NOI18N
+					+ "F.ratingModifDate, F.tagsModifDate, F.genre, F.genreModifDate  " // NOI18N
+					+ "FROM file F "
+					+ "JOIN path P ON F.idPath=P.idPath " // NOI18N
+					+ "JOIN devicefile D ON D.idFile=F.idFile "
+					+ "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
+					+ "ON F.idFile=C.idFile " // NOI18N //NOI18N
+					+ "WHERE D.idDevice=? AND D.status!='INFO'");
+			stSelectFilesStats4Source = dbConn.getConnection().prepareStatement(
+					"SELECT "
+					+ "F.idFile, F.idPath, (P.strPath || F.name) AS fullPath, "
+					+ "F.rating, F.lastplayed, F.addedDate, F.playCounter, F.BPM, " // NOI18N
+					+ "C.playcounter AS previousPlayCounter, " // NOI18N
+					+ "F.ratingModifDate, F.tagsModifDate, F.genre, F.genreModifDate " // NOI18N
+					+ "FROM file F "
+					+ "JOIN path P ON F.idPath=P.idPath " // NOI18N
+					+ "LEFT OUTER JOIN (SELECT * FROM playcounter WHERE idStatSource=?) C "
+					+ "ON F.idFile=C.idFile ");
+
+			this.stSelectFileStatistics = this.stSelectFilesStats4Source; // by default, but not to be called directly
+
+			this.stUpdateFileStatistics = dbConn.connection.prepareStatement(
+					"UPDATE file "
+					+ "SET rating=?, bpm=?, lastplayed=?, addedDate=?, "
+					+ "playCounter=?, ratingModifDate=?, genreModifDate=?, genre=? "
+					+ "WHERE idFile=?");
+
+			return true;
+		} catch (SQLException ex) {
+			// Proper error handling. We should not have such an error unless above code
+			// changes
+			Popup.error("setUp", ex); // NOI18N
+			return false;
+		}
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@Override
+	public boolean tearDown() {
+		// this.dbConn.disconnect();
+		// Never disconnecting from application database, no need (really ?)
+		return true;
+	}
+
+	/**
+	 * Return a FileInfo from given ResultSet
+	 *
+	 * @param rs
+	 * @return
+	 */
+	@Override
+	public FileInfo getFileStatistics(ResultSet rs) {
+		try {
+			// JaMuz database does not store rootPath in database, only relative one
+			String relativeFullPath = dbConn.getStringValue(rs, "fullPath"); // NOI18N
+			int rating = rs.getInt("rating"); // NOI18N
+			String lastPlayed = dbConn.getStringValue(rs, "lastplayed", "1970-01-01 00:00:00"); // NOI18N
+			String addedDate = dbConn.getStringValue(rs, "addedDate", "1970-01-01 00:00:00"); // NOI18N
+			int playCounter = rs.getInt("playCounter"); // NOI18N
+			float bpm = rs.getFloat("bpm");
+			int previousPlayCounter = rs.getInt("previousPlayCounter"); // NOI18N
+			String ratingModifDate = dbConn.getStringValue(rs, "ratingModifDate", "1970-01-01 00:00:00"); // NOI18N
+			String tagsModifDate = dbConn.getStringValue(rs, "tagsModifDate", "1970-01-01 00:00:00"); // NOI18N
+			String genreModifDate = dbConn.getStringValue(rs, "genreModifDate", "1970-01-01 00:00:00"); // NOI18N
+			int idFile = rs.getInt("idFile"); // NOI18N
+			int idPath = rs.getInt("idPath"); // NOI18N
+			String genre = dbConn.getStringValue(rs, "genre"); // NOI18N
+
+			return new FileInfo(idFile, idPath, relativeFullPath, rating,
+					lastPlayed, addedDate, playCounter, this.getName(),
+					previousPlayCounter, bpm, genre, ratingModifDate, tagsModifDate,
+					genreModifDate);
+		} catch (SQLException ex) {
+			Popup.error("getStats", ex); // NOI18N
+			return null;
+		}
+	}
+
+	/**
+	 * Set update statistics parameters
+	 *
+	 * @param file
+	 * @throws SQLException
+	 */
+	@Override
+	public synchronized void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
+		this.stUpdateFileStatistics.setInt(1, file.getRating());
+		this.stUpdateFileStatistics.setFloat(2, file.getBPM());
+		this.stUpdateFileStatistics.setString(3, file.getFormattedLastPlayed());
+		this.stUpdateFileStatistics.setString(4, file.getFormattedAddedDate());
+		this.stUpdateFileStatistics.setInt(5, file.getPlayCounter());
+		this.stUpdateFileStatistics.setString(6,
+				file.isUpdateRatingModifDate()
+						? DateTime.getCurrentUtcSql()
+						: file.getFormattedRatingModifDate());
+		this.stUpdateFileStatistics.setString(7,
+				file.isUpdateRatingModifDate()
+						? DateTime.getCurrentUtcSql()
+						: file.getFormattedGenreModifDate());
+		this.stUpdateFileStatistics.setString(8, file.getGenre());
+		this.stUpdateFileStatistics.setInt(9, file.getIdFile());
+		this.stUpdateFileStatistics.addBatch();
+	}
+
+	/**
+	 *
+	 * @param files
+	 * @return
+	 */
+	@Override
+	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
+		int[] results = super.updateFileStatistics(files);
+		return daoFileTag.update(files, results);
 	}
 
 	// </editor-fold>

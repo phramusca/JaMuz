@@ -426,7 +426,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		
 		//If idPath is not known, check if it exists
 		if(idPath<0) {
-			idPath = Jamuz.getDb().getIdPath(relativePath);
+			idPath = Jamuz.getDb().path().getIdPath(relativePath);
 		}
 
 		if(idPath>=0) {
@@ -444,7 +444,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 */
 	public boolean insertInDb(CheckedFlag checkedFlag) {
 		int [] key = new int[1]; //Hint: Using a int table as cannot pass a simple integer by reference
-		boolean result = Jamuz.getDb().insertPath(relativePath, modifDate, checkedFlag, mbId, key);
+		boolean result = Jamuz.getDb().path().insert(relativePath, modifDate, checkedFlag, mbId, key);
 		idPath=key[0]; //Get insertion key
 		return result;
 	}
@@ -455,7 +455,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 * @return
 	 */
 	public boolean updateInDb(CheckedFlag checkedFlag) {
-		return Jamuz.getDb().updatePath(idPath, modifDate, checkedFlag, relativePath, mbId);
+		return Jamuz.getDb().path().update(idPath, modifDate, checkedFlag, relativePath, mbId);
 	}
 
     /**
@@ -1509,7 +1509,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 				filesAudio.get(0).getRelativePath());
 		
 			//Prevent duplicate strPath in database
-			int newIdPath = Jamuz.getDb().getIdPath(filesAudio.get(0).getRelativePath());
+			int newIdPath = Jamuz.getDb().path().getIdPath(filesAudio.get(0).getRelativePath());
 			if(idPath>=0 && newIdPath>=0 && idPath!=newIdPath) {
 				if(Jamuz.getDb().file().updateIdPath(idPath, newIdPath)) {
 					idPath=newIdPath;
@@ -1554,7 +1554,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
     
 	private void KO(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().updatePathChecked(idPath, FolderInfo.CheckedFlag.KO);
+            Jamuz.getDb().path().updateCheckedFlag(idPath, FolderInfo.CheckedFlag.KO);
         }
         else {
             moveList(getAllFiles(), ProcessCheck.getKoLocation().getValue(), false, 
@@ -1566,7 +1566,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
     
     private boolean Manual(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().updatePathChecked(idPath, FolderInfo.CheckedFlag.UNCHECKED);
+            Jamuz.getDb().path().updateCheckedFlag(idPath, FolderInfo.CheckedFlag.UNCHECKED);
             return false;
         }
         else {
