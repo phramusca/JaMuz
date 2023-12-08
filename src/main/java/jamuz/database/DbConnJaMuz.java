@@ -92,6 +92,7 @@ public class DbConnJaMuz extends StatSourceSQL {
     private final DaoFileTranscoded daoFileTranscoded;
     private final DaoPath daoPath;
     private final DaoPlayCounter daoPlayCounter;
+    private final DaoOption daoOption;
 
 	/**
 	 * Creates a database dbConn.connection.
@@ -114,6 +115,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         daoFileTranscoded = new DaoFileTranscoded(dbConn);
         daoPath = new DaoPath(dbConn);
         daoPlayCounter = new DaoPlayCounter(dbConn);
+        daoOption = new DaoOption(dbConn);
 	}
 
 	public DaoGenre genre() {
@@ -171,138 +173,10 @@ public class DbConnJaMuz extends StatSourceSQL {
     public DaoPlayCounter playCounter() {
         return daoPlayCounter;
     }
-	
 
-	// <editor-fold defaultstate="collapsed" desc="Option">
-	/**
-	 *
-	 * @param selOptions
-	 * @return
-	 */
-	public synchronized boolean updateOptions(Machine selOptions) {
-		try {
-			dbConn.connection.setAutoCommit(false);
-
-			PreparedStatement stUpdateOptions = dbConn.connection.prepareStatement(
-					"UPDATE option SET value=? "
-					+ "WHERE idMachine=? AND idOptionType=?"); // NOI18N
-
-			for (Option option : selOptions.getOptions()) {
-				if (option.getType().equals("path")
-						&& !option.getValue().isBlank()) { // NOI18N
-					option.setValue(FilenameUtils.normalizeNoEndSeparator(option.getValue().trim())
-							+ File.separator);
-				}
-
-				stUpdateOptions.setString(1, option.getValue());
-				stUpdateOptions.setInt(2, option.getIdMachine());
-				stUpdateOptions.setInt(3, option.getIdOptionType());
-
-				stUpdateOptions.addBatch();
-			}
-			long startTime = System.currentTimeMillis();
-			int[] results = stUpdateOptions.executeBatch();
-			dbConn.connection.commit();
-			long endTime = System.currentTimeMillis();
-			Jamuz.getLogger().log(Level.FINEST, "setOptions // {0} // Total execution time: {1}ms",
-					new Object[]{results.length, endTime - startTime}); // NOI18N
-			// Check results
-			int result;
-			for (int i = 0; i < results.length; i++) {
-				result = results[i];
-				if (result != 1) {
-					return false;
-				}
-			}
-			dbConn.connection.setAutoCommit(true);
-			return true;
-		} catch (SQLException ex) {
-			Popup.error(ex);
-			return false;
-		}
-	}
-
-	/**
-	 * Set option value (update)
-	 *
-	 * @param myOption
-	 * @param value
-	 * @return
-	 */
-	public synchronized boolean updateOption(Option myOption, String value) {
-		try {
-			if (myOption.getType().equals("path")) { // NOI18N
-				value = FilenameUtils.normalizeNoEndSeparator(value.trim()) + File.separator;
-			}
-			PreparedStatement stUpdateOption = dbConn.connection.prepareStatement("UPDATE option SET value=? "
-					+ "WHERE idMachine=? AND idOptionType=?"); // NOI18N
-			stUpdateOption.setString(1, value);
-			stUpdateOption.setInt(2, myOption.getIdMachine());
-			stUpdateOption.setInt(3, myOption.getIdOptionType());
-
-			int nbRowsAffected = stUpdateOption.executeUpdate();
-			if (nbRowsAffected > 0) {
-				return true;
-			} else {
-				Jamuz.getLogger().log(Level.SEVERE, "stUpdateOption, value={0}, idMachine={1}, "
-						+ "idMachidOptionTypeine={2} # row(s) affected: +{3}", // NOI18N
-						new Object[]{value, myOption.getIdMachine(), myOption.getIdOptionType(), nbRowsAffected});
-				return false;
-			}
-		} catch (SQLException ex) {
-			Popup.error("setOption(" + myOption.toString() + "," + value + ")", ex); // NOI18N
-			return false;
-		}
-	}
-
-	/**
-	 * Get options for given machine
-	 *
-	 * @param myOptions
-	 * @param machineName
-	 * @return
-	 */
-	public boolean getOptions(ArrayList<Option> myOptions, String machineName) {
-		ResultSet rs = null;
-		try {
-			PreparedStatement stSelectOptions = dbConn.connection.prepareStatement(
-					"SELECT O.idMachine, OT.name, O.value, O.idOptionType, OT.type "
-					+ "FROM option O, optiontype OT, machine M " // NOI18N
-					+ "WHERE O.idMachine=M.idMachine "
-					+ "AND O.idOptionType=OT.idOptionType "
-					+ "AND M.name=?");
-			stSelectOptions.setString(1, machineName);
-			rs = stSelectOptions.executeQuery();
-			while (rs.next()) {
-				myOptions.add(new Option(
-						dbConn.getStringValue(rs, "name"),
-						dbConn.getStringValue(rs, "value"),
-						rs.getInt("idMachine"),
-						rs.getInt("idOptionType"),
-						dbConn.getStringValue(rs, "type"))); // NOI18N
-			}
-
-			if (myOptions.size() <= 0) {
-				Popup.warning(Inter.get("Error.NoOption") + " \"" + machineName + "\"."); // NOI18N //NOI18N
-				return false;
-			}
-
-			return true;
-		} catch (SQLException ex) {
-			Popup.error("getOptions(\"" + machineName + "\")", ex); // NOI18N
-			return false;
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-			} catch (SQLException ex) {
-				Jamuz.getLogger().warning("Failed to close ResultSet");
-			}
-		}
-	}
-
-	// </editor-fold>
+    public DaoOption option() {
+        return daoOption;
+    }
 
     // <editor-fold defaultstate="collapsed" desc="Machine & Option">
 	/**
