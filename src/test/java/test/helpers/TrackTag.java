@@ -16,11 +16,11 @@
  */
 package test.helpers;
 
-import jamuz.database.DbConnJaMuz;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.ReplayGain.GainValues;
+import jamuz.process.sync.SyncStatus;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public class TrackTag extends FileInfoInt {
 		super(-1, -1, relativePath, filename, TrackSourceRepo.get(sourceFile).length, TrackSourceRepo.get(sourceFile).format,
 				TrackSourceRepo.get(sourceFile).bitRate, (int) TrackSourceRepo.get(sourceFile).size, BPM, album, albumArtist, artist, comment,
 				discNo, discTotal, genre, nbCovers, title, trackNo, trackTotal, year, playCounter, rating, addedDate, lastPlayed,
-				TrackSourceRepo.get(sourceFile).modifDate, "", checkedFlag, FolderInfo.CopyRight.UNDEFINED, 0, 0, "", DbConnJaMuz.SyncStatus.INFO,
+				TrackSourceRepo.get(sourceFile).modifDate, "", checkedFlag, FolderInfo.CopyRight.UNDEFINED, 0, 0, "", SyncStatus.INFO,
 				DateTime.formatUTCtoSqlUTC(new Date(0)), "", new GainValues());
 
 		oriAddedDate = addedDate;

@@ -16,7 +16,7 @@
  */
 package jamuz;
 
-import jamuz.database.DbConnJaMuz.SyncStatus;
+import jamuz.process.sync.SyncStatus;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.process.check.FolderInfoResult;

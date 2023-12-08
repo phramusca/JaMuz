@@ -16,6 +16,7 @@
  */
 package jamuz.database;
 
+import jamuz.process.sync.SyncStatus;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
@@ -85,6 +86,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	private final DaoSchema daoSchema;
 	private final DaoDeviceFile daoDeviceFile;
     private final DaoFile daoFile;
+    private final DaoFileTranscoded daoFileTranscoded;
 
 	/**
 	 * Creates a database dbConn.connection.
@@ -104,6 +106,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		daoSchema = new DaoSchema(dbConn);
 		daoDeviceFile = new DaoDeviceFile(dbConn);
         daoFile = new DaoFile(dbConn);
+        daoFileTranscoded = new DaoFileTranscoded(dbConn);
 	}
 
 	public DaoGenre genre() {
@@ -149,7 +152,13 @@ public class DbConnJaMuz extends StatSourceSQL {
     public DaoFile file() {
         return daoFile;
     }
+    
+    public DaoFileTranscoded fileTranscoded() {
+        return daoFileTranscoded;
+    }
 
+    
+    
 	/**
 	 *
 	 * @param myListModel
@@ -475,102 +484,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc="DeviceFile">
+
 	
-
-	/**
-	 *
-	 * @param files
-	 */
-	public synchronized void insertOrUpdateFilesTranslated(ArrayList<FileInfoInt> files) {
-		try {
-			if (!files.isEmpty()) {
-				long startTime = System.currentTimeMillis();
-				dbConn.connection.setAutoCommit(false);
-				int[] results;
-				PreparedStatement preparedStatement = dbConn.connection.prepareStatement(
-						"INSERT INTO fileTranscoded "
-						+ " (idFile, ext, bitRate, format, length, size, trackGain, albumGain, modifDate) " // NOI18N
-						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
-						+ " ON CONFLICT(idFile, ext) DO UPDATE SET bitRate=?, format=?, length=?, size=?, trackGain=?, albumGain=?, modifDate=?"); // NOI18N
-				for (FileInfoInt file : files) {
-					// Insert
-					preparedStatement.setInt(1, file.getIdFile());
-					preparedStatement.setString(2, file.getExt());
-					preparedStatement.setString(3, file.getBitRate());
-					preparedStatement.setString(4, file.getFormat());
-					preparedStatement.setInt(5, file.getLength());
-					preparedStatement.setLong(6, file.getSize());
-					GainValues gainValues = file.getReplayGain(false);
-					preparedStatement.setFloat(7, gainValues.getTrackGain());
-					preparedStatement.setFloat(8, gainValues.getAlbumGain());
-					preparedStatement.setString(9, file.getFormattedModifDate());
-					// Update
-					preparedStatement.setString(10, file.getBitRate());
-					preparedStatement.setString(11, file.getFormat());
-					preparedStatement.setInt(12, file.getLength());
-					preparedStatement.setLong(13, file.getSize());
-					preparedStatement.setFloat(14, gainValues.getTrackGain());
-					preparedStatement.setFloat(15, gainValues.getAlbumGain());
-					preparedStatement.setString(16, file.getFormattedModifDate());
-					preparedStatement.addBatch();
-				}
-				results = preparedStatement.executeBatch();
-				dbConn.connection.commit();
-				dbConn.connection.setAutoCommit(true);
-				long endTime = System.currentTimeMillis();
-				Jamuz.getLogger().log(Level.FINEST,
-						"insertOrUpdateDeviceFilesTranslated // {0} // Total execution time: {1}ms",
-						new Object[]{results.length, endTime - startTime}); // NOI18N
-			}
-		} catch (SQLException ex) {
-			Popup.error("insertOrUpdateDeviceFilesTranslated(ArrayList<FileInfoInt> files)", ex); // NOI18N
-		}
-	}
-
-	/**
-	 *
-	 */
-	public enum SyncStatus {
-
-		/**
-		 *
-		 */
-		NEW,
-		/**
-		 *
-		 */
-		INFO
-	}
-
-	/**
-	 * Resets the check flag to UNCHECKED on path table for given checked flag
-	 *
-	 * @param status
-	 * @param idFile
-	 * @param idDevice
-	 * @return
-	 */
-	public synchronized boolean updateDeviceFileStatus(SyncStatus status, int idFile, int idDevice) {
-		try {
-			PreparedStatement stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
-					"UPDATE deviceFile SET status=? "
-					+ "WHERE idFile=? AND idDevice=?"); // NOI18N
-			stUpdateCheckedFlagReset.setString(1, status.name());
-			stUpdateCheckedFlagReset.setInt(2, idFile);
-			stUpdateCheckedFlagReset.setInt(3, idDevice);
-			int nbRowsAffected = stUpdateCheckedFlagReset.executeUpdate();
-			if (nbRowsAffected == 1) {
-				return true;
-			} else {
-				Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} # row(s) affected: +{1}",
-						new Object[]{idFile, nbRowsAffected}); // NOI18N
-				return false;
-			}
-		} catch (SQLException ex) {
-			Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} : {1}", new Object[]{idFile, ex}); // NOI18N
-			return false;
-		}
-	}
 
 	// </editor-fold>
 	/**

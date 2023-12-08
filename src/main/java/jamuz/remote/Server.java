@@ -22,6 +22,7 @@ import jamuz.database.DbConnJaMuz;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
+import jamuz.process.sync.SyncStatus;
 import jamuz.process.check.Location;
 import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
@@ -157,7 +158,7 @@ public class Server {
 					res.sendAttachment(file.toPath());
 					System.out.println("Sent"+msg);
 					ArrayList<FileInfoInt> insert = new ArrayList<>();
-					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
+					fileInfoInt.setStatus(SyncStatus.NEW);
 					insert.add(fileInfoInt);
 					Jamuz.getDb().deviceFile().insertOrUpdate(insert, device.getId());
 				} else {
@@ -278,7 +279,7 @@ public class Server {
 				String login=req.getHeader("login").get(0); 
 				Device device = tableModel.getClient(login).getDevice(); 
 				String destExt = device.getPlaylist().getDestExt(); 
-				DbConnJaMuz.SyncStatus status = DbConnJaMuz.SyncStatus.valueOf(req.getParam("status")); 
+				SyncStatus status = SyncStatus.valueOf(req.getParam("status")); 
 				boolean getCount = Boolean.parseBoolean(req.getQuery("getCount")); 
 				String limit=""; 
 				if(!getCount) { 
@@ -286,11 +287,11 @@ public class Server {
 					int nbFilesInBatch = Integer.parseInt(req.getQuery("nbFilesInBatch")); 
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch; 
 				} 
-				String statusSql = status.equals(DbConnJaMuz.SyncStatus.INFO) 
+				String statusSql = status.equals(SyncStatus.INFO) 
 						?"'INFO' AS status" 
 						:"DF.status"; 
 				 
-				String whereSql = status.equals(DbConnJaMuz.SyncStatus.INFO) 
+				String whereSql = status.equals(SyncStatus.INFO) 
 						?"(DF.status is null OR DF.status=\"INFO\")" 
 						:"DF.idDevice="+device.getId()+" AND DF.status=\""+status+"\""; 
 				 
