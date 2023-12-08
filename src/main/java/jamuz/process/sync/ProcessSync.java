@@ -98,11 +98,11 @@ public class ProcessSync extends ProcessAbstract {
             // (database will not reflect reality so merge "not found" errors would be raised)
             //TODO: Make a proper toInsertInDeviceFiles list in all cases:
             //  => Use fileInfoSourceList, fileInfoDestinationList and toInsertInDeviceFiles
-            if(toInsertInDeviceFiles.size()>0) {
+            if(!toInsertInDeviceFiles.isEmpty()) {
 				progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
 				callback.refresh();
-                Jamuz.getDb().deleteDeviceFiles(device.getId());
-                Jamuz.getDb().insertOrIgnoreDeviceFiles(toInsertInDeviceFiles, device.getId());
+                Jamuz.getDb().deviceFile().delete(device.getId());
+                Jamuz.getDb().deviceFile().insertOrIgnore(toInsertInDeviceFiles, device.getId());
 				progressBar.setup(fileInfoSourceList.size());
 				progressBar.progress("Export complete.", fileInfoSourceList.size());
 				callback.refresh();
@@ -184,7 +184,7 @@ public class ProcessSync extends ProcessAbstract {
 			callback.refresh();
 		}
 		filesToInsertOrUpdate.addAll(filesDevicePlaylist);
-		Jamuz.getDb().insertOrUpdateDeviceFiles(filesToInsertOrUpdate, device.getId());
+		Jamuz.getDb().deviceFile().insertOrUpdate(filesToInsertOrUpdate, device.getId());
 		fileInfoSourceList.addAll(filesDevicePlaylist); // To have a proper count in progressBar at the end
 		return true;
 	}

@@ -787,7 +787,7 @@ public class DbConnJaMuzTest {
 		int idDevice = 0;
 		DbConnJaMuz instance = null;
 		ArrayList<FileInfoInt> expResult = null;
-		ArrayList<FileInfoInt> result = instance.insertOrIgnoreDeviceFiles(files, idDevice);
+		ArrayList<FileInfoInt> result = instance.deviceFile().insertOrIgnore(files, idDevice);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -803,7 +803,7 @@ public class DbConnJaMuzTest {
 		FileInfoInt file = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.insertOrIgnoreDeviceFile(idDevice, file);
+		boolean result = instance.deviceFile().insertOrIgnore(idDevice, file);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -818,7 +818,7 @@ public class DbConnJaMuzTest {
 		int idDevice = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.deleteDeviceFiles(idDevice);
+		boolean result = instance.deviceFile().delete(idDevice);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -834,7 +834,7 @@ public class DbConnJaMuzTest {
 		int idDevice = 0;
 		DbConnJaMuz instance = null;
 		ArrayList<FileInfoInt> expResult = null;
-		ArrayList<FileInfoInt> result = instance.insertOrUpdateDeviceFiles(files, idDevice);
+		ArrayList<FileInfoInt> result = instance.deviceFile().insertOrUpdate(files, idDevice);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1747,7 +1747,7 @@ public class DbConnJaMuzTest {
 		int requestedVersion = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateSchema(requestedVersion);
+		boolean result = instance.schema().update(requestedVersion);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

@@ -72,7 +72,7 @@ public class Jamuz {
 		if(!getDb().dbConn.connect()) {
 			return false;
 		}
-		if(!getDb().updateSchema(2)) {
+		if(!getDb().schema().update(2)) {
 			return false;
 		}
 		getDb().dbConn.disconnect();

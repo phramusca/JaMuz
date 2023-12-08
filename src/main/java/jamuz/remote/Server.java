@@ -159,7 +159,7 @@ public class Server {
 					ArrayList<FileInfoInt> insert = new ArrayList<>();
 					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
 					insert.add(fileInfoInt);
-					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
+					Jamuz.getDb().deviceFile().insertOrUpdate(insert, device.getId());
 				} else {
 					res.sendStatus(Status._404);
 				}		
