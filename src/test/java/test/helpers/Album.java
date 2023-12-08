@@ -665,7 +665,7 @@ public class Album {
 
 	private void checkDb() throws CannotReadException, IOException, TagException,
 			ReadOnlyFileException, InvalidAudioFrameException {
-		FolderInfo folder = Jamuz.getDb().getFolder(idPath);
+		FolderInfo folder = Jamuz.getDb().path().get(idPath);
 		Assert.assertTrue("Could not retrieve idPath=" + idPath, folder != null);
 
 		ArrayList<FileInfoInt> files = new ArrayList<>();

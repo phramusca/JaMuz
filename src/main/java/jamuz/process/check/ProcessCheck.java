@@ -512,7 +512,7 @@ public class ProcessCheck {
 
         private boolean scan() throws InterruptedException {
             //Get list of folders from library
-            if(!Jamuz.getDb().getFolders(foldersDb)) {
+            if(!Jamuz.getDb().path().get(foldersDb)) {
                 return false;
             }
             checkAbort();
@@ -523,7 +523,7 @@ public class ProcessCheck {
 
 		private boolean scanDeleted() throws InterruptedException {
             //Get list of folders from library
-            if(!Jamuz.getDb().getFolders(foldersDb)) {
+            if(!Jamuz.getDb().path().get(foldersDb)) {
                 return false;
             }
             return sendFoldersDbToScanQueue(ScanType.SCAN_DELETED);
@@ -531,7 +531,7 @@ public class ProcessCheck {
 		
 		private boolean transcode() throws InterruptedException {
             //Get list of folders from library
-            if(!Jamuz.getDb().getFolders(foldersDb)) {
+            if(!Jamuz.getDb().path().get(foldersDb)) {
                 return false;
             }
             return sendFoldersDbToScanQueue(ScanType.TRANSCODE);
@@ -542,7 +542,7 @@ public class ProcessCheck {
         }
         
         private boolean scanDbUnchecked() throws InterruptedException {
-            if(!Jamuz.getDb().getFolders(foldersDb, CheckedFlag.UNCHECKED)) {
+            if(!Jamuz.getDb().path().get(foldersDb, CheckedFlag.UNCHECKED)) {
                 return false;
             }
             sendFoldersDbToScanQueue(ScanType.SCAN);
@@ -550,7 +550,7 @@ public class ProcessCheck {
         }
 
         private boolean scanFolder(int idPath) throws InterruptedException {
-            if(!Jamuz.getDb().getFolder(foldersDb, idPath)) {
+            if(!Jamuz.getDb().path().get(foldersDb, idPath)) {
                 return false;
             }
             sendFoldersDbToScanQueue(ScanType.SCAN);
