@@ -204,9 +204,9 @@ public class PanelSelect extends javax.swing.JPanel {
 	}
 	
     private static void setYearSpinners() {
-        double minYear = Jamuz.getDb().getYear("MIN"); //NOI18N
+        double minYear = Jamuz.getDb().file().getYear("MIN"); //NOI18N
         minYear = (10*Math.floor(minYear/10));
-        double maxYear = Jamuz.getDb().getYear("MAX"); //NOI18N
+        double maxYear = Jamuz.getDb().file().getYear("MAX"); //NOI18N
         maxYear = (10*Math.ceil(maxYear/10))+10;
         SpinnerModel yearModel; 
         yearModel = new SpinnerNumberModel(minYear, minYear, maxYear, 10.0);
@@ -1015,7 +1015,7 @@ public class PanelSelect extends javax.swing.JPanel {
                 
                 int copyRight = jComboBoxBestOfCopyRight.getSelectedIndex() -1;
                 
-                jLabelSelectedSummary.setText(Jamuz.getDb().getFilesStats(selGenre, selArtist.getValue(), selAlbum.getValue(), selRatings, selCheckedFlag, 
+                jLabelSelectedSummary.setText(Jamuz.getDb().file().getFilesStats(selGenre, selArtist.getValue(), selAlbum.getValue(), selRatings, selCheckedFlag, 
                         yearFrom, yearTo, bpmFrom, bpmTo, copyRight));
                 
                 if(selAlbum.getValue().equals("%") && selArtist.getValue().equals("%") && selGenre.equals("%")) {
@@ -1023,7 +1023,7 @@ public class PanelSelect extends javax.swing.JPanel {
                     throw new InterruptedException();
                 }
                 
-                Jamuz.getDb().getFiles(fileInfoList, selGenre, selArtist.getValue(), selAlbum.getValue(), selRatings, selCheckedFlag, 
+                Jamuz.getDb().file().getFiles(fileInfoList, selGenre, selArtist.getValue(), selAlbum.getValue(), selRatings, selCheckedFlag, 
                         yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
 
                 for (FileInfoInt myFileInfoInt : fileInfoList) {

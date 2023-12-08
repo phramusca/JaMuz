@@ -140,7 +140,7 @@ public class ProcessSync extends ProcessAbstract {
 				+ " JOIN path P ON F.idPath=P.idPath "
 				+ " AND DF.idDevice="+device.getId()+" "
 				+ " ORDER BY idFile ";
-		Jamuz.getDb().getFiles(fileInfoSourceList, sql);
+		Jamuz.getDb().file().getFiles(fileInfoSourceList, sql);
 
 		// Check if some files require to be transcoded and exit if so
 		String destExt = playlist.getDestExt();

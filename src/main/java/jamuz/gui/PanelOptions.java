@@ -211,7 +211,7 @@ public class PanelOptions extends javax.swing.JPanel {
 				ProgressBar progressBar = (ProgressBar) jProgressBarSaveTags;
 
 				progressBar.setIndeterminate("Retrieving list");
-				Jamuz.getDb().getFiles(filesToSave, sql);
+				Jamuz.getDb().file().getFiles(filesToSave, sql);
 
 				progressBar.setup(filesToSave.size());
 				for (Iterator<FileInfoInt> iterator = filesToSave.iterator(); iterator.hasNext();) {

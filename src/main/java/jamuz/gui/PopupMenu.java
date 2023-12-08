@@ -167,7 +167,7 @@ public class PopupMenu {
 				FileInfoInt selected = getSelected();
 				if(selected!=null) {
 					ArrayList<FileInfoInt> albumFiles = new ArrayList<>();
-					if(Jamuz.getDb().getFiles(albumFiles, selected.getIdPath())) {
+					if(Jamuz.getDb().file().getFiles(albumFiles, selected.getIdPath())) {
 						PanelMain.getQueueModel().clear();
 						for(FileInfoInt myFileInfo : albumFiles) {
 							PanelMain.addToQueue(myFileInfo, Jamuz.getDb().getRootPath()); 	
@@ -192,7 +192,7 @@ public class PopupMenu {
 				FileInfoInt selected = getSelected();
 				if(selected!=null) {
 					ArrayList<FileInfoInt> albumFiles = new ArrayList<>();
-					if(Jamuz.getDb().getFiles(albumFiles, selected.getIdPath())) {
+					if(Jamuz.getDb().file().getFiles(albumFiles, selected.getIdPath())) {
 						delete(albumFiles, false); //FIXME Z Add a progress bar
 					}
 				}

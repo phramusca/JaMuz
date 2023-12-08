@@ -270,7 +270,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		//Anyway, all files on that folder are not (supposed to be) in databsase yet, so will be inserted
 		if(idPath>0) {
 			progressBar.setIndeterminate(Inter.get("Msg.Check.Scan.Setup")); //NOI18N
-			if(!Jamuz.getDb().getFiles(filesDb, idPath)) {
+			if(!Jamuz.getDb().file().getFiles(filesDb, idPath)) {
 				return false;
 			}
 		}
@@ -318,7 +318,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	}
 	
 	private boolean scanDeletedFiles(ProgressBar progressBar) {
-		if(!Jamuz.getDb().getFiles(filesDb, idPath)) {
+		if(!Jamuz.getDb().file().getFiles(filesDb, idPath)) {
 			return false;
 		}
         progressBar.setup(filesDb.size());
@@ -359,7 +359,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 * @return
 	 */
 	public boolean transcodeAsNeeded(ProgressBar progressBar) {
-		if(!Jamuz.getDb().getFiles(filesDb, idPath)) {
+		if(!Jamuz.getDb().file().getFiles(filesDb, idPath)) {
 			return false;
 		}
 		return transcodeAsNeeded(filesDb, progressBar);
