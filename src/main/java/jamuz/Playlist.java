@@ -594,7 +594,7 @@ public class Playlist implements Comparable {
 			Jamuz.getLogger().finest(sql);
 
 			//Get files for current playlist
-			if (!Jamuz.getDb().getFiles(fileInfoListTemp, sql)) {
+			if (!Jamuz.getDb().file().getFiles(fileInfoListTemp, sql)) {
 				return false;
 			}
 		}

@@ -139,7 +139,7 @@ public class Server {
 				Device device = tableModel.getClient(login).getDevice();
 				String destExt = device.getPlaylist().getDestExt();
 				int idFile = Integer.parseInt(req.getQuery("id"));
-				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt); 
+				FileInfoInt fileInfoInt = Jamuz.getDb().file().getFile(idFile, destExt); 
 				File file = fileInfoInt.getFullPath();
 				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
 					Location location = new Location("location.transcoded");
@@ -295,7 +295,8 @@ public class Server {
 						?"(DF.status is null OR DF.status=\"INFO\")" 
 						:"DF.idDevice="+device.getId()+" AND DF.status=\""+status+"\""; 
 				 
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " : " F.idFile, F.idPath, F.name, F.rating, " 
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " 
+                        : " F.idFile, F.idPath, F.name, F.rating, " 
 					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, " 
 					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" + 
 				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, " 
@@ -320,7 +321,7 @@ public class Server {
 				 
 				setStatus(login, "Sending "+(getCount?"count":"list") + " of "+status.name().toUpperCase()+" files ("+limit+" )"); 
 				if(getCount) { 
-					res.send(Jamuz.getDb().getFilesCount(sql).toString()); 
+					res.send(Jamuz.getDb().file().getFilesCount(sql).toString()); 
 				} else { 
 					res.send(getFiles(sql, destExt)); 
 				} 
@@ -338,7 +339,7 @@ public class Server {
 	
 	private String getFiles(String sql, String destExt) {
 		ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
-		Jamuz.getDb().getFiles(filesToSend, sql);
+		Jamuz.getDb().file().getFiles(filesToSend, sql);
 		Map jsonAsMap = new HashMap();
 		JSONArray jSONArray = new JSONArray();
 		for (FileInfoInt fileInfo : filesToSend) {
@@ -530,7 +531,7 @@ public class Server {
 	 * @param destExt
 	 */
 	public void sendFile(String clientId, String login, int idFile, String destExt) {
-		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt);
+		FileInfoInt fileInfoInt = Jamuz.getDb().file().getFile(idFile, destExt);
 		setStatus(login, "Sending file: "+fileInfoInt.getRelativeFullPath());
 		if(!sendFile(clientId, fileInfoInt)) {
 			Popup.error("Cannot send missing file \""

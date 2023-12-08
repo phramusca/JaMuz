@@ -669,7 +669,7 @@ public class Album {
 		Assert.assertTrue("Could not retrieve idPath=" + idPath, folder != null);
 
 		ArrayList<FileInfoInt> files = new ArrayList<>();
-		Jamuz.getDb().getFiles(files, idPath);
+		Jamuz.getDb().file().getFiles(files, idPath);
 
 		compare(files);
 	}

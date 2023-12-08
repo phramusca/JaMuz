@@ -650,7 +650,7 @@ public class PanelStats extends javax.swing.JPanel {
                 break;
         }
 
-        StatItem total=Jamuz.getDb().getStatItem(field, totalSelector, 
+        StatItem total=Jamuz.getDb().file().getStatItem(field, totalSelector, 
 				table, "", Color.YELLOW, selRatings);
         long totalCount = total.getCountFile();
 
@@ -749,7 +749,7 @@ public class PanelStats extends javax.swing.JPanel {
 		if(field.equals("checked")) {  //NOI18N
 			table="path";  //NOI18N
 		}
-		stats.add(Jamuz.getDb().getStatItem(field, value, table, label, color, null));
+		stats.add(Jamuz.getDb().file().getStatItem(field, value, table, label, color, null));
 	}
 	
 	//FIXME ZZZ Add to common library
@@ -868,7 +868,7 @@ public class PanelStats extends javax.swing.JPanel {
 		}
         else if(stat.equals(Inter.get("Stat.PercentRated"))) {
             field="idPath"; //Any field from path will do as =%
-            Jamuz.getDb().getPercentRatedForStats(stats);
+            Jamuz.getDb().file().getPercentRatedForStats(stats);
             showChart=true;
 			showFilters=false;
             setDefaultNbCategories();
@@ -876,26 +876,26 @@ public class PanelStats extends javax.swing.JPanel {
 		else if(stat.equals(Inter.get("Tag.Genre"))) { //NOI18N
 			field="genre";  //NOI18N
 			selRatingsToUse=selRatings;
-			Jamuz.getDb().getSelectionList4Stats(stats, field, selRatings);
+			Jamuz.getDb().file().getSelectionList4Stats(stats, field, selRatings);
             showChart=true;
             setDefaultNbCategories(10, setSlider);
 		}
 		else if(stat.equals(Inter.get("Tag.Year"))) { //NOI18N
 			field="year";  //NOI18N
 			selRatingsToUse=selRatings;
-			Jamuz.getDb().getSelectionList4Stats(stats, field, selRatings);
+			Jamuz.getDb().file().getSelectionList4Stats(stats, field, selRatings);
             showChart=true;
             setDefaultNbCategories(10, setSlider);
 		}
 		else if(stat.equals(Inter.get("Tag.Artist"))) { //NOI18N
 			field="artist";  //NOI18N
 			selRatingsToUse=selRatings;
-			Jamuz.getDb().getSelectionList4Stats(stats, field, selRatings);
+			Jamuz.getDb().file().getSelectionList4Stats(stats, field, selRatings);
 		}
 		else if(stat.equals(Inter.get("Tag.Album"))) { //NOI18N
 			field="album";  //NOI18N
 			selRatingsToUse=selRatings;
-            Jamuz.getDb().getSelectionList4Stats(stats, field, selRatings);
+            Jamuz.getDb().file().getSelectionList4Stats(stats, field, selRatings);
 		}
 		else if(stat.equals(Inter.get("Stat.Decade"))) { //NOI18N
 			field="year";  //NOI18N
