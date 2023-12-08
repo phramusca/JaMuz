@@ -17,8 +17,8 @@
 
 package jamuz.process.book;
 
-import jamuz.DbConn;
-import jamuz.DbInfo;
+import jamuz.database.DbConn;
+import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;

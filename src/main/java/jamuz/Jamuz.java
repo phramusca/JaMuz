@@ -16,7 +16,9 @@
  */
 package jamuz;
 
-import jamuz.DbInfo.LibType;
+import jamuz.database.DbInfo;
+import jamuz.database.DbConnJaMuz;
+import jamuz.database.DbInfo.LibType;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
@@ -69,13 +71,13 @@ public class Jamuz {
 		if (!setupDatabase()) {
 			return false;
 		}
-		if(!getDb().dbConn.connect()) {
+		if(!getDb().getDbConn().connect()) {
 			return false;
 		}
 		if(!getDb().schema().update(2)) {
 			return false;
 		}
-		getDb().dbConn.disconnect();
+		getDb().getDbConn().disconnect();
 		if(!db.setUp(false)) {
 			return false;
 		}
@@ -129,7 +131,7 @@ public class Jamuz {
 		Ftp.setLogger(logger);
 
 		//Log options
-		logger.log(Level.CONFIG, "JaMuz database: {0}", getDb().getDbConn().info.locationOri); //NOI18N
+		logger.log(Level.CONFIG, "JaMuz database: {0}", getDb().getDbConn().getInfo().getLocationOri()); //NOI18N
 		logConfig("location.library");
 		logConfig("library.isMaster");
 		logConfig("location.add");

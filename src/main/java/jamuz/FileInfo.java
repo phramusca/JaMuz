@@ -222,6 +222,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected boolean updateRatingModifDate = false;
 
+    public boolean isUpdateRatingModifDate() {
+        return updateRatingModifDate;
+    }
+
 	/**
 	 *
 	 */

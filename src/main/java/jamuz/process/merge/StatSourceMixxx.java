@@ -17,10 +17,10 @@
 
 package jamuz.process.merge;
 
-import jamuz.DbInfo;
+import jamuz.database.DbInfo;
 import jamuz.FileInfo;
 import jamuz.Jamuz;
-import jamuz.StatSourceSQL;
+import jamuz.database.StatSourceSQL;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

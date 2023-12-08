@@ -16,7 +16,7 @@
  */
 package jamuz;
 
-import jamuz.DbConnJaMuz.SyncStatus;
+import jamuz.database.DbConnJaMuz.SyncStatus;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.process.check.FolderInfoResult;
@@ -100,6 +100,10 @@ public class FileInfoInt extends FileInfo {
 	public void setStatus(SyncStatus status) {
 		this.status = status;
 	}
+
+    public SyncStatus getStatus() {
+        return status;
+    }
 
 	/**
 	 *
@@ -1305,6 +1309,14 @@ public class FileInfoInt extends FileInfo {
 		return this.albumArtist + separator + this.album;
 	}
 
+    public void setAlbumArtist(String albumArtist) {
+        this.albumArtist = albumArtist;
+    }
+
+    public void setNbCovers(int nbCovers) {
+        this.nbCovers = nbCovers;
+    }
+    
 	/**
 	 *
 	 * @return

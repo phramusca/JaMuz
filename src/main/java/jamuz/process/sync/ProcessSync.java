@@ -19,7 +19,7 @@ package jamuz.process.sync;
 //FIXME Z SYNC If file missing in source, it blocks transfert
 //FIXME Z SYNC If tag issue (genre, only?), it blocks transfert (errors)
 //FIXME Z SYNC Export file scrollabr freeze => threaded ?
-import jamuz.DbConnJaMuz;
+import jamuz.database.DbConnJaMuz;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;

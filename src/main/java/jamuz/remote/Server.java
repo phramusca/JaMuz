@@ -18,7 +18,7 @@ package jamuz.remote;
 
 import express.Express;
 import express.utils.Status;
-import jamuz.DbConnJaMuz;
+import jamuz.database.DbConnJaMuz;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;

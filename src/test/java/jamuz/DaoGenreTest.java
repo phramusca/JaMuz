@@ -16,6 +16,8 @@
  */
 package jamuz;
 
+import jamuz.database.DaoGenre;
+import jamuz.database.DbConnJaMuz;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -16,6 +16,7 @@
  */
 package jamuz;
 
+import jamuz.database.DbConnJaMuz;
 import jamuz.gui.swing.ListElement;
 import jamuz.process.check.DuplicateInfo;
 import jamuz.process.check.FolderInfo;

@@ -16,6 +16,8 @@
  */
 package jamuz;
 
+import jamuz.database.DbInfo;
+import jamuz.database.DbConn;
 import java.sql.Connection;
 import org.junit.After;
 import org.junit.AfterClass;
