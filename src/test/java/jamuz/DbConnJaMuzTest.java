@@ -22,6 +22,7 @@ import jamuz.process.check.DuplicateInfo;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
+import jamuz.process.sync.SyncStatus;
 import jamuz.remote.ClientInfo;
 import java.awt.Color;
 import java.io.File;
@@ -847,12 +848,12 @@ public class DbConnJaMuzTest {
 	@Test
 	public void testUpdateDeviceFileStatus() {
 		System.out.println("updateDeviceFileStatus");
-		DbConnJaMuz.SyncStatus status = null;
+		SyncStatus status = null;
 		int idFile = 0;
 		int idDevice = 0;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateDeviceFileStatus(status, idFile, idDevice);
+		boolean result = instance.deviceFile().update(status, idFile, idDevice);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -866,7 +867,7 @@ public class DbConnJaMuzTest {
 		System.out.println("insertOrUpdateFilesTranslated");
 		ArrayList<FileInfoInt> files = null;
 		DbConnJaMuz instance = null;
-		instance.insertOrUpdateFilesTranslated(files);
+		instance.fileTranscoded().insertOrUpdate(files);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

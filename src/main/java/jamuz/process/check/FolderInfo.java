@@ -410,7 +410,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 					file.saveReplayGainToID3(gv);
 					file.readMetadata(false); //To get new file information (format, size,...)
 				});
-				Jamuz.getDb().insertOrUpdateFilesTranslated(filesTranscoded);
+				Jamuz.getDb().fileTranscoded().insertOrUpdate(filesTranscoded);
 			}
 		}
 		return true;

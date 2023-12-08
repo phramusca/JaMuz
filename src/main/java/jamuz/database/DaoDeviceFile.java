@@ -16,6 +16,7 @@
  */
 package jamuz.database;
 
+import jamuz.process.sync.SyncStatus;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.utils.Popup;
@@ -174,6 +175,36 @@ public class DaoDeviceFile {
 			return true;
 		} catch (SQLException ex) {
 			Popup.error("insertDeviceFile(" + idDevice + ", " + file.getIdFile() + ")", ex); // NOI18N
+			return false;
+		}
+	}
+    
+    /**
+	 * Resets the check flag to UNCHECKED on path table for given checked flag
+	 *
+	 * @param status
+	 * @param idFile
+	 * @param idDevice
+	 * @return
+	 */
+	public synchronized boolean update(SyncStatus status, int idFile, int idDevice) {
+		try {
+			PreparedStatement stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
+					"UPDATE deviceFile SET status=? "
+					+ "WHERE idFile=? AND idDevice=?"); // NOI18N
+			stUpdateCheckedFlagReset.setString(1, status.name());
+			stUpdateCheckedFlagReset.setInt(2, idFile);
+			stUpdateCheckedFlagReset.setInt(3, idDevice);
+			int nbRowsAffected = stUpdateCheckedFlagReset.executeUpdate();
+			if (nbRowsAffected == 1) {
+				return true;
+			} else {
+				Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} # row(s) affected: +{1}",
+						new Object[]{idFile, nbRowsAffected}); // NOI18N
+				return false;
+			}
+		} catch (SQLException ex) {
+			Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} : {1}", new Object[]{idFile, ex}); // NOI18N
 			return false;
 		}
 	}

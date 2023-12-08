@@ -174,9 +174,9 @@ public class ProcessSync extends ProcessAbstract {
 		for (FileInfoInt fileTable : fileInfoSourceList) {
 			if(filesDevicePlaylist.contains(fileTable)) {
 				filesDevicePlaylist.remove(fileTable);
-				fileTable.setStatus(DbConnJaMuz.SyncStatus.NEW);
+				fileTable.setStatus(SyncStatus.NEW);
 			} else {
-				fileTable.setStatus(DbConnJaMuz.SyncStatus.INFO);
+				fileTable.setStatus(SyncStatus.INFO);
 			}
 			filesToInsertOrUpdate.add(fileTable);
 			callback.addRow(fileTable.getRelativeFullPath(), 1); //NOI18N
