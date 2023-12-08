@@ -1014,8 +1014,8 @@ public class DbConnJaMuzTest {
 		Color color = null;
 		boolean[] selRatings = null;
 		DbConnJaMuz instance = null;
-		DbConnJaMuz.StatItem expResult = null;
-		DbConnJaMuz.StatItem result = instance.getStatItem(field, value, table, label, color, selRatings);
+		StatItem expResult = null;
+		StatItem result = instance.getStatItem(field, value, table, label, color, selRatings);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1091,7 +1091,7 @@ public class DbConnJaMuzTest {
 		FileInfoInt fileInfo = null;
 		DbConnJaMuz instance = null;
 		boolean expResult = false;
-		boolean result = instance.updateFileGenre(fileInfo);
+		boolean result = instance.file().updateFileGenre(fileInfo);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -1407,7 +1407,7 @@ public class DbConnJaMuzTest {
 	@Test
 	public void testGetSelectionList4Stats() {
 		System.out.println("getSelectionList4Stats");
-		ArrayList<DbConnJaMuz.StatItem> stats = null;
+		ArrayList<StatItem> stats = null;
 		String field = "";
 		boolean[] selRatings = null;
 		DbConnJaMuz instance = null;
@@ -1422,7 +1422,7 @@ public class DbConnJaMuzTest {
 	@Test
 	public void testGetPercentRatedForStats() {
 		System.out.println("getPercentRatedForStats");
-		ArrayList<DbConnJaMuz.StatItem> stats = null;
+		ArrayList<StatItem> stats = null;
 		DbConnJaMuz instance = null;
 		instance.getPercentRatedForStats(stats);
 		// TODO review the generated test code and remove the default call to fail.

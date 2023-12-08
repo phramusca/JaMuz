@@ -948,7 +948,7 @@ public class FileInfoInt extends FileInfo {
 		if (this.saveMetadata(FieldKey.GENRE, genre)) {
 			this.genre = genre;
 			if (this.idFile > -1) { //File displayed in player may not be from database (check new)
-				return Jamuz.getDb().updateFileGenre(this);
+				return Jamuz.getDb().file().updateFileGenre(this);
 			}
 			return true;
 		}

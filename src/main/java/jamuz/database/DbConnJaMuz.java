@@ -16,6 +16,7 @@
  */
 package jamuz.database;
 
+import jamuz.StatItem;
 import jamuz.process.sync.SyncStatus;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
@@ -483,39 +484,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 	}
 
 	// </editor-fold>
-	// <editor-fold defaultstate="collapsed" desc="DeviceFile">
 
 	
-
-	// </editor-fold>
-	/**
-	 * Update genre
-	 *
-	 * @param fileInfo
-	 * @return
-	 */
-	public synchronized boolean updateFileGenre(FileInfoInt fileInfo) {
-		try {
-			PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement(
-					"UPDATE file set genre=?, "
-					+ "genreModifDate=datetime('now') "
-					+ "WHERE idFile=?"); // NOI18N
-			stUpdateFileGenre.setString(1, fileInfo.getGenre());
-			stUpdateFileGenre.setInt(2, fileInfo.getIdFile());
-			int nbRowsAffected = stUpdateFileGenre.executeUpdate();
-			if (nbRowsAffected == 1) {
-				return true;
-			} else {
-				Jamuz.getLogger().log(Level.SEVERE, "stUpdateFileGenre, "
-						+ "fileInfo={0} # row(s) affected: +{1}",
-						new Object[]{fileInfo.toString(), nbRowsAffected}); // NOI18N
-				return false;
-			}
-		} catch (SQLException ex) {
-			Popup.error("updateGenre(" + fileInfo.toString() + ")", ex); // NOI18N
-			return false;
-		}
-	}
 
 	// <editor-fold defaultstate="collapsed" desc="File">
 	/**
@@ -2017,144 +1987,6 @@ public class DbConnJaMuz extends StatSourceSQL {
 		return listElement;
 	}
 
-	/**
-	 */
-	public class StatItem {
-
-		private final long countFile;
-		private final long countPath;
-		private long size = -1;
-		private long length = -1;
-		private double rating = -1;
-		private float percentage = -1;
-		private String label;
-		private final String value;
-		private final Color color;
-
-		/**
-		 *
-		 * @param label
-		 * @param value
-		 * @param countFile
-		 * @param size
-		 * @param countPath
-		 * @param length
-		 * @param rating
-		 * @param color
-		 */
-		public StatItem(String label, String value, long countFile,
-				long countPath, long size, long length, double rating,
-				Color color) {
-			this.value = value;
-			this.countFile = countFile;
-			this.countPath = countPath;
-			this.size = size;
-			this.length = length;
-			this.rating = rating;
-			this.label = label;
-			this.color = color;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public long getCountFile() {
-			return countFile;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public long getCountPath() {
-			return countPath;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public long getSize() {
-			return size;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public long getLength() {
-			return length;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public double getRating() {
-			return rating;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public String getLabel() {
-			return label;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public String getLabelForChart() {
-			String newLabel = label;
-			newLabel = newLabel.replaceAll("%", "-");
-			newLabel = newLabel.replaceAll("percent", "%");
-			return newLabel;
-			// return label.replaceAll("%", "-").replaceAll("percent", "%");
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public String getValue() {
-			return value;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public float getPercentage() {
-			return percentage;
-		}
-
-		/**
-		 *
-		 * @param percentage
-		 */
-		public void setPercentage(float percentage) {
-			this.percentage = percentage;
-		}
-
-		/**
-		 *
-		 * @param label
-		 */
-		public void setLabel(String label) {
-			this.label = label;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public Color getColor() {
-			return color;
-		}
-	}
 
 	private String getCSVlist(boolean[] values) {
 		StringBuilder builder = new StringBuilder();
