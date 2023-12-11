@@ -59,7 +59,7 @@ public class DaoFile {
      * @param key
      * @return
      */
-    public synchronized boolean insert(FileInfoInt fileInfo, int[] key) {
+    public boolean insert(FileInfoInt fileInfo, int[] key) {
         try {
             PreparedStatement stInsertFileTag = dbConn.connection.prepareStatement("INSERT INTO file (name, idPath, "
                     + "format, title, artist, album, albumArtist, genre, discNo, trackNo, year, comment, " // NOI18N
@@ -247,7 +247,7 @@ public class DaoFile {
      * @param fileInfo
      * @return
      */
-    public synchronized boolean update(FileInfoInt fileInfo) {
+    public boolean update(FileInfoInt fileInfo) {
         try {
             PreparedStatement stUpdateFileTag = dbConn.connection.prepareStatement(
                     "UPDATE file "
@@ -303,7 +303,7 @@ public class DaoFile {
      * @param file
      * @return
      */
-    public synchronized boolean updateLastPlayedAndCounter(FileInfoInt file) {
+    public boolean updateLastPlayedAndCounter(FileInfoInt file) {
         try {
             PreparedStatement stUpdateFileLastPlayedAndCounter = dbConn.connection.prepareStatement("UPDATE file "
                     + "SET lastplayed=?, playCounter=? "
@@ -333,7 +333,7 @@ public class DaoFile {
      * @param fileInfo
      * @return
      */
-    public synchronized boolean updateRating(FileInfoInt fileInfo) {
+    public boolean updateRating(FileInfoInt fileInfo) {
         try {
             PreparedStatement stUpdateFileRating = dbConn.connection.prepareStatement(
                     "UPDATE file set rating=?, "
@@ -360,7 +360,7 @@ public class DaoFile {
 	 * @param fileInfo
 	 * @return
 	 */
-	public synchronized boolean updateFileGenre(FileInfoInt fileInfo) {
+	public boolean updateFileGenre(FileInfoInt fileInfo) {
 		try {
 			PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement(
 					"UPDATE file set genre=?, "
@@ -389,7 +389,7 @@ public class DaoFile {
      * @param newIdPath
      * @return
      */
-    public synchronized boolean updateIdPath(int idPath, int newIdPath) {
+    public boolean updateIdPath(int idPath, int newIdPath) {
         try {
             PreparedStatement stUpdateIdPathInFile = dbConn.connection.prepareStatement(
                     "UPDATE file "
@@ -419,7 +419,7 @@ public class DaoFile {
      * @param name
      * @return
      */
-    public synchronized boolean updateModifDate(int idFile, Date modifDate,
+    public boolean updateModifDate(int idFile, Date modifDate,
             String name) {
         try {
             PreparedStatement stUpdateFileModifDate = dbConn.connection.prepareStatement(
@@ -452,7 +452,7 @@ public class DaoFile {
      * @param idFile
      * @return
      */
-    public synchronized boolean setSaved(int idFile) {
+    public boolean setSaved(int idFile) {
         try {
             PreparedStatement stUpdateSavedFile = dbConn.connection
                     .prepareStatement("UPDATE file SET saved=1 WHERE idFile=?"); // NOI18N
@@ -478,7 +478,7 @@ public class DaoFile {
      * @param idFile
      * @return
      */
-    public synchronized boolean delete(int idFile) {
+    public boolean delete(int idFile) {
         try {
             PreparedStatement stDeleteFile = dbConn.connection.prepareStatement(
                     "DELETE FROM file WHERE idFile=?"); // NOI18N

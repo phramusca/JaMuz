@@ -45,7 +45,7 @@ public class DaoFileTranscoded {
 	 *
 	 * @param files
 	 */
-	public synchronized void insertOrUpdate(ArrayList<FileInfoInt> files) {
+	public void insertOrUpdate(ArrayList<FileInfoInt> files) {
 		try {
 			if (!files.isEmpty()) {
 				long startTime = System.currentTimeMillis();

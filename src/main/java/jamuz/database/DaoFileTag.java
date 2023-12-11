@@ -67,7 +67,7 @@ public class DaoFileTag {
 		}
 	}
 	
-	public synchronized boolean updateModifDate(String newTag) {
+	public boolean updateModifDate(String newTag) {
 		try {
 			String sql = """
                 UPDATE file SET tagsModifDate=datetime('now') WHERE idFile=(SELECT TF.idFile
@@ -97,7 +97,7 @@ public class DaoFileTag {
 	 * @param fileInfo
 	 * @return
 	 */
-	public synchronized boolean updateModifDate(FileInfo fileInfo) {
+	public boolean updateModifDate(FileInfo fileInfo) {
 		try {
 			PreparedStatement stUpdateTagsModifDate = dbConn.getConnection().prepareStatement(
 					"UPDATE file SET tagsModifDate=datetime('now') "
@@ -124,7 +124,7 @@ public class DaoFileTag {
 	 * @param results
 	 * @return
 	 */
-	public synchronized int[] update(ArrayList<? extends FileInfo> files, int[] results) {
+	public int[] update(ArrayList<? extends FileInfo> files, int[] results) {
 		int i = 0;
 		for (FileInfo fileInfo : files) {
 			if (fileInfo.getTags() != null) {
@@ -146,14 +146,14 @@ public class DaoFileTag {
 		return results;
 	}
 
-	private synchronized boolean update(ArrayList<String> tags, int idFile) {
+	private boolean update(ArrayList<String> tags, int idFile) {
 		if (!delete(idFile)) {
 			return false;
 		}
 		return insert(tags, idFile);
 	}
 
-	private synchronized boolean insert(ArrayList<String> tags, int idFile) {
+	private boolean insert(ArrayList<String> tags, int idFile) {
 		try {
 			if (!tags.isEmpty()) {
 				dbConn.getConnection().setAutoCommit(false);
@@ -197,7 +197,7 @@ public class DaoFileTag {
 		}
 	}
 
-	private synchronized boolean delete(int idFile) {
+	private boolean delete(int idFile) {
 		try {
 			PreparedStatement stDeleteTagFiles = dbConn.getConnection()
 					.prepareStatement(

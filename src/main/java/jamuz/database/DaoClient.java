@@ -125,7 +125,7 @@ public class DaoClient {
 	 * @param clientInfo
 	 * @return
 	 */
-	public synchronized boolean insertOrUpdate(ClientInfo clientInfo) {
+	public boolean insertOrUpdate(ClientInfo clientInfo) {
 		try {
 			if (clientInfo.getId() > -1) {
 

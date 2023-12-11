@@ -48,7 +48,7 @@ public class DaoDeviceFile {
 	 * @param idDevice
 	 * @return
 	 */
-	public synchronized ArrayList<FileInfoInt> insertOrUpdate(ArrayList<FileInfoInt> files, int idDevice) {
+	public ArrayList<FileInfoInt> insertOrUpdate(ArrayList<FileInfoInt> files, int idDevice) {
 		ArrayList<FileInfoInt> insertedOrUpdated = new ArrayList<>();
 		try {
 			if (!files.isEmpty()) {
@@ -100,7 +100,7 @@ public class DaoDeviceFile {
 	 * @param idDevice
 	 * @return
 	 */
-	public synchronized ArrayList<FileInfoInt> insertOrIgnore(ArrayList<FileInfoInt> files, int idDevice) {
+	public ArrayList<FileInfoInt> insertOrIgnore(ArrayList<FileInfoInt> files, int idDevice) {
 		ArrayList<FileInfoInt> inserted = new ArrayList<>();
 		try {
 			if (!files.isEmpty()) {
@@ -147,7 +147,7 @@ public class DaoDeviceFile {
 	 * @param idDevice
 	 * @return
 	 */
-	public synchronized boolean insertOrIgnore(int idDevice, FileInfoInt file) {
+	public boolean insertOrIgnore(int idDevice, FileInfoInt file) {
 		try {
 			int result;
 			PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
@@ -187,7 +187,7 @@ public class DaoDeviceFile {
 	 * @param idDevice
 	 * @return
 	 */
-	public synchronized boolean update(SyncStatus status, int idFile, int idDevice) {
+	public boolean update(SyncStatus status, int idFile, int idDevice) {
 		try {
 			PreparedStatement stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
 					"UPDATE deviceFile SET status=? "
@@ -214,7 +214,7 @@ public class DaoDeviceFile {
 	 * @param idDevice
 	 * @return
 	 */
-	public synchronized boolean delete(int idDevice) {
+	public boolean delete(int idDevice) {
 		try {
 			PreparedStatement stDeleteDeviceFiles = dbConn.connection.prepareStatement(
 					"DELETE FROM deviceFile WHERE idDevice=?"); // NOI18N

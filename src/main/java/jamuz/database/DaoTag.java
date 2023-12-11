@@ -46,7 +46,7 @@ public class DaoTag {
 	 * @param tag
 	 * @return
 	 */
-	public synchronized boolean insert(String tag) {
+	public boolean insert(String tag) {
 		try {
 			PreparedStatement stInsertTag = dbConn.connection.prepareStatement(
 					"INSERT OR IGNORE INTO tag (value) VALUES (?) "); // NOI18N
@@ -143,7 +143,7 @@ public class DaoTag {
 	 * @param newTag
 	 * @return
 	 */
-	public synchronized boolean update(String oldTag, String newTag) {
+	public boolean update(String oldTag, String newTag) {
 		try {
 			PreparedStatement stUpdateTag = dbConn.connection.prepareStatement(
 					"UPDATE tag SET value=? WHERE value=?"); // NOI18N
@@ -170,7 +170,7 @@ public class DaoTag {
 	 * @param tag
 	 * @return
 	 */
-	public synchronized boolean delete(String tag) {
+	public boolean delete(String tag) {
 		try {
 			String sql = """
                 DELETE FROM tag

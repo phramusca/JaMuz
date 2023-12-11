@@ -48,7 +48,7 @@ public class DaoPlayCounter {
 	 * @param idStatSource
 	 * @return
 	 */
-	public synchronized boolean update(ArrayList<? super FileInfoInt> files, int idStatSource) {
+	public boolean update(ArrayList<? super FileInfoInt> files, int idStatSource) {
 		try {
 			int[] results;
 			PreparedStatement stUpdatePlayCounter = dbConn.connection.prepareStatement(

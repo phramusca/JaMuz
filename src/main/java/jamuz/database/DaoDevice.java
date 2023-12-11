@@ -107,7 +107,7 @@ public class DaoDevice {
 	 * @param device
 	 * @return
 	 */
-	public synchronized boolean insertOrUpdate(Device device) {
+	public boolean insertOrUpdate(Device device) {
 		try {
 			if (device.getId() > -1) {
 				PreparedStatement stUpdateDevice = dbConn.connection.prepareStatement(
@@ -170,7 +170,7 @@ public class DaoDevice {
 	 * @param id
 	 * @return
 	 */
-	public synchronized boolean delete(int id) {
+	public boolean delete(int id) {
 		try {
 			PreparedStatement stDeleteDevice = dbConn.connection.prepareStatement(
 					"DELETE FROM device WHERE idDevice=?"); // NOI18N
