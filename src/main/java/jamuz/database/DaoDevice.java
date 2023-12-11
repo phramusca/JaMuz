@@ -107,7 +107,7 @@ public class DaoDevice {
 	 * @param device
 	 * @return
 	 */
-	public synchronized boolean update(Device device) {
+	public synchronized boolean insertOrUpdate(Device device) {
 		try {
 			if (device.getId() > -1) {
 				PreparedStatement stUpdateDevice = dbConn.connection.prepareStatement(
