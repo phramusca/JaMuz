@@ -125,7 +125,7 @@ public class DaoClient {
 	 * @param clientInfo
 	 * @return
 	 */
-	public synchronized boolean update(ClientInfo clientInfo) {
+	public synchronized boolean insertOrUpdate(ClientInfo clientInfo) {
 		try {
 			if (clientInfo.getId() > -1) {
 
@@ -140,7 +140,7 @@ public class DaoClient {
 
 				int nbRowsAffected = stUpdateClient.executeUpdate();
 				if (nbRowsAffected > 0) {
-					daoDevice.update(clientInfo.getDevice());
+					daoDevice.insertOrUpdate(clientInfo.getDevice());
 					daoStatSource.insertOrUpdate(clientInfo.getStatSource());
 					return true;
 				} else {
