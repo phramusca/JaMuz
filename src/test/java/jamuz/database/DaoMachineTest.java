@@ -72,7 +72,7 @@ public class DaoMachineTest {
 
 		//Get machines
 		DefaultListModel defaultListModel = new DefaultListModel();
-		Jamuz.getDb().getMachineListModel(defaultListModel);
+		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
 		ListElement element = (ListElement) defaultListModel.get(0);
 		assertEquals(2, defaultListModel.size()); //The created one and current machine
 		assertEquals("<html><b>" + machineName + "</b><BR/><i></i></html>", element.toString());
@@ -109,7 +109,7 @@ public class DaoMachineTest {
 		assertTrue("isMachine updated", Jamuz.getDb().machine().getOrInsert(machineName, zText, false));
 		assertEquals(description, zText.toString());
 		defaultListModel = new DefaultListModel();
-		Jamuz.getDb().getMachineListModel(defaultListModel);
+		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
 		element = (ListElement) defaultListModel.get(0);
 		assertEquals(2, defaultListModel.size()); //The created one and current machine
 		assertEquals("<html><b>" + machineName + "</b><BR/><i>" + description + "</i></html>", element.toString());
@@ -148,7 +148,7 @@ public class DaoMachineTest {
 		//Delete machine 
 		assertTrue(Jamuz.getDb().machine().delete(machineName));
 		defaultListModel = new DefaultListModel();
-		Jamuz.getDb().getMachineListModel(defaultListModel);
+		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
 		assertEquals(1, defaultListModel.size()); //Only current machine left
 		element = (ListElement) defaultListModel.get(0);
 		assertNull(element.getFile());

@@ -93,7 +93,7 @@ public class DbConn {
 					Class.forName("org.sqlite.JDBC"); // NOI18N
 					SQLiteConfig config = new SQLiteConfig();
 					config.enforceForeignKeys(enforceForeignKeys);
-					connection = DriverManager.getConnection("jdbc:sqlite:" + this.info.locationWork, // NOI18N
+   					connection = DriverManager.getConnection("jdbc:sqlite:" + this.info.locationWork, // NOI18N
 							config.toProperties()); // NOI18N
 					break;
 				case MySQL:
