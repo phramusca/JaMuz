@@ -539,7 +539,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 * @throws SQLException
 	 */
 	@Override
-	public synchronized void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
+	public void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
 		this.stUpdateFileStatistics.setInt(1, file.getRating());
 		this.stUpdateFileStatistics.setFloat(2, file.getBPM());
 		this.stUpdateFileStatistics.setString(3, file.getFormattedLastPlayed());

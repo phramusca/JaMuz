@@ -96,7 +96,7 @@ public class DaoOption {
 	 * @param machine
 	 * @return
 	 */
-	public synchronized boolean update(Machine machine) {
+	public boolean update(Machine machine) {
 		try {
 			dbConn.connection.setAutoCommit(false);
 
@@ -146,7 +146,7 @@ public class DaoOption {
 	 * @param value
 	 * @return
 	 */
-	public synchronized boolean update(Option myOption, String value) {
+	public boolean update(Option myOption, String value) {
 		try {
 			if (myOption.getType().equals("path")) { // NOI18N
 				value = FilenameUtils.normalizeNoEndSeparator(value.trim()) + File.separator;

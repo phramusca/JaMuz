@@ -116,7 +116,7 @@ public class DaoStatSource {
 	 * @param statSource
 	 * @return
 	 */
-	public synchronized boolean insertOrUpdate(StatSource statSource) {
+	public boolean insertOrUpdate(StatSource statSource) {
 		try {
 			if (statSource.getId() > -1) {
 				PreparedStatement stUpdateStatSource = dbConn.connection
@@ -184,7 +184,7 @@ public class DaoStatSource {
 	 * @param idStatSource
 	 * @return
 	 */
-	public synchronized String updateLastMergeDate(int idStatSource) {
+	public String updateLastMergeDate(int idStatSource) {
 		ResultSet rs = null;
 		try {
 			PreparedStatement stUpdateStatSourceLastMergeDate = dbConn.connection.prepareStatement("UPDATE statsource "
@@ -222,7 +222,7 @@ public class DaoStatSource {
 	 * @param id
 	 * @return
 	 */
-	public synchronized boolean delete(int id) {
+	public boolean delete(int id) {
 		try {
 			PreparedStatement stDeleteStatSource = dbConn.connection.prepareStatement(
 					"DELETE FROM statsource WHERE idStatSource=?"); // NOI18N
