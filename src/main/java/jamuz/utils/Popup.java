@@ -82,11 +82,26 @@ public class Popup {
 	 * @param ex
 	 */
 	public static void error(String str, Exception ex) {
+		StackTraceElement traceElement = findJaMuzTraceElement(ex.getStackTrace());
+		String errorMessage = String.format("An unexpected error occured :(\n%s\n%s\n%s",
+				ex.toString(),
+				traceElement.toString(),
+				str);
 		if(logger!=null) {
-			Popup.logger.log(Level.SEVERE, str, ex);
+			Popup.logger.log(Level.SEVERE, errorMessage, ex);
 		}
-		popupError(str+":\n\n"+ex.toString());  //NOI18N
+		popupError(errorMessage);
 	}
+	
+	private static StackTraceElement findJaMuzTraceElement(StackTraceElement[] stackTrace) {
+        for (StackTraceElement element : stackTrace) {
+            String className = element.getClassName();
+            if (className.startsWith("jamuz.")) {
+                return element;
+            }
+        }
+        return stackTrace[0];
+    }
 	
 	/**
 	 * Popup an error (Exception only)
