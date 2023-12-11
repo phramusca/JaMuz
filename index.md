@@ -30,10 +30,10 @@ layout: default
 <!-- Initialize download links -->
 <script src="./scripts/download.js"></script>
 
-JaMuz consits of:
-
-- [JaMuz Desktop](#jamuz-desktop): a Java application that will help you managing your digital music collection.
-- [JaMuz Android](#jamuz-android): an Android audio player, connected to [JaMuz Desktop](#jamuz-desktop).
+| [JaMuz Desktop](#jamuz-desktop) | [JaMuz Android](#jamuz-android) |
+|--|--|
+| <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> | <img src="img/android.png" alt="JaMuz Android">  |
+| Manage, play and serve your music collection to JaMuz Android. | Play, tag, rate and remote control JaMuz Desktop. |
 
 ## JaMuz Android
 
@@ -85,7 +85,7 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 ### Installation
 
 - Prerequisites:
-  - Install [Java](https://www.java.com/) if you have not already.
+  - Install [Java](https://www.java.com/).
   - Install [7-zip](https://www.7-zip.org/) or any other valid tool to extract a 7z archive.
 - <span id="download-container-jamuz-desktop"></span>
 - Extract 7z archive
