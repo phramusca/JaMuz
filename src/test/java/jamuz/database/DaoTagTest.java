@@ -71,7 +71,7 @@ public class DaoTagTest {
 		checkTagList(expectedTags);
 
 		DefaultListModel myListModel = new DefaultListModel();
-		Jamuz.getDb().getTagListModel(myListModel);
+		Jamuz.getDb().listModel().getTagListModel(myListModel);
 		assertArrayEquals(expectedTags.toArray(), myListModel.toArray());
 
 		assertTrue("updateTag", Jamuz.getDb().tag().update("Normal", "Tutu"));
