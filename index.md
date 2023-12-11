@@ -84,7 +84,9 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 
 ### Installation
 
-- [Install Java](https://www.java.com/en/download/help/download_options_fr.html) if you have not already.
+- Prerequisites:
+  - Install [Java](https://www.java.com/) if you have not already.
+  - Install [7-zip](https://www.7-zip.org/) or any other valid tool to extract a 7z archive.
 - <span id="download-container-jamuz-desktop"></span>
 - Extract 7z archive
 - Double-click on `JaMuz.jar`
