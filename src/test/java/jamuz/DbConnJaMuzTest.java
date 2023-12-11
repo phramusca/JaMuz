@@ -108,7 +108,7 @@ public class DbConnJaMuzTest {
 		System.out.println("getGenreListModel");
 		DefaultListModel myListModel = null;
 		DbConnJaMuz instance = null;
-		instance.getGenreListModel(myListModel);
+		instance.listModel().getGenreListModel(myListModel);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -133,7 +133,7 @@ public class DbConnJaMuzTest {
 		checkTagList(expectedTags);
 
 		DefaultListModel myListModel = new DefaultListModel();
-		Jamuz.getDb().getTagListModel(myListModel);
+		Jamuz.getDb().listModel().getTagListModel(myListModel);
 		assertArrayEquals(expectedTags.toArray(), myListModel.toArray());
 
 		assertTrue("updateTag", Jamuz.getDb().tag().update("Normal", "Tutu"));
@@ -213,7 +213,7 @@ public class DbConnJaMuzTest {
 		System.out.println("getTagListModel");
 		DefaultListModel myListModel = null;
 		DbConnJaMuz instance = null;
-		instance.getTagListModel(myListModel);
+		instance.listModel().getTagListModel(myListModel);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -247,7 +247,7 @@ public class DbConnJaMuzTest {
 
 		//Get machines
 		DefaultListModel defaultListModel = new DefaultListModel();
-		Jamuz.getDb().getMachineListModel(defaultListModel);
+		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
 		ListElement element = (ListElement) defaultListModel.get(0);
 		assertEquals(2, defaultListModel.size()); //The created one and current machine
 		assertEquals("<html><b>" + machineName + "</b><BR/><i></i></html>", element.toString());
@@ -284,7 +284,7 @@ public class DbConnJaMuzTest {
 		assertTrue("isMachine updated", Jamuz.getDb().machine().getOrInsert(machineName, zText, false));
 		assertEquals(description, zText.toString());
 		defaultListModel = new DefaultListModel();
-		Jamuz.getDb().getMachineListModel(defaultListModel);
+		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
 		element = (ListElement) defaultListModel.get(0);
 		assertEquals(2, defaultListModel.size()); //The created one and current machine
 		assertEquals("<html><b>" + machineName + "</b><BR/><i>" + description + "</i></html>", element.toString());
@@ -323,7 +323,7 @@ public class DbConnJaMuzTest {
 		//Delete machine 
 		assertTrue(Jamuz.getDb().machine().delete(machineName));
 		defaultListModel = new DefaultListModel();
-		Jamuz.getDb().getMachineListModel(defaultListModel);
+		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
 		assertEquals(1, defaultListModel.size()); //Only current machine left
 		element = (ListElement) defaultListModel.get(0);
 		assertNull(element.getFile());
@@ -411,7 +411,7 @@ public class DbConnJaMuzTest {
 		System.out.println("getMachineListModel");
 		DefaultListModel myListModel = null;
 		DbConnJaMuz instance = null;
-		instance.getMachineListModel(myListModel);
+		instance.listModel().getMachineListModel(myListModel);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
@@ -1528,7 +1528,7 @@ public class DbConnJaMuzTest {
 		int copyRight = 0;
 		String sqlOrder = "";
 		DbConnJaMuz instance = null;
-		instance.fillSelectorList(myListModel, field, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, sqlOrder);
+		instance.listModel().fillSelectorList(myListModel, field, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, sqlOrder);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}

@@ -1120,7 +1120,7 @@ public class PanelSelect extends javax.swing.JPanel {
         
         int copyRight = jComboBoxBestOfCopyRight.getSelectedIndex() -1;
         
-		Jamuz.getDb().fillSelectorList(myListModel, field, 
+		Jamuz.getDb().listModel().fillSelectorList(myListModel, field, 
                 selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, 
                 yearFrom, yearTo, bpmFrom, bpmTo, 
                 copyRight, sqlOrder);
