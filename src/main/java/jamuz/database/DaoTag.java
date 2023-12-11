@@ -30,6 +30,7 @@ import java.util.logging.Level;
  * @author phramusca <phramusca@gmail.com>
  */
 public class DaoTag {
+
 	private final DbConn dbConn;
 
 	/**
@@ -37,9 +38,9 @@ public class DaoTag {
 	 * @param dbConn
 	 */
 	public DaoTag(DbConn dbConn) {
-        this.dbConn = dbConn;
-    }
-	
+		this.dbConn = dbConn;
+	}
+
 	/**
 	 * Inserts a tag
 	 *
@@ -56,7 +57,7 @@ public class DaoTag {
 				return true;
 			} else {
 				Jamuz.getLogger().log(Level.SEVERE, "stInsertTag, tag=\"{0}\" "
-						+ "# row(s) affected: +{1}", new Object[] { tag, nbRowsAffected }); // NOI18N
+						+ "# row(s) affected: +{1}", new Object[]{tag, nbRowsAffected}); // NOI18N
 				return false;
 			}
 		} catch (SQLException ex) {
@@ -64,7 +65,7 @@ public class DaoTag {
 			return false;
 		}
 	}
-	
+
 	public boolean insertIfMissing(String tag) {
 		ResultSet rs = null;
 		ResultSet keys = null;
@@ -135,7 +136,7 @@ public class DaoTag {
 		}
 		return tags;
 	}
-	
+
 	/**
 	 * Updates tag in tag table
 	 *
@@ -155,7 +156,7 @@ public class DaoTag {
 			} else {
 				Jamuz.getLogger().log(Level.SEVERE, "stUpdateTag, oldTag={0}, "
 						+ "newTag={1} # row(s) affected: +{2}",
-						new Object[] { oldTag, newTag, nbRowsAffected }); // NOI18N
+						new Object[]{oldTag, newTag, nbRowsAffected}); // NOI18N
 				return false;
 			}
 		} catch (SQLException ex) {
@@ -163,7 +164,7 @@ public class DaoTag {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Deletes tag from tag table
 	 *

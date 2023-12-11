@@ -57,10 +57,12 @@ public class DaoPath {
      */
     public boolean insert(String relativePath, Date modifDate,
             FolderInfo.CheckedFlag checkedFlag, String mbId, int[] key) {
+		ResultSet keys = null;
+		PreparedStatement stInsertPath = null;
         try {
             // Only inserting in Linux style in database
             relativePath = FilenameUtils.separatorsToUnix(relativePath);
-            PreparedStatement stInsertPath = dbConn.getConnection().prepareStatement(
+            stInsertPath = dbConn.getConnection().prepareStatement(
                     "INSERT INTO path "
                     + "(strPath, modifDate, checked, mbId) " // NOI18N
                     + "VALUES (?, ?, ?, ?)"); // NOI18N
@@ -71,7 +73,7 @@ public class DaoPath {
             stInsertPath.setString(4, mbId);
             int nbRowsAffected = stInsertPath.executeUpdate();
             if (nbRowsAffected == 1) {
-                ResultSet keys = stInsertPath.getGeneratedKeys();
+                keys = stInsertPath.getGeneratedKeys();
                 keys.next();
                 key[0] = keys.getInt(1);
                 return true;
@@ -85,7 +87,22 @@ public class DaoPath {
             Popup.error("insertPath(" + relativePath + ", " + modifDate.toString() + ")",
                     ex); // NOI18N
             return false;
-        }
+        } finally {
+			try {
+				if (keys != null) {
+					keys.close();
+				}
+			} catch (SQLException ex) {
+				Jamuz.getLogger().warning("Failed to close ResultSet");
+			}
+			try {
+				if (stInsertPath != null) {
+					stInsertPath.close();
+				}
+			} catch (SQLException ex) {
+				Jamuz.getLogger().warning("Failed to close PreparedStatement");
+			}
+		}
     }
 
     /**

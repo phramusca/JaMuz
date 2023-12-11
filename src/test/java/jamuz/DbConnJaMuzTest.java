@@ -57,7 +57,7 @@ import test.helpers.TestUnitSettings;
 public class DbConnJaMuzTest {
 
 	private static DbConnJaMuz dbConnJaMuz;
-	
+
 	public DbConnJaMuzTest() {
 	}
 
@@ -68,6 +68,7 @@ public class DbConnJaMuzTest {
 
 	@AfterClass
 	public static void tearDownClass() {
+//		new File(dbConnJaMuz.getDbConn().getInfo().getLocationOri()).delete();
 	}
 
 	@Before
@@ -77,21 +78,37 @@ public class DbConnJaMuzTest {
 	@After
 	public void tearDown() {
 	}
-	
+
 	@Test
 	public void testConcurrency() throws InterruptedException {
-		
-//		boolean insertOrUpdate = dbConnJaMuz.device().insertOrUpdate(new Device("updateMe"));
-//		
-//		dbConnJaMuz.device().g
-//		
-		ExecutorService executorService = Executors.newFixedThreadPool(5);
-		executorService.submit(() -> dbConnJaMuz.client().insertOrUpdate(new ClientInfo("toto", "whatever", "/here", "totoName", true)));
-		executorService.submit(() -> dbConnJaMuz.device().insertOrUpdate(new Device("tutu")));
-		int[] key = new int[1];
-		executorService.submit(() -> dbConnJaMuz.file().insert(new FileInfoInt("/relative/path", "/root/path"), key));
-		
+		ExecutorService executorService = Executors.newFixedThreadPool(150);
+
+		for (int i = 0; i < 10; i++) {
+			final int index = i;
+
+//			executorService.submit(() -> {
+//				System.out.println("file" + index);
+//				dbConnJaMuz.file().insert(new FileInfoInt("file" + index, "/root/path"), new int[1]);
+//			});
+//
+//			executorService.submit(() -> {
+//				System.out.println("genre" + index);
+//				dbConnJaMuz.genre().insert("genre" + index);
+//			});
+
+			executorService.submit(() -> {
+				System.out.println("path" + index);
+				dbConnJaMuz.path().insert("path" + index, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", new int[1]);
+			});
+
+//			executorService.submit(() -> {
+//				System.out.println("tag" + index);
+//				dbConnJaMuz.tag().insert("tag" + index);
+//			});
+		}
+
 		executorService.awaitTermination(30, TimeUnit.SECONDS);
 	}
 
 }
+
