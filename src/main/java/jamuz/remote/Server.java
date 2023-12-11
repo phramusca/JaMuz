@@ -474,7 +474,7 @@ public class Server {
 					"source", clientInfo.getLogin(), 
 					-1, 
 					clientInfo.getLogin(), true);
-			if(Jamuz.getDb().device().update(device)) {
+			if(Jamuz.getDb().device().insertOrUpdate(device)) {
 				Device deviceWithId = Jamuz.getDb().device().get(clientInfo.getLogin());
 				clientInfo.setDevice(deviceWithId);
 				StatSource statSource = new StatSource(
@@ -486,7 +486,7 @@ public class Server {
 				if(Jamuz.getDb().statSource().insertOrUpdate(statSource)) {
 					StatSource statSourceWithId = Jamuz.getDb().statSource().get(clientInfo.getLogin());
 					clientInfo.setStatSource(statSourceWithId);
-					if(Jamuz.getDb().client().update(clientInfo)) {
+					if(Jamuz.getDb().client().insertOrUpdate(clientInfo)) {
 						ClientInfo clientInfoUpdated = Jamuz.getDb().client().get(clientInfo.getLogin());
 						clientInfo.setId(clientInfoUpdated.getId());
 						tableModel.add(clientInfoUpdated);

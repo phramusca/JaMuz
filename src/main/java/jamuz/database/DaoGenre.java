@@ -22,7 +22,7 @@ public class DaoGenre {
      * @param genre
      * @return
      */
-    public synchronized boolean insert(String genre) {
+    public boolean insert(String genre) {
         try {
             if (isSupported(genre)) {
                 return false;
@@ -80,7 +80,7 @@ public class DaoGenre {
      * @param newGenre
      * @return
      */
-    public synchronized boolean update(String oldGenre, String newGenre) {
+    public boolean update(String oldGenre, String newGenre) {
         try {
             PreparedStatement stUpdateGenre = dbConn.connection.prepareStatement(
                     "UPDATE genre SET value=? WHERE value=?"); // NOI18N
@@ -107,7 +107,7 @@ public class DaoGenre {
      * @param genre
      * @return
      */
-    public synchronized boolean delete(String genre) {
+    public boolean delete(String genre) {
         try {
             PreparedStatement stDeleteGenre = dbConn.connection.prepareStatement(
                     "DELETE FROM genre WHERE value=?"); // NOI18N

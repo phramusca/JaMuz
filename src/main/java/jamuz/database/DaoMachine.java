@@ -131,7 +131,7 @@ public class DaoMachine {
 	 * @param description
 	 * @return
 	 */
-	public synchronized boolean update(int idMachine, String description) {
+	public boolean update(int idMachine, String description) {
 		try {
 			PreparedStatement stUpdateMachine = dbConn.connection.prepareStatement(
 					"UPDATE machine SET description=? WHERE idMachine=?"); // NOI18N
@@ -158,7 +158,7 @@ public class DaoMachine {
 	 * @param machineName
 	 * @return
 	 */
-	public synchronized boolean delete(String machineName) {
+	public boolean delete(String machineName) {
 		try {
 			PreparedStatement stDeleteMachine = dbConn.connection.prepareStatement("DELETE FROM machine WHERE name=?"); // NOI18N
 			stDeleteMachine.setString(1, machineName);

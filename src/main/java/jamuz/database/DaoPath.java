@@ -55,12 +55,14 @@ public class DaoPath {
      * @param key
      * @return
      */
-    public synchronized boolean insert(String relativePath, Date modifDate,
+    public boolean insert(String relativePath, Date modifDate,
             FolderInfo.CheckedFlag checkedFlag, String mbId, int[] key) {
+		ResultSet keys = null;
+		PreparedStatement stInsertPath = null;
         try {
             // Only inserting in Linux style in database
             relativePath = FilenameUtils.separatorsToUnix(relativePath);
-            PreparedStatement stInsertPath = dbConn.getConnection().prepareStatement(
+            stInsertPath = dbConn.getConnection().prepareStatement(
                     "INSERT INTO path "
                     + "(strPath, modifDate, checked, mbId) " // NOI18N
                     + "VALUES (?, ?, ?, ?)"); // NOI18N
@@ -71,7 +73,7 @@ public class DaoPath {
             stInsertPath.setString(4, mbId);
             int nbRowsAffected = stInsertPath.executeUpdate();
             if (nbRowsAffected == 1) {
-                ResultSet keys = stInsertPath.getGeneratedKeys();
+                keys = stInsertPath.getGeneratedKeys();
                 keys.next();
                 key[0] = keys.getInt(1);
                 return true;
@@ -85,7 +87,22 @@ public class DaoPath {
             Popup.error("insertPath(" + relativePath + ", " + modifDate.toString() + ")",
                     ex); // NOI18N
             return false;
-        }
+        } finally {
+			try {
+				if (keys != null) {
+					keys.close();
+				}
+			} catch (SQLException ex) {
+				Jamuz.getLogger().warning("Failed to close ResultSet");
+			}
+			try {
+				if (stInsertPath != null) {
+					stInsertPath.close();
+				}
+			} catch (SQLException ex) {
+				Jamuz.getLogger().warning("Failed to close PreparedStatement");
+			}
+		}
     }
 
     /**
@@ -225,7 +242,7 @@ public class DaoPath {
      * @param mbId
      * @return
      */
-    public synchronized boolean update(int idPath, Date modifDate,
+    public boolean update(int idPath, Date modifDate,
             FolderInfo.CheckedFlag checkedFlag, String path, String mbId) {
         try {
             PreparedStatement stUpdatePath = dbConn.connection.prepareStatement(
@@ -259,7 +276,7 @@ public class DaoPath {
      * @param checkedFlag
      * @return
      */
-    public synchronized boolean updateCheckedFlag(int idPath, FolderInfo.CheckedFlag checkedFlag) {
+    public boolean updateCheckedFlag(int idPath, FolderInfo.CheckedFlag checkedFlag) {
         try {
             PreparedStatement stUpdateCheckedFlag = dbConn.connection
                     .prepareStatement("UPDATE path set checked=? WHERE idPath=?"); // NOI18N
@@ -288,7 +305,7 @@ public class DaoPath {
      * @param checkedFlag
      * @return
      */
-    public synchronized boolean updateCheckedFlagReset(FolderInfo.CheckedFlag checkedFlag) {
+    public boolean updateCheckedFlagReset(FolderInfo.CheckedFlag checkedFlag) {
         try {
             PreparedStatement stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
                     "UPDATE path SET checked=0 "
@@ -310,7 +327,7 @@ public class DaoPath {
      * @param copyRight
      * @return
      */
-    public synchronized boolean updateCopyRight(int idPath, int copyRight) {
+    public boolean updateCopyRight(int idPath, int copyRight) {
         try {
             PreparedStatement stUpdateCopyRight = dbConn.connection.prepareStatement(
                     "UPDATE path "
@@ -338,7 +355,7 @@ public class DaoPath {
 	 * @param idPath
 	 * @return
 	 */
-	public synchronized boolean delete(int idPath) {
+	public boolean delete(int idPath) {
 		try {
 			PreparedStatement stDeletedPath = dbConn.connection.prepareStatement(
 					"DELETE FROM path WHERE idPath=?"); // NOI18N

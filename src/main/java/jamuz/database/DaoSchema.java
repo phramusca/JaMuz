@@ -96,7 +96,7 @@ public class DaoSchema {
 		return true;
 	}
 
-	private synchronized boolean updateSchemaToNewVersion(int newVersion) {
+	private boolean updateSchemaToNewVersion(int newVersion) {
 		try {
 			File scriptFile = Jamuz.getFile(newVersion + ".sql", "data", "system", "sql");
 			String locationWork = this.dbConn.info.getLocationWork();
@@ -111,7 +111,7 @@ public class DaoSchema {
 		return false;
 	}
 
-	private synchronized boolean insertVersionHistory(int version) {
+	private boolean insertVersionHistory(int version) {
 		try {
 			PreparedStatement stInsertVersionHistory = dbConn.connection.prepareStatement(
 					"INSERT INTO versionHistory (version, upgradeStart) "
@@ -131,7 +131,7 @@ public class DaoSchema {
 		}
 	}
 
-	private synchronized boolean updateVersionHistory(int version) {
+	private boolean updateVersionHistory(int version) {
 		try {
 			PreparedStatement stUpdateVersionHistory = dbConn.connection.prepareStatement(
 					"UPDATE versionHistory SET upgradeEnd=datetime('now') "

@@ -46,7 +46,7 @@ public class DaoPlaylist {
 	 * @param playlist
 	 * @return
 	 */
-	public synchronized boolean insert(Playlist playlist) {
+	public boolean insert(Playlist playlist) {
 		try {
 			PreparedStatement stInsertPlaylist = dbConn.connection.prepareStatement(
 					"INSERT INTO playlist "
@@ -149,7 +149,7 @@ public class DaoPlaylist {
 	 * @param playlist
 	 * @return
 	 */
-	public synchronized boolean update(Playlist playlist) {
+	public boolean update(Playlist playlist) {
 		try {
 			PreparedStatement stUpdatePlaylist = dbConn.connection.prepareStatement(
 					"UPDATE playlist "
@@ -263,7 +263,7 @@ public class DaoPlaylist {
 	 * @param id
 	 * @return
 	 */
-	public synchronized boolean delete(int id) {
+	public boolean delete(int id) {
 		try {
 			PreparedStatement stDeletePlaylist = dbConn.connection.prepareStatement("DELETE FROM playlist "
 					+ "WHERE idPlaylist=? " // NOI18N

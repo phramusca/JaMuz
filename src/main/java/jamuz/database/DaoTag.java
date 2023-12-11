@@ -30,6 +30,7 @@ import java.util.logging.Level;
  * @author phramusca <phramusca@gmail.com>
  */
 public class DaoTag {
+
 	private final DbConn dbConn;
 
 	/**
@@ -37,16 +38,16 @@ public class DaoTag {
 	 * @param dbConn
 	 */
 	public DaoTag(DbConn dbConn) {
-        this.dbConn = dbConn;
-    }
-	
+		this.dbConn = dbConn;
+	}
+
 	/**
 	 * Inserts a tag
 	 *
 	 * @param tag
 	 * @return
 	 */
-	public synchronized boolean insert(String tag) {
+	public boolean insert(String tag) {
 		try {
 			PreparedStatement stInsertTag = dbConn.connection.prepareStatement(
 					"INSERT OR IGNORE INTO tag (value) VALUES (?) "); // NOI18N
@@ -56,7 +57,7 @@ public class DaoTag {
 				return true;
 			} else {
 				Jamuz.getLogger().log(Level.SEVERE, "stInsertTag, tag=\"{0}\" "
-						+ "# row(s) affected: +{1}", new Object[] { tag, nbRowsAffected }); // NOI18N
+						+ "# row(s) affected: +{1}", new Object[]{tag, nbRowsAffected}); // NOI18N
 				return false;
 			}
 		} catch (SQLException ex) {
@@ -64,7 +65,7 @@ public class DaoTag {
 			return false;
 		}
 	}
-	
+
 	public boolean insertIfMissing(String tag) {
 		ResultSet rs = null;
 		ResultSet keys = null;
@@ -135,7 +136,7 @@ public class DaoTag {
 		}
 		return tags;
 	}
-	
+
 	/**
 	 * Updates tag in tag table
 	 *
@@ -143,7 +144,7 @@ public class DaoTag {
 	 * @param newTag
 	 * @return
 	 */
-	public synchronized boolean update(String oldTag, String newTag) {
+	public boolean update(String oldTag, String newTag) {
 		try {
 			PreparedStatement stUpdateTag = dbConn.connection.prepareStatement(
 					"UPDATE tag SET value=? WHERE value=?"); // NOI18N
@@ -155,7 +156,7 @@ public class DaoTag {
 			} else {
 				Jamuz.getLogger().log(Level.SEVERE, "stUpdateTag, oldTag={0}, "
 						+ "newTag={1} # row(s) affected: +{2}",
-						new Object[] { oldTag, newTag, nbRowsAffected }); // NOI18N
+						new Object[]{oldTag, newTag, nbRowsAffected}); // NOI18N
 				return false;
 			}
 		} catch (SQLException ex) {
@@ -163,14 +164,14 @@ public class DaoTag {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Deletes tag from tag table
 	 *
 	 * @param tag
 	 * @return
 	 */
-	public synchronized boolean delete(String tag) {
+	public boolean delete(String tag) {
 		try {
 			String sql = """
                 DELETE FROM tag
