@@ -126,7 +126,7 @@ public class DaoGenreTest {
 
 	private void checkGenreList(ArrayList<String> expectedGenres) {
 		DefaultListModel myListModel = new DefaultListModel();
-		dbConnJaMuz.getGenreListModel(myListModel);
+		dbConnJaMuz.listModel().getGenreListModel(myListModel);
 		Collections.sort(expectedGenres);
 		assertArrayEquals(expectedGenres.toArray(), myListModel.toArray());
 	}

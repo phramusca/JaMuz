@@ -356,7 +356,7 @@ public class Jamuz {
 	 */
 	public static void readGenres() {
 		genreListModel = new DefaultListModel();
-		getDb().getGenreListModel(genreListModel);
+		getDb().listModel().getGenreListModel(genreListModel);
 	}
 
 	/**
@@ -382,8 +382,10 @@ public class Jamuz {
 	 *
 	 */
 	public static void readTags() {
+        tagsModel = new DefaultListModel();
+        //TODO: Why not using getTagListModel ?
+//        getDb().getTagListModel(tagsModel);
 		tags = getDb().tag().get();
-		tagsModel = new DefaultListModel();
 		tags.forEach(tag -> {
 			tagsModel.addElement(tag);
 		});

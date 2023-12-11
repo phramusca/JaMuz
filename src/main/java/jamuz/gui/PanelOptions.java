@@ -162,7 +162,7 @@ public class PanelOptions extends javax.swing.JPanel {
 
 	private static void fillMachineList(DefaultListModel listModel) {
 		listModel.clear();
-		Jamuz.getDb().getMachineListModel(listModel);
+		Jamuz.getDb().listModel().getMachineListModel(listModel);
 	}
 
 	private void resetCheckedFlag(FolderInfo.CheckedFlag checkedFlag) {
