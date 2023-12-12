@@ -85,7 +85,10 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 ### Installation
 
 - Prerequisites:
-  - Install [Java](https://www.java.com/).
+  - Install Java (OpenJDK JRE) >=17
+    - [Java 17 Windows](https://adoptium.net/marketplace/?package=jre&version=17) (Take Temurin from Adoptium if unsure what distribution/vendor to choose)
+    - Linux Debian based (Ubuntu, Mint,...): [openjdk-17-jre](apt://openjdk-17-jre)
+    - Linux others: refer to [Adoptium](https://adoptium.net/installation/)
   - Install [7-zip](https://www.7-zip.org/) or any other valid tool to extract a 7z archive.
 - <span id="download-container-jamuz-desktop"></span>
 - Extract 7z archive
