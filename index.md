@@ -84,14 +84,13 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 
 ### Installation
 
-- Prerequisites:
-  - Install Java (OpenJDK JRE) >=17
-    - [Java 17 Windows](https://adoptium.net/marketplace/?package=jre&version=17) (Take Temurin from Adoptium if unsure what distribution/vendor to choose)
-    - Linux Debian based (Ubuntu, Mint,...): [openjdk-17-jre](apt://openjdk-17-jre)
-    - Linux others: refer to [Adoptium](https://adoptium.net/installation/)
-  - Install [7-zip](https://www.7-zip.org/) or any other valid tool to extract a 7z archive.
+- Install Java (OpenJDK JRE) >=17
+  - [Java 17 Windows](https://adoptium.net/marketplace/?package=jre&version=17) (Take Temurin from Adoptium if unsure what distribution/vendor to choose)
+  - Linux Debian based (Ubuntu, Mint,...): [openjdk-17-jre](apt://openjdk-17-jre)
+  - Linux others: refer to [Adoptium](https://adoptium.net/installation/)
 - <span id="download-container-jamuz-desktop"></span>
 - Extract 7z archive
+  - Note: 7z is natively supported on most linux distributions and since October, 31, 2023 on Windows 11 too (with update [KB5031455](https://support.microsoft.com/en-us/topic/october-31-2023-kb5031455-os-builds-22621-2506-and-22631-2506-preview-6513c5ec-c5a2-4aaf-97f5-44c13d29e0d4)). Otherwise, you need to [install 7-zip](https://7ziphelp.com/7-zip-for-pc).
 - Double-click on `JaMuz.jar`
 
 ### Features
