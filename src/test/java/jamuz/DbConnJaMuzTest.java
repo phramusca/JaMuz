@@ -17,37 +17,16 @@
 package jamuz;
 
 import jamuz.database.DbConnJaMuz;
-import jamuz.gui.swing.ListElement;
-import jamuz.process.check.DuplicateInfo;
 import jamuz.process.check.FolderInfo;
-import jamuz.process.merge.StatSource;
-import jamuz.process.sync.Device;
-import jamuz.process.sync.SyncStatus;
-import jamuz.remote.ClientInfo;
-import java.awt.Color;
-import java.io.File;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import javax.swing.DefaultListModel;
-import org.apache.commons.io.FilenameUtils;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import test.helpers.TestSettings;
 import test.helpers.TestUnitSettings;
 
 /**
