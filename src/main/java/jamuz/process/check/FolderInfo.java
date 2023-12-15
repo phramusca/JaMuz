@@ -342,7 +342,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		File path = new File(fullPath);
 		if(!path.exists()) {
 			//Path does not exist. Delete path and associated files from database
-			if(!Jamuz.getDb().path().delete(idPath)) {
+			if(!Jamuz.getDb().path().lock().delete(idPath)) {
 				return false;
 			}
 		}
@@ -444,7 +444,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 */
 	public boolean insertInDb(CheckedFlag checkedFlag) {
 		int [] key = new int[1]; //Hint: Using a int table as cannot pass a simple integer by reference
-		boolean result = Jamuz.getDb().path().insert(relativePath, modifDate, checkedFlag, mbId, key);
+		boolean result = Jamuz.getDb().path().lock().insert(relativePath, modifDate, checkedFlag, mbId, key);
 		idPath=key[0]; //Get insertion key
 		return result;
 	}
@@ -455,7 +455,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 * @return
 	 */
 	public boolean updateInDb(CheckedFlag checkedFlag) {
-		return Jamuz.getDb().path().update(idPath, modifDate, checkedFlag, relativePath, mbId);
+		return Jamuz.getDb().path().lock().update(idPath, modifDate, checkedFlag, relativePath, mbId);
 	}
 
     /**
@@ -734,7 +734,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         if(isCheckingMasterLibrary()) {
             scanDeleted(progressBar);
 			if(getNumberOfFiles()==0) {
-				Jamuz.getDb().path().delete(idPath);
+				Jamuz.getDb().path().lock().delete(idPath);
 			}
         }
 	}
@@ -1511,7 +1511,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			//Prevent duplicate strPath in database
 			int newIdPath = Jamuz.getDb().path().getIdPath(filesAudio.get(0).getRelativePath());
 			if(idPath>=0 && newIdPath>=0 && idPath!=newIdPath) {
-				if(Jamuz.getDb().file().updateIdPath(idPath, newIdPath)) {
+				if(Jamuz.getDb().file().lock().updateIdPath(idPath, newIdPath)) {
 					idPath=newIdPath;
 					checkedFlag=CheckedFlag.UNCHECKED;
 				} else {
@@ -1554,7 +1554,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
     
 	private void KO(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().path().updateCheckedFlag(idPath, FolderInfo.CheckedFlag.KO);
+            Jamuz.getDb().path().lock().updateCheckedFlag(idPath, FolderInfo.CheckedFlag.KO);
         }
         else {
             moveList(getAllFiles(), ProcessCheck.getKoLocation().getValue(), false, 
@@ -1566,7 +1566,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
     
     private boolean Manual(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().path().updateCheckedFlag(idPath, FolderInfo.CheckedFlag.UNCHECKED);
+            Jamuz.getDb().path().lock().updateCheckedFlag(idPath, FolderInfo.CheckedFlag.UNCHECKED);
             return false;
         }
         else {

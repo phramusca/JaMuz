@@ -195,7 +195,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 	}
     
-    	/**
+    /**
 	 * Prepare the predefined SQL statements
 	 *
 	 * @param isRemote
