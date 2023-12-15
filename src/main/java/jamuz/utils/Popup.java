@@ -78,15 +78,15 @@ public class Popup {
 	
 	/**
 	 * Popup an error with additional text
-	 * @param str
+	 * @param msg
 	 * @param ex
 	 */
-	public static void error(String str, Exception ex) {
+	public static void error(String msg, Exception ex) {
 		StackTraceElement traceElement = findJaMuzTraceElement(ex.getStackTrace());
-		String errorMessage = String.format("An unexpected error occured :(\n%s\n%s\n%s",
+		String errorMessage = String.format("An unexpected error occured :(\n%s\n%s\n\n%s",
 				ex.toString(),
 				traceElement.toString(),
-				str);
+				msg);
 		if(logger!=null) {
 			Popup.logger.log(Level.SEVERE, errorMessage, ex);
 		}
