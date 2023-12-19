@@ -252,7 +252,7 @@ public class Jamuz {
 		}
 
 		//Create and open connection to JaMuz JaMuzDbPath			
-		db = new DbConnJaMuz(new DbInfo(LibType.Sqlite, JaMuzDbPath, "", ""));
+		db = new DbConnJaMuz(new DbInfo(LibType.Sqlite, JaMuzDbPath, "", ""), Jamuz.getMachine().getOptionValue("location.library"));
 		return true;
 	}
 
