@@ -89,7 +89,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 		daoClient = new DaoClient(dbConn, daoDevice, daoStatSource);
 		daoSchema = new DaoSchema(dbConn);
 		daoDeviceFile = new DaoDeviceFile(dbConn);
-        daoFile = new DaoFile(dbConn);
+        daoFile = new DaoFile(dbConn, locationLibrary);
         daoFileTranscoded = new DaoFileTranscoded(dbConn);
         daoPath = new DaoPath(dbConn);
         daoPathAlbum = new DaoPathAlbum(dbConn);
