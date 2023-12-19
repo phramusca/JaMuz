@@ -69,7 +69,7 @@ public class DaoClientWrite {
 
                     int nbRowsAffected = stUpdateClient.executeUpdate();
                     if (nbRowsAffected > 0) {
-                        daoDevice.insertOrUpdate(clientInfo.getDevice());
+                        daoDevice.lock().insertOrUpdate(clientInfo.getDevice());
                         daoStatSource.insertOrUpdate(clientInfo.getStatSource());
                         return true;
                     } else {

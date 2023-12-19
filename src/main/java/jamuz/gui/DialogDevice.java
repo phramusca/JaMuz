@@ -216,7 +216,7 @@ public class DialogDevice extends javax.swing.JDialog {
 			Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
 			this.device.setIdPlaylist(playlist.getId());
 			
-			if(Jamuz.getDb().device().insertOrUpdate(this.device)) {
+			if(Jamuz.getDb().device().lock().insertOrUpdate(this.device)) {
 				this.dispose();
 				DialogOptions.displayDevices();
 			}
