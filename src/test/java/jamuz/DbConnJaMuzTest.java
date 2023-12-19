@@ -27,21 +27,41 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.anyString;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.MockitoJUnitRunner;
 import test.helpers.TestUnitSettings;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/ )
  */
+@RunWith(MockitoJUnitRunner.class)
 public class DbConnJaMuzTest {
 
+//	@Mock
+//    private Jamuz mockJamuz;
+	
+	@Mock
+    private Machine mockMachine;
+
+	@InjectMocks
     private static DbConnJaMuz dbConnJaMuz;
 
     public DbConnJaMuzTest() {
+		mockStatic(Jamuz.class);
+        when(Jamuz.getMachine()).thenReturn(mockMachine);
+//		Machine machine = Jamuz.getMachine();
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+		
+		
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
@@ -60,6 +80,13 @@ public class DbConnJaMuzTest {
 
     @Test
     public void testConcurrency() throws InterruptedException {
+
+        
+		
+//        when(mockMachine.getOptionValue("location.library")).thenReturn("mockedLocation");
+		when(mockMachine.getOption(anyString())).thenReturn(new Option("location.library", "mockedLocation", -1, -1, ""));
+
+
         ExecutorService executorService = Executors.newFixedThreadPool(150);
 
         for (int i = 0; i < 1; i++) {
@@ -84,7 +111,6 @@ public class DbConnJaMuzTest {
                 FileInfoInt fileInfoInt = new FileInfoInt("file/update" + index, "/root/file/update" + index);
                 fileInfoInt.setIdPath(keyPath[0]);
                 dbConnJaMuz.file().lock().insert(fileInfoInt, key);
-                //FIXME ! getFile breaks program because machine is null
                 FileInfoInt file = dbConnJaMuz.file().getFile(key[0], "");
                 file.setGenre("Updated");
                 dbConnJaMuz.file().lock().update(file);
