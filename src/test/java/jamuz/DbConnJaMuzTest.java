@@ -17,7 +17,6 @@
 package jamuz;
 
 import jamuz.database.DbConnJaMuz;
-import jamuz.database.DbInfo;
 import jamuz.process.check.FolderInfo;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,33 +29,17 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.mockito.ArgumentMatchers.anyString;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
-import org.mockito.junit.MockitoJUnitRunner;
 import test.helpers.TestUnitSettings;
 
 /**
  *
  * @author phramusca ( https://github.com/phramusca/ )
  */
-//@RunWith(MockitoJUnitRunner.class)
 public class DbConnJaMuzTest {
 
-//    @Mock
-    private Machine mockMachine;
-
-//    @Mock
-    private DbInfo mockDbInfo;
-    
-//    @InjectMocks
     private static DbConnJaMuz dbConnJaMuz;
 
     public DbConnJaMuzTest() {
-        // No setup in the constructor
     }
 
     @BeforeClass
@@ -71,16 +54,6 @@ public class DbConnJaMuzTest {
 
     @Before
     public void setUp() throws SQLException, ClassNotFoundException, IOException {
-//        mockStatic(Jamuz.class);
-//        when(Jamuz.getMachine()).thenReturn(mockMachine);
-//        when(mockMachine.getOption(anyString())).thenReturn(new Option("location.library", "mockedLocation", -1, -1, ""));
-        
-        // Create the instance of DbConnJaMuz after setting up mocks
-//        if(dbConnJaMuz==null) {
-//            mockDbInfo =  TestUnitSettings.getTempDbInfo();
-//            dbConnJaMuz = new DbConnJaMuz(mockDbInfo, "");
-//            dbConnJaMuz = TestUnitSettings.createTempDatabase();
-//        }
     }
 
     @After
@@ -92,7 +65,7 @@ public class DbConnJaMuzTest {
 
         ExecutorService executorService = Executors.newFixedThreadPool(150);
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             final int index = i;
 
             executorService.submit(() -> {
@@ -115,7 +88,7 @@ public class DbConnJaMuzTest {
                 fileInfoInt.setIdPath(keyPath[0]);
                 dbConnJaMuz.file().lock().insert(fileInfoInt, key);
                 FileInfoInt file = dbConnJaMuz.file().getFile(key[0], "");
-                file.setGenre("Updated");
+                file.setGenre("Updated + " + key[0]);
                 dbConnJaMuz.file().lock().update(file);
                 System.out.println("file updated " + index);
             });
