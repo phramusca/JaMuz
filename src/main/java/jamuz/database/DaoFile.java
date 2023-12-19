@@ -24,16 +24,13 @@ import static jamuz.database.DbUtils.getSqlWHERE;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.ReplayGain;
 import jamuz.process.sync.SyncStatus;
-import jamuz.utils.DateTime;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 
 /**
@@ -61,16 +58,6 @@ public class DaoFile {
     public DaoFileWrite lock() {
         return daoFileWrite;
     }
-	
-//	private StackTraceElement findJaMuzTraceElement(StackTraceElement[] stackTrace) {
-//        for (StackTraceElement element : stackTrace) {
-//            String className = element.getClassName();
-//            if (className.startsWith("jamuz.")) {
-//                return element;
-//            }
-//        }
-//        return stackTrace[0];
-//    }
 
 	/**
 	 *

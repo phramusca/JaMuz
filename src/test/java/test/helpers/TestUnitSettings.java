@@ -35,15 +35,27 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class TestUnitSettings {
 	
-	public static DbConnJaMuz createTempDatabase() throws SQLException, ClassNotFoundException, IOException {
-		File tempFile = File.createTempFile("tempJaMuzDbForUnitTests", ".db");
+    public static DbInfo getTempDbInfo() throws IOException {
+        File tempFile = File.createTempFile("tempJaMuzDbForUnitTests", ".db");
 		DbInfo dbInfo = new DbInfo(DbInfo.LibType.Sqlite, tempFile.getAbsolutePath(), "", "");
-		DbConnJaMuz dbConnJaMuz = new DbConnJaMuz(dbInfo);
-		dbConnJaMuz.getDbConn().connect();
+        return dbInfo;
+    }
+    
+    public static DbConnJaMuz createTempDatabase() throws SQLException, ClassNotFoundException, IOException {
+        return createTempDatabase(getTempDbInfo());
+    }
+    
+    public static void createTempDatabase(DbConnJaMuz dbConnJaMuz) throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz.getDbConn().connect();
 		executeScript(dbConnJaMuz, getFile("JaMuz_creation.sql", "database").getAbsolutePath());
 		executeScript(dbConnJaMuz,getFile("JaMuz_insertion_minimal.sql", "database").getAbsolutePath());
 		executeScript(dbConnJaMuz,getFile("JaMuz_insertion_optional.sql", "database").getAbsolutePath());
-		return dbConnJaMuz;
+    }
+    
+	public static DbConnJaMuz createTempDatabase(DbInfo dbInfo) throws SQLException, ClassNotFoundException, IOException {
+		DbConnJaMuz dbConnJaMuz = new DbConnJaMuz(dbInfo, "");
+		createTempDatabase(dbConnJaMuz);
+        return dbConnJaMuz;
 	}
 	
 	private static void executeScript(DbConnJaMuz dbConnJaMuz, String script) throws SQLException, ClassNotFoundException, IOException {

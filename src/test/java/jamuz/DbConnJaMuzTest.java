@@ -17,7 +17,10 @@
 package jamuz;
 
 import jamuz.database.DbConnJaMuz;
+import jamuz.database.DbInfo;
 import jamuz.process.check.FolderInfo;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,28 +43,24 @@ import test.helpers.TestUnitSettings;
  *
  * @author phramusca ( https://github.com/phramusca/ )
  */
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class DbConnJaMuzTest {
 
-//	@Mock
-//    private Jamuz mockJamuz;
-	
-	@Mock
+//    @Mock
     private Machine mockMachine;
 
-	@InjectMocks
+//    @Mock
+    private DbInfo mockDbInfo;
+    
+//    @InjectMocks
     private static DbConnJaMuz dbConnJaMuz;
 
     public DbConnJaMuzTest() {
-		mockStatic(Jamuz.class);
-        when(Jamuz.getMachine()).thenReturn(mockMachine);
-//		Machine machine = Jamuz.getMachine();
+        // No setup in the constructor
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-		
-		
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
@@ -71,7 +70,17 @@ public class DbConnJaMuzTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws SQLException, ClassNotFoundException, IOException {
+//        mockStatic(Jamuz.class);
+//        when(Jamuz.getMachine()).thenReturn(mockMachine);
+//        when(mockMachine.getOption(anyString())).thenReturn(new Option("location.library", "mockedLocation", -1, -1, ""));
+        
+        // Create the instance of DbConnJaMuz after setting up mocks
+//        if(dbConnJaMuz==null) {
+//            mockDbInfo =  TestUnitSettings.getTempDbInfo();
+//            dbConnJaMuz = new DbConnJaMuz(mockDbInfo, "");
+//            dbConnJaMuz = TestUnitSettings.createTempDatabase();
+//        }
     }
 
     @After
@@ -80,12 +89,6 @@ public class DbConnJaMuzTest {
 
     @Test
     public void testConcurrency() throws InterruptedException {
-
-        
-		
-//        when(mockMachine.getOptionValue("location.library")).thenReturn("mockedLocation");
-		when(mockMachine.getOption(anyString())).thenReturn(new Option("location.library", "mockedLocation", -1, -1, ""));
-
 
         ExecutorService executorService = Executors.newFixedThreadPool(150);
 
