@@ -32,78 +32,22 @@ public class DaoFileTagWrite {
 
     private final DbConn dbConn;
     private final DaoTag daoTag;
+    private final DaoFile daoFile;
 
     /**
      *
      * @param dbConn
      * @param daoTag
+     * @param daoFile
      */
-    public DaoFileTagWrite(DbConn dbConn, DaoTag daoTag) {
+    public DaoFileTagWrite(DbConn dbConn, DaoTag daoTag, DaoFile daoFile) {
         this.dbConn = dbConn;
         this.daoTag = daoTag;
+        this.daoFile = daoFile;
 
     }
 
-    /**
-     * Updates the modification date of files based on a new tag value
-     *
-     * @param newTag
-     * @return
-     */
-    public boolean updateModifDate(String newTag) {
-        synchronized (dbConn) {
-            try {
-                String sql = """
-                UPDATE file SET tagsModifDate=datetime('now') WHERE idFile=(SELECT TF.idFile
-                FROM tag T
-                JOIN tagfile TF ON TF.idTag=T.id
-                WHERE T.value=?)""";
-                try (PreparedStatement stUpdateTagsModifDate = dbConn.getConnection().prepareStatement(sql)) {
-
-                    stUpdateTagsModifDate.setString(1, newTag);
-                    int nbRowsAffected = stUpdateTagsModifDate.executeUpdate();
-                    if (nbRowsAffected >= 0) {
-                        return true;
-                    } else {
-                        Jamuz.getLogger().log(Level.SEVERE, "stUpdateTagsModifDate, "
-                                + "newTag={0} # row(s) affected: +{1}",
-                                new Object[]{newTag, nbRowsAffected});
-                        return false;
-                    }
-                }
-            } catch (SQLException ex) {
-                Popup.error("updateTagsModifDate(" + newTag + ")", ex);
-                return false;
-            }
-        }
-    }
-
-    /**
-     * Update modification date for a file
-     *
-     * @param fileInfo
-     * @return
-     */
-    private boolean updateModifDate(FileInfo fileInfo) {
-        synchronized (dbConn) {
-            try (PreparedStatement stUpdateTagsModifDate = dbConn.connection.prepareStatement(
-                    "UPDATE file SET tagsModifDate=datetime('now') WHERE idFile=?")) {
-                stUpdateTagsModifDate.setInt(1, fileInfo.getIdFile());
-                int nbRowsAffected = stUpdateTagsModifDate.executeUpdate();
-                if (nbRowsAffected == 1) {
-                    return true;
-                } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateTagsModifDate, "
-                            + "fileInfo={0} # row(s) affected: +{1}",
-                            new Object[]{fileInfo.toString(), nbRowsAffected});
-                    return false;
-                }
-            } catch (SQLException ex) {
-                Popup.error("updateTagsModifDate(" + fileInfo.toString() + ")", ex);
-                return false;
-            }
-        }
-    }
+ 
 
     /**
      * Update tags and modification date for a list of files
@@ -125,7 +69,7 @@ public class DaoFileTagWrite {
                                 results[i] = 0;
                             }
                         }
-                        if (!updateModifDate(fileInfo)) {
+                        if (!daoFile.lock().updateModifDate(fileInfo)) {
                             if (results != null) {
                                 results[i] = 0;
                             }

@@ -36,11 +36,12 @@ public class DaoFileTag {
      *
      * @param dbConn
      * @param daoTag
+     * @param daoFile
      */
-    public DaoFileTag(DbConn dbConn, DaoTag daoTag) {
+    public DaoFileTag(DbConn dbConn, DaoTag daoTag, DaoFile daoFile) {
         this.dbConn = dbConn;
         this.daoTag = daoTag;
-        this.daoFileTagWrite = new DaoFileTagWrite(dbConn, daoTag);
+        this.daoFileTagWrite = new DaoFileTagWrite(dbConn, daoTag, daoFile);
     }
 
     /**
