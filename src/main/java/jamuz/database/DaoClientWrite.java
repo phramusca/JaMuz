@@ -67,48 +67,52 @@ public class DaoClientWrite {
     }
 
     private boolean updateClient(ClientInfo clientInfo) throws SQLException {
-        try (PreparedStatement stUpdateClient = dbConn.connection.prepareStatement(
-                "UPDATE client SET login=?, pwd=?, name=?, enabled=? WHERE idClient=?")) {
+        synchronized (dbConn) {
+            try (PreparedStatement stUpdateClient = dbConn.connection.prepareStatement(
+                    "UPDATE client SET login=?, pwd=?, name=?, enabled=? WHERE idClient=?")) {
 
-            stUpdateClient.setString(1, clientInfo.getLogin());
-            stUpdateClient.setString(2, clientInfo.getPwd());
-            stUpdateClient.setString(3, clientInfo.getName());
-            stUpdateClient.setBoolean(4, clientInfo.isEnabled());
-            stUpdateClient.setInt(5, clientInfo.getId());
+                stUpdateClient.setString(1, clientInfo.getLogin());
+                stUpdateClient.setString(2, clientInfo.getPwd());
+                stUpdateClient.setString(3, clientInfo.getName());
+                stUpdateClient.setBoolean(4, clientInfo.isEnabled());
+                stUpdateClient.setInt(5, clientInfo.getId());
 
-            int nbRowsAffected = stUpdateClient.executeUpdate();
-            if (nbRowsAffected > 0) {
-                daoDevice.lock().insertOrUpdate(clientInfo.getDevice());
-                daoStatSource.lock().insertOrUpdate(clientInfo.getStatSource());
-                return true;
-            } else {
-                Jamuz.getLogger().log(Level.SEVERE,
-                        "stUpdateClient, myStatSource={0} # row(s) affected: +{1}",
-                        new Object[]{clientInfo.toString(), nbRowsAffected});
-                return false;
+                int nbRowsAffected = stUpdateClient.executeUpdate();
+                if (nbRowsAffected > 0) {
+                    daoDevice.lock().insertOrUpdate(clientInfo.getDevice());
+                    daoStatSource.lock().insertOrUpdate(clientInfo.getStatSource());
+                    return true;
+                } else {
+                    Jamuz.getLogger().log(Level.SEVERE,
+                            "stUpdateClient, myStatSource={0} # row(s) affected: +{1}",
+                            new Object[]{clientInfo.toString(), nbRowsAffected});
+                    return false;
+                }
             }
         }
     }
 
     private boolean insertClient(ClientInfo clientInfo) throws SQLException {
-        try (PreparedStatement stInsertClient = dbConn.connection.prepareStatement(
-                "INSERT INTO client (login, pwd, name, idDevice, idStatSource, enabled) VALUES (?, ?, ?, ?, ?, ?)")) {
+        synchronized (dbConn) {
+            try (PreparedStatement stInsertClient = dbConn.connection.prepareStatement(
+                    "INSERT INTO client (login, pwd, name, idDevice, idStatSource, enabled) VALUES (?, ?, ?, ?, ?, ?)")) {
 
-            stInsertClient.setString(1, clientInfo.getLogin());
-            stInsertClient.setString(2, clientInfo.getPwd());
-            stInsertClient.setString(3, clientInfo.getName() + "-" + clientInfo.getLogin().substring(0, 5));
-            stInsertClient.setInt(4, (clientInfo.getDevice() != null) ? clientInfo.getDevice().getId() : java.sql.Types.INTEGER);
-            stInsertClient.setInt(5, (clientInfo.getStatSource() != null) ? clientInfo.getStatSource().getId() : java.sql.Types.INTEGER);
-            stInsertClient.setBoolean(6, clientInfo.isEnabled());
+                stInsertClient.setString(1, clientInfo.getLogin());
+                stInsertClient.setString(2, clientInfo.getPwd());
+                stInsertClient.setString(3, clientInfo.getName() + "-" + clientInfo.getLogin().substring(0, 5));
+                stInsertClient.setInt(4, (clientInfo.getDevice() != null) ? clientInfo.getDevice().getId() : java.sql.Types.INTEGER);
+                stInsertClient.setInt(5, (clientInfo.getStatSource() != null) ? clientInfo.getStatSource().getId() : java.sql.Types.INTEGER);
+                stInsertClient.setBoolean(6, clientInfo.isEnabled());
 
-            int nbRowsAffected = stInsertClient.executeUpdate();
-            if (nbRowsAffected > 0) {
-                return true;
-            } else {
-                Jamuz.getLogger().log(Level.SEVERE,
-                        "stInsertClient, myStatSource={0} # row(s) affected: +{1}",
-                        new Object[]{clientInfo.toString(), nbRowsAffected});
-                return false;
+                int nbRowsAffected = stInsertClient.executeUpdate();
+                if (nbRowsAffected > 0) {
+                    return true;
+                } else {
+                    Jamuz.getLogger().log(Level.SEVERE,
+                            "stInsertClient, myStatSource={0} # row(s) affected: +{1}",
+                            new Object[]{clientInfo.toString(), nbRowsAffected});
+                    return false;
+                }
             }
         }
     }

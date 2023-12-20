@@ -137,56 +137,66 @@ public class DaoPlaylistWrite {
     }
 
     private void deletePlaylistFilters(int idPlaylist) throws SQLException {
-        try (PreparedStatement stDeletePlaylistFilters = dbConn.connection
-                .prepareStatement("DELETE FROM playlistFilter WHERE idPlaylist=?")) {
-            stDeletePlaylistFilters.setInt(1, idPlaylist);
-            stDeletePlaylistFilters.executeUpdate();
+        synchronized (dbConn) {
+            try (PreparedStatement stDeletePlaylistFilters = dbConn.connection
+                    .prepareStatement("DELETE FROM playlistFilter WHERE idPlaylist=?")) {
+                stDeletePlaylistFilters.setInt(1, idPlaylist);
+                stDeletePlaylistFilters.executeUpdate();
+            }
         }
     }
 
     private void deletePlaylistOrders(int idPlaylist) throws SQLException {
-        try (PreparedStatement stDeletePlaylistOrders = dbConn.connection
-                .prepareStatement("DELETE FROM playlistOrder WHERE idPlaylist=?")) {
-            stDeletePlaylistOrders.setInt(1, idPlaylist);
-            stDeletePlaylistOrders.executeUpdate();
+        synchronized (dbConn) {
+            try (PreparedStatement stDeletePlaylistOrders = dbConn.connection
+                    .prepareStatement("DELETE FROM playlistOrder WHERE idPlaylist=?")) {
+                stDeletePlaylistOrders.setInt(1, idPlaylist);
+                stDeletePlaylistOrders.executeUpdate();
+            }
         }
     }
 
     private void batchInsertPlaylistFilter(PreparedStatement stInsertPlaylistFilter, Playlist playlist) throws SQLException {
-        for (Playlist.Filter filter : playlist.getFilters()) {
-            stInsertPlaylistFilter.setString(1, filter.getFieldName());
-            stInsertPlaylistFilter.setString(2, filter.getOperatorName());
-            stInsertPlaylistFilter.setString(3, filter.getValue());
-            stInsertPlaylistFilter.setInt(4, playlist.getId());
-            stInsertPlaylistFilter.addBatch();
-        }
+        synchronized (dbConn) {
+            for (Playlist.Filter filter : playlist.getFilters()) {
+                stInsertPlaylistFilter.setString(1, filter.getFieldName());
+                stInsertPlaylistFilter.setString(2, filter.getOperatorName());
+                stInsertPlaylistFilter.setString(3, filter.getValue());
+                stInsertPlaylistFilter.setInt(4, playlist.getId());
+                stInsertPlaylistFilter.addBatch();
+            }
 
-        executeBatchAndCommit(stInsertPlaylistFilter);
+            executeBatchAndCommit(stInsertPlaylistFilter);
+        }
     }
 
     private void batchInsertPlaylistOrder(PreparedStatement stInsertPlaylistOrder, Playlist playlist) throws SQLException {
-        for (Playlist.Order order : playlist.getOrders()) {
-            stInsertPlaylistOrder.setBoolean(1, order.isDesc());
-            stInsertPlaylistOrder.setString(2, order.getFieldName());
-            stInsertPlaylistOrder.setInt(3, playlist.getId());
-            stInsertPlaylistOrder.addBatch();
-        }
+        synchronized (dbConn) {
+            for (Playlist.Order order : playlist.getOrders()) {
+                stInsertPlaylistOrder.setBoolean(1, order.isDesc());
+                stInsertPlaylistOrder.setString(2, order.getFieldName());
+                stInsertPlaylistOrder.setInt(3, playlist.getId());
+                stInsertPlaylistOrder.addBatch();
+            }
 
-        executeBatchAndCommit(stInsertPlaylistOrder);
+            executeBatchAndCommit(stInsertPlaylistOrder);
+        }
     }
 
     private void executeBatchAndCommit(PreparedStatement statement) throws SQLException {
-        long startTime = System.currentTimeMillis();
-        int[] results = statement.executeBatch();
-        dbConn.connection.commit();
-        long endTime = System.currentTimeMillis();
-        Jamuz.getLogger().log(Level.FINEST, "{0} // {1} // Total execution time: {2}ms",
-                new Object[]{statement.toString(), results.length, endTime - startTime});
+        synchronized (dbConn) {
+            long startTime = System.currentTimeMillis();
+            int[] results = statement.executeBatch();
+            dbConn.connection.commit();
+            long endTime = System.currentTimeMillis();
+            Jamuz.getLogger().log(Level.FINEST, "{0} // {1} // Total execution time: {2}ms",
+                    new Object[]{statement.toString(), results.length, endTime - startTime});
 
-        // Check results
-        for (int result : results) {
-            if (result != 1) {
-                throw new SQLException("Batch execution failed.");
+            // Check results
+            for (int result : results) {
+                if (result != 1) {
+                    throw new SQLException("Batch execution failed.");
+                }
             }
         }
     }
