@@ -23,7 +23,6 @@ import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 
 /**
@@ -47,71 +46,82 @@ public class DaoPlayCounterWrite {
      *
      * @param files
      * @param idStatSource
-     * @return
+     * @return true if the update is successful, false otherwise
      */
     public boolean update(ArrayList<? super FileInfoInt> files, int idStatSource) {
-        try {
-            int[] results;
-            PreparedStatement stUpdatePlayCounter = dbConn.connection.prepareStatement(
-                    "UPDATE playcounter SET playCounter=? "
-                    + "WHERE idFile=? AND idStatSource=?"); // NOI18N
-            // First try to update values
-            dbConn.connection.setAutoCommit(false);
-            for (Iterator<? super FileInfoInt> it = files.iterator(); it.hasNext();) {
-                FileInfo file = (FileInfo) it.next();
-                stUpdatePlayCounter.setInt(1, file.getPlayCounter());
-                stUpdatePlayCounter.setInt(2, file.getIdFile());
-                stUpdatePlayCounter.setInt(3, idStatSource);
-                stUpdatePlayCounter.addBatch();
-            }
-            long startTime = System.currentTimeMillis();
-            results = stUpdatePlayCounter.executeBatch();
-            dbConn.connection.commit();
-            long endTime = System.currentTimeMillis();
-            Jamuz.getLogger().log(Level.FINEST, "setPreviousPlayCounter UPDATE // {0} // Total execution time: {1}ms",
-                    new Object[]{results.length, endTime - startTime}); // NOI18N
+        synchronized (dbConn) {
+            try {
+                int[] results;
+                boolean doInsertBatch = false;
 
-            // If update failed, try to insert values
-            int result;
-            FileInfo file;
-            boolean doInsertBatch = false;
-            PreparedStatement stInsertPlayCounter = dbConn.connection
-                    .prepareStatement("INSERT OR IGNORE INTO playcounter "
-                            + "(idFile, idStatSource, playCounter) " // NOI18N
-                            + "VALUES (?, ?, ?)"); // NOI18N
-            for (int i = 0; i < results.length; i++) {
-                result = results[i];
-                if (result != 1) {
-                    file = (FileInfo) files.get(i);
-                    stInsertPlayCounter.setInt(1, file.getIdFile());
-                    stInsertPlayCounter.setInt(2, idStatSource);
-                    stInsertPlayCounter.setInt(3, file.getPlayCounter());
-                    stInsertPlayCounter.addBatch();
-                    doInsertBatch = true;
-                }
-            }
-            if (doInsertBatch) {
-                startTime = System.currentTimeMillis();
-                results = stInsertPlayCounter.executeBatch();
-                dbConn.connection.commit();
-                endTime = System.currentTimeMillis();
-                Jamuz.getLogger().log(Level.FINEST, "setPreviousPlayCounter "
-                        + "INSERT // {0} // Total execution time: {1}ms",
-                        new Object[]{results.length, endTime - startTime}); // NOI18N
-                // Check results
-                for (int i = 0; i < results.length; i++) {
-                    result = results[i];
-                    if (result != 1) {
-                        return false;
+                try (PreparedStatement stUpdatePlayCounter = dbConn.connection.prepareStatement(
+                        "UPDATE playcounter SET playCounter=? WHERE idFile=? AND idStatSource=?")) {
+
+                    // First try to update values
+                    dbConn.connection.setAutoCommit(false);
+
+                    for (Object fileInfoObj : files) {
+                        FileInfo file = (FileInfo) fileInfoObj;
+                        stUpdatePlayCounter.setInt(1, file.getPlayCounter());
+                        stUpdatePlayCounter.setInt(2, file.getIdFile());
+                        stUpdatePlayCounter.setInt(3, idStatSource);
+                        stUpdatePlayCounter.addBatch();
+                    }
+
+                    long startTime = System.currentTimeMillis();
+                    results = stUpdatePlayCounter.executeBatch();
+                    dbConn.connection.commit();
+                    long endTime = System.currentTimeMillis();
+                    Jamuz.getLogger().log(Level.FINEST,
+                            "setPreviousPlayCounter UPDATE // {0} // Total execution time: {1}ms",
+                            new Object[]{results.length, endTime - startTime}); // NOI18N
+
+                    // If update failed, try to insert values
+                    int result;
+                    FileInfo file;
+
+                    try (PreparedStatement stInsertPlayCounter = dbConn.connection.prepareStatement(
+                            "INSERT OR IGNORE INTO playcounter (idFile, idStatSource, playCounter) VALUES (?, ?, ?)")) {
+
+                        for (int i = 0; i < results.length; i++) {
+                            result = results[i];
+                            if (result != 1) {
+                                file = (FileInfo) files.get(i);
+                                stInsertPlayCounter.setInt(1, file.getIdFile());
+                                stInsertPlayCounter.setInt(2, idStatSource);
+                                stInsertPlayCounter.setInt(3, file.getPlayCounter());
+                                stInsertPlayCounter.addBatch();
+                                doInsertBatch = true;
+                            }
+                        }
+
+                        if (doInsertBatch) {
+                            startTime = System.currentTimeMillis();
+                            results = stInsertPlayCounter.executeBatch();
+                            dbConn.connection.commit();
+                            endTime = System.currentTimeMillis();
+                            Jamuz.getLogger().log(Level.FINEST,
+                                    "setPreviousPlayCounter INSERT // {0} // Total execution time: {1}ms",
+                                    new Object[]{results.length, endTime - startTime}); // NOI18N
+
+                            // Check results
+                            for (int i = 0; i < results.length; i++) {
+                                result = results[i];
+                                if (result != 1) {
+                                    return false;
+                                }
+                            }
+                        }
                     }
                 }
-            }
-            dbConn.connection.setAutoCommit(true);
-            return true;
+                dbConn.connection.setAutoCommit(true);
+                return true;
 
-        } catch (SQLException ex) {
-            Popup.error("setPreviousPlayCounter(" + idStatSource + ")", ex); // NOI18N
-            return false;
+            } catch (SQLException ex) {
+                Popup.error("setPreviousPlayCounter(" + idStatSource + ")", ex); // NOI18N
+                return false;
+            }
         }
     }
+
 }
