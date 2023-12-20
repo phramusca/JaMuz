@@ -827,7 +827,7 @@ public class PanelOptions extends javax.swing.JPanel {
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					if (Jamuz.getDb().tag().update((String) jListTags.getSelectedValue(), newTag)) {
+					if (Jamuz.getDb().tag().lock().update((String) jListTags.getSelectedValue(), newTag)) {
 						if (Jamuz.getDb().file().lock().updateModifDate(newTag)) {
 							refreshListTagsModel();
 						}
@@ -854,7 +854,7 @@ public class PanelOptions extends javax.swing.JPanel {
 					Inter.get("Label.Confirm"), //NOI18N 
 					JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				if (Jamuz.getDb().tag().delete((String) jListTags.getSelectedValue())) {
+				if (Jamuz.getDb().tag().lock().delete((String) jListTags.getSelectedValue())) {
 					Popup.warning("Problem deleting tag. It is probably applied to at least a track, so cannot delete it.");  //NOI18N
 					refreshListTagsModel();
 				}
@@ -868,7 +868,7 @@ public class PanelOptions extends javax.swing.JPanel {
 		if (model.contains(input)) {
 			Popup.warning(MessageFormat.format(Inter.get("Msg.Options.Tag.Exists"), input));  //NOI18N 
 		} else if (!input.isBlank()) {  //NOI18N 
-			Jamuz.getDb().tag().insert(input);
+			Jamuz.getDb().tag().lock().insert(input);
 			refreshListTagsModel();
 		}
     }//GEN-LAST:event_jButtonTagsAddActionPerformed

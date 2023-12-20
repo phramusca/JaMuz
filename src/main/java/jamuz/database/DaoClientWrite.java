@@ -79,7 +79,7 @@ public class DaoClientWrite {
             int nbRowsAffected = stUpdateClient.executeUpdate();
             if (nbRowsAffected > 0) {
                 daoDevice.lock().insertOrUpdate(clientInfo.getDevice());
-                daoStatSource.insertOrUpdate(clientInfo.getStatSource());
+                daoStatSource.lock().insertOrUpdate(clientInfo.getStatSource());
                 return true;
             } else {
                 Jamuz.getLogger().log(Level.SEVERE,

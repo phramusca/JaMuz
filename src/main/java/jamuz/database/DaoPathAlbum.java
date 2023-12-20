@@ -35,6 +35,7 @@ import org.apache.commons.io.FilenameUtils;
 public class DaoPathAlbum {
 
     private final DbConn dbConn;
+    private final DaoPathAlbumWrite albumWrite;
 
     private static final String SELECT_DUPLICATE = "SELECT album, albumArtist, checked, discNo, discTotal, "
             + " ifnull(round(((sum(case when rating > 0 then rating end))"
@@ -49,6 +50,17 @@ public class DaoPathAlbum {
      */
     public DaoPathAlbum(DbConn dbConn) {
         this.dbConn = dbConn;
+        this.albumWrite = new DaoPathAlbumWrite(dbConn);
+
+    }
+
+    /**
+     * This is to reach writing operations (insert, update, delete)
+     *
+     * @return
+     */
+    public DaoPathAlbumWrite lock() {
+        return albumWrite;
     }
 
     /**

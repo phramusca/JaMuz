@@ -240,7 +240,7 @@ public class Playlist implements Comparable {
 	 * @return
 	 */
 	public boolean update() {
-		return Jamuz.getDb().playlist().update(this);
+		return Jamuz.getDb().playlist().lock().update(this);
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class Playlist implements Comparable {
 	 * @return
 	 */
 	public boolean insert() {
-		return Jamuz.getDb().playlist().insert(this);
+		return Jamuz.getDb().playlist().lock().insert(this);
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class Playlist implements Comparable {
 	 * @return
 	 */
 	public boolean delete() {
-		return Jamuz.getDb().playlist().delete(id);
+		return Jamuz.getDb().playlist().lock().delete(id);
 	}
 
 	/**

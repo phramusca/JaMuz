@@ -73,7 +73,7 @@ public class DaoPlaylistTest {
 		expectedPlaylists.add(playlist3);
 		expectedPlaylists.add(playlist4);
 		for(Playlist playlist : expectedPlaylists) {
-			assertTrue(Jamuz.getDb().playlist().insert(playlist));
+			assertTrue(Jamuz.getDb().playlist().lock().insert(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
 
@@ -87,7 +87,7 @@ public class DaoPlaylistTest {
 		playlist3.addOrder(new Playlist.Order(1, Playlist.Field.LASTPLAYED, true));
 		playlist3.addOrder(new Playlist.Order(2, Playlist.Field.TITLE, false));
 		for(Playlist playlist : expectedPlaylists) {
-			assertTrue(Jamuz.getDb().playlist().update(playlist));
+			assertTrue(Jamuz.getDb().playlist().lock().update(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
 		
@@ -108,11 +108,11 @@ public class DaoPlaylistTest {
 		playlist4.setTranscode(true);
 		playlist4.setType(Playlist.Type.Songs);		
 		for(Playlist playlist : expectedPlaylists) {
-			assertTrue(Jamuz.getDb().playlist().update(playlist));
+			assertTrue(Jamuz.getDb().playlist().lock().update(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
 		
-		assertTrue(Jamuz.getDb().playlist().delete(2));
+		assertTrue(Jamuz.getDb().playlist().lock().delete(2));
 		expectedPlaylists.remove(playlist2);
 		checkPlaylistList(expectedPlaylists);
 
@@ -137,7 +137,7 @@ public class DaoPlaylistTest {
 		Playlist playlist = null;
 		DaoPlaylist instance = null;
 		boolean expResult = false;
-		boolean result = instance.insert(playlist);
+		boolean result = instance.lock().insert(playlist);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -169,7 +169,7 @@ public class DaoPlaylistTest {
 		Playlist playlist = null;
 		DaoPlaylist instance = null;
 		boolean expResult = false;
-		boolean result = instance.update(playlist);
+		boolean result = instance.lock().update(playlist);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -185,7 +185,7 @@ public class DaoPlaylistTest {
 		int id = 0;
 		DaoPlaylist instance = null;
 		boolean expResult = false;
-		boolean result = instance.delete(id);
+		boolean result = instance.lock().delete(id);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
