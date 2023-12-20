@@ -130,7 +130,7 @@ public class DaoFileTagWrite {
                     dbConn.connection.setAutoCommit(false);
                     int[] results;
                     for (String tag : tags) {
-                        if (daoTag.insertIfMissing(tag)) {
+                        if (daoTag.lock().insertIfMissing(tag)) {
                             stInsertTagFile.setInt(1, idFile);
                             stInsertTagFile.setString(2, tag);
                             stInsertTagFile.addBatch();

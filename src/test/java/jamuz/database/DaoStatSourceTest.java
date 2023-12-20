@@ -73,7 +73,7 @@ public class DaoStatSourceTest {
 		expectedStatSources.add(statSource2);
 		expectedStatSources.add(statSource3);
 		for(StatSource statSource : expectedStatSources) {
-			assertTrue(Jamuz.getDb().statSource().insertOrUpdate(statSource));
+			assertTrue(Jamuz.getDb().statSource().lock().insertOrUpdate(statSource));
 		}
 		// Needed in checkStatSourceList to get proper value
 		// and later on too, to be able to update them
@@ -87,12 +87,12 @@ public class DaoStatSourceTest {
 		//statSource2.setIdStatement(1); // Need to update source in statSource2 if changing IdStatement
 		statSource3.setIsSelected(false);
 		for(StatSource statSource : expectedStatSources) {
-			assertTrue(Jamuz.getDb().statSource().insertOrUpdate(statSource));
+			assertTrue(Jamuz.getDb().statSource().lock().insertOrUpdate(statSource));
 		}
 		checkStatSourceList(expectedStatSources);
 		
 		//Delete and check list
-		assertTrue(Jamuz.getDb().statSource().delete(2));
+		assertTrue(Jamuz.getDb().statSource().lock().delete(2));
 		expectedStatSources.remove(statSource2);
 		checkStatSourceList(expectedStatSources);
 
@@ -182,7 +182,7 @@ public class DaoStatSourceTest {
 		StatSource statSource = null;
 		DaoStatSource instance = null;
 		boolean expResult = false;
-		boolean result = instance.insertOrUpdate(statSource);
+		boolean result = instance.lock().insertOrUpdate(statSource);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -198,7 +198,7 @@ public class DaoStatSourceTest {
 		int idStatSource = 0;
 		DaoStatSource instance = null;
 		String expResult = "";
-		String result = instance.updateLastMergeDate(idStatSource);
+		String result = instance.lock().updateLastMergeDate(idStatSource);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -214,7 +214,7 @@ public class DaoStatSourceTest {
 		int id = 0;
 		DaoStatSource instance = null;
 		boolean expResult = false;
-		boolean result = instance.delete(id);
+		boolean result = instance.lock().delete(id);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

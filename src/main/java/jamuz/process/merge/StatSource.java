@@ -151,7 +151,7 @@ public class StatSource {
 	 *
 	 */
 	public void updateLastMergeDate() {
-		lastMergeDate=DateTime.parseSqlUtc(Jamuz.getDb().statSource().updateLastMergeDate(this.getId()));
+		lastMergeDate=DateTime.parseSqlUtc(Jamuz.getDb().statSource().lock().updateLastMergeDate(this.getId()));
     }
 	
 	/**

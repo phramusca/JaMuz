@@ -1001,10 +1001,10 @@ public class ProcessMerge extends ProcessAbstract {
 
 		if(!simulate) {	
 			progressBar.progress(Inter.get("Msg.Check.Scan.Setup")); //NOI18N
-			if(filesToUpdatePlayCounter.size()>0) {
+			if(!filesToUpdatePlayCounter.isEmpty()) {
 				//Remove potential duplicates 
 				filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter));
-				if(!dBJaMuz.playCounter().update(filesToUpdatePlayCounter, selectedStatSource.getId())) {
+				if(!dBJaMuz.playCounter().lock().update(filesToUpdatePlayCounter, selectedStatSource.getId())) {
 					return false;
 				}
 			}

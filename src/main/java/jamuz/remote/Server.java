@@ -483,7 +483,7 @@ public class Server {
 					clientInfo.getRootPath(), 
 					clientInfo.getLogin(), 
 					deviceWithId.getId(), false, "", true);
-				if(Jamuz.getDb().statSource().insertOrUpdate(statSource)) {
+				if(Jamuz.getDb().statSource().lock().insertOrUpdate(statSource)) {
 					StatSource statSourceWithId = Jamuz.getDb().statSource().get(clientInfo.getLogin());
 					clientInfo.setStatSource(statSourceWithId);
 					if(Jamuz.getDb().client().lock().insertOrUpdate(clientInfo)) {

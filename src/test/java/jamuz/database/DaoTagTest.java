@@ -66,7 +66,7 @@ public class DaoTagTest {
 		expectedTags.add("Normal");
 		expectedTags.add("Joyeux");
 		for (String tag : expectedTags) {
-			assertTrue(Jamuz.getDb().tag().insert(tag));
+			assertTrue(Jamuz.getDb().tag().lock().insert(tag));
 		}
 		checkTagList(expectedTags);
 
@@ -74,26 +74,26 @@ public class DaoTagTest {
 		Jamuz.getDb().listModel().getTagListModel(myListModel);
 		assertArrayEquals(expectedTags.toArray(), myListModel.toArray());
 
-		assertTrue("updateTag", Jamuz.getDb().tag().update("Normal", "Tutu"));
+		assertTrue("updateTag", Jamuz.getDb().tag().lock().update("Normal", "Tutu"));
 		expectedTags.set(2, "Tutu");
 		checkTagList(expectedTags);
 
-		assertTrue("deleteTag", Jamuz.getDb().tag().delete("Tutu"));
+		assertTrue("deleteTag", Jamuz.getDb().tag().lock().delete("Tutu"));
 		expectedTags.remove("Tutu");
 		checkTagList(expectedTags);
 
-		assertTrue("insertTag", Jamuz.getDb().tag().insert("Normal"));
+		assertTrue("insertTag", Jamuz.getDb().tag().lock().insert("Normal"));
 		expectedTags.add("Normal");
 		checkTagList(expectedTags);
 
 		//Negative cases
-		assertFalse("updateTag negative", Jamuz.getDb().tag().update("NoSuchWeirdGenre", "Toto"));
+		assertFalse("updateTag negative", Jamuz.getDb().tag().lock().update("NoSuchWeirdGenre", "Toto"));
 		checkTagList(expectedTags);
 
-		assertFalse("deleteTag negative", Jamuz.getDb().tag().delete("NoSuchWeirdGenre"));
+		assertFalse("deleteTag negative", Jamuz.getDb().tag().lock().delete("NoSuchWeirdGenre"));
 		checkTagList(expectedTags);
 
-		assertFalse("insertTag negative", Jamuz.getDb().tag().insert("Normal")); //As duplicate
+		assertFalse("insertTag negative", Jamuz.getDb().tag().lock().insert("Normal")); //As duplicate
 		checkTagList(expectedTags);
 
 		//FIXME TEST Check other constraints
@@ -115,7 +115,7 @@ public class DaoTagTest {
 		String tag = "";
 		DaoTag instance = null;
 		boolean expResult = false;
-		boolean result = instance.insert(tag);
+		boolean result = instance.lock().insert(tag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -131,7 +131,7 @@ public class DaoTagTest {
 		String tag = "";
 		DaoTag instance = null;
 		boolean expResult = false;
-		boolean result = instance.insertIfMissing(tag);
+		boolean result = instance.lock().insertIfMissing(tag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -163,7 +163,7 @@ public class DaoTagTest {
 		String newTag = "";
 		DaoTag instance = null;
 		boolean expResult = false;
-		boolean result = instance.update(oldTag, newTag);
+		boolean result = instance.lock().update(oldTag, newTag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -179,7 +179,7 @@ public class DaoTagTest {
 		String tag = "";
 		DaoTag instance = null;
 		boolean expResult = false;
-		boolean result = instance.delete(tag);
+		boolean result = instance.lock().delete(tag);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

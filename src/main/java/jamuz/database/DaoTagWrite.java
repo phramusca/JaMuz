@@ -16,11 +16,19 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
+import jamuz.utils.Popup;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+
 /**
  *
  * @author raph
  */
 public class DaoTagWrite {
+
     private final DbConn dbConn;
 
     /**
@@ -29,5 +37,118 @@ public class DaoTagWrite {
      */
     public DaoTagWrite(DbConn dbConn) {
         this.dbConn = dbConn;
+    }
+
+    /**
+     * Inserts a tag
+     *
+     * @param tag
+     * @return
+     */
+    public boolean insert(String tag) {
+        try {
+            PreparedStatement stInsertTag = dbConn.connection.prepareStatement(
+                    "INSERT OR IGNORE INTO tag (value) VALUES (?) "); // NOI18N
+            stInsertTag.setString(1, tag);
+            int nbRowsAffected = stInsertTag.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stInsertTag, tag=\"{0}\" "
+                        + "# row(s) affected: +{1}", new Object[]{tag, nbRowsAffected}); // NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("insertTag(" + tag + ")", ex); // NOI18N
+            return false;
+        }
+    }
+
+    public boolean insertIfMissing(String tag) {
+        ResultSet rs = null;
+        ResultSet keys = null;
+        try {
+            PreparedStatement stSelectMachine = dbConn.getConnection().prepareStatement(
+                    "SELECT COUNT(*) FROM tag WHERE value=?"); // NOI18N
+            stSelectMachine.setString(1, tag);
+            rs = stSelectMachine.executeQuery();
+            if (rs.getInt(1) > 0) {
+                return true;
+            } else {
+                return insert(tag);
+            }
+        } catch (SQLException ex) {
+            Popup.error("isTag(" + tag + ")", ex); // NOI18N
+            return false;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+
+            try {
+                if (keys != null) {
+                    keys.close();
+                }
+            } catch (SQLException ex) {
+                Jamuz.getLogger().warning("Failed to close ResultSet");
+            }
+        }
+    }
+
+    /**
+     * Updates tag in tag table
+     *
+     * @param oldTag
+     * @param newTag
+     * @return
+     */
+    public boolean update(String oldTag, String newTag) {
+        try {
+            PreparedStatement stUpdateTag = dbConn.connection.prepareStatement(
+                    "UPDATE tag SET value=? WHERE value=?"); // NOI18N
+            stUpdateTag.setString(1, newTag);
+            stUpdateTag.setString(2, oldTag);
+            int nbRowsAffected = stUpdateTag.executeUpdate();
+            if (nbRowsAffected == 1) {
+                return true;
+            } else {
+                Jamuz.getLogger().log(Level.SEVERE, "stUpdateTag, oldTag={0}, "
+                        + "newTag={1} # row(s) affected: +{2}",
+                        new Object[]{oldTag, newTag, nbRowsAffected}); // NOI18N
+                return false;
+            }
+        } catch (SQLException ex) {
+            Popup.error("updateTag(" + oldTag + ", " + newTag + ")", ex); // NOI18N
+            return false;
+        }
+    }
+
+    /**
+     * Deletes tag from tag table
+     *
+     * @param tag
+     * @return
+     */
+    public boolean delete(String tag) {
+        try {
+            String sql = """
+                DELETE FROM tag
+                WHERE id=(
+                SELECT id FROM tag
+                LEFT JOIN tagfile ON tag.id=tagfile.idTag
+                WHERE value=? AND idFile IS NULL
+                )""";
+            PreparedStatement stDeleteTag = dbConn.connection.prepareStatement(sql);
+            stDeleteTag.setString(1, tag);
+            int nbRowsAffected = stDeleteTag.executeUpdate();
+            return nbRowsAffected > 0;
+        } catch (SQLException ex) {
+            Popup.error("deleteTag(" + tag + ")", ex); // NOI18N
+            return false;
+        }
     }
 }

@@ -119,7 +119,7 @@ public class TestSettings {
 	public static void addStatSource(String name, int idStatement, String rootPath, int idDevice) throws IOException {
 		String destination = copyStatSourceDatabase(name, name);
 		//Define stat source in Jamuz dB
-		Jamuz.getDb().statSource().insertOrUpdate(new StatSource(-1, name, idStatement, destination, "", "",
+		Jamuz.getDb().statSource().lock().insertOrUpdate(new StatSource(-1, name, idStatement, destination, "", "",
 				rootPath, Jamuz.getMachine().getName(), idDevice, true, "", false));
 	}
 
