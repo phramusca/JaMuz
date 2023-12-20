@@ -37,12 +37,6 @@ import org.apache.commons.io.FilenameUtils;
 public class DaoPathWrite {
 
     private final DbConn dbConn;
-    private PreparedStatement stInsertPath;
-    private PreparedStatement stUpdatePath;
-    private PreparedStatement stUpdateCheckedFlag;
-    private PreparedStatement stUpdateCheckedFlagReset;
-    private PreparedStatement stUpdateCopyRight;
-    private PreparedStatement stDeletedPath;
 
     /**
      *
@@ -53,57 +47,45 @@ public class DaoPathWrite {
     }
 
     /**
-     * Insert a path in database
+     * Insert a path in the database.
      *
-     * @param relativePath
-     * @param modifDate
-     * @param checkedFlag
-     * @param mbId
-     * @param key
-     * @return
+     * @param relativePath the relative path to be inserted
+     * @param modifDate the modification date
+     * @param checkedFlag the checked flag
+     * @param mbId the mbId
+     * @param key an array to store the generated key
+     * @return true if the insertion is successful, false otherwise
      */
-    public boolean insert(String relativePath, Date modifDate, FolderInfo.CheckedFlag checkedFlag, String mbId,
-            int[] key) {
+    public boolean insert(String relativePath, Date modifDate, FolderInfo.CheckedFlag checkedFlag, String mbId, int[] key) {
         synchronized (dbConn) {
-            ResultSet keys = null;
-            try {
+            try (PreparedStatement stInsertPath = dbConn.getConnection().prepareStatement(
+                    "INSERT INTO path (strPath, modifDate, checked, mbId) VALUES (?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS)) {
+
                 relativePath = FilenameUtils.separatorsToUnix(relativePath);
-                if (stInsertPath == null) {
-                    // Only inserting in Linux style in database
-                    stInsertPath = dbConn.getConnection().prepareStatement(
-                            "INSERT INTO path "
-                            + "(strPath, modifDate, checked, mbId) " // NOI18N
-                            + "VALUES (?, ?, ?, ?)",
-                            Statement.RETURN_GENERATED_KEYS); // NOI18N
-                }
                 stInsertPath.setString(1, relativePath);
                 stInsertPath.setString(2, DateTime.formatUTCtoSqlUTC(modifDate));
                 stInsertPath.setInt(3, checkedFlag.getValue());
                 stInsertPath.setString(4, mbId);
+
                 int nbRowsAffected = stInsertPath.executeUpdate();
                 if (nbRowsAffected == 1) {
-                    keys = stInsertPath.getGeneratedKeys();
-                    keys.next();
-                    key[0] = keys.getInt(1);
-                    return true;
-                } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stInsertPath, relativePath=\"{0}\" "
-                            + "# row(s) affected: +{1}",
-                            new Object[]{relativePath, nbRowsAffected}); // NOI18N
-                    return false;
-                }
-            } catch (SQLException ex) {
-                Popup.error("insertPath(" + relativePath + ", " + modifDate.toString() + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (keys != null) {
-                        keys.close();
+                    try (ResultSet keys = stInsertPath.getGeneratedKeys()) {
+                        if (keys.next()) {
+                            key[0] = keys.getInt(1);
+                            return true;
+                        }
                     }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close ResultSet");
+                } else {
+                    Jamuz.getLogger().log(Level.SEVERE, "stInsertPath, relativePath=\"{0}\" # row(s) affected: +{1}",
+                            new Object[]{relativePath, nbRowsAffected});
                 }
+
+            } catch (SQLException ex) {
+                Popup.error("insertPath(" + relativePath + ", " + modifDate.toString() + ")", ex);
             }
+
+            return false;
         }
     }
 
@@ -119,13 +101,12 @@ public class DaoPathWrite {
      */
     public boolean update(int idPath, Date modifDate, FolderInfo.CheckedFlag checkedFlag, String path, String mbId) {
         synchronized (dbConn) {
+            PreparedStatement stUpdatePath = null;
             try {
-                if (stUpdatePath == null) {
-                    stUpdatePath = dbConn.connection.prepareStatement(
-                            "UPDATE path "
-                            + "SET modifDate=?, checked=?, strPath=?, mbId=? " // NOI18N
-                            + "WHERE idPath=?"); // NOI18N
-                }
+                stUpdatePath = dbConn.connection.prepareStatement(
+                        "UPDATE path "
+                        + "SET modifDate=?, checked=?, strPath=?, mbId=? " // NOI18N
+                        + "WHERE idPath=?"); // NOI18N
                 stUpdatePath.setString(1, DateTime.formatUTCtoSqlUTC(modifDate));
                 stUpdatePath.setInt(2, checkedFlag.getValue());
                 path = FilenameUtils.separatorsToUnix(path);
@@ -143,6 +124,14 @@ public class DaoPathWrite {
             } catch (SQLException ex) {
                 Popup.error("updatePath(" + idPath + ", " + modifDate.toString() + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdatePath != null) {
+                        stUpdatePath.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdatePath");
+                }
             }
         }
     }
@@ -156,11 +145,10 @@ public class DaoPathWrite {
      */
     public boolean updateCheckedFlag(int idPath, FolderInfo.CheckedFlag checkedFlag) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateCheckedFlag = null;
             try {
-                if (stUpdateCheckedFlag == null) {
-                    stUpdateCheckedFlag = dbConn.connection
-                            .prepareStatement("UPDATE path set checked=? WHERE idPath=?"); // NOI18N
-                }
+                stUpdateCheckedFlag = dbConn.connection
+                        .prepareStatement("UPDATE path set checked=? WHERE idPath=?"); // NOI18N
                 stUpdateCheckedFlag.setInt(1, checkedFlag.getValue());
                 stUpdateCheckedFlag.setInt(2, idPath);
                 int nbRowsAffected = stUpdateCheckedFlag.executeUpdate();
@@ -175,6 +163,14 @@ public class DaoPathWrite {
             } catch (SQLException ex) {
                 Popup.error("setCheckedFlag(" + idPath + "," + checkedFlag + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateCheckedFlag != null) {
+                        stUpdateCheckedFlag.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateCheckedFlag");
+                }
             }
         }
     }
@@ -188,12 +184,11 @@ public class DaoPathWrite {
      */
     public boolean updateCheckedFlagReset(FolderInfo.CheckedFlag checkedFlag) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateCheckedFlagReset = null;
             try {
-                if (stUpdateCheckedFlag == null) {
-                    stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
-                            "UPDATE path SET checked=0 "
-                            + "WHERE checked=?"); // NOI18N
-                }
+                stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
+                        "UPDATE path SET checked=0 "
+                        + "WHERE checked=?"); // NOI18N
                 stUpdateCheckedFlagReset.setInt(1, checkedFlag.getValue());
                 stUpdateCheckedFlagReset.executeUpdate();
                 // we can have no rows affected if library is empty so not checking it
@@ -201,6 +196,14 @@ public class DaoPathWrite {
             } catch (SQLException ex) {
                 Popup.error("setCheckedFlagReset()", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateCheckedFlagReset != null) {
+                        stUpdateCheckedFlagReset.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateCheckedFlagReset");
+                }
             }
         }
     }
@@ -214,12 +217,11 @@ public class DaoPathWrite {
      */
     public boolean updateCopyRight(int idPath, int copyRight) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateCopyRight = null;
             try {
-                if (stUpdateCheckedFlag == null) {
-                    stUpdateCopyRight = dbConn.connection.prepareStatement(
-                            "UPDATE path "
-                            + "SET copyRight=? WHERE idPath=?"); // NOI18N
-                }
+                stUpdateCopyRight = dbConn.connection.prepareStatement(
+                        "UPDATE path "
+                        + "SET copyRight=? WHERE idPath=?"); // NOI18N
                 stUpdateCopyRight.setInt(1, copyRight);
                 stUpdateCopyRight.setInt(2, idPath);
                 int nbRowsAffected = stUpdateCopyRight.executeUpdate();
@@ -234,6 +236,14 @@ public class DaoPathWrite {
             } catch (SQLException ex) {
                 Popup.error("updateCopyRight(" + idPath + ", " + copyRight + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateCopyRight != null) {
+                        stUpdateCopyRight.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateCopyRight");
+                }
             }
         }
     }
@@ -246,11 +256,10 @@ public class DaoPathWrite {
      */
     public boolean delete(int idPath) {
         synchronized (dbConn) {
+            PreparedStatement stDeletedPath = null;
             try {
-                if (stUpdateCheckedFlag == null) {
-                    stDeletedPath = dbConn.connection.prepareStatement(
-                            "DELETE FROM path WHERE idPath=?"); // NOI18N
-                }
+                stDeletedPath = dbConn.connection.prepareStatement(
+                        "DELETE FROM path WHERE idPath=?"); // NOI18N
                 stDeletedPath.setInt(1, idPath);
                 int nbRowsAffected = stDeletedPath.executeUpdate();
                 if (nbRowsAffected == 1) {
@@ -263,6 +272,14 @@ public class DaoPathWrite {
             } catch (SQLException ex) {
                 Popup.error("deletePath(" + idPath + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stDeletedPath != null) {
+                        stDeletedPath.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stDeletedPath");
+                }
             }
         }
     }
