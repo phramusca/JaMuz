@@ -35,15 +35,6 @@ import java.util.logging.Level;
 public class DaoFileWrite {
 
     private final DbConn dbConn;
-    private PreparedStatement stDeleteFile;
-    private PreparedStatement stInsertFileTag;
-    private PreparedStatement stUpdateFileTag;
-    private PreparedStatement stUpdateFileLastPlayedAndCounter;
-    private PreparedStatement stUpdateFileRating;
-    private PreparedStatement stUpdateFileGenre;
-    private PreparedStatement stUpdateIdPathInFile;
-    private PreparedStatement stUpdateFileModifDate;
-    private PreparedStatement stUpdateSavedFile;
 
     /**
      *
@@ -63,16 +54,15 @@ public class DaoFileWrite {
     public boolean insert(FileInfoInt fileInfo, int[] key) {
         synchronized (dbConn) {
             ResultSet keys = null;
+            PreparedStatement stInsertFileTag = null;
             try {
-                if (stInsertFileTag == null) {
-                    stInsertFileTag = dbConn.connection.prepareStatement("INSERT INTO file (name, idPath, "
+                stInsertFileTag = dbConn.connection.prepareStatement("INSERT INTO file (name, idPath, "
                             + "format, title, artist, album, albumArtist, genre, discNo, trackNo, year, comment, " // NOI18N
                             + "length, bitRate, size, modifDate, trackTotal, discTotal, BPM, nbCovers, "
                             + "rating, lastPlayed, playCounter, addedDate, coverHash, trackGain, albumGain) " // NOI18N
                             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
                             + "0, \"1970-01-01 00:00:00\", 0, datetime('now'), ?, ?, ?)",
                             Statement.RETURN_GENERATED_KEYS); // NOI18N
-                }
                 stInsertFileTag.setString(1, fileInfo.getFilename());
                 stInsertFileTag.setInt(2, fileInfo.getIdPath());
                 stInsertFileTag.setString(3, fileInfo.getFormat());
@@ -120,6 +110,13 @@ public class DaoFileWrite {
                 } catch (SQLException ex) {
                     Jamuz.getLogger().warning("Failed to close ResultSet");
                 }
+                try {
+                    if (stInsertFileTag != null) {
+                        stInsertFileTag.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stInsertFileTag");
+                }
             }
         }
     }
@@ -132,11 +129,11 @@ public class DaoFileWrite {
      */
     public boolean delete(int idFile) {
         synchronized (dbConn) {
+            PreparedStatement stDeleteFile = null;
+
             try {
-                if (stDeleteFile == null) {
-                    stDeleteFile = dbConn.connection.prepareStatement(
+                stDeleteFile = dbConn.connection.prepareStatement(
                             "DELETE FROM file WHERE idFile=?"); // NOI18N
-                }
                 stDeleteFile.setInt(1, idFile);
                 int nbRowsAffected = stDeleteFile.executeUpdate();
                 if (nbRowsAffected == 1) {
@@ -149,6 +146,14 @@ public class DaoFileWrite {
             } catch (SQLException ex) {
                 Popup.error("stDeleteFile(" + idFile + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stDeleteFile != null) {
+                        stDeleteFile.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stDeleteFile");
+                }
             }
         }
     }
@@ -160,11 +165,10 @@ public class DaoFileWrite {
      */
     public boolean setSaved(int idFile) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateSavedFile = null;
             try {
-                if (stUpdateSavedFile == null) {
-                    stUpdateSavedFile = dbConn.connection
+                stUpdateSavedFile = dbConn.connection
                             .prepareStatement("UPDATE file SET saved=1 WHERE idFile=?"); // NOI18N
-                }
                 stUpdateSavedFile.setInt(1, idFile);
                 int nbRowsAffected = stUpdateSavedFile.executeUpdate();
                 if (nbRowsAffected == 1) {
@@ -177,6 +181,14 @@ public class DaoFileWrite {
             } catch (SQLException ex) {
                 Popup.error("setFileSaved(" + idFile + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateSavedFile != null) {
+                        stUpdateSavedFile.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateSavedFile");
+                }
             }
         }
     }
@@ -189,9 +201,10 @@ public class DaoFileWrite {
      */
     public boolean update(FileInfoInt fileInfo) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateFileTag = null;
+
             try {
-                if (stUpdateFileTag == null) {
-                    stUpdateFileTag = dbConn.connection.prepareStatement(
+                stUpdateFileTag = dbConn.connection.prepareStatement(
                             """
                                 UPDATE file
                                 SET format=?, title=?, artist=?, album=?, albumArtist=?,
@@ -202,7 +215,6 @@ public class DaoFileWrite {
                                 nbCovers=?, coverHash=?, trackGain=?, albumGain=?
                                 WHERE idPath=? AND idFile=?
                                 """); // NOI18N
-                }
                 stUpdateFileTag.setString(1, fileInfo.getFormat());
                 stUpdateFileTag.setString(2, fileInfo.getTitle());
                 stUpdateFileTag.setString(3, fileInfo.getArtist());
@@ -239,6 +251,14 @@ public class DaoFileWrite {
             } catch (SQLException ex) {
                 Popup.error("updateTags(" + fileInfo.toString() + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateFileTag != null) {
+                        stUpdateFileTag.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateFileTag");
+                }
             }
         }
     }
@@ -251,12 +271,11 @@ public class DaoFileWrite {
      */
     public boolean updateLastPlayedAndCounter(FileInfoInt file) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateFileLastPlayedAndCounter = null;
             try {
-                if (stUpdateFileLastPlayedAndCounter == null) {
-                    stUpdateFileLastPlayedAndCounter = dbConn.connection.prepareStatement("UPDATE file "
+                stUpdateFileLastPlayedAndCounter = dbConn.connection.prepareStatement("UPDATE file "
                             + "SET lastplayed=?, playCounter=? "
                             + "WHERE idFile=?");
-                }
                 stUpdateFileLastPlayedAndCounter.setString(1, DateTime.getCurrentUtcSql());
                 stUpdateFileLastPlayedAndCounter.setInt(2, file.getPlayCounter() + 1);
                 stUpdateFileLastPlayedAndCounter.setInt(3, file.getIdFile());
@@ -272,6 +291,14 @@ public class DaoFileWrite {
             } catch (SQLException ex) {
                 Popup.error("updateLastPlayedAndCounter(" + file.toString() + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateFileLastPlayedAndCounter != null) {
+                        stUpdateFileLastPlayedAndCounter.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateFileLastPlayedAndCounter");
+                }
             }
         }
     }
@@ -284,13 +311,13 @@ public class DaoFileWrite {
      */
     public boolean updateRating(FileInfoInt fileInfo) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateFileRating = null;
+
             try {
-                if (stUpdateFileRating == null) {
-                    stUpdateFileRating = dbConn.connection.prepareStatement(
+                stUpdateFileRating = dbConn.connection.prepareStatement(
                             "UPDATE file set rating=?, "
                             + "ratingModifDate=datetime('now') "
                             + "WHERE idFile=?"); // NOI18N
-                }
                 stUpdateFileRating.setInt(1, fileInfo.getRating());
                 stUpdateFileRating.setInt(2, fileInfo.getIdFile());
                 int nbRowsAffected = stUpdateFileRating.executeUpdate();
@@ -304,6 +331,14 @@ public class DaoFileWrite {
             } catch (SQLException ex) {
                 Popup.error("updateRating(" + fileInfo.toString() + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateFileRating != null) {
+                        stUpdateFileRating.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateFileRating");
+                }
             }
         }
     }
@@ -316,13 +351,13 @@ public class DaoFileWrite {
      */
     public boolean updateFileGenre(FileInfoInt fileInfo) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateFileGenre = null;
+
             try {
-                if (stUpdateFileGenre == null) {
-                    stUpdateFileGenre = dbConn.connection.prepareStatement(
+                stUpdateFileGenre = dbConn.connection.prepareStatement(
                             "UPDATE file set genre=?, "
                             + "genreModifDate=datetime('now') "
                             + "WHERE idFile=?"); // NOI18N
-                }
                 stUpdateFileGenre.setString(1, fileInfo.getGenre());
                 stUpdateFileGenre.setInt(2, fileInfo.getIdFile());
                 int nbRowsAffected = stUpdateFileGenre.executeUpdate();
@@ -336,6 +371,14 @@ public class DaoFileWrite {
             } catch (SQLException ex) {
                 Popup.error("updateGenre(" + fileInfo.toString() + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateFileGenre != null) {
+                        stUpdateFileGenre.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateFileGenre");
+                }
             }
         }
     }
@@ -349,13 +392,13 @@ public class DaoFileWrite {
      */
     public boolean updateIdPath(int idPath, int newIdPath) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateIdPathInFile = null;
+
             try {
-                if (stUpdateIdPathInFile == null) {
-                    stUpdateIdPathInFile = dbConn.connection.prepareStatement(
+                stUpdateIdPathInFile = dbConn.connection.prepareStatement(
                             "UPDATE file "
                             + "SET idPath=? " // NOI18N
                             + "WHERE idPath=?"); // NOI18N
-                }
                 stUpdateIdPathInFile.setInt(1, newIdPath);
                 stUpdateIdPathInFile.setInt(2, idPath);
                 int nbRowsAffected = stUpdateIdPathInFile.executeUpdate();
@@ -370,6 +413,14 @@ public class DaoFileWrite {
             } catch (SQLException ex) {
                 Popup.error("updateIdPath(" + idPath + ", " + newIdPath + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateIdPathInFile != null) {
+                        stUpdateIdPathInFile.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateIdPathInFile");
+                }
             }
         }
     }
@@ -384,13 +435,12 @@ public class DaoFileWrite {
      */
     public boolean updateModifDate(int idFile, Date modifDate, String name) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateFileModifDate = null;
             try {
-                if (stUpdateFileModifDate == null) {
-                    stUpdateFileModifDate = dbConn.connection.prepareStatement(
+                stUpdateFileModifDate = dbConn.connection.prepareStatement(
                             "UPDATE file "
                             + "SET name=?, modifDate=? " // NOI18N
                             + "WHERE idFile=?"); // NOI18N
-                }
                 stUpdateFileModifDate.setString(1, name);
                 stUpdateFileModifDate.setString(2, DateTime.formatUTCtoSqlUTC(modifDate));
                 stUpdateFileModifDate.setInt(3, idFile);
@@ -407,6 +457,14 @@ public class DaoFileWrite {
             } catch (SQLException ex) {
                 Popup.error("updateModifDate(" + idFile + ", \"" + modifDate.toString() + "\", \"" + name + "\")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateFileModifDate != null) {
+                        stUpdateFileModifDate.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateFileModifDate");
+                }
             }
         }
 

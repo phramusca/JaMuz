@@ -32,8 +32,6 @@ public class DaoClientWrite {
     private final DbConn dbConn;
     private final DaoDevice daoDevice;
     private final DaoStatSource daoStatSource;
-    private PreparedStatement stUpdateClient;
-    private PreparedStatement stInsertClient;
 
     /**
      *
@@ -55,9 +53,10 @@ public class DaoClientWrite {
      */
     public boolean insertOrUpdate(ClientInfo clientInfo) {
         synchronized (dbConn) {
+            PreparedStatement stUpdateClient = null;
+            PreparedStatement stInsertClient = null;
             try {
                 if (clientInfo.getId() > -1) {
-
                     stUpdateClient = dbConn.connection.prepareStatement(
                             "UPDATE client SET login=?, pwd=?, name=?, enabled=? "
                             + "WHERE idClient=?"); // NOI18N
@@ -112,6 +111,21 @@ public class DaoClientWrite {
             } catch (SQLException ex) {
                 Popup.error("setClientInfo(" + clientInfo.toString() + ")", ex); // NOI18N
                 return false;
+            } finally {
+                try {
+                    if (stUpdateClient != null) {
+                        stUpdateClient.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stUpdateClient");
+                }
+                try {
+                    if (stInsertClient != null) {
+                        stInsertClient.close();
+                    }
+                } catch (SQLException ex) {
+                    Jamuz.getLogger().warning("Failed to close stInsertClient");
+                }
             }
         }
     }
