@@ -47,8 +47,6 @@ public class DaoFileTagWrite {
 
     }
 
- 
-
     /**
      * Update tags and modification date for a list of files
      *
