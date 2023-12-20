@@ -751,7 +751,7 @@ public class PanelOptions extends javax.swing.JPanel {
 		if (model.contains(input)) {
 			Popup.warning(MessageFormat.format(Inter.get("Msg.Options.GenreExists"), input));  //NOI18N 
 		} else if (!input.isBlank()) {  //NOI18N 
-			Jamuz.getDb().genre().insert(input);
+			Jamuz.getDb().genre().lock().insert(input);
 			PanelMain.fillGenreLists();
 			jListGenres.setModel(Jamuz.getGenreListModel());
 		}
@@ -766,7 +766,7 @@ public class PanelOptions extends javax.swing.JPanel {
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					Jamuz.getDb().genre().update((String) jListGenres.getSelectedValue(), input);
+					Jamuz.getDb().genre().lock().update((String) jListGenres.getSelectedValue(), input);
 					PanelMain.fillGenreLists();
 					jListGenres.setModel(Jamuz.getGenreListModel());
 				}
@@ -783,7 +783,7 @@ public class PanelOptions extends javax.swing.JPanel {
 					Inter.get("Label.Confirm"), //NOI18N 
 					JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				Jamuz.getDb().genre().delete((String) jListGenres.getSelectedValue());
+				Jamuz.getDb().genre().lock().delete((String) jListGenres.getSelectedValue());
 				PanelMain.fillGenreLists();
 				jListGenres.setModel(Jamuz.getGenreListModel());
 			}
