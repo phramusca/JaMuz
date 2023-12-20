@@ -55,7 +55,7 @@ public class Machine {
 		statSources = new LinkedHashMap<>();
 		devices = new LinkedHashMap<>();
 		StringBuilder zText = new StringBuilder();
-		if (Jamuz.getDb().machine().getOrInsert(this.name, zText, false)) {
+		if (Jamuz.getDb().machine().lock().getOrInsert(this.name, zText, false)) {
 			this.description = zText.toString();
 			if (!Jamuz.getDb().option().get(options, this.name)) {
 				return false;
