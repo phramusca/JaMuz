@@ -47,8 +47,7 @@ public class DaoPath {
     }
 
     /**
-     * This is to reach writing operations (insert, update, delete) on the path table
-     * @return
+     * This is to reach writing operations (insert, update, delete)
      */
     public DaoPathWrite lock() {
         return daoPathWrite;

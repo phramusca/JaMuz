@@ -35,8 +35,7 @@ public class DaoMachine {
     }
 
     /**
-     * This is to reach writing operations (insert, update, delete) on the
-     * client table
+     * This is to reach writing operations (insert, update, delete)
      *
      * @return
      */

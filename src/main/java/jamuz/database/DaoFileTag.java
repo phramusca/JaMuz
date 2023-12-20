@@ -45,8 +45,7 @@ public class DaoFileTag {
     }
 
     /**
-     * This is to reach writing operations (insert, update, delete) on the tagFile
-     * table
+     * This is to reach writing operations (insert, update, delete)
      *
      * @return
      */

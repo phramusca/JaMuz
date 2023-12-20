@@ -18,8 +18,7 @@ public class DaoGenre {
     }
 
     /**
-     * This is to reach writing operations (insert, update, delete) on the genre
-     * table
+     * This is to reach writing operations (insert, update, delete)
      *
      * @return
      */

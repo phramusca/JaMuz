@@ -55,8 +55,7 @@ public class DaoFile {
     }
 
     /**
-     * This is to reach writing operations (insert, update, delete) on the file
-     * table
+     * This is to reach writing operations (insert, update, delete)
      *
      * @return
      */

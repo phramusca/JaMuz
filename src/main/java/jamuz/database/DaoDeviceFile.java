@@ -35,8 +35,7 @@ public class DaoDeviceFile {
     }
 
     /**
-     * This is to reach writing operations (insert, update, delete) on the
-     * deviceFile table
+     * This is to reach writing operations (insert, update, delete)
      *
      * @return
      */
