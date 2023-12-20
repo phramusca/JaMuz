@@ -397,7 +397,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		});
 
 		//Compute replaygain and insert in fileTranscoded
-		if(filesTranscoded.size()>0) {
+		if(!filesTranscoded.isEmpty()) {
 			progressBar.setIndeterminate("Computing ReplayGain for MP3 ...");
 			ArrayList<String> albumList = group(filesTranscoded, "getAlbum");  //NOI18N
 			boolean trackGain=albumList.size()==1 && albumList.get(0).equals("Various Albums");				
@@ -410,7 +410,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 					file.saveReplayGainToID3(gv);
 					file.readMetadata(false); //To get new file information (format, size,...)
 				});
-				Jamuz.getDb().fileTranscoded().insertOrUpdate(filesTranscoded);
+				Jamuz.getDb().fileTranscoded().lock().insertOrUpdate(filesTranscoded);
 			}
 		}
 		return true;
@@ -557,7 +557,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			}
 			
 			//Transcode convertible files
-			if(transcode && filesConvertible.size()>0) {
+			if(transcode && !filesConvertible.isEmpty()) {
 				transcode(progressBar);
 			}
 
@@ -1114,11 +1114,11 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 				int discTotal=1;
 				ArrayList<String> discNoList = group(filesAudio, "getDiscNo");  //NOI18N
 				if(!discNoList.contains("") && discNoList.size()==1) {
-					discNo=Integer.valueOf(discNoList.get(0));
+					discNo=Integer.parseInt(discNoList.get(0));
 				}
 				ArrayList<String> discTotalList = group(filesAudio, "getDiscTotal");  //NOI18N
 				if(!discTotalList.contains("") && discTotalList.size()==1){
-					discTotal=Integer.valueOf(discTotalList.get(0));
+					discTotal=Integer.parseInt(discTotalList.get(0));
 				}
 				if(!(searchArtist.equals("Various Artists") && searchAlbum.equals("Various Albums"))) {
 					searchMatches(searchAlbum, searchArtist, discNo, discTotal, progressBar);
@@ -1396,7 +1396,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
             Float newValue = (Float) newValueObject;
             Float tagValueFloat;
             try {
-                tagValueFloat=Float.parseFloat(tagValue.getValue());
+                tagValueFloat=Float.valueOf(tagValue.getValue());
             }
             catch(java.lang.NumberFormatException ex) {
                 tagValueFloat=Float.valueOf(0);
@@ -1858,7 +1858,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         }
         List<ReleaseMatch> matchesL = getMatches();
         if(matchesL!=null) {
-            if(matchesL.size()>0) {
+            if(!matchesL.isEmpty()) {
                 builder.append("<BR/>");
                 builder.append(matchesL.get(0).toString());
                 builder.append("<BR/>");
@@ -2047,7 +2047,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	void setAction() {
 		//Select appropriate action
 		if(isValid()) { //ie: no KO result
-			if(getMatches().size()>0) {
+			if(!getMatches().isEmpty()) {
 				setMbId(getMatches().get(0).getId());
 			}
 			if(isWarning()) {
@@ -2077,7 +2077,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			}
 			else {
 				ReleaseMatch match=getMatches().get(0);
-				if(match.getDuplicates().size()>0) {
+				if(!match.getDuplicates().isEmpty()) {
 					action=Action.KO;
 				}
 				else if(match.getScore()<100) {
@@ -2104,7 +2104,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 								action=Action.SAVE;
 								break;
 							case "cover":
-								if(getFilesImage().size()>0 || getCoverList().size()>0 || getFirstCoverFromTags()!=null) {
+								if(!getFilesImage().isEmpty() || !getCoverList().isEmpty() || getFirstCoverFromTags()!=null) {
 									//There is a cover somewhere (tag, file or found) so need user to choose from
 									//Well, getCoverList() only contains a list of information. 
 									//Covers are only searched when opening DialogCheck, but at least there is hope :)

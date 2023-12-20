@@ -16,15 +16,6 @@
  */
 package jamuz.database;
 
-import jamuz.FileInfoInt;
-import jamuz.Jamuz;
-import jamuz.process.check.ReplayGain;
-import jamuz.utils.Popup;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-
 /**
  *
  * @author raph
@@ -32,6 +23,7 @@ import java.util.logging.Level;
 public class DaoFileTranscoded {
 
     private final DbConn dbConn;
+    private final DaoFileTranscodedWrite daoFileTranscodedWrite;
 
     /**
      *
@@ -39,55 +31,16 @@ public class DaoFileTranscoded {
      */
     public DaoFileTranscoded(DbConn dbConn) {
         this.dbConn = dbConn;
+        this.daoFileTranscodedWrite = new DaoFileTranscodedWrite(dbConn);
     }
-    
-    	/**
-	 *
-	 * @param files
-	 */
-	public void insertOrUpdate(ArrayList<FileInfoInt> files) {
-		try {
-			if (!files.isEmpty()) {
-				long startTime = System.currentTimeMillis();
-				dbConn.connection.setAutoCommit(false);
-				int[] results;
-				PreparedStatement preparedStatement = dbConn.connection.prepareStatement(
-						"INSERT INTO fileTranscoded "
-						+ " (idFile, ext, bitRate, format, length, size, trackGain, albumGain, modifDate) " // NOI18N
-						+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) "
-						+ " ON CONFLICT(idFile, ext) DO UPDATE SET bitRate=?, format=?, length=?, size=?, trackGain=?, albumGain=?, modifDate=?"); // NOI18N
-				for (FileInfoInt file : files) {
-					// Insert
-					preparedStatement.setInt(1, file.getIdFile());
-					preparedStatement.setString(2, file.getExt());
-					preparedStatement.setString(3, file.getBitRate());
-					preparedStatement.setString(4, file.getFormat());
-					preparedStatement.setInt(5, file.getLength());
-					preparedStatement.setLong(6, file.getSize());
-					ReplayGain.GainValues gainValues = file.getReplayGain(false);
-					preparedStatement.setFloat(7, gainValues.getTrackGain());
-					preparedStatement.setFloat(8, gainValues.getAlbumGain());
-					preparedStatement.setString(9, file.getFormattedModifDate());
-					// Update
-					preparedStatement.setString(10, file.getBitRate());
-					preparedStatement.setString(11, file.getFormat());
-					preparedStatement.setInt(12, file.getLength());
-					preparedStatement.setLong(13, file.getSize());
-					preparedStatement.setFloat(14, gainValues.getTrackGain());
-					preparedStatement.setFloat(15, gainValues.getAlbumGain());
-					preparedStatement.setString(16, file.getFormattedModifDate());
-					preparedStatement.addBatch();
-				}
-				results = preparedStatement.executeBatch();
-				dbConn.connection.commit();
-				dbConn.connection.setAutoCommit(true);
-				long endTime = System.currentTimeMillis();
-				Jamuz.getLogger().log(Level.FINEST,
-						"insertOrUpdateDeviceFilesTranslated // {0} // Total execution time: {1}ms",
-						new Object[]{results.length, endTime - startTime}); // NOI18N
-			}
-		} catch (SQLException ex) {
-			Popup.error("insertOrUpdateDeviceFilesTranslated(ArrayList<FileInfoInt> files)", ex); // NOI18N
-		}
-	}
+
+    /**
+     * This is to reach writing operations (insert, update, delete) on the
+     * client table
+     *
+     * @return
+     */
+    public DaoFileTranscodedWrite lock() {
+        return daoFileTranscodedWrite;
+    }
 }
