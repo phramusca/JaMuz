@@ -68,7 +68,7 @@ public class DaoMachineTest {
 		//Create a new machine
 		StringBuilder zText = new StringBuilder();
 		String machineName = "000aaaa000"; //Hoping this this will be id 0 when sorted
-		assertTrue("isMachine", Jamuz.getDb().machine().getOrInsert(machineName, zText, false));
+		assertTrue("isMachine", Jamuz.getDb().machine().lock().getOrInsert(machineName, zText, false));
 
 		//Get machines
 		DefaultListModel defaultListModel = new DefaultListModel();
@@ -104,9 +104,9 @@ public class DaoMachineTest {
 
 		//Set description
 		String description = "Waouh the great description!";
-		assertTrue(Jamuz.getDb().machine().update(idMachine, description));
+		assertTrue(Jamuz.getDb().machine().lock().update(idMachine, description));
 		zText = new StringBuilder();
-		assertTrue("isMachine updated", Jamuz.getDb().machine().getOrInsert(machineName, zText, false));
+		assertTrue("isMachine updated", Jamuz.getDb().machine().lock().getOrInsert(machineName, zText, false));
 		assertEquals(description, zText.toString());
 		defaultListModel = new DefaultListModel();
 		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
@@ -146,7 +146,7 @@ public class DaoMachineTest {
 		checkOptionList(machineName, expectedOptions);
 
 		//Delete machine 
-		assertTrue(Jamuz.getDb().machine().delete(machineName));
+		assertTrue(Jamuz.getDb().machine().lock().delete(machineName));
 		defaultListModel = new DefaultListModel();
 		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
 		assertEquals(1, defaultListModel.size()); //Only current machine left
@@ -188,7 +188,7 @@ public class DaoMachineTest {
 		boolean hidden = false;
 		DaoMachine instance = null;
 		boolean expResult = false;
-		boolean result = instance.getOrInsert(hostname, description, hidden);
+		boolean result = instance.lock().getOrInsert(hostname, description, hidden);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -205,7 +205,7 @@ public class DaoMachineTest {
 		String description = "";
 		DaoMachine instance = null;
 		boolean expResult = false;
-		boolean result = instance.update(idMachine, description);
+		boolean result = instance.lock().update(idMachine, description);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -221,7 +221,7 @@ public class DaoMachineTest {
 		String machineName = "";
 		DaoMachine instance = null;
 		boolean expResult = false;
-		boolean result = instance.delete(machineName);
+		boolean result = instance.lock().delete(machineName);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");

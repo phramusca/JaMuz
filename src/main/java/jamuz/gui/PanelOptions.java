@@ -736,7 +736,7 @@ public class PanelOptions extends javax.swing.JPanel {
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					Jamuz.getDb().machine().delete(machineToDelete);
+					Jamuz.getDb().machine().lock().delete(machineToDelete);
 					fillMachineList();
 				}
 			} else {
