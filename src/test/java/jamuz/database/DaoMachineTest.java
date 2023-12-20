@@ -121,7 +121,7 @@ public class DaoMachineTest {
 		String newValue;
 		for (Option expectedOption : expectedOptions) {
 			newValue = "New value " + i;
-			Jamuz.getDb().option().update(expectedOption, newValue);
+			Jamuz.getDb().option().lock().update(expectedOption, newValue);
 			if (expectedOption.getType().equals("path")) {   //NOI18N
 				newValue = FilenameUtils.normalizeNoEndSeparator(newValue.trim()) + File.separator;
 			}
@@ -137,7 +137,7 @@ public class DaoMachineTest {
 		}
 		Machine machine = new Machine(machineName);
 		machine.setOptions(expectedOptions);
-		assertTrue(Jamuz.getDb().option().update(machine));
+		assertTrue(Jamuz.getDb().option().lock().update(machine));
 		for (Option expectedOption : expectedOptions) {
 			if (expectedOption.getType().equals("path")) {   //NOI18N
 				expectedOption.setValue(FilenameUtils.normalizeNoEndSeparator(expectedOption.getValue().trim()) + File.separator);

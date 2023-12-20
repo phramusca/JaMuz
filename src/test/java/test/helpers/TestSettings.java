@@ -92,7 +92,7 @@ public class TestSettings {
 
 		//Set options for current machine
 		for (Option option : Jamuz.getMachine().getOptions()) {
-			Jamuz.getDb().option().update(option, getOptionValue(option.getId()));
+			Jamuz.getDb().option().lock().update(option, getOptionValue(option.getId()));
 		}
 
 		//Read created options
