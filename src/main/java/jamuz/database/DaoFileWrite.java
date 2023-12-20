@@ -45,24 +45,22 @@ public class DaoFileWrite {
     }
 
     /**
-     * Inserts a file (tags)
+     * Inserts file (tags) into the database.
      *
-     * @param fileInfo
-     * @param key
-     * @return
+     * @param fileInfo the file information
+     * @param key an array to store the generated key
+     * @return true if the insertion is successful, false otherwise
      */
     public boolean insert(FileInfoInt fileInfo, int[] key) {
         synchronized (dbConn) {
-            ResultSet keys = null;
-            PreparedStatement stInsertFileTag = null;
-            try {
-                stInsertFileTag = dbConn.connection.prepareStatement("INSERT INTO file (name, idPath, "
-                            + "format, title, artist, album, albumArtist, genre, discNo, trackNo, year, comment, " // NOI18N
-                            + "length, bitRate, size, modifDate, trackTotal, discTotal, BPM, nbCovers, "
-                            + "rating, lastPlayed, playCounter, addedDate, coverHash, trackGain, albumGain) " // NOI18N
-                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-                            + "0, \"1970-01-01 00:00:00\", 0, datetime('now'), ?, ?, ?)",
-                            Statement.RETURN_GENERATED_KEYS); // NOI18N
+            try (PreparedStatement stInsertFileTag = dbConn.connection.prepareStatement("INSERT INTO file (name, idPath, "
+                    + "format, title, artist, album, albumArtist, genre, discNo, trackNo, year, comment, " // NOI18N
+                    + "length, bitRate, size, modifDate, trackTotal, discTotal, BPM, nbCovers, "
+                    + "rating, lastPlayed, playCounter, addedDate, coverHash, trackGain, albumGain) " // NOI18N
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+                    + "0, \"1970-01-01 00:00:00\", 0, datetime('now'), ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS)) {
+
                 stInsertFileTag.setString(1, fileInfo.getFilename());
                 stInsertFileTag.setInt(2, fileInfo.getIdPath());
                 stInsertFileTag.setString(3, fileInfo.getFormat());
@@ -84,137 +82,113 @@ public class DaoFileWrite {
                 stInsertFileTag.setFloat(19, fileInfo.getBPM());
                 stInsertFileTag.setInt(20, fileInfo.getNbCovers());
                 stInsertFileTag.setString(21, fileInfo.getCoverHash());
+
                 ReplayGain.GainValues gainValues = fileInfo.getReplayGain(false);
                 stInsertFileTag.setFloat(22, gainValues.getTrackGain());
                 stInsertFileTag.setFloat(23, gainValues.getAlbumGain());
+
                 int nbRowsAffected = stInsertFileTag.executeUpdate();
 
                 if (nbRowsAffected == 1) {
-                    keys = stInsertFileTag.getGeneratedKeys();
-                    keys.next();
-                    key[0] = keys.getInt(1);
-                    return true;
+                    try (ResultSet keys = stInsertFileTag.getGeneratedKeys()) {
+                        if (keys.next()) {
+                            key[0] = keys.getInt(1);
+                            return true;
+                        }
+                    }
                 } else {
                     Jamuz.getLogger().log(Level.SEVERE, "insertTags, fileInfo={0} # row(s) affected: +{1}",
-                            new Object[]{fileInfo.toString(), nbRowsAffected}); // NOI18N
-                    return false;
+                            new Object[]{fileInfo.toString(), nbRowsAffected});
                 }
+
             } catch (SQLException ex) {
                 Popup.error(fileInfo.toString(), ex);
-                return false;
-            } finally {
-                try {
-                    if (keys != null) {
-                        keys.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close ResultSet");
-                }
-                try {
-                    if (stInsertFileTag != null) {
-                        stInsertFileTag.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stInsertFileTag");
-                }
             }
+
+            return false;
         }
     }
 
     /**
-     * Delete a file.
+     * Deletes a file from the database.
      *
-     * @param idFile
-     * @return
+     * @param idFile the ID of the file to be deleted
+     * @return true if the deletion is successful, false otherwise
      */
     public boolean delete(int idFile) {
         synchronized (dbConn) {
-            PreparedStatement stDeleteFile = null;
+            try (PreparedStatement stDeleteFile = dbConn.connection.prepareStatement(
+                    "DELETE FROM file WHERE idFile=?")) {
 
-            try {
-                stDeleteFile = dbConn.connection.prepareStatement(
-                            "DELETE FROM file WHERE idFile=?"); // NOI18N
                 stDeleteFile.setInt(1, idFile);
+
                 int nbRowsAffected = stDeleteFile.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
                     Jamuz.getLogger().log(Level.SEVERE, "stDeleteFile, idFile={0} # row(s) affected: +{1}",
-                            new Object[]{idFile, nbRowsAffected}); // NOI18N
+                            new Object[]{idFile, nbRowsAffected});
                     return false;
                 }
+
             } catch (SQLException ex) {
-                Popup.error("stDeleteFile(" + idFile + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stDeleteFile != null) {
-                        stDeleteFile.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stDeleteFile");
-                }
+                Popup.error("stDeleteFile(" + idFile + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
+     * Sets the saved flag for a file in the database.
      *
-     * @param idFile
-     * @return
+     * @param idFile the ID of the file to be updated
+     * @return true if the update is successful, false otherwise
      */
     public boolean setSaved(int idFile) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateSavedFile = null;
-            try {
-                stUpdateSavedFile = dbConn.connection
-                            .prepareStatement("UPDATE file SET saved=1 WHERE idFile=?"); // NOI18N
+            try (PreparedStatement stUpdateSavedFile = dbConn.connection.prepareStatement(
+                    "UPDATE file SET saved=1 WHERE idFile=?")) {
+
                 stUpdateSavedFile.setInt(1, idFile);
+
                 int nbRowsAffected = stUpdateSavedFile.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
                     Jamuz.getLogger().log(Level.SEVERE, "setFileSaved, idFile={0} # row(s) affected: +{1}",
-                            new Object[]{idFile, nbRowsAffected}); // NOI18N
+                            new Object[]{idFile, nbRowsAffected});
                     return false;
                 }
+
             } catch (SQLException ex) {
-                Popup.error("setFileSaved(" + idFile + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateSavedFile != null) {
-                        stUpdateSavedFile.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateSavedFile");
-                }
+                Popup.error("setFileSaved(" + idFile + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * Updates a file (tags)
+     * Updates file tags in the database.
      *
-     * @param fileInfo
-     * @return
+     * @param fileInfo the file information to be updated
+     * @return true if the update is successful, false otherwise
      */
     public boolean update(FileInfoInt fileInfo) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateFileTag = null;
+            try (PreparedStatement stUpdateFileTag = dbConn.connection.prepareStatement(
+                    """
+                UPDATE file
+                SET format=?, title=?, artist=?, album=?, albumArtist=?,
+                genre=?, discNo=?,
+                trackNo=?, year=?, comment=?,
+                length=?, bitRate=?, size=?, modifDate=?, trackTotal=?,
+                discTotal=?, BPM=?,
+                nbCovers=?, coverHash=?, trackGain=?, albumGain=?
+                WHERE idPath=? AND idFile=?
+                """)) {
 
-            try {
-                stUpdateFileTag = dbConn.connection.prepareStatement(
-                            """
-                                UPDATE file
-                                SET format=?, title=?, artist=?, album=?, albumArtist=?,
-                                genre=?, discNo=?,
-                                trackNo=?, year=?, comment=?,
-                                length=?, bitRate=?, size=?, modifDate=?, trackTotal=?,
-                                 discTotal=?, BPM=?,
-                                nbCovers=?, coverHash=?, trackGain=?, albumGain=?
-                                WHERE idPath=? AND idFile=?
-                                """); // NOI18N
                 stUpdateFileTag.setString(1, fileInfo.getFormat());
                 stUpdateFileTag.setString(2, fileInfo.getTitle());
                 stUpdateFileTag.setString(3, fileInfo.getArtist());
@@ -240,233 +214,183 @@ public class DaoFileWrite {
                 // WHERE:
                 stUpdateFileTag.setInt(22, fileInfo.getIdPath());
                 stUpdateFileTag.setInt(23, fileInfo.getIdFile());
+
                 int nbRowsAffected = stUpdateFileTag.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
                     Jamuz.getLogger().log(Level.SEVERE, "updateTags, fileInfo={0} # row(s) affected: +{1}",
-                            new Object[]{fileInfo.toString(), nbRowsAffected}); // NOI18N
-                    return false;
+                            new Object[]{fileInfo.toString(), nbRowsAffected});
                 }
+
             } catch (SQLException ex) {
-                Popup.error("updateTags(" + fileInfo.toString() + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateFileTag != null) {
-                        stUpdateFileTag.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateFileTag");
-                }
+                Popup.error("updateTags(" + fileInfo.toString() + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * Updates a file (tags)
+     * Updates the last played timestamp and play counter for a file in the
+     * database.
      *
-     * @param file
-     * @return
+     * @param fileInfo the file information to be updated
+     * @return true if the update is successful, false otherwise
      */
-    public boolean updateLastPlayedAndCounter(FileInfoInt file) {
+    public boolean updateLastPlayedAndCounter(FileInfoInt fileInfo) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateFileLastPlayedAndCounter = null;
-            try {
-                stUpdateFileLastPlayedAndCounter = dbConn.connection.prepareStatement("UPDATE file "
-                            + "SET lastplayed=?, playCounter=? "
-                            + "WHERE idFile=?");
+            try (PreparedStatement stUpdateFileLastPlayedAndCounter = dbConn.connection.prepareStatement(
+                    "UPDATE file SET lastplayed=?, playCounter=? WHERE idFile=?")) {
+
                 stUpdateFileLastPlayedAndCounter.setString(1, DateTime.getCurrentUtcSql());
-                stUpdateFileLastPlayedAndCounter.setInt(2, file.getPlayCounter() + 1);
-                stUpdateFileLastPlayedAndCounter.setInt(3, file.getIdFile());
+                stUpdateFileLastPlayedAndCounter.setInt(2, fileInfo.getPlayCounter() + 1);
+                stUpdateFileLastPlayedAndCounter.setInt(3, fileInfo.getIdFile());
+
                 int nbRowsAffected = stUpdateFileLastPlayedAndCounter.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
                     Jamuz.getLogger().log(Level.SEVERE,
                             "stUpdateFileLastPlayedAndCounter, fileInfo={0} # row(s) affected: +{1}",
-                            new Object[]{file.toString(), nbRowsAffected}); // NOI18N
-                    return false;
+                            new Object[]{fileInfo.toString(), nbRowsAffected});
                 }
+
             } catch (SQLException ex) {
-                Popup.error("updateLastPlayedAndCounter(" + file.toString() + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateFileLastPlayedAndCounter != null) {
-                        stUpdateFileLastPlayedAndCounter.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateFileLastPlayedAndCounter");
-                }
+                Popup.error("updateLastPlayedAndCounter(" + fileInfo.toString() + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * Update rating
+     * Updates the rating for a file in the database.
      *
-     * @param fileInfo
-     * @return
+     * @param fileInfo the file information to be updated
+     * @return true if the update is successful, false otherwise
      */
     public boolean updateRating(FileInfoInt fileInfo) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateFileRating = null;
+            try (PreparedStatement stUpdateFileRating = dbConn.connection.prepareStatement(
+                    "UPDATE file SET rating=?, ratingModifDate=datetime('now') WHERE idFile=?")) {
 
-            try {
-                stUpdateFileRating = dbConn.connection.prepareStatement(
-                            "UPDATE file set rating=?, "
-                            + "ratingModifDate=datetime('now') "
-                            + "WHERE idFile=?"); // NOI18N
                 stUpdateFileRating.setInt(1, fileInfo.getRating());
                 stUpdateFileRating.setInt(2, fileInfo.getIdFile());
+
                 int nbRowsAffected = stUpdateFileRating.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateFileRating, fileInfo={0} # row(s) affected: +{1}",
-                            new Object[]{fileInfo.toString(), nbRowsAffected}); // NOI18N
-                    return false;
+                    Jamuz.getLogger().log(Level.SEVERE,
+                            "stUpdateFileRating, fileInfo={0} # row(s) affected: +{1}",
+                            new Object[]{fileInfo.toString(), nbRowsAffected});
                 }
+
             } catch (SQLException ex) {
-                Popup.error("updateRating(" + fileInfo.toString() + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateFileRating != null) {
-                        stUpdateFileRating.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateFileRating");
-                }
+                Popup.error("updateRating(" + fileInfo.toString() + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * Update genre
+     * Updates the genre for a file in the database.
      *
-     * @param fileInfo
-     * @return
+     * @param fileInfo the file information to be updated
+     * @return true if the update is successful, false otherwise
      */
     public boolean updateFileGenre(FileInfoInt fileInfo) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateFileGenre = null;
+            try (PreparedStatement stUpdateFileGenre = dbConn.connection.prepareStatement(
+                    "UPDATE file SET genre=?, genreModifDate=datetime('now') WHERE idFile=?")) {
 
-            try {
-                stUpdateFileGenre = dbConn.connection.prepareStatement(
-                            "UPDATE file set genre=?, "
-                            + "genreModifDate=datetime('now') "
-                            + "WHERE idFile=?"); // NOI18N
                 stUpdateFileGenre.setString(1, fileInfo.getGenre());
                 stUpdateFileGenre.setInt(2, fileInfo.getIdFile());
+
                 int nbRowsAffected = stUpdateFileGenre.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateFileGenre, fileInfo={0} # row(s) affected: +{1}",
-                            new Object[]{fileInfo.toString(), nbRowsAffected}); // NOI18N
-                    return false;
+                    Jamuz.getLogger().log(Level.SEVERE,
+                            "stUpdateFileGenre, fileInfo={0} # row(s) affected: +{1}",
+                            new Object[]{fileInfo.toString(), nbRowsAffected});
                 }
+
             } catch (SQLException ex) {
-                Popup.error("updateGenre(" + fileInfo.toString() + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateFileGenre != null) {
-                        stUpdateFileGenre.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateFileGenre");
-                }
+                Popup.error("updateGenre(" + fileInfo.toString() + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * Updates all files with idPath to newIdPath
+     * Updates the idPath for all files with the given idPath to a new idPath in
+     * the database.
      *
-     * @param idPath
-     * @param newIdPath
-     * @return
+     * @param idPath the current idPath to be updated
+     * @param newIdPath the new idPath to set
+     * @return true if the update is successful, false otherwise
      */
     public boolean updateIdPath(int idPath, int newIdPath) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateIdPathInFile = null;
+            try (PreparedStatement stUpdateIdPathInFile = dbConn.connection.prepareStatement(
+                    "UPDATE file SET idPath=? WHERE idPath=?")) {
 
-            try {
-                stUpdateIdPathInFile = dbConn.connection.prepareStatement(
-                            "UPDATE file "
-                            + "SET idPath=? " // NOI18N
-                            + "WHERE idPath=?"); // NOI18N
                 stUpdateIdPathInFile.setInt(1, newIdPath);
                 stUpdateIdPathInFile.setInt(2, idPath);
+
                 int nbRowsAffected = stUpdateIdPathInFile.executeUpdate();
                 if (nbRowsAffected > 0) {
                     return true;
                 } else {
                     Jamuz.getLogger().log(Level.SEVERE,
                             "updateIdPath, idPath={0}, newIdPath={1} # row(s) affected: +{2}",
-                            new Object[]{idPath, newIdPath, nbRowsAffected}); // NOI18N
-                    return false;
+                            new Object[]{idPath, newIdPath, nbRowsAffected});
                 }
+
             } catch (SQLException ex) {
-                Popup.error("updateIdPath(" + idPath + ", " + newIdPath + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateIdPathInFile != null) {
-                        stUpdateIdPathInFile.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateIdPathInFile");
-                }
+                Popup.error("updateIdPath(" + idPath + ", " + newIdPath + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * Updates a file (name, modifDate)
+     * Updates the modification date and name for a file in the database.
      *
-     * @param idFile
-     * @param modifDate
-     * @param name
-     * @return
+     * @param idFile the ID of the file to be updated
+     * @param modifDate the new modification date
+     * @param name the new name
+     * @return true if the update is successful, false otherwise
      */
     public boolean updateModifDate(int idFile, Date modifDate, String name) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateFileModifDate = null;
-            try {
-                stUpdateFileModifDate = dbConn.connection.prepareStatement(
-                            "UPDATE file "
-                            + "SET name=?, modifDate=? " // NOI18N
-                            + "WHERE idFile=?"); // NOI18N
+            try (PreparedStatement stUpdateFileModifDate = dbConn.connection.prepareStatement(
+                    "UPDATE file SET name=?, modifDate=? WHERE idFile=?")) {
+
                 stUpdateFileModifDate.setString(1, name);
                 stUpdateFileModifDate.setString(2, DateTime.formatUTCtoSqlUTC(modifDate));
                 stUpdateFileModifDate.setInt(3, idFile);
 
-                // Note that we need to scan files (even for check) to get idFile otherwise the
-                // following will fail
                 int nbRowsAffected = stUpdateFileModifDate.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateFile, idFile={0} # row(s) affected: +{1}", new Object[]{idFile, nbRowsAffected}); // NOI18N
-                    return false;
+                    Jamuz.getLogger().log(Level.SEVERE,
+                            "stUpdateFile, idFile={0} # row(s) affected: +{1}",
+                            new Object[]{idFile, nbRowsAffected});
                 }
-            } catch (SQLException ex) {
-                Popup.error("updateModifDate(" + idFile + ", \"" + modifDate.toString() + "\", \"" + name + "\")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateFileModifDate != null) {
-                        stUpdateFileModifDate.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateFileModifDate");
-                }
-            }
-        }
 
+            } catch (SQLException ex) {
+                Popup.error("updateModifDate(" + idFile + ", \"" + modifDate.toString() + "\", \"" + name + "\")", ex);
+            }
+
+            return false;
+        }
     }
+
 }

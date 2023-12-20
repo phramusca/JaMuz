@@ -43,106 +43,103 @@ public class DaoDeviceWrite {
     }
 
     /**
-     * Inserts or update a device
+     * Inserts or updates a device in the database.
      *
-     * @param device
-     * @return
+     * @param device the device information to be inserted or updated
+     * @return true if the operation is successful, false otherwise
      */
     public boolean insertOrUpdate(Device device) {
         synchronized (dbConn) {
             try {
                 if (device.getId() > -1) {
-                    if (stUpdateDevice == null) {
-                        stUpdateDevice = dbConn.connection.prepareStatement(
-                                "UPDATE device SET name=?, source=?,"
-                                + "destination=?, idPlaylist=? WHERE idDevice=?"); // NOI18N
-                    }
-                    stUpdateDevice.setString(1, device.getName());
-                    stUpdateDevice.setString(2, device.getSource());
-                    stUpdateDevice.setString(3, device.getDestination());
-                    if (device.getIdPlaylist() > 0) {
-                        stUpdateDevice.setInt(4, device.getIdPlaylist());
-                    } else {
-                        stUpdateDevice.setNull(4, java.sql.Types.INTEGER);
-                    }
-                    stUpdateDevice.setInt(5, device.getId());
-
-                    int nbRowsAffected = stUpdateDevice.executeUpdate();
-                    if (nbRowsAffected > 0) {
-                        return true;
-                    } else {
-                        Jamuz.getLogger().log(Level.SEVERE, "stUpdateDevice, "
-                                + "myStatSource={0} # row(s) affected: +{1}",
-                                new Object[]{device.toString(), nbRowsAffected}); // NOI18N
-                        return false;
-                    }
+                    return updateDevice(device);
                 } else {
-                    if (stInsertDevice == null) {
-                        stInsertDevice = dbConn.connection.prepareStatement(
-                                "INSERT INTO device "
-                                + "(name, source, destination, "
-                                + "idMachine, idPlaylist) VALUES (?, ?, ?, "
-                                + "(SELECT idMachine FROM machine WHERE name=?), ?)"); // NOI18N
-                    }
-                    stInsertDevice.setString(1, device.getName());
-                    stInsertDevice.setString(2, device.getSource());
-                    stInsertDevice.setString(3, device.getDestination());
-                    stInsertDevice.setString(4, device.getMachineName());
-                    if (device.getIdPlaylist() > 0) {
-                        stInsertDevice.setInt(5, device.getIdPlaylist());
-                    } else {
-                        stInsertDevice.setNull(5, java.sql.Types.INTEGER);
-                    }
-
-                    int nbRowsAffected = stInsertDevice.executeUpdate();
-                    if (nbRowsAffected > 0) {
-                        return true;
-                    } else {
-                        Jamuz.getLogger().log(Level.SEVERE, "stInsertDevice, "
-                                + "myStatSource={0} # row(s) affected: +{1}",
-                                new Object[]{device.toString(), nbRowsAffected}); // NOI18N
-                        return false;
-                    }
+                    return insertDevice(device);
                 }
             } catch (SQLException ex) {
-                Popup.error("setDevice(" + device.toString() + ")", ex); // NOI18N
+                Popup.error("setDevice(" + device.toString() + ")", ex);
                 return false;
+            }
+        }
+    }
+
+    private boolean updateDevice(Device device) throws SQLException {
+        synchronized (dbConn) {
+            try (PreparedStatement stUpdateDevice = dbConn.connection.prepareStatement(
+                    "UPDATE device SET name=?, source=?, destination=?, idPlaylist=? WHERE idDevice=?")) {
+
+                stUpdateDevice.setString(1, device.getName());
+                stUpdateDevice.setString(2, device.getSource());
+                stUpdateDevice.setString(3, device.getDestination());
+                stUpdateDevice.setInt(4, (device.getIdPlaylist() > 0) ? device.getIdPlaylist() : java.sql.Types.INTEGER);
+                stUpdateDevice.setInt(5, device.getId());
+
+                int nbRowsAffected = stUpdateDevice.executeUpdate();
+                if (nbRowsAffected > 0) {
+                    return true;
+                } else {
+                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateDevice, myStatSource={0} # row(s) affected: +{1}",
+                            new Object[]{device.toString(), nbRowsAffected});
+                    return false;
+                }
+            }
+        }
+    }
+
+    private boolean insertDevice(Device device) throws SQLException {
+        synchronized (dbConn) {
+            try (PreparedStatement stInsertDevice = dbConn.connection.prepareStatement(
+                    "INSERT INTO device (name, source, destination, idMachine, idPlaylist) "
+                    + "VALUES (?, ?, ?, (SELECT idMachine FROM machine WHERE name=?), ?)")) {
+
+                stInsertDevice.setString(1, device.getName());
+                stInsertDevice.setString(2, device.getSource());
+                stInsertDevice.setString(3, device.getDestination());
+                stInsertDevice.setString(4, device.getMachineName());
+                stInsertDevice.setInt(5, (device.getIdPlaylist() > 0) ? device.getIdPlaylist() : java.sql.Types.INTEGER);
+
+                int nbRowsAffected = stInsertDevice.executeUpdate();
+                if (nbRowsAffected > 0) {
+                    return true;
+                } else {
+                    Jamuz.getLogger().log(Level.SEVERE, "stInsertDevice, myStatSource={0} # row(s) affected: +{1}",
+                            new Object[]{device.toString(), nbRowsAffected});
+                    return false;
+                }
             }
         }
     }
 
     /**
-     * Deletes a device
+     * Deletes a device from the database.
      *
-     * @param id
-     * @return
+     * @param id the ID of the device to be deleted
+     * @return true if the operation is successful, false otherwise
      */
     public boolean delete(int id) {
         synchronized (dbConn) {
-            try {
-                if (stDeleteDevice == null) {
-                    stDeleteDevice = dbConn.connection.prepareStatement(
-                            "DELETE FROM device WHERE idDevice=?"); // NOI18N
-                }
+            try (PreparedStatement stDeleteDevice = dbConn.connection.prepareStatement(
+                    "DELETE FROM device WHERE idDevice=?")) {
+
                 stDeleteDevice.setInt(1, id);
                 int nbRowsAffected = stDeleteDevice.executeUpdate();
                 if (nbRowsAffected > 0) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE,
-                            "stDeleteDevice, id={0} # row(s) affected: +{1}",
-                            new Object[]{id, nbRowsAffected}); // NOI18N
+                    Jamuz.getLogger().log(Level.SEVERE, "stDeleteDevice, id={0} # row(s) affected: +{1}",
+                            new Object[]{id, nbRowsAffected});
                     return false;
                 }
             } catch (SQLException ex) {
                 // FIXME Z OPTIONS Happens when the device is linked to a stat source =>
-                // => Popup this nicely to user !
-                // instead of:
+                // => Popup this nicely to the user!
+                // Instead of:
                 // java.sql.SQLException: [SQLITE_CONSTRAINT]
                 // Abort due to constraint violation (foreign key constraint failed)
-                Popup.error("deleteDevice(" + id + ")", ex); // NOI18N
+                Popup.error("deleteDevice(" + id + ")", ex);
                 return false;
             }
         }
     }
+
 }

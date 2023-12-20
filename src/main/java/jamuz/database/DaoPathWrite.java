@@ -90,197 +90,162 @@ public class DaoPathWrite {
     }
 
     /**
-     * Update a path in database
+     * Update a path in the database.
      *
-     * @param idPath
-     * @param modifDate
-     * @param checkedFlag
-     * @param path
-     * @param mbId
-     * @return
+     * @param idPath the ID of the path to be updated
+     * @param modifDate the modification date
+     * @param checkedFlag the checked flag
+     * @param path the path to be updated
+     * @param mbId the mbId
+     * @return true if the update is successful, false otherwise
      */
     public boolean update(int idPath, Date modifDate, FolderInfo.CheckedFlag checkedFlag, String path, String mbId) {
         synchronized (dbConn) {
-            PreparedStatement stUpdatePath = null;
-            try {
-                stUpdatePath = dbConn.connection.prepareStatement(
-                        "UPDATE path "
-                        + "SET modifDate=?, checked=?, strPath=?, mbId=? " // NOI18N
-                        + "WHERE idPath=?"); // NOI18N
+            try (PreparedStatement stUpdatePath = dbConn.connection.prepareStatement(
+                    "UPDATE path SET modifDate=?, checked=?, strPath=?, mbId=? WHERE idPath=?")) {
+
                 stUpdatePath.setString(1, DateTime.formatUTCtoSqlUTC(modifDate));
                 stUpdatePath.setInt(2, checkedFlag.getValue());
                 path = FilenameUtils.separatorsToUnix(path);
                 stUpdatePath.setString(3, path);
                 stUpdatePath.setString(4, mbId);
                 stUpdatePath.setInt(5, idPath);
+
                 int nbRowsAffected = stUpdatePath.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stUpdatePath, idPath={0} "
-                            + "# row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected}); // NOI18N
+                    Jamuz.getLogger().log(Level.SEVERE, "stUpdatePath, idPath={0} # row(s) affected: +{1}",
+                            new Object[]{idPath, nbRowsAffected});
                     return false;
                 }
+
             } catch (SQLException ex) {
-                Popup.error("updatePath(" + idPath + ", " + modifDate.toString() + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdatePath != null) {
-                        stUpdatePath.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdatePath");
-                }
+                Popup.error("updatePath(" + idPath + ", " + modifDate.toString() + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * Sets a path as checked
+     * Sets a path as checked in the database.
      *
-     * @param idPath
-     * @param checkedFlag
-     * @return
+     * @param idPath the ID of the path to be updated
+     * @param checkedFlag the checked flag
+     * @return true if the update is successful, false otherwise
      */
     public boolean updateCheckedFlag(int idPath, FolderInfo.CheckedFlag checkedFlag) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateCheckedFlag = null;
-            try {
-                stUpdateCheckedFlag = dbConn.connection
-                        .prepareStatement("UPDATE path set checked=? WHERE idPath=?"); // NOI18N
+            try (PreparedStatement stUpdateCheckedFlag = dbConn.connection
+                    .prepareStatement("UPDATE path SET checked=? WHERE idPath=?")) {
+
                 stUpdateCheckedFlag.setInt(1, checkedFlag.getValue());
                 stUpdateCheckedFlag.setInt(2, idPath);
+
                 int nbRowsAffected = stUpdateCheckedFlag.executeUpdate();
                 if (nbRowsAffected > 0) {
                     return true;
                 } else {
                     Jamuz.getLogger().log(Level.SEVERE,
                             "stUpdateCheckedFlag, idPath={0}, checkedFlag={1} # row(s) affected: +{2}",
-                            new Object[]{idPath, checkedFlag, nbRowsAffected}); // NOI18N
+                            new Object[]{idPath, checkedFlag, nbRowsAffected});
                     return false;
                 }
+
             } catch (SQLException ex) {
-                Popup.error("setCheckedFlag(" + idPath + "," + checkedFlag + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateCheckedFlag != null) {
-                        stUpdateCheckedFlag.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateCheckedFlag");
-                }
+                Popup.error("setCheckedFlag(" + idPath + "," + checkedFlag + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * /!\ Resets the check flag to UNCHECKED on path table for given checked
-     * flag
+     * Resets the check flag to UNCHECKED on the path table for a given checked
+     * flag.
      *
-     * @param checkedFlag
-     * @return
+     * @param checkedFlag the checked flag
+     * @return true if the update is successful, false otherwise
      */
     public boolean updateCheckedFlagReset(FolderInfo.CheckedFlag checkedFlag) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateCheckedFlagReset = null;
-            try {
-                stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
-                        "UPDATE path SET checked=0 "
-                        + "WHERE checked=?"); // NOI18N
+            try (PreparedStatement stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
+                    "UPDATE path SET checked=0 WHERE checked=?")) {
+
                 stUpdateCheckedFlagReset.setInt(1, checkedFlag.getValue());
                 stUpdateCheckedFlagReset.executeUpdate();
-                // we can have no rows affected if library is empty so not checking it
+                // We can have no rows affected if the library is empty, so not checking it
                 return true;
+
             } catch (SQLException ex) {
-                Popup.error("setCheckedFlagReset()", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateCheckedFlagReset != null) {
-                        stUpdateCheckedFlagReset.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateCheckedFlagReset");
-                }
+                Popup.error("setCheckedFlagReset()", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * Updates copyRight in path table
+     * Updates the copyRight in the path table.
      *
-     * @param idPath
-     * @param copyRight
-     * @return
+     * @param idPath the ID of the path to be updated
+     * @param copyRight the copyRight value
+     * @return true if the update is successful, false otherwise
      */
     public boolean updateCopyRight(int idPath, int copyRight) {
         synchronized (dbConn) {
-            PreparedStatement stUpdateCopyRight = null;
-            try {
-                stUpdateCopyRight = dbConn.connection.prepareStatement(
-                        "UPDATE path "
-                        + "SET copyRight=? WHERE idPath=?"); // NOI18N
+            try (PreparedStatement stUpdateCopyRight = dbConn.connection.prepareStatement(
+                    "UPDATE path SET copyRight=? WHERE idPath=?")) {
+
                 stUpdateCopyRight.setInt(1, copyRight);
                 stUpdateCopyRight.setInt(2, idPath);
+
                 int nbRowsAffected = stUpdateCopyRight.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateCopyRight, idPath={0}, "
-                            + "copyRight={1} # row(s) affected: +{2}",
-                            new Object[]{idPath, copyRight, nbRowsAffected}); // NOI18N
+                    Jamuz.getLogger().log(Level.SEVERE, "stUpdateCopyRight, idPath={0}, copyRight={1} # row(s) affected: +{2}",
+                            new Object[]{idPath, copyRight, nbRowsAffected});
                     return false;
                 }
+
             } catch (SQLException ex) {
-                Popup.error("updateCopyRight(" + idPath + ", " + copyRight + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stUpdateCopyRight != null) {
-                        stUpdateCopyRight.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stUpdateCopyRight");
-                }
+                Popup.error("updateCopyRight(" + idPath + ", " + copyRight + ")", ex);
             }
+
+            return false;
         }
     }
 
     /**
-     * Deletes a path.
+     * Deletes a path from the database.
      *
-     * @param idPath
-     * @return
+     * @param idPath the ID of the path to be deleted
+     * @return true if the deletion is successful, false otherwise
      */
     public boolean delete(int idPath) {
         synchronized (dbConn) {
-            PreparedStatement stDeletedPath = null;
-            try {
-                stDeletedPath = dbConn.connection.prepareStatement(
-                        "DELETE FROM path WHERE idPath=?"); // NOI18N
+            try (PreparedStatement stDeletedPath = dbConn.connection.prepareStatement(
+                    "DELETE FROM path WHERE idPath=?")) {
+
                 stDeletedPath.setInt(1, idPath);
+
                 int nbRowsAffected = stDeletedPath.executeUpdate();
                 if (nbRowsAffected == 1) {
                     return true;
                 } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "stDeletedFiles, idPath={0} "
-                            + "# row(s) affected: +{1}", new Object[]{idPath, nbRowsAffected}); // NOI18N
+                    Jamuz.getLogger().log(Level.SEVERE, "stDeletedFiles, idPath={0} # row(s) affected: +{1}",
+                            new Object[]{idPath, nbRowsAffected});
                     return false;
                 }
+
             } catch (SQLException ex) {
-                Popup.error("deletePath(" + idPath + ")", ex); // NOI18N
-                return false;
-            } finally {
-                try {
-                    if (stDeletedPath != null) {
-                        stDeletedPath.close();
-                    }
-                } catch (SQLException ex) {
-                    Jamuz.getLogger().warning("Failed to close stDeletedPath");
-                }
+                Popup.error("deletePath(" + idPath + ")", ex);
             }
+
+            return false;
         }
     }
+
 }
