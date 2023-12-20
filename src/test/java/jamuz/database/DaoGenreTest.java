@@ -95,28 +95,28 @@ public class DaoGenreTest {
 		expectedGenres.add("Trip Hop");
 		checkGenreList(expectedGenres);
 
-		assertTrue("updateGenre", dbConnJaMuz.genre().update("Reggae", "Toto"));
+		assertTrue("updateGenre", dbConnJaMuz.genre().lock().update("Reggae", "Toto"));
 		expectedGenres.set(13, "Toto");
 		checkGenreList(expectedGenres);
 
-		assertTrue("deleteGenre", dbConnJaMuz.genre().delete("Toto"));
+		assertTrue("deleteGenre", dbConnJaMuz.genre().lock().delete("Toto"));
 		expectedGenres.remove("Toto");
 		checkGenreList(expectedGenres);
 
-		assertTrue("insertGenre", dbConnJaMuz.genre().insert("Reggae"));
+		assertTrue("insertGenre", dbConnJaMuz.genre().lock().insert("Reggae"));
 		expectedGenres.add("Reggae");
 		checkGenreList(expectedGenres);
 
 		assertTrue("checkGenre", dbConnJaMuz.genre().isSupported("Reggae"));
 
 		// Negative cases
-		assertFalse("updateGenre negative", dbConnJaMuz.genre().update("NoSuchWeirdGenre", "Toto"));
+		assertFalse("updateGenre negative", dbConnJaMuz.genre().lock().update("NoSuchWeirdGenre", "Toto"));
 		checkGenreList(expectedGenres);
 
-		assertFalse("deleteGenre negative", dbConnJaMuz.genre().delete("NoSuchWeirdGenre"));
+		assertFalse("deleteGenre negative", dbConnJaMuz.genre().lock().delete("NoSuchWeirdGenre"));
 		checkGenreList(expectedGenres);
 
-		assertFalse("insertGenre negative", dbConnJaMuz.genre().insert("Reggae")); // As duplicate
+		assertFalse("insertGenre negative", dbConnJaMuz.genre().lock().insert("Reggae")); // As duplicate
 		checkGenreList(expectedGenres);
 
 		assertFalse("checkGenre negative", dbConnJaMuz.genre().isSupported("NoSuchWeirdGenre"));
@@ -157,7 +157,7 @@ public class DaoGenreTest {
 		String genre = "";
 		DaoGenre instance = null;
 		boolean expResult = false;
-		boolean result = instance.insert(genre);
+		boolean result = instance.lock().insert(genre);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -190,7 +190,7 @@ public class DaoGenreTest {
 		String newGenre = "";
 		DaoGenre instance = null;
 		boolean expResult = false;
-		boolean result = instance.update(oldGenre, newGenre);
+		boolean result = instance.lock().update(oldGenre, newGenre);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -206,7 +206,7 @@ public class DaoGenreTest {
 		String genre = "";
 		DaoGenre instance = null;
 		boolean expResult = false;
-		boolean result = instance.delete(genre);
+		boolean result = instance.lock().delete(genre);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
