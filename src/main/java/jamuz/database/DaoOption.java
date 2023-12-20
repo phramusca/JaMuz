@@ -17,17 +17,13 @@
 package jamuz.database;
 
 import jamuz.Jamuz;
-import jamuz.Machine;
 import jamuz.Option;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
-import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -49,8 +45,7 @@ public class DaoOption {
     }
 
     /**
-     * This is to reach writing operations (insert, update, delete) on the
-     * client table
+     * This is to reach writing operations (insert, update, delete)
      *
      * @return
      */
