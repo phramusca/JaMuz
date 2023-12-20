@@ -79,17 +79,18 @@ public class DbConnJaMuz extends StatSourceSQL {
 	 */
 	public DbConnJaMuz(DbInfo dbInfo, String locationLibrary) {
 		super(dbInfo, "JaMuz", "", true, true, true, true, false, true);
-		daoGenre = new DaoGenre(dbConn);
 		daoTag = new DaoTag(dbConn);
-		daoFileTag = new DaoFileTag(dbConn, daoTag);
+        daoFile = new DaoFile(dbConn, locationLibrary);
+		daoFileTag = new DaoFileTag(dbConn, daoTag, daoFile);
+        daoStatSource = new DaoStatSource(dbConn);
+        daoDevice = new DaoDevice(dbConn);
+		daoClient = new DaoClient(dbConn, daoDevice, daoStatSource);
+        
+        daoGenre = new DaoGenre(dbConn);
 		daoMachine = new DaoMachine(dbConn);
 		daoPlaylist = new DaoPlaylist(dbConn);
-		daoDevice = new DaoDevice(dbConn);
-		daoStatSource = new DaoStatSource(dbConn);
-		daoClient = new DaoClient(dbConn, daoDevice, daoStatSource);
 		daoSchema = new DaoSchema(dbConn);
 		daoDeviceFile = new DaoDeviceFile(dbConn);
-        daoFile = new DaoFile(dbConn, locationLibrary);
         daoFileTranscoded = new DaoFileTranscoded(dbConn);
         daoPath = new DaoPath(dbConn);
         daoPathAlbum = new DaoPathAlbum(dbConn);
