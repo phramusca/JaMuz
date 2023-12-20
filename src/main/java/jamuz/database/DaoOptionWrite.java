@@ -43,50 +43,55 @@ public class DaoOptionWrite {
     }
 
     /**
+     * Updates options for a machine
      *
      * @param machine
-     * @return
+     * @return true if the update is successful, false otherwise
      */
     public boolean update(Machine machine) {
-        try {
-            dbConn.connection.setAutoCommit(false);
+        synchronized (dbConn) {
+            try {
+                dbConn.connection.setAutoCommit(false);
 
-            PreparedStatement stUpdateOptions = dbConn.connection.prepareStatement(
-                    "UPDATE option SET value=? "
-                    + "WHERE idMachine=? AND idOptionType=?"); // NOI18N
+                try (PreparedStatement stUpdateOptions = dbConn.connection.prepareStatement(
+                        "UPDATE option SET value=? "
+                        + "WHERE idMachine=? AND idOptionType=?")) {
 
-            for (Option option : machine.getOptions()) {
-                if (option.getType().equals("path")
-                        && !option.getValue().isBlank()) { // NOI18N
-                    option.setValue(FilenameUtils.normalizeNoEndSeparator(option.getValue().trim())
-                            + File.separator);
+                    for (Option option : machine.getOptions()) {
+                        if (option.getType().equals("path") && !option.getValue().isBlank()) {
+                            option.setValue(FilenameUtils.normalizeNoEndSeparator(option.getValue().trim())
+                                    + File.separator);
+                        }
+
+                        stUpdateOptions.setString(1, option.getValue());
+                        stUpdateOptions.setInt(2, option.getIdMachine());
+                        stUpdateOptions.setInt(3, option.getIdOptionType());
+
+                        stUpdateOptions.addBatch();
+                    }
+
+                    long startTime = System.currentTimeMillis();
+                    int[] results = stUpdateOptions.executeBatch();
+                    dbConn.connection.commit();
+                    long endTime = System.currentTimeMillis();
+
+                    Jamuz.getLogger().log(Level.FINEST, "setOptions // {0} // Total execution time: {1}ms",
+                            new Object[]{results.length, endTime - startTime});
+
+                    // Check results
+                    for (int result : results) {
+                        if (result != 1) {
+                            return false;
+                        }
+                    }
+
+                    dbConn.connection.setAutoCommit(true);
+                    return true;
                 }
-
-                stUpdateOptions.setString(1, option.getValue());
-                stUpdateOptions.setInt(2, option.getIdMachine());
-                stUpdateOptions.setInt(3, option.getIdOptionType());
-
-                stUpdateOptions.addBatch();
+            } catch (SQLException ex) {
+                Popup.error(ex);
+                return false;
             }
-            long startTime = System.currentTimeMillis();
-            int[] results = stUpdateOptions.executeBatch();
-            dbConn.connection.commit();
-            long endTime = System.currentTimeMillis();
-            Jamuz.getLogger().log(Level.FINEST, "setOptions // {0} // Total execution time: {1}ms",
-                    new Object[]{results.length, endTime - startTime}); // NOI18N
-            // Check results
-            int result;
-            for (int i = 0; i < results.length; i++) {
-                result = results[i];
-                if (result != 1) {
-                    return false;
-                }
-            }
-            dbConn.connection.setAutoCommit(true);
-            return true;
-        } catch (SQLException ex) {
-            Popup.error(ex);
-            return false;
         }
     }
 
@@ -95,31 +100,38 @@ public class DaoOptionWrite {
      *
      * @param myOption
      * @param value
-     * @return
+     * @return true if the update is successful, false otherwise
      */
     public boolean update(Option myOption, String value) {
-        try {
-            if (myOption.getType().equals("path")) { // NOI18N
-                value = FilenameUtils.normalizeNoEndSeparator(value.trim()) + File.separator;
-            }
-            PreparedStatement stUpdateOption = dbConn.connection.prepareStatement("UPDATE option SET value=? "
-                    + "WHERE idMachine=? AND idOptionType=?"); // NOI18N
-            stUpdateOption.setString(1, value);
-            stUpdateOption.setInt(2, myOption.getIdMachine());
-            stUpdateOption.setInt(3, myOption.getIdOptionType());
+        synchronized (dbConn) {
+            try {
+                if (myOption.getType().equals("path")) {
+                    value = FilenameUtils.normalizeNoEndSeparator(value.trim()) + File.separator;
+                }
 
-            int nbRowsAffected = stUpdateOption.executeUpdate();
-            if (nbRowsAffected > 0) {
-                return true;
-            } else {
-                Jamuz.getLogger().log(Level.SEVERE, "stUpdateOption, value={0}, idMachine={1}, "
-                        + "idMachidOptionTypeine={2} # row(s) affected: +{3}", // NOI18N
-                        new Object[]{value, myOption.getIdMachine(), myOption.getIdOptionType(), nbRowsAffected});
+                try (PreparedStatement stUpdateOption = dbConn.connection.prepareStatement(
+                        "UPDATE option SET value=? WHERE idMachine=? AND idOptionType=?")) {
+
+                    stUpdateOption.setString(1, value);
+                    stUpdateOption.setInt(2, myOption.getIdMachine());
+                    stUpdateOption.setInt(3, myOption.getIdOptionType());
+
+                    int nbRowsAffected = stUpdateOption.executeUpdate();
+
+                    if (nbRowsAffected > 0) {
+                        return true;
+                    } else {
+                        Jamuz.getLogger().log(Level.SEVERE, "stUpdateOption, value={0}, idMachine={1}, "
+                                + "idOptionType={2} # row(s) affected: +{3}",
+                                new Object[]{value, myOption.getIdMachine(), myOption.getIdOptionType(), nbRowsAffected});
+                        return false;
+                    }
+                }
+            } catch (SQLException ex) {
+                Popup.error("setOption(" + myOption.toString() + "," + value + ")", ex);
                 return false;
             }
-        } catch (SQLException ex) {
-            Popup.error("setOption(" + myOption.toString() + "," + value + ")", ex); // NOI18N
-            return false;
         }
     }
+
 }
