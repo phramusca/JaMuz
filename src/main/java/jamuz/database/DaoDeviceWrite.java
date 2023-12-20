@@ -30,9 +30,6 @@ import java.util.logging.Level;
 public class DaoDeviceWrite {
 
     private final DbConn dbConn;
-    private PreparedStatement stUpdateDevice;
-    private PreparedStatement stInsertDevice;
-    private PreparedStatement stDeleteDevice;
 
     /**
      *
