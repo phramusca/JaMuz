@@ -891,7 +891,7 @@ public class ProcessMerge extends ProcessAbstract {
 					filesToUpdatePlayCounter.add(fileInfo);
 					completedList.add((FileInfo) fileInfo.clone());
 				}
-				Jamuz.getDb().fileTag().update(mergeListDbSelected, null);
+				Jamuz.getDb().fileTag().lock().update(mergeListDbSelected, null);
 			} else {
 				int[] results = selectedStatSource
 						.getSource()

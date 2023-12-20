@@ -828,7 +828,7 @@ public class PanelOptions extends javax.swing.JPanel {
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
 					if (Jamuz.getDb().tag().update((String) jListTags.getSelectedValue(), newTag)) {
-						if (Jamuz.getDb().fileTag().updateModifDate(newTag)) {
+						if (Jamuz.getDb().fileTag().lock().updateModifDate(newTag)) {
 							refreshListTagsModel();
 						}
 					}

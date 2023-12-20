@@ -340,7 +340,7 @@ public class DbConnJaMuz extends StatSourceSQL {
 	@Override
 	public int[] updateFileStatistics(ArrayList<? extends FileInfo> files) {
 		int[] results = super.updateFileStatistics(files);
-		return daoFileTag.update(files, results);
+		return daoFileTag.lock().update(files, results);
 	}
     
     @Override
