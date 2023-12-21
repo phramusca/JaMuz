@@ -219,11 +219,12 @@ public class ProcessMerge extends ProcessAbstract {
 		if(simulate) {
             dBJaMuz = new DbConnJaMuz(
 					new DbInfo(DbInfo.LibType.Sqlite, 
-							Jamuz.getDb().getDbConn().getInfo().getLocationWork(), "", ""), Jamuz.getMachine().getOptionValue("location.library"));
+							Jamuz.getDb().getDbConn().getInfo().getLocationWork(), "", ""));
 			//Connect and create Prepared Statements
 			if(!dBJaMuz.setUp(false)) {
 				return false;
 			}
+            dBJaMuz.setLocationLibrary(Jamuz.getMachine().getOptionValue("location.library"));
 		}
 		else {
 			dBJaMuz = Jamuz.getDb();

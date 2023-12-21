@@ -67,7 +67,7 @@ public class Jamuz {
 	 */
 	public static boolean configure(String appPath) {
 		Jamuz.appPath = appPath;
-		logPath = appPath + "logs" + File.separator;  //NOI18N //NOI18N //NOI18N
+		logPath = appPath + "logs" + File.separator;  //NOI18N
 		if (!setupDatabase()) {
 			return false;
 		}
@@ -86,12 +86,13 @@ public class Jamuz {
 		if (!readPlaylists()) {
 			return false;
 		}
-		if (!getCurrentMachine()) {
+        if (!getCurrentMachine()) {
 			return false;
 		}
 		if (!getMachine().read()) {
 			return false;
 		}
+        getDb().setLocationLibrary(Jamuz.getMachine().getOptionValue("location.library"));
 		if (!createLog()) {
 			return false;
 		}
@@ -252,7 +253,7 @@ public class Jamuz {
 		}
 
 		//Create and open connection to JaMuz JaMuzDbPath			
-		db = new DbConnJaMuz(new DbInfo(LibType.Sqlite, JaMuzDbPath, "", ""), Jamuz.getMachine().getOptionValue("location.library"));
+		db = new DbConnJaMuz(new DbInfo(LibType.Sqlite, JaMuzDbPath, "", ""));
 		return true;
 	}
 

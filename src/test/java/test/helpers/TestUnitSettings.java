@@ -53,7 +53,7 @@ public class TestUnitSettings {
     }
     
 	public static DbConnJaMuz createTempDatabase(DbInfo dbInfo) throws SQLException, ClassNotFoundException, IOException {
-		DbConnJaMuz dbConnJaMuz = new DbConnJaMuz(dbInfo, "");
+		DbConnJaMuz dbConnJaMuz = new DbConnJaMuz(dbInfo);
 		createTempDatabase(dbConnJaMuz);
         return dbConnJaMuz;
 	}

@@ -714,6 +714,7 @@ public class PanelMain extends javax.swing.JFrame {
         if (!Jamuz.getMachine().read()) {
             return false;
         }
+        Jamuz.getDb().setLocationLibrary(Jamuz.getMachine().getOptionValue("location.library"));
         //TODO OPTIONS Use listeners to address the following (and more)
 		//Rationalize to avoid potential errors
         //(especially when called from a process, this would not do the trick, 

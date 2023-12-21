@@ -41,17 +41,19 @@ public class DaoFile {
 
     private final DbConn dbConn;
     private final DaoFileWrite daoFileWrite;
-    private final String locationLibrary;
+    private String locationLibrary;
 
     /**
      *
      * @param dbConn
-     * @param locationLibrary
      */
-    public DaoFile(DbConn dbConn, String locationLibrary) {
+    public DaoFile(DbConn dbConn) {
         this.dbConn = dbConn;
-        this.locationLibrary = locationLibrary;
         this.daoFileWrite = new DaoFileWrite(dbConn);
+    }
+
+    public void setLocationLibrary(String locationLibrary) {
+        this.locationLibrary = locationLibrary;
     }
 
     /**
