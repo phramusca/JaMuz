@@ -28,8 +28,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import org.apache.commons.io.FilenameUtils;
 
-//FIXME ! In all Dao classes: Use this .lock() system
-//FIXME !! Only log in Dao classes and throw exceptions (need to evaluate the consequences first)
+//FIXME Z Only log in Dao classes and throw exceptions (need to evaluate the consequences first) and update tests to check (no) exception is thrown
 /**
  *
  * @author raph

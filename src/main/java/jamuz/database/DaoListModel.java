@@ -85,7 +85,7 @@ public class DaoListModel {
         try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
-                Object elementToAdd = null;
+                Object elementToAdd = dbConn.getStringValue(rs, field);
                 switch (field) {
                     case "album": // NOI18N
                         elementToAdd = handleAlbumField(rs);
