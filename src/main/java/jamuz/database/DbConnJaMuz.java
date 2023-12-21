@@ -70,17 +70,16 @@ public class DbConnJaMuz extends StatSourceSQL {
     private final DaoOption daoOption;
     private final DaoPathAlbum daoPathAlbum;
     private final DaoListModel daoListModel;
-
+    
 	/**
 	 * Creates a database dbConn.connection.
 	 *
 	 * @param dbInfo
-     * @param locationLibrary
 	 */
-	public DbConnJaMuz(DbInfo dbInfo, String locationLibrary) {
+	public DbConnJaMuz(DbInfo dbInfo) {
 		super(dbInfo, "JaMuz", "", true, true, true, true, false, true);
 		daoTag = new DaoTag(dbConn);
-        daoFile = new DaoFile(dbConn, locationLibrary);
+        daoFile = new DaoFile(dbConn);
 		daoFileTag = new DaoFileTag(dbConn, daoTag, daoFile);
         daoStatSource = new DaoStatSource(dbConn);
         daoDevice = new DaoDevice(dbConn);
@@ -96,9 +95,14 @@ public class DbConnJaMuz extends StatSourceSQL {
         daoPathAlbum = new DaoPathAlbum(dbConn);
         daoPlayCounter = new DaoPlayCounter(dbConn);
         daoOption = new DaoOption(dbConn);
-        daoListModel = new DaoListModel(dbConn, locationLibrary);
+        daoListModel = new DaoListModel(dbConn);
         
 	}
+
+    public void setLocationLibrary(String locationLibrary) {
+        daoFile.setLocationLibrary(locationLibrary);
+        daoListModel.setLocationLibrary(locationLibrary);
+    }
 
 	public DaoGenre genre() {
 		return daoGenre;

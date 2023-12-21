@@ -38,15 +38,17 @@ import javax.swing.DefaultListModel;
 public class DaoListModel {
 
     private final DbConn dbConn;
-    private final String locationLibrary;
+    private String locationLibrary;
 
     /**
      *
      * @param dbConn
-     * @param locationLibrary
      */
-    public DaoListModel(DbConn dbConn, String locationLibrary) {
+    public DaoListModel(DbConn dbConn) {
         this.dbConn = dbConn;
+    }
+
+    public void setLocationLibrary(String locationLibrary) {
         this.locationLibrary = locationLibrary;
     }
 

@@ -367,7 +367,6 @@ public class FileInfoInt extends FileInfo {
 		return percentRated;
 	}
 
-//	Jamuz.getMachine().getOption("location.library")
 	/**
 	 * Used when retrieving file information from database
 	 *
@@ -478,7 +477,7 @@ public class FileInfoInt extends FileInfo {
 		this.rootPath = rootPath;
 	}
 
-	public File getFullPath() {
+	public final File getFullPath() {
 		return new File(FilenameUtils.concat(this.rootPath, this.relativeFullPath));
 	}
 

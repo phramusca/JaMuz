@@ -21,7 +21,6 @@ import jamuz.Jamuz;
 import jamuz.utils.Inter;
 import jamuz.utils.Swing;
 import java.awt.Frame;
-import java.io.File;
 import javax.swing.JTextField;
 
 /**
