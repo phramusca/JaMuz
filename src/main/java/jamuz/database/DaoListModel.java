@@ -17,7 +17,6 @@
 package jamuz.database;
 
 import jamuz.FileInfoInt;
-import jamuz.Jamuz;
 import static jamuz.database.DbUtils.getCSVlist;
 import static jamuz.database.DbUtils.getSqlWHERE;
 import jamuz.gui.swing.ListElement;
@@ -83,112 +82,111 @@ public class DaoListModel {
     }
 
     private void getListModel(DefaultListModel myListModel, String sql, String field) {
-        ResultSet rs = null;
-        Statement st = null;
-        try {
-            st = dbConn.connection.createStatement();
-            rs = st.executeQuery(sql);
-            Object elementToAdd;
-            String rating;
-            int percentRated;
+        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+
             while (rs.next()) {
-                elementToAdd = dbConn.getStringValue(rs, field);
+                Object elementToAdd = null;
                 switch (field) {
                     case "album": // NOI18N
-                        int checked = rs.getInt("checked"); // NOI18N
-                        String album = (String) elementToAdd;
-                        String albumArtist = dbConn.getStringValue(rs, "albumArtist") + "<BR/>"; // NOI18N
-                        String year = dbConn.getStringValue(rs, "year"); // NOI18N
-                        if (albumArtist.isBlank()) { // NOI18N
-                            albumArtist = dbConn.getStringValue(rs, "artist"); // NOI18N
-                        }
-
-                        percentRated = rs.getInt("percentRated"); // NOI18N
-                        rating = "[" + rs.getDouble("albumRating") + "]";// + "/5]";
-                        if (percentRated != 100) {
-                            int errorLevel = 2;
-                            if (percentRated > 50 && percentRated < 100) {
-                                errorLevel = 1;
-                            }
-                            rating = FolderInfoResult.colorField(rating, errorLevel, false);
-                        }
-                        if (checked > 0) {
-                            album = FolderInfoResult.colorField(album, (3 - checked), false);
-                        }
-                        ListElement albumElement = makeListElement(elementToAdd, rs);
-                        albumElement.setDisplay("<html>" + year + " <b>" + album + "</b> " + rating + "<BR/>"
-                                + albumArtist + "</html>"); // NOI18N
-                        elementToAdd = albumElement;
+                        elementToAdd = handleAlbumField(rs);
                         break;
                     case "albumArtist": // NOI18N
-
-                        String source = dbConn.getStringValue(rs, "source"); // NOI18N
-
-                        String artist = (String) elementToAdd;
-                        if (source.equals("albumArtist")) { // NOI18N
-                            artist = "<b>" + artist + "</b>"; // NOI18N
-                        }
-                        int nbFiles = rs.getInt("nbFiles"); // NOI18N
-                        int nbPaths = rs.getInt("nbPaths"); // NOI18N
-                        percentRated = rs.getInt("percentRated"); // NOI18N
-                        rating = " [" + rs.getDouble("albumRating") + "]";// + "/5]";
-                        if (percentRated != 100) {
-                            int errorLevel = 2;
-                            if (percentRated > 50 && percentRated < 100) {
-                                errorLevel = 1;
-                            }
-                            rating = FolderInfoResult.colorField(rating,
-                                    errorLevel, false);
-                        }
-                        artist = "<html>" + artist + rating
-                                + "<BR/>" + nbPaths + " "
-                                + Inter.get("Tag.Album").toLowerCase(Locale.getDefault())
-                                + "(s), " + nbFiles + " "
-                                + Inter.get("Label.File").toLowerCase(Locale.getDefault())
-                                + "(s)</html>"; // NOI18N
-                        ListElement artistElement = makeListElement(elementToAdd, rs);
-                        artistElement.setDisplay(artist);
-                        elementToAdd = artistElement;
+                        elementToAdd = handleAlbumArtistField(rs);
                         break;
                     case "name": // that is for machine
-                        String name = (String) elementToAdd;
-                        elementToAdd = new ListElement(name, "<html>"
-                                + "<b>" + name + "</b><BR/>"
-                                + "<i>" + dbConn.getStringValue(rs, "description") + "</i>"
-                                + "</html>");
+                        elementToAdd = handleNameField(rs);
+                        break;
                     default:
                         break;
                 }
-                myListModel.addElement(elementToAdd);
+                if (elementToAdd != null) {
+                    myListModel.addElement(elementToAdd);
+                }
             }
         } catch (SQLException ex) {
             Popup.error("fillList(\"" + field + "\")", ex); // NOI18N
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
         }
     }
 
-    private ListElement makeListElement(Object elementToAdd, ResultSet rs) {
+    private Object handleAlbumField(ResultSet rs) throws SQLException {
+        int checked = rs.getInt("checked"); // NOI18N
+        String album = dbConn.getStringValue(rs, "album"); // NOI18N
+        String albumArtist = dbConn.getStringValue(rs, "albumArtist") + "<BR/>"; // NOI18N
+        String year = dbConn.getStringValue(rs, "year"); // NOI18N
+
+        if (albumArtist.isBlank()) { // NOI18N
+            albumArtist = dbConn.getStringValue(rs, "artist"); // NOI18N
+        }
+
+        int percentRated = rs.getInt("percentRated"); // NOI18N
+        String rating = "[" + rs.getDouble("albumRating") + "]";// + "/5]";
+
+        if (percentRated != 100) {
+            int errorLevel = 2;
+            if (percentRated > 50 && percentRated < 100) {
+                errorLevel = 1;
+            }
+            rating = FolderInfoResult.colorField(rating, errorLevel, false);
+        }
+
+        if (checked > 0) {
+            album = FolderInfoResult.colorField(album, (3 - checked), false);
+        }
+
+        ListElement albumElement = makeListElement(album, rs);
+        albumElement.setDisplay("<html>" + year + " <b>" + album + "</b> " + rating + "<BR/>"
+                + albumArtist + "</html>"); // NOI18N
+        return albumElement;
+    }
+
+    private Object handleAlbumArtistField(ResultSet rs) throws SQLException {
+        String source = dbConn.getStringValue(rs, "source"); // NOI18N
+        String artist = dbConn.getStringValue(rs, "albumArtist");
+
+        if (source.equals("albumArtist")) { // NOI18N
+            artist = "<b>" + artist + "</b>"; // NOI18N
+        }
+
+        int nbFiles = rs.getInt("nbFiles"); // NOI18N
+        int nbPaths = rs.getInt("nbPaths"); // NOI18N
+        int percentRated = rs.getInt("percentRated"); // NOI18N
+        String rating = " [" + rs.getDouble("albumRating") + "]";// + "/5]";
+
+        if (percentRated != 100) {
+            int errorLevel = 2;
+            if (percentRated > 50 && percentRated < 100) {
+                errorLevel = 1;
+            }
+            rating = FolderInfoResult.colorField(rating, errorLevel, false);
+        }
+
+        artist = "<html>" + artist + rating
+                + "<BR/>" + nbPaths + " "
+                + Inter.get("Tag.Album").toLowerCase(Locale.getDefault())
+                + "(s), " + nbFiles + " "
+                + Inter.get("Label.File").toLowerCase(Locale.getDefault())
+                + "(s)</html>"; // NOI18N
+
+        ListElement artistElement = makeListElement(artist, rs);
+        artistElement.setDisplay(artist);
+        return artistElement;
+    }
+
+    private Object handleNameField(ResultSet rs) throws SQLException {
+        String name = dbConn.getStringValue(rs, "name");
+        return new ListElement(name, "<html>"
+                + "<b>" + name + "</b><BR/>"
+                + "<i>" + dbConn.getStringValue(rs, "description") + "</i>"
+                + "</html>");
+    }
+
+    private ListElement makeListElement(Object elementToAdd, ResultSet rs) throws SQLException {
         FileInfoInt file = new FileInfoInt(dbConn.getStringValue(rs, "strPath")
                 + dbConn.getStringValue(rs, "name"), locationLibrary); // NOI18N
         file.setCoverHash(dbConn.getStringValue(rs, "coverHash")); // NOI18N
         file.setNbCovers(1);
         file.setAlbumArtist(dbConn.getStringValue(rs, "albumArtist")); // NOI18N
-        ListElement listElement = new ListElement((String) elementToAdd, file);
-        return listElement;
+        return new ListElement((String) elementToAdd, file);
     }
 
     /**

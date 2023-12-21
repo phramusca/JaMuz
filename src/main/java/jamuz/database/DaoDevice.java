@@ -16,7 +16,6 @@
  */
 package jamuz.database;
 
-import jamuz.Jamuz;
 import jamuz.process.sync.Device;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
@@ -70,38 +69,39 @@ public class DaoDevice {
      * @param hidden
      * @return
      */
-    public boolean get(LinkedHashMap<Integer, Device> devices,
-            String hostname, boolean hidden) {
-        ResultSet rs = null;
-        try {
-            PreparedStatement stSelectDevices = dbConn.connection.prepareStatement(
-                    "SELECT idDevice AS deviceId, source, destination, idPlaylist, D.name AS deviceName "
-                    + "FROM device D "
-                    + "JOIN machine M "
-                    + "ON M.idMachine=D.idMachine " // NOI18N
-                    + "WHERE M.name=? "
-                    + "ORDER BY D.name"); // NOI18N
+    public boolean get(LinkedHashMap<Integer, Device> devices, String hostname, boolean hidden) {
+        try (PreparedStatement stSelectDevices = dbConn.connection.prepareStatement(
+                "SELECT idDevice AS deviceId, source, destination, idPlaylist, D.name AS deviceName "
+                + "FROM device D "
+                + "JOIN machine M "
+                + "ON M.idMachine=D.idMachine " // NOI18N
+                + "WHERE M.name=? "
+                + "ORDER BY D.name")) { // NOI18N
+
             stSelectDevices.setString(1, hostname);
-            rs = stSelectDevices.executeQuery();
-            while (rs.next()) {
-                Device device = get(rs, hostname, hidden);
-                devices.put(device.getId(), device); // NOI18N
+
+            try (ResultSet rs = stSelectDevices.executeQuery()) {
+                while (rs.next()) {
+                    Device device = get(rs, hostname, hidden);
+                    devices.put(device.getId(), device); // NOI18N
+                }
+                return true;
             }
-            return true;
         } catch (SQLException ex) {
             Popup.error("getDevices", ex); // NOI18N
             return false;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
         }
     }
 
+    /**
+     * Get device information from ResultSet
+     *
+     * @param rs
+     * @param hostname
+     * @param hidden
+     * @return
+     * @throws SQLException
+     */
     public Device get(ResultSet rs, String hostname, boolean hidden) throws SQLException {
         int idDevice = rs.getInt("deviceId"); // NOI18N
         return new Device(idDevice,

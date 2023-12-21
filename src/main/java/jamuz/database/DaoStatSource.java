@@ -16,7 +16,6 @@
  */
 package jamuz.database;
 
-import jamuz.Jamuz;
 import jamuz.process.merge.StatSource;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
@@ -64,52 +63,50 @@ public class DaoStatSource {
     }
 
     /**
-     * Return list of database sources for given machine
+     * Return list of database sources for the given machine.
      *
-     * @param statSources
-     * @param hostname
-     * @param hidden
-     * @return
+     * @param statSources LinkedHashMap to store StatSource objects.
+     * @param hostname Machine hostname.
+     * @param hidden Boolean indicating whether to include hidden sources.
+     * @return True if the operation is successful, false otherwise.
      */
-    public boolean get(LinkedHashMap<Integer, StatSource> statSources,
-            String hostname, boolean hidden) {
-        ResultSet rs = null;
-        try {
-            String sql = """
-                SELECT S.idStatSource, S.name AS sourceName, S.idStatement, S.location, S.rootPath, S.idDevice, S.selected, M.name AS machineName
-                , S.lastMergeDate FROM statsource S
-                JOIN machine M ON M.idMachine=S.idMachine
-                WHERE M.name=? ORDER BY S.name""";
-            PreparedStatement stSelectStatSources = dbConn.connection.prepareStatement(sql); // NOI18N
+    public boolean get(LinkedHashMap<Integer, StatSource> statSources, String hostname, boolean hidden) {
+        try (PreparedStatement stSelectStatSources = dbConn.connection.prepareStatement(
+                "SELECT S.idStatSource, S.name AS sourceName, S.idStatement, S.location, S.rootPath, S.idDevice, S.selected, M.name AS machineName, S.lastMergeDate "
+                + "FROM statsource S "
+                + "JOIN machine M ON M.idMachine=S.idMachine "
+                + "WHERE M.name=? ORDER BY S.name")) {
             stSelectStatSources.setString(1, hostname);
-            rs = stSelectStatSources.executeQuery();
-            while (rs.next()) {
-                StatSource statSource = get(rs, hidden);
-                statSources.put(statSource.getId(), statSource);
+            try (ResultSet rs = stSelectStatSources.executeQuery()) {
+                while (rs.next()) {
+                    StatSource statSource = get(rs, hidden);
+                    statSources.put(statSource.getId(), statSource);
+                }
             }
             return true;
         } catch (SQLException ex) {
             Popup.error("getStatSources(" + hostname + ")", ex); // NOI18N
             return false;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
         }
     }
 
+    /**
+     * Convert a ResultSet row to a StatSource object.
+     *
+     * @param rs ResultSet containing the data.
+     * @param hidden Boolean indicating whether the source is hidden.
+     * @return StatSource object.
+     * @throws SQLException If a database access error occurs.
+     */
     public StatSource get(ResultSet rs, boolean hidden) throws SQLException {
-        int idStatSource = rs.getInt("idStatSource"); // NOI18N
-        int idStatement = rs.getInt("idStatement"); // NOI18N
-        String statSourceLocation = dbConn.getStringValue(rs, "location"); // NOI18N
-        String machineName = dbConn.getStringValue(rs, "machineName"); // NOI18N
+        int idStatSource = rs.getInt("idStatSource");
+        int idStatement = rs.getInt("idStatement");
+        String statSourceLocation = dbConn.getStringValue(rs, "location");
+        String machineName = dbConn.getStringValue(rs, "machineName");
         String lastMergeDate = dbConn.getStringValue(rs, "lastMergeDate", "1970-01-01 00:00:00");
-        int idDevice = rs.getInt("idDevice"); // NOI18N
-        boolean isSelected = rs.getBoolean("selected"); // NOI18N
+        int idDevice = rs.getInt("idDevice");
+        boolean isSelected = rs.getBoolean("selected");
+
         return new StatSource(
                 idStatSource,
                 dbConn.getStringValue(rs, "sourceName"),
@@ -118,7 +115,7 @@ public class DaoStatSource {
                 dbConn.getStringValue(rs, "rootPath"),
                 machineName,
                 idDevice,
-                isSelected, lastMergeDate, hidden); // NOI18N
+                isSelected, lastMergeDate, hidden);
     }
 
 }

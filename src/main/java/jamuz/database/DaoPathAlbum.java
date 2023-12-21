@@ -16,7 +16,6 @@
  */
 package jamuz.database;
 
-import jamuz.Jamuz;
 import jamuz.process.check.DuplicateInfo;
 import jamuz.process.check.FolderInfo;
 import jamuz.utils.DateTime;
@@ -64,29 +63,27 @@ public class DaoPathAlbum {
     }
 
     /**
-     * Check if a similar album exist in JaMuz database
+     * Check if a similar album exists in JaMuz database
      *
      * @param myList
      * @param album
      * @param idPath
      * @return
      */
-    public boolean checkSimilar(ArrayList<DuplicateInfo> myList,
-            String album, int idPath) {
+    public boolean checkSimilar(ArrayList<DuplicateInfo> myList, String album, int idPath) {
         if (!album.isBlank()) {
-            try {
+            try (PreparedStatement stSelectAlbumSimilar = dbConn.connection.prepareStatement(
+                    SELECT_DUPLICATE
+                    + " WHERE album LIKE ? AND P.idPath!=?"
+                    + GROUP_DUPLICATE)) {
 
-                PreparedStatement stSelectAlbumSimilar = dbConn.connection.prepareStatement(
-                        SELECT_DUPLICATE
-                        + " WHERE album LIKE ? AND P.idPath!=?"
-                        + GROUP_DUPLICATE); // NOI18N
-                stSelectAlbumSimilar.setString(1, "%" + album + "%"); // NOI18N
+                stSelectAlbumSimilar.setString(1, "%" + album + "%");
                 stSelectAlbumSimilar.setInt(2, idPath);
 
                 getDuplicates(myList, stSelectAlbumSimilar, 1);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkSimilarAlbum(" + album + ")", ex); // NOI18N
+                Popup.error("checkSimilarAlbum(" + album + ")", ex);
             }
         }
         return false;
@@ -100,21 +97,19 @@ public class DaoPathAlbum {
      * @param idPath
      * @return
      */
-    public boolean checkExact(ArrayList<DuplicateInfo> myList, String album,
-            int idPath) {
+    public boolean checkExact(ArrayList<DuplicateInfo> myList, String album, int idPath) {
         if (!album.isBlank()) {
-            try {
-                PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(
-                        SELECT_DUPLICATE
-                        + " WHERE album = ? AND P.idPath!=?"
-                        + GROUP_DUPLICATE); // NOI18N
+            try (PreparedStatement stSelectAlbumExact = dbConn.connection.prepareStatement(
+                    SELECT_DUPLICATE
+                    + " WHERE album = ? AND P.idPath!=?"
+                    + GROUP_DUPLICATE)) {
 
                 stSelectAlbumExact.setString(1, album);
                 stSelectAlbumExact.setInt(2, idPath);
                 getDuplicates(myList, stSelectAlbumExact, 1);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkExactAlbum(" + album + ")", ex); // NOI18N
+                Popup.error("checkExactAlbum(" + album + ")", ex);
             }
         }
         return false;
@@ -127,22 +122,19 @@ public class DaoPathAlbum {
      * @param mbId
      * @return
      */
-    public boolean checkDuplicate(
-            ArrayList<DuplicateInfo> myList,
-            String mbId) {
-        if (mbId != null && !mbId.isBlank()) { // NOI18N
-            try {
-                PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
-                        SELECT_DUPLICATE
-                        + " WHERE mbId LIKE ? " // NOI18N
-                        + " AND P.idPath!=? "
-                        + GROUP_DUPLICATE); // NOI18N
+    public boolean checkDuplicate(ArrayList<DuplicateInfo> myList, String mbId) {
+        if (mbId != null && !mbId.isBlank()) {
+            try (PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
+                    SELECT_DUPLICATE
+                    + " WHERE mbId LIKE ? "
+                    + " AND P.idPath!=? "
+                    + GROUP_DUPLICATE)) {
 
                 stSelectDuplicates.setString(1, mbId);
                 getDuplicates(myList, stSelectDuplicates, 2);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkDuplicate(" + mbId + ")", ex); // NOI18N
+                Popup.error("checkDuplicate(" + mbId + ")", ex);
             }
         }
         return false;
@@ -163,16 +155,15 @@ public class DaoPathAlbum {
     public boolean checkDuplicate(ArrayList<DuplicateInfo> myList,
             String albumArtist, String album, int idPath, int discNo, int discTotal) {
 
-        if (!albumArtist.isBlank() && !album.isBlank()) { // NOI18N
-            try {
-                PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
-                        SELECT_DUPLICATE
-                        + " WHERE albumArtist LIKE ? " // NOI18N
-                        + " AND album LIKE ? "
-                        + " AND P.idPath!=? "
-                        + " AND discNo=? "
-                        + " AND discTotal=? "
-                        + GROUP_DUPLICATE); // NOI18N
+        if (!albumArtist.isBlank() && !album.isBlank()) {
+            try (PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
+                    SELECT_DUPLICATE
+                    + " WHERE albumArtist LIKE ? "
+                    + " AND album LIKE ? "
+                    + " AND P.idPath!=? "
+                    + " AND discNo=? "
+                    + " AND discTotal=? "
+                    + GROUP_DUPLICATE)) {
 
                 stSelectDuplicates.setString(1, albumArtist);
                 stSelectDuplicates.setString(2, album);
@@ -182,7 +173,7 @@ public class DaoPathAlbum {
                 getDuplicates(myList, stSelectDuplicates, 2);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkDuplicate(" + albumArtist + "," + album + ")", ex); // NOI18N
+                Popup.error("checkDuplicate(" + albumArtist + "," + album + ")", ex);
             }
         }
         return false;
@@ -200,13 +191,12 @@ public class DaoPathAlbum {
     public boolean checkDuplicate(ArrayList<DuplicateInfo> myList,
             String albumArtist, String album, int idPath) {
 
-        if (!albumArtist.isBlank() && !album.isBlank()) { // NOI18N
-            try {
-                PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
-                        SELECT_DUPLICATE
-                        + " WHERE albumArtist LIKE ? " // NOI18N
-                        + " AND album LIKE ? AND P.idPath!=? "
-                        + GROUP_DUPLICATE); // NOI18N
+        if (!albumArtist.isBlank() && !album.isBlank()) {
+            try (PreparedStatement stSelectDuplicates = dbConn.connection.prepareStatement(
+                    SELECT_DUPLICATE
+                    + " WHERE albumArtist LIKE ? "
+                    + " AND album LIKE ? AND P.idPath!=? "
+                    + GROUP_DUPLICATE)) {
 
                 stSelectDuplicates.setString(1, albumArtist);
                 stSelectDuplicates.setString(2, album);
@@ -214,7 +204,7 @@ public class DaoPathAlbum {
                 getDuplicates(myList, stSelectDuplicates, 1);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkDuplicate(" + albumArtist + "," + album + ")", ex); // NOI18N
+                Popup.error("checkDuplicate(" + albumArtist + "," + album + ")", ex);
             }
         }
         return false;
@@ -223,34 +213,23 @@ public class DaoPathAlbum {
     /**
      * Return DuplicateInfo (for duplicate check)
      *
-     * @param myFileInfoList
-     * @param selGenre
-     * @param selArtist
-     * @param selAlbum
+     * @param myList
+     * @param st
+     * @param errorlevel
      */
     private void getDuplicates(ArrayList<DuplicateInfo> myList, PreparedStatement st,
             int errorlevel) {
-        ResultSet rs = null;
-        try {
-            rs = st.executeQuery();
-            String album;
-            String albumArtist;
-            double albumRating;
-            FolderInfo.CheckedFlag checkedFlag;
-            int discNo;
-            int discTotal;
+        try (ResultSet rs = st.executeQuery()) {
             while (rs.next()) {
-                album = dbConn.getStringValue(rs, "album");
-                albumArtist = dbConn.getStringValue(rs, "albumArtist");
-                albumRating = rs.getDouble("albumRating");
-                checkedFlag = FolderInfo.CheckedFlag.values()[rs.getInt("checked")];
-                discNo = rs.getInt("discNo");
-                discTotal = rs.getInt("discTotal");
+                String album = dbConn.getStringValue(rs, "album");
+                String albumArtist = dbConn.getStringValue(rs, "albumArtist");
+                double albumRating = rs.getDouble("albumRating");
+                FolderInfo.CheckedFlag checkedFlag = FolderInfo.CheckedFlag.values()[rs.getInt("checked")];
+                int discNo = rs.getInt("discNo");
+                int discTotal = rs.getInt("discTotal");
 
-                Date dbModifDate = DateTime.parseSqlUtc(
-                        dbConn.getStringValue(rs, "modifDate")); // NOI18N
-                String path = FilenameUtils.separatorsToSystem(
-                        dbConn.getStringValue(rs, "strPath")); // NOI18N
+                Date dbModifDate = DateTime.parseSqlUtc(dbConn.getStringValue(rs, "modifDate"));
+                String path = FilenameUtils.separatorsToSystem(dbConn.getStringValue(rs, "strPath"));
 
                 FolderInfo folderInfo = new FolderInfo(rs.getInt("idPath"),
                         path, dbModifDate, FolderInfo.CheckedFlag.values()[rs.getInt("checked")]);
@@ -259,16 +238,8 @@ public class DaoPathAlbum {
                         errorlevel, discNo, discTotal, folderInfo));
             }
         } catch (SQLException ex) {
-            Popup.error("getDuplicates(...)", ex); // NOI18N
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-
+            Popup.error("getDuplicates(...)", ex);
         }
     }
+
 }

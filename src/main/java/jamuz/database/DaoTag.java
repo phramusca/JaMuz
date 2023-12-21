@@ -16,11 +16,10 @@
  */
 package jamuz.database;
 
-import jamuz.Jamuz;
 import jamuz.utils.Popup;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -51,38 +50,21 @@ public class DaoTag {
     }
 
     /**
-     * Get list of tags
+     * Get list of tags.
      *
-     * @return
+     * @return ArrayList of tags.
      */
     public ArrayList<String> get() {
-        Statement st = null;
-        ResultSet rs = null;
         ArrayList<String> tags = new ArrayList<>();
-        try {
-            st = dbConn.connection.createStatement();
-            rs = st.executeQuery("SELECT id, value FROM tag ORDER BY value");
+
+        try (PreparedStatement stSelectTags = dbConn.connection.prepareStatement("SELECT id, value FROM tag ORDER BY value"); ResultSet rs = stSelectTags.executeQuery()) {
             while (rs.next()) {
                 tags.add(dbConn.getStringValue(rs, "value"));
             }
         } catch (SQLException ex) {
             Popup.error("getTags()", ex); // NOI18N
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
         }
+
         return tags;
     }
 

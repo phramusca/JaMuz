@@ -16,7 +16,6 @@
  */
 package jamuz.database;
 
-import jamuz.Jamuz;
 import jamuz.Option;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -54,49 +53,41 @@ public class DaoOption {
     }
 
     /**
-     * Get options for given machine
+     * Get options for the given machine
      *
      * @param myOptions
      * @param machineName
      * @return
      */
     public boolean get(ArrayList<Option> myOptions, String machineName) {
-        ResultSet rs = null;
-        try {
-            PreparedStatement stSelectOptions = dbConn.connection.prepareStatement(
-                    "SELECT O.idMachine, OT.name, O.value, O.idOptionType, OT.type "
-                    + "FROM option O, optiontype OT, machine M " // NOI18N
-                    + "WHERE O.idMachine=M.idMachine "
-                    + "AND O.idOptionType=OT.idOptionType "
-                    + "AND M.name=?");
+        try (PreparedStatement stSelectOptions = dbConn.connection.prepareStatement(
+                "SELECT O.idMachine, OT.name, O.value, O.idOptionType, OT.type "
+                + "FROM option O, optiontype OT, machine M " // NOI18N
+                + "WHERE O.idMachine=M.idMachine "
+                + "AND O.idOptionType=OT.idOptionType "
+                + "AND M.name=?")) {
             stSelectOptions.setString(1, machineName);
-            rs = stSelectOptions.executeQuery();
-            while (rs.next()) {
-                myOptions.add(new Option(
-                        dbConn.getStringValue(rs, "name"),
-                        dbConn.getStringValue(rs, "value"),
-                        rs.getInt("idMachine"),
-                        rs.getInt("idOptionType"),
-                        dbConn.getStringValue(rs, "type"))); // NOI18N
-            }
 
-            if (myOptions.size() <= 0) {
-                Popup.warning(Inter.get("Error.NoOption") + " \"" + machineName + "\"."); // NOI18N //NOI18N
-                return false;
-            }
+            try (ResultSet rs = stSelectOptions.executeQuery()) {
+                while (rs.next()) {
+                    myOptions.add(new Option(
+                            dbConn.getStringValue(rs, "name"),
+                            dbConn.getStringValue(rs, "value"),
+                            rs.getInt("idMachine"),
+                            rs.getInt("idOptionType"),
+                            dbConn.getStringValue(rs, "type"))); // NOI18N
+                }
 
-            return true;
+                if (myOptions.isEmpty()) {
+                    Popup.warning(Inter.get("Error.NoOption") + " \"" + machineName + "\"."); // NOI18N //NOI18N
+                    return false;
+                }
+
+                return true;
+            }
         } catch (SQLException ex) {
             Popup.error("getOptions(\"" + machineName + "\")", ex); // NOI18N
             return false;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
         }
     }
 
