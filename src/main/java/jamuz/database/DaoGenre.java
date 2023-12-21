@@ -1,6 +1,5 @@
 package jamuz.database;
 
-import jamuz.Jamuz;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,30 +26,21 @@ public class DaoGenre {
     }
 
     /**
-     * Checks if genre is in supported list
+     * Checks if genre is in the supported list.
      *
      * @param genre
      * @return
      */
     public boolean isSupported(String genre) {
-        ResultSet rs = null;
-        try {
-            PreparedStatement stCheckGenre = dbConn.connection.prepareStatement(
-                    "SELECT COUNT(*) FROM genre WHERE value=?"); // NOI18N
+        try (PreparedStatement stCheckGenre = dbConn.connection.prepareStatement(
+                "SELECT COUNT(*) FROM genre WHERE value=?")) {
             stCheckGenre.setString(1, genre);
-            rs = stCheckGenre.executeQuery();
-            return rs.getInt(1) > 0;
+            try (ResultSet rs = stCheckGenre.executeQuery()) {
+                return rs.getInt(1) > 0;
+            }
         } catch (SQLException ex) {
             Popup.error("checkGenre(" + genre + ")", ex); // NOI18N
             return false;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
         }
     }
 

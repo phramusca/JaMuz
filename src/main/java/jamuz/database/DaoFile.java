@@ -17,7 +17,6 @@
 package jamuz.database;
 
 import jamuz.FileInfoInt;
-import jamuz.Jamuz;
 import jamuz.StatItem;
 import static jamuz.database.DbUtils.getCSVlist;
 import static jamuz.database.DbUtils.getSqlWHERE;
@@ -31,7 +30,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 /**
  *
@@ -66,80 +64,41 @@ public class DaoFile {
     }
 
     /**
+     * Get the count of files based on the provided SQL query.
      *
      * @param sql
      * @return
      */
     public Integer getFilesCount(String sql) {
-        Statement st = null;
-        ResultSet rs = null;
-        try {
-            st = dbConn.connection.createStatement();
-            rs = st.executeQuery(sql);
+        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
             return rs.getInt(1);
-
         } catch (SQLException ex) {
-            Popup.error("getIdFileMax()", ex); // NOI18N
+            Popup.error("getIdFileMax()", ex);
             return null;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
         }
     }
 
     /**
-     * Gets MIN or MAX year from audio files
+     * Gets MIN or MAX year from audio files.
      *
      * @param maxOrMin
      * @return
      */
     public double getYear(String maxOrMin) {
-        Statement st = null;
-        ResultSet rs = null;
-        try {
-            st = dbConn.connection.createStatement();
+        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery("SELECT " + maxOrMin + "(year) FROM file "
+                + "WHERE year GLOB '[0-9][0-9][0-9][0-9]' AND length(year)=4")) {
             // FIXME ZZ PanelSelect better validate year (but regex is not available by
             // default :( )
-            rs = st.executeQuery("SELECT " + maxOrMin + "(year) FROM file "
-                    + "WHERE year GLOB '[0-9][0-9][0-9][0-9]' AND length(year)=4");
             // To exclude wrong entries (not YYYY format)
             return rs.getDouble(1);
-
         } catch (SQLException ex) {
-            Popup.error("getYear(" + maxOrMin + ")", ex); // NOI18N
+            Popup.error("getYear(" + maxOrMin + ")", ex);
             return -1.0;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
         }
     }
 
     /**
-     * Get statistics on given table (path or file)
+     * Get statistics on the given table (path or file).
      *
      * @param field
      * @param value
@@ -149,65 +108,45 @@ public class DaoFile {
      * @param selRatings
      * @return
      */
-    public StatItem getStatItem(String field, String value, String table,
-            String label, Color color, boolean[] selRatings) {
+    public StatItem getStatItem(String field, String value, String table, String label, Color color, boolean[] selRatings) {
         String sql;
-        Statement st = null;
-        ResultSet rs = null;
         try {
-            value = value.replaceAll("\"", "%"); // NOI18N
+            value = value.replaceAll("\"", "%");
             sql = "SELECT COUNT(*), COUNT(DISTINCT path.idPath), SUM(size), "
                     + "\nSUM(length), avg(rating) "
                     + "\nFROM file JOIN path ON path.idPath=file.idPath ";
-            if (value.contains("IN (")) { // NOI18N
-                sql += " \nWHERE " + table + "." + field + " " + value; // NOI18N
-            } else if (value.startsWith(">")) { // NOI18N
-                sql += " \nWHERE " + table + "." + field + value + ""; // NOI18N
-            } else if (value.contains("%")) { // NOI18N
-                sql += " \nWHERE " + table + "." + field + " LIKE \"" + value + "\""; // NOI18N
+            if (value.contains("IN (")) {
+                sql += " \nWHERE " + table + "." + field + " " + value;
+            } else if (value.startsWith(">")) {
+                sql += " \nWHERE " + table + "." + field + value + "";
+            } else if (value.contains("%")) {
+                sql += " \nWHERE " + table + "." + field + " LIKE \"" + value + "\"";
             } else {
-                sql += " \nWHERE " + table + "." + field + "='" + value + "'"; // NOI18N
+                sql += " \nWHERE " + table + "." + field + "='" + value + "'";
             }
             if (selRatings != null) {
                 sql += " \nAND file.rating IN " + getCSVlist(selRatings);
             }
-            st = dbConn.connection.createStatement();
-            rs = st.executeQuery(sql);
-            return new StatItem(label, value, rs.getLong(1), rs.getLong(2),
-                    rs.getLong(3), rs.getLong(4), rs.getDouble(5), color);
 
+            try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+                return new StatItem(label, value, rs.getLong(1), rs.getLong(2),
+                        rs.getLong(3), rs.getLong(4), rs.getDouble(5), color);
+            }
         } catch (SQLException ex) {
-            Popup.error("getStatItem(" + field + "," + value + ")", ex); // NOI18N
+            Popup.error("getStatItem(" + field + "," + value + ")", ex);
             return new StatItem(label, value, -1, -1, -1, -1, -1, Color.BLACK);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
         }
     }
 
     /**
-     * Get number of given "field" (genre, year, artist, album) for stats
-     * display
+     * Get the number of the given "field" (genre, year, artist, album) for
+     * stats display.
      *
      * @param stats
      * @param field
      * @param selRatings
      */
     public void getSelectionList4Stats(ArrayList<StatItem> stats, String field, boolean[] selRatings) {
-        Statement st = null;
-        ResultSet rs = null;
         try {
             String sql = "SELECT COUNT(*), COUNT(DISTINCT P.idPath), SUM(size), "
                     + " \nSUM(length), avg(rating)," + field + " "
@@ -215,43 +154,27 @@ public class DaoFile {
                     + " \nWHERE F.rating IN " + getCSVlist(selRatings)
                     + " \nGROUP BY " + field + " ORDER BY " + field; // NOI18N //NOI18N
 
-            st = dbConn.connection.createStatement();
-            rs = st.executeQuery(sql);
-            while (rs.next()) {
-                stats.add(new StatItem(dbConn.getStringValue(rs, field),
-                        dbConn.getStringValue(rs, field),
-                        rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4),
-                        rs.getDouble(5), null));
+            try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    stats.add(new StatItem(dbConn.getStringValue(rs, field),
+                            dbConn.getStringValue(rs, field),
+                            rs.getLong(1), rs.getLong(2), rs.getLong(3), rs.getLong(4),
+                            rs.getDouble(5), null));
+                }
             }
         } catch (SQLException ex) {
-            Popup.error("getSelectionList4Stats(" + field + ")", ex); // NOI18N
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
+            Popup.error("getSelectionList4Stats(" + field + ")", ex);
         }
     }
 
     /**
+     * Get the percentage of rated items for stats.
      *
      * @param stats
      */
     public void getPercentRatedForStats(ArrayList<StatItem> stats) {
-        Statement st = null;
-        ResultSet rs = null;
         try {
-            // Note Using "percent" as "%" is replaced by "-" because of decades. Now also
+            // Note: Using "percent" as "%" is replaced by "-" because of decades. Now also
             // replacing "percent" by "%"
             String sql = "SELECT count(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), round(avg(albumRating),1 ) as [rating] , T.range as [percentRated] \n"
                     + "FROM (\n"
@@ -271,52 +194,37 @@ public class DaoFile {
                     + "P ON F.idPath=P.idPath ) T \n"
                     + "GROUP BY T.range ";
 
-            st = dbConn.connection.createStatement();
-            rs = st.executeQuery(sql);
-            while (rs.next()) {
-                String label = dbConn.getStringValue(rs, "percentRated");
-                Color color = Color.WHITE;
-                switch (label) {
-                    case "0 -> 9 percent":
-                        color = new Color(233, 76, 18);
-                        break;
-                    case "10 -> 24 percent":
-                        color = new Color(233, 183, 18);
-                        break;
-                    case "25 -> 49 percent":
-                        color = new Color(212, 233, 18);
-                        break;
-                    case "50 -> 74 percent":
-                        color = new Color(153, 255, 153);
-                        break;
-                    case "75 -> 99 percent":
-                        color = new Color(51, 255, 51);
-                        break;
-                    case "x 100 percent x":
-                        color = new Color(0, 195, 0);
-                        break;
+            try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    String label = dbConn.getStringValue(rs, "percentRated");
+                    Color color = Color.WHITE;
+                    switch (label) {
+                        case "0 -> 9 percent":
+                            color = new Color(233, 76, 18);
+                            break;
+                        case "10 -> 24 percent":
+                            color = new Color(233, 183, 18);
+                            break;
+                        case "25 -> 49 percent":
+                            color = new Color(212, 233, 18);
+                            break;
+                        case "50 -> 74 percent":
+                            color = new Color(153, 255, 153);
+                            break;
+                        case "75 -> 99 percent":
+                            color = new Color(51, 255, 51);
+                            break;
+                        case "x 100 percent x":
+                            color = new Color(0, 195, 0);
+                            break;
+                    }
+                    stats.add(new StatItem(label, label,
+                            rs.getLong(1), rs.getLong(2), rs.getLong(3),
+                            rs.getLong(4), rs.getDouble(5), color));
                 }
-                stats.add(new StatItem(label, label,
-                        rs.getLong(1), rs.getLong(2), rs.getLong(3),
-                        rs.getLong(4), rs.getDouble(5), color));
             }
         } catch (SQLException ex) {
-            Popup.error("getPercentRatedForStats()", ex); // NOI18N
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
+            Popup.error("getPercentRatedForStats()", ex);
         }
     }
 
@@ -399,128 +307,83 @@ public class DaoFile {
      * @param rootPath
      * @return
      */
-    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql,
-            String rootPath) {
-
-        int idFile;
-        int idPath;
-        String relativePath;
-        String filename;
-        int length;
-        String format;
-        String bitRate;
-        int size;
-        float BPM;
-        String album;
-        String albumArtist;
-        String artist;
-        String comment;
-        int discNo;
-        int discTotal;
-        String genre;
-        int nbCovers;
-        String coverHash;
-        String title;
-        int trackNo;
-        int trackTotal;
-        String year;
-        int playCounter;
-        int rating;
-        String addedDate;
-        String lastPlayed;
-        String modifDate;
-        FolderInfo.CheckedFlag checkedFlag;
-        FolderInfo.CopyRight copyRight;
-        double albumRating;
-        int percentRated;
-        SyncStatus status;
-        String pathModifDate;
-        String pathMbid;
-        ReplayGain.GainValues replayGain;
-
+    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql, String rootPath) {
         myFileInfoList.clear();
-        Statement st = null;
-        ResultSet rs = null;
-        long startTime = System.currentTimeMillis();
-        try {
-            // Execute query
+        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
 
-            st = dbConn.connection.createStatement();
-            rs = st.executeQuery(sql);
             while (rs.next()) {
-                idFile = rs.getInt("idFile"); // NOI18N
-                idPath = rs.getInt("idPath"); // NOI18N
-                checkedFlag = FolderInfo.CheckedFlag.values()[rs.getInt("checked")]; // NOI18N
-                copyRight = FolderInfo.CopyRight.values()[rs.getInt("copyRight")];
+                int idFile = rs.getInt("idFile"); // NOI18N
+                int idPath = rs.getInt("idPath"); // NOI18N
+                FolderInfo.CheckedFlag checkedFlag = FolderInfo.CheckedFlag.values()[rs.getInt("checked")]; // NOI18N
+                FolderInfo.CopyRight copyRight = FolderInfo.CopyRight.values()[rs.getInt("copyRight")];
 
                 // Path can be empty if file is on root folder
-                relativePath = dbConn.getStringValue(rs, "strPath"); // NOI18N
+                String relativePath = dbConn.getStringValue(rs, "strPath"); // NOI18N
 
-                filename = dbConn.getStringValue(rs, "name"); // NOI18N
-                length = rs.getInt("length"); // NOI18N
-                format = dbConn.getStringValue(rs, "format"); // NOI18N
-                bitRate = dbConn.getStringValue(rs, "bitRate"); // NOI18N
-                size = rs.getInt("size"); // NOI18N
-                BPM = rs.getFloat("BPM"); // NOI18N
-                album = dbConn.getStringValue(rs, "album"); // NOI18N
-                albumArtist = dbConn.getStringValue(rs, "albumArtist"); // NOI18N
-                artist = dbConn.getStringValue(rs, "artist"); // NOI18N
-                comment = dbConn.getStringValue(rs, "comment"); // NOI18N
-                discNo = rs.getInt("discNo"); // NOI18N
-                discTotal = rs.getInt("discTotal"); // NOI18N
-                genre = dbConn.getStringValue(rs, "genre"); // NOI18N
-                nbCovers = rs.getInt("nbCovers"); // NOI18N
-                coverHash = dbConn.getStringValue(rs, "coverHash"); // NOI18N
-                title = dbConn.getStringValue(rs, "title"); // NOI18N
-                trackNo = rs.getInt("trackNo"); // NOI18N
-                trackTotal = rs.getInt("trackTotal"); // NOI18N
-                year = dbConn.getStringValue(rs, "year"); // NOI18N
-                playCounter = rs.getInt("playCounter"); // NOI18N
-                rating = rs.getInt("rating"); // NOI18N
-                addedDate = dbConn.getStringValue(rs, "addedDate"); // NOI18N
-                lastPlayed = dbConn.getStringValue(rs, "lastPlayed"); // NOI18N
-                modifDate = dbConn.getStringValue(rs, "modifDate"); // NOI18N
-                albumRating = rs.getDouble("albumRating");
-                percentRated = rs.getInt("percentRated");
-                status = SyncStatus.valueOf(dbConn.getStringValue(rs, "status", "INFO"));
-                pathModifDate = dbConn.getStringValue(rs, "pathModifDate");
-                pathMbid = dbConn.getStringValue(rs, "pathMbid");
-                replayGain = new ReplayGain.GainValues(rs.getFloat("trackGain"), rs.getFloat("albumGain"));
+                String filename = dbConn.getStringValue(rs, "name"); // NOI18N
+                int length = rs.getInt("length"); // NOI18N
+                String format = dbConn.getStringValue(rs, "format"); // NOI18N
+                String bitRate = dbConn.getStringValue(rs, "bitRate"); // NOI18N
+                int size = rs.getInt("size"); // NOI18N
+                float BPM = rs.getFloat("BPM"); // NOI18N
+                String album = dbConn.getStringValue(rs, "album"); // NOI18N
+                String albumArtist = dbConn.getStringValue(rs, "albumArtist"); // NOI18N
+                String artist = dbConn.getStringValue(rs, "artist"); // NOI18N
+                String comment = dbConn.getStringValue(rs, "comment"); // NOI18N
+                int discNo = rs.getInt("discNo"); // NOI18N
+                int discTotal = rs.getInt("discTotal"); // NOI18N
+                String genre = dbConn.getStringValue(rs, "genre"); // NOI18N
+                int nbCovers = rs.getInt("nbCovers"); // NOI18N
+                String coverHash = dbConn.getStringValue(rs, "coverHash"); // NOI18N
+                String title = dbConn.getStringValue(rs, "title"); // NOI18N
+                int trackNo = rs.getInt("trackNo"); // NOI18N
+                int trackTotal = rs.getInt("trackTotal"); // NOI18N
+                String year = dbConn.getStringValue(rs, "year"); // NOI18N
+                int playCounter = rs.getInt("playCounter"); // NOI18N
+                int rating = rs.getInt("rating"); // NOI18N
+                String addedDate = dbConn.getStringValue(rs, "addedDate"); // NOI18N
+                String lastPlayed = dbConn.getStringValue(rs, "lastPlayed"); // NOI18N
+                String modifDate = dbConn.getStringValue(rs, "modifDate"); // NOI18N
+                double albumRating = rs.getDouble("albumRating");
+                int percentRated = rs.getInt("percentRated");
+                SyncStatus status = SyncStatus.valueOf(dbConn.getStringValue(rs, "status", "INFO"));
+                String pathModifDate = dbConn.getStringValue(rs, "pathModifDate");
+                String pathMbid = dbConn.getStringValue(rs, "pathMbid");
+                ReplayGain.GainValues replayGain = new ReplayGain.GainValues(rs.getFloat("trackGain"), rs.getFloat("albumGain"));
 
-                myFileInfoList.add(
-                        new FileInfoInt(idFile, idPath, relativePath, filename,
-                                length, format, bitRate, size, BPM, album,
-                                albumArtist, artist, comment, discNo, discTotal,
-                                genre, nbCovers, title, trackNo, trackTotal,
-                                year, playCounter, rating, addedDate,
-                                lastPlayed, modifDate, coverHash,
-                                checkedFlag, copyRight, albumRating,
-                                percentRated, rootPath, status, pathModifDate,
-                                pathMbid, replayGain));
+                myFileInfoList.add(new FileInfoInt(idFile, idPath, relativePath, filename,
+                        length, format, bitRate, size, BPM, album,
+                        albumArtist, artist, comment, discNo, discTotal,
+                        genre, nbCovers, title, trackNo, trackTotal,
+                        year, playCounter, rating, addedDate,
+                        lastPlayed, modifDate, coverHash,
+                        checkedFlag, copyRight, albumRating,
+                        percentRated, rootPath, status, pathModifDate,
+                        pathMbid, replayGain));
             }
             return true;
         } catch (SQLException ex) {
             Popup.error("getFileInfoList()", ex); // NOI18N
             return false;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
-            long endTime = System.currentTimeMillis();
-            Jamuz.getLogger().log(Level.FINEST, "getFiles // Total execution time: {0}ms",
-                    new Object[]{endTime - startTime}); // NOI18N
         }
+    }
+
+    /**
+     * Get given folder's files for scan/check
+     *
+     * @param files
+     * @param idPath
+     * @return
+     */
+    public boolean getFiles(ArrayList<FileInfoInt> files, int idPath) {
+        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
+                + "0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
+                + "FROM file F, path P "
+                + "WHERE F.idPath=P.idPath "; // NOI18N
+        if (idPath > -1) {
+            sql += " AND P.idPath=" + idPath; // NOI18N
+        }
+        return getFiles(files, sql);
     }
 
     /**
@@ -553,64 +416,27 @@ public class DaoFile {
     }
 
     /**
+     * Retrieve file statistics based on the provided SQL query.
      *
-     * @param sql
-     * @return
+     * @param sql The SQL query to execute.
+     * @return A string representation of file statistics.
      */
     public String getFilesStats(String sql) {
+        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
 
-        Statement st = null;
-        ResultSet rs = null;
-        int nbFiles;
-        long totalSize;
-        long totalLength;
-        try {
-            // Execute query
-            st = dbConn.connection.createStatement();
-            rs = st.executeQuery(sql);
-            nbFiles = rs.getInt("nbFiles"); // NOI18N
-            totalSize = rs.getLong("totalSize"); // NOI18N
-            totalLength = rs.getLong("totalLength"); // NOI18N
-            return nbFiles + " file(s)"
-                    + " ; " + StringManager.humanReadableSeconds(totalLength)
-                    + " ; " + StringManager.humanReadableByteCount(totalSize, false);
+            int nbFiles = rs.getInt("nbFiles"); // NOI18N
+            long totalSize = rs.getLong("totalSize"); // NOI18N
+            long totalLength = rs.getLong("totalLength"); // NOI18N
+
+            return String.format("%d file(s); %s; %s",
+                    nbFiles,
+                    StringManager.humanReadableSeconds(totalLength),
+                    StringManager.humanReadableByteCount(totalSize, false));
+
         } catch (SQLException ex) {
-            Popup.error("getFileInfoList()", ex); // NOI18N
+            Popup.error("getFilesStats()", ex); // NOI18N
             return "";
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
         }
-    }
-
-    /**
-     * Get given folder's files for scan/check
-     *
-     * @param files
-     * @param idPath
-     * @return
-     */
-    public boolean getFiles(ArrayList<FileInfoInt> files, int idPath) {
-        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
-                + "0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
-                + "FROM file F, path P "
-                + "WHERE F.idPath=P.idPath "; // NOI18N
-        if (idPath > -1) {
-            sql += " AND P.idPath=" + idPath; // NOI18N
-        }
-        return getFiles(files, sql);
     }
 
 }

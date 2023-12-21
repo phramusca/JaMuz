@@ -54,22 +54,24 @@ public class DaoFileTag {
     }
 
     /**
+     * Get tags associated with a file
      *
      * @param tags
      * @param idFile
      * @return
      */
     public boolean get(ArrayList<String> tags, int idFile) {
-        try {
-            PreparedStatement stSelectTags = dbConn.connection.prepareStatement(
-                    "SELECT value FROM tag T JOIN tagFile F ON T.id=F.idTag "
-                    + "WHERE F.idFile=?"); // NOI18N
+        String sql = "SELECT value FROM tag T JOIN tagFile F ON T.id=F.idTag WHERE F.idFile=?";
+
+        try (PreparedStatement stSelectTags = dbConn.connection.prepareStatement(sql)) {
             stSelectTags.setInt(1, idFile);
-            ResultSet rs = stSelectTags.executeQuery();
-            while (rs.next()) {
-                tags.add(dbConn.getStringValue(rs, "value"));
+
+            try (ResultSet rs = stSelectTags.executeQuery()) {
+                while (rs.next()) {
+                    tags.add(dbConn.getStringValue(rs, "value"));
+                }
+                return true;
             }
-            return true;
         } catch (SQLException ex) {
             Popup.error("getTags(" + idFile + ")", ex); // NOI18N
             return false;

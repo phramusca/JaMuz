@@ -58,62 +58,69 @@ public class DaoPlaylist {
      * @return
      */
     public boolean get(HashMap<Integer, Playlist> playlists) {
-        try {
-            PreparedStatement stSelectPlaylists = dbConn.connection
-                    .prepareStatement("SELECT idPlaylist, name, limitDo, "
-                            + "limitValue, limitUnit, random, hidden, type, match, destExt FROM playlist"); // NOI18N
-            ResultSet rs = stSelectPlaylists.executeQuery();
+        String selectPlaylistsSql = "SELECT idPlaylist, name, limitDo, limitValue, limitUnit, random, hidden, type, match, destExt FROM playlist";
+        try (PreparedStatement stSelectPlaylists = dbConn.connection.prepareStatement(selectPlaylistsSql); ResultSet rs = stSelectPlaylists.executeQuery()) {
+
             while (rs.next()) {
-                int id = rs.getInt("idPlaylist"); // NOI18N
-                String playlistName = dbConn.getStringValue(rs, "name"); // NOI18N
-                boolean limit = rs.getBoolean("limitDo"); // NOI18N
-                int limitValue = rs.getInt("limitValue"); // NOI18N
-                Playlist.LimitUnit limitUnit = Playlist.LimitUnit.valueOf(dbConn.getStringValue(rs, "limitUnit")); // NOI18N
-                boolean random = rs.getBoolean("random"); // NOI18N
-                boolean hidden = rs.getBoolean("hidden");
-                String destExt = rs.getString("destExt");
-                Playlist.Type type = Playlist.Type.valueOf(dbConn.getStringValue(rs, "type")); // NOI18N
-                Playlist.Match match = Playlist.Match.valueOf(dbConn.getStringValue(rs, "match")); // NOI18N
-                Playlist playlist = new Playlist(id, playlistName, limit, limitValue, limitUnit, random, type, match,
-                        hidden, destExt);
-
-                // Get the filters
-                PreparedStatement stSelectPlaylistFilters = dbConn.connection
-                        .prepareStatement("SELECT idPlaylistFilter, field, operator, value "
-                                + "FROM playlistFilter " // NOI18N
-                                + "WHERE idPlaylist=?"); // NOI18N
-                stSelectPlaylistFilters.setInt(1, id);
-                ResultSet rsFilters = stSelectPlaylistFilters.executeQuery();
-                while (rsFilters.next()) {
-                    int idPlaylistFilter = rsFilters.getInt("idPlaylistFilter"); // NOI18N
-                    String field = dbConn.getStringValue(rsFilters, "field"); // NOI18N
-                    String operator = dbConn.getStringValue(rsFilters, "operator"); // NOI18N
-                    String value = dbConn.getStringValue(rsFilters, "value"); // NOI18N
-                    playlist.addFilter(new Playlist.Filter(idPlaylistFilter, Playlist.Field.valueOf(field),
-                            Playlist.Operator.valueOf(operator), value));
-                }
-
-                // Get the orders
-                PreparedStatement stSelectPlaylistOrders = dbConn.connection
-                        .prepareStatement("SELECT idPlaylistOrder, desc, field "
-                                + "FROM playlistOrder " // NOI18N
-                                + "WHERE idPlaylist=?"); // NOI18N
-                stSelectPlaylistOrders.setInt(1, id);
-                ResultSet rsOrders = stSelectPlaylistOrders.executeQuery();
-                while (rsOrders.next()) {
-                    int idPlaylistOrder = rsOrders.getInt("idPlaylistOrder"); // NOI18N
-                    boolean desc = rsOrders.getBoolean("desc"); // NOI18N
-                    String field = dbConn.getStringValue(rsOrders, "field"); // NOI18N
-                    playlist.addOrder(new Playlist.Order(idPlaylistOrder, Playlist.Field.valueOf(field), desc));
-                }
-
-                // Add playlist to hashmap
-                playlists.put(id, playlist);
+                Playlist playlist = buildPlaylistFromResultSet(rs);
+                playlists.put(playlist.getId(), playlist);
             }
+
             return true;
         } catch (SQLException ex) {
-            Popup.error("getPlaylists", ex); // NOI18N
+            Popup.error("getPlaylists", ex);
             return false;
+        }
+    }
+
+    private Playlist buildPlaylistFromResultSet(ResultSet rs) throws SQLException {
+        int id = rs.getInt("idPlaylist");
+        String playlistName = dbConn.getStringValue(rs, "name");
+        boolean limit = rs.getBoolean("limitDo");
+        int limitValue = rs.getInt("limitValue");
+        Playlist.LimitUnit limitUnit = Playlist.LimitUnit.valueOf(dbConn.getStringValue(rs, "limitUnit"));
+        boolean random = rs.getBoolean("random");
+        boolean hidden = rs.getBoolean("hidden");
+        String destExt = rs.getString("destExt");
+        Playlist.Type type = Playlist.Type.valueOf(dbConn.getStringValue(rs, "type"));
+        Playlist.Match match = Playlist.Match.valueOf(dbConn.getStringValue(rs, "match"));
+        Playlist playlist = new Playlist(id, playlistName, limit, limitValue, limitUnit, random, type, match, hidden, destExt);
+
+        fetchPlaylistFilters(playlist);
+        fetchPlaylistOrders(playlist);
+
+        return playlist;
+    }
+
+    private void fetchPlaylistFilters(Playlist playlist) throws SQLException {
+        String selectFiltersSql = "SELECT idPlaylistFilter, field, operator, value FROM playlistFilter WHERE idPlaylist=?";
+        try (PreparedStatement stSelectPlaylistFilters = dbConn.connection.prepareStatement(selectFiltersSql)) {
+            stSelectPlaylistFilters.setInt(1, playlist.getId());
+            ResultSet rsFilters = stSelectPlaylistFilters.executeQuery();
+
+            while (rsFilters.next()) {
+                int idPlaylistFilter = rsFilters.getInt("idPlaylistFilter");
+                String field = dbConn.getStringValue(rsFilters, "field");
+                String operator = dbConn.getStringValue(rsFilters, "operator");
+                String value = dbConn.getStringValue(rsFilters, "value");
+                playlist.addFilter(new Playlist.Filter(idPlaylistFilter, Playlist.Field.valueOf(field),
+                        Playlist.Operator.valueOf(operator), value));
+            }
+        }
+    }
+
+    private void fetchPlaylistOrders(Playlist playlist) throws SQLException {
+        String selectOrdersSql = "SELECT idPlaylistOrder, desc, field FROM playlistOrder WHERE idPlaylist=?";
+        try (PreparedStatement stSelectPlaylistOrders = dbConn.connection.prepareStatement(selectOrdersSql)) {
+            stSelectPlaylistOrders.setInt(1, playlist.getId());
+            ResultSet rsOrders = stSelectPlaylistOrders.executeQuery();
+
+            while (rsOrders.next()) {
+                int idPlaylistOrder = rsOrders.getInt("idPlaylistOrder");
+                boolean desc = rsOrders.getBoolean("desc");
+                String field = dbConn.getStringValue(rsOrders, "field");
+                playlist.addOrder(new Playlist.Order(idPlaylistOrder, Playlist.Field.valueOf(field), desc));
+            }
         }
     }
 

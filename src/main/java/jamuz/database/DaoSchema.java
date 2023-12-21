@@ -16,7 +16,6 @@
  */
 package jamuz.database;
 
-import jamuz.Jamuz;
 import jamuz.utils.DateTime;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
@@ -57,71 +56,45 @@ public class DaoSchema {
     }
 
     boolean getVersionHistory(ArrayList<DbVersion> versions) {
-        Pair existsTableVersionHistory = existsTableVersionHistory();
-        if (!(Boolean) existsTableVersionHistory.getKey()) {
-            // Method did not succeeded.
+        Pair<Boolean, Boolean> tableVersionHistoryStatus = existsTableVersionHistory();
+
+        if (!tableVersionHistoryStatus.getKey()) {
+            // Method did not succeed.
             return false;
         }
-        if (!(Boolean) existsTableVersionHistory.getValue()) {
-            // Table does not exists.
+
+        if (!tableVersionHistoryStatus.getValue()) {
+            // Table does not exist.
             versions.add(new DbVersion(0, new Date(0), new Date(0)));
             return true;
         }
-        ResultSet rs = null;
-        try {
-            String sql = """
-                SELECT version, upgradeStart, upgradeEnd
-                FROM versionHistory
-                ORDER BY version DESC
-                """;
-            PreparedStatement stSelectVersionHistory = dbConn.connection.prepareStatement(sql);
-            rs = stSelectVersionHistory.executeQuery();
+
+        try (PreparedStatement stSelectVersionHistory = dbConn.connection.prepareStatement(
+                "SELECT version, upgradeStart, upgradeEnd FROM versionHistory ORDER BY version DESC"); ResultSet rs = stSelectVersionHistory.executeQuery()) {
+
             while (rs.next()) {
-                int version = rs.getInt("version"); // NOI18N
+                int version = rs.getInt("version");
                 Date upgradeStart = DateTime.parseSqlUtc(rs.getString("upgradeStart"));
                 Date upgradeEnd = DateTime.parseSqlUtc(rs.getString("upgradeEnd"));
                 versions.add(new DbVersion(version, upgradeStart, upgradeEnd));
             }
+
             return true;
         } catch (SQLException ex) {
-            Popup.error("getVersionHistory", ex); // NOI18N
+            Popup.error("getVersionHistory", ex);
             return false;
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
         }
     }
 
-    private Pair existsTableVersionHistory() {
-        Statement st = null;
-        ResultSet rs = null;
-        try {
-            st = dbConn.connection.createStatement();
-            rs = st.executeQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='versionHistory';");
-            return new ImmutablePair(true, rs.getInt(1) > 0);
+    private Pair<Boolean, Boolean> existsTableVersionHistory() {
+        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='versionHistory';")) {
+
+            return new ImmutablePair<>(true, rs.getInt(1) > 0);
+
         } catch (SQLException ex) {
-            Popup.error("existsTableVersionHistory()", ex); // NOI18N
-            return new ImmutablePair(false, false);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close ResultSet");
-            }
-            try {
-                if (st != null) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().warning("Failed to close Statement");
-            }
+            Popup.error("existsTableVersionHistory()", ex);
+            return new ImmutablePair<>(false, false);
         }
     }
+
 }
