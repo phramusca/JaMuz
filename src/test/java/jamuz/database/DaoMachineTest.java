@@ -52,7 +52,7 @@ public class DaoMachineTest {
 
 	@AfterClass
 	public static void tearDownClass() {
-		new File(dbConnJaMuz.getDbConn().getInfo().getLocationOri()).delete();
+		TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
 	}
 
 	@Before

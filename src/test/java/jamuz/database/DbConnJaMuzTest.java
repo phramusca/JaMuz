@@ -30,7 +30,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import test.helpers.TestUnitSettings;
-import java.io.File;
 
 /**
  *
@@ -50,7 +49,7 @@ public class DbConnJaMuzTest {
 
 	@AfterClass
 	public static void tearDownClass() {
-		new File(dbConnJaMuz.getDbConn().getInfo().getLocationOri()).delete();
+		TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
 	}
 
 	@Before

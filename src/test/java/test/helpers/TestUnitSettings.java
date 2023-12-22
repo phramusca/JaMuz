@@ -86,4 +86,9 @@ public class TestUnitSettings {
 		file = FilenameUtils.concat(file, filename); //NOI18N
 		return new File(file); //NOI18N
 	}
+
+	public static void cleanupTempDatabase(DbConnJaMuz dbConnJaMuz) {
+		dbConnJaMuz.getDbConn().disconnect();
+		new File(dbConnJaMuz.getDbConn().getInfo().getLocationOri()).delete();
+	}
 }
