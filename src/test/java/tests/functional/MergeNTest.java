@@ -25,6 +25,7 @@ import jamuz.utils.Inter;
 import java.io.File;
 import java.util.ArrayList;
 import junit.framework.TestCase;
+
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +38,7 @@ import test.helpers.TestProcessHelper;
  *
  * @author phramusca <phramusca@gmail.com>
  */
-public class MergeNTest extends TestCase {
+public class MergeNTest extends TestCase { //TODO: do we really need to extends TestCase (here and in all other places), which is from old JUnit 3 (junit.framework.TestCase)
 
 	//FIXME TEST !!!!! Refer to "TestPlan.ods"
 	/**

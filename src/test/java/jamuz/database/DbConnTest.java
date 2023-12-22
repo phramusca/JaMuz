@@ -17,6 +17,7 @@
 package jamuz.database;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -192,5 +193,65 @@ public class DbConnTest {
 				TestResultSet.getResultSet("MailleNiouValiou"),
 				"GimmeValue"));
 	}
+
+    /**
+     * Test of getConnection method, of class DbConn.
+     */
+    @Test
+    public void testGetConnection() {
+        System.out.println("getConnection");
+        DbConn instance = null;
+        Connection expResult = null;
+        Connection result = instance.getConnection();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of connect method, of class DbConn.
+     */
+    @Test
+    public void testConnect_0args() {
+        System.out.println("connect");
+        DbConn instance = null;
+        boolean expResult = false;
+        boolean result = instance.connect();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of connect method, of class DbConn.
+     */
+    @Test
+    public void testConnect_boolean() {
+        System.out.println("connect");
+        boolean enforceForeignKeys = false;
+        DbConn instance = null;
+        boolean expResult = false;
+        boolean result = instance.connect(enforceForeignKeys);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getStringValue method, of class DbConn.
+     */
+    @Test
+    public void testGetStringValue_3args() {
+        System.out.println("getStringValue");
+        ResultSet rs = null;
+        String source = "";
+        String defaultValue = "";
+        DbConn instance = null;
+        String expResult = "";
+        String result = instance.getStringValue(rs, source, defaultValue);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 
 }

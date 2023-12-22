@@ -22,18 +22,18 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import test.helpers.TestUnitSettings;
 import java.io.IOException;
 import java.sql.SQLException;
+
 
 /**
  *
  * @author raph
  */
-public class DaoGenreWriteTest {
-
-    public DaoGenreWriteTest() {
+public class DaoSchemaWriteTest {
+    
+    public DaoSchemaWriteTest() {
     }
 
     @BeforeClass
@@ -51,54 +51,21 @@ public class DaoGenreWriteTest {
     @After
     public void tearDown() throws Exception {
     }
+    
 
     /**
-     * Test of insert method, of class DaoGenreWrite.
+     * Test of update method, of class DaoSchemaWrite.
      */
     @Test
-    @Ignore // Refer to DaoGenTest
-    public void testInsert() {
-        System.out.println("insert");
-        String genre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.insert(genre);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of update method, of class DaoGenreWrite.
-     */
-    @Test
-    @Ignore // Refer to DaoGenTest
     public void testUpdate() {
         System.out.println("update");
-        String oldGenre = "";
-        String newGenre = "";
-        DaoGenreWrite instance = null;
+        int requestedVersion = 0;
+        DaoSchemaWrite instance = null;
         boolean expResult = false;
-        boolean result = instance.update(oldGenre, newGenre);
+        boolean result = instance.update(requestedVersion);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
-    /**
-     * Test of delete method, of class DaoGenreWrite.
-     */
-    @Test
-    @Ignore // Refer to DaoGenTest
-    public void testDelete() {
-        System.out.println("delete");
-        String genre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.delete(genre);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
+    
 }
