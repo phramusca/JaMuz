@@ -29,207 +29,209 @@ import java.util.logging.Level;
  */
 public class DaoPlaylistWrite {
 
-    private final DbConn dbConn;
+	private final DbConn dbConn;
 
-    /**
-     *
-     * @param dbConn
-     */
-    public DaoPlaylistWrite(DbConn dbConn) {
-        this.dbConn = dbConn;
-    }
+	/**
+	 *
+	 * @param dbConn
+	 */
+	public DaoPlaylistWrite(DbConn dbConn) {
+		this.dbConn = dbConn;
+	}
 
-    /**
-     * Inserts an empty playlist
-     *
-     * @param playlist
-     * @return true if the insertion is successful, false otherwise
-     */
-    public boolean insert(Playlist playlist) {
-        synchronized (dbConn) {
-            try {
-                String sql = "INSERT INTO playlist "
-                        + "(name, limitDo, limitValue, limitUnit, type, match, random, hidden, destExt) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	/**
+	 * Inserts an empty playlist
+	 *
+	 * @param playlist
+	 * @return true if the insertion is successful, false otherwise
+	 */
+	public boolean insert(Playlist playlist) {
+		synchronized (dbConn) {
+			try {
+				String sql = "INSERT INTO playlist "
+						+ "(name, limitDo, limitValue, limitUnit, type, match, random, hidden, destExt) "
+						+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                try (PreparedStatement stInsertPlaylist = dbConn.connection.prepareStatement(sql)) {
-                    stInsertPlaylist.setString(1, playlist.getName());
-                    stInsertPlaylist.setBoolean(2, playlist.isLimit());
-                    stInsertPlaylist.setInt(3, playlist.getLimitValue());
-                    stInsertPlaylist.setString(4, playlist.getLimitUnit().name());
-                    stInsertPlaylist.setString(5, playlist.getType().name());
-                    stInsertPlaylist.setString(6, playlist.getMatch().name());
-                    stInsertPlaylist.setBoolean(7, playlist.isRandom());
-                    stInsertPlaylist.setBoolean(8, playlist.isHidden());
-                    stInsertPlaylist.setString(9, playlist.getDestExt());
+				try (PreparedStatement stInsertPlaylist = dbConn.connection.prepareStatement(sql)) {
+					stInsertPlaylist.setString(1, playlist.getName());
+					stInsertPlaylist.setBoolean(2, playlist.isLimit());
+					stInsertPlaylist.setInt(3, playlist.getLimitValue());
+					stInsertPlaylist.setString(4, playlist.getLimitUnit().name());
+					stInsertPlaylist.setString(5, playlist.getType().name());
+					stInsertPlaylist.setString(6, playlist.getMatch().name());
+					stInsertPlaylist.setBoolean(7, playlist.isRandom());
+					stInsertPlaylist.setBoolean(8, playlist.isHidden());
+					stInsertPlaylist.setString(9, playlist.getDestExt());
 
-                    int nbRowsAffected = stInsertPlaylist.executeUpdate();
-                    if (nbRowsAffected == 1) {
-                        return true;
-                    } else {
-                        Jamuz.getLogger().log(Level.SEVERE, "stInsertPlaylist, playlist=\"{0}\" "
-                                + "# row(s) affected: +{1}",
-                                new Object[]{playlist, nbRowsAffected}); // NOI18N
-                        return false;
-                    }
-                }
-            } catch (SQLException ex) {
-                Popup.error("insertPlaylist(" + playlist + ")", ex); // NOI18N
-                return false;
-            }
-        }
-    }
+					int nbRowsAffected = stInsertPlaylist.executeUpdate();
+					if (nbRowsAffected == 1) {
+						return true;
+					} else {
+						Jamuz.getLogger().log(Level.SEVERE, "stInsertPlaylist, playlist=\"{0}\" "
+								+ "# row(s) affected: +{1}",
+								new Object[]{playlist, nbRowsAffected}); // NOI18N
+						return false;
+					}
+				}
+			} catch (SQLException ex) {
+				Popup.error("insertPlaylist(" + playlist + ")", ex); // NOI18N
+				return false;
+			}
+		}
+	}
 
-    /**
-     * Updates a playlist
-     *
-     * @param playlist
-     * @return true if the update is successful, false otherwise
-     */
-    public boolean update(Playlist playlist) {
-        synchronized (dbConn) {
-            try {
-                String updateSql = "UPDATE playlist "
-                        + "SET limitDo=?, limitValue=?, limitUnit=?, random=?, "
-                        + "type=?, match=?, name=?, hidden=?, destExt=? "
-                        + "WHERE idPlaylist=?";
+	/**
+	 * Updates a playlist
+	 *
+	 * @param playlist
+	 * @return true if the update is successful, false otherwise
+	 */
+	public boolean update(Playlist playlist) {
+		synchronized (dbConn) {
+			try {
+				String updateSql = "UPDATE playlist "
+						+ "SET limitDo=?, limitValue=?, limitUnit=?, random=?, "
+						+ "type=?, match=?, name=?, hidden=?, destExt=? "
+						+ "WHERE idPlaylist=?";
 
-                try (PreparedStatement stUpdatePlaylist = dbConn.connection.prepareStatement(updateSql)) {
-                    stUpdatePlaylist.setBoolean(1, playlist.isLimit());
-                    stUpdatePlaylist.setDouble(2, playlist.getLimitValue());
-                    stUpdatePlaylist.setString(3, playlist.getLimitUnit().name());
-                    stUpdatePlaylist.setBoolean(4, playlist.isRandom());
-                    stUpdatePlaylist.setString(5, playlist.getType().name());
-                    stUpdatePlaylist.setString(6, playlist.getMatch().name());
-                    stUpdatePlaylist.setString(7, playlist.getName());
-                    stUpdatePlaylist.setBoolean(8, playlist.isHidden());
-                    stUpdatePlaylist.setString(9, playlist.getDestExt());
-                    stUpdatePlaylist.setInt(10, playlist.getId());
+				try (PreparedStatement stUpdatePlaylist = dbConn.connection.prepareStatement(updateSql)) {
+					stUpdatePlaylist.setBoolean(1, playlist.isLimit());
+					stUpdatePlaylist.setDouble(2, playlist.getLimitValue());
+					stUpdatePlaylist.setString(3, playlist.getLimitUnit().name());
+					stUpdatePlaylist.setBoolean(4, playlist.isRandom());
+					stUpdatePlaylist.setString(5, playlist.getType().name());
+					stUpdatePlaylist.setString(6, playlist.getMatch().name());
+					stUpdatePlaylist.setString(7, playlist.getName());
+					stUpdatePlaylist.setBoolean(8, playlist.isHidden());
+					stUpdatePlaylist.setString(9, playlist.getDestExt());
+					stUpdatePlaylist.setInt(10, playlist.getId());
 
-                    int nbRowsAffected = stUpdatePlaylist.executeUpdate();
-                    if (nbRowsAffected == 1) {
-                        deletePlaylistFilters(playlist.getId());
-                        deletePlaylistOrders(playlist.getId());
+					int nbRowsAffected = stUpdatePlaylist.executeUpdate();
+					if (nbRowsAffected == 1) {
+						deletePlaylistFilters(playlist.getId());
+						deletePlaylistOrders(playlist.getId());
+						
+						dbConn.connection.setAutoCommit(false);
+						try (PreparedStatement stInsertPlaylistFilter = dbConn.connection.prepareStatement(
+								"INSERT INTO playlistFilter (field, operator, value, idPlaylist) VALUES (?, ?, ?, ?)")) {
+							batchInsertPlaylistFilter(stInsertPlaylistFilter, playlist);
+						}
 
-                        try (PreparedStatement stInsertPlaylistFilter = dbConn.connection.prepareStatement(
-                                "INSERT INTO playlistFilter (field, operator, value, idPlaylist) VALUES (?, ?, ?, ?)")) {
-                            batchInsertPlaylistFilter(stInsertPlaylistFilter, playlist);
-                        }
+						try (PreparedStatement stInsertPlaylistOrder = dbConn.connection.prepareStatement(
+								"INSERT INTO playlistOrder (desc, field, idPlaylist) VALUES (?, ?, ?)")) {
+							batchInsertPlaylistOrder(stInsertPlaylistOrder, playlist);
+						}
+						dbConn.connection.setAutoCommit(true);
+						
+						return true;
+					} else {
+						Jamuz.getLogger().log(Level.SEVERE, "stUpdatePlaylist, playlist={0}, "
+								+ "# row(s) affected: +{1}",
+								new Object[]{playlist.toString(), nbRowsAffected});
+						return false;
+					}
+				}
+			} catch (SQLException ex) {
+				Popup.error("updatePlaylist(" + playlist.toString() + ")", ex);
+				return false;
+			}
+		}
+	}
 
-                        try (PreparedStatement stInsertPlaylistOrder = dbConn.connection.prepareStatement(
-                                "INSERT INTO playlistOrder (desc, field, idPlaylist) VALUES (?, ?, ?)")) {
-                            batchInsertPlaylistOrder(stInsertPlaylistOrder, playlist);
-                        }
+	private void deletePlaylistFilters(int idPlaylist) throws SQLException {
+		synchronized (dbConn) {
+			try (PreparedStatement stDeletePlaylistFilters = dbConn.connection
+					.prepareStatement("DELETE FROM playlistFilter WHERE idPlaylist=?")) {
+				stDeletePlaylistFilters.setInt(1, idPlaylist);
+				stDeletePlaylistFilters.executeUpdate();
+			}
+		}
+	}
 
-                        return true;
-                    } else {
-                        Jamuz.getLogger().log(Level.SEVERE, "stUpdatePlaylist, playlist={0}, "
-                                + "# row(s) affected: +{1}",
-                                new Object[]{playlist.toString(), nbRowsAffected});
-                        return false;
-                    }
-                }
-            } catch (SQLException ex) {
-                Popup.error("updatePlaylist(" + playlist.toString() + ")", ex);
-                return false;
-            }
-        }
-    }
+	private void deletePlaylistOrders(int idPlaylist) throws SQLException {
+		synchronized (dbConn) {
+			try (PreparedStatement stDeletePlaylistOrders = dbConn.connection
+					.prepareStatement("DELETE FROM playlistOrder WHERE idPlaylist=?")) {
+				stDeletePlaylistOrders.setInt(1, idPlaylist);
+				stDeletePlaylistOrders.executeUpdate();
+			}
+		}
+	}
 
-    private void deletePlaylistFilters(int idPlaylist) throws SQLException {
-        synchronized (dbConn) {
-            try (PreparedStatement stDeletePlaylistFilters = dbConn.connection
-                    .prepareStatement("DELETE FROM playlistFilter WHERE idPlaylist=?")) {
-                stDeletePlaylistFilters.setInt(1, idPlaylist);
-                stDeletePlaylistFilters.executeUpdate();
-            }
-        }
-    }
+	private void batchInsertPlaylistFilter(PreparedStatement stInsertPlaylistFilter, Playlist playlist) throws SQLException {
+		synchronized (dbConn) {
+			for (Playlist.Filter filter : playlist.getFilters()) {
+				stInsertPlaylistFilter.setString(1, filter.getFieldName());
+				stInsertPlaylistFilter.setString(2, filter.getOperatorName());
+				stInsertPlaylistFilter.setString(3, filter.getValue());
+				stInsertPlaylistFilter.setInt(4, playlist.getId());
+				stInsertPlaylistFilter.addBatch();
+			}
 
-    private void deletePlaylistOrders(int idPlaylist) throws SQLException {
-        synchronized (dbConn) {
-            try (PreparedStatement stDeletePlaylistOrders = dbConn.connection
-                    .prepareStatement("DELETE FROM playlistOrder WHERE idPlaylist=?")) {
-                stDeletePlaylistOrders.setInt(1, idPlaylist);
-                stDeletePlaylistOrders.executeUpdate();
-            }
-        }
-    }
+			executeBatchAndCommit(stInsertPlaylistFilter);
+		}
+	}
 
-    private void batchInsertPlaylistFilter(PreparedStatement stInsertPlaylistFilter, Playlist playlist) throws SQLException {
-        synchronized (dbConn) {
-            for (Playlist.Filter filter : playlist.getFilters()) {
-                stInsertPlaylistFilter.setString(1, filter.getFieldName());
-                stInsertPlaylistFilter.setString(2, filter.getOperatorName());
-                stInsertPlaylistFilter.setString(3, filter.getValue());
-                stInsertPlaylistFilter.setInt(4, playlist.getId());
-                stInsertPlaylistFilter.addBatch();
-            }
+	private void batchInsertPlaylistOrder(PreparedStatement stInsertPlaylistOrder, Playlist playlist) throws SQLException {
+		synchronized (dbConn) {
+			for (Playlist.Order order : playlist.getOrders()) {
+				stInsertPlaylistOrder.setBoolean(1, order.isDesc());
+				stInsertPlaylistOrder.setString(2, order.getFieldName());
+				stInsertPlaylistOrder.setInt(3, playlist.getId());
+				stInsertPlaylistOrder.addBatch();
+			}
 
-            executeBatchAndCommit(stInsertPlaylistFilter);
-        }
-    }
+			executeBatchAndCommit(stInsertPlaylistOrder);
+		}
+	}
 
-    private void batchInsertPlaylistOrder(PreparedStatement stInsertPlaylistOrder, Playlist playlist) throws SQLException {
-        synchronized (dbConn) {
-            for (Playlist.Order order : playlist.getOrders()) {
-                stInsertPlaylistOrder.setBoolean(1, order.isDesc());
-                stInsertPlaylistOrder.setString(2, order.getFieldName());
-                stInsertPlaylistOrder.setInt(3, playlist.getId());
-                stInsertPlaylistOrder.addBatch();
-            }
+	private void executeBatchAndCommit(PreparedStatement statement) throws SQLException {
+		synchronized (dbConn) {
+			long startTime = System.currentTimeMillis();
+			int[] results = statement.executeBatch();
+			dbConn.connection.commit();
+			long endTime = System.currentTimeMillis();
+			Jamuz.getLogger().log(Level.FINEST, "{0} // {1} // Total execution time: {2}ms",
+					new Object[]{statement.toString(), results.length, endTime - startTime});
 
-            executeBatchAndCommit(stInsertPlaylistOrder);
-        }
-    }
+			// Check results
+			for (int result : results) {
+				if (result != 1) {
+					throw new SQLException("Batch execution failed.");
+				}
+			}
+		}
+	}
 
-    private void executeBatchAndCommit(PreparedStatement statement) throws SQLException {
-        synchronized (dbConn) {
-            long startTime = System.currentTimeMillis();
-            int[] results = statement.executeBatch();
-            dbConn.connection.commit();
-            long endTime = System.currentTimeMillis();
-            Jamuz.getLogger().log(Level.FINEST, "{0} // {1} // Total execution time: {2}ms",
-                    new Object[]{statement.toString(), results.length, endTime - startTime});
+	/**
+	 * Deletes a playlist
+	 *
+	 * @param id
+	 * @return true if the playlist is successfully deleted, false otherwise
+	 */
+	public boolean delete(int id) {
+		synchronized (dbConn) {
+			try {
+				String deleteSql = "DELETE FROM playlist "
+						+ "WHERE idPlaylist=? "
+						+ "AND idPlaylist NOT IN (SELECT idPlaylist FROM device WHERE idPlaylist IS NOT NULL) "
+						+ "AND idPlaylist NOT IN (SELECT value FROM playlistFilter WHERE field='PLAYLIST')";
 
-            // Check results
-            for (int result : results) {
-                if (result != 1) {
-                    throw new SQLException("Batch execution failed.");
-                }
-            }
-        }
-    }
-
-    /**
-     * Deletes a playlist
-     *
-     * @param id
-     * @return true if the playlist is successfully deleted, false otherwise
-     */
-    public boolean delete(int id) {
-        synchronized (dbConn) {
-            try {
-                String deleteSql = "DELETE FROM playlist "
-                        + "WHERE idPlaylist=? "
-                        + "AND idPlaylist NOT IN (SELECT idPlaylist FROM device WHERE idPlaylist IS NOT NULL) "
-                        + "AND idPlaylist NOT IN (SELECT value FROM playlistFilter WHERE field='PLAYLIST')";
-
-                try (PreparedStatement stDeletePlaylist = dbConn.connection.prepareStatement(deleteSql)) {
-                    stDeletePlaylist.setInt(1, id);
-                    int nbRowsAffected = stDeletePlaylist.executeUpdate();
-                    if (nbRowsAffected > 0) {
-                        return true;
-                    } else {
-                        Popup.warning("Playlist is linked to a sync device or another playlist so cannot delete it.");
-                        return false;
-                    }
-                }
-            } catch (SQLException ex) {
-                Popup.error("deletePlaylist(" + id + ")", ex);
-                return false;
-            }
-        }
-    }
+				try (PreparedStatement stDeletePlaylist = dbConn.connection.prepareStatement(deleteSql)) {
+					stDeletePlaylist.setInt(1, id);
+					int nbRowsAffected = stDeletePlaylist.executeUpdate();
+					if (nbRowsAffected > 0) {
+						return true;
+					} else {
+						Popup.warning("Playlist is linked to a sync device or another playlist so cannot delete it.");
+						return false;
+					}
+				}
+			} catch (SQLException ex) {
+				Popup.error("deletePlaylist(" + id + ")", ex);
+				return false;
+			}
+		}
+	}
 
 }

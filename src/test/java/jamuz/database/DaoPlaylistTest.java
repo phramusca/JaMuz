@@ -16,8 +16,9 @@
  */
 package jamuz.database;
 
-import jamuz.Jamuz;
 import jamuz.Playlist;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.junit.After;
@@ -27,18 +28,20 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
+import test.helpers.TestUnitSettings;
 
 /**
  *
  * @author phramusca <phramusca@gmail.com>
  */
 public class DaoPlaylistTest {
-	
+	private static DbConnJaMuz dbConnJaMuz;
 	public DaoPlaylistTest() {
 	}
 	
 	@BeforeClass
-	public static void setUpClass() {
+	public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+		dbConnJaMuz = TestUnitSettings.createTempDatabase();
 	}
 	
 	@AfterClass
@@ -73,7 +76,7 @@ public class DaoPlaylistTest {
 		expectedPlaylists.add(playlist3);
 		expectedPlaylists.add(playlist4);
 		for(Playlist playlist : expectedPlaylists) {
-			assertTrue(Jamuz.getDb().playlist().lock().insert(playlist));
+			assertTrue(dbConnJaMuz.playlist().lock().insert(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
 
@@ -87,7 +90,7 @@ public class DaoPlaylistTest {
 		playlist3.addOrder(new Playlist.Order(1, Playlist.Field.LASTPLAYED, true));
 		playlist3.addOrder(new Playlist.Order(2, Playlist.Field.TITLE, false));
 		for(Playlist playlist : expectedPlaylists) {
-			assertTrue(Jamuz.getDb().playlist().lock().update(playlist));
+			assertTrue(dbConnJaMuz.playlist().lock().update(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
 		
@@ -108,11 +111,11 @@ public class DaoPlaylistTest {
 		playlist4.setTranscode(true);
 		playlist4.setType(Playlist.Type.Songs);		
 		for(Playlist playlist : expectedPlaylists) {
-			assertTrue(Jamuz.getDb().playlist().lock().update(playlist));
+			assertTrue(dbConnJaMuz.playlist().lock().update(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
 		
-		assertTrue(Jamuz.getDb().playlist().lock().delete(2));
+		assertTrue(dbConnJaMuz.playlist().lock().delete(2));
 		expectedPlaylists.remove(playlist2);
 		checkPlaylistList(expectedPlaylists);
 
@@ -122,22 +125,21 @@ public class DaoPlaylistTest {
 
 	private void checkPlaylistList(ArrayList<Playlist> expectedPlaylists) {
 		HashMap<Integer, Playlist> actualList = new HashMap<>();
-		assertTrue(Jamuz.getDb().playlist().get(actualList));
+		assertTrue(dbConnJaMuz.playlist().get(actualList));
 		//Collections.sort(expectedPlaylists); // getPlaylists() return sorted ?
 		assertArrayEquals(expectedPlaylists.toArray(), actualList.values().toArray());
 	}
-	
+
 	/**
-	 * Test of insert method, of class DaoPlaylist.
+	 * Test of lock method, of class DaoPlaylist.
 	 */
 	@Test
 	@Ignore // Refer to testPlaylists() above
-	public void testInsert() {
-		System.out.println("insert");
-		Playlist playlist = null;
+	public void testLock() {
+		System.out.println("lock");
 		DaoPlaylist instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().insert(playlist);
+		DaoPlaylistWrite expResult = null;
+		DaoPlaylistWrite result = instance.lock();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -154,38 +156,6 @@ public class DaoPlaylistTest {
 		DaoPlaylist instance = null;
 		boolean expResult = false;
 		boolean result = instance.get(playlists);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of update method, of class DaoPlaylist.
-	 */
-	@Test
-	@Ignore // Refer to testPlaylists() above
-	public void testUpdate() {
-		System.out.println("update");
-		Playlist playlist = null;
-		DaoPlaylist instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().update(playlist);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of delete method, of class DaoPlaylist.
-	 */
-	@Test
-	@Ignore // Refer to testPlaylists() above
-	public void testDelete() {
-		System.out.println("delete");
-		int id = 0;
-		DaoPlaylist instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().delete(id);
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
