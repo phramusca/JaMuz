@@ -33,6 +33,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import test.helpers.TestUnitSettings;
+import java.io.File;
 
 /**
  *
@@ -53,6 +54,7 @@ public class DaoStatSourceTest {
 
 	@AfterClass
 	public static void tearDownClass() {
+		new File(dbConnJaMuz.getDbConn().getInfo().getLocationOri()).delete();
 	}
 
 	@Before
@@ -71,8 +73,6 @@ public class DaoStatSourceTest {
 		//Check no default stat sources
 		ArrayList<StatSource> expectedStatSources = new ArrayList<>();
 		checkStatSourceList(expectedStatSources);
-		
-		
 
 		//Need a machine in db to insert a statSource because tables are linked
 		dbConnJaMuz.machine().lock().getOrInsert(testMachineName, new StringBuilder(), true);

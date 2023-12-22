@@ -31,6 +31,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import test.helpers.TestUnitSettings;
+import java.io.File;
 
 /**
  *
@@ -50,6 +51,7 @@ public class DaoGenreTest {
 
 	@AfterClass
 	public static void tearDownClass() {
+		new File(dbConnJaMuz.getDbConn().getInfo().getLocationOri()).delete();
 	}
 
 	@Before
@@ -96,16 +98,16 @@ public class DaoGenreTest {
 		assertTrue("updateGenre", dbConnJaMuz.genre().lock().update("Reggae", "Toto"));
 		expectedGenres.set(13, "Toto");
 		checkGenreList(expectedGenres);
-        
-        assertTrue("checkGenre", dbConnJaMuz.genre().isSupported("Toto"));
-        assertFalse("checkGenre negative", dbConnJaMuz.genre().isSupported("Reggae"));
+
+		assertTrue("checkGenre", dbConnJaMuz.genre().isSupported("Toto"));
+		assertFalse("checkGenre negative", dbConnJaMuz.genre().isSupported("Reggae"));
 
 		assertTrue("deleteGenre", dbConnJaMuz.genre().lock().delete("Toto"));
 		expectedGenres.remove("Toto");
 		checkGenreList(expectedGenres);
-        
-        assertFalse("checkGenre negative", dbConnJaMuz.genre().isSupported("Toto"));
-        assertFalse("checkGenre negative", dbConnJaMuz.genre().isSupported("Reggae"));
+
+		assertFalse("checkGenre negative", dbConnJaMuz.genre().isSupported("Toto"));
+		assertFalse("checkGenre negative", dbConnJaMuz.genre().isSupported("Reggae"));
 
 		assertTrue("insertGenre", dbConnJaMuz.genre().lock().insert("Reggae"));
 		expectedGenres.add("Reggae");
@@ -135,36 +137,35 @@ public class DaoGenreTest {
 		assertArrayEquals(expectedGenres.toArray(), myListModel.toArray());
 	}
 
-    /**
-     * Test of lock method, of class DaoGenre.
-     */
-    @Test
-    @Ignore // Refer to testGenre() above
-    public void testLock() {
-        System.out.println("lock");
-        DaoGenre instance = null;
-        DaoGenreWrite expResult = null;
-        DaoGenreWrite result = instance.lock();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+	/**
+	 * Test of lock method, of class DaoGenre.
+	 */
+	@Test
+	@Ignore // Refer to testGenre() above
+	public void testLock() {
+		System.out.println("lock");
+		DaoGenre instance = null;
+		DaoGenreWrite expResult = null;
+		DaoGenreWrite result = instance.lock();
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
 
-    /**
-     * Test of isSupported method, of class DaoGenre.
-     */
-    @Test
-    @Ignore // Refer to testGenre() above
-    public void testIsSupported() {
-        System.out.println("isSupported");
-        String genre = "";
-        DaoGenre instance = null;
-        boolean expResult = false;
-        boolean result = instance.isSupported(genre);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
+	/**
+	 * Test of isSupported method, of class DaoGenre.
+	 */
+	@Test
+	@Ignore // Refer to testGenre() above
+	public void testIsSupported() {
+		System.out.println("isSupported");
+		String genre = "";
+		DaoGenre instance = null;
+		boolean expResult = false;
+		boolean result = instance.isSupported(genre);
+		assertEquals(expResult, result);
+		// TODO review the generated test code and remove the default call to fail.
+		fail("The test case is a prototype.");
+	}
 
 }
