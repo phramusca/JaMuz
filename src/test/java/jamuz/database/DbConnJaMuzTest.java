@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import test.helpers.TestUnitSettings;
+import java.io.File;
 
 /**
  *
@@ -37,98 +38,98 @@ import test.helpers.TestUnitSettings;
  */
 public class DbConnJaMuzTest {
 
-    private static DbConnJaMuz dbConnJaMuz;
+	private static DbConnJaMuz dbConnJaMuz;
 
-    public DbConnJaMuzTest() {
-    }
+	public DbConnJaMuzTest() {
+	}
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        dbConnJaMuz = TestUnitSettings.createTempDatabase();
-    }
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		dbConnJaMuz = TestUnitSettings.createTempDatabase();
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-//		new File(dbConnJaMuz.getDbConn().getInfo().getLocationOri()).delete();
-    }
+	@AfterClass
+	public static void tearDownClass() {
+		new File(dbConnJaMuz.getDbConn().getInfo().getLocationOri()).delete();
+	}
 
-    @Before
-    public void setUp() throws SQLException, ClassNotFoundException, IOException {
-    }
+	@Before
+	public void setUp() throws SQLException, ClassNotFoundException, IOException {
+	}
 
-    @After
-    public void tearDown() {
-    }
+	@After
+	public void tearDown() {
+	}
 
-    @Test
-    public void testConcurrency() throws InterruptedException {
+	@Test
+	public void testConcurrency() throws InterruptedException {
 
-        ExecutorService executorService = Executors.newFixedThreadPool(150);
+		ExecutorService executorService = Executors.newFixedThreadPool(150);
 
-        for (int i = 0; i < 10; i++) {
-            final int index = i;
+		for (int i = 0; i < 10; i++) {
+			final int index = i;
 
-            executorService.submit(() -> {
-                System.out.println("file insert " + index);
-                int[] keyPath = new int[1];
-                dbConnJaMuz.path().lock().insert("4file/insert" + index, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", keyPath);
-                int[] key = new int[1];
-                FileInfoInt fileInfoInt = new FileInfoInt("file/insert" + index, "/root/file/insert" + index);
-                fileInfoInt.setIdPath(keyPath[0]);
-                dbConnJaMuz.file().lock().insert(fileInfoInt, key);
-                System.out.println("file inserted " + index);
-            });
+			executorService.submit(() -> {
+				System.out.println("file insert " + index);
+				int[] keyPath = new int[1];
+				dbConnJaMuz.path().lock().insert("4file/insert" + index, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", keyPath);
+				int[] key = new int[1];
+				FileInfoInt fileInfoInt = new FileInfoInt("file/insert" + index, "/root/file/insert" + index);
+				fileInfoInt.setIdPath(keyPath[0]);
+				dbConnJaMuz.file().lock().insert(fileInfoInt, key);
+				System.out.println("file inserted " + index);
+			});
 
-            executorService.submit(() -> {
-                System.out.println("file update " + index);
-                int[] keyPath = new int[1];
-                dbConnJaMuz.path().lock().insert("4file/update" + index, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", keyPath);
-                int[] key = new int[1];
-                FileInfoInt fileInfoInt = new FileInfoInt("file/update" + index, "/root/file/update" + index);
-                fileInfoInt.setIdPath(keyPath[0]);
-                dbConnJaMuz.file().lock().insert(fileInfoInt, key);
-                FileInfoInt file = dbConnJaMuz.file().getFile(key[0], "");
-                file.setGenre("Updated + " + key[0]);
-                dbConnJaMuz.file().lock().update(file);
-                System.out.println("file updated " + index);
-            });
+			executorService.submit(() -> {
+				System.out.println("file update " + index);
+				int[] keyPath = new int[1];
+				dbConnJaMuz.path().lock().insert("4file/update" + index, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", keyPath);
+				int[] key = new int[1];
+				FileInfoInt fileInfoInt = new FileInfoInt("file/update" + index, "/root/file/update" + index);
+				fileInfoInt.setIdPath(keyPath[0]);
+				dbConnJaMuz.file().lock().insert(fileInfoInt, key);
+				FileInfoInt file = dbConnJaMuz.file().getFile(key[0], "");
+				file.setGenre("Updated + " + key[0]);
+				dbConnJaMuz.file().lock().update(file);
+				System.out.println("file updated " + index);
+			});
 //
 //			executorService.submit(() -> {
 //				System.out.println("genre" + index);
 
 //				dbConnJaMuz.genre().insert("genre" + index);
 //			});
-            executorService.submit(() -> {
-                System.out.println("path insert " + index);
-                int[] key = new int[1];
-                dbConnJaMuz.path().lock().insert("path/insert" + index, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", key);
-                System.out.println("path inserted " + index);
-            });
+			executorService.submit(() -> {
+				System.out.println("path insert " + index);
+				int[] key = new int[1];
+				dbConnJaMuz.path().lock().insert("path/insert" + index, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", key);
+				System.out.println("path inserted " + index);
+			});
 
-            executorService.submit(() -> {
-                System.out.println("path update " + index);
-                final String path = "path/update" + index;
-                int[] key = new int[1];
-                dbConnJaMuz.path().lock().insert(path, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", key);
-                int idPath = dbConnJaMuz.path().getIdPath(path);
-                dbConnJaMuz.path().lock().update(idPath, new Date(), FolderInfo.CheckedFlag.OK_WARNING, path, "MbIdd + " + idPath);
-                System.out.println("path updated " + index);
-            });
+			executorService.submit(() -> {
+				System.out.println("path update " + index);
+				final String path = "path/update" + index;
+				int[] key = new int[1];
+				dbConnJaMuz.path().lock().insert(path, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", key);
+				int idPath = dbConnJaMuz.path().getIdPath(path);
+				dbConnJaMuz.path().lock().update(idPath, new Date(), FolderInfo.CheckedFlag.OK_WARNING, path, "MbIdd + " + idPath);
+				System.out.println("path updated " + index);
+			});
 
 //			executorService.submit(() -> {
 //				System.out.println("tag" + index);
 //				dbConnJaMuz.tag().insert("tag" + index);
 //			});
-        }
-        executorService.shutdown();
-        if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
-            System.err.println("Pool did not terminate");
-        }
+		}
+		executorService.shutdown();
+		if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+			System.err.println("Pool did not terminate");
+		}
 //        while (!executorService.isTerminated()) {
 //            Thread.sleep(1000); // Sleep for a short duration
 //        }
 
-        System.out.println("-- END --");
-    }
+		System.out.println("-- END --");
+	}
 
 }
