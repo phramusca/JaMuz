@@ -66,43 +66,56 @@ public class DaoClientTest {
     public void testClient() {
 
         System.out.println("testClient");
+        
+        //Machine needed by Device and StatSource
         String hostname = "testClientMachine";
         dbConnJaMuz.machine().lock().getOrInsert(hostname, new StringBuilder(), true);
+        
+        //Playlist needed by Device
         Playlist playlist = new Playlist(0, "whateverName",false, 0, Playlist.LimitUnit.Gio, false, Playlist.Type.Albums, Playlist.Match.All, false, "exttt");
         dbConnJaMuz.playlist().lock().insert(playlist);
+        
+        //Device needed by ClientInfo and StatSource
         Device device = new Device(-1, "login", "source", "clientLogin", 1, hostname, true);
         device.setIdPlaylist(1);
         dbConnJaMuz.device().lock().insertOrUpdate(device);
+        
+        //StatSource needed by ClientInfo
         StatSource statSource = new StatSource(hostname);
         dbConnJaMuz.statSource().lock().insertOrUpdate(statSource);
+        
+        //Creating a ClientInfo with device and statSource (with their id 1 in database)
         ClientInfo clientInfo = new ClientInfo("login", "pwd", "rootPath", "name", true);
         clientInfo.setDevice(new Device(1, hostname, "", "", 1, hostname, true));
         statSource.setId(1);
         clientInfo.setStatSource(statSource);
+        
+        //in case of an error in `dbConnJaMuz.client().lock().insertOrUpdate(clientInfo)`
         Jamuz.setDb(dbConnJaMuz);
-        Jamuz.readPlaylists(); //in case of an error in below method
+        Jamuz.readPlaylists(); 
         
         //When
         dbConnJaMuz.client().lock().insertOrUpdate(clientInfo);
+        //Set id
+        clientInfo = new ClientInfo(1, clientInfo.getLogin(), clientInfo.getName(), clientInfo.getPwd(), clientInfo.getDevice(), clientInfo.getStatSource(), true);
 
         //Then
         //FIXME TEST: Assert
         
-        // FIXME TEST Check all those methods
+        // FIXME TEST Check all those methods below (maybe split test by methods)
         
         
         clientInfo.setConnected(true);
-
-        clientInfo = new ClientInfo(1, clientInfo.getLogin(), clientInfo.getName(), clientInfo.getPwd(), clientInfo.getDevice(), clientInfo.getStatSource(), true);
         dbConnJaMuz.client().lock().insertOrUpdate(clientInfo);
 
-        dbConnJaMuz.client().get("login");
+        ClientInfo get = dbConnJaMuz.client().get("login");
 
         LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
 
         dbConnJaMuz.client().get(clients);
 
         // FIXME TEST Check other constraints
+        //FIXME TEST Negative cases
     }
 
     /**
