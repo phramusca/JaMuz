@@ -90,15 +90,7 @@ public class DaoStatSource {
         }
     }
 
-    /**
-     * Convert a ResultSet row to a StatSource object.
-     *
-     * @param rs ResultSet containing the data.
-     * @param hidden Boolean indicating whether the source is hidden.
-     * @return StatSource object.
-     * @throws SQLException If a database access error occurs.
-     */
-    public StatSource get(ResultSet rs, boolean hidden) throws SQLException {
+    StatSource get(ResultSet rs, boolean hidden) throws SQLException {
         int idStatSource = rs.getInt("idStatSource");
         int idStatement = rs.getInt("idStatement");
         String statSourceLocation = dbConn.getStringValue(rs, "location");
