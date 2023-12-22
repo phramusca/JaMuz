@@ -324,6 +324,10 @@ public class Jamuz {
 		return db;
 	}
 
+	public static void setDb(DbConnJaMuz db) {
+		Jamuz.db = db;
+	}
+
 	/**
 	 * Get Application current machine's options.
 	 *

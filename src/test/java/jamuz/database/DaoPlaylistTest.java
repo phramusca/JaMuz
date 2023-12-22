@@ -35,23 +35,25 @@ import test.helpers.TestUnitSettings;
  * @author phramusca <phramusca@gmail.com>
  */
 public class DaoPlaylistTest {
+
 	private static DbConnJaMuz dbConnJaMuz;
+
 	public DaoPlaylistTest() {
 	}
-	
+
 	@BeforeClass
 	public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
 		dbConnJaMuz = TestUnitSettings.createTempDatabase();
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	@Before
 	public void setUp() {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
@@ -60,22 +62,22 @@ public class DaoPlaylistTest {
 	public void testPlaylists() {
 
 		System.out.println("testPlaylists");
-		
+
 		//Check no default playlists
 		ArrayList<Playlist> expectedPlaylists = new ArrayList<>();
-		checkPlaylistList(expectedPlaylists);	
+		checkPlaylistList(expectedPlaylists);
 
 		//Create some playlists and test insertion in db
 		// Note : filters and orders are not inserted
 		Playlist playlist1 = new Playlist(1, "Pl 1", true, 0, Playlist.LimitUnit.minutes, true, Playlist.Type.Songs, Playlist.Match.All, true, "/fou/barre");
 		Playlist playlist2 = new Playlist(2, "Pl 2nd", false, 20, Playlist.LimitUnit.hours, false, Playlist.Type.Albums, Playlist.Match.Inde, false, "/another/path/to/somwhere/else/");
 		Playlist playlist3 = new Playlist(3, "Pl 3è du nom", true, -1, Playlist.LimitUnit.Mio, true, Playlist.Type.Songs, Playlist.Match.All, true, "/fou/barre");
-		Playlist playlist4 = new Playlist(4, "Pl IV le retour", true, 99999, Playlist.LimitUnit.files, false, Playlist.Type.Artists, Playlist.Match.One, false, "/car/en/barre");		
+		Playlist playlist4 = new Playlist(4, "Pl IV le retour", true, 99999, Playlist.LimitUnit.files, false, Playlist.Type.Artists, Playlist.Match.One, false, "/car/en/barre");
 		expectedPlaylists.add(playlist1);
 		expectedPlaylists.add(playlist2);
 		expectedPlaylists.add(playlist3);
 		expectedPlaylists.add(playlist4);
-		for(Playlist playlist : expectedPlaylists) {
+		for (Playlist playlist : expectedPlaylists) {
 			assertTrue(dbConnJaMuz.playlist().lock().insert(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
@@ -89,15 +91,15 @@ public class DaoPlaylistTest {
 		playlist3.addFilter(new Playlist.Filter(2, Playlist.Field.FORMAT, Playlist.Operator.ISNOT, "tutu"));
 		playlist3.addOrder(new Playlist.Order(1, Playlist.Field.LASTPLAYED, true));
 		playlist3.addOrder(new Playlist.Order(2, Playlist.Field.TITLE, false));
-		for(Playlist playlist : expectedPlaylists) {
+		for (Playlist playlist : expectedPlaylists) {
 			assertTrue(dbConnJaMuz.playlist().lock().update(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
-		
+
 		//Update playlists and check update in db
 		playlist1.addFilter(new Playlist.Filter(1, Playlist.Field.ADDEDDATE, Playlist.Operator.DATEGREATERTHAN, "titi"));
 		playlist1.addOrder(new Playlist.Order(2, Playlist.Field.ALBUMRATING, true));
-		playlist1.setHidden(false);	
+		playlist1.setHidden(false);
 		playlist2.setLimit(true);
 		playlist2.setLimitUnit(Playlist.LimitUnit.Mio);
 		playlist2.setLimitValue(666);
@@ -109,12 +111,12 @@ public class DaoPlaylistTest {
 		playlist3.setFilter(1, new Playlist.Filter(2, Playlist.Field.COPYRIGHT, Playlist.Operator.NUMISNOT, "thrt"));
 		playlist3.setOrder(0, new Playlist.Order(1, Playlist.Field.TRACKNO, false));
 		playlist4.setTranscode(true);
-		playlist4.setType(Playlist.Type.Songs);		
-		for(Playlist playlist : expectedPlaylists) {
+		playlist4.setType(Playlist.Type.Songs);
+		for (Playlist playlist : expectedPlaylists) {
 			assertTrue(dbConnJaMuz.playlist().lock().update(playlist));
 		}
 		checkPlaylistList(expectedPlaylists);
-		
+
 		assertTrue(dbConnJaMuz.playlist().lock().delete(2));
 		expectedPlaylists.remove(playlist2);
 		checkPlaylistList(expectedPlaylists);
@@ -160,5 +162,5 @@ public class DaoPlaylistTest {
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
-	
+
 }
