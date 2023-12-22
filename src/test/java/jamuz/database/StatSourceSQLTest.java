@@ -228,45 +228,5 @@ public class StatSourceSQLTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
-    public class StatSourceSQLImpl extends StatSourceSQL {
-
-        public StatSourceSQLImpl() {
-            super(null, "", "", false, false, false, false, false, false);
-        }
-
-        public void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
-        }
-
-        @Override
-        public boolean getTags(ArrayList<String> tags, FileInfo file) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        @Override
-        public boolean setUp(boolean isRemote) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-    }
-
-    public class StatSourceSQLImpl extends StatSourceSQL {
-
-        public StatSourceSQLImpl() {
-            super(null, "", "", false, false, false, false, false, false);
-        }
-
-        public void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
-        }
-    }
-
-    public class StatSourceSQLImpl extends StatSourceSQL {
-
-        public StatSourceSQLImpl() {
-            super(null, "", "", false, false, false, false, false, false);
-        }
-
-        public void setUpdateStatisticsParameters(FileInfo file) throws SQLException {
-        }
-    }
-    
+   
 }
