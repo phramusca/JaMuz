@@ -16,15 +16,8 @@
  */
 package jamuz.database;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import test.helpers.TestUnitSettings;
-import java.io.IOException;
-import java.sql.SQLException;
 
 
 /**

@@ -17,9 +17,6 @@
 package jamuz.database;
 
 import static org.junit.Assert.*;
-import test.helpers.TestUnitSettings;
-import java.io.IOException;
-import java.sql.SQLException;
 
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
