@@ -72,7 +72,7 @@ public class DaoTagWrite {
      * @return true if the tag already exists or insertion is successful, false
      * otherwise
      */
-    public boolean insertIfMissing(String tag) {
+    boolean insertIfMissing(String tag) {
         synchronized (dbConn) {
             try (PreparedStatement stSelectTag = dbConn.getConnection().prepareStatement(
                     "SELECT COUNT(*) FROM tag WHERE value=?"); ResultSet rs = stSelectTag.executeQuery()) {
