@@ -17,6 +17,9 @@
 
 package jamuz.utils;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
  * Internationalization class
  * @author phramusca <phramusca@gmail.com>
@@ -28,8 +31,12 @@ public class Inter {
 	 * @param key
 	 * @return
 	 */
-	public static String get(String key) {
-		return java.util.ResourceBundle.getBundle("inter/Bundle").getString(key);
-	}
+//	public static String get(String key) {
+//		return java.util.ResourceBundle.getBundle("inter/Bundle").getString(key);
+//	}
+    public static String get(String key) {
+    ResourceBundle bundle = ResourceBundle.getBundle("inter.Bundle", Locale.getDefault(), Inter.class.getClassLoader());
+    return bundle.getString(key);
+}
 	
 }
