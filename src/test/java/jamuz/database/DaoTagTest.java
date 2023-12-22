@@ -17,6 +17,8 @@
 package jamuz.database;
 
 import jamuz.Jamuz;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.DefaultListModel;
@@ -27,28 +29,33 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
+import test.helpers.TestUnitSettings;
 
 /**
  *
  * @author phramusca <phramusca@gmail.com>
  */
 public class DaoTagTest {
-	
+
+	private static DbConnJaMuz dbConnJaMuz;
+
 	public DaoTagTest() {
 	}
-	
+
 	@BeforeClass
-	public static void setUpClass() {
+	public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+		dbConnJaMuz = TestUnitSettings.createTempDatabase();
+		Jamuz.setDb(dbConnJaMuz);
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	@Before
 	public void setUp() {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
@@ -60,7 +67,7 @@ public class DaoTagTest {
 	public void testTag() {
 
 		System.out.println("testTag");
-		
+
 		ArrayList<String> expectedTags = new ArrayList<>();
 		expectedTags.add("Calme");
 		expectedTags.add("Normal");
@@ -104,34 +111,17 @@ public class DaoTagTest {
 		Collections.sort(expectedTags); // getTags() return sorted
 		assertArrayEquals(expectedTags.toArray(), actualList.toArray());
 	}
-	
-	/**
-	 * Test of insert method, of class DaoTag.
-	 */
-	@Test
-	@Ignore // Refer to testTag() above
-	public void testInsert() {
-		System.out.println("insert");
-		String tag = "";
-		DaoTag instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().insert(tag);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
 
 	/**
-	 * Test of insertIfMissing method, of class DaoTag.
+	 * Test of lock method, of class DaoTag.
 	 */
 	@Test
 	@Ignore // Refer to testTag() above
-	public void testInsertIfMissing() {
-		System.out.println("insertIfMissing");
-		String tag = "";
+	public void testLock() {
+		System.out.println("lock");
 		DaoTag instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().insertIfMissing(tag);
+		DaoTagWrite expResult = null;
+		DaoTagWrite result = instance.lock();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
@@ -152,37 +142,4 @@ public class DaoTagTest {
 		fail("The test case is a prototype.");
 	}
 
-	/**
-	 * Test of update method, of class DaoTag.
-	 */
-	@Test
-	@Ignore // Refer to testTag() above
-	public void testUpdate() {
-		System.out.println("update");
-		String oldTag = "";
-		String newTag = "";
-		DaoTag instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().update(oldTag, newTag);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of delete method, of class DaoTag.
-	 */
-	@Test
-	@Ignore // Refer to testTag() above
-	public void testDelete() {
-		System.out.println("delete");
-		String tag = "";
-		DaoTag instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().delete(tag);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-	
 }
