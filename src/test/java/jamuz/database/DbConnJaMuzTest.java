@@ -69,6 +69,8 @@ public class DbConnJaMuzTest {
 		for (int i = 0; i < 10; i++) {
 			final int index = i;
 
+			//FIXME TEST Check other methods, and check if no exceptions (need to throw them)
+			
 			executorService.submit(() -> {
 				System.out.println("file insert " + index);
 				int[] keyPath = new int[1];
@@ -93,12 +95,7 @@ public class DbConnJaMuzTest {
 				dbConnJaMuz.file().lock().update(file);
 				System.out.println("file updated " + index);
 			});
-//
-//			executorService.submit(() -> {
-//				System.out.println("genre" + index);
 
-//				dbConnJaMuz.genre().insert("genre" + index);
-//			});
 			executorService.submit(() -> {
 				System.out.println("path insert " + index);
 				int[] key = new int[1];
@@ -116,18 +113,11 @@ public class DbConnJaMuzTest {
 				System.out.println("path updated " + index);
 			});
 
-//			executorService.submit(() -> {
-//				System.out.println("tag" + index);
-//				dbConnJaMuz.tag().insert("tag" + index);
-//			});
 		}
 		executorService.shutdown();
 		if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
 			System.err.println("Pool did not terminate");
 		}
-//        while (!executorService.isTerminated()) {
-//            Thread.sleep(1000); // Sleep for a short duration
-//        }
 
 		System.out.println("-- END --");
 	}

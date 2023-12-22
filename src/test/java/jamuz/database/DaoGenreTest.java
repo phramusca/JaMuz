@@ -62,9 +62,6 @@ public class DaoGenreTest {
 	public void tearDown() {
 	}
 
-	/**
-	 * Test of genre methods, of class DbConnJaMuz.
-	 */
 	@Test
 	public void testGenre() {
 
