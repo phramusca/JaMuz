@@ -16,89 +16,97 @@
  */
 package jamuz.database;
 
+import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import test.helpers.TestUnitSettings;
 import java.io.IOException;
 import java.sql.SQLException;
+
 
 /**
  *
  * @author raph
  */
-public class DaoGenreWriteTest {
-
-    public DaoGenreWriteTest() {
+public class DbVersionTest {
+    
+    public DbVersionTest() {
     }
-
+    
+   private static DbConnJaMuz dbConnJaMuz;
+    
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
-
+    
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
-
+    
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
+    @Test
+	public void testxxxxxxxxxxxxxx() {
+
+		System.out.println("testxxxxxxxxxxxxxx");
+
+        //FIXME TEST Make unit test
+		//FIXME TEST Negative cases
+		//FIXME TEST Check other constraints
+	}
+
     /**
-     * Test of insert method, of class DaoGenreWrite.
+     * Test of getVersion method, of class DbVersion.
      */
     @Test
-    @Ignore // Refer to DaoGenTest
-    public void testInsert() {
-        System.out.println("insert");
-        String genre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.insert(genre);
+    public void testGetVersion() {
+        System.out.println("getVersion");
+        DbVersion instance = null;
+        int expResult = 0;
+        int result = instance.getVersion();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of update method, of class DaoGenreWrite.
+     * Test of getUpgradeStart method, of class DbVersion.
      */
     @Test
-    @Ignore // Refer to DaoGenTest
-    public void testUpdate() {
-        System.out.println("update");
-        String oldGenre = "";
-        String newGenre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.update(oldGenre, newGenre);
+    public void testGetUpgradeStart() {
+        System.out.println("getUpgradeStart");
+        DbVersion instance = null;
+        Date expResult = null;
+        Date result = instance.getUpgradeStart();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of delete method, of class DaoGenreWrite.
+     * Test of getUpgradeEnd method, of class DbVersion.
      */
     @Test
-    @Ignore // Refer to DaoGenTest
-    public void testDelete() {
-        System.out.println("delete");
-        String genre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.delete(genre);
+    public void testGetUpgradeEnd() {
+        System.out.println("getUpgradeEnd");
+        DbVersion instance = null;
+        Date expResult = null;
+        Date result = instance.getUpgradeEnd();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
+    
 }

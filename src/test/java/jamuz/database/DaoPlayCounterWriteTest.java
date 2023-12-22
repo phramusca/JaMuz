@@ -16,24 +16,25 @@
  */
 package jamuz.database;
 
+import jamuz.FileInfoInt;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import test.helpers.TestUnitSettings;
-import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  *
  * @author raph
  */
-public class DaoGenreWriteTest {
-
-    public DaoGenreWriteTest() {
+public class DaoPlayCounterWriteTest {
+    
+    public DaoPlayCounterWriteTest() {
     }
 
     @BeforeClass
@@ -52,53 +53,21 @@ public class DaoGenreWriteTest {
     public void tearDown() throws Exception {
     }
 
-    /**
-     * Test of insert method, of class DaoGenreWrite.
-     */
-    @Test
-    @Ignore // Refer to DaoGenTest
-    public void testInsert() {
-        System.out.println("insert");
-        String genre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.insert(genre);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
-     * Test of update method, of class DaoGenreWrite.
+     * Test of update method, of class DaoPlayCounterWrite.
      */
     @Test
-    @Ignore // Refer to DaoGenTest
     public void testUpdate() {
         System.out.println("update");
-        String oldGenre = "";
-        String newGenre = "";
-        DaoGenreWrite instance = null;
+        ArrayList<? super FileInfoInt> files = null;
+        int idStatSource = 0;
+        DaoPlayCounterWrite instance = null;
         boolean expResult = false;
-        boolean result = instance.update(oldGenre, newGenre);
+        boolean result = instance.update(files, idStatSource);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
-    /**
-     * Test of delete method, of class DaoGenreWrite.
-     */
-    @Test
-    @Ignore // Refer to DaoGenTest
-    public void testDelete() {
-        System.out.println("delete");
-        String genre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.delete(genre);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
+    
 }

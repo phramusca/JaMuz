@@ -22,6 +22,7 @@ import jamuz.process.check.ProcessCheck.Action;
 import jamuz.utils.ImageUtils;
 import java.util.ArrayList;
 import junit.framework.TestCase;
+
 import org.junit.Test;
 import test.helpers.AlbumBuffer;
 import test.helpers.TestSettings;
