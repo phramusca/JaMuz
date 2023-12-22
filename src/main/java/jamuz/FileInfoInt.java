@@ -16,7 +16,7 @@
  */
 package jamuz;
 
-import jamuz.DbConnJaMuz.SyncStatus;
+import jamuz.process.sync.SyncStatus;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.FolderInfo.CheckedFlag;
 import jamuz.process.check.FolderInfoResult;
@@ -100,6 +100,10 @@ public class FileInfoInt extends FileInfo {
 	public void setStatus(SyncStatus status) {
 		this.status = status;
 	}
+
+    public SyncStatus getStatus() {
+        return status;
+    }
 
 	/**
 	 *
@@ -363,7 +367,6 @@ public class FileInfoInt extends FileInfo {
 		return percentRated;
 	}
 
-//	Jamuz.getMachine().getOption("location.library")
 	/**
 	 * Used when retrieving file information from database
 	 *
@@ -474,7 +477,7 @@ public class FileInfoInt extends FileInfo {
 		this.rootPath = rootPath;
 	}
 
-	public File getFullPath() {
+	public final File getFullPath() {
 		return new File(FilenameUtils.concat(this.rootPath, this.relativeFullPath));
 	}
 
@@ -797,7 +800,7 @@ public class FileInfoInt extends FileInfo {
 			}
 
 			if (this.idFile > -1) { //File displayed in player may not be from database (check new)
-				Jamuz.getDb().setFileSaved(idFile);
+				Jamuz.getDb().file().lock().setSaved(idFile);
 			}
 			return true;
 		} catch (CannotWriteException | CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException | IllegalArgumentException ex) {
@@ -864,7 +867,7 @@ public class FileInfoInt extends FileInfo {
 	 */
 	public boolean insertTagsInDb() {
 		int[] key = new int[1]; //Hint: Using a int table as cannot pass a simple integer by reference
-		boolean result = Jamuz.getDb().insert(this, key);
+		boolean result = Jamuz.getDb().file().lock().insert(this, key);
 		this.idFile = key[0]; //Get insertion key
 		return result;
 	}
@@ -875,7 +878,7 @@ public class FileInfoInt extends FileInfo {
 	 * @return
 	 */
 	public boolean updateTagsInDb() {
-		return Jamuz.getDb().updateFile(this);
+		return Jamuz.getDb().file().lock().update(this);
 	}
 
 	/**
@@ -944,7 +947,7 @@ public class FileInfoInt extends FileInfo {
 		if (this.saveMetadata(FieldKey.GENRE, genre)) {
 			this.genre = genre;
 			if (this.idFile > -1) { //File displayed in player may not be from database (check new)
-				return Jamuz.getDb().updateFileGenre(this);
+				return Jamuz.getDb().file().lock().updateFileGenre(this);
 			}
 			return true;
 		}
@@ -959,7 +962,7 @@ public class FileInfoInt extends FileInfo {
 	public boolean updateRating(String rating) {
 		this.rating = Integer.valueOf(rating);
 		if (this.idFile > -1) { //File displayed in player may not be from database (check new)
-			return Jamuz.getDb().updateFileRating(this);
+			return Jamuz.getDb().file().lock().updateRating(this);
 		}
 		return true;
 	}
@@ -971,7 +974,7 @@ public class FileInfoInt extends FileInfo {
 	 */
 	public boolean updateInDb() {
 		this.modifDate = new Date(getFullPath().lastModified());
-		return Jamuz.getDb().updateFileModifDate(this.idFile, this.modifDate, this.getFilename());
+		return Jamuz.getDb().file().lock().updateModifDate(this.idFile, this.modifDate, this.getFilename());
 	}
 
 	/**
@@ -982,7 +985,7 @@ public class FileInfoInt extends FileInfo {
 	public boolean scanDeleted() {
 		File currentFile = getFullPath();
 		if (!currentFile.exists()) {
-			if (!Jamuz.getDb().deleteFile(this.idFile)) {
+			if (!Jamuz.getDb().file().lock().delete(this.idFile)) {
 				return false;
 			}
 		}
@@ -1305,6 +1308,14 @@ public class FileInfoInt extends FileInfo {
 		return this.albumArtist + separator + this.album;
 	}
 
+    public void setAlbumArtist(String albumArtist) {
+        this.albumArtist = albumArtist;
+    }
+
+    public void setNbCovers(int nbCovers) {
+        this.nbCovers = nbCovers;
+    }
+    
 	/**
 	 *
 	 * @return

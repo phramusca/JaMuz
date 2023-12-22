@@ -55,15 +55,15 @@ public class Machine {
 		statSources = new LinkedHashMap<>();
 		devices = new LinkedHashMap<>();
 		StringBuilder zText = new StringBuilder();
-		if (Jamuz.getDb().isMachine(this.name, zText, false)) {
+		if (Jamuz.getDb().machine().lock().getOrInsert(this.name, zText, false)) {
 			this.description = zText.toString();
-			if (!Jamuz.getDb().getOptions(options, this.name)) {
+			if (!Jamuz.getDb().option().get(options, this.name)) {
 				return false;
 			}
-			if (!Jamuz.getDb().getStatSources(statSources, this.name, false)) {
+			if (!Jamuz.getDb().statSource().get(statSources, this.name, false)) {
 				return false;
 			}
-			return Jamuz.getDb().getDevices(devices, this.name, false);
+			return Jamuz.getDb().device().get(devices, this.name, false);
 		} else {
 			return false;
 		}
@@ -138,7 +138,7 @@ public class Machine {
 	public Collection<StatSource> getStatSources(boolean force) {
 		if (force) {
 			statSources = new LinkedHashMap<>();
-			Jamuz.getDb().getStatSources(statSources, this.name, false);
+			Jamuz.getDb().statSource().get(statSources, this.name, false);
 		}
 		return statSources.values();
 	}
@@ -175,7 +175,7 @@ public class Machine {
 	public Collection<Device> getDevices(boolean force) {
 		if (force) {
 			devices = new LinkedHashMap<>();
-			Jamuz.getDb().getDevices(devices, this.name, false);
+			Jamuz.getDb().device().get(devices, this.name, false);
 		}
 		return devices.values();
 	}

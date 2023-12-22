@@ -222,6 +222,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected boolean updateRatingModifDate = false;
 
+    public boolean isUpdateRatingModifDate() {
+        return updateRatingModifDate;
+    }
+
 	/**
 	 *
 	 */
@@ -403,7 +407,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public ArrayList<String> readTags() {
 		ArrayList<String> out = new ArrayList<>();
 		if (idFile >= 0) {
-			Jamuz.getDb().getTags(out, idFile);
+			Jamuz.getDb().fileTag().get(out, idFile);
 		}
 		return out;
 	}

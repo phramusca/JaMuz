@@ -66,7 +66,7 @@ public class FileSystemTest {
 	 */
 	@Before
 	public void setUp() {
-		source = new File(FilenameUtils.concat(TestSettings.getRessourcesPath(),
+		source = new File(FilenameUtils.concat(TestSettings.getResourcesPath(),
 				FilenameUtils.concat("audioFiles", "1min.mp3")));
 
 		destination = new File(FilenameUtils.concat(TestSettings.getAppFolder(),
@@ -177,7 +177,7 @@ public class FileSystemTest {
 	@Test
 	public void testSize() {
 		System.out.println("size");
-		File file = new File(FilenameUtils.concat(TestSettings.getRessourcesPath(), "audioFiles"));
+		File file = new File(FilenameUtils.concat(TestSettings.getResourcesPath(), "audioFiles"));
 		long result = FileSystem.size(file.toPath());
 		assertEquals(7011134, result);
 	}

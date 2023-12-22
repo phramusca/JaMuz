@@ -212,7 +212,7 @@ public class MergeNTest extends TestCase {
 				1, //playlist.getId()is not set (only when retrieved from db)
 				Jamuz.getMachine().getName(), false
 		);
-		assertTrue("Device creation", Jamuz.getDb().updateDevice(device));
+		assertTrue("Device creation", Jamuz.getDb().device().lock().insertOrUpdate(device));
 
 		//Set stat sources
 		String rootPath;

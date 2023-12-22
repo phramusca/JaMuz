@@ -18,10 +18,11 @@ package jamuz.remote;
 
 import express.Express;
 import express.utils.Status;
-import jamuz.DbConnJaMuz;
+import jamuz.database.DbConnJaMuz;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
+import jamuz.process.sync.SyncStatus;
 import jamuz.process.check.Location;
 import jamuz.process.merge.ICallBackMerge;
 import jamuz.process.merge.ProcessMerge;
@@ -138,7 +139,7 @@ public class Server {
 				Device device = tableModel.getClient(login).getDevice();
 				String destExt = device.getPlaylist().getDestExt();
 				int idFile = Integer.parseInt(req.getQuery("id"));
-				FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt); 
+				FileInfoInt fileInfoInt = Jamuz.getDb().file().getFile(idFile, destExt); 
 				File file = fileInfoInt.getFullPath();
 				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
 					Location location = new Location("location.transcoded");
@@ -157,9 +158,9 @@ public class Server {
 					res.sendAttachment(file.toPath());
 					System.out.println("Sent"+msg);
 					ArrayList<FileInfoInt> insert = new ArrayList<>();
-					fileInfoInt.setStatus(DbConnJaMuz.SyncStatus.NEW);
+					fileInfoInt.setStatus(SyncStatus.NEW);
 					insert.add(fileInfoInt);
-					Jamuz.getDb().insertOrUpdateDeviceFiles(insert, device.getId());
+					Jamuz.getDb().deviceFile().lock().insertOrUpdate(insert, device.getId());
 				} else {
 					res.sendStatus(Status._404);
 				}		
@@ -278,7 +279,7 @@ public class Server {
 				String login=req.getHeader("login").get(0); 
 				Device device = tableModel.getClient(login).getDevice(); 
 				String destExt = device.getPlaylist().getDestExt(); 
-				DbConnJaMuz.SyncStatus status = DbConnJaMuz.SyncStatus.valueOf(req.getParam("status")); 
+				SyncStatus status = SyncStatus.valueOf(req.getParam("status")); 
 				boolean getCount = Boolean.parseBoolean(req.getQuery("getCount")); 
 				String limit=""; 
 				if(!getCount) { 
@@ -286,15 +287,16 @@ public class Server {
 					int nbFilesInBatch = Integer.parseInt(req.getQuery("nbFilesInBatch")); 
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch; 
 				} 
-				String statusSql = status.equals(DbConnJaMuz.SyncStatus.INFO) 
+				String statusSql = status.equals(SyncStatus.INFO) 
 						?"'INFO' AS status" 
 						:"DF.status"; 
 				 
-				String whereSql = status.equals(DbConnJaMuz.SyncStatus.INFO) 
+				String whereSql = status.equals(SyncStatus.INFO) 
 						?"(DF.status is null OR DF.status=\"INFO\")" 
 						:"DF.idDevice="+device.getId()+" AND DF.status=\""+status+"\""; 
 				 
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " : " F.idFile, F.idPath, F.name, F.rating, " 
+				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " 
+                        : " F.idFile, F.idPath, F.name, F.rating, " 
 					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, " 
 					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" + 
 				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, " 
@@ -319,7 +321,7 @@ public class Server {
 				 
 				setStatus(login, "Sending "+(getCount?"count":"list") + " of "+status.name().toUpperCase()+" files ("+limit+" )"); 
 				if(getCount) { 
-					res.send(Jamuz.getDb().getFilesCount(sql).toString()); 
+					res.send(Jamuz.getDb().file().getFilesCount(sql).toString()); 
 				} else { 
 					res.send(getFiles(sql, destExt)); 
 				} 
@@ -337,7 +339,7 @@ public class Server {
 	
 	private String getFiles(String sql, String destExt) {
 		ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
-		Jamuz.getDb().getFiles(filesToSend, sql);
+		Jamuz.getDb().file().getFiles(filesToSend, sql);
 		Map jsonAsMap = new HashMap();
 		JSONArray jSONArray = new JSONArray();
 		for (FileInfoInt fileInfo : filesToSend) {
@@ -466,14 +468,14 @@ public class Server {
 		//Creates a new machine, device and statSource
 		//and store the client
 		StringBuilder zText = new StringBuilder ();
-		if(Jamuz.getDb().isMachine(clientInfo.getLogin(), zText, true)) {
+		if(Jamuz.getDb().machine().lock().getOrInsert(clientInfo.getLogin(), zText, true)) {
 			Device device = new Device(-1, 
 					clientInfo.getLogin(), 
 					"source", clientInfo.getLogin(), 
 					-1, 
 					clientInfo.getLogin(), true);
-			if(Jamuz.getDb().updateDevice(device)) {
-				Device deviceWithId = Jamuz.getDb().getDevice(clientInfo.getLogin());
+			if(Jamuz.getDb().device().lock().insertOrUpdate(device)) {
+				Device deviceWithId = Jamuz.getDb().device().get(clientInfo.getLogin());
 				clientInfo.setDevice(deviceWithId);
 				StatSource statSource = new StatSource(
 					-1, clientInfo.getLogin(), 6, 
@@ -481,11 +483,11 @@ public class Server {
 					clientInfo.getRootPath(), 
 					clientInfo.getLogin(), 
 					deviceWithId.getId(), false, "", true);
-				if(Jamuz.getDb().insertOrUpdateStatSource(statSource)) {
-					StatSource statSourceWithId = Jamuz.getDb().getStatSource(clientInfo.getLogin());
+				if(Jamuz.getDb().statSource().lock().insertOrUpdate(statSource)) {
+					StatSource statSourceWithId = Jamuz.getDb().statSource().get(clientInfo.getLogin());
 					clientInfo.setStatSource(statSourceWithId);
-					if(Jamuz.getDb().updateClient(clientInfo)) {
-						ClientInfo clientInfoUpdated = Jamuz.getDb().getClient(clientInfo.getLogin());
+					if(Jamuz.getDb().client().lock().insertOrUpdate(clientInfo)) {
+						ClientInfo clientInfoUpdated = Jamuz.getDb().client().get(clientInfo.getLogin());
 						clientInfo.setId(clientInfoUpdated.getId());
 						tableModel.add(clientInfoUpdated);
 					}
@@ -529,7 +531,7 @@ public class Server {
 	 * @param destExt
 	 */
 	public void sendFile(String clientId, String login, int idFile, String destExt) {
-		FileInfoInt fileInfoInt = Jamuz.getDb().getFile(idFile, destExt);
+		FileInfoInt fileInfoInt = Jamuz.getDb().file().getFile(idFile, destExt);
 		setStatus(login, "Sending file: "+fileInfoInt.getRelativeFullPath());
 		if(!sendFile(clientId, fileInfoInt)) {
 			Popup.error("Cannot send missing file \""
@@ -614,7 +616,7 @@ public class Server {
 	public void fillClients() {
 		tableModel.clear();
 		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
-		Jamuz.getDb().getClients(clients);
+		Jamuz.getDb().client().get(clients);
 		for(ClientInfo clientInfo : clients.values()) {
 			tableModel.add(clientInfo);
 		}

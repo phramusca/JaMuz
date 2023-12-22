@@ -240,7 +240,7 @@ public class Playlist implements Comparable {
 	 * @return
 	 */
 	public boolean update() {
-		return Jamuz.getDb().updatePlaylist(this);
+		return Jamuz.getDb().playlist().lock().update(this);
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class Playlist implements Comparable {
 	 * @return
 	 */
 	public boolean insert() {
-		return Jamuz.getDb().insertPlaylist(this);
+		return Jamuz.getDb().playlist().lock().insert(this);
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class Playlist implements Comparable {
 	 * @return
 	 */
 	public boolean delete() {
-		return Jamuz.getDb().deletePlaylist(id);
+		return Jamuz.getDb().playlist().lock().delete(id);
 	}
 
 	/**
@@ -594,7 +594,7 @@ public class Playlist implements Comparable {
 			Jamuz.getLogger().finest(sql);
 
 			//Get files for current playlist
-			if (!Jamuz.getDb().getFiles(fileInfoListTemp, sql)) {
+			if (!Jamuz.getDb().file().getFiles(fileInfoListTemp, sql)) {
 				return false;
 			}
 		}

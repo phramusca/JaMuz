@@ -45,7 +45,7 @@ public class TestSettings {
 	 *
 	 * @return
 	 */
-	public static String getRessourcesPath() {
+	public static String getResourcesPath() {
 		return getFolder("Ressources");
 	}
 
@@ -81,7 +81,7 @@ public class TestSettings {
 	 */
 	public static void setupApplication() throws Exception {
 		//Refresh database (overwrite db test file with reference db)
-		File source = new File(getRessourcesPath() + "JaMuz_Minimal.db");
+		File source = new File(getResourcesPath() + "JaMuz_Minimal.db");
 		File destination = new File(getAppFolder() + "JaMuz.db");
 		FileSystem.copyFile(source, destination);
 
@@ -92,7 +92,7 @@ public class TestSettings {
 
 		//Set options for current machine
 		for (Option option : Jamuz.getMachine().getOptions()) {
-			Jamuz.getDb().updateOption(option, getOptionValue(option.getId()));
+			Jamuz.getDb().option().lock().update(option, getOptionValue(option.getId()));
 		}
 
 		//Read created options
@@ -119,12 +119,12 @@ public class TestSettings {
 	public static void addStatSource(String name, int idStatement, String rootPath, int idDevice) throws IOException {
 		String destination = copyStatSourceDatabase(name, name);
 		//Define stat source in Jamuz dB
-		Jamuz.getDb().insertOrUpdateStatSource(new StatSource(-1, name, idStatement, destination, "", "",
+		Jamuz.getDb().statSource().lock().insertOrUpdate(new StatSource(-1, name, idStatement, destination, "", "",
 				rootPath, Jamuz.getMachine().getName(), idDevice, true, "", false));
 	}
 
 	public static String copyStatSourceDatabase(String sourceName, String destinationName) throws IOException {
-		File sourceFile = new File(getRessourcesPath() + "statSources/" + sourceName);
+		File sourceFile = new File(getResourcesPath() + "statSources/" + sourceName);
 		String destination = getStatSourcesFolder() + destinationName;
 		File destinationFile = new File(destination);
 		FileSystem.copyFile(sourceFile, destinationFile);

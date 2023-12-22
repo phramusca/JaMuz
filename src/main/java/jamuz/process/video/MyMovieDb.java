@@ -17,8 +17,8 @@
 package jamuz.process.video;
 
 import info.movito.themoviedbapi.model.MovieDb;
-import jamuz.DbInfo;
-import jamuz.DbInfo.LibType;
+import jamuz.database.DbInfo;
+import jamuz.database.DbInfo.LibType;
 import static jamuz.process.video.PanelVideo.comboRating;
 import java.io.Serializable;
 

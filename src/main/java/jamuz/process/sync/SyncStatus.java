@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 phramusca <phramusca@gmail.com>
+ * Copyright (C) 2023 raph
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,34 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jamuz;
-
-import java.util.Date;
+package jamuz.process.sync;
 
 /**
  *
- * @author phramusca <phramusca@gmail.com>
  */
-public class DbVersion {
-	private final int version;
-	private final Date upgradeStart;
-	private final Date upgradeEnd;
+public enum SyncStatus {
+    /**
+     *
+     */
+    NEW, /**
+     *
+     */
+    INFO
 
-	public DbVersion(int version, Date upgradeStart, Date upgradeEnd) {
-		this.version = version;
-		this.upgradeStart = upgradeStart;
-		this.upgradeEnd = upgradeEnd;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public Date getUpgradeStart() {
-		return upgradeStart;
-	}
-
-	public Date getUpgradeEnd() {
-		return upgradeEnd;
-	}
 }

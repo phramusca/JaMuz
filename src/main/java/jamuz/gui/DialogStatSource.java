@@ -17,7 +17,7 @@
 
 package jamuz.gui;
 
-import jamuz.DbInfo;
+import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.process.merge.StatSource;
 import jamuz.process.merge.StatSourceKodi;
@@ -264,7 +264,7 @@ public class DialogStatSource extends javax.swing.JDialog {
 			this.statSource.setIdDevice(device.getId());
 			//TODO: Cannot use check() as type is not initialized at this stage ...
 //			if(this.myStatSource.check()) {
-				if(Jamuz.getDb().insertOrUpdateStatSource(this.statSource)) {
+				if(Jamuz.getDb().statSource().lock().insertOrUpdate(this.statSource)) {
 					this.dispose();
 					DialogOptions.displayStatSources();
 				}

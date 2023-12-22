@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz.process.merge;
 
-import jamuz.DbInfo;
-import jamuz.DbInfo.LibType;
+import jamuz.database.DbInfo;
+import jamuz.database.DbInfo.LibType;
 import jamuz.Jamuz;
-import jamuz.StatSourceAbstract;
+import jamuz.database.StatSourceAbstract;
 import jamuz.process.sync.Device;
 import jamuz.utils.DateTime;
 import java.util.Date;
@@ -28,6 +27,7 @@ import java.util.Objects;
 
 /**
  * Stat source class
+ *
  * @author phramusca <phramusca@gmail.com>
  */
 public class StatSource {
@@ -35,69 +35,71 @@ public class StatSource {
 	private boolean hidden;
 
 	/**
-	 * Used when retrieving StatSourceS from db for given machine 
-	 * @param id 
-	 * @param name 
-	 * @param idStatement 
+	 * Used when retrieving StatSourceS from db for given machine
+	 *
+	 * @param id
+	 * @param name
+	 * @param idStatement
 	 * @param location
 	 * @param user
 	 * @param pwd
 	 * @param rootPath
-	 * @param machineName  
+	 * @param machineName
 	 * @param idDevice
-	 * @param isSelected  
-     * @param lastMergeDate  
-	 * @param hidden  
+	 * @param isSelected
+	 * @param lastMergeDate
+	 * @param hidden
 	 */
-	public StatSource(int id, String name, int idStatement, String location, 
-			String user, String pwd, String rootPath, String machineName, 
+	public StatSource(int id, String name, int idStatement, String location,
+			String user, String pwd, String rootPath, String machineName,
 			int idDevice, boolean isSelected, String lastMergeDate, boolean hidden) {
-		
-		this(id, name, location, user, pwd, rootPath, machineName, 
+
+		this(id, name, location, user, pwd, rootPath, machineName,
 				isSelected, idDevice, idStatement, lastMergeDate);
 		this.hidden = hidden;
 	}
-    
-    /**
+
+	/**
 	 * Used when creating a new empty StatSource
+	 *
 	 * @param machineName
 	 */
 	public StatSource(String machineName) {
 		this(-1, "", "", "", "", "", machineName, true, 0, 1, "");  //NOI18N
 	}
-   
-	private StatSource(int id, String name, String location, String user, String pwd, String rootPath, 
+
+	private StatSource(int id, String name, String location, String user, String pwd, String rootPath,
 			String machineName, boolean isSelected, int idDevice, int idStatement, String lastMergeDate) {
-		this.id=id;
-        this.idStatement = idStatement;
-        this.machineName = machineName;
+		this.id = id;
+		this.idStatement = idStatement;
+		this.machineName = machineName;
 		this.isSelected = isSelected;
-        this.idDevice = idDevice;
-        this.lastMergeDate=DateTime.parseSqlUtc(lastMergeDate);
-        
-        switch (idStatement) {
-            case 1: // Guayadeque 	(Linux)
-                this.source = new StatSourceGuayadeque(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
-                break;
-            case 2: // Kodi 	(Linux/Windows)
-                this.source = new StatSourceKodi(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
-                break;
-            case 3: // MediaMonkey (Windows)
-                this.source = new StatSourceMediaMonkey(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
-                break;
-            case 4: // Mixxx 	(Linux/Windows)
-                this.source = new StatSourceMixxx(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
-                break;
-            case 5: // MyTunes 	(Android)
-                this.source = new StatSourceMyTunes(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
-                break;
+		this.idDevice = idDevice;
+		this.lastMergeDate = DateTime.parseSqlUtc(lastMergeDate);
+
+		switch (idStatement) {
+			case 1: // Guayadeque 	(Linux)
+				this.source = new StatSourceGuayadeque(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
+				break;
+			case 2: // Kodi 	(Linux/Windows)
+				this.source = new StatSourceKodi(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
+				break;
+			case 3: // MediaMonkey (Windows)
+				this.source = new StatSourceMediaMonkey(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
+				break;
+			case 4: // Mixxx 	(Linux/Windows)
+				this.source = new StatSourceMixxx(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
+				break;
+			case 5: // MyTunes 	(Android)
+				this.source = new StatSourceMyTunes(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
+				break;
 			case 6: // JaMuz Remote 	(Android)
-                this.source = new StatSourceJaMuzRemote(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath); 
-                break;
-            default:
-                this.source = null;
-                break;
-        }
+				this.source = new StatSourceJaMuzRemote(new DbInfo(LibType.Sqlite, location, user, pwd), name, rootPath);
+				break;
+			default:
+				this.source = null;
+				break;
+		}
 	}
 
 	private int id;
@@ -107,53 +109,53 @@ public class StatSource {
 	 * @return
 	 */
 	public int getId() {
-        return id;
-    }
-	
-	public void setId(int id) {
-		this.id=id;
+		return id;
 	}
-	
-    private int idStatement; //TODO: Replace by an enum: refer to checkedFlag usage
-    
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	private int idStatement; //TODO: Replace by an enum: refer to checkedFlag usage
+
 	/**
 	 *
 	 * @return
 	 */
 	public int getIdStatement() {
-        return idStatement;
-    }
+		return idStatement;
+	}
 
 	/**
 	 *
 	 * @param idStatement
 	 */
 	public void setIdStatement(int idStatement) {
-        this.idStatement = idStatement;
-    }
-    
-    private StatSourceAbstract source;
+		this.idStatement = idStatement;
+	}
+
+	private StatSourceAbstract source;
 
 	/**
 	 *
 	 * @return
 	 */
 	public StatSourceAbstract getSource() {
-        return source;
-    }
-    
-    /**
-     * Last Merge Date
-     */
-    protected Date lastMergeDate;
+		return source;
+	}
+
+	/**
+	 * Last Merge Date
+	 */
+	protected Date lastMergeDate;
 
 	/**
 	 *
 	 */
 	public void updateLastMergeDate() {
-		lastMergeDate=DateTime.parseSqlUtc(Jamuz.getDb().updateStatSourceLastMergeDate(this.getId()));
-    }
-	
+		lastMergeDate = DateTime.parseSqlUtc(Jamuz.getDb().statSource().lock().updateLastMergeDate(this.getId()));
+	}
+
 	/**
 	 * Machine name
 	 */
@@ -164,9 +166,9 @@ public class StatSource {
 	 * @return
 	 */
 	public String getMachineName() {
-        return machineName;
-    }
-    
+		return machineName;
+	}
+
 	/**
 	 * Is selected by default in GUI ?
 	 */
@@ -177,17 +179,17 @@ public class StatSource {
 	 * @return
 	 */
 	public boolean isIsSelected() {
-        return isSelected;
-    }
+		return isSelected;
+	}
 
 	/**
 	 *
 	 * @param isSelected
 	 */
 	public void setIsSelected(boolean isSelected) {
-        this.isSelected = isSelected;
-    }
-	
+		this.isSelected = isSelected;
+	}
+
 	/**
 	 * Device ID
 	 */
@@ -198,19 +200,20 @@ public class StatSource {
 	 * @return
 	 */
 	public int getIdDevice() {
-        return idDevice;
-    }
+		return idDevice;
+	}
 
 	/**
 	 *
 	 * @param idDevice
 	 */
 	public void setIdDevice(int idDevice) {
-        this.idDevice = idDevice;
-    }
-	
+		this.idDevice = idDevice;
+	}
+
 	/**
 	 * Gets device
+	 *
 	 * @return
 	 */
 	public Device getDevice() {
@@ -219,7 +222,8 @@ public class StatSource {
 
 	/**
 	 * Type
-     * @return 
+	 *
+	 * @return
 	 */
 	@Override
 	public String toString() {
@@ -277,10 +281,7 @@ public class StatSource {
 		if (!Objects.equals(this.source, other.source)) {
 			return false;
 		}
-		if (!Objects.equals(this.lastMergeDate, other.lastMergeDate)) {
-			return false;
-		}
-		return true;
+		return Objects.equals(this.lastMergeDate, other.lastMergeDate);
 	}
 
 	public void setHidden(boolean hidden) {

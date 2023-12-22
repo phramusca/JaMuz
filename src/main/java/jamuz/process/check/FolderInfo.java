@@ -270,7 +270,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		//Anyway, all files on that folder are not (supposed to be) in databsase yet, so will be inserted
 		if(idPath>0) {
 			progressBar.setIndeterminate(Inter.get("Msg.Check.Scan.Setup")); //NOI18N
-			if(!Jamuz.getDb().getFiles(filesDb, idPath)) {
+			if(!Jamuz.getDb().file().getFiles(filesDb, idPath)) {
 				return false;
 			}
 		}
@@ -318,7 +318,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	}
 	
 	private boolean scanDeletedFiles(ProgressBar progressBar) {
-		if(!Jamuz.getDb().getFiles(filesDb, idPath)) {
+		if(!Jamuz.getDb().file().getFiles(filesDb, idPath)) {
 			return false;
 		}
         progressBar.setup(filesDb.size());
@@ -342,7 +342,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		File path = new File(fullPath);
 		if(!path.exists()) {
 			//Path does not exist. Delete path and associated files from database
-			if(!Jamuz.getDb().deletePath(idPath)) {
+			if(!Jamuz.getDb().path().lock().delete(idPath)) {
 				return false;
 			}
 		}
@@ -359,7 +359,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 * @return
 	 */
 	public boolean transcodeAsNeeded(ProgressBar progressBar) {
-		if(!Jamuz.getDb().getFiles(filesDb, idPath)) {
+		if(!Jamuz.getDb().file().getFiles(filesDb, idPath)) {
 			return false;
 		}
 		return transcodeAsNeeded(filesDb, progressBar);
@@ -397,7 +397,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		});
 
 		//Compute replaygain and insert in fileTranscoded
-		if(filesTranscoded.size()>0) {
+		if(!filesTranscoded.isEmpty()) {
 			progressBar.setIndeterminate("Computing ReplayGain for MP3 ...");
 			ArrayList<String> albumList = group(filesTranscoded, "getAlbum");  //NOI18N
 			boolean trackGain=albumList.size()==1 && albumList.get(0).equals("Various Albums");				
@@ -410,7 +410,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 					file.saveReplayGainToID3(gv);
 					file.readMetadata(false); //To get new file information (format, size,...)
 				});
-				Jamuz.getDb().insertOrUpdateFilesTranslated(filesTranscoded);
+				Jamuz.getDb().fileTranscoded().lock().insertOrUpdate(filesTranscoded);
 			}
 		}
 		return true;
@@ -426,7 +426,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 		
 		//If idPath is not known, check if it exists
 		if(idPath<0) {
-			idPath = Jamuz.getDb().getIdPath(relativePath);
+			idPath = Jamuz.getDb().path().getIdPath(relativePath);
 		}
 
 		if(idPath>=0) {
@@ -444,7 +444,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 */
 	public boolean insertInDb(CheckedFlag checkedFlag) {
 		int [] key = new int[1]; //Hint: Using a int table as cannot pass a simple integer by reference
-		boolean result = Jamuz.getDb().insertPath(relativePath, modifDate, checkedFlag, mbId, key);
+		boolean result = Jamuz.getDb().path().lock().insert(relativePath, modifDate, checkedFlag, mbId, key);
 		idPath=key[0]; //Get insertion key
 		return result;
 	}
@@ -455,7 +455,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	 * @return
 	 */
 	public boolean updateInDb(CheckedFlag checkedFlag) {
-		return Jamuz.getDb().updatePath(idPath, modifDate, checkedFlag, relativePath, mbId);
+		return Jamuz.getDb().path().lock().update(idPath, modifDate, checkedFlag, relativePath, mbId);
 	}
 
     /**
@@ -557,7 +557,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			}
 			
 			//Transcode convertible files
-			if(transcode && filesConvertible.size()>0) {
+			if(transcode && !filesConvertible.isEmpty()) {
 				transcode(progressBar);
 			}
 
@@ -734,7 +734,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         if(isCheckingMasterLibrary()) {
             scanDeleted(progressBar);
 			if(getNumberOfFiles()==0) {
-				Jamuz.getDb().deletePath(idPath);
+				Jamuz.getDb().path().lock().delete(idPath);
 			}
         }
 	}
@@ -946,7 +946,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			ArrayList<String> genreList = group(filesAudio, "getGenre");  //NOI18N
 			if(genreList.size()==1) {
                 //TODO: Use genre cache (in some combo or else, not to query db each time !!)
-				if(Jamuz.getDb().checkGenre(genreList.get(0))) {
+				if(Jamuz.getDb().genre().isSupported(genreList.get(0))) {
 					results.get("genre").value=genreList.get(0);  //NOI18N
 				}
 			}
@@ -1114,11 +1114,11 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 				int discTotal=1;
 				ArrayList<String> discNoList = group(filesAudio, "getDiscNo");  //NOI18N
 				if(!discNoList.contains("") && discNoList.size()==1) {
-					discNo=Integer.valueOf(discNoList.get(0));
+					discNo=Integer.parseInt(discNoList.get(0));
 				}
 				ArrayList<String> discTotalList = group(filesAudio, "getDiscTotal");  //NOI18N
 				if(!discTotalList.contains("") && discTotalList.size()==1){
-					discTotal=Integer.valueOf(discTotalList.get(0));
+					discTotal=Integer.parseInt(discTotalList.get(0));
 				}
 				if(!(searchArtist.equals("Various Artists") && searchAlbum.equals("Various Albums"))) {
 					searchMatches(searchAlbum, searchArtist, discNo, discTotal, progressBar);
@@ -1396,7 +1396,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
             Float newValue = (Float) newValueObject;
             Float tagValueFloat;
             try {
-                tagValueFloat=Float.parseFloat(tagValue.getValue());
+                tagValueFloat=Float.valueOf(tagValue.getValue());
             }
             catch(java.lang.NumberFormatException ex) {
                 tagValueFloat=Float.valueOf(0);
@@ -1509,9 +1509,9 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 				filesAudio.get(0).getRelativePath());
 		
 			//Prevent duplicate strPath in database
-			int newIdPath = Jamuz.getDb().getIdPath(filesAudio.get(0).getRelativePath());
+			int newIdPath = Jamuz.getDb().path().getIdPath(filesAudio.get(0).getRelativePath());
 			if(idPath>=0 && newIdPath>=0 && idPath!=newIdPath) {
-				if(Jamuz.getDb().updateFileIdPath(idPath, newIdPath)) {
+				if(Jamuz.getDb().file().lock().updateIdPath(idPath, newIdPath)) {
 					idPath=newIdPath;
 					checkedFlag=CheckedFlag.UNCHECKED;
 				} else {
@@ -1554,7 +1554,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
     
 	private void KO(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().updatePathChecked(idPath, FolderInfo.CheckedFlag.KO);
+            Jamuz.getDb().path().lock().updateCheckedFlag(idPath, FolderInfo.CheckedFlag.KO);
         }
         else {
             moveList(getAllFiles(), ProcessCheck.getKoLocation().getValue(), false, 
@@ -1566,7 +1566,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
     
     private boolean Manual(ProgressBar progressBar) {
         if(isCheckingMasterLibrary()) {
-            Jamuz.getDb().updatePathChecked(idPath, FolderInfo.CheckedFlag.UNCHECKED);
+            Jamuz.getDb().path().lock().updateCheckedFlag(idPath, FolderInfo.CheckedFlag.UNCHECKED);
             return false;
         }
         else {
@@ -1858,7 +1858,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
         }
         List<ReleaseMatch> matchesL = getMatches();
         if(matchesL!=null) {
-            if(matchesL.size()>0) {
+            if(!matchesL.isEmpty()) {
                 builder.append("<BR/>");
                 builder.append(matchesL.get(0).toString());
                 builder.append("<BR/>");
@@ -2047,7 +2047,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 	void setAction() {
 		//Select appropriate action
 		if(isValid()) { //ie: no KO result
-			if(getMatches().size()>0) {
+			if(!getMatches().isEmpty()) {
 				setMbId(getMatches().get(0).getId());
 			}
 			if(isWarning()) {
@@ -2077,7 +2077,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			}
 			else {
 				ReleaseMatch match=getMatches().get(0);
-				if(match.getDuplicates().size()>0) {
+				if(!match.getDuplicates().isEmpty()) {
 					action=Action.KO;
 				}
 				else if(match.getScore()<100) {
@@ -2104,7 +2104,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 								action=Action.SAVE;
 								break;
 							case "cover":
-								if(getFilesImage().size()>0 || getCoverList().size()>0 || getFirstCoverFromTags()!=null) {
+								if(!getFilesImage().isEmpty() || !getCoverList().isEmpty() || getFirstCoverFromTags()!=null) {
 									//There is a cover somewhere (tag, file or found) so need user to choose from
 									//Well, getCoverList() only contains a list of information. 
 									//Covers are only searched when opening DialogCheck, but at least there is hope :)

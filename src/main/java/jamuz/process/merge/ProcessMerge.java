@@ -25,12 +25,12 @@
 
 package jamuz.process.merge;
 
-import jamuz.DbConnJaMuz;
-import jamuz.DbInfo;
+import jamuz.database.DbConnJaMuz;
+import jamuz.database.DbInfo;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.StatSourceAbstract;
+import jamuz.database.StatSourceAbstract;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.DateTime;
 import jamuz.utils.Inter;
@@ -224,6 +224,7 @@ public class ProcessMerge extends ProcessAbstract {
 			if(!dBJaMuz.setUp(false)) {
 				return false;
 			}
+            dBJaMuz.setLocationLibrary(Jamuz.getMachine().getOptionValue("location.library"));
 		}
 		else {
 			dBJaMuz = Jamuz.getDb();
@@ -891,7 +892,7 @@ public class ProcessMerge extends ProcessAbstract {
 					filesToUpdatePlayCounter.add(fileInfo);
 					completedList.add((FileInfo) fileInfo.clone());
 				}
-				Jamuz.getDb().updateFileTags(mergeListDbSelected, null);
+				Jamuz.getDb().fileTag().lock().update(mergeListDbSelected, null);
 			} else {
 				int[] results = selectedStatSource
 						.getSource()
@@ -1001,10 +1002,10 @@ public class ProcessMerge extends ProcessAbstract {
 
 		if(!simulate) {	
 			progressBar.progress(Inter.get("Msg.Check.Scan.Setup")); //NOI18N
-			if(filesToUpdatePlayCounter.size()>0) {
+			if(!filesToUpdatePlayCounter.isEmpty()) {
 				//Remove potential duplicates 
 				filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter));
-				if(!dBJaMuz.updatePreviousPlayCounter(filesToUpdatePlayCounter, selectedStatSource.getId())) {
+				if(!dBJaMuz.playCounter().lock().update(filesToUpdatePlayCounter, selectedStatSource.getId())) {
 					return false;
 				}
 			}

@@ -19,7 +19,7 @@ package jamuz.process.sync;
 //FIXME Z SYNC If file missing in source, it blocks transfert
 //FIXME Z SYNC If tag issue (genre, only?), it blocks transfert (errors)
 //FIXME Z SYNC Export file scrollabr freeze => threaded ?
-import jamuz.DbConnJaMuz;
+import jamuz.database.DbConnJaMuz;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.Playlist;
@@ -98,11 +98,11 @@ public class ProcessSync extends ProcessAbstract {
             // (database will not reflect reality so merge "not found" errors would be raised)
             //TODO: Make a proper toInsertInDeviceFiles list in all cases:
             //  => Use fileInfoSourceList, fileInfoDestinationList and toInsertInDeviceFiles
-            if(toInsertInDeviceFiles.size()>0) {
+            if(!toInsertInDeviceFiles.isEmpty()) {
 				progressBar.setIndeterminate(Inter.get("Msg.Sync.UpdatingDb")); //NOI18N
 				callback.refresh();
-                Jamuz.getDb().deleteDeviceFiles(device.getId());
-                Jamuz.getDb().insertOrIgnoreDeviceFiles(toInsertInDeviceFiles, device.getId());
+                Jamuz.getDb().deviceFile().lock().delete(device.getId());
+                Jamuz.getDb().deviceFile().lock().insertOrIgnore(toInsertInDeviceFiles, device.getId());
 				progressBar.setup(fileInfoSourceList.size());
 				progressBar.progress("Export complete.", fileInfoSourceList.size());
 				callback.refresh();
@@ -140,7 +140,7 @@ public class ProcessSync extends ProcessAbstract {
 				+ " JOIN path P ON F.idPath=P.idPath "
 				+ " AND DF.idDevice="+device.getId()+" "
 				+ " ORDER BY idFile ";
-		Jamuz.getDb().getFiles(fileInfoSourceList, sql);
+		Jamuz.getDb().file().getFiles(fileInfoSourceList, sql);
 
 		// Check if some files require to be transcoded and exit if so
 		String destExt = playlist.getDestExt();
@@ -174,9 +174,9 @@ public class ProcessSync extends ProcessAbstract {
 		for (FileInfoInt fileTable : fileInfoSourceList) {
 			if(filesDevicePlaylist.contains(fileTable)) {
 				filesDevicePlaylist.remove(fileTable);
-				fileTable.setStatus(DbConnJaMuz.SyncStatus.NEW);
+				fileTable.setStatus(SyncStatus.NEW);
 			} else {
-				fileTable.setStatus(DbConnJaMuz.SyncStatus.INFO);
+				fileTable.setStatus(SyncStatus.INFO);
 			}
 			filesToInsertOrUpdate.add(fileTable);
 			callback.addRow(fileTable.getRelativeFullPath(), 1); //NOI18N
@@ -184,7 +184,7 @@ public class ProcessSync extends ProcessAbstract {
 			callback.refresh();
 		}
 		filesToInsertOrUpdate.addAll(filesDevicePlaylist);
-		Jamuz.getDb().insertOrUpdateDeviceFiles(filesToInsertOrUpdate, device.getId());
+		Jamuz.getDb().deviceFile().lock().insertOrUpdate(filesToInsertOrUpdate, device.getId());
 		fileInfoSourceList.addAll(filesDevicePlaylist); // To have a proper count in progressBar at the end
 		return true;
 	}
