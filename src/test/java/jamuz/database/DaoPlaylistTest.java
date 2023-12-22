@@ -29,7 +29,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import test.helpers.TestUnitSettings;
-import java.io.File;
 
 /**
  *
@@ -49,7 +48,7 @@ public class DaoPlaylistTest {
 
 	@AfterClass
 	public static void tearDownClass() {
-		new File(dbConnJaMuz.getDbConn().getInfo().getLocationOri()).delete();
+		TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
 	}
 
 	@Before
