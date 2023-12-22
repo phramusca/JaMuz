@@ -16,11 +16,12 @@
  */
 package jamuz.database;
 
-import jamuz.Jamuz;
 import jamuz.Machine;
 import jamuz.Option;
 import jamuz.gui.swing.ListElement;
 import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import org.apache.commons.io.FilenameUtils;
@@ -31,57 +32,61 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
+import test.helpers.TestUnitSettings;
 
 /**
  *
  * @author phramusca <phramusca@gmail.com>
  */
 public class DaoMachineTest {
-	
+
+	private static DbConnJaMuz dbConnJaMuz;
+
 	public DaoMachineTest() {
 	}
-	
+
 	@BeforeClass
-	public static void setUpClass() {
+	public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+		dbConnJaMuz = TestUnitSettings.createTempDatabase();
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() {
 	}
-	
+
 	@Before
 	public void setUp() {
 	}
-	
+
 	@After
 	public void tearDown() {
 	}
 
-		/**
+	/**
 	 * Test of machine and option methods, of class DbConnJaMuz.
 	 */
 	@Test
 	public void testMachineAndOption() {
 
 		System.out.println("testMachineAndOption");
-		
+
 		//Create a new machine
 		StringBuilder zText = new StringBuilder();
 		String machineName = "000aaaa000"; //Hoping this this will be id 0 when sorted
-		assertTrue("isMachine", Jamuz.getDb().machine().lock().getOrInsert(machineName, zText, false));
+		assertTrue("isMachine", dbConnJaMuz.machine().lock().getOrInsert(machineName, zText, false));
 
 		//Get machines
 		DefaultListModel defaultListModel = new DefaultListModel();
-		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
+		dbConnJaMuz.listModel().getMachineListModel(defaultListModel);
 		ListElement element = (ListElement) defaultListModel.get(0);
-		assertEquals(2, defaultListModel.size()); //The created one and current machine
+		assertEquals(1, defaultListModel.size());
 		assertEquals("<html><b>" + machineName + "</b><BR/><i></i></html>", element.toString());
 		assertEquals(machineName, element.getValue());
 		assertNull(element.getFile());
 
 		//Get new machine options
 		ArrayList<Option> expectedOptions = new ArrayList<>();
-		int idMachine = 2;
+		int idMachine = 1;
 		expectedOptions.add(new Option("location.library", "", idMachine, 1, "path"));
 		expectedOptions.add(new Option("library.isMaster", "false", idMachine, 2, "bool"));
 		expectedOptions.add(new Option("location.add", "", idMachine, 3, "path"));
@@ -93,25 +98,25 @@ public class DaoMachineTest {
 		expectedOptions.add(new Option("log.limit", "5242880", idMachine, 9, "integer"));
 		expectedOptions.add(new Option("log.count", "20", idMachine, 10, "integer"));
 		expectedOptions.add(new Option("files.audio", "mp3,flac", idMachine, 11, "csv"));
-		expectedOptions.add(new Option("files.image", "", idMachine, 12, "csv"));
+		expectedOptions.add(new Option("files.image", "png,jpg,jpeg,bmp,gif", idMachine, 12, "csv"));
 		expectedOptions.add(new Option("files.convert", "", idMachine, 13, "csv"));
 		expectedOptions.add(new Option("files.delete", "", idMachine, 14, "csv"));
 		expectedOptions.add(new Option("location.manual", "", idMachine, 15, "path"));
-		expectedOptions.add(new Option("location.transcoded", "", idMachine, 16, "csv"));
-		expectedOptions.add(new Option("files.image.delete", "false", idMachine, 17, "csv"));
-		
+		expectedOptions.add(new Option("location.transcoded", "", idMachine, 16, "path"));
+		expectedOptions.add(new Option("files.image.delete", "false", idMachine, 17, "bool"));
+
 		checkOptionList(machineName, expectedOptions);
 
 		//Set description
 		String description = "Waouh the great description!";
-		assertTrue(Jamuz.getDb().machine().lock().update(idMachine, description));
+		assertTrue(dbConnJaMuz.machine().lock().update(idMachine, description));
 		zText = new StringBuilder();
-		assertTrue("isMachine updated", Jamuz.getDb().machine().lock().getOrInsert(machineName, zText, false));
+		assertTrue("isMachine updated", dbConnJaMuz.machine().lock().getOrInsert(machineName, zText, false));
 		assertEquals(description, zText.toString());
 		defaultListModel = new DefaultListModel();
-		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
+		dbConnJaMuz.listModel().getMachineListModel(defaultListModel);
 		element = (ListElement) defaultListModel.get(0);
-		assertEquals(2, defaultListModel.size()); //The created one and current machine
+		assertEquals(1, defaultListModel.size());
 		assertEquals("<html><b>" + machineName + "</b><BR/><i>" + description + "</i></html>", element.toString());
 		assertEquals(machineName, element.getValue());
 		assertNull(element.getFile());
@@ -121,7 +126,7 @@ public class DaoMachineTest {
 		String newValue;
 		for (Option expectedOption : expectedOptions) {
 			newValue = "New value " + i;
-			Jamuz.getDb().option().lock().update(expectedOption, newValue);
+			dbConnJaMuz.option().lock().update(expectedOption, newValue);
 			if (expectedOption.getType().equals("path")) {   //NOI18N
 				newValue = FilenameUtils.normalizeNoEndSeparator(newValue.trim()) + File.separator;
 			}
@@ -137,7 +142,7 @@ public class DaoMachineTest {
 		}
 		Machine machine = new Machine(machineName);
 		machine.setOptions(expectedOptions);
-		assertTrue(Jamuz.getDb().option().lock().update(machine));
+		assertTrue(dbConnJaMuz.option().lock().update(machine));
 		for (Option expectedOption : expectedOptions) {
 			if (expectedOption.getType().equals("path")) {   //NOI18N
 				expectedOption.setValue(FilenameUtils.normalizeNoEndSeparator(expectedOption.getValue().trim()) + File.separator);
@@ -146,13 +151,10 @@ public class DaoMachineTest {
 		checkOptionList(machineName, expectedOptions);
 
 		//Delete machine 
-		assertTrue(Jamuz.getDb().machine().lock().delete(machineName));
+		assertTrue(dbConnJaMuz.machine().lock().delete(machineName));
 		defaultListModel = new DefaultListModel();
-		Jamuz.getDb().listModel().getMachineListModel(defaultListModel);
-		assertEquals(1, defaultListModel.size()); //Only current machine left
-		element = (ListElement) defaultListModel.get(0);
-		assertNull(element.getFile());
-		assertNotSame(machineName, element.getValue());
+		dbConnJaMuz.listModel().getMachineListModel(defaultListModel);
+		assertEquals(0, defaultListModel.size());
 
 		//FIXME TEST Negative cases
 		//FIXME TEST Check other constraints
@@ -160,7 +162,7 @@ public class DaoMachineTest {
 
 	private void checkOptionList(String machineName, ArrayList<Option> expectedOptions) {
 		ArrayList<Option> options = new ArrayList<>();
-		assertTrue("getOptions", Jamuz.getDb().option().get(options, machineName));
+		assertTrue("getOptions", dbConnJaMuz.option().get(options, machineName));
 		Option actualOption;
 		int i = 0;
 		for (Option expectedOption : expectedOptions) {
@@ -175,56 +177,20 @@ public class DaoMachineTest {
 			assertEquals(expectedOption.toString(), actualOption.toString());
 		}
 	}
-	
+
 	/**
-	 * Test of getOrInsert method, of class DaoMachine.
+	 * Test of lock method, of class DaoMachine.
 	 */
 	@Test
 	@Ignore // Refer to testMachineAndOption() above
-	public void testGetOrInsert() {
-		System.out.println("getOrInsert");
-		String hostname = "";
-		StringBuilder description = null;
-		boolean hidden = false;
+	public void testLock() {
+		System.out.println("lock");
 		DaoMachine instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().getOrInsert(hostname, description, hidden);
+		DaoMachineWrite expResult = null;
+		DaoMachineWrite result = instance.lock();
 		assertEquals(expResult, result);
 		// TODO review the generated test code and remove the default call to fail.
 		fail("The test case is a prototype.");
 	}
 
-	/**
-	 * Test of update method, of class DaoMachine.
-	 */
-	@Test
-	@Ignore // Refer to testMachineAndOption() above
-	public void testUpdate() {
-		System.out.println("update");
-		int idMachine = 0;
-		String description = "";
-		DaoMachine instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().update(idMachine, description);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-
-	/**
-	 * Test of delete method, of class DaoMachine.
-	 */
-	@Test
-	@Ignore // Refer to testMachineAndOption() above
-	public void testDelete() {
-		System.out.println("delete");
-		String machineName = "";
-		DaoMachine instance = null;
-		boolean expResult = false;
-		boolean result = instance.lock().delete(machineName);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-	
 }
