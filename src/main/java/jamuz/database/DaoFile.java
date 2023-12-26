@@ -22,10 +22,12 @@ import static jamuz.database.DbUtils.getCSVlist;
 import static jamuz.database.DbUtils.getSqlWHERE;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.ReplayGain;
+import jamuz.process.sync.Device;
 import jamuz.process.sync.SyncStatus;
 import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -63,20 +65,7 @@ public class DaoFile {
         return daoFileWrite;
     }
 
-    /**
-     * Get the count of files based on the provided SQL query.
-     *
-     * @param sql
-     * @return
-     */
-    public Integer getFilesCount(String sql) {
-        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            return rs.getInt(1);
-        } catch (SQLException ex) {
-            Popup.error("getIdFileMax()", ex);
-            return null;
-        }
-    }
+    
 
     /**
      * Gets MIN or MAX year from audio files.
@@ -139,8 +128,7 @@ public class DaoFile {
     }
 
     /**
-     * Get the number of the given "field" (genre, year, artist, album) for
-     * stats display.
+     * Get the number of the given "field" (genre, year, artist, album) for stats display.
      *
      * @param stats
      * @param field
@@ -229,9 +217,9 @@ public class DaoFile {
     }
 
     /**
-     * Get files matching given genre, artist, album, ratings and checkedFlag
+     * Get files matching given genre, artist, album, ratings, and checkedFlag
      *
-     * @param myFileInfoList
+     * @param files
      * @param selGenre
      * @param selArtist
      * @param selAlbum
@@ -244,7 +232,7 @@ public class DaoFile {
      * @param copyRight
      * @return
      */
-    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String selGenre,
+    public boolean getFiles(ArrayList<FileInfoInt> files, String selGenre,
             String selArtist, String selAlbum,
             boolean[] selRatings, boolean[] selCheckedFlag, int yearFrom, int yearTo,
             float bpmFrom, float bpmTo, int copyRight) {
@@ -254,18 +242,103 @@ public class DaoFile {
                 + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings,
                         selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
 
-        return getFiles(myFileInfoList, sql);
+        //FIXME TEST ! This is wrong. Need to include some ? in getSqlWhere and so refactor some more deeper
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            int paramIndex = 1;
+
+            // Set other parameters as needed, adjust paramIndex accordingly
+            ps.setString(paramIndex++, selGenre);
+            ps.setString(paramIndex++, selArtist);
+            ps.setString(paramIndex++, selAlbum);
+            for (boolean rating : selRatings) {
+                ps.setBoolean(paramIndex++, rating);
+            }
+            for (boolean checkedFlag : selCheckedFlag) {
+                ps.setBoolean(paramIndex++, checkedFlag);
+            }
+            ps.setInt(paramIndex++, yearFrom);
+            ps.setInt(paramIndex++, yearTo);
+            ps.setFloat(paramIndex++, bpmFrom);
+            ps.setFloat(paramIndex++, bpmTo);
+            ps.setInt(paramIndex, copyRight);
+
+            return getFiles(files, ps);
+        } catch (SQLException ex) {
+            Popup.error("getFiles()", ex); // Handle or log the exception appropriately
+            return false;
+        }
     }
 
     /**
-     *
+     * Returns a file for server to upload to client
+     * 
      * @param idFile
      * @param destExt
      * @return
      */
     public FileInfoInt getFile(int idFile, String destExt) {
         ArrayList<FileInfoInt> myFileInfoList = new ArrayList<>();
-        String sql = "SELECT F.idFile, F.idPath, F.name, F.rating, "
+        String sql = """
+                     SELECT F.idFile, F.idPath, F.name, F.rating, F.lastPlayed, F.playCounter, F.addedDate, F.artist, F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, 
+                     F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, F.nbCovers, F.coverHash, F.ratingModifDate, F.tagsModifDate, F.genreModifDate, F.saved, 
+                     ifnull(T.bitRate, F.bitRate) AS bitRate, 
+                     ifnull(T.format, F.format) AS format, 
+                     ifnull(T.length, F.length) AS length, 
+                     ifnull(T.size, F.size) AS size, 
+                     ifnull(T.trackGain, F.trackGain) AS trackGain, 
+                     ifnull(T.albumGain, F.albumGain) AS albumGain, 
+                     ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, 
+                     P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate 
+                     FROM file F 
+                     LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=? 
+                     JOIN path P ON F.idPath=P.idPath WHERE F.idFile=?""";
+
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            ps.setString(1, destExt);
+            ps.setInt(2, idFile);
+
+            getFiles(myFileInfoList, ps);
+            return myFileInfoList.isEmpty() ? null : myFileInfoList.get(0);
+        } catch (SQLException ex) {
+            Popup.error("getFile()", ex);
+            return null;
+        }
+    }
+
+    /**
+     * Returns list of files for remote sync process
+     *
+     * @param files
+     * @param status
+     * @param device
+     * @param limit
+     * @param destExt
+     * @return ArrayList of FileInfoInt
+     */
+    public boolean getFiles(ArrayList<FileInfoInt> files, SyncStatus status, Device device, String limit, String destExt) {
+
+        String sql = getSql(status, device, false, destExt, limit);
+
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            if (getFiles(files, ps)) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Popup.error("getFiles()", ex);
+        }
+
+        return false;
+    }
+
+    private String getSql(SyncStatus status, Device device, boolean getCount, String destExt, String limit) {
+        String statusSql = status.equals(SyncStatus.INFO)
+                ? "'INFO' AS status"
+                : "DF.status";
+        String whereSql = status.equals(SyncStatus.INFO)
+                ? "(DF.status is null OR DF.status=\"INFO\")"
+                : "DF.idDevice=" + device.getId() + " AND DF.status=\"" + status + "\"";
+        String sql = "SELECT " + (getCount ? " COUNT(F.idFile) "
+                : " F.idFile, F.idPath, F.name, F.rating, "
                 + "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
                 + "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n"
                 + "F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
@@ -279,37 +352,180 @@ public class DaoFile {
                 + "ifnull(T.albumGain, F.albumGain) AS albumGain, \n"
                 + "ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n"
                 + "P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
-                + "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate \n"
+                + "P.mbId AS pathMbId, P.modifDate AS pathModifDate, " + statusSql + " \n")
                 + "FROM file F \n"
                 + "LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\"" + destExt + "\" \n"
-                + "JOIN path P ON F.idPath=P.idPath "
-                + "WHERE F.idFile=" + idFile;
-        getFiles(myFileInfoList, sql);
-        return myFileInfoList.get(0);
+                + "LEFT JOIN deviceFile DF ON DF.idFile=F.idFile AND DF.idDevice=" + device.getId() + " \n"
+                + "JOIN path P ON F.idPath=P.idPath \n"
+                + "WHERE " + whereSql + " \n"
+                + "ORDER BY F.idFile "
+                + limit;
+        return sql;
+    }
+    
+    /**
+     * Returns number of files for remote sync process
+     * @param status
+     * @param device
+     * @param destExt
+     * @param limit
+     * @return
+     */
+    public Integer getFilesCount(SyncStatus status, Device device, String destExt, String limit) {
+        String sql = getSql(status, device, true, destExt, limit);
+        
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            return getFilesCount(ps);
+        } catch (SQLException ex) {
+            Popup.error("getFiles()", ex);
+        }
+        return -1;
     }
 
     /**
-     * Return list of files
-     *
-     * @param myFileInfoList
-     * @param sql
+     * Return files list matching given sql where from playlist
+     * @param files
+     * @param destExt
+     * @param sqlWhere
      * @return
      */
-    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql) {
-        return getFiles(myFileInfoList, sql, locationLibrary);
+    public boolean getFiles(ArrayList<FileInfoInt> files, String destExt, String sqlWhere) {
+        String sql = "SELECT F.idFile, F.idPath, F.name, F.rating, "
+                    + "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
+                    + "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n"
+                    + "F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
+                    + "F.nbCovers, F.coverHash, F.ratingModifDate, "
+                    + "F.tagsModifDate, F.genreModifDate, F.saved, \n"
+                    + "ifnull(T.bitRate, F.bitRate) AS bitRate, \n"
+                    + "ifnull(T.format, F.format) AS format, \n"
+                    + "ifnull(T.length, F.length) AS length, \n"
+                    + "ifnull(T.size, F.size) AS size, \n"
+                    + "ifnull(T.trackGain, F.trackGain) AS trackGain, \n"
+                    + "ifnull(T.albumGain, F.albumGain) AS albumGain, \n"
+                    + "ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n"
+                    + "P.strPath, P.checked, P.copyRight, P.albumRating, P.percentRated, "
+                    + "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate \n"
+                    + "FROM file F \n"
+                    + "LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\"" + destExt + "\" \n"
+                    + "JOIN (\n"
+                    + "		SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n"
+                    + "		ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"
+                    + "		FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath \n"
+                    + "	) P ON F.idPath=P.idPath ";
+        
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            if (getFiles(files, ps)) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Popup.error("getFiles()", ex);
+        }
+
+        return false;
+    }
+    
+    /**
+     * Return raw list of files, for CompareDB
+     * @param files
+     * @return
+     */
+    public boolean getFiles(ArrayList<FileInfoInt> files) {
+        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
+				+ " FROM file F JOIN path P ON F.idPath=P.idPath ";
+        
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            if (getFiles(files, ps)) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Popup.error("getFiles()", ex);
+        }
+
+        return false;
+    }
+    
+    /**
+     * Get files where saved is 0
+     *
+     * @param files
+     * @return ArrayList of FileInfoInt
+     */
+    public boolean getFilesNotSaved(ArrayList<FileInfoInt> files) {
+        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, "
+                + "0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
+                + "FROM file F JOIN path P ON F.idPath=P.idPath WHERE saved=0";
+
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            if (getFiles(files, ps)) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Popup.error("getFiles()", ex);
+        }
+
+        return false;
     }
 
     /**
-     * Return list of files
-     *
-     * @param myFileInfoList
-     * @param sql
-     * @param rootPath
+     * Get files for given device for sync process
+     * @param files
+     * @param device
      * @return
      */
-    public boolean getFiles(ArrayList<FileInfoInt> myFileInfoList, String sql, String rootPath) {
-        myFileInfoList.clear();
-        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+    public boolean getFiles(ArrayList<FileInfoInt> files, Device device) {
+        String sql = "SELECT DF.status, F.*, P.strPath, P.checked, P.copyRight, "
+                + " 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, "
+                + " P.modifDate AS pathModifDate "
+                + " FROM deviceFile DF "
+                + " JOIN file F ON DF.idFile=F.idFile "
+                + " JOIN path P ON F.idPath=P.idPath "
+                + " AND DF.idDevice=? "
+                + " ORDER BY idFile ";
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            ps.setInt(1, device.getId());
+            return getFiles(files, ps);
+        } catch (SQLException ex) {
+            Popup.error("getFiles()", ex); // Handle or log the exception appropriately
+            return false;
+        }
+    }
+
+    /**
+     * Get given folder's files
+     *
+     * @param files
+     * @param idPath
+     * @return
+     */
+    public boolean getFiles(ArrayList<FileInfoInt> files, int idPath) {
+        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
+                + "0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
+                + "FROM file F, path P "
+                + "WHERE F.idPath=P.idPath "; // NOI18N
+
+        if (idPath > -1) {
+            sql += " AND P.idPath=?";
+        }
+
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            if (idPath > -1) {
+                ps.setInt(1, idPath);
+            }
+
+            return getFiles(files, ps);
+        } catch (SQLException ex) {
+            Popup.error("getFiles()", ex); // Handle or log the exception appropriately
+            return false;
+        }
+    }
+
+    private boolean getFiles(ArrayList<FileInfoInt> files, PreparedStatement ps) {
+        return getFiles(files, ps, locationLibrary);
+    }
+
+    private boolean getFiles(ArrayList<FileInfoInt> files, PreparedStatement ps, String rootPath) {
+        files.clear();
+        try (ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 int idFile = rs.getInt("idFile"); // NOI18N
@@ -351,7 +567,7 @@ public class DaoFile {
                 String pathMbid = dbConn.getStringValue(rs, "pathMbid");
                 ReplayGain.GainValues replayGain = new ReplayGain.GainValues(rs.getFloat("trackGain"), rs.getFloat("albumGain"));
 
-                myFileInfoList.add(new FileInfoInt(idFile, idPath, relativePath, filename,
+                files.add(new FileInfoInt(idFile, idPath, relativePath, filename,
                         length, format, bitRate, size, BPM, album,
                         albumArtist, artist, comment, discNo, discTotal,
                         genre, nbCovers, title, trackNo, trackTotal,
@@ -368,22 +584,14 @@ public class DaoFile {
         }
     }
 
-    /**
-     * Get given folder's files for scan/check
-     *
-     * @param files
-     * @param idPath
-     * @return
-     */
-    public boolean getFiles(ArrayList<FileInfoInt> files, int idPath) {
-        String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, "
-                + "0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
-                + "FROM file F, path P "
-                + "WHERE F.idPath=P.idPath "; // NOI18N
-        if (idPath > -1) {
-            sql += " AND P.idPath=" + idPath; // NOI18N
+    //TODO: Move to higher level, and use it 
+    private Integer getFilesCount(PreparedStatement ps) {
+        try (ResultSet rs = ps.executeQuery()) {
+            return rs.getInt(1);
+        } catch (SQLException ex) {
+            Popup.error("getIdFileMax()", ex);
+            return null;
         }
-        return getFiles(files, sql);
     }
 
     /**
