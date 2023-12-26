@@ -20,6 +20,7 @@ package jamuz.process.sync;
 import jamuz.Jamuz;
 import jamuz.Playlist;
 import jamuz.utils.Inter;
+import java.util.Objects;
 
 /**
  *
@@ -168,7 +169,55 @@ public class Device {
 		return this.name + " (" + this.getPlaylist().toString() + ")"; //NOI18N //NOI18N //NOI18N
 	}
 
-	boolean isHidden() {
+	public boolean isHidden() {
 		return hidden;
 	}
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 37 * hash + this.id;
+        hash = 37 * hash + (this.hidden ? 1 : 0);
+        hash = 37 * hash + Objects.hashCode(this.name);
+        hash = 37 * hash + Objects.hashCode(this.machineName);
+        hash = 37 * hash + this.idPlaylist;
+        hash = 37 * hash + Objects.hashCode(this.source);
+        hash = 37 * hash + Objects.hashCode(this.destination);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Device other = (Device) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.hidden != other.hidden) {
+            return false;
+        }
+        if (this.idPlaylist != other.idPlaylist) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.machineName, other.machineName)) {
+            return false;
+        }
+        if (!Objects.equals(this.source, other.source)) {
+            return false;
+        }
+        return Objects.equals(this.destination, other.destination);
+    }
+    
+    
 }
