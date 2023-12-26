@@ -84,10 +84,8 @@ public class CompareDB {
 		//Getting list of files from databases
 		ArrayList<FileInfoInt> filesDb1 = new ArrayList<>();
 		ArrayList<FileInfoInt> filesDb2 = new ArrayList<>();
-		String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
-				+ " FROM file F JOIN path P ON F.idPath=P.idPath ";
-		db1.file().getFiles(filesDb1, sql, "");
-		db2.file().getFiles(filesDb2, sql, "");
+		db1.file().getFiles(filesDb1);
+		db2.file().getFiles(filesDb2);
 
 		//Converting lists to maps
 		Map<Integer, FileInfoInt> files1 = toMap(filesDb1);

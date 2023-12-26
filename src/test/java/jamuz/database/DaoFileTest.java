@@ -35,12 +35,12 @@ import test.helpers.TestUnitSettings;
  * @author raph
  */
 public class DaoFileTest {
-    
+
     public DaoFileTest() {
     }
-    
-   private static DbConnJaMuz dbConnJaMuz;
-    
+
+    private static DbConnJaMuz dbConnJaMuz;
+
     @BeforeClass
     public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
@@ -50,24 +50,24 @@ public class DaoFileTest {
     public static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
     @Test
-	public void testxxxxxxxxxxxxxx() {
+    public void testxxxxxxxxxxxxxx() {
 
-		System.out.println("testxxxxxxxxxxxxxx");
+        System.out.println("testxxxxxxxxxxxxxx");
 
         //FIXME TEST Make unit test
-		//FIXME TEST Negative cases
-		//FIXME TEST Check other constraints
-	}
+        //FIXME TEST Negative cases
+        //FIXME TEST Check other constraints
+    }
 
     /**
      * Test of setLocationLibrary method, of class DaoFile.
@@ -91,21 +91,6 @@ public class DaoFileTest {
         DaoFile instance = null;
         DaoFileWrite expResult = null;
         DaoFileWrite result = instance.lock();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getFilesCount method, of class DaoFile.
-     */
-    @Test
-    public void testGetFilesCount() {
-        System.out.println("getFilesCount");
-        String sql = "";
-        DaoFile instance = null;
-        Integer expResult = null;
-        Integer result = instance.getFilesCount(sql);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -219,39 +204,6 @@ public class DaoFileTest {
      * Test of getFiles method, of class DaoFile.
      */
     @Test
-    public void testGetFiles_ArrayList_String() {
-        System.out.println("getFiles");
-        ArrayList<FileInfoInt> myFileInfoList = null;
-        String sql = "";
-        DaoFile instance = null;
-        boolean expResult = false;
-        boolean result = instance.getFiles(myFileInfoList, sql);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getFiles method, of class DaoFile.
-     */
-    @Test
-    public void testGetFiles_3args() {
-        System.out.println("getFiles");
-        ArrayList<FileInfoInt> myFileInfoList = null;
-        String sql = "";
-        String rootPath = "";
-        DaoFile instance = null;
-        boolean expResult = false;
-        boolean result = instance.getFiles(myFileInfoList, sql, rootPath);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getFiles method, of class DaoFile.
-     */
-    @Test
     public void testGetFiles_ArrayList_int() {
         System.out.println("getFiles");
         ArrayList<FileInfoInt> files = null;
@@ -302,5 +254,5 @@ public class DaoFileTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-    
+
 }

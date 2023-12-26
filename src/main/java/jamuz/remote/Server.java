@@ -281,49 +281,19 @@ public class Server {
 				String destExt = device.getPlaylist().getDestExt(); 
 				SyncStatus status = SyncStatus.valueOf(req.getParam("status")); 
 				boolean getCount = Boolean.parseBoolean(req.getQuery("getCount")); 
+				
 				String limit=""; 
 				if(!getCount) { 
 					int idFrom = Integer.parseInt(req.getQuery("idFrom")); 
 					int nbFilesInBatch = Integer.parseInt(req.getQuery("nbFilesInBatch")); 
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch; 
-				} 
-				String statusSql = status.equals(SyncStatus.INFO) 
-						?"'INFO' AS status" 
-						:"DF.status"; 
-				 
-				String whereSql = status.equals(SyncStatus.INFO) 
-						?"(DF.status is null OR DF.status=\"INFO\")" 
-						:"DF.idDevice="+device.getId()+" AND DF.status=\""+status+"\""; 
-				 
-				String sql = "SELECT "+(getCount?" COUNT(F.idFile) " 
-                        : " F.idFile, F.idPath, F.name, F.rating, " 
-					+ "F.lastPlayed, F.playCounter, F.addedDate, F.artist, " 
-					+ "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n" + 
-				"F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, " 
-					+ "F.nbCovers, F.coverHash, F.ratingModifDate, " 
-					+ "F.tagsModifDate, F.genreModifDate, F.saved, \n" + 
-				"ifnull(T.bitRate, F.bitRate) AS bitRate, \n" + 
-				"ifnull(T.format, F.format) AS format, \n" + 
-				"ifnull(T.length, F.length) AS length, \n" + 
-				"ifnull(T.size, F.size) AS size, \n" + 
-				"ifnull(T.trackGain, F.trackGain) AS trackGain, \n" + 
-				"ifnull(T.albumGain, F.albumGain) AS albumGain, \n" + 
-				"ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n" + 
-				"P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, " 
-					+ "P.mbId AS pathMbId, P.modifDate AS pathModifDate, "+statusSql+" \n") + 
-				"FROM file F \n" + 
-				"LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\""+destExt+"\" \n" 
-				+ "LEFT JOIN deviceFile DF ON DF.idFile=F.idFile AND DF.idDevice="+device.getId()+" \n" 
-				+ "JOIN path P ON F.idPath=P.idPath \n" 
-				+ "WHERE "+whereSql+" \n" 
-				+ "ORDER BY F.idFile " 
-				+ limit; 
+				}
 				 
 				setStatus(login, "Sending "+(getCount?"count":"list") + " of "+status.name().toUpperCase()+" files ("+limit+" )"); 
 				if(getCount) { 
-					res.send(Jamuz.getDb().file().getFilesCount(sql).toString()); 
+					res.send(Jamuz.getDb().file().getFilesCount(status, device, limit, destExt).toString()); 
 				} else { 
-					res.send(getFiles(sql, destExt)); 
+					res.send(getFiles(status, device, limit, destExt)); 
 				} 
 				setStatus(login, "Sent "+(getCount?"count":"list") + " of "+status.name().toUpperCase()+" files ("+limit+" )"); 
 			});
@@ -337,9 +307,9 @@ public class Server {
 		}
 	}
 	
-	private String getFiles(String sql, String destExt) {
+	private String getFiles(SyncStatus status, Device device, String limit, String destExt) {
 		ArrayList<FileInfoInt> filesToSend = new ArrayList<>();
-		Jamuz.getDb().file().getFiles(filesToSend, sql);
+		Jamuz.getDb().file().getFiles(filesToSend, status, device, limit, destExt);
 		Map jsonAsMap = new HashMap();
 		JSONArray jSONArray = new JSONArray();
 		for (FileInfoInt fileInfo : filesToSend) {
