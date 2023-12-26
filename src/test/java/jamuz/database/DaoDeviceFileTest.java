@@ -19,11 +19,13 @@ package jamuz.database;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Playlist;
+import jamuz.process.check.FolderInfo;
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -86,28 +88,41 @@ public class DaoDeviceFileTest {
         StatSource statSource = new StatSource(hostname);
         dbConnJaMuz.statSource().lock().insertOrUpdate(statSource);
         statSource.setId(1);
+        
 
+        //File need a path
+        int[] keyPath = new int[1];
+        dbConnJaMuz.path().lock().insert("relative/path", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbId", keyPath);
+        
         //Inserting files
-        ArrayList<FileInfoInt> files = new ArrayList<>();
-        FileInfoInt fileInfoInt = new FileInfoInt("/relative/path", "/root/path");
-        files.add(fileInfoInt);
-        int[] key = new int[1];
-        dbConnJaMuz.file().lock().insert(fileInfoInt, key);
+        ArrayList<FileInfoInt> expectedFiles = new ArrayList<>();
+        FileInfoInt fileInfoInt = new FileInfoInt("relative/path", "/root/path");
+        fileInfoInt.setIdPath(keyPath[0]);
+        expectedFiles.add(fileInfoInt);
+        int[] keyFile = new int[1];
+        dbConnJaMuz.file().lock().insert(fileInfoInt, keyFile);
+        fileInfoInt.setIdFile(keyFile[0]);
 
         //When
-        dbConnJaMuz.deviceFile().lock().insertOrIgnore(files, device.getId());
+        dbConnJaMuz.deviceFile().lock().insertOrIgnore(expectedFiles, device.getId());
 
         //Then
         dbConnJaMuz.setUp(true);
-        ArrayList<FileInfo> filesGet = new ArrayList<>();
-        dbConnJaMuz.getStatistics(filesGet, statSource);
-
+        checkFilesList(expectedFiles, statSource);
         //FIXME TEST ! Assert insertion, then test others cases: other insertion, other gets, and update and delete too
         
         //FIXME TEST Negative cases
         //FIXME TEST Check other constraints
     }
 
+    private void checkFilesList(ArrayList<FileInfoInt> expectedFiles, StatSource statSource) {
+//		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
+        ArrayList<FileInfo> files = new ArrayList<>();
+		assertTrue(dbConnJaMuz.getStatistics(files, statSource));
+//		Collections.sort(expectedClients);
+		assertArrayEquals(expectedFiles.toArray(), files.toArray());
+	}
+    
     /**
      * Test of lock method, of class DaoDeviceFile.
      */
