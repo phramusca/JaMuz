@@ -16,14 +16,21 @@
  */
 package jamuz.database;
 
+import jamuz.FileInfo;
+import jamuz.FileInfoInt;
+import jamuz.Playlist;
+import jamuz.process.merge.StatSource;
+import jamuz.process.sync.Device;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import test.helpers.TestUnitSettings;
 
 /**
@@ -31,12 +38,12 @@ import test.helpers.TestUnitSettings;
  * @author raph
  */
 public class DaoDeviceFileTest {
-    
+
+    private static DbConnJaMuz dbConnJaMuz;
+
     public DaoDeviceFileTest() {
     }
-    
-   private static DbConnJaMuz dbConnJaMuz;
-    
+
     @BeforeClass
     public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
@@ -46,29 +53,66 @@ public class DaoDeviceFileTest {
     public static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
     @Test
-	public void testxxxxxxxxxxxxxx() {
+    public void testDeviceFile() {
 
-		System.out.println("testxxxxxxxxxxxxxx");
+        System.out.println("testDeviceFile");
 
-        //FIXME TEST Make unit test
-		//FIXME TEST Negative cases
-		//FIXME TEST Check other constraints
-	}
+        //Given
+        //Playlist needed by Device
+        Playlist playlist = new Playlist(0, "whateverName", false, 0, Playlist.LimitUnit.Gio, false, Playlist.Type.Albums, Playlist.Match.All, false, "exttt");
+        dbConnJaMuz.playlist().lock().insert(playlist);
+
+        //Machine needed by Device
+        String hostname = "testClientMachine";
+        dbConnJaMuz.machine().lock().getOrInsert(hostname, new StringBuilder(), true);
+
+        //Device need by deviceFile
+        Device device = new Device(-1, "name", "source", "clientLogin", 1, hostname, true);
+        device.setIdPlaylist(1);
+        dbConnJaMuz.device().lock().insertOrUpdate(device);
+        device = new Device(1, "name", "source", "clientLogin", 1, hostname, true);
+
+        //StatSource to link to Device
+        StatSource statSource = new StatSource(hostname);
+        dbConnJaMuz.statSource().lock().insertOrUpdate(statSource);
+        statSource.setId(1);
+
+        //Inserting files
+        ArrayList<FileInfoInt> files = new ArrayList<>();
+        FileInfoInt fileInfoInt = new FileInfoInt("/relative/path", "/root/path");
+        files.add(fileInfoInt);
+        int[] key = new int[1];
+        dbConnJaMuz.file().lock().insert(fileInfoInt, key);
+
+        //When
+        dbConnJaMuz.deviceFile().lock().insertOrIgnore(files, device.getId());
+
+        //Then
+        dbConnJaMuz.setUp(true);
+        ArrayList<FileInfo> filesGet = new ArrayList<>();
+        dbConnJaMuz.getStatistics(filesGet, statSource);
+
+        //FIXME TEST ! Assert insertion, then test others cases: other insertion, other gets, and update and delete too
+        
+        //FIXME TEST Negative cases
+        //FIXME TEST Check other constraints
+    }
 
     /**
      * Test of lock method, of class DaoDeviceFile.
      */
     @Test
+    @Ignore
     public void testLock() {
         System.out.println("lock");
         DaoDeviceFile instance = null;
@@ -78,5 +122,5 @@ public class DaoDeviceFileTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-    
+
 }

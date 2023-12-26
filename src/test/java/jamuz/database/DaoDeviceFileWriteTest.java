@@ -84,22 +84,6 @@ public class DaoDeviceFileWriteTest {
     }
 
     /**
-     * Test of insertOrIgnore method, of class DaoDeviceFileWrite.
-     */
-    @Test
-    public void testInsertOrIgnore_int_FileInfoInt() {
-        System.out.println("insertOrIgnore");
-        int idDevice = 0;
-        FileInfoInt file = null;
-        DaoDeviceFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.insertOrIgnore(idDevice, file);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of update method, of class DaoDeviceFileWrite.
      */
     @Test
