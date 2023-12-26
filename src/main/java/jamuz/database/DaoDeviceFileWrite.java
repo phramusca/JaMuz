@@ -147,43 +147,6 @@ public class DaoDeviceFileWrite {
     }
 
     /**
-     * Insert in deviceFile table
-     *
-     * @param idDevice
-     * @param file
-     * @return
-     */
-    public boolean insertOrIgnore(int idDevice, FileInfoInt file) {
-        synchronized (dbConn) {
-            try (PreparedStatement stInsertDeviceFile = dbConn.connection.prepareStatement(
-                    "INSERT OR IGNORE INTO deviceFile (idFile, idDevice, oriRelativeFullPath) VALUES (?, ?, ?)")) {
-
-                stInsertDeviceFile.setInt(1, file.getIdFile());
-                stInsertDeviceFile.setInt(2, idDevice);
-                stInsertDeviceFile.setString(3, file.getRelativeFullPath());
-
-                long startTime = System.currentTimeMillis();
-                int result = stInsertDeviceFile.executeUpdate();
-                long endTime = System.currentTimeMillis();
-                Jamuz.getLogger().log(Level.FINEST, "insertDeviceFile UPDATE // {0} "
-                        + "// Total execution time: {1}ms",
-                        new Object[]{result, endTime - startTime}); // NOI18N
-
-                if (result < 0) {
-                    Jamuz.getLogger().log(Level.SEVERE, "insertDeviceFile, "
-                            + "idFile={0}, idDevice={1}, result={2}",
-                            new Object[]{file.getIdFile(), idDevice, result}); // NOI18N
-                    return false;
-                }
-                return true;
-            } catch (SQLException ex) {
-                Popup.error("insertDeviceFile(" + idDevice + ", " + file.getIdFile() + ")", ex); // NOI18N
-                return false;
-            }
-        }
-    }
-
-    /**
      * Resets the check flag to UNCHECKED on path table for the given checked
      * flag
      *

@@ -24,7 +24,6 @@ import jamuz.remote.ClientInfo;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -149,11 +148,7 @@ public class DaoClientTest {
     private void checkClientList(ArrayList<ClientInfo> expectedClients) {
 		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
 		assertTrue(dbConnJaMuz.client().get(clients));
-		//Collections.sort(expectedPlaylists); // getPlaylists() return sorted ?
-        // Print arrays for visual inspection
-        System.out.println("Actual: " + Arrays.toString(expectedClients.toArray()));
-        System.out.println("Expected: " + Arrays.toString(clients.values().toArray()));
-        
+//		Collections.sort(expectedClients);
 		assertArrayEquals(expectedClients.toArray(), clients.values().toArray());
 	}
     
