@@ -22,6 +22,7 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
 import jamuz.utils.DateTime;
+import java.util.Objects;
 
 /**
  *
@@ -244,5 +245,65 @@ public class ClientInfo {
 
 	void setId(int id) {
 		this.id=id;
-	}	
+	}
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 83 * hash + this.id;
+        hash = 83 * hash + Objects.hashCode(this.login);
+        hash = 83 * hash + Objects.hashCode(this.pwd);
+        hash = 83 * hash + Objects.hashCode(this.name);
+        hash = 83 * hash + Objects.hashCode(this.device);
+        hash = 83 * hash + Objects.hashCode(this.statSource);
+        hash = 83 * hash + (this.enabled ? 1 : 0);
+        hash = 83 * hash + Objects.hashCode(this.status);
+        hash = 83 * hash + Objects.hashCode(this.rootPath);
+        hash = 83 * hash + (this.isConnected ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ClientInfo other = (ClientInfo) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.enabled != other.enabled) {
+            return false;
+        }
+        if (this.isConnected != other.isConnected) {
+            return false;
+        }
+        if (!Objects.equals(this.login, other.login)) {
+            return false;
+        }
+        if (!Objects.equals(this.pwd, other.pwd)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.status, other.status)) {
+            return false;
+        }
+        if (!Objects.equals(this.rootPath, other.rootPath)) {
+            return false;
+        }
+        if (!Objects.equals(this.device, other.device)) {
+            return false;
+        }
+        return Objects.equals(this.statSource, other.statSource);
+    }
+    
+    
 }

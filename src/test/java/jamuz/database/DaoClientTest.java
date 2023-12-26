@@ -23,6 +23,8 @@ import jamuz.process.sync.Device;
 import jamuz.remote.ClientInfo;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -62,10 +64,15 @@ public class DaoClientTest {
     public void tearDown() {
     }
 
+    //FIXME ZZZ Refactor client, device, statsource as too much hard-coded weird misusages that makes maintenance very hard
     @Test
     public void testClient() {
 
         System.out.println("testClient");
+        
+        //Check no default playlists
+        ArrayList<ClientInfo> expectedClients = new ArrayList<>();
+		checkClientList(expectedClients);
         
         //Machine needed by Device and StatSource
         String hostname = "testClientMachine";
@@ -76,9 +83,10 @@ public class DaoClientTest {
         dbConnJaMuz.playlist().lock().insert(playlist);
         
         //Device needed by ClientInfo and StatSource
-        Device device = new Device(-1, "login", "source", "clientLogin", 1, hostname, true);
+        Device device = new Device(-1, "logMoreThan5", "source", "clientLogin", 1, hostname, true);
         device.setIdPlaylist(1);
         dbConnJaMuz.device().lock().insertOrUpdate(device);
+        device = new Device(1, device.getName(), device.getSource(), device.getDestination(), device.getIdPlaylist(), "", device.isHidden());
         
         //StatSource needed by ClientInfo
         StatSource statSource = new StatSource(hostname);
@@ -86,7 +94,8 @@ public class DaoClientTest {
         
         //Creating a ClientInfo with device and statSource (with their id 1 in database)
         ClientInfo clientInfo = new ClientInfo("login", "pwd", "rootPath", "name", true);
-        clientInfo.setDevice(new Device(1, hostname, "", "", 1, hostname, true));
+        
+        clientInfo.setDevice(device);
         statSource.setId(1);
         clientInfo.setStatSource(statSource);
         
@@ -96,28 +105,58 @@ public class DaoClientTest {
         
         //When
         dbConnJaMuz.client().lock().insertOrUpdate(clientInfo);
-        //Set id
-        clientInfo = new ClientInfo(1, clientInfo.getLogin(), clientInfo.getName(), clientInfo.getPwd(), clientInfo.getDevice(), clientInfo.getStatSource(), true);
+        //Set id and name
+        clientInfo = new ClientInfo(1, clientInfo.getLogin(), clientInfo.getName() + "-" + clientInfo.getLogin().substring(0, 5), clientInfo.getPwd(), clientInfo.getDevice(), clientInfo.getStatSource(), true);
+        clientInfo.setDevice(device);
+        statSource = new StatSource(clientInfo.getLogin());
+        statSource.setId(1);
+        statSource.setHidden(true);
+        clientInfo.setStatSource(statSource);
+        expectedClients.add(clientInfo);
 
         //Then
-        //FIXME TEST: Assert
+        checkClientList(expectedClients);
         
-        // FIXME TEST Check all those methods below (maybe split test by methods)
+        //When 
+        ClientInfo get = dbConnJaMuz.client().get(clientInfo.getLogin());
         
+        //When using client().get with a login, device's machineName ends up to be set to login
+        device = new Device(1, device.getName(), device.getSource(), device.getDestination(), device.getIdPlaylist(), clientInfo.getLogin(), device.isHidden());
+        clientInfo.setDevice(device);
         
-        clientInfo.setConnected(true);
+        //Then
+        assertEquals(clientInfo, get);
+ 
+        //When
+        clientInfo = new ClientInfo(1, "new login", "new name", "new pwd", device, statSource, false);
+        
         dbConnJaMuz.client().lock().insertOrUpdate(clientInfo);
 
-        ClientInfo get = dbConnJaMuz.client().get("login");
-
-        LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
-
-        dbConnJaMuz.client().get(clients);
+        //Then
+        device = new Device(1, device.getName(), device.getSource(), device.getDestination(), device.getIdPlaylist(), "", device.isHidden());
+        clientInfo.setDevice(device);
+        statSource = new StatSource(clientInfo.getLogin());
+        statSource.setId(1);
+        statSource.setHidden(true);
+        clientInfo.setStatSource(statSource);
+        expectedClients.set(0, clientInfo);
+        checkClientList(expectedClients);
 
         // FIXME TEST Check other constraints
-        //FIXME TEST Negative cases
+        // FIXME TEST Negative cases
     }
 
+    private void checkClientList(ArrayList<ClientInfo> expectedClients) {
+		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
+		assertTrue(dbConnJaMuz.client().get(clients));
+		//Collections.sort(expectedPlaylists); // getPlaylists() return sorted ?
+        // Print arrays for visual inspection
+        System.out.println("Actual: " + Arrays.toString(expectedClients.toArray()));
+        System.out.println("Expected: " + Arrays.toString(clients.values().toArray()));
+        
+		assertArrayEquals(expectedClients.toArray(), clients.values().toArray());
+	}
+    
     /**
      * Test of lock method, of class DaoClient.
      */
