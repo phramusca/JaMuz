@@ -46,6 +46,7 @@ public class MP3gain {
 	private final ProgressBar progressBar;
 	private final boolean recalculate;
 	private final boolean trackGain;
+	private final String mp3GainPath;
 	
     /**
      *
@@ -61,19 +62,8 @@ public class MP3gain {
         this.progressBar = progressBar;
 		this.recalculate = recalculate;
 		this.trackGain=trackGain;
+		mp3GainPath = Jamuz.getFile("mp3gain.exe", "data", "system", "bin").getAbsolutePath();
     }
-
-	/**
-	 *
-	 * @param file
-	 */
-	public MP3gain(File file) {
-        this.path = file.getAbsolutePath();
-		this.relativePath = FilenameUtils.getBaseName(path);
-        this.progressBar = new ProgressBar();
-		this.recalculate = true;
-		this.trackGain=true;
-	}
 	
 	/**
 	 *
@@ -114,7 +104,7 @@ public class MP3gain {
 		//Build mp3gain command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
-			cmdArray.add("data\\system\\bin\\mp3gain.exe");
+			cmdArray.add(mp3GainPath);
 		}
 		else {
 			//TODO: Test if it works in MacOS for instance
@@ -257,12 +247,12 @@ public class MP3gain {
 										progressIndex+=1;
 										setProgress(0);
 									}
-									setProgress(Integer.valueOf(percent));
+									setProgress(Integer.parseInt(percent));
 								}
 								else if(line.endsWith("written")) {  //NOI18N
 									//1% of 7721786 bytes written
 									percent=line.substring(0, line.indexOf('%')).trim();  //NOI18N
-									setProgress(Integer.valueOf(percent));		
+									setProgress(Integer.parseInt(percent));		
 								}
 								//Not testing nor logging other messages
 								//as it can be different from one OS to another
@@ -311,7 +301,7 @@ public class MP3gain {
 			//Build mp3gain command array
 			List<String> cmdArray = new ArrayList<>();
 			if(OS.isWindows()) {
-				cmdArray.add("data\\system\\bin\\mp3gain.exe");
+				cmdArray.add(mp3GainPath);
 			}
             else {
                 //TODO: Test if it works in MacOS for instance
@@ -364,7 +354,7 @@ public class MP3gain {
 			//Build mp3gain command array
 			List<String> cmdArray = new ArrayList<>();
 			if(OS.isWindows()) {
-				cmdArray.add("data\\system\\bin\\mp3gain.exe");
+				cmdArray.add(mp3GainPath);
 			}
             else {
                 //TODO: Test if it works in MacOS for instance
