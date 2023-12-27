@@ -17,12 +17,11 @@
 package jamuz.database;
 
 import jamuz.FileInfoInt;
-import static jamuz.database.DbUtils.getCSVlist;
-import static jamuz.database.DbUtils.getSqlWHERE;
 import jamuz.gui.swing.ListElement;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,13 +37,16 @@ public class DaoListModel {
 
     private final DbConn dbConn;
     private String locationLibrary;
+    private final DaoFile daoFile;
 
     /**
      *
      * @param dbConn
+     * @param daoFile
      */
-    public DaoListModel(DbConn dbConn) {
+    public DaoListModel(DbConn dbConn, DaoFile daoFile) {
         this.dbConn = dbConn;
+        this.daoFile = daoFile;
     }
 
     public void setLocationLibrary(String locationLibrary) {
@@ -82,7 +84,26 @@ public class DaoListModel {
     }
 
     private void getListModel(DefaultListModel myListModel, String sql, String field) {
-        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            getListModel(myListModel, ps, field);
+        } catch (SQLException ex) {
+            Popup.error("getFilesStats()", ex);
+        }
+    }
+
+    private void getListModel(DefaultListModel myListModel, String field, String sql, String selGenre, String selArtist, String selAlbum,
+            boolean[] selRatings, boolean[] selCheckedFlag,
+            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight, boolean setExtraSelRatings) {
+        try (PreparedStatement ps = daoFile.prepareFileStatement(sql, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, setExtraSelRatings)) {
+            getListModel(myListModel, ps, field);
+        } catch (SQLException ex) {
+            Popup.error("getFilesStats()", ex);
+        }
+    }
+
+    private void getListModel(DefaultListModel myListModel, PreparedStatement ps, String field) {
+
+        try (ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Object elementToAdd = dbConn.getStringValue(rs, field);
@@ -190,7 +211,7 @@ public class DaoListModel {
     }
 
     /**
-     * Fill list of genre, artist or album
+     * Fill list of genre, artist, or album
      *
      * @param myListModel
      * @param field
@@ -214,56 +235,102 @@ public class DaoListModel {
         boolean[] allRatings = new boolean[6];
         Arrays.fill(allRatings, Boolean.TRUE);
         String sql;
+
         switch (field) {
-            case "album": // NOI18N
-                sql = "SELECT checked, strPath, name, coverHash, album, artist, albumArtist, year, "
-                        + "ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, "
-                        + // NOI18N
-                        "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n" // NOI18N
-                        // FIXME Z PanelSelect SELECT BY idPath (as grouped)
-                        // ex: Album "Charango" is either from Morcheeba or Yannick Noah
-                        // BUT files from both album are displayed in both cases
-                        // (WAS seen as only one album in Select tab, before group by idPath)
-                        + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo,
-                                bpmFrom, bpmTo, copyRight);
-                sql += " GROUP BY P.idPath ";
-                sql += " HAVING (sum(case when rating IN " + getCSVlist(selRatings) + " then 1 end))>0 ";
-                sql += " ORDER BY " + sqlOrder;
+            case "album":
+                sql = buildAlbumSql(selGenre, selArtist, selAlbum, selRatings,
+                        selCheckedFlag, copyRight, sqlOrder, allRatings);
                 break;
-            case "artist": // NOI18N
-                sql = "SELECT albumArtist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles, COUNT(DISTINCT F.idPath) AS nbPaths, 'albumArtist' AS source, "
-                        + "ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, "
-                        + // NOI18N
-                        "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n" // NOI18N
-                        + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo,
-                                bpmFrom, bpmTo, copyRight) // NOI18N
-                        + " GROUP BY albumArtist HAVING (sum(case when rating IN " + getCSVlist(selRatings)
-                        + " then 1 end))>0 "; // NOI18N
-                sql += " UNION "; // NOI18N
-                sql += "SELECT artist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles, COUNT(DISTINCT F.idPath) AS nbPaths, 'artist', " // NOI18N
-                        + "ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, "
-                        + // NOI18N
-                        "ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n" // NOI18N
-                        + getSqlWHERE(selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo,
-                                bpmFrom, bpmTo, copyRight)
-                        + " AND albumArtist='' GROUP BY " + field + " HAVING (sum(case when rating IN "
-                        + getCSVlist(selRatings) + " then 1 end))>0 "
-                        + "ORDER BY " + sqlOrder; // NOI18N
+            case "artist":
+                sql = buildArtistSql(selGenre, selArtist, selAlbum, selRatings,
+                        selCheckedFlag, copyRight, sqlOrder, allRatings);
                 myListModel.addElement(new ListElement("%", field)); // NOI18N
                 field = "albumArtist"; // As known as this in recordset //NOI18N
                 break;
             default:
-                sql = "SELECT " + field + " " // NOI18N
-                        + getSqlWHERE(selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo,
-                                bpmFrom, bpmTo, copyRight)
-                        + " GROUP BY " + field + " ORDER BY " + field; // NOI18N //NOI18N
+                sql = buildDefaultSql(field, selGenre, selArtist, selAlbum,
+                        selRatings, selCheckedFlag, copyRight);
                 myListModel.addElement("%"); // NOI18N
                 break;
         }
-        getListModel(myListModel, sql, field);
+
+        getListModel(myListModel, field, sql, selGenre, selArtist, selAlbum, selRatings,
+                selCheckedFlag, yearFrom, yearTo, bpmFrom,
+                bpmTo, copyRight, (field.equals("alubm") || field.equals("artist")));
 
         if (field.equals("album") && myListModel.size() > 1) {
             myListModel.insertElementAt(new ListElement("%", field), 0); // NOI18N
         }
     }
+
+    //FIXME ! buildSqlQuery returns a SQL for prepared statement:
+    // - update remaining to ?
+    // - Create a PreparedStatement and try opening it => getListModel
+    private String buildSqlQuery(String field, String selGenre, String selArtist,
+            String selAlbum, boolean[] selRatings, boolean[] selCheckedFlag, int copyRight,
+            String sqlOrder, boolean[] allRatings) {
+        String sql;
+
+        switch (field) {
+            case "album":
+                sql = buildAlbumSql(selGenre, selArtist, selAlbum, selRatings,
+                        selCheckedFlag, copyRight, sqlOrder, allRatings);
+                break;
+            case "artist":
+                sql = buildArtistSql(selGenre, selArtist, selAlbum, selRatings,
+                        selCheckedFlag, copyRight, sqlOrder, allRatings);
+                break;
+            default:
+                sql = buildDefaultSql(field, selGenre, selArtist, selAlbum,
+                        selRatings, selCheckedFlag, copyRight);
+                break;
+        }
+        return sql;
+    }
+
+    private String buildAlbumSql(String selGenre, String selArtist, String selAlbum,
+            boolean[] selRatings, boolean[] selCheckedFlag, int copyRight, String sqlOrder, boolean[] allRatings) {
+        String sqlSelect = """
+                          SELECT checked, strPath, name, coverHash, album, artist, albumArtist, year,
+                          ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,
+                          ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated
+                          """;
+        String sql = daoFile.getSqlWhere(sqlSelect, selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, copyRight);
+        sql += " GROUP BY P.idPath ";
+        sql += " HAVING (sum(case when rating IN " + daoFile.getCSVlist(selRatings) + " then 1 end))>0 ";
+        sql += " ORDER BY " + sqlOrder;
+        return sql;
+    }
+
+    private String buildArtistSql(String selGenre, String selArtist, String selAlbum,
+            boolean[] selRatings, boolean[] selCheckedFlag, int copyRight, String sqlOrder, boolean[] allRatings) {
+        String sqlSelectAlbumArtist = """
+                           SELECT albumArtist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles,
+                           COUNT(DISTINCT F.idPath) AS nbPaths, 'albumArtist' AS source,
+                           ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,
+                           ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated
+                           """;
+        String sql = daoFile.getSqlWhere(sqlSelectAlbumArtist, selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, copyRight)
+                + " GROUP BY albumArtist HAVING (sum(case when rating IN " + daoFile.getCSVlist(selRatings)
+                + " then 1 end))>0 ";
+        sql += " \nUNION\n ";
+        String sqlSelectArtist = """
+                                SELECT artist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles,
+                                COUNT(DISTINCT F.idPath) AS nbPaths, 'artist', 
+                                ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,
+                                ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated
+                                """;
+        sql += daoFile.getSqlWhere(sqlSelectArtist, selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, copyRight)
+                + " AND albumArtist='' GROUP BY artist HAVING (sum(case when rating IN "
+                + daoFile.getCSVlist(selRatings) + " then 1 end))>0 "
+                + "ORDER BY " + sqlOrder;
+        return sql;
+    }
+
+    private String buildDefaultSql(String field, String selGenre, String selArtist,
+            String selAlbum, boolean[] selRatings, boolean[] selCheckedFlag, int copyRight) {
+        return daoFile.getSqlWhere("SELECT " + field + " ", selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, copyRight)
+                + " GROUP BY " + field + " ORDER BY " + field;
+    }
+
 }

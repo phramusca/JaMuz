@@ -240,19 +240,4 @@ public class DaoFileTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of getFilesStats method, of class DaoFile.
-     */
-    @Test
-    public void testGetFilesStats_String() {
-        System.out.println("getFilesStats");
-        String sql = "";
-        DaoFile instance = null;
-        String expResult = "";
-        String result = instance.getFilesStats(sql);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
 }

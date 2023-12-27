@@ -80,7 +80,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 		super(dbInfo, "JaMuz", "", true, true, true, true, false, true);
 		daoTag = new DaoTag(dbConn);
         daoFile = new DaoFile(dbConn);
-		daoFileTag = new DaoFileTag(dbConn, daoTag, daoFile);
+		daoListModel = new DaoListModel(dbConn, daoFile);
+        daoFileTag = new DaoFileTag(dbConn, daoTag, daoFile);
         daoStatSource = new DaoStatSource(dbConn);
         daoDevice = new DaoDevice(dbConn);
 		daoClient = new DaoClient(dbConn, daoDevice, daoStatSource);
@@ -95,7 +96,7 @@ public class DbConnJaMuz extends StatSourceSQL {
         daoPathAlbum = new DaoPathAlbum(dbConn);
         daoPlayCounter = new DaoPlayCounter(dbConn);
         daoOption = new DaoOption(dbConn);
-        daoListModel = new DaoListModel(dbConn);
+        
         
 	}
 
