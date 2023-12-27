@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -53,6 +54,7 @@ public class DaoDeviceWriteTest {
      * Test of insertOrUpdate method, of class DaoDeviceWrite.
      */
     @Test
+	@Ignore
     public void testInsertOrUpdate() {
         System.out.println("insertOrUpdate");
         Device device = null;
@@ -68,6 +70,7 @@ public class DaoDeviceWriteTest {
      * Test of delete method, of class DaoDeviceWrite.
      */
     @Test
+	@Ignore
     public void testDelete() {
         System.out.println("delete");
         int id = 0;

@@ -102,7 +102,7 @@ public class DaoDevice {
      * @return
      * @throws SQLException
      */
-    public Device get(ResultSet rs, String hostname, boolean hidden) throws SQLException {
+    Device get(ResultSet rs, String hostname, boolean hidden) throws SQLException {
         int idDevice = rs.getInt("deviceId"); // NOI18N
         return new Device(idDevice,
                 dbConn.getStringValue(rs, "deviceName"), // NOI18N
