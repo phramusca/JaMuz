@@ -84,23 +84,6 @@ public class DaoDeviceFileWriteTest {
     }
 
     /**
-     * Test of update method, of class DaoDeviceFileWrite.
-     */
-    @Test
-    public void testUpdate() {
-        System.out.println("update");
-        SyncStatus status = null;
-        int idFile = 0;
-        int idDevice = 0;
-        DaoDeviceFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.update(status, idFile, idDevice);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of delete method, of class DaoDeviceFileWrite.
      */
     @Test

@@ -34,6 +34,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import test.helpers.TestUnitSettings;
+import java.time.Instant;
+import java.time.Duration;
 
 /**
  *
@@ -92,16 +94,17 @@ public class DaoDeviceFileTest {
 
         //File need a path
         int[] keyPath = new int[1];
-        dbConnJaMuz.path().lock().insert("relative/path", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbId", keyPath);
+        dbConnJaMuz.path().lock().insert("relative/path/", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbId", keyPath);
         
         //Inserting files
         ArrayList<FileInfoInt> expectedFiles = new ArrayList<>();
-        FileInfoInt fileInfoInt = new FileInfoInt("relative/path", "/root/path");
+        FileInfoInt fileInfoInt = new FileInfoInt("relative/path/file.ext", "/root/path");
         fileInfoInt.setIdPath(keyPath[0]);
         expectedFiles.add(fileInfoInt);
         int[] keyFile = new int[1];
         dbConnJaMuz.file().lock().insert(fileInfoInt, keyFile);
         fileInfoInt.setIdFile(keyFile[0]);
+		fileInfoInt.setRating(0); //forced to 0 on insertion
 
         //When
         dbConnJaMuz.deviceFile().lock().insertOrIgnore(expectedFiles, device.getId());
@@ -109,8 +112,11 @@ public class DaoDeviceFileTest {
         //Then
         dbConnJaMuz.setUp(true);
         checkFilesList(expectedFiles, statSource);
-        //FIXME TEST ! Assert insertion, then test others cases: other insertion, other gets, and update and delete too
-        
+		
+        //FIXME TEST Test insertOrUpdate, delete, and maybe other get (select from deviceFile, there are a few others)
+//		dbConnJaMuz.deviceFile().lock().insertOrUpdate(expectedFiles, device.getId());
+//		dbConnJaMuz.deviceFile().lock().delete(idDevice);
+		
         //FIXME TEST Negative cases
         //FIXME TEST Check other constraints
     }
@@ -119,8 +125,51 @@ public class DaoDeviceFileTest {
 //		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
         ArrayList<FileInfo> files = new ArrayList<>();
 		assertTrue(dbConnJaMuz.getStatistics(files, statSource));
+		
+		//Cannot use assertArrayEquals as equals in FileInfoInt is limited for other usage
 //		Collections.sort(expectedClients);
-		assertArrayEquals(expectedFiles.toArray(), files.toArray());
+//		assertArrayEquals(expectedFiles.toArray(), files.toArray());
+
+		int i = 0;
+		FileInfo actualFile;
+		for (FileInfoInt expectedFile : expectedFiles) {
+			actualFile = files.get(i);
+			assertEquals(expectedFile.getIdFile(), actualFile.getIdFile());		
+			assertEquals(expectedFile.getIdPath(), actualFile.getIdPath());
+			assertEquals(expectedFile.getBPM(), actualFile.getBPM(), 0);
+			assertEquals(expectedFile.getExt(), actualFile.getExt());
+			assertEquals(expectedFile.getFilename(), actualFile.getFilename());
+			assertEquals(expectedFile.getFormattedGenreModifDate(), actualFile.getFormattedGenreModifDate());
+			assertEquals(expectedFile.getFormattedLastPlayed(), actualFile.getFormattedLastPlayed());
+			assertEquals(expectedFile.getFormattedRatingModifDate(), actualFile.getFormattedRatingModifDate());
+			assertEquals(expectedFile.getFormattedTagsModifDate(), actualFile.getFormattedTagsModifDate());
+			assertEquals(expectedFile.getGenre(), actualFile.getGenre());
+			assertEquals(expectedFile.getGenreModifDate(), actualFile.getGenreModifDate());
+			assertEquals(expectedFile.getLastPlayed(), actualFile.getLastPlayed());
+			assertEquals(expectedFile.getLastPlayedLocalTime(), actualFile.getLastPlayedLocalTime());
+			assertEquals(expectedFile.getPlayCounter(), actualFile.getPlayCounter());
+			assertEquals(expectedFile.getPreviousPlayCounter(), actualFile.getPreviousPlayCounter());
+			assertEquals(expectedFile.getRating(), actualFile.getRating());
+			assertEquals(expectedFile.getRatingModifDate(), actualFile.getRatingModifDate());
+			assertEquals(expectedFile.getRelativeFullPath(), actualFile.getRelativeFullPath());
+			assertEquals(expectedFile.getRelativePath(), actualFile.getRelativePath());
+			
+			//AddedDate is inserted with `datetime('now')` in db, so need to check it is close to current datetime
+			long toleranceSeconds = 5;
+			Instant currentInstant = Instant.now();
+			assertTrue("addedDate is not close to the current date and time", Duration.between( currentInstant, actualFile.getAddedDate().toInstant()).abs().getSeconds() <= toleranceSeconds);
+			//Not checking those convertions here. Refer to DateTimeUtils and DaoFile tests
+//			assertEquals(expectedFile.getAddedDateLocalTime(), actualFile.getAddedDateLocalTime());
+//			assertEquals(expectedFile.getFormattedAddedDate(), actualFile.getFormattedAddedDate());
+			
+			// Source differ as for one it is "file" and "Jamuz" for the other
+//			assertEquals(expectedFile.getSourceName(), actualFile.getSourceName());
+			//FileInfoInt reads tags from database but not FileInfo (only for stats)
+//			Jamuz.setDb(dbConnJaMuz);
+//			assertEquals(expectedFile.getTags(), actualFile.getTags());
+			assertEquals(expectedFile.getTagsModifDate(), actualFile.getTagsModifDate());
+			assertEquals(expectedFile.getTagsToString(), actualFile.getTagsToString());
+		}
 	}
     
     /**
@@ -129,12 +178,6 @@ public class DaoDeviceFileTest {
     @Test
     @Ignore
     public void testLock() {
-        System.out.println("lock");
-        DaoDeviceFile instance = null;
-        DaoDeviceFileWrite expResult = null;
-        DaoDeviceFileWrite result = instance.lock();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
