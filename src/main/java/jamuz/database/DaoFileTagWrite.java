@@ -79,21 +79,18 @@ public class DaoFileTagWrite {
                 dbConn.connection.commit();
                 return results;
             } catch (SQLException ex) {
+				Jamuz.getLogger().log(Level.SEVERE, "", ex);
                 try {
                     dbConn.connection.rollback();
                 } catch (SQLException rollbackEx) {
-                    // Handle rollback exception
-                    rollbackEx.printStackTrace();
+					Jamuz.getLogger().log(Level.SEVERE, "", rollbackEx);
                 }
-                // Log or handle the SQL exception
-                ex.printStackTrace();
                 return results;
             } finally {
                 try {
                     dbConn.connection.setAutoCommit(true);
                 } catch (SQLException autoCommitEx) {
-                    // Handle setAutoCommit exception
-                    autoCommitEx.printStackTrace();
+					Jamuz.getLogger().log(Level.SEVERE, "", autoCommitEx);
                 }
             }
         }

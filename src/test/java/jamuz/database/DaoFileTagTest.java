@@ -16,6 +16,8 @@
  */
 package jamuz.database;
 
+import jamuz.FileInfo;
+import jamuz.FileInfoInt;
 import static org.junit.Assert.*;
 
 
@@ -59,10 +61,25 @@ public class DaoFileTagTest {
     }
 
     @Test
-    public void testxxxxxxxxxxxxxx() {
+    public void testFileTag() {
 
-        System.out.println("testxxxxxxxxxxxxxx");
+        System.out.println("testFileTag");
+		
+		//Given
+		dbConnJaMuz.tag().lock().insert("frefrfe");
+		dbConnJaMuz.tag().lock().insert("mpomoipm");
+		dbConnJaMuz.tag().lock().insert("5165vge");
+		dbConnJaMuz.tag().lock().insert("wqs:");
+		
 
+//		dbConnJaMuz.fileTag().get(tags, idFile);
+		
+		ArrayList<? extends FileInfo> files = new ArrayList<>();
+
+		files.add(new FileInfoInt())
+		
+		dbConnJaMuz.fileTag().lock().update(files, results);
+		
         //FIXME TEST Make unit test
         //FIXME TEST Negative cases
         //FIXME TEST Check other constraints
