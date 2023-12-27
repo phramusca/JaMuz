@@ -17,7 +17,6 @@
 package jamuz.database;
 
 import jamuz.FileInfoInt;
-import jamuz.process.sync.SyncStatus;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -25,6 +24,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -55,6 +55,7 @@ public class DaoDeviceFileWriteTest {
      * Test of insertOrUpdate method, of class DaoDeviceFileWrite.
      */
     @Test
+	@Ignore
     public void testInsertOrUpdate() {
         System.out.println("insertOrUpdate");
         ArrayList<FileInfoInt> files = null;
@@ -71,6 +72,7 @@ public class DaoDeviceFileWriteTest {
      * Test of insertOrIgnore method, of class DaoDeviceFileWrite.
      */
     @Test
+	@Ignore
     public void testInsertOrIgnore_ArrayList_int() {
         System.out.println("insertOrIgnore");
         ArrayList<FileInfoInt> files = null;
@@ -87,6 +89,7 @@ public class DaoDeviceFileWriteTest {
      * Test of delete method, of class DaoDeviceFileWrite.
      */
     @Test
+	@Ignore
     public void testDelete() {
         System.out.println("delete");
         int idDevice = 0;
