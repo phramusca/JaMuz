@@ -18,7 +18,6 @@ package jamuz.database;
 
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.process.sync.SyncStatus;
 import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -42,7 +41,7 @@ public class DaoDeviceFileWrite {
     }
 
     /**
-     * Insert or update in deviceFile table
+     * Insert deviceFile or update status in deviceFile table. Used for remote sync.
      *
      * @param files
      * @param idDevice
@@ -97,7 +96,7 @@ public class DaoDeviceFileWrite {
     }
 
     /**
-     * Insert in deviceFile table
+     * Insert in deviceFile table. Used in filesystem sync
      *
      * @param files
      * @param idDevice
@@ -142,40 +141,6 @@ public class DaoDeviceFileWrite {
             } catch (SQLException ex) {
                 Popup.error("insertDeviceFile(" + idDevice + ")", ex); // NOI18N
                 return inserted;
-            }
-        }
-    }
-
-    /**
-     * Resets the check flag to UNCHECKED on path table for the given checked
-     * flag
-     *
-     * @param status
-     * @param idFile
-     * @param idDevice
-     * @return
-     */
-    public boolean update(SyncStatus status, int idFile, int idDevice) {
-        synchronized (dbConn) {
-            try (PreparedStatement stUpdateCheckedFlagReset = dbConn.connection.prepareStatement(
-                    "UPDATE deviceFile SET status=? WHERE idFile=? AND idDevice=?")) {
-
-                stUpdateCheckedFlagReset.setString(1, status.name());
-                stUpdateCheckedFlagReset.setInt(2, idFile);
-                stUpdateCheckedFlagReset.setInt(3, idDevice);
-                int nbRowsAffected = stUpdateCheckedFlagReset.executeUpdate();
-
-                if (nbRowsAffected == 1) {
-                    return true;
-                } else {
-                    Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} # row(s) affected: +{1}",
-                            new Object[]{idFile, nbRowsAffected}); // NOI18N
-                    return false;
-                }
-            } catch (SQLException ex) {
-                Jamuz.getLogger().log(Level.SEVERE, "setDeviceFileStatus, idFile={0} : {1}",
-                        new Object[]{idFile, ex}); // NOI18N
-                return false;
             }
         }
     }
