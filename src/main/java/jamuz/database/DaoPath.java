@@ -22,7 +22,6 @@ import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.io.FilenameUtils;
@@ -61,10 +60,8 @@ public class DaoPath {
      * @param checkedFlag
      * @return
      */
-    public boolean get(ConcurrentHashMap<String, FolderInfo> folders,
-            FolderInfo.CheckedFlag checkedFlag) {
-        return get(folders, "WHERE checked="
-                + checkedFlag.getValue());// NOI18N
+    public boolean get(ConcurrentHashMap<String, FolderInfo> folders, FolderInfo.CheckedFlag checkedFlag) {
+        return get(folders, "WHERE checked=?", checkedFlag.getValue());
     }
 
     /**
@@ -74,9 +71,8 @@ public class DaoPath {
      * @param idPath
      * @return
      */
-    public boolean get(ConcurrentHashMap<String, FolderInfo> folders,
-            int idPath) {
-        return get(folders, "WHERE idPath=" + idPath); // NOI18N
+    public boolean get(ConcurrentHashMap<String, FolderInfo> folders, int idPath) {
+        return get(folders, "WHERE idPath=?", idPath);
     }
 
     /**
@@ -87,8 +83,8 @@ public class DaoPath {
      */
     public FolderInfo get(int idPath) {
         ConcurrentHashMap<String, FolderInfo> folders = new ConcurrentHashMap<>();
-        if (get(folders, idPath)) { // NOI18N
-            return folders.elements().nextElement(); // .get(0);
+        if (get(folders, "WHERE idPath=?", idPath)) {
+            return folders.elements().nextElement();
         } else {
             return null;
         }
@@ -104,20 +100,27 @@ public class DaoPath {
         return get(folders, "");
     }
 
-    private boolean get(ConcurrentHashMap<String, FolderInfo> folders, String sqlWhere) {
+    private boolean get(ConcurrentHashMap<String, FolderInfo> folders, String sqlWhere, Object... params) {
         folders.clear();
-        String sql = "SELECT idPath, strPath, modifDate, checked FROM path " + sqlWhere; // NOI18N
-        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-            String path;
-            while (rs.next()) {
-                Date dbModifDate = DateTime.parseSqlUtc(dbConn.getStringValue(rs, "modifDate")); // NOI18N
-                path = FilenameUtils.separatorsToSystem(dbConn.getStringValue(rs, "strPath")); // NOI18N
-                folders.put(path, new FolderInfo(rs.getInt("idPath"), path, dbModifDate,
-                        FolderInfo.CheckedFlag.values()[rs.getInt("checked")])); // NOI18N
+        String sql = "SELECT idPath, strPath, modifDate, checked FROM path " + sqlWhere;
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            // Set parameters
+            for (int i = 0; i < params.length; i++) {
+                ps.setObject(i + 1, params[i]);
             }
-            return true;
+
+            try (ResultSet rs = ps.executeQuery()) {
+                String path;
+                while (rs.next()) {
+                    Date dbModifDate = DateTime.parseSqlUtc(dbConn.getStringValue(rs, "modifDate"));
+                    path = FilenameUtils.separatorsToSystem(dbConn.getStringValue(rs, "strPath"));
+                    folders.put(path, new FolderInfo(rs.getInt("idPath"), path, dbModifDate,
+                            FolderInfo.CheckedFlag.values()[rs.getInt("checked")]));
+                }
+                return true;
+            }
         } catch (SQLException ex) {
-            Popup.error("getFolderInfoList(" + sqlWhere + ")", ex); // NOI18N
+            Popup.error("getFolderInfoList(" + sqlWhere + ")", ex);
             return false;
         }
     }

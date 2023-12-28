@@ -21,7 +21,6 @@ import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -87,10 +86,12 @@ public class DaoSchema {
     }
 
     private Pair<Boolean, Boolean> existsTableVersionHistory() {
-        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='versionHistory';")) {
+        try (PreparedStatement ps = dbConn.connection.prepareStatement("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?")) {
+            ps.setString(1, "versionHistory");
 
-            return new ImmutablePair<>(true, rs.getInt(1) > 0);
-
+            try (ResultSet rs = ps.executeQuery()) {
+                return new ImmutablePair<>(true, rs.getInt(1) > 0);
+            }
         } catch (SQLException ex) {
             Popup.error("existsTableVersionHistory()", ex);
             return new ImmutablePair<>(false, false);
