@@ -170,19 +170,19 @@ public class DaoFile {
             String sql = """
                          SELECT count(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), round(avg(albumRating),1 ) as [rating] , T.range as [percentRated] 
                          FROM (
-                         SELECT albumRating, size, length, P.idPath,
-                         \tcase  
-                             when percentRated <  10\t\t\t\t\t\t  then '0 -> 9 percent'
-                             when percentRated >= 10 and percentRated < 25  then '10 -> 24 percent'
-                             when percentRated >= 25 and percentRated < 50  then '25 -> 49 percent'
-                             when percentRated >= 50 and percentRated < 75  then '50 -> 74 percent'
-                             when percentRated >= 75 and percentRated < 100 then '75 -> 99 percent'
-                             when percentRated == 100\t\t\t\t\t      then 'x 100 percent x'
-                             else 'kes' end as range
-                           FROM file F   JOIN ( SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,
-                         \t\t\tifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated
-                         \t\tFROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath ) 
-                         P ON F.idPath=P.idPath ) T 
+                            SELECT albumRating, size, length, P.idPath,
+                                case  
+                                    when percentRated <  10                        then '0 -> 9 percent'
+                                    when percentRated >= 10 and percentRated < 25  then '10 -> 24 percent'
+                                    when percentRated >= 25 and percentRated < 50  then '25 -> 49 percent'
+                                    when percentRated >= 50 and percentRated < 75  then '50 -> 74 percent'
+                                    when percentRated >= 75 and percentRated < 100 then '75 -> 99 percent'
+                                    when percentRated == 100                       then 'x 100 percent x'
+                                    else 'kes' end as range
+                            FROM file F   
+                            JOIN ( SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,
+                                ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated
+                                FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath ) P ON F.idPath=P.idPath ) T 
                          GROUP BY T.range """;
 
             try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
@@ -306,7 +306,8 @@ public class DaoFile {
             ps.setString(paramIndex++, selGenre);
         }
         if (!selArtist.equals("%")) { // NOI18N
-            ps.setString(paramIndex++, selArtist);
+            ps.setString(paramIndex++, selArtist); // artist
+            ps.setString(paramIndex++, selArtist); // albumArtist
         }
         if (!selAlbum.equals("%")) { // NOI18N
             ps.setString(paramIndex++, selAlbum);
