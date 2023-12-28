@@ -71,12 +71,15 @@ public class DaoFile {
      * @return
      */
     public double getYear(String maxOrMin) {
-        try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery("SELECT " + maxOrMin + "(year) FROM file "
-                + "WHERE year GLOB '[0-9][0-9][0-9][0-9]' AND length(year)=4")) {
-            // FIXME ZZ PanelSelect better validate year (but regex is not available by
-            // default :( )
-            // To exclude wrong entries (not YYYY format)
-            return rs.getDouble(1);
+        String query = "SELECT " + maxOrMin + "(year) FROM file WHERE year GLOB '[0-9][0-9][0-9][0-9]' AND length(year) = 4";
+
+        try (PreparedStatement ps = dbConn.connection.prepareStatement(query)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                // FIXME ZZ PanelSelect better validate year (but regex is not available by
+                // default :( )
+                // To exclude wrong entries (not YYYY format)
+                return rs.getDouble(1);
+            }
         } catch (SQLException ex) {
             Popup.error("getYear(" + maxOrMin + ")", ex);
             return -1.0;
@@ -98,25 +101,36 @@ public class DaoFile {
         String sql;
         try {
             value = value.replaceAll("\"", "%");
-            sql = "SELECT COUNT(*), COUNT(DISTINCT path.idPath), SUM(size), "
-                    + "\nSUM(length), avg(rating) "
-                    + "\nFROM file JOIN path ON path.idPath=file.idPath ";
-            if (value.contains("IN (")) {
-                sql += " \nWHERE " + table + "." + field + " " + value;
-            } else if (value.startsWith(">")) {
-                sql += " \nWHERE " + table + "." + field + value + "";
+            sql = """
+              SELECT COUNT(*), COUNT(DISTINCT path.idPath), SUM(size), 
+              SUM(length), avg(rating) 
+              FROM file JOIN path ON path.idPath=file.idPath """;
+
+            if (value.startsWith(">")) {
+                sql += " \nWHERE " + table + "." + field + value;
             } else if (value.contains("%")) {
-                sql += " \nWHERE " + table + "." + field + " LIKE \"" + value + "\"";
+                sql += " \nWHERE " + table + "." + field + " LIKE ?";
             } else {
-                sql += " \nWHERE " + table + "." + field + "='" + value + "'";
+                sql += " \nWHERE " + table + "." + field + "=?";
             }
+
             if (selRatings != null) {
                 sql += " \nAND file.rating IN " + getCSVlist(selRatings);
             }
 
-            try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-                return new StatItem(label, value, rs.getLong(1), rs.getLong(2),
-                        rs.getLong(3), rs.getLong(4), rs.getDouble(5), color);
+            try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+                if (value.contains("%")) {
+                    ps.setString(1, value);
+                } else if (!value.startsWith(">")) {
+                    ps.setString(1, value);
+                }
+                if (selRatings != null) {
+                    setCSVlist(ps, selRatings, 2);
+                }
+                try (ResultSet rs = ps.executeQuery()) {
+                    return new StatItem(label, value, rs.getLong(1), rs.getLong(2),
+                            rs.getLong(3), rs.getLong(4), rs.getDouble(5), color);
+                }
             }
         } catch (SQLException ex) {
             Popup.error("getStatItem(" + field + "," + value + ")", ex);
@@ -391,10 +405,7 @@ public class DaoFile {
      * @return ArrayList of FileInfoInt
      */
     public boolean getFiles(ArrayList<FileInfoInt> files, SyncStatus status, Device device, String limit, String destExt) {
-
-        String sql = getSql(status, device, false, destExt, limit);
-
-        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = prepareStatement(status, device, limit, destExt, false)) {
             if (getFiles(files, ps)) {
                 return true;
             }
@@ -403,39 +414,6 @@ public class DaoFile {
         }
 
         return false;
-    }
-
-    private String getSql(SyncStatus status, Device device, boolean getCount, String destExt, String limit) {
-        String statusSql = status.equals(SyncStatus.INFO)
-                ? "'INFO' AS status"
-                : "DF.status";
-        String whereSql = status.equals(SyncStatus.INFO)
-                ? "(DF.status is null OR DF.status=\"INFO\")"
-                : "DF.idDevice=" + device.getId() + " AND DF.status=\"" + status + "\"";
-        String sql = "SELECT " + (getCount ? " COUNT(F.idFile) "
-                : " F.idFile, F.idPath, F.name, F.rating, "
-                + "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
-                + "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n"
-                + "F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
-                + "F.nbCovers, F.coverHash, F.ratingModifDate, "
-                + "F.tagsModifDate, F.genreModifDate, F.saved, \n"
-                + "ifnull(T.bitRate, F.bitRate) AS bitRate, \n"
-                + "ifnull(T.format, F.format) AS format, \n"
-                + "ifnull(T.length, F.length) AS length, \n"
-                + "ifnull(T.size, F.size) AS size, \n"
-                + "ifnull(T.trackGain, F.trackGain) AS trackGain, \n"
-                + "ifnull(T.albumGain, F.albumGain) AS albumGain, \n"
-                + "ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n"
-                + "P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, "
-                + "P.mbId AS pathMbId, P.modifDate AS pathModifDate, " + statusSql + " \n")
-                + "FROM file F \n"
-                + "LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\"" + destExt + "\" \n"
-                + "LEFT JOIN deviceFile DF ON DF.idFile=F.idFile AND DF.idDevice=" + device.getId() + " \n"
-                + "JOIN path P ON F.idPath=P.idPath \n"
-                + "WHERE " + whereSql + " \n"
-                + "ORDER BY F.idFile "
-                + limit;
-        return sql;
     }
 
     /**
@@ -448,14 +426,43 @@ public class DaoFile {
      * @return
      */
     public Integer getFilesCount(SyncStatus status, Device device, String destExt, String limit) {
-        String sql = getSql(status, device, true, destExt, limit);
-
-        try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = prepareStatement(status, device, limit, destExt, true)) {
             return getFilesCount(ps);
         } catch (SQLException ex) {
-            Popup.error("getFiles()", ex);
+            Popup.error("getFilesCount()", ex);
         }
         return -1;
+    }
+
+    private PreparedStatement prepareStatement(SyncStatus status, Device device, String limit, String destExt, boolean getCount) throws SQLException {
+        String sql = "SELECT " + (getCount ? " COUNT(F.idFile) "
+                : """
+                   F.idFile, F.idPath, F.name, F.rating, F.lastPlayed, F.playCounter, F.addedDate, F.artist, F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, 
+                  F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, F.nbCovers, F.coverHash, F.ratingModifDate, F.tagsModifDate, F.genreModifDate, F.saved, 
+                  ifnull(T.bitRate, F.bitRate) AS bitRate, 
+                  ifnull(T.format, F.format) AS format, 
+                  ifnull(T.length, F.length) AS length, 
+                  ifnull(T.size, F.size) AS size, 
+                  ifnull(T.trackGain, F.trackGain) AS trackGain, 
+                  ifnull(T.albumGain, F.albumGain) AS albumGain, 
+                  ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, 
+                  P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, P.mbId AS pathMbId, P.modifDate AS pathModifDate, """
+                + (status.equals(SyncStatus.INFO) ? "'INFO' AS status" : "DF.status") + " \n")
+                + "FROM file F \n"
+                + "LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=? \n"
+                + "LEFT JOIN deviceFile DF ON DF.idFile=F.idFile AND DF.idDevice=? \n"
+                + "JOIN path P ON F.idPath=P.idPath \n"
+                + "WHERE " + (status.equals(SyncStatus.INFO) ? "(DF.status is null OR DF.status=\"INFO\")" : "DF.idDevice=? AND DF.status=?") + " \n"
+                + "ORDER BY F.idFile "
+                + limit;
+        PreparedStatement ps = dbConn.connection.prepareStatement(sql);
+        ps.setString(1, destExt);
+        ps.setInt(2, device.getId());
+        if (!status.equals(SyncStatus.INFO)) {
+            ps.setInt(3, device.getId());
+            ps.setString(4, status.toString());
+        }
+        return ps;
     }
 
     /**
@@ -467,30 +474,27 @@ public class DaoFile {
      * @return
      */
     public boolean getFiles(ArrayList<FileInfoInt> files, String destExt, String sqlWhere) {
-        String sql = "SELECT F.idFile, F.idPath, F.name, F.rating, "
-                + "F.lastPlayed, F.playCounter, F.addedDate, F.artist, "
-                + "F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, \n"
-                + "F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, "
-                + "F.nbCovers, F.coverHash, F.ratingModifDate, "
-                + "F.tagsModifDate, F.genreModifDate, F.saved, \n"
-                + "ifnull(T.bitRate, F.bitRate) AS bitRate, \n"
-                + "ifnull(T.format, F.format) AS format, \n"
-                + "ifnull(T.length, F.length) AS length, \n"
-                + "ifnull(T.size, F.size) AS size, \n"
-                + "ifnull(T.trackGain, F.trackGain) AS trackGain, \n"
-                + "ifnull(T.albumGain, F.albumGain) AS albumGain, \n"
-                + "ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, \n"
-                + "P.strPath, P.checked, P.copyRight, P.albumRating, P.percentRated, "
-                + "'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate \n"
-                + "FROM file F \n"
-                + "LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=\"" + destExt + "\" \n"
-                + "JOIN (\n"
-                + "		SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, \n"
-                + "		ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"
-                + "		FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath \n"
-                + "	) P ON F.idPath=P.idPath ";
+        String sql = """
+                     SELECT F.idFile, F.idPath, F.name, F.rating, F.lastPlayed, F.playCounter, F.addedDate, F.artist, F.album, F.albumArtist, F.title, F.trackNo, F.trackTotal, 
+                     F.discNo, F.discTotal, F.genre, F.year, F.BPM, F.comment, F.nbCovers, F.coverHash, F.ratingModifDate, F.tagsModifDate, F.genreModifDate, F.saved, 
+                     ifnull(T.bitRate, F.bitRate) AS bitRate, 
+                     ifnull(T.format, F.format) AS format, 
+                     ifnull(T.length, F.length) AS length, 
+                     ifnull(T.size, F.size) AS size, 
+                     ifnull(T.trackGain, F.trackGain) AS trackGain, 
+                     ifnull(T.albumGain, F.albumGain) AS albumGain, 
+                     ifnull(T.modifDate, F.modifDate) AS modifDate, T.ext, 
+                     P.strPath, P.checked, P.copyRight, P.albumRating, P.percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate 
+                     FROM file F 
+                     LEFT JOIN fileTranscoded T ON T.idFile=F.idFile AND T.ext=? 
+                     JOIN (
+                     \t\tSELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, 
+                     \t\tifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated
+                     \t\tFROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath 
+                     \t) P ON F.idPath=P.idPath """;
 
         try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
+            ps.setString(1, destExt);
             if (getFiles(files, ps)) {
                 return true;
             }
