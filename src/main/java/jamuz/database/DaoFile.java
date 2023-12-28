@@ -28,7 +28,6 @@ import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -180,50 +179,29 @@ public class DaoFile {
      */
     public void getPercentRatedForStats(ArrayList<StatItem> stats) {
         try {
-            // Note: Using "percent" as "%" is replaced by "-" because of decades. Now also
-            // replacing "percent" by "%"
             String sql = """
-                         SELECT count(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), round(avg(albumRating),1 ) as [rating] , T.range as [percentRated] 
-                         FROM (
-                            SELECT albumRating, size, length, P.idPath,
-                                case  
-                                    when percentRated <  10                        then '0 -> 9 percent'
-                                    when percentRated >= 10 and percentRated < 25  then '10 -> 24 percent'
-                                    when percentRated >= 25 and percentRated < 50  then '25 -> 49 percent'
-                                    when percentRated >= 50 and percentRated < 75  then '50 -> 74 percent'
-                                    when percentRated >= 75 and percentRated < 100 then '75 -> 99 percent'
-                                    when percentRated == 100                       then 'x 100 percent x'
-                                    else 'kes' end as range
-                            FROM file F   
-                            JOIN ( SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,
-                                ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated
-                                FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath ) P ON F.idPath=P.idPath ) T 
-                         GROUP BY T.range """;
+                     SELECT count(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), round(avg(albumRating), 1) as [rating] , T.range as [percentRated] 
+                     FROM (
+                        SELECT albumRating, size, length, P.idPath,
+                            CASE  
+                                WHEN percentRated <  10                        THEN '0 -> 9 percent'
+                                WHEN percentRated >= 10 AND percentRated < 25  THEN '10 -> 24 percent'
+                                WHEN percentRated >= 25 AND percentRated < 50  THEN '25 -> 49 percent'
+                                WHEN percentRated >= 50 AND percentRated < 75  THEN '50 -> 74 percent'
+                                WHEN percentRated >= 75 AND percentRated < 100 THEN '75 -> 99 percent'
+                                WHEN percentRated == 100                       THEN 'x 100 percent x'
+                                ELSE 'kes' END AS range
+                        FROM file F   
+                        JOIN (SELECT path.*, IFNULL(ROUND(((SUM(CASE WHEN rating > 0 THEN rating END))/(SUM(CASE WHEN rating > 0 THEN 1.0 END))), 1), 0) AS albumRating,
+                            IFNULL((SUM(CASE WHEN rating > 0 THEN 1.0 END) / COUNT(*) * 100), 0) AS percentRated
+                            FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath ) P ON F.idPath=P.idPath ) T 
+                     GROUP BY T.range """;
 
-            try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            try (PreparedStatement ps = dbConn.connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     String label = dbConn.getStringValue(rs, "percentRated");
-                    Color color = Color.WHITE;
-                    switch (label) {
-                        case "0 -> 9 percent":
-                            color = new Color(233, 76, 18);
-                            break;
-                        case "10 -> 24 percent":
-                            color = new Color(233, 183, 18);
-                            break;
-                        case "25 -> 49 percent":
-                            color = new Color(212, 233, 18);
-                            break;
-                        case "50 -> 74 percent":
-                            color = new Color(153, 255, 153);
-                            break;
-                        case "75 -> 99 percent":
-                            color = new Color(51, 255, 51);
-                            break;
-                        case "x 100 percent x":
-                            color = new Color(0, 195, 0);
-                            break;
-                    }
+                    Color color = getColorForLabel(label);
+
                     stats.add(new StatItem(label, label,
                             rs.getLong(1), rs.getLong(2), rs.getLong(3),
                             rs.getLong(4), rs.getDouble(5), color));
@@ -231,6 +209,25 @@ public class DaoFile {
             }
         } catch (SQLException ex) {
             Popup.error("getPercentRatedForStats()", ex);
+        }
+    }
+
+    private Color getColorForLabel(String label) {
+        switch (label) {
+            case "0 -> 9 percent":
+                return new Color(233, 76, 18);
+            case "10 -> 24 percent":
+                return new Color(233, 183, 18);
+            case "25 -> 49 percent":
+                return new Color(212, 233, 18);
+            case "50 -> 74 percent":
+                return new Color(153, 255, 153);
+            case "75 -> 99 percent":
+                return new Color(51, 255, 51);
+            case "x 100 percent x":
+                return new Color(0, 195, 0);
+            default:
+                return Color.WHITE;
         }
     }
 
