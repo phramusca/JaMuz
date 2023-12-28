@@ -743,8 +743,7 @@ public class PanelStats extends javax.swing.JPanel {
 		myTableModel.addRow(donnee);
     }
     
-	private void addToStats(String field, String value, String label, 
-			Color color) {
+	private void addToStats(String field, String value, String label, Color color) {
 		String table="file";  //NOI18N
 		if(field.equals("checked")) {  //NOI18N
 			table="path";  //NOI18N
