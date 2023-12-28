@@ -69,18 +69,18 @@ public class DaoTagWrite {
      * Inserts a tag if it doesn't already exist
      *
      * @param tag the tag value to be inserted
-     * @return true if the tag already exists or insertion is successful, false
-     * otherwise
+     * @return true if the tag already exists or insertion is successful, false otherwise
      */
     boolean insertIfMissing(String tag) {
         synchronized (dbConn) {
-            try (PreparedStatement stSelectTag = dbConn.getConnection().prepareStatement(
-                    "SELECT COUNT(*) FROM tag WHERE value=?"); ResultSet rs = stSelectTag.executeQuery()) {
-
-                if (rs.next() && rs.getInt(1) > 0) {
-                    return true; // Tag already exists
-                } else {
-                    return insert(tag);
+            try (PreparedStatement stSelectTag = dbConn.getConnection().prepareStatement("SELECT COUNT(*) FROM tag WHERE value=?")) {
+                stSelectTag.setString(1, tag);
+                try (ResultSet rs = stSelectTag.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        return true; // Tag already exists
+                    } else {
+                        return insert(tag);
+                    }
                 }
             } catch (SQLException ex) {
                 Popup.error("isTag(" + tag + ")", ex);
