@@ -24,7 +24,6 @@ import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Locale;
 import javax.swing.DefaultListModel;
@@ -38,6 +37,7 @@ public class DaoListModel {
     private final DbConn dbConn;
     private String locationLibrary;
     private final DaoFile daoFile;
+    private final boolean[] allRatings = new boolean[6];
 
     /**
      *
@@ -47,6 +47,8 @@ public class DaoListModel {
     public DaoListModel(DbConn dbConn, DaoFile daoFile) {
         this.dbConn = dbConn;
         this.daoFile = daoFile;
+        Arrays.fill(allRatings, Boolean.TRUE);
+
     }
 
     public void setLocationLibrary(String locationLibrary) {
@@ -85,16 +87,6 @@ public class DaoListModel {
 
     private void getListModel(DefaultListModel myListModel, String sql, String field) {
         try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
-            getListModel(myListModel, ps, field);
-        } catch (SQLException ex) {
-            Popup.error("getFilesStats()", ex);
-        }
-    }
-
-    private void getListModel(DefaultListModel myListModel, String field, String sql, String selGenre, String selArtist, String selAlbum,
-            boolean[] selRatings, boolean[] selCheckedFlag,
-            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) {
-        try (PreparedStatement ps = daoFile.prepareFileStatement(sql, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, field)) {
             getListModel(myListModel, ps, field);
         } catch (SQLException ex) {
             Popup.error("getFilesStats()", ex);
@@ -230,18 +222,15 @@ public class DaoListModel {
             boolean[] selCheckedFlag, int yearFrom, int yearTo, float bpmFrom,
             float bpmTo, int copyRight, String sqlOrder) {
 
-        boolean[] allRatings = new boolean[6];
-        Arrays.fill(allRatings, Boolean.TRUE);
         String sql;
-
         switch (field) {
             case "album":
                 sql = buildAlbumSql(selGenre, selArtist, selAlbum, selRatings,
-                        selCheckedFlag, copyRight, sqlOrder, allRatings);
+                        selCheckedFlag, copyRight, sqlOrder);
                 break;
             case "artist":
                 sql = buildArtistSql(selGenre, selArtist, selAlbum, selRatings,
-                        selCheckedFlag, copyRight, sqlOrder, allRatings);
+                        selCheckedFlag, copyRight, sqlOrder);
                 myListModel.addElement(new ListElement("%", field)); // NOI18N
                 field = "albumArtist"; // As known as this in recordset //NOI18N
                 break;
@@ -252,17 +241,43 @@ public class DaoListModel {
                 break;
         }
 
-        getListModel(myListModel, field, sql, selGenre, selArtist, selAlbum, selRatings,
-                selCheckedFlag, yearFrom, yearTo, bpmFrom,
-                bpmTo, copyRight);
+        try (PreparedStatement ps = prepareStatement4ListModel(sql, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, field)) {
+            getListModel(myListModel, ps, field);
+        } catch (SQLException ex) {
+            Popup.error("getFilesStats()", ex);
+        }
 
         if (field.equals("album") && myListModel.size() > 1) {
             myListModel.insertElementAt(new ListElement("%", field), 0); // NOI18N
         }
     }
 
+    private PreparedStatement prepareStatement4ListModel(String sql, String selGenre, String selArtist, String selAlbum,
+            boolean[] selRatings, boolean[] selCheckedFlag,
+            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight, String field) throws SQLException {
+
+        PreparedStatement ps = dbConn.connection.prepareStatement(sql);
+        int paramIndex = 1;
+
+        switch (field) {
+            case "album":
+                paramIndex = daoFile.prepareStatement4SqlWhere(paramIndex, ps, selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+                daoFile.setCSVlist(ps, selRatings, paramIndex);
+                break;
+            case "albumArtist":
+                paramIndex = daoFile.prepareStatement4SqlWhere(paramIndex, ps, selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+                paramIndex = daoFile.setCSVlist(ps, selRatings, paramIndex);
+                paramIndex = daoFile.prepareStatement4SqlWhere(paramIndex, ps, selGenre, selArtist, selAlbum, allRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+                daoFile.setCSVlist(ps, selRatings, paramIndex);
+                break;
+            default:
+                daoFile.prepareStatement4SqlWhere(paramIndex, ps, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+        }
+        return ps;
+    }
+
     private String buildAlbumSql(String selGenre, String selArtist, String selAlbum,
-            boolean[] selRatings, boolean[] selCheckedFlag, int copyRight, String sqlOrder, boolean[] allRatings) {
+            boolean[] selRatings, boolean[] selCheckedFlag, int copyRight, String sqlOrder) {
         String sqlSelect = """
                           SELECT checked, strPath, name, coverHash, album, artist, albumArtist, year,
                           ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,
@@ -276,7 +291,7 @@ public class DaoListModel {
     }
 
     private String buildArtistSql(String selGenre, String selArtist, String selAlbum,
-            boolean[] selRatings, boolean[] selCheckedFlag, int copyRight, String sqlOrder, boolean[] allRatings) {
+            boolean[] selRatings, boolean[] selCheckedFlag, int copyRight, String sqlOrder) {
         String sqlSelectAlbumArtist = """
                            SELECT albumArtist, strPath, name, coverHash, COUNT(F.idFile) AS nbFiles,
                            COUNT(DISTINCT F.idPath) AS nbPaths, 'albumArtist' AS source,

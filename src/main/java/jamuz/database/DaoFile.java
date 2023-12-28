@@ -48,6 +48,7 @@ public class DaoFile {
     public DaoFile(DbConn dbConn) {
         this.dbConn = dbConn;
         this.daoFileWrite = new DaoFileWrite(dbConn);
+
     }
 
     public void setLocationLibrary(String locationLibrary) {
@@ -152,7 +153,7 @@ public class DaoFile {
         }
     }
 
-    PreparedStatement prepareStatement4Stats(boolean[] selRatings, String field, String sql) throws SQLException {
+    private PreparedStatement prepareStatement4Stats(boolean[] selRatings, String field, String sql) throws SQLException {
         PreparedStatement ps = dbConn.connection.prepareStatement(sql);
         setCSVlist(ps, selRatings, 1);
         return ps;
@@ -242,11 +243,9 @@ public class DaoFile {
 
         String sqlSelect = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, "
                 + "0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate, P.mbId AS pathMbId, P.modifDate AS pathModifDate "; // NOI18N
-
         String sql = getSqlWhere(sqlSelect, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, copyRight);
-
-        try (PreparedStatement ps = prepareFileStatement(sql, selGenre, selArtist, selAlbum, selRatings,
-                selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, "")) {
+        try (PreparedStatement ps = prepareStatement(sql, selGenre, selArtist, selAlbum, selRatings,
+                selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight)) {
             return getFiles(files, ps);
         } catch (SQLException ex) {
             Popup.error("getFiles()", ex);
@@ -254,7 +253,7 @@ public class DaoFile {
         }
     }
 
-    public String getSqlWhere(String sqlSelect, String selGenre, String selArtist, String selAlbum,
+    String getSqlWhere(String sqlSelect, String selGenre, String selArtist, String selAlbum,
             boolean[] selRatings, boolean[] selCheckedFlag, int copyRight) {
         String sql = sqlSelect + " FROM file F " // NOI18N
                 + " \nINNER JOIN `path` P ON P.idPath=F.idPath " // NOI18N
@@ -283,12 +282,18 @@ public class DaoFile {
         return sql;
     }
 
-    PreparedStatement prepareFileStatement(String sql, String selGenre, String selArtist, String selAlbum,
+    private PreparedStatement prepareStatement(String sql, String selGenre, String selArtist, String selAlbum,
             boolean[] selRatings, boolean[] selCheckedFlag,
-            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight, String field) throws SQLException {
+            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) throws SQLException {
 
         PreparedStatement ps = dbConn.connection.prepareStatement(sql);
-        int paramIndex = 1;
+        prepareStatement4SqlWhere(1, ps, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight);
+        return ps;
+    }
+
+    int prepareStatement4SqlWhere(int paramIndex, PreparedStatement ps, String selGenre, String selArtist, String selAlbum,
+            boolean[] selRatings, boolean[] selCheckedFlag,
+            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) throws SQLException {
 
         paramIndex = setCSVlist(ps, selRatings, paramIndex);
         paramIndex = setCSVlist(ps, selCheckedFlag, paramIndex);
@@ -297,10 +302,6 @@ public class DaoFile {
         ps.setInt(paramIndex++, yearTo);
         ps.setFloat(paramIndex++, bpmFrom);
         ps.setFloat(paramIndex++, bpmTo);
-
-        if (field.equals("albumArtist")) {
-            setCSVlist(ps, selRatings, paramIndex);
-        }
 
         if (!selGenre.equals("%")) { // NOI18N
             ps.setString(paramIndex++, selGenre);
@@ -315,15 +316,10 @@ public class DaoFile {
         if (copyRight >= 0) {
             ps.setInt(paramIndex++, copyRight);
         }
-
-        if (field.equals("albumArtist") || field.equals("album")) {
-            setCSVlist(ps, selRatings, paramIndex);
-        }
-
-        return ps;
+        return paramIndex;
     }
 
-    private int setCSVlist(PreparedStatement ps, boolean[] values, int paramIndex) throws SQLException {
+    int setCSVlist(PreparedStatement ps, boolean[] values, int paramIndex) throws SQLException {
         for (int i = 0; i < values.length; i++) {
             if (values[i]) {
                 ps.setInt(paramIndex++, i);
@@ -697,8 +693,8 @@ public class DaoFile {
 
         String sqlSelect = "SELECT COUNT(*) AS nbFiles, SUM(F.size) AS totalSize, SUM(F.length) AS totalLength "; // NOI18N
         String sql = getSqlWhere(sqlSelect, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, copyRight);
-        try (PreparedStatement ps = prepareFileStatement(sql, selGenre, selArtist, selAlbum, selRatings,
-                selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, "")) {
+        try (PreparedStatement ps = prepareStatement(sql, selGenre, selArtist, selAlbum, selRatings,
+                selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight)) {
             return getFilesStats(ps);
         } catch (SQLException ex) {
             Popup.error("getFilesStats()", ex);
