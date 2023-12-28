@@ -16,18 +16,23 @@
  */
 package jamuz.database;
 
-import jamuz.FileInfo;
 import jamuz.FileInfoInt;
+import jamuz.process.check.FolderInfo;
 import static org.junit.Assert.*;
-
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import test.helpers.TestUnitSettings;
 
@@ -64,31 +69,78 @@ public class DaoFileTagTest {
     public void testFileTag() {
 
         System.out.println("testFileTag");
-		
-		//Given
-		dbConnJaMuz.tag().lock().insert("frefrfe");
-		dbConnJaMuz.tag().lock().insert("mpomoipm");
-		dbConnJaMuz.tag().lock().insert("5165vge");
-		dbConnJaMuz.tag().lock().insert("wqs:");
-		
 
-//		dbConnJaMuz.fileTag().get(tags, idFile);
-		
-		ArrayList<? extends FileInfo> files = new ArrayList<>();
+        //Given
+        dbConnJaMuz.tag().lock().insert("frefrfe");
+        dbConnJaMuz.tag().lock().insert("mpomoipm");
+        dbConnJaMuz.tag().lock().insert("5165vge");
+        dbConnJaMuz.tag().lock().insert("wqs");
 
-		files.add(new FileInfoInt())
-		
-		dbConnJaMuz.fileTag().lock().update(files, results);
-		
-        //FIXME TEST Make unit test
+        Map<FileInfoInt, List<String>> expectedTags = new HashMap<>();
+
+        FileInfoInt file1 = insertNewFile(1);
+        ArrayList<String> tags1 = new ArrayList<>();
+        tags1.add("mpomoipm");
+        file1.setTags(tags1);
+        expectedTags.put(file1, tags1);
+
+        FileInfoInt file2 = insertNewFile(2);
+        ArrayList<String> tags2 = new ArrayList<>();
+        tags2.add("mpomoipm");
+        tags2.add("5165vge");
+        file2.setTags(tags2);
+        expectedTags.put(file2, tags2);
+
+        FileInfoInt file3 = insertNewFile(3);
+        ArrayList<String> tags3 = new ArrayList<>();
+        tags3.add("mpomoipm");
+        tags3.add("frefrfe");
+        tags3.add("wqs");
+        file3.setTags(tags3);
+        expectedTags.put(file3, tags3);
+
+        //When
+        dbConnJaMuz.fileTag().lock().update(new ArrayList<>(expectedTags.keySet()), null);
+
+        //Then
+        checkTags(file1, expectedTags);
+        checkTags(file2, expectedTags);
+        checkTags(file3, expectedTags);
+
         //FIXME TEST Negative cases
         //FIXME TEST Check other constraints
+    }
+
+    private void checkTags(FileInfoInt file, Map<FileInfoInt, List<String>> expectedTags) {
+        ArrayList<String> tags = new ArrayList<>();
+        dbConnJaMuz.fileTag().get(tags, file.getIdFile());
+        List<String> expected = expectedTags.get(file);
+        //fileTag().get returns in ids order, and expected is not sorted neither
+        Collections.sort(expected);
+        Collections.sort(tags);
+        assertArrayEquals(expected.toArray(), tags.toArray());
+    }
+
+    private FileInfoInt insertNewFile(int index) {
+        int[] keyPath = new int[1];
+        dbConnJaMuz.path().lock().insert("4file/insert" + index, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mmmbbbiiidd", keyPath);
+        FileInfoInt fileInfoInt = new FileInfoInt("file/insert" + index, "/root/file/insert" + index);
+        fileInfoInt.setIdPath(keyPath[0]);
+        int[] keyFile = new int[1];
+        dbConnJaMuz.file().lock().insert(fileInfoInt, keyFile);
+        fileInfoInt.setIdFile(keyFile[0]);
+        return fileInfoInt;
+    }
+
+    private void setTags(ArrayList<String> tags) {
+//        fileInfoInt.setTags(tags);
     }
 
     /**
      * Test of lock method, of class DaoFileTag.
      */
     @Test
+    @Ignore
     public void testLock() {
         System.out.println("lock");
         DaoFileTag instance = null;
@@ -103,6 +155,7 @@ public class DaoFileTagTest {
      * Test of get method, of class DaoFileTag.
      */
     @Test
+    @Ignore
     public void testGet() {
         System.out.println("get");
         ArrayList<String> tags = null;
