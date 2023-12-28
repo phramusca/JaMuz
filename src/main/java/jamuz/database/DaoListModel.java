@@ -93,8 +93,8 @@ public class DaoListModel {
 
     private void getListModel(DefaultListModel myListModel, String field, String sql, String selGenre, String selArtist, String selAlbum,
             boolean[] selRatings, boolean[] selCheckedFlag,
-            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight, boolean setExtraSelRatings) {
-        try (PreparedStatement ps = daoFile.prepareFileStatement(sql, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, setExtraSelRatings)) {
+            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight) {
+        try (PreparedStatement ps = daoFile.prepareFileStatement(sql, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, field)) {
             getListModel(myListModel, ps, field);
         } catch (SQLException ex) {
             Popup.error("getFilesStats()", ex);
@@ -256,36 +256,11 @@ public class DaoListModel {
 
         getListModel(myListModel, field, sql, selGenre, selArtist, selAlbum, selRatings,
                 selCheckedFlag, yearFrom, yearTo, bpmFrom,
-                bpmTo, copyRight, (field.equals("alubm") || field.equals("artist")));
+                bpmTo, copyRight);
 
         if (field.equals("album") && myListModel.size() > 1) {
             myListModel.insertElementAt(new ListElement("%", field), 0); // NOI18N
         }
-    }
-
-    //FIXME ! buildSqlQuery returns a SQL for prepared statement:
-    // - update remaining to ?
-    // - Create a PreparedStatement and try opening it => getListModel
-    private String buildSqlQuery(String field, String selGenre, String selArtist,
-            String selAlbum, boolean[] selRatings, boolean[] selCheckedFlag, int copyRight,
-            String sqlOrder, boolean[] allRatings) {
-        String sql;
-
-        switch (field) {
-            case "album":
-                sql = buildAlbumSql(selGenre, selArtist, selAlbum, selRatings,
-                        selCheckedFlag, copyRight, sqlOrder, allRatings);
-                break;
-            case "artist":
-                sql = buildArtistSql(selGenre, selArtist, selAlbum, selRatings,
-                        selCheckedFlag, copyRight, sqlOrder, allRatings);
-                break;
-            default:
-                sql = buildDefaultSql(field, selGenre, selArtist, selAlbum,
-                        selRatings, selCheckedFlag, copyRight);
-                break;
-        }
-        return sql;
     }
 
     private String buildAlbumSql(String selGenre, String selArtist, String selAlbum,
