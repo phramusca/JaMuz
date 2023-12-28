@@ -132,13 +132,14 @@ public class DaoFile {
      */
     public void getSelectionList4Stats(ArrayList<StatItem> stats, String field, boolean[] selRatings) {
         try {
-            String sql = "SELECT COUNT(*), COUNT(DISTINCT P.idPath), SUM(size), "
-                    + " \nSUM(length), avg(rating)," + field + " "
-                    + " \nFROM file F JOIN path P ON P.idPath=F.idPath "
-                    + " \nWHERE F.rating IN " + getCSVlist(selRatings)
-                    + " \nGROUP BY " + field + " ORDER BY " + field; // NOI18N //NOI18N
+            String sql = """
+                     SELECT COUNT(*), COUNT(DISTINCT P.idPath), SUM(size),  
+                     SUM(length), avg(rating), """ + field + """  
+                      FROM file F JOIN path P ON P.idPath=F.idPath  
+                     WHERE F.rating IN """ + getCSVlist(selRatings)
+                    + " \nGROUP BY " + field + " ORDER BY " + field; //NOI18N
 
-            try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            try (PreparedStatement ps = prepareStatement4Stats(selRatings, field, sql); ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     stats.add(new StatItem(dbConn.getStringValue(rs, field),
                             dbConn.getStringValue(rs, field),
@@ -151,6 +152,12 @@ public class DaoFile {
         }
     }
 
+    PreparedStatement prepareStatement4Stats(boolean[] selRatings, String field, String sql) throws SQLException {
+        PreparedStatement ps = dbConn.connection.prepareStatement(sql);
+        setCSVlist(ps, selRatings, 1);
+        return ps;
+    }
+
     /**
      * Get the percentage of rated items for stats.
      *
@@ -160,23 +167,23 @@ public class DaoFile {
         try {
             // Note: Using "percent" as "%" is replaced by "-" because of decades. Now also
             // replacing "percent" by "%"
-            String sql = "SELECT count(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), round(avg(albumRating),1 ) as [rating] , T.range as [percentRated] \n"
-                    + "FROM (\n"
-                    + "SELECT albumRating, size, length, P.idPath,\n"
-                    + "	case  \n"
-                    + "    when percentRated <  10						  then '0 -> 9 percent'\n"
-                    + "    when percentRated >= 10 and percentRated < 25  then '10 -> 24 percent'\n"
-                    + "    when percentRated >= 25 and percentRated < 50  then '25 -> 49 percent'\n"
-                    + "    when percentRated >= 50 and percentRated < 75  then '50 -> 74 percent'\n"
-                    + "    when percentRated >= 75 and percentRated < 100 then '75 -> 99 percent'\n"
-                    + "    when percentRated == 100					      then 'x 100 percent x'\n"
-                    + "    else 'kes' end as range\n"
-                    + "  FROM file F "
-                    + "  JOIN ( SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,\n"
-                    + "			ifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated\n"
-                    + "		FROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath ) \n"
-                    + "P ON F.idPath=P.idPath ) T \n"
-                    + "GROUP BY T.range ";
+            String sql = """
+                         SELECT count(*), COUNT(DISTINCT idPath), SUM(size), SUM(length), round(avg(albumRating),1 ) as [rating] , T.range as [percentRated] 
+                         FROM (
+                         SELECT albumRating, size, length, P.idPath,
+                         \tcase  
+                             when percentRated <  10\t\t\t\t\t\t  then '0 -> 9 percent'
+                             when percentRated >= 10 and percentRated < 25  then '10 -> 24 percent'
+                             when percentRated >= 25 and percentRated < 50  then '25 -> 49 percent'
+                             when percentRated >= 50 and percentRated < 75  then '50 -> 74 percent'
+                             when percentRated >= 75 and percentRated < 100 then '75 -> 99 percent'
+                             when percentRated == 100\t\t\t\t\t      then 'x 100 percent x'
+                             else 'kes' end as range
+                           FROM file F   JOIN ( SELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating,
+                         \t\t\tifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated
+                         \t\tFROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath ) 
+                         P ON F.idPath=P.idPath ) T 
+                         GROUP BY T.range """;
 
             try (Statement st = dbConn.connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
                 while (rs.next()) {
@@ -239,7 +246,7 @@ public class DaoFile {
         String sql = getSqlWhere(sqlSelect, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, copyRight);
 
         try (PreparedStatement ps = prepareFileStatement(sql, selGenre, selArtist, selAlbum, selRatings,
-                selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, false)) {
+                selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, "")) {
             return getFiles(files, ps);
         } catch (SQLException ex) {
             Popup.error("getFiles()", ex);
@@ -278,7 +285,7 @@ public class DaoFile {
 
     PreparedStatement prepareFileStatement(String sql, String selGenre, String selArtist, String selAlbum,
             boolean[] selRatings, boolean[] selCheckedFlag,
-            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight, boolean setExtraSelRatings) throws SQLException {
+            int yearFrom, int yearTo, float bpmFrom, float bpmTo, int copyRight, String field) throws SQLException {
 
         PreparedStatement ps = dbConn.connection.prepareStatement(sql);
         int paramIndex = 1;
@@ -290,6 +297,10 @@ public class DaoFile {
         ps.setInt(paramIndex++, yearTo);
         ps.setFloat(paramIndex++, bpmFrom);
         ps.setFloat(paramIndex++, bpmTo);
+
+        if (field.equals("albumArtist")) {
+            setCSVlist(ps, selRatings, paramIndex);
+        }
 
         if (!selGenre.equals("%")) { // NOI18N
             ps.setString(paramIndex++, selGenre);
@@ -303,7 +314,8 @@ public class DaoFile {
         if (copyRight >= 0) {
             ps.setInt(paramIndex++, copyRight);
         }
-        if(setExtraSelRatings) {
+
+        if (field.equals("albumArtist") || field.equals("album")) {
             setCSVlist(ps, selRatings, paramIndex);
         }
 
@@ -685,7 +697,7 @@ public class DaoFile {
         String sqlSelect = "SELECT COUNT(*) AS nbFiles, SUM(F.size) AS totalSize, SUM(F.length) AS totalLength "; // NOI18N
         String sql = getSqlWhere(sqlSelect, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, copyRight);
         try (PreparedStatement ps = prepareFileStatement(sql, selGenre, selArtist, selAlbum, selRatings,
-                selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, false)) {
+                selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, "")) {
             return getFilesStats(ps);
         } catch (SQLException ex) {
             Popup.error("getFilesStats()", ex);
