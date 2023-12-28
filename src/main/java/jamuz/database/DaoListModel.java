@@ -109,29 +109,27 @@ public class DaoListModel {
                 Object elementToAdd = dbConn.getStringValue(rs, field);
                 switch (field) {
                     case "album": // NOI18N
-                        elementToAdd = handleAlbumField(rs);
+                        elementToAdd = handleAlbumField(rs, elementToAdd);
                         break;
                     case "albumArtist": // NOI18N
-                        elementToAdd = handleAlbumArtistField(rs);
+                        elementToAdd = handleAlbumArtistField(rs, elementToAdd);
                         break;
                     case "name": // that is for machine
-                        elementToAdd = handleNameField(rs);
+                        elementToAdd = handleNameField(rs, elementToAdd);
                         break;
                     default:
                         break;
                 }
-                if (elementToAdd != null) {
-                    myListModel.addElement(elementToAdd);
-                }
+                myListModel.addElement(elementToAdd);
             }
         } catch (SQLException ex) {
             Popup.error("fillList(\"" + field + "\")", ex); // NOI18N
         }
     }
 
-    private Object handleAlbumField(ResultSet rs) throws SQLException {
+    private Object handleAlbumField(ResultSet rs, Object elementToAdd) throws SQLException {
         int checked = rs.getInt("checked"); // NOI18N
-        String album = dbConn.getStringValue(rs, "album"); // NOI18N
+        String album = (String) elementToAdd;
         String albumArtist = dbConn.getStringValue(rs, "albumArtist") + "<BR/>"; // NOI18N
         String year = dbConn.getStringValue(rs, "year"); // NOI18N
 
@@ -154,15 +152,15 @@ public class DaoListModel {
             album = FolderInfoResult.colorField(album, (3 - checked), false);
         }
 
-        ListElement albumElement = makeListElement(album, rs);
+        ListElement albumElement = makeListElement(elementToAdd, rs);
         albumElement.setDisplay("<html>" + year + " <b>" + album + "</b> " + rating + "<BR/>"
                 + albumArtist + "</html>"); // NOI18N
         return albumElement;
     }
 
-    private Object handleAlbumArtistField(ResultSet rs) throws SQLException {
+    private Object handleAlbumArtistField(ResultSet rs, Object elementToAdd) throws SQLException {
         String source = dbConn.getStringValue(rs, "source"); // NOI18N
-        String artist = dbConn.getStringValue(rs, "albumArtist");
+        String artist = (String) elementToAdd;
 
         if (source.equals("albumArtist")) { // NOI18N
             artist = "<b>" + artist + "</b>"; // NOI18N
@@ -188,13 +186,13 @@ public class DaoListModel {
                 + Inter.get("Label.File").toLowerCase(Locale.getDefault())
                 + "(s)</html>"; // NOI18N
 
-        ListElement artistElement = makeListElement(artist, rs);
+        ListElement artistElement = makeListElement(elementToAdd, rs);
         artistElement.setDisplay(artist);
         return artistElement;
     }
 
-    private Object handleNameField(ResultSet rs) throws SQLException {
-        String name = dbConn.getStringValue(rs, "name");
+    private Object handleNameField(ResultSet rs, Object elementToAdd) throws SQLException {
+        String name = (String) elementToAdd;
         return new ListElement(name, "<html>"
                 + "<b>" + name + "</b><BR/>"
                 + "<i>" + dbConn.getStringValue(rs, "description") + "</i>"
