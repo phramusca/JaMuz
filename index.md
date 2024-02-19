@@ -84,10 +84,10 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 
 ### Installation
 
-1. Install Java (OpenJDK JRE) >=17
-  - <img src="img/windows.png" alt="Windows"> Windows: [Eclipse Temurin OpenJDK17U-jre_x64_windows](https://adoptium.net/fr/temurin/releases/?os=windows&arch=x64&package=jre&version=17) (Pick .msi)
-  - <img src="img/linux.png" alt="Linux">Linux Debian based (Ubuntu, Mint,...): [openjdk-17-jre](apt://openjdk-17-jre)
-  - <img src="img/raspberry.png" alt="Raspberry"> Raspberry: [Deb installation on Debian or Ubuntu](https://adoptium.net/installation/linux/#_deb_installation_on_debian_or_ubuntu), or in brief:
+- Install Java (OpenJDK JRE) >=17
+  - Windows: [Eclipse Temurin OpenJDK17U-jre_x64_windows](https://adoptium.net/fr/temurin/releases/?os=windows&arch=x64&package=jre&version=17) (Pick .msi)
+  - Linux Debian based (Ubuntu, Mint,...): [openjdk-17-jre](apt://openjdk-17-jre)
+  - Raspberry: [Deb installation on Debian or Ubuntu](https://adoptium.net/installation/linux/#_deb_installation_on_debian_or_ubuntu), or in brief:
     ```bash
     sudo apt install -y wget apt-transport-https gpg
     sudo wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
@@ -96,17 +96,16 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
     sudo apt install temurin-17-jre
     ```
   - Any other case, refer to [Adoptium](https://adoptium.net/installation/)
-2. <span id="download-container-jamuz-desktop"></span>
-3. Extract 7z archive
+- <span id="download-container-jamuz-desktop"></span>
+- Extract 7z archive
   - Note: 7z is natively supported on most linux distributions and since October, 31, 2023 on Windows 11 too (with update [KB5031455](https://support.microsoft.com/en-us/topic/october-31-2023-kb5031455-os-builds-22621-2506-and-22631-2506-preview-6513c5ec-c5a2-4aaf-97f5-44c13d29e0d4)). Otherwise, you need to [install 7-zip](https://www.7-zip.org/).
-4. Only Raspberry <img src="img/raspberry.png" alt="Raspberry">: 
-  - You will need to manually install dependencies (as raspberry does not support apt:// by default):
+- Only Raspberry : You will need to manually install dependencies (as raspberry does not support apt:// by default):
     ```bash
     sudo apt install mplayer
     sudo apt install flac
     sudo apt install mp3gain
     ```
-5. Double-click on `JaMuz.jar`
+- Double-click on `JaMuz.jar`
 
 ### Features
 
