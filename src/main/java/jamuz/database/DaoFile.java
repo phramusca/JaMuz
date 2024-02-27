@@ -488,7 +488,7 @@ public class DaoFile {
                      \t\tSELECT path.*, ifnull(round(((sum(case when rating > 0 then rating end))/(sum(case when rating > 0 then 1.0 end))), 1), 0) AS albumRating, 
                      \t\tifnull((sum(case when rating > 0 then 1.0 end) / count(*)*100), 0) AS percentRated
                      \t\tFROM path JOIN file ON path.idPath=file.idPath GROUP BY path.idPath 
-                     \t) P ON F.idPath=P.idPath """;
+                     \t) P ON F.idPath=P.idPath WHERE 1 """+ sqlWhere;
 
         try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
             ps.setString(1, destExt);
