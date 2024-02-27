@@ -103,6 +103,7 @@ public class IconBuffer {
 		} else if (iconFileExists(name, "jpg", location)) { //NOI18N
 			image = readImage(name, "jpg", location); //NOI18N
 		}
+        //FIXME ! Only store if image is not "NO COVER" (bug may be elsewhere, to be investigated. Seen on rpion fresh install)
 		//Making all versions at once. Yes, why not ? We're reading file only once as it
 		Map<IconVersion, ImageIcon> versionMap = new HashMap<>();
 		if (image != null) {
