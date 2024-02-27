@@ -21,7 +21,6 @@ package test.helpers;
  * @author phramusca <phramusca@gmail.com>
  */
 import jamuz.FileInfoInt;
-import java.awt.image.BufferedImage;
 import java.util.Comparator;
 
 public class FileInfoIntComparator implements Comparator<FileInfoInt> {
@@ -226,22 +225,5 @@ public class FileInfoIntComparator implements Comparator<FileInfoInt> {
             return obj1 == null ? -1 : 1;
         }
         return comparator.compare(obj1, obj2);
-    }
-
-    // Custom comparator for BufferedImage
-    private static class BufferedImageComparator implements Comparator<BufferedImage> {
-        private static final BufferedImageComparator INSTANCE = new BufferedImageComparator();
-
-        public static BufferedImageComparator getInstance() {
-            return INSTANCE;
-        }
-
-        @Override
-        public int compare(BufferedImage o1, BufferedImage o2) {
-            // Implement your custom comparison logic for BufferedImage here
-            // Example: Compare based on image dimensions, or convert to a common representation for comparison
-            // Return 0 if objects are equal, a positive value if o1 > o2, and a negative value if o1 < o2
-            return Integer.compare(o1.getWidth(), o2.getWidth());
-        }
     }
 }
