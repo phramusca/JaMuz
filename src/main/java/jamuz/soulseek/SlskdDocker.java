@@ -37,6 +37,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+//FIXME ! Check that docker is installed and if not => https://docs.docker.com/engine/install/ or https://rancherdesktop.io/
+
 /**
  *
  * @author phramusca <phramusca@gmail.com>
@@ -141,7 +143,13 @@ public class SlskdDocker {
         createAndStartContainer();
     }
 
+    //FIXME ! doc `docker pull slskd/slskd`, or better :
+//    String imageName = "slskd/slskd";
+//        dockerClient.pullImageCmd(imageName)
+//                .exec(new PullImageResultCallback())
+//                .awaitSuccess();
     private void createAndStartContainer() {
+        
         CreateContainerResponse container
                 = dockerClient.createContainerCmd("slskd/slskd:latest")
                         .withName(CONTAINER_NAME)

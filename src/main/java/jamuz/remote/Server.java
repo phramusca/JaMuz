@@ -16,9 +16,12 @@
  */
 package jamuz.remote;
 
+//FIXME ! Do not popup errors when on server
+// => either send errors to client and/or log
+// => incl. SQL errors: see repercussions elsewhere in code
+
 import express.Express;
 import express.utils.Status;
-import jamuz.database.DbConnJaMuz;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
