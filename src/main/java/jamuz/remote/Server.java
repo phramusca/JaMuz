@@ -21,10 +21,13 @@ package jamuz.remote;
 // => incl. SQL errors: see repercussions elsewhere in code
 
 import express.Express;
-import express.utils.Status;
+import express.http.Status;
+import io.javalin.http.sse.SseClient;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
+import jamuz.player.MPlaybackListener;
+import jamuz.player.Mplayer;
 import jamuz.process.sync.SyncStatus;
 import jamuz.process.check.Location;
 import jamuz.process.merge.ICallBackMerge;
@@ -43,7 +46,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -76,6 +81,9 @@ public class Server {
 	private final TableModelRemote tableModel; //contains clients info from database
 	private final Map<String, SocketClient> clientMap; //contains connected clients
 	
+    private static final Mplayer mplayer= new Mplayer();
+    Queue<SseClient> clients = new ConcurrentLinkedQueue<>();
+    
 	/**
 	 *
 	 * @param port
@@ -87,6 +95,32 @@ public class Server {
 		tableModel = new TableModelRemote();
 		tableModel.setColumnNames();
 		this.callback = callback;
+        
+        MPlaybackListener mPlaybackListener = new MPlaybackListener() {
+			@Override
+			public void volumeChanged(float volume) {
+				if(volume>=0) {
+					volume=5*Math.round(volume/5);
+                    Jamuz.getLogger().log(Level.INFO, "volume: {0}", (float)volume);
+				}
+			}
+
+			@Override
+			public void playbackFinished() {
+                Jamuz.getLogger().info("Server playback finished");
+			}
+
+			@Override
+			public void positionChanged(int position, int length) {
+				Jamuz.getLogger().log(Level.INFO, "position: {0}", position);
+                
+                for (SseClient client : clients) {
+                    client.sendEvent("positionChanged", String.valueOf(position), "id");
+                }
+			}
+		};
+		
+		mplayer.addListener(mPlaybackListener);
 	}
 	
 	/**
@@ -108,69 +142,111 @@ public class Server {
 			//Start REST Server Express, for Sync process
 			app = new Express();
 
-			app.use((req, res) -> {
-				String login=req.getHeader("login").get(0);
-				if(!tableModel.contains(login)) {
-					String password=req.getHeader("password").get(0);
-					String rootPath=req.getHeader("rootPath").get(0);
-					String model=req.getHeader("model").get(0);
-					boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
-					ClientInfo info = new ClientInfo(login, password, rootPath, model, enableNewClients);
-					createClient(info);
-				}
-				if(!tableModel.contains(login) || !tableModel.getClient(login).isEnabled()) {
-					res.sendStatus(Status._401);
-				} else {
-					String apiVersion=req.getHeader("api-version").get(0);
-					if(!apiVersion.equals("2.0")) {
-						res.setStatus(Status._301); // 301 Moved Permanently
-						JSONArray list = new JSONArray();
-						list.add("2.0");
-						JSONObject obj = new JSONObject();
-						obj.put("supported-versions", list);
-						res.send(obj.toJSONString());
-					}	
-				}
-			});
+            
+//https://medium.com/@anugrahasb1997/implementing-server-sent-events-sse-in-android-with-okhttp-eventsource-226dc9b2599d
+            app.sse("/sse", client -> {
+//                client.keepAlive();
+                client.onClose(() -> clients.remove(client));
+                clients.add(client);
+                
+//                client.s
+            });
+            //TODO: Switch to https://github.com/square/okhttp/tree/master/okhttp-sse when ready
+            
+            
+            app.get("/play", (req, res) -> {
+                String get = res.get("idFile");
+                FileInfoInt file = Jamuz.getDb().file().getFile(Integer.parseInt(get), "");
+                if(mplayer!=null) {
+                    mplayer.stop();
+                }
+//                mplayer.addListener(new MPlaybackListener() {
+//                    @Override
+//                    public void volumeChanged(float volume) {
+//                        System.out.println("volume changed:" + volume);
+//                    }
+//
+//                    @Override
+//                    public void playbackFinished() {
+//                        System.out.println("playback stopped");
+//                    }
+//
+//                    @Override
+//                    public void positionChanged(int position, int length) {
+//                        System.out.println("poistion changed: " + position);
+//                        for (SseClient client : clients) {
+//                            client.sendEvent(String.valueOf(position));
+//                        }
+//                    }
+//                });
+                mplayer.play(file.getFullPath().getAbsolutePath(), false);
+                res.sendStatus(Status._200.getCode());
+            });
+            
+//			app.use((req, res) -> {
+//				String login=req.get("login");
+//                
+//				if(!tableModel.contains(login)) {
+//					String password=req.get("password");
+//					String rootPath=req.get("rootPath");
+//					String model=req.get("model");
+//					boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
+//					ClientInfo info = new ClientInfo(login, password, rootPath, model, enableNewClients);
+//					createClient(info);
+//				}
+//				if(!tableModel.contains(login) || !tableModel.getClient(login).isEnabled()) {
+//					res.sendStatus(Status._401.getCode());
+//				} else {
+//					String apiVersion=req.get("api-version");
+//					if(!apiVersion.equals("2.0")) {
+//						res.status(Status._301.getCode()); // 301 Moved Permanently
+//						JSONArray list = new JSONArray();
+//						list.add("2.0");
+//						JSONObject obj = new JSONObject();
+//						obj.put("supported-versions", list);
+//						res.send(obj.toJSONString());
+//					}	
+//				}
+//			});
 			
 			app.get("/connect", (req, res) -> {
-				res.sendStatus(Status._200);
+				res.sendStatus(Status._200.getCode());
 			});
 								
 			app.get("/download", (req, res) -> {
-				String login=req.getHeader("login").get(0);
+				String login=req.get("login");
 				Device device = tableModel.getClient(login).getDevice();
 				String destExt = device.getPlaylist().getDestExt();
-				int idFile = Integer.parseInt(req.getQuery("id"));
+				int idFile = Integer.parseInt(req.query("id"));
 				FileInfoInt fileInfoInt = Jamuz.getDb().file().getFile(idFile, destExt); 
 				File file = fileInfoInt.getFullPath();
 				if(!destExt.isBlank() && !fileInfoInt.getExt().equals(destExt)) {
 					Location location = new Location("location.transcoded");
 					if(!location.check()) {
-						res.sendStatus(Status._410);
+						res.sendStatus(Status._410.getCode());
 					}
 					String destPath = location.getValue();
 					file = fileInfoInt.getTranscodedFile(destExt, destPath);
 					if(!file.exists() || !file.isFile()) {
-						res.sendStatus(Status._410);
+						res.sendStatus(Status._410.getCode());
 					}
 				}
 				if(file.exists() && file.isFile()) {
 					String msg=" #"+fileInfoInt.getIdFile()+" ("+file.length()+"o) "+file.getAbsolutePath();
 					System.out.println("Sending"+msg);
-					res.sendAttachment(file.toPath());
+					res.download(file.toPath());
 					System.out.println("Sent"+msg);
 					ArrayList<FileInfoInt> insert = new ArrayList<>();
 					fileInfoInt.setStatus(SyncStatus.NEW);
 					insert.add(fileInfoInt);
 					Jamuz.getDb().deviceFile().lock().insertOrUpdate(insert, device.getId());
 				} else {
-					res.sendStatus(Status._404);
+					res.sendStatus(Status._404.getCode());
 				}		
 			});
 			
 			app.get("/tags", (req, res) -> {
-				String login=req.getHeader("login").get(0);	
+				String login=req.get("login");	
 				setStatus(login, "Sending tags");
 				JSONArray list = new JSONArray();
 				for(String tag : Jamuz.getTags()) {
@@ -183,7 +259,7 @@ public class Server {
 			});
 			
 			app.get("/genres", (req, res) -> {
-				String login=req.getHeader("login").get(0);
+				String login=req.get("login");
 				setStatus(login, "Sending genres");
 				JSONArray list = new JSONArray();
 				for(String genre : Jamuz.getGenres()) {
@@ -198,8 +274,8 @@ public class Server {
 			//Merge statistics
 			app.post("/files", (req, res) -> {
 				try {
-					String login=req.getHeader("login").get(0);
-					String body = getBody(req.getBody());
+					String login=req.get("login");
+					String body = req.body().toString(); //getBody();
 					JSONObject jsonObject = (JSONObject) new JSONParser().parse(body);
 					setStatus(login, "Received files to merge");
 					ArrayList<FileInfo> newTracks = new ArrayList<>();
@@ -242,14 +318,14 @@ public class Server {
 									tableModel.fireTableDataChanged();
 								}
 					}).start();
-				} catch (IOException | ParseException ex) {
+				} catch (ParseException ex) {
 					Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-					res.sendStatus(Status._500); //FIXME Z Return proper error
+					res.sendStatus(Status._500.getCode()); //FIXME Z Return proper error
 				}
 			});
 			
 			app.get("/refresh", (req, res) -> { 
-				String login=req.getHeader("login").get(0); 
+				String login=req.get("login"); 
 				Device device = tableModel.getClient(login).getDevice(); 
 				ProcessSync processSync = new ProcessSync("Server.ProcessSync",  
 						device, tableModel.getClient(login).getProgressBar(),  
@@ -262,7 +338,7 @@ public class Server {
  
 					@Override 
 					public void enable() {
-						res.sendStatus(Status._200);
+						res.sendStatus(Status._200.getCode());
 					}
  
 					@Override 
@@ -279,16 +355,16 @@ public class Server {
 			});
 			
 			app.get("/files/:status", (req, res) -> { 
-				String login=req.getHeader("login").get(0); 
+				String login=req.get("login"); 
 				Device device = tableModel.getClient(login).getDevice(); 
 				String destExt = device.getPlaylist().getDestExt(); 
-				SyncStatus status = SyncStatus.valueOf(req.getParam("status")); 
-				boolean getCount = Boolean.parseBoolean(req.getQuery("getCount")); 
+				SyncStatus status = SyncStatus.valueOf(req.params("status")); 
+				boolean getCount = Boolean.parseBoolean(req.query("getCount")); 
 				
 				String limit=""; 
 				if(!getCount) { 
-					int idFrom = Integer.parseInt(req.getQuery("idFrom")); 
-					int nbFilesInBatch = Integer.parseInt(req.getQuery("nbFilesInBatch")); 
+					int idFrom = Integer.parseInt(req.query("idFrom")); 
+					int nbFilesInBatch = Integer.parseInt(req.query("nbFilesInBatch")); 
 					limit=" LIMIT "+idFrom+", "+nbFilesInBatch; 
 				}
 				 
@@ -588,9 +664,9 @@ public class Server {
 	 */
 	public void fillClients() {
 		tableModel.clear();
-		LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
-		Jamuz.getDb().client().get(clients);
-		for(ClientInfo clientInfo : clients.values()) {
+		LinkedHashMap<Integer, ClientInfo> clientsDb = new LinkedHashMap<>();
+		Jamuz.getDb().client().get(clientsDb);
+		for(ClientInfo clientInfo : clientsDb.values()) {
 			tableModel.add(clientInfo);
 		}
 	}

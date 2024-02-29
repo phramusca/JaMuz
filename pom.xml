@@ -94,6 +94,10 @@
             <id>local-repo</id>
             <url>file://${project.basedir}/lib</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -220,6 +224,11 @@
             <artifactId>hamcrest-library</artifactId>
             <version>2.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.Aarkan1</groupId>
+            <artifactId>java-express</artifactId>
+            <version>1.1.3</version>
+        </dependency>
 
         <!--Local jar dependencies -->
         <dependency>
@@ -227,11 +236,11 @@
             <artifactId>beaglebuddy_mp3</artifactId>
             <version>0.0.1</version>
         </dependency>
-        <dependency>
+        <!--        <dependency>
             <groupId>com.example</groupId>
             <artifactId>java-express</artifactId>
             <version>0.1.1</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>jaudiotagger</artifactId>
