@@ -196,7 +196,7 @@ public class PanelMain extends javax.swing.JFrame {
 
 			@Override
 			public void positionChanged(int position, int length) {
-                panelRemote.sendPosition(position);
+                panelRemote.sendPosition(position, length);
 			}
 		};
 		

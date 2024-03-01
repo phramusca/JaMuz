@@ -70,9 +70,9 @@ public class Server {
         tableModel.setColumnNames();
     }
     
-    public void sendPosition(int position) {
+    public void sendPosition(int position, int length) {
         for (SseClient sseClient : sseClients) {
-            sseClient.sendEvent("positionChanged", String.valueOf(position), "id");
+            sseClient.sendEvent("positionChanged", String.valueOf(position), String.valueOf(length));
         }
     }
 

@@ -199,8 +199,8 @@ public class PanelRemote extends javax.swing.JPanel {
         jButtonStart.setEnabled(true);
 	}
    
-    public void sendPosition(int position) {
-        server.sendPosition(position);
+    public void sendPosition(int position, int length) {
+        server.sendPosition(position, length);
     }
     
 	/**
