@@ -148,11 +148,7 @@ public class Server {
 //                client.keepAlive();
                 client.onClose(() -> clients.remove(client));
                 clients.add(client);
-                
-//                client.s
             });
-            //TODO: Switch to https://github.com/square/okhttp/tree/master/okhttp-sse when ready
-            
             
             app.get("/play", (req, res) -> {
                 String get = res.get("idFile");
@@ -160,54 +156,42 @@ public class Server {
                 if(mplayer!=null) {
                     mplayer.stop();
                 }
-//                mplayer.addListener(new MPlaybackListener() {
-//                    @Override
-//                    public void volumeChanged(float volume) {
-//                        System.out.println("volume changed:" + volume);
-//                    }
-//
-//                    @Override
-//                    public void playbackFinished() {
-//                        System.out.println("playback stopped");
-//                    }
-//
-//                    @Override
-//                    public void positionChanged(int position, int length) {
-//                        System.out.println("poistion changed: " + position);
-//                        for (SseClient client : clients) {
-//                            client.sendEvent(String.valueOf(position));
-//                        }
-//                    }
-//                });
                 mplayer.play(file.getFullPath().getAbsolutePath(), false);
                 res.sendStatus(Status._200.getCode());
             });
             
-//			app.use((req, res) -> {
-//				String login=req.get("login");
-//                
-//				if(!tableModel.contains(login)) {
-//					String password=req.get("password");
-//					String rootPath=req.get("rootPath");
-//					String model=req.get("model");
-//					boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
-//					ClientInfo info = new ClientInfo(login, password, rootPath, model, enableNewClients);
-//					createClient(info);
-//				}
-//				if(!tableModel.contains(login) || !tableModel.getClient(login).isEnabled()) {
-//					res.sendStatus(Status._401.getCode());
-//				} else {
-//					String apiVersion=req.get("api-version");
-//					if(!apiVersion.equals("2.0")) {
-//						res.status(Status._301.getCode()); // 301 Moved Permanently
-//						JSONArray list = new JSONArray();
-//						list.add("2.0");
-//						JSONObject obj = new JSONObject();
-//						obj.put("supported-versions", list);
-//						res.send(obj.toJSONString());
-//					}	
-//				}
-//			});
+            app.get("/stop", (req, res) -> {
+                if(mplayer!=null) {
+                    mplayer.stop();
+                }
+                res.sendStatus(Status._200.getCode());
+            });
+            
+			app.use((req, res) -> {
+				String login=req.get("login");
+                
+				if(!tableModel.contains(login)) {
+					String password=req.get("password");
+					String rootPath=req.get("rootPath");
+					String model=req.get("model");
+					boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
+					ClientInfo info = new ClientInfo(login, password, rootPath, model, enableNewClients);
+					createClient(info);
+				}
+				if(!tableModel.contains(login) || !tableModel.getClient(login).isEnabled()) {
+					res.sendStatus(Status._401.getCode());
+				} else {
+					String apiVersion=req.get("api-version");
+					if(!apiVersion.equals("2.0")) {
+						res.status(Status._301.getCode()); // 301 Moved Permanently
+						JSONArray list = new JSONArray();
+						list.add("2.0");
+						JSONObject obj = new JSONObject();
+						obj.put("supported-versions", list);
+						res.send(obj.toJSONString());
+					}	
+				}
+			});
 			
 			app.get("/connect", (req, res) -> {
 				res.sendStatus(Status._200.getCode());
