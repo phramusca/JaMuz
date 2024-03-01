@@ -33,8 +33,6 @@ import jamuz.process.check.FolderInfo;
 import jamuz.process.check.PanelCheck;
 import jamuz.process.merge.PanelMerge;
 import jamuz.process.sync.PanelSync;
-import jamuz.remote.ICallBackServer;
-import jamuz.remote.PanelRemote;
 import jamuz.utils.Dependencies;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -48,9 +46,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -71,8 +67,6 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumn;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 /**
  * Main JaMuz GUI class
@@ -202,7 +196,7 @@ public class PanelMain extends javax.swing.JFrame {
 
 			@Override
 			public void positionChanged(int position, int length) {
-				dispMP3progress(position);
+                panelRemote.sendPosition(position);
 			}
 		};
 		
@@ -217,7 +211,7 @@ public class PanelMain extends javax.swing.JFrame {
         panelStats.initExtended();
         panelSelect.initExtended(panelSlsk);
         panelPlaylists.initExtended(panelSlsk);
-		panelRemote.initExtended(this, new CallBackServer());
+		panelRemote.initExtended(this);
 		panelVideo.initExtended(this);
 		panelBook.initExtended(this);
 		panelSlsk.initExtended(this);
@@ -227,82 +221,6 @@ public class PanelMain extends javax.swing.JFrame {
 		Dependencies.check(this);
     }
 	
-	class CallBackServer implements ICallBackServer {
-		
-		@Override
-		public void received(String clientId, String msg) {
-			if(msg.startsWith("sendCover")) {
-				int maxWidth = Integer.parseInt(msg.substring("sendCover".length()));
-				PanelRemote.sendCover(clientId, displayedFile, maxWidth);
-			}
-			else if(msg.startsWith("setPlaylist")) {
-				setPlaylist(msg.substring("setPlaylist".length()));
-			}
-			else if(msg.startsWith("setGenre")) {
-				setGenre(msg.substring("setGenre".length()));
-			}
-			else if(msg.startsWith("toggleTag")) {
-				if(displayedFile.isFromLibrary()) {
-					String tag = msg.substring("toggleTag".length());
-					displayedFile.toggleTag(tag);
-					ArrayList<FileInfoInt> temp = new ArrayList<>();
-					temp.add(displayedFile);
-					Jamuz.getDb().fileTag().lock().update(temp, null);
-					displayTags();
-				}
-			}
-			else {
-				switch(msg) { 
-					//TODO: Say rating as an option 
-					case "setRating1": setRating(1, false); break; 
-					case "setRating2": setRating(2, false); break; 
-					case "setRating3": setRating(3, false); break; 
-					case "setRating4": setRating(4, false); break; 
-					case "setRating5": setRating(5, false); break; 
-					case "previousTrack": 
-						pressButton(jButtonPlayerPrevious);  
-						break; 
-					case "nextTrack":  
-						pressButton(jButtonPlayerNext);  
-						break; 
-					case "playTrack":  
-						pressButton(jButtonPlayerPlay);  
-						break; 
-					case "clearTracks":  
-						pressButton(jButtonPlayerClear);  
-						break; 
-					case "forward": forward(); break; 
-					case "rewind": rewind(); break; 
-					case "pullup": moveCursor(0); break; 
-					case "volUp":  
-					  jSpinnerVolume.setValue( 
-						  (float)jSpinnerVolume.getValue()+5.0f);  
-					  break; 
-					case "volDown":  
-					  jSpinnerVolume.setValue( 
-						  (float)jSpinnerVolume.getValue()-5.0f);  
-					  break; 
-					default: 
-						Jamuz.getLogger().warning(msg); 
-						break; 
-				}
-			}
-		}
-
-		@Override
-		public void connectedRemote(String clientId) {
-			sendPlaylists(clientId, jComboBoxPlaylist.getSelectedItem().toString());
-			sendTrackToRemote();
-		}
-
-//		@Override
-//		public void disconnectedRemote(String login) {}
-//		@Override
-//		public void connectedSync(String login) {}
-//		@Override
-//		public void disconnectedSync(String login) {}
-	}
-
 	private static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = PanelMain.class.getResource(path);
         if (imgURL != null) {
@@ -363,36 +281,6 @@ public class PanelMain extends javax.swing.JFrame {
     }
 	
     private void setKeyBindings() {
-        Action setRating1 = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setRating(1, true);
-            }
-        };
-        Action setRating2 = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setRating(2, true);
-            }
-        };
-        Action setRating3 = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setRating(3, true);
-            }
-        };
-        Action setRating4 = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setRating(4, true);
-            }
-        };
-        Action setRating5 = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setRating(5, true);
-            }
-        };
         Action previousTrack = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -438,12 +326,7 @@ public class PanelMain extends javax.swing.JFrame {
         };
 
 		InputMap inputMap = this.jSplitPaneMain.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, Event.SHIFT_MASK+Event.ALT_MASK), "setRating1");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, Event.SHIFT_MASK+Event.ALT_MASK), "setRating2");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, Event.SHIFT_MASK+Event.ALT_MASK), "setRating3");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, Event.SHIFT_MASK+Event.ALT_MASK), "setRating4");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, Event.SHIFT_MASK+Event.ALT_MASK), "setRating5");
-        
+       
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.SHIFT_MASK+Event.ALT_MASK), "previousTrack");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.SHIFT_MASK+Event.ALT_MASK), "nextTrack");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.SHIFT_MASK+Event.ALT_MASK), "playTrack");
@@ -452,12 +335,6 @@ public class PanelMain extends javax.swing.JFrame {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, Event.SHIFT_MASK+Event.ALT_MASK), "forward");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.SHIFT_MASK+Event.ALT_MASK), "rewind");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, Event.SHIFT_MASK+Event.ALT_MASK), "pullup");
-        
-        this.jSplitPaneMain.getActionMap().put("setRating1", setRating1);
-        this.jSplitPaneMain.getActionMap().put("setRating2", setRating2);
-        this.jSplitPaneMain.getActionMap().put("setRating3", setRating3);
-        this.jSplitPaneMain.getActionMap().put("setRating4", setRating4);
-        this.jSplitPaneMain.getActionMap().put("setRating5", setRating5);
         
         this.jSplitPaneMain.getActionMap().put("previousTrack", previousTrack);
         this.jSplitPaneMain.getActionMap().put("nextTrack", nextTrack);
@@ -482,42 +359,7 @@ public class PanelMain extends javax.swing.JFrame {
             button.doClick();
         }
     }
-    
-    private void setPlaylist(String playlist) {
-        int index=-1;
-        int i=0;
-        for(String playlistSource : getPlaylists()) {
-            if(playlistSource.equals(playlist)) {
-                index=i;
-                break;
-            }
-            i++;
-        }
-        if(jComboBoxPlaylist.getSelectedItem().toString().equals(playlist)) {
-			refreshHiddenQueue=false;
-		}
-        jComboBoxPlaylist.setSelectedIndex(index);
-        refreshHiddenQueue=true;
-    }
 	
-	private void setRating(int rating, boolean sayRated) {
-		if(displayedFile.isFromLibrary()) {
-            jComboBoxPlayerRating.setSelectedIndex(rating);
-            sendTrackToRemote();
-        }
-    }
-	
-	private void setGenre(String genre) {
-		if(displayedFile.isFromLibrary()) {
-			jComboBoxPlayerGenre.setSelectedItem(genre);
-            sendTrackToRemote();
-        }
-    }
-	
-	private static void sendTrackToRemote() {
-		PanelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString(), jSliderPlayerLength.getValue());
-	}
-
 	/**
 	 *
 	 */
@@ -1121,22 +963,6 @@ public class PanelMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Display MP3 play position
-     *
-     * @param currentPosition
-     */
-    private static void dispMP3progress(int currentPosition) {
-        if (jSliderPlayerLength.isEnabled()) {
-            isManual = false;
-            jSliderPlayerLength.setValue(currentPosition);
-            isManual = true;
-            jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(currentPosition));
-            playerInfo.dispMP3progress(currentPosition);
-            sendPosition(currentPosition);
-        }
-    }
-	
-    /**
      * Enable/disable previous and next buttons
      *
      * @param previous
@@ -1454,10 +1280,10 @@ public class PanelMain extends javax.swing.JFrame {
 		jListPlayerQueue.setSelectedIndices(convertIntegers(selectedNew));
     }//GEN-LAST:event_jButtonQueueDownActionPerformed
 
-    private static boolean refreshHiddenQueue=true;
+    private static final boolean REFRESH_HIDDEN_QUEUE = true;
     
     private void jComboBoxPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPlaylistActionPerformed
-        if(refreshHiddenQueue) {
+        if(REFRESH_HIDDEN_QUEUE) {
 			refreshHiddenQueue(false);
 		}
     }//GEN-LAST:event_jComboBoxPlaylistActionPerformed
@@ -1597,36 +1423,9 @@ public class PanelMain extends javax.swing.JFrame {
 		for(String tag : displayedFile.getTags()) {
 			builder.append(tag).append(" ");
 		}
-		jLabelTags.setText(toHTML(builder.toString()));
-		sendTrackToRemote();
-		
+		jLabelTags.setText(toHTML(builder.toString()));	
 	}
 
-    private static long startTime=System.currentTimeMillis();
-    private static void sendPosition(int currentPosition) {
-        long currentTime=System.currentTimeMillis();
-        if(currentTime-startTime>1000) {
-            Map jsonAsMap = new HashMap();
-            jsonAsMap.put("type", "currentPosition");
-            jsonAsMap.put("currentPosition", currentPosition);
-            jsonAsMap.put("total", displayedFile.getLength());
-            PanelRemote.send(jsonAsMap);
-            startTime=System.currentTimeMillis();
-        }
-    }
-    
-    private static void sendPlaylists(String clientId, String selectedPlaylist) {
-		JSONArray list = new JSONArray();
-		for(String playlist : getPlaylists()) {
-			list.add(playlist);
-		}
-		JSONObject obj = new JSONObject();
-		obj.put("type", "playlists");
-		obj.put("playlists", list);
-		obj.put("selectedPlaylist", selectedPlaylist);
-		PanelRemote.send(clientId, obj);
-    }
-	
 	/**
 	 *
 	 * @return
