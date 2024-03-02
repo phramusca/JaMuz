@@ -80,34 +80,34 @@ public class PanelMain extends javax.swing.JFrame {
      */
     private static ListModelPlayerQueue queueModel;
 
-	/**
-	 *
-	 * @return
-	 */
-	public static ListModelPlayerQueue getQueueModel() {
+    /**
+     *
+     * @return
+     */
+    public static ListModelPlayerQueue getQueueModel() {
         return queueModel;
     }
-    
-	private static Mplayer MPLAYER;
 
-	/**
-	 *
-	 */
-	protected static DefaultComboBoxModel comboPlaylistsModel = new DefaultComboBoxModel();
-    
+    private static Mplayer MPLAYER;
+
+    /**
+     *
+     */
+    protected static DefaultComboBoxModel comboPlaylistsModel = new DefaultComboBoxModel();
+
     /**
      * genre combo values
      */
     protected static String[] comboGenre;
 
-	/**
-	 *
-	 * @return
-	 */
-	public static String[] getComboGenre() {
+    /**
+     *
+     * @return
+     */
+    public static String[] getComboGenre() {
         return comboGenre;
     }
-    
+
     private static ImageIcon[] ratingIcon;
     /**
      * Progress bar for "Best Of" tab
@@ -118,13 +118,13 @@ public class PanelMain extends javax.swing.JFrame {
     private static final int[] STATS_COLS = {16, 18, 19};
     private static final int[] FILE_COLS = {6, 7, 8, 9, 10};
     private static final int[] EXTRA_COLS = {11, 13, 14, 15, 20};
-	private static final int[] RIGHTS_COLS = {21};
+    private static final int[] RIGHTS_COLS = {21};
 
     /**
      * Creates new form MainGUI
      */
     public PanelMain() {
-		
+
         comboGenre = new String[1];
         comboGenre[0] = ""; //NOI18N
         initComponents();
@@ -137,19 +137,19 @@ public class PanelMain extends javax.swing.JFrame {
         setTab("PanelMain.panelPlaylists.TabConstraints.tabTitle", "application_view_list");
         setTab("Label.Lyrics", "text");
         setTab("PanelMain.panelStats.TabConstraints.tabTitle", "statistics");
-		setTab("PanelMain.panelRemote.TabConstraints.tabTitle", "android");
+        setTab("PanelMain.panelRemote.TabConstraints.tabTitle", "android");
         setTab("Label.Options", "selected");
         setTab("PanelMain.panelVideo.TabConstraints.tabTitle", "movies");
-		setTab("PanelMain.panelBook.TabConstraints.tabTitle", "book_open");
+        setTab("PanelMain.panelBook.TabConstraints.tabTitle", "book_open");
         setTab("PanelMain.panelslsk.TabConstraints.tabTitle", "slsk");
 
-	//Left pane: player
+        //Left pane: player
         //Set queue model
         queueModel = new ListModelPlayerQueue();
         jListPlayerQueue.setModel(queueModel);
         playerInfo = new FramePlayerInfo(getTitle(), queueModel);
-		
-		fillGenreLists();
+
+        fillGenreLists();
         //Empty the FileInfo labels
         jLabelTags.setText("-------------------------");
         jLabelPlayerTitle.setText("Welcome to");  //NOI18N
@@ -157,8 +157,8 @@ public class PanelMain extends javax.swing.JFrame {
         jLabelPlayerArtist.setText("---");  //NOI18N
         //FIXME ! Use a global value and/or add instructions on release guide
         jLabelPlayerYear.setText("2024");  //NOI18N
-		PanelCover coverImg = (PanelCover) jPanelPlayerCover;
-		coverImg.setImage(null);
+        PanelCover coverImg = (PanelCover) jPanelPlayerCover;
+        coverImg.setImage(null);
         //Set rating combobox renderer
         String[] imageNames = {"null", "1star", "2star", "3star", "4star", "5star"}; //NOI18N
         ratingIcon = new ImageIcon[imageNames.length];
@@ -172,56 +172,63 @@ public class PanelMain extends javax.swing.JFrame {
         jComboBoxPlayerGenre.setEnabled(false);
 
         jComboBoxPlaylist.setModel(comboPlaylistsModel);
-                
-		// Disable keyboard edits in the spinner
-		JFormattedTextField tf = ((JSpinner.DefaultEditor) jSpinnerVolume.getEditor()).getTextField();
-		tf.setEditable(false);
-		tf.setBackground(Color.GRAY);
-		
-		MPLAYER = new Mplayer();
-		
-		MPlaybackListener mPlaybackListener = new MPlaybackListener() {
-			@Override
-			public void volumeChanged(float volume) {
-				if(volume>=0) {
-					volume=5*Math.round(volume/5);
-					jSpinnerVolume.getModel().setValue((float)volume);
-				}
-			}
 
-			@Override
-			public void playbackFinished() {
-				next();
-			}
+        // Disable keyboard edits in the spinner
+        JFormattedTextField tf = ((JSpinner.DefaultEditor) jSpinnerVolume.getEditor()).getTextField();
+        tf.setEditable(false);
+        tf.setBackground(Color.GRAY);
 
-			@Override
-			public void positionChanged(int position, int length) {
-                panelRemote.sendPosition(position, length);
-			}
-		};
-		
-		MPLAYER.addListener(mPlaybackListener);
-        
-		//Init tabs
-		panelOptions.initExtended(this);
+        MPLAYER = new Mplayer();
+
+        MPlaybackListener mPlaybackListener = new MPlaybackListener() {
+            @Override
+            public void volumeChanged(float volume) {
+                if (volume >= 0) {
+                    volume = 5 * Math.round(volume / 5);
+                    jSpinnerVolume.getModel().setValue((float) volume);
+                }
+            }
+
+            @Override
+            public void playbackFinished() {
+                next();
+            }
+
+            @Override
+            public void positionChanged(int position, int length) {
+                if (jSliderPlayerLength.isEnabled()) {
+                    isManual = false;
+                    jSliderPlayerLength.setValue(position);
+                    isManual = true;
+                    jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(position));
+                    playerInfo.dispMP3progress(position);
+                    panelRemote.sendPosition(position, length);
+                }
+            }
+        };
+
+        MPLAYER.addListener(mPlaybackListener);
+
+        //Init tabs
+        panelOptions.initExtended(this);
         panelSync.initExtended(this);
         panelMerge.initExtended(this);
         PanelCheck.setOptions(); //Needs to be static (for now at least)
-		panelCheck.initExtended(this);
+        panelCheck.initExtended(this);
         panelStats.initExtended();
         panelSelect.initExtended(panelSlsk);
         panelPlaylists.initExtended(panelSlsk);
-		panelRemote.initExtended(this);
-		panelVideo.initExtended(this);
-		panelBook.initExtended(this);
-		panelSlsk.initExtended(this);
-		
+        panelRemote.initExtended(this);
+        panelVideo.initExtended(this);
+        panelBook.initExtended(this);
+        panelSlsk.initExtended(this);
+
         setKeyBindings();
-		
-		Dependencies.check(this);
+
+        Dependencies.check(this);
     }
-	
-	private static ImageIcon createImageIcon(String path) {
+
+    private static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = PanelMain.class.getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL);
@@ -235,13 +242,13 @@ public class PanelMain extends javax.swing.JFrame {
      */
     private static void next() {
         //update lastPlayed (now) and playCounter (+1)
-		FileInfoInt file = queueModel.getPlayingSong().getFile();
-		if(file.isFromLibrary()) {
-			Jamuz.getDb().file().lock().updateLastPlayedAndCounter(file);
-			//FIXME Z PLAYER Do not increase playCounter when moved back on queue and moved forward
-			// especially if many back and forward
-			//If not, increase playCounter too much
-			// => Refer to JaMuzRemote:
+        FileInfoInt file = queueModel.getPlayingSong().getFile();
+        if (file.isFromLibrary()) {
+            Jamuz.getDb().file().lock().updateLastPlayedAndCounter(file);
+            //FIXME Z PLAYER Do not increase playCounter when moved back on queue and moved forward
+            // especially if many back and forward
+            //If not, increase playCounter too much
+            // => Refer to JaMuzRemote:
 //			if(queueHistoryIndex>=0 && (queueHistoryIndex+1)<queueHistory.size()) {
 //				queueHistoryIndex++;
 //				playHistory();
@@ -253,7 +260,7 @@ public class PanelMain extends javax.swing.JFrame {
 //				musicLibrary.updateTrack(displayedTrack);
 //				playNextOrRandom();
 //			}
-		}
+        }
         //Moving next
         queueModel.next();
     }
@@ -267,7 +274,7 @@ public class PanelMain extends javax.swing.JFrame {
     public static ImageIcon getRatingIcon(int rating) {
         return ratingIcon[rating];
     }
-	
+
     /**
      * Add a song to the audio player queue
      *
@@ -279,7 +286,7 @@ public class PanelMain extends javax.swing.JFrame {
         ListElement albumElement = new ListElement(fileInfo.toStringQueue(), fileInfo);
         queueModel.add(albumElement);
     }
-	
+
     private void setKeyBindings() {
         Action previousTrack = new AbstractAction() {
             @Override
@@ -305,7 +312,7 @@ public class PanelMain extends javax.swing.JFrame {
                 pressButton(jButtonPlayerClear);
             }
         };
-        
+
         Action forward = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -325,49 +332,49 @@ public class PanelMain extends javax.swing.JFrame {
             }
         };
 
-		InputMap inputMap = this.jSplitPaneMain.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-       
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.SHIFT_MASK+Event.ALT_MASK), "previousTrack");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.SHIFT_MASK+Event.ALT_MASK), "nextTrack");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.SHIFT_MASK+Event.ALT_MASK), "playTrack");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, Event.SHIFT_MASK+Event.ALT_MASK), "clearTracks");
-        
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, Event.SHIFT_MASK+Event.ALT_MASK), "forward");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.SHIFT_MASK+Event.ALT_MASK), "rewind");
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, Event.SHIFT_MASK+Event.ALT_MASK), "pullup");
-        
+        InputMap inputMap = this.jSplitPaneMain.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, Event.SHIFT_MASK + Event.ALT_MASK), "previousTrack");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, Event.SHIFT_MASK + Event.ALT_MASK), "nextTrack");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.SHIFT_MASK + Event.ALT_MASK), "playTrack");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, Event.SHIFT_MASK + Event.ALT_MASK), "clearTracks");
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, Event.SHIFT_MASK + Event.ALT_MASK), "forward");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.SHIFT_MASK + Event.ALT_MASK), "rewind");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, Event.SHIFT_MASK + Event.ALT_MASK), "pullup");
+
         this.jSplitPaneMain.getActionMap().put("previousTrack", previousTrack);
         this.jSplitPaneMain.getActionMap().put("nextTrack", nextTrack);
         this.jSplitPaneMain.getActionMap().put("playTrack", playTrack);
         this.jSplitPaneMain.getActionMap().put("clearTracks", clearTracks);
-        
+
         this.jSplitPaneMain.getActionMap().put("forward", forward);
         this.jSplitPaneMain.getActionMap().put("rewind", rewind);
         this.jSplitPaneMain.getActionMap().put("pullup", pullup);
     }
-    
+
     private static void moveCursor(int value) {
-        if(jSliderPlayerLength.isEnabled()) {
-            if(value>=jSliderPlayerLength.getMinimum() && value<jSliderPlayerLength.getMaximum()) {
+        if (jSliderPlayerLength.isEnabled()) {
+            if (value >= jSliderPlayerLength.getMinimum() && value < jSliderPlayerLength.getMaximum()) {
                 jSliderPlayerLength.setValue(value);
             }
         }
     }
-    
+
     private void pressButton(JButton button) {
-        if(button.isEnabled()) {
+        if (button.isEnabled()) {
             button.doClick();
         }
     }
-	
-	/**
-	 *
-	 */
-	public static void fillGenreLists() {
-		Jamuz.readGenres();
-		
+
+    /**
+     *
+     */
+    public static void fillGenreLists() {
+        Jamuz.readGenres();
+
         //Fill genreDisplay combo boxes
-		List<String> genreList = Jamuz.getGenres();
+        List<String> genreList = Jamuz.getGenres();
         comboGenre = new String[genreList.size() + 1];
         comboGenre[0] = Inter.get("Label.SelectOne");  //NOI18N
 
@@ -382,37 +389,36 @@ public class PanelMain extends javax.swing.JFrame {
         }
         jComboBoxPlayerGenre.setEnabled(displayedFile.isFromLibrary());
 
-		displayFileInfo();
+        displayFileInfo();
     }
 
-
-	//TODO: Move to a SelectTable class
+    //TODO: Move to a SelectTable class
     /**
      * initialize a "select style" table (select and playlist tabs)
      *
      * @param tableModel
      * @param jTable
      * @param tableColumnModel
-	 * @param fileInfoList
-	 * @param callBackSelect
+     * @param fileInfoList
+     * @param callBackSelect
      */
     public static void initSelectTable(
-			TableModel tableModel, 
-			JTable jTable, 
-			TableColumnModel tableColumnModel,
-			ArrayList<FileInfoInt> fileInfoList,
-			ICallBackSelect callBackSelect) {
+            TableModel tableModel,
+            JTable jTable,
+            TableColumnModel tableColumnModel,
+            ArrayList<FileInfoInt> fileInfoList,
+            ICallBackSelect callBackSelect) {
 
         String[] columnNames = {Inter.get("Tag.Artist"), Inter.get("Tag.Album"), //NOI18N
-			Inter.get("Tag.TrackNo"), Inter.get("Tag.Title"), //NOI18N
-			Inter.get("Tag.Genre"), Inter.get("Tag.Year"), //NOI18N
-			Inter.get("Tag.BitRate"), Inter.get("Label.File"), //NOI18N
-			Inter.get("Tag.Length"), Inter.get("Tag.Format"), //NOI18N
-			Inter.get("Tag.Size"), Inter.get("Tag.BPM"), Inter.get("Tag.AlbumArtist"), //NOI18N
-			Inter.get("Tag.Comment"), Inter.get("Tag.DiscNo"), Inter.get("Tag.Cover"), //NOI18N
-			Inter.get("Stat.PlayCounter"), Inter.get("Stat.Rating"), //NOI18N
-			Inter.get("Stat.Added"), Inter.get("Stat.LastPlayed"), //NOI18N
-			Inter.get("Stat.Checked"), Inter.get("Label.BestOf.Ownership")};  //NOI18N
+            Inter.get("Tag.TrackNo"), Inter.get("Tag.Title"), //NOI18N
+            Inter.get("Tag.Genre"), Inter.get("Tag.Year"), //NOI18N
+            Inter.get("Tag.BitRate"), Inter.get("Label.File"), //NOI18N
+            Inter.get("Tag.Length"), Inter.get("Tag.Format"), //NOI18N
+            Inter.get("Tag.Size"), Inter.get("Tag.BPM"), Inter.get("Tag.AlbumArtist"), //NOI18N
+            Inter.get("Tag.Comment"), Inter.get("Tag.DiscNo"), Inter.get("Tag.Cover"), //NOI18N
+            Inter.get("Stat.PlayCounter"), Inter.get("Stat.Rating"), //NOI18N
+            Inter.get("Stat.Added"), Inter.get("Stat.LastPlayed"), //NOI18N
+            Inter.get("Stat.Checked"), Inter.get("Label.BestOf.Ownership")};  //NOI18N
         Object[][] data = {
             {"Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", //NOI18N
                 "Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", "Default", //NOI18N
@@ -514,7 +520,7 @@ public class PanelMain extends javax.swing.JFrame {
         column.setMinWidth(50);
         column.setMaxWidth(200);
         column.setPreferredWidth(100);
-        
+
         // 21: Combobox
         column = jTable.getColumnModel().getColumn(21);
         final JComboBox comboBox = new JComboBox(FolderInfo.CopyRight.values());
@@ -523,29 +529,29 @@ public class PanelMain extends javax.swing.JFrame {
         column.setMinWidth(130);
         column.setMaxWidth(200);
         column.setPreferredWidth(130);
-		Action action = new AbstractAction() {
+        Action action = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableCellListener tcl = (TableCellListener) e.getSource();
                 if (tcl.getColumn() == 21) { //ComboBox is here
-					FolderInfo.CopyRight copyRight = (FolderInfo.CopyRight)tcl.getNewValue();
+                    FolderInfo.CopyRight copyRight = (FolderInfo.CopyRight) tcl.getNewValue();
                     FileInfoInt myFileInfo = fileInfoList.get(tcl.getRow());
                     Jamuz.getDb().path().lock().updateCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
-					callBackSelect.refresh();
+                    callBackSelect.refresh();
                 }
             }
         };
         TableCellListener tcl = new TableCellListener(jTable, action);
-        
+
         //Combobox needs to be editable to work
-        tableModel.setEditable(new Integer[] {21});
-        
+        tableModel.setEditable(new Integer[]{21});
+
         //Display defaults columns (only basic by default)
         setBasicVisible(tableColumnModel, true);
         setExtraVisible(tableColumnModel, false);
         setStatsVisible(tableColumnModel, false);
         setFileVisible(tableColumnModel, false);
-		setRightsVisible(tableColumnModel, false);
+        setRightsVisible(tableColumnModel, false);
     }
 
     /**
@@ -559,20 +565,17 @@ public class PanelMain extends javax.swing.JFrame {
         }
         Jamuz.getDb().setLocationLibrary(Jamuz.getMachine().getOptionValue("location.library"));
         //TODO OPTIONS Use listeners to address the following (and more)
-		//Rationalize to avoid potential errors
+        //Rationalize to avoid potential errors
         //(especially when called from a process, this would not do the trick, 
-		//need a way to bypass process check)
+        //need a way to bypass process check)
         PanelMerge.setOptions();
         PanelCheck.setOptions();
         PanelSync.setOptions();
         return true;
     }
 
-    
-
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
+     * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
@@ -974,8 +977,7 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
     /**
-     * fill queue (clear played leaving a given number of those and add some new
-     * until a given size is reached)
+     * fill queue (clear played leaving a given number of those and add some new until a given size is reached)
      */
     public static void fillQueue() {
         //TODO: Make those application options
@@ -988,11 +990,10 @@ public class PanelMain extends javax.swing.JFrame {
 //        for(int i=0; i<queueModel.getSize(); i++) {
 //            ListElement listElement = (ListElement) queueModel.getElementAt(i);
 //        }
-        
-        for(ListElement listElement : queueModel.getQueue()) {
+        for (ListElement listElement : queueModel.getQueue()) {
             fileInfoHiddenQueue.remove(listElement.getFile());
         }
-        
+
         //Fillup queue until reached "nbFilesInQueue"
         if (!fileInfoHiddenQueue.isEmpty()) {
             while (queueModel.getSize() < nbFilesInQueue) {
@@ -1006,6 +1007,7 @@ public class PanelMain extends javax.swing.JFrame {
 
     /**
      * Fill audio player queue then plays selected song in queue
+     *
      * @param resume
      */
     public static void playSelected(boolean resume) {
@@ -1017,7 +1019,7 @@ public class PanelMain extends javax.swing.JFrame {
             if (selected < 0) {
                 selected = 0;
                 jListPlayerQueue.setSelectedIndex(0);
-				resume=false;
+                resume = false;
             }
             queueModel.setPlayingIndex(selected);
             play(resume);
@@ -1026,6 +1028,7 @@ public class PanelMain extends javax.swing.JFrame {
 
     /**
      * fill queue, play selected file and display lyrics
+     *
      * @param resume
      */
     public static void play(boolean resume) {
@@ -1045,39 +1048,39 @@ public class PanelMain extends javax.swing.JFrame {
         jLabelPlayerTimeTotal.setText(StringManager.secondsToMMSS(myFileInfo.getLength()));
         playerInfo.setMax(myFileInfo.getLength());
         String audioFileName = myFileInfo.getFullPath().getAbsolutePath();
-        boolean enablejSliderPlayerLength=true;
-		
-		MPLAYER.play(audioFileName, resume);
-		
+        boolean enablejSliderPlayerLength = true;
+
+        MPLAYER.play(audioFileName, resume);
+
         String lyrics = myFileInfo.getLyrics();
-        Color textColor=Color.RED;
+        Color textColor = Color.RED;
         if (!lyrics.isBlank()) {  //NOI18N
-			textColor=new Color(0, 128, 0);
-        } 
+            textColor = new Color(0, 128, 0);
+        }
         setTab("Label.Lyrics", "text", textColor);
         PanelLyrics.setText(lyrics);
         jSliderPlayerLength.setEnabled(enablejSliderPlayerLength);
     }
-    
-	/**
-	 * Select tab with given title
-	 *
-	 * @param title
-	 */
-	public static void selectTab(String title) {
-		Swing.selectTab(jTabbedPane, title);
-	}
-	
+
+    /**
+     * Select tab with given title
+     *
+     * @param title
+     */
+    public static void selectTab(String title) {
+        Swing.selectTab(jTabbedPane, title);
+    }
+
     private static void setTab(String title, String iconName) {
         setTab(title, iconName, null);
     }
-    
+
     private static void setTab(String title, String iconName, Color textColor) {
         int index = jTabbedPane.indexOfTab(Inter.get(title)); //NOI18N
         JLabel label = new JLabel(Inter.get(title));
-        Icon icon = new ImageIcon(PanelMain.class.getResource("/icons/"+iconName+".png"));
+        Icon icon = new ImageIcon(PanelMain.class.getResource("/icons/" + iconName + ".png"));
         label.setIcon(icon);
-        if(textColor!=null) {
+        if (textColor != null) {
             label.setForeground(textColor);
         }
         label.setIconTextGap(5);
@@ -1085,15 +1088,15 @@ public class PanelMain extends javax.swing.JFrame {
         jTabbedPane.setTabComponentAt(index, label);
     }
 
-	/**
-	 *
-	 */
-	public static void stopMplayer() {
-		if(MPLAYER!=null) {
-			MPLAYER.stop();
-		}
-	}
-	
+    /**
+     *
+     */
+    public static void stopMplayer() {
+        if (MPLAYER != null) {
+            MPLAYER.stop();
+        }
+    }
+
     /**
      * stop player
      */
@@ -1102,8 +1105,8 @@ public class PanelMain extends javax.swing.JFrame {
         jSliderPlayerLength.setEnabled(false);
         queueModel.removeBullet();
 
-		MPLAYER.pause();
-		
+        MPLAYER.pause();
+
         queueModel.setPlayingIndex(-1);
         jButtonPlayerPlay.setText(Inter.get("Button.Play"));  //NOI18N
         queueModel.enablePreviousAndNext();
@@ -1148,15 +1151,15 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanelPlayerCoverMousePressed
 
     private void jButtonPlayerPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlayerPlayActionPerformed
-		if (jButtonPlayerPlay.getText().equals(Inter.get("Button.Pause"))) { //NOI18N
-			pause();
+        if (jButtonPlayerPlay.getText().equals(Inter.get("Button.Pause"))) { //NOI18N
+            pause();
         } else {
-			//resume
+            //resume
             playSelected(true);
         }
     }//GEN-LAST:event_jButtonPlayerPlayActionPerformed
 
-	//False by default as jSliderPlayerLength is set to 0 within 
+    //False by default as jSliderPlayerLength is set to 0 within 
     //GUI auto-generated code, and it is an internal hange
     private static boolean isManual = false;
 
@@ -1165,7 +1168,7 @@ public class PanelMain extends javax.swing.JFrame {
         int position = source.getValue();
         if (!source.getValueIsAdjusting()) {
             if (isManual) {
-				MPLAYER.setPosition(position);
+                MPLAYER.setPosition(position);
 //                mp3Player.setPosition(position);
                 MPLAYER.positionLock = false;
 //				mp3Player.positionLock = false;
@@ -1178,8 +1181,6 @@ public class PanelMain extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jSliderPlayerLengthStateChanged
 
-
-
     /**
      * add row to a 'select style' table (select and playlist tabs)
      *
@@ -1189,7 +1190,7 @@ public class PanelMain extends javax.swing.JFrame {
     public static void addRowSelect(TableModel tableModel, FileInfoInt myFileInfo) {
         //TODO: OK as long as each album only have one cover as they are loaded in ListModelSelector
         //Will be a problem for "Various Albums" (ie: Singles) ... need to make a load thread (as in ListModelSelector)
-        ImageIcon coverIcon = IconBufferCover.getCoverIcon(myFileInfo, false); 
+        ImageIcon coverIcon = IconBufferCover.getCoverIcon(myFileInfo, false);
         ImageIcon rating = PanelMain.getRatingIcon(myFileInfo.getRating());
 
         Object[] donnee = new Object[]{myFileInfo.getArtist(), myFileInfo.getAlbum(), myFileInfo.getTrackNoFull(),
@@ -1198,7 +1199,7 @@ public class PanelMain extends javax.swing.JFrame {
             myFileInfo.getBPM(), myFileInfo.getAlbumArtist(),
             myFileInfo.getComment(), myFileInfo.getDiscNoFull(), coverIcon,
             myFileInfo.getPlayCounter(), rating, myFileInfo.getAddedDateLocalTime(),
-            myFileInfo.getLastPlayedLocalTime(), myFileInfo.getCheckedFlag().toString(), myFileInfo.getCopyRight().toString()};       
+            myFileInfo.getLastPlayedLocalTime(), myFileInfo.getCheckedFlag().toString(), myFileInfo.getCopyRight().toString()};
         tableModel.addRow(donnee);
     }
 
@@ -1218,7 +1219,7 @@ public class PanelMain extends javax.swing.JFrame {
             String rating = jComboBoxPlayerRating.getSelectedItem().toString();
             displayedFile.updateRating(rating);
             queueModel.getPlayingSong().setDisplay(rating);
-            
+
             queueModel.refreshPlayingFile();
             PanelSelect.fillSelectTable();
         }
@@ -1233,11 +1234,11 @@ public class PanelMain extends javax.swing.JFrame {
 
         int[] selectedRows = jListPlayerQueue.getSelectedIndices();
         int selectedRow;
-        ArrayList<Integer> selectedNew= new ArrayList();
-        for(int i=0; i<selectedRows.length; i++) {
+        ArrayList<Integer> selectedNew = new ArrayList();
+        for (int i = 0; i < selectedRows.length; i++) {
             selectedRow = selectedRows[i];
-            int newRow = selectedRow-1;
-            if(newRow>=0) {
+            int newRow = selectedRow - 1;
+            if (newRow >= 0) {
                 moveQueueRow(selectedRow, newRow);
                 selectedNew.add(newRow);
             }
@@ -1246,81 +1247,79 @@ public class PanelMain extends javax.swing.JFrame {
         jListPlayerQueue.setSelectedIndices(convertIntegers(selectedNew));
     }//GEN-LAST:event_jButtonQueueUpActionPerformed
 
-    private static int[] convertIntegers(List<Integer> integers)
-    {
+    private static int[] convertIntegers(List<Integer> integers) {
         int[] ret = new int[integers.size()];
-        for (int i=0; i < ret.length; i++)
-        {
+        for (int i = 0; i < ret.length; i++) {
             ret[i] = integers.get(i);
         }
         return ret;
     }
-    
+
     private void moveQueueRow(int selectedRow, int newRow) {
-		try {
+        try {
             queueModel.moveRow(selectedRow, newRow);
-		} catch (CloneNotSupportedException ex) {
-			Jamuz.getLogger().log(Level.SEVERE, "moveCheckRow", ex); //NOI18N
-		}
-	}
-    
+        } catch (CloneNotSupportedException ex) {
+            Jamuz.getLogger().log(Level.SEVERE, "moveCheckRow", ex); //NOI18N
+        }
+    }
+
     private void jButtonQueueDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQueueDownActionPerformed
         int[] selectedRows = jListPlayerQueue.getSelectedIndices();
         int selectedRow;
-        ArrayList<Integer> selectedNew= new ArrayList();
-        for(int i=selectedRows.length-1; i>=0; i--) {
+        ArrayList<Integer> selectedNew = new ArrayList();
+        for (int i = selectedRows.length - 1; i >= 0; i--) {
             selectedRow = selectedRows[i];
-            int newRow = selectedRow+1;
-            if(newRow>=0) {
+            int newRow = selectedRow + 1;
+            if (newRow >= 0) {
                 moveQueueRow(selectedRow, newRow);
                 selectedNew.add(newRow);
             }
         }
         jListPlayerQueue.clearSelection();
-		jListPlayerQueue.setSelectedIndices(convertIntegers(selectedNew));
+        jListPlayerQueue.setSelectedIndices(convertIntegers(selectedNew));
     }//GEN-LAST:event_jButtonQueueDownActionPerformed
 
     private static final boolean REFRESH_HIDDEN_QUEUE = true;
-    
+
     private void jComboBoxPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPlaylistActionPerformed
-        if(REFRESH_HIDDEN_QUEUE) {
-			refreshHiddenQueue(false);
-		}
+        if (REFRESH_HIDDEN_QUEUE) {
+            refreshHiddenQueue(false);
+        }
     }//GEN-LAST:event_jComboBoxPlaylistActionPerformed
 
-	/**
-	 *
-	 * @param wait
-	 */
-	public static void refreshHiddenQueue(boolean wait) {
+    /**
+     *
+     * @param wait
+     */
+    public static void refreshHiddenQueue(boolean wait) {
         Thread fillQueue = new Thread("Thread.PanelMain.playlist.getFiles") {
-			@Override
-			public void run() {
-				fileInfoHiddenQueue.clear();
-				queueModel.clearNotPlayed();
-				if (jComboBoxPlaylist.getSelectedIndex() > 1) {
-						//Get playlist's files
-						Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-						playlist.getFiles(fileInfoHiddenQueue);
-						fillQueue();
-						queueModel.enablePreviousAndNext();
-				} 
-				else if(jComboBoxPlaylist.getSelectedIndex()==1) {
-					fileInfoHiddenQueue = new ArrayList<>(PanelSelect.getFileInfoList());
-					Collections.shuffle(fileInfoHiddenQueue);
-					fillQueue();
-				}
-			}};
-		fillQueue.start();
-		if(wait) {
-			try {
-				fillQueue.join(10000);
-			} catch (InterruptedException ex) {
-				Popup.error(ex);
-			}
-		}
+            @Override
+            public void run() {
+                fileInfoHiddenQueue.clear();
+                queueModel.clearNotPlayed();
+                if (jComboBoxPlaylist.getSelectedIndex() > 1) {
+                    //Get playlist's files
+                    Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
+                    playlist.getFiles(fileInfoHiddenQueue);
+                    fillQueue();
+                    queueModel.enablePreviousAndNext();
+                } else if (jComboBoxPlaylist.getSelectedIndex() == 1) {
+                    fileInfoHiddenQueue = new ArrayList<>(PanelSelect.getFileInfoList());
+                    Collections.shuffle(fileInfoHiddenQueue);
+                    fillQueue();
+                }
+            }
+        };
+        fillQueue.start();
+        if (wait) {
+            try {
+                fillQueue.join(10000);
+            } catch (InterruptedException ex) {
+                Popup.error(ex);
+            }
+        }
     }
-    
+
     private void jButtonRefreshHiddenQueueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshHiddenQueueActionPerformed
         refreshHiddenQueue(false);
     }//GEN-LAST:event_jButtonRefreshHiddenQueueActionPerformed
@@ -1330,25 +1329,25 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonTagsActionPerformed
 
     private void jSpinnerVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVolumeStateChanged
-        MPLAYER.setVolume((float)jSpinnerVolume.getValue());
+        MPLAYER.setVolume((float) jSpinnerVolume.getValue());
     }//GEN-LAST:event_jSpinnerVolumeStateChanged
 
-	/**
-	 *
-	 */
-	public static void forward() {
-        moveCursor(jSliderPlayerLength.getValue() + (jSliderPlayerLength.getMaximum()/10));
+    /**
+     *
+     */
+    public static void forward() {
+        moveCursor(jSliderPlayerLength.getValue() + (jSliderPlayerLength.getMaximum() / 10));
     }
-    
-	/**
-	 *
-	 */
-	public void rewind() {
-        moveCursor(jSliderPlayerLength.getValue() - (jSliderPlayerLength.getMaximum()/10));
+
+    /**
+     *
+     */
+    public void rewind() {
+        moveCursor(jSliderPlayerLength.getValue() - (jSliderPlayerLength.getMaximum() / 10));
     }
 
     private static ArrayList<FileInfoInt> fileInfoHiddenQueue = new ArrayList<>();
-    
+
     /**
      * Unset external player info (fullscreen) when leaving it
      */
@@ -1360,15 +1359,15 @@ public class PanelMain extends javax.swing.JFrame {
 
     private static FramePlayerInfo playerInfo;
 
-	/**
-	 *
-	 */
-	public static void displayFileInfo() {
-        FileInfoInt playingFile = queueModel.getPlayingSong()==null?displayedFile:queueModel.getPlayingSong().getFile();
-		//In case we have stopped/paused so it gets refreshed anyway
+    /**
+     *
+     */
+    public static void displayFileInfo() {
+        FileInfoInt playingFile = queueModel.getPlayingSong() == null ? displayedFile : queueModel.getPlayingSong().getFile();
+        //In case we have stopped/paused so it gets refreshed anyway
         displayFileInfo(playingFile, true);
     }
-    
+
     //TODO: This is called too many times sometimes
     //TODO: Only call to display current played song, not other one selected from queue
     /**
@@ -1388,10 +1387,10 @@ public class PanelMain extends javax.swing.JFrame {
 //                jButtonDisplayCurrent.setForeground(Color.red);
                 jSliderPlayerLength.setEnabled(false);
             }
-            
-			displayedFile.readTags(); //In case of merge change
+
+            displayedFile.readTags(); //In case of merge change
             displayTags();
-            
+
             jLabelPlayerTitle.setText(toHTML(fileInfo.getTitle()));
             jLabelPlayerAlbum.setText(toHTML(fileInfo.getAlbum()));
             jLabelPlayerArtist.setText(toHTML(fileInfo.getArtist()));
@@ -1403,7 +1402,7 @@ public class PanelMain extends javax.swing.JFrame {
             jComboBoxPlayerRating.setEnabled(false);
             jComboBoxPlayerRating.setSelectedIndex(fileInfo.getRating());
             jComboBoxPlayerRating.setEnabled(fileInfo.isFromLibrary());
-            
+
             jButtonTags.setEnabled(fileInfo.isFromLibrary());
 
             jLabelPlayerYear.setText(fileInfo.getYear());  //NOI18N
@@ -1417,20 +1416,20 @@ public class PanelMain extends javax.swing.JFrame {
             Popup.error(ex);
         }
     }
-	
-	static void displayTags() {
-		StringBuilder builder = new StringBuilder();
-		for(String tag : displayedFile.getTags()) {
-			builder.append(tag).append(" ");
-		}
-		jLabelTags.setText(toHTML(builder.toString()));	
-	}
 
-	/**
-	 *
-	 * @return
-	 */
-	public static List<String> getPlaylists() {
+    static void displayTags() {
+        StringBuilder builder = new StringBuilder();
+        for (String tag : displayedFile.getTags()) {
+            builder.append(tag).append(" ");
+        }
+        jLabelTags.setText(toHTML(builder.toString()));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static List<String> getPlaylists() {
         ArrayList<String> list = new ArrayList<>();
         for (int index = 0; index < comboPlaylistsModel.getSize(); index++) {
             Object msg = comboPlaylistsModel.getElementAt(index);
@@ -1438,15 +1437,14 @@ public class PanelMain extends javax.swing.JFrame {
                 list.add((String) msg);
             } else if (msg instanceof Playlist) {
                 list.add(((Playlist) msg).getName());
-            } 
+            }
         }
         return list;
     }
 
     //TODO: Move to a dedicated class
     /**
-     * checks if genre exists in genre combo and return "select one" value (the
-     * first in combo)
+     * checks if genre exists in genre combo and return "select one" value (the first in combo)
      *
      * @param genre
      * @return
@@ -1463,8 +1461,8 @@ public class PanelMain extends javax.swing.JFrame {
     private static String toHTML(String text) {
         return "<html>" + text + "</html>";  //NOI18N
     }
-	
-	//TODO: Move those setXXXVisible methods to separate class (not TableColumnModel)
+
+    //TODO: Move those setXXXVisible methods to separate class (not TableColumnModel)
     /**
      * set basic colums visible/unvisible
      *
@@ -1494,8 +1492,8 @@ public class PanelMain extends javax.swing.JFrame {
     public static void setExtraVisible(TableColumnModel myXTableColumnModel, boolean state) {
         setColumnVisible(myXTableColumnModel, EXTRA_COLS, state);
     }
-	
-	/**
+
+    /**
      * set extra colums visible/unvisible
      *
      * @param myXTableColumnModel
@@ -1558,8 +1556,8 @@ public class PanelMain extends javax.swing.JFrame {
      */
     public static void main() {
         /* Set the Nimbus look and feel */
-		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        	/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
@@ -1572,16 +1570,16 @@ public class PanelMain extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             Jamuz.getLogger().severe(ex.toString());
         }
-		//</editor-fold>
+        //</editor-fold>
 
         java.awt.EventQueue.invokeLater(() -> {
-			PanelMain panel = new PanelMain();
-			panel.setLocationRelativeTo(null);
-			panel.setExtendedState(PanelMain.MAXIMIZED_BOTH);
-			String version = Main.class.getPackage().getImplementationVersion();
-			panel.setTitle(panel.getTitle() + " " + version); //NOI18N
-			panel.setVisible(true);
-		});
+            PanelMain panel = new PanelMain();
+            panel.setLocationRelativeTo(null);
+            panel.setExtendedState(PanelMain.MAXIMIZED_BOTH);
+            String version = Main.class.getPackage().getImplementationVersion();
+            panel.setTitle(panel.getTitle() + " " + version); //NOI18N
+            panel.setVisible(true);
+        });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonPlayerClear;
