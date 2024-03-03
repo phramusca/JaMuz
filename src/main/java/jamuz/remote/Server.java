@@ -26,6 +26,7 @@ import io.javalin.http.sse.SseClient;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
+import jamuz.gui.PanelMain;
 import jamuz.process.sync.SyncStatus;
 import jamuz.process.check.Location;
 import jamuz.process.merge.ICallBackMerge;
@@ -189,6 +190,19 @@ public class Server {
             obj.put("genres", list);
             res.send(obj.toJSONString());
         });
+
+        //FIXME ! Call this !!
+        app.get("/playlists", ((req, res) -> {
+            JSONArray list = new JSONArray();
+            for (String playlist : PanelMain.getPlaylists()) {
+                list.add(playlist);
+            }
+            JSONObject obj = new JSONObject();
+            obj.put("type", "playlists");
+            obj.put("playlists", list);
+            obj.put("selectedPlaylist", PanelMain.getSelectPlaylist());
+            res.send(obj.toJSONString());
+        }));
 
         //Merge statistics
         app.post("/files", (req, res) -> {

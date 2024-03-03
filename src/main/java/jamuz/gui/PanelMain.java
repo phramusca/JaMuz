@@ -229,14 +229,19 @@ public class PanelMain extends javax.swing.JFrame {
             @Override
             public void received(String action, String value) {
 
+                // FIXME ! For "setGenre", "toggleTag" and "setRating", return new value so it can be updated on android
+                
                 switch (action) {
                     case "setPlaylist":
+                        //FIXME ! Test, need to get them first
                         setPlaylist(value);
                         break;
                     case "setGenre":
+                        //FIXME ! Test
                         setGenre(value);
                         break;
                     case "toggleTag":
+                        //FIXME ! Test
                         if (displayedFile.isFromLibrary()) {
                             displayedFile.toggleTag(value);
                             ArrayList<FileInfoInt> temp = new ArrayList<>();
@@ -246,6 +251,7 @@ public class PanelMain extends javax.swing.JFrame {
                         }
                         break;
                     case "setRating":
+                        //FIXME ! Test
                         setRating(Integer.parseInt(value), false);
                         break;
                     case "previousTrack":
@@ -258,6 +264,7 @@ public class PanelMain extends javax.swing.JFrame {
                         pressButton(jButtonPlayerPlay);
                         break;
                     case "clearTracks":
+                        //FIXME ! Can this be reached ?
                         pressButton(jButtonPlayerClear);
                         break;
                     case "forward":
@@ -267,7 +274,6 @@ public class PanelMain extends javax.swing.JFrame {
                         rewind();
                         break;
                     case "pullup":
-                        //FIXME! How to trigger ?
                         moveCursor(0);
                         break;
                     case "volUp":
