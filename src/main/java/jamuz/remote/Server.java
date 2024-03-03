@@ -72,9 +72,9 @@ public class Server {
         tableModel.setColumnNames();
     }
     
-    public void sendPosition(int position, int length) {
+    public void sendSseEvent(String event, String data, String id) {
         for (SseClient sseClient : sseClients) {
-            sseClient.sendEvent("positionChanged", String.valueOf(position), String.valueOf(length));
+            sseClient.sendEvent(event, data, id);
         }
     }
 
@@ -112,6 +112,8 @@ public class Server {
             res.sendStatus(Status._200.getCode());
         });
 
+//        app.get("/playingFile", handler)
+        
         app.use((req, res) -> {
             String login = req.get("login");
 
@@ -204,6 +206,7 @@ public class Server {
         app.post("/files", (req, res) -> {
             try {
                 String login = req.get("login");
+                //FIXME ! Use Gson power instead of converting twice and looping
                 String body = new Gson().toJson(req.body());
                 JSONObject jsonObject = (JSONObject) new JSONParser().parse(body);
                 setStatus(login, "Received files to merge");
