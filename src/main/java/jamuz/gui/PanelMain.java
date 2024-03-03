@@ -67,6 +67,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumn;
+import org.json.simple.JSONObject;
 
 /**
  * Main JaMuz GUI class
@@ -202,7 +203,12 @@ public class PanelMain extends javax.swing.JFrame {
                     isManual = true;
                     jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(position));
                     playerInfo.dispMP3progress(position);
-                    panelRemote.sendPosition(position, length);
+                    
+                    JSONObject obj = new JSONObject();
+                    obj.put("idFile", queueModel.getPlayingSong().getFile().getIdFile());
+                    obj.put("position", position);
+                    obj.put("length", length);
+                    panelRemote.sendSseEvent("positionChanged", obj.toJSONString(), "");
                 }
             }
         };
