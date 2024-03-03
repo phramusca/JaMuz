@@ -33,6 +33,7 @@ import jamuz.process.check.FolderInfo;
 import jamuz.process.check.PanelCheck;
 import jamuz.process.merge.PanelMerge;
 import jamuz.process.sync.PanelSync;
+import jamuz.remote.ICallBackServer;
 import jamuz.utils.Dependencies;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -48,6 +49,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
@@ -68,6 +70,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumn;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Main JaMuz GUI class
@@ -203,7 +207,7 @@ public class PanelMain extends javax.swing.JFrame {
                     isManual = true;
                     jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(position));
                     playerInfo.dispMP3progress(position);
-                    
+
                     JSONObject obj = new JSONObject();
                     obj.put("idFile", queueModel.getPlayingSong().getFile().getIdFile());
                     obj.put("position", position);
@@ -224,7 +228,88 @@ public class PanelMain extends javax.swing.JFrame {
         panelStats.initExtended();
         panelSelect.initExtended(panelSlsk);
         panelPlaylists.initExtended(panelSlsk);
-        panelRemote.initExtended(this);
+        panelRemote.initExtended(this, new ICallBackServer() {
+            
+            //FIXME ! Adapt this to json
+            @Override
+            public void received(String body) {
+                String msg = body;
+                        
+                JSONObject jsonObject;
+                try {
+                    jsonObject = (JSONObject) new JSONParser().parse(body);
+                    msg = (String) jsonObject.get("action");
+                } catch (ParseException ex) {
+                    Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                if (msg.startsWith("setPlaylist")) {
+                    setPlaylist(msg.substring("setPlaylist".length()));
+                } else if (msg.startsWith("setGenre")) {
+                    setGenre(msg.substring("setGenre".length()));
+                } else if (msg.startsWith("toggleTag")) {
+                    if (displayedFile.isFromLibrary()) {
+                        String tag = msg.substring("toggleTag".length());
+                        displayedFile.toggleTag(tag);
+                        ArrayList<FileInfoInt> temp = new ArrayList<>();
+                        temp.add(displayedFile);
+                        Jamuz.getDb().fileTag().lock().update(temp, null);
+                        displayTags();
+                    }
+                } else {
+                    switch (msg) {
+                        //TODO: Say rating as an option 
+                        case "setRating1":
+                            setRating(1, false);
+                            break;
+                        case "setRating2":
+                            setRating(2, false);
+                            break;
+                        case "setRating3":
+                            setRating(3, false);
+                            break;
+                        case "setRating4":
+                            setRating(4, false);
+                            break;
+                        case "setRating5":
+                            setRating(5, false);
+                            break;
+                        case "previousTrack":
+                            pressButton(jButtonPlayerPrevious);
+                            break;
+                        case "nextTrack":
+                            pressButton(jButtonPlayerNext);
+                            break;
+                        case "playTrack":
+                            pressButton(jButtonPlayerPlay);
+                            break;
+                        case "clearTracks":
+                            pressButton(jButtonPlayerClear);
+                            break;
+                        case "forward":
+                            forward();
+                            break;
+                        case "rewind":
+                            rewind();
+                            break;
+                        case "pullup":
+                            moveCursor(0);
+                            break;
+                        case "volUp":
+                            jSpinnerVolume.setValue(
+                                    (float) jSpinnerVolume.getValue() + 5.0f);
+                            break;
+                        case "volDown":
+                            jSpinnerVolume.setValue(
+                                    (float) jSpinnerVolume.getValue() - 5.0f);
+                            break;
+                        default:
+                            Jamuz.getLogger().warning(msg);
+                            break;
+                    }
+                }
+            }
+        });
         panelVideo.initExtended(this);
         panelBook.initExtended(this);
         panelSlsk.initExtended(this);
@@ -269,6 +354,43 @@ public class PanelMain extends javax.swing.JFrame {
         }
         //Moving next
         queueModel.next();
+    }
+
+    //FIXME ! Adapt and use the 4 following methods
+    private void setPlaylist(String playlist) {
+        int index = -1;
+        int i = 0;
+        for (String playlistSource : getPlaylists()) {
+            if (playlistSource.equals(playlist)) {
+                index = i;
+                break;
+            }
+            i++;
+        }
+        if (jComboBoxPlaylist.getSelectedItem().toString().equals(playlist)) {
+            REFRESH_HIDDEN_QUEUE = false;
+        }
+        jComboBoxPlaylist.setSelectedIndex(index);
+        REFRESH_HIDDEN_QUEUE = true;
+    }
+
+    private void setRating(int rating, boolean sayRated) {
+        if (displayedFile.isFromLibrary()) {
+            jComboBoxPlayerRating.setSelectedIndex(rating);
+            sendTrackToRemote();
+        }
+    }
+
+    private void setGenre(String genre) {
+        if (displayedFile.isFromLibrary()) {
+            jComboBoxPlayerGenre.setSelectedItem(genre);
+            sendTrackToRemote();
+        }
+    }
+
+    private void sendTrackToRemote() {
+        //FIXME
+//		panelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString(), jSliderPlayerLength.getValue());
     }
 
     /**
@@ -1285,7 +1407,7 @@ public class PanelMain extends javax.swing.JFrame {
         jListPlayerQueue.setSelectedIndices(convertIntegers(selectedNew));
     }//GEN-LAST:event_jButtonQueueDownActionPerformed
 
-    private static final boolean REFRESH_HIDDEN_QUEUE = true;
+    private static boolean REFRESH_HIDDEN_QUEUE = true;
 
     private void jComboBoxPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPlaylistActionPerformed
         if (REFRESH_HIDDEN_QUEUE) {
