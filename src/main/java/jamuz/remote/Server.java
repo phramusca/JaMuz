@@ -95,8 +95,9 @@ public class Server {
         });
 
         app.post("/action", (req, res) -> {
-            callBackServer.received(new Gson().toJson(req.body()));
-            
+            String action = (String) req.body().get("action");
+            String value = (String) req.body().getOrDefault("value", "");
+            callBackServer.received(action, value);
             //FIXME ! Need to return a body in some cases
             res.sendStatus(Status._200.getCode());
         });

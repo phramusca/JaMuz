@@ -21,5 +21,5 @@ package jamuz.remote;
  * @author raph
  */
 public interface ICallBackServer {
-    public void received(String msg);
+    public void received(String action, String value);
 }

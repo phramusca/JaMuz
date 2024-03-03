@@ -49,7 +49,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultCellEditor;
@@ -70,8 +69,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumn;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * Main JaMuz GUI class
@@ -229,84 +226,61 @@ public class PanelMain extends javax.swing.JFrame {
         panelSelect.initExtended(panelSlsk);
         panelPlaylists.initExtended(panelSlsk);
         panelRemote.initExtended(this, new ICallBackServer() {
-            
-            //FIXME ! Adapt this to json
             @Override
-            public void received(String body) {
-                String msg = body;
-                        
-                JSONObject jsonObject;
-                try {
-                    jsonObject = (JSONObject) new JSONParser().parse(body);
-                    msg = (String) jsonObject.get("action");
-                } catch (ParseException ex) {
-                    Logger.getLogger(PanelMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                if (msg.startsWith("setPlaylist")) {
-                    setPlaylist(msg.substring("setPlaylist".length()));
-                } else if (msg.startsWith("setGenre")) {
-                    setGenre(msg.substring("setGenre".length()));
-                } else if (msg.startsWith("toggleTag")) {
-                    if (displayedFile.isFromLibrary()) {
-                        String tag = msg.substring("toggleTag".length());
-                        displayedFile.toggleTag(tag);
-                        ArrayList<FileInfoInt> temp = new ArrayList<>();
-                        temp.add(displayedFile);
-                        Jamuz.getDb().fileTag().lock().update(temp, null);
-                        displayTags();
-                    }
-                } else {
-                    switch (msg) {
-                        //TODO: Say rating as an option 
-                        case "setRating1":
-                            setRating(1, false);
-                            break;
-                        case "setRating2":
-                            setRating(2, false);
-                            break;
-                        case "setRating3":
-                            setRating(3, false);
-                            break;
-                        case "setRating4":
-                            setRating(4, false);
-                            break;
-                        case "setRating5":
-                            setRating(5, false);
-                            break;
-                        case "previousTrack":
-                            pressButton(jButtonPlayerPrevious);
-                            break;
-                        case "nextTrack":
-                            pressButton(jButtonPlayerNext);
-                            break;
-                        case "playTrack":
-                            pressButton(jButtonPlayerPlay);
-                            break;
-                        case "clearTracks":
-                            pressButton(jButtonPlayerClear);
-                            break;
-                        case "forward":
-                            forward();
-                            break;
-                        case "rewind":
-                            rewind();
-                            break;
-                        case "pullup":
-                            moveCursor(0);
-                            break;
-                        case "volUp":
-                            jSpinnerVolume.setValue(
-                                    (float) jSpinnerVolume.getValue() + 5.0f);
-                            break;
-                        case "volDown":
-                            jSpinnerVolume.setValue(
-                                    (float) jSpinnerVolume.getValue() - 5.0f);
-                            break;
-                        default:
-                            Jamuz.getLogger().warning(msg);
-                            break;
-                    }
+            public void received(String action, String value) {
+
+                switch (action) {
+                    case "setPlaylist":
+                        setPlaylist(value);
+                        break;
+                    case "setGenre":
+                        setGenre(value);
+                        break;
+                    case "toggleTag":
+                        if (displayedFile.isFromLibrary()) {
+                            displayedFile.toggleTag(value);
+                            ArrayList<FileInfoInt> temp = new ArrayList<>();
+                            temp.add(displayedFile);
+                            Jamuz.getDb().fileTag().lock().update(temp, null);
+                            displayTags();
+                        }
+                        break;
+                    case "setRating":
+                        setRating(Integer.parseInt(value), false);
+                        break;
+                    case "previousTrack":
+                        pressButton(jButtonPlayerPrevious);
+                        break;
+                    case "nextTrack":
+                        pressButton(jButtonPlayerNext);
+                        break;
+                    case "playTrack":
+                        pressButton(jButtonPlayerPlay);
+                        break;
+                    case "clearTracks":
+                        pressButton(jButtonPlayerClear);
+                        break;
+                    case "forward":
+                        forward();
+                        break;
+                    case "rewind":
+                        rewind();
+                        break;
+                    case "pullup":
+                        //FIXME! How to trigger ?
+                        moveCursor(0);
+                        break;
+                    case "volUp":
+                        jSpinnerVolume.setValue(
+                                (float) jSpinnerVolume.getValue() + 5.0f);
+                        break;
+                    case "volDown":
+                        jSpinnerVolume.setValue(
+                                (float) jSpinnerVolume.getValue() - 5.0f);
+                        break;
+                    default:
+                        Jamuz.getLogger().log(Level.WARNING, "{0}:{1}", new Object[]{action, value});
+                        break;
                 }
             }
         });
@@ -389,7 +363,7 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
     private void sendTrackToRemote() {
-        //FIXME
+        //FIXME !!! Send
 //		panelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString(), jSliderPlayerLength.getValue());
     }
 
