@@ -225,69 +225,58 @@ public class PanelMain extends javax.swing.JFrame {
         panelStats.initExtended();
         panelSelect.initExtended(panelSlsk);
         panelPlaylists.initExtended(panelSlsk);
-        panelRemote.initExtended(this, new ICallBackServer() {
-            @Override
-            public void received(String action, String value) {
-
-                // FIXME ! For "setGenre", "toggleTag" and "setRating", return new value so it can be updated on android
-                
-                switch (action) {
-                    case "setPlaylist":
-                        //FIXME ! Test, need to get them first
-                        setPlaylist(value);
-                        break;
-                    case "setGenre":
-                        //FIXME ! Test
-                        setGenre(value);
-                        break;
-                    case "toggleTag":
-                        //FIXME ! Test
-                        if (displayedFile.isFromLibrary()) {
-                            displayedFile.toggleTag(value);
-                            ArrayList<FileInfoInt> temp = new ArrayList<>();
-                            temp.add(displayedFile);
-                            Jamuz.getDb().fileTag().lock().update(temp, null);
-                            displayTags();
-                        }
-                        break;
-                    case "setRating":
-                        //FIXME ! Test
-                        setRating(Integer.parseInt(value), false);
-                        break;
-                    case "previousTrack":
-                        pressButton(jButtonPlayerPrevious);
-                        break;
-                    case "nextTrack":
-                        pressButton(jButtonPlayerNext);
-                        break;
-                    case "playTrack":
-                        pressButton(jButtonPlayerPlay);
-                        break;
-                    case "clearTracks":
-                        //FIXME ! Can this be reached ?
-                        pressButton(jButtonPlayerClear);
-                        break;
-                    case "forward":
-                        forward();
-                        break;
-                    case "rewind":
-                        rewind();
-                        break;
-                    case "pullup":
-                        moveCursor(0);
-                        break;
-                    case "volUp":
-                        jSpinnerVolume.setValue(
-                                (float) jSpinnerVolume.getValue() + 5.0f);
-                        break;
-                    case "volDown":
-                        jSpinnerVolume.setValue(
-                                (float) jSpinnerVolume.getValue() - 5.0f);
-                        break;
-                    default:
-                        Jamuz.getLogger().log(Level.WARNING, "{0}:{1}", new Object[]{action, value});
-                        break;
-                }
+        panelRemote.initExtended(this, (String action, String value) -> {
+            switch (action) {
+                case "setPlaylist":
+                    setPlaylist(value);
+                    break;
+                case "setGenre":
+                    setGenre(value);
+                    break;
+                case "toggleTag":
+                    if (displayedFile.isFromLibrary()) {
+                        displayedFile.toggleTag(value);
+                        ArrayList<FileInfoInt> temp = new ArrayList<>();
+                        temp.add(displayedFile);
+                        Jamuz.getDb().fileTag().lock().update(temp, null);
+                        displayTags();
+                    }
+                    break;
+                case "setRating":
+                    setRating(Integer.parseInt(value), false);
+                    break;
+                case "previousTrack":
+                    pressButton(jButtonPlayerPrevious);
+                    break;
+                case "nextTrack":
+                    pressButton(jButtonPlayerNext);
+                    break;
+                case "playTrack":
+                    pressButton(jButtonPlayerPlay);
+                    break;
+                case "clearTracks":
+                    pressButton(jButtonPlayerClear);
+                    break;
+                case "forward":
+                    forward();
+                    break;
+                case "rewind":
+                    rewind();
+                    break;
+                case "pullup":
+                    moveCursor(0);
+                    break;
+                case "volUp":
+                    jSpinnerVolume.setValue(
+                            (float) jSpinnerVolume.getValue() + 5.0f);
+                    break;
+                case "volDown":
+                    jSpinnerVolume.setValue(
+                            (float) jSpinnerVolume.getValue() - 5.0f);
+                    break;
+                default:
+                    Jamuz.getLogger().log(Level.WARNING, "{0}:{1}", new Object[]{action, value});
+                    break;
             }
         });
         panelVideo.initExtended(this);
@@ -336,7 +325,6 @@ public class PanelMain extends javax.swing.JFrame {
         queueModel.next();
     }
 
-    //FIXME ! Adapt and use the 4 following methods
     private void setPlaylist(String playlist) {
         int index = -1;
         int i = 0;
@@ -357,20 +345,13 @@ public class PanelMain extends javax.swing.JFrame {
     private void setRating(int rating, boolean sayRated) {
         if (displayedFile.isFromLibrary()) {
             jComboBoxPlayerRating.setSelectedIndex(rating);
-            sendTrackToRemote();
         }
     }
 
     private void setGenre(String genre) {
         if (displayedFile.isFromLibrary()) {
             jComboBoxPlayerGenre.setSelectedItem(genre);
-            sendTrackToRemote();
         }
-    }
-
-    private void sendTrackToRemote() {
-        //FIXME !!! Send
-//		panelRemote.send(displayedFile, jComboBoxPlaylist.getSelectedItem().toString(), jSliderPlayerLength.getValue());
     }
 
     /**
@@ -1548,6 +1529,10 @@ public class PanelMain extends javax.swing.JFrame {
             }
         }
         return list;
+    }
+
+    public static String getSelectPlaylist() {
+        return jComboBoxPlaylist.getSelectedItem().toString();
     }
 
     //TODO: Move to a dedicated class

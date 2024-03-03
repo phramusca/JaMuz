@@ -99,7 +99,6 @@ public class Server {
             String action = (String) req.body().get("action");
             String value = (String) req.body().getOrDefault("value", "");
             callBackServer.received(action, value);
-            //FIXME ! Need to return a body in some cases
             res.sendStatus(Status._200.getCode());
         });
 
@@ -191,16 +190,15 @@ public class Server {
             res.send(obj.toJSONString());
         });
 
-        //FIXME ! Call this !!
         app.get("/playlists", ((req, res) -> {
             JSONArray list = new JSONArray();
             for (String playlist : PanelMain.getPlaylists()) {
                 list.add(playlist);
             }
             JSONObject obj = new JSONObject();
-            obj.put("type", "playlists");
             obj.put("playlists", list);
             obj.put("selectedPlaylist", PanelMain.getSelectPlaylist());
+            //FIXMZ! Include displayed fileId
             res.send(obj.toJSONString());
         }));
 
