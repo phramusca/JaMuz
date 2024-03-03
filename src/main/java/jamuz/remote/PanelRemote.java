@@ -67,8 +67,9 @@ public class PanelRemote extends javax.swing.JPanel {
 	/**
 	 *
 	 * @param parent
+     * @param callBackServer
 	 */
-	public void initExtended(Frame parent) {
+	public void initExtended(Frame parent, ICallBackServer callBackServer) {
 		this.parent = parent;
 		boolean onStartup = Boolean.parseBoolean(Jamuz.getOptions().get("server.on.startup", "false"));
 		jCheckBoxServerStartOnStartup.setSelected(onStartup);
@@ -79,7 +80,7 @@ public class PanelRemote extends javax.swing.JPanel {
         String getPort = Jamuz.getOptions().get("server.port", "2013");
 		int port = getPort.isBlank()?2013:Integer.parseInt(Jamuz.getOptions().get("server.port", "2013"));
 		jSpinnerPort.setValue(port);
-		server = new Server(port);
+		server = new Server(port, callBackServer);
 
 		jTableRemote.setModel(server.getTableModel());
 		jTableRemote.setRowSorter(null);

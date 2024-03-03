@@ -61,17 +61,20 @@ public class Server {
     private int port;
     private final TableModelRemote tableModel; //contains clients info from database
     Queue<SseClient> sseClients = new ConcurrentLinkedQueue<>();
+    private final ICallBackServer callBackServer;
 
     /**
      *
      * @param port
+     * @param callBackServer
      */
-    public Server(int port) {
+    public Server(int port, ICallBackServer callBackServer) {
         this.port = port;
         tableModel = new TableModelRemote();
         tableModel.setColumnNames();
+        this.callBackServer = callBackServer;
     }
-    
+
     public void sendSseEvent(String event, String data, String id) {
         for (SseClient sseClient : sseClients) {
             sseClient.sendEvent(event, data, id);
@@ -83,37 +86,21 @@ public class Server {
      * @return
      */
     public boolean connect() {
-        //Start REST Server Express, for Sync process
         app = new Express();
 
 //https://medium.com/@anugrahasb1997/implementing-server-sent-events-sse-in-android-with-okhttp-eventsource-226dc9b2599d
         app.sse("/sse", client -> {
-//                client.keepAlive();
             client.onClose(() -> sseClients.remove(client));
             sseClients.add(client);
         });
 
-        //FIXME !! Make API to control playback: play/pause, next track, ...
-        
-        app.get("/play", (req, res) -> {
-//            String get = res.get("idFile");
-//            FileInfoInt file = Jamuz.getDb().file().getFile(Integer.parseInt(get), "");
-//            if (mplayer != null) {
-//                mplayer.stop();
-//            }
-//            mplayer.play(file.getFullPath().getAbsolutePath(), false);
+        app.post("/action", (req, res) -> {
+            callBackServer.received(new Gson().toJson(req.body()));
+            
+            //FIXME ! Need to return a body in some cases
             res.sendStatus(Status._200.getCode());
         });
 
-        app.get("/stop", (req, res) -> {
-//            if (mplayer != null) {
-//                mplayer.stop();
-//            }
-            res.sendStatus(Status._200.getCode());
-        });
-
-//        app.get("/playingFile", handler)
-        
         app.use((req, res) -> {
             String login = req.get("login");
 
@@ -226,30 +213,30 @@ public class Server {
                         sources, false, false, newTracks,
                         tableModel.getClient(login).getProgressBar(),
                         new ICallBackMerge() {
-                            @Override
-                            public void completed(ArrayList<FileInfo> errorList, ArrayList<FileInfo> mergeListDbSelected, String popupMsg, String mergeReport) {
-                                Jamuz.getLogger().info(popupMsg);
-                                setStatus(login, popupMsg);
-                                JSONObject obj = new JSONObject();
-                                obj.put("type", "mergeListDbSelected");
-                                JSONArray jsonArray = new JSONArray();
-                                for (int i = 0; i < mergeListDbSelected.size(); i++) {
-                                    FileInfo fileInfo = mergeListDbSelected.get(i);
-                                    if (!destExt.isBlank() && !fileInfo.getExt().equals(destExt)) {
-                                        //Note: No need to get info from fileTranscoded table since only stats are updated on remote
-                                        fileInfo.setExt(destExt);
-                                    }
-                                    jsonArray.add(fileInfo.toMap());
-                                }
-                                obj.put("files", jsonArray);
-                                res.send(obj.toJSONString());
+                    @Override
+                    public void completed(ArrayList<FileInfo> errorList, ArrayList<FileInfo> mergeListDbSelected, String popupMsg, String mergeReport) {
+                        Jamuz.getLogger().info(popupMsg);
+                        setStatus(login, popupMsg);
+                        JSONObject obj = new JSONObject();
+                        obj.put("type", "mergeListDbSelected");
+                        JSONArray jsonArray = new JSONArray();
+                        for (int i = 0; i < mergeListDbSelected.size(); i++) {
+                            FileInfo fileInfo = mergeListDbSelected.get(i);
+                            if (!destExt.isBlank() && !fileInfo.getExt().equals(destExt)) {
+                                //Note: No need to get info from fileTranscoded table since only stats are updated on remote
+                                fileInfo.setExt(destExt);
                             }
-                            
-                            @Override
-                            public void refresh() {
-                                tableModel.fireTableDataChanged();
-                            }
-                        });
+                            jsonArray.add(fileInfo.toMap());
+                        }
+                        obj.put("files", jsonArray);
+                        res.send(obj.toJSONString());
+                    }
+
+                    @Override
+                    public void refresh() {
+                        tableModel.fireTableDataChanged();
+                    }
+                });
                 processMerge.start();
                 processMerge.join();
             } catch (InterruptedException | ParseException ex) {
