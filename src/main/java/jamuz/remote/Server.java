@@ -19,6 +19,7 @@ package jamuz.remote;
 //FIXME ! Do not popup errors when on server
 // => either send errors to client and/or log
 // => incl. SQL errors: see repercussions elsewhere in code
+import com.google.gson.Gson;
 import express.Express;
 import express.http.Status;
 import io.javalin.http.sse.SseClient;
@@ -55,6 +56,7 @@ import org.json.simple.parser.ParseException;
  */
 public class Server {
 
+    //https://github.com/Aarkan1/java-express
     private Express app;
     private int port;
     private final TableModelRemote tableModel; //contains clients info from database
@@ -91,7 +93,7 @@ public class Server {
             sseClients.add(client);
         });
 
-        //FIXME ! Make API to control playback: play/pause, next track, ...
+        //FIXME !! Make API to control playback: play/pause, next track, ...
         
         app.get("/play", (req, res) -> {
 //            String get = res.get("idFile");
@@ -202,7 +204,7 @@ public class Server {
         app.post("/files", (req, res) -> {
             try {
                 String login = req.get("login");
-                String body = req.body().toString(); //getBody();
+                String body = new Gson().toJson(req.body());
                 JSONObject jsonObject = (JSONObject) new JSONParser().parse(body);
                 setStatus(login, "Received files to merge");
                 ArrayList<FileInfo> newTracks = new ArrayList<>();
@@ -217,35 +219,37 @@ public class Server {
                 setStatus(login, "Starting merge");
                 Device device = tableModel.getClient(login).getDevice();
                 String destExt = device.getPlaylist().getDestExt();
-                new ProcessMerge("Thread.Server.ProcessMerge." + login,
+                ProcessMerge processMerge = new ProcessMerge("Thread.Server.ProcessMerge." + login,
                         sources, false, false, newTracks,
                         tableModel.getClient(login).getProgressBar(),
                         new ICallBackMerge() {
-                    @Override
-                    public void completed(ArrayList<FileInfo> errorList, ArrayList<FileInfo> mergeListDbSelected, String popupMsg, String mergeReport) {
-                        Jamuz.getLogger().info(popupMsg);
-                        setStatus(login, popupMsg);
-                        JSONObject obj = new JSONObject();
-                        obj.put("type", "mergeListDbSelected");
-                        JSONArray jsonArray = new JSONArray();
-                        for (int i = 0; i < mergeListDbSelected.size(); i++) {
-                            FileInfo fileInfo = mergeListDbSelected.get(i);
-                            if (!destExt.isBlank() && !fileInfo.getExt().equals(destExt)) {
-                                //Note: No need to get info from fileTranscoded table since only stats are updated on remote
-                                fileInfo.setExt(destExt);
+                            @Override
+                            public void completed(ArrayList<FileInfo> errorList, ArrayList<FileInfo> mergeListDbSelected, String popupMsg, String mergeReport) {
+                                Jamuz.getLogger().info(popupMsg);
+                                setStatus(login, popupMsg);
+                                JSONObject obj = new JSONObject();
+                                obj.put("type", "mergeListDbSelected");
+                                JSONArray jsonArray = new JSONArray();
+                                for (int i = 0; i < mergeListDbSelected.size(); i++) {
+                                    FileInfo fileInfo = mergeListDbSelected.get(i);
+                                    if (!destExt.isBlank() && !fileInfo.getExt().equals(destExt)) {
+                                        //Note: No need to get info from fileTranscoded table since only stats are updated on remote
+                                        fileInfo.setExt(destExt);
+                                    }
+                                    jsonArray.add(fileInfo.toMap());
+                                }
+                                obj.put("files", jsonArray);
+                                res.send(obj.toJSONString());
                             }
-                            jsonArray.add(fileInfo.toMap());
-                        }
-                        obj.put("files", jsonArray);
-                        res.send(obj.toJSONString());
-                    }
-
-                    @Override
-                    public void refresh() {
-                        tableModel.fireTableDataChanged();
-                    }
-                }).start();
-            } catch (ParseException ex) {
+                            
+                            @Override
+                            public void refresh() {
+                                tableModel.fireTableDataChanged();
+                            }
+                        });
+                processMerge.start();
+                processMerge.join();
+            } catch (InterruptedException | ParseException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 res.sendStatus(Status._500.getCode()); //FIXME Z Return proper error
             }
