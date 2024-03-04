@@ -187,7 +187,7 @@ public class Server {
             res.send(obj.toJSONString());
         });
 
-        app.get("/playlists", ((req, res) -> {
+        app.get("/playing", ((req, res) -> {
             JSONArray list = new JSONArray();
             for (String playlist : PanelMain.getPlaylists()) {
                 list.add(playlist);
@@ -195,7 +195,9 @@ public class Server {
             JSONObject obj = new JSONObject();
             obj.put("playlists", list);
             obj.put("selectedPlaylist", PanelMain.getSelectPlaylist());
-            //FIXME ! Include displayed fileId
+            
+            int idFile = callBackServer.getIdFile();
+            obj.put("idFile", idFile);
             res.send(obj.toJSONString());
         }));
 
