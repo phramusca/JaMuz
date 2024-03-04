@@ -19,7 +19,6 @@ package jamuz.remote;
 //FIXME ! Do not popup errors when on server
 // => either send errors to client and/or log
 // => incl. SQL errors: see repercussions elsewhere in code
-import com.google.gson.Gson;
 import express.Express;
 import express.http.Status;
 import io.javalin.http.sse.SseClient;
@@ -48,8 +47,6 @@ import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -198,7 +195,7 @@ public class Server {
             JSONObject obj = new JSONObject();
             obj.put("playlists", list);
             obj.put("selectedPlaylist", PanelMain.getSelectPlaylist());
-            //FIXMZ! Include displayed fileId
+            //FIXME ! Include displayed fileId
             res.send(obj.toJSONString());
         }));
 
@@ -206,14 +203,12 @@ public class Server {
         app.post("/files", (req, res) -> {
             try {
                 String login = req.get("login");
-                //FIXME ! Use Gson power instead of converting twice and looping
-                String body = new Gson().toJson(req.body());
-                JSONObject jsonObject = (JSONObject) new JSONParser().parse(body);
                 setStatus(login, "Received files to merge");
                 ArrayList<FileInfo> newTracks = new ArrayList<>();
-                JSONArray files = (JSONArray) jsonObject.get("files");
+                
+                ArrayList files = (ArrayList) req.body().get("files");
                 for (int i = 0; i < files.size(); i++) {
-                    JSONObject obj = (JSONObject) files.get(i);
+                    LinkedHashMap obj = (LinkedHashMap) files.get(i);
                     FileInfo file = new FileInfo(login, obj);
                     newTracks.add(file);
                 }
@@ -252,7 +247,7 @@ public class Server {
                 });
                 processMerge.start();
                 processMerge.join();
-            } catch (InterruptedException | ParseException ex) {
+            } catch (InterruptedException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 res.sendStatus(Status._500.getCode()); //FIXME Z Return proper error
             }

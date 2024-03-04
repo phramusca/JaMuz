@@ -21,11 +21,11 @@ import jamuz.utils.Utils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 /**
  * Audio file information
@@ -515,18 +515,18 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	/**
 	 *
 	 * @param sourceName
-	 * @param file
+	 * @param map
 	 */
-	public FileInfo(String sourceName, JSONObject file) {
-		this(sourceName, (String) file.get("path"));
-		idFile = (int) (long) file.get("idFile");
-		rating = (int) (long) file.get("rating");
-		addedDate = getDate(file, "addedDate");
-		lastPlayed = getDate(file, "lastPlayed");
-		playCounter = (int) (long) file.get("playCounter");
-		genre = (String) file.get("genre");
+	public FileInfo(String sourceName, LinkedHashMap map) {
+		this(sourceName, (String) map.get("path"));
+		idFile = (int) map.get("idFile");
+		rating = (int) map.get("rating");
+		addedDate = getDate(map, "addedDate");
+		lastPlayed = getDate(map, "lastPlayed");
+		playCounter = (int) map.get("playCounter");
+		genre = (String) map.get("genre");
 
-		JSONArray jsonTags = (JSONArray) file.get("tags");
+		ArrayList jsonTags = (ArrayList) map.get("tags");
 		tags = new ArrayList<>();
 		for (int i = 0; i < jsonTags.size(); i++) {
 			String tag = (String) jsonTags.get(i);
@@ -535,12 +535,12 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	}
 
 	/**
-	 * @param jsonObject the one including date to get
+	 * @param map the one including date to get
 	 * @param id id where to get date from file
 	 * @return Date from jsonObject
 	 */
-	private Date getDate(JSONObject jsonObject, String id) {
-		String dateStr = (String) jsonObject.get(id);
+	private Date getDate(LinkedHashMap map, String id) {
+		String dateStr = (String) map.get(id);
 		return DateTime.parseSqlUtc(dateStr);
 	}
 
@@ -549,7 +549,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 *
 	 * @param relativeFullPath
 	 */
-	public void setPath(String relativeFullPath) {
+	public final void setPath(String relativeFullPath) {
 		this.relativeFullPath = FilenameUtils.separatorsToSystem(relativeFullPath);
 		this.relativePath = FilenameUtils.getFullPath(this.relativeFullPath);
 		this.filename = FilenameUtils.getName(this.relativeFullPath);
