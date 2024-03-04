@@ -33,7 +33,6 @@ import jamuz.process.check.FolderInfo;
 import jamuz.process.check.PanelCheck;
 import jamuz.process.merge.PanelMerge;
 import jamuz.process.sync.PanelSync;
-import jamuz.remote.ICallBackServer;
 import jamuz.utils.Dependencies;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -90,7 +89,7 @@ public class PanelMain extends javax.swing.JFrame {
         return queueModel;
     }
 
-    private static Mplayer MPLAYER;
+    private static Mplayer mplayer;
 
     /**
      *
@@ -180,8 +179,7 @@ public class PanelMain extends javax.swing.JFrame {
         tf.setEditable(false);
         tf.setBackground(Color.GRAY);
 
-        MPLAYER = new Mplayer();
-
+        mplayer = new Mplayer();
         MPlaybackListener mPlaybackListener = new MPlaybackListener() {
             @Override
             public void volumeChanged(float volume) {
@@ -214,7 +212,7 @@ public class PanelMain extends javax.swing.JFrame {
             }
         };
 
-        MPLAYER.addListener(mPlaybackListener);
+        mplayer.addListener(mPlaybackListener);
 
         //Init tabs
         panelOptions.initExtended(this);
@@ -1139,7 +1137,7 @@ public class PanelMain extends javax.swing.JFrame {
         String audioFileName = myFileInfo.getFullPath().getAbsolutePath();
         boolean enablejSliderPlayerLength = true;
 
-        MPLAYER.play(audioFileName, resume);
+        mplayer.play(audioFileName, resume);
 
         String lyrics = myFileInfo.getLyrics();
         Color textColor = Color.RED;
@@ -1181,8 +1179,8 @@ public class PanelMain extends javax.swing.JFrame {
      *
      */
     public static void stopMplayer() {
-        if (MPLAYER != null) {
-            MPLAYER.stop();
+        if (mplayer != null) {
+            mplayer.stop();
         }
     }
 
@@ -1194,7 +1192,7 @@ public class PanelMain extends javax.swing.JFrame {
         jSliderPlayerLength.setEnabled(false);
         queueModel.removeBullet();
 
-        MPLAYER.pause();
+        mplayer.pause();
 
         queueModel.setPlayingIndex(-1);
         jButtonPlayerPlay.setText(Inter.get("Button.Play"));  //NOI18N
@@ -1257,15 +1255,15 @@ public class PanelMain extends javax.swing.JFrame {
         int position = source.getValue();
         if (!source.getValueIsAdjusting()) {
             if (isManual) {
-                MPLAYER.setPosition(position);
+                mplayer.setPosition(position);
 //                mp3Player.setPosition(position);
-                MPLAYER.positionLock = false;
+                mplayer.positionLock = false;
 //				mp3Player.positionLock = false;
             }
         } else {
             jLabelPlayerTimeEllapsed.setText(StringManager.secondsToMMSS(position));
             //TODO: Use a real java Lock
-            MPLAYER.positionLock = true;
+            mplayer.positionLock = true;
 //			mp3Player.positionLock = true;
         }
     }//GEN-LAST:event_jSliderPlayerLengthStateChanged
@@ -1418,7 +1416,7 @@ public class PanelMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonTagsActionPerformed
 
     private void jSpinnerVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerVolumeStateChanged
-        MPLAYER.setVolume((float) jSpinnerVolume.getValue());
+        mplayer.setVolume((float) jSpinnerVolume.getValue());
     }//GEN-LAST:event_jSpinnerVolumeStateChanged
 
     /**
