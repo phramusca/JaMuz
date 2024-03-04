@@ -22,4 +22,6 @@ package jamuz.remote;
  */
 public interface ICallBackServer {
     public void received(String action, String value);
+
+    public int getIdFile();
 }

@@ -33,6 +33,7 @@ import jamuz.process.check.FolderInfo;
 import jamuz.process.check.PanelCheck;
 import jamuz.process.merge.PanelMerge;
 import jamuz.process.sync.PanelSync;
+import jamuz.remote.ICallBackServer;
 import jamuz.utils.Dependencies;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -223,58 +224,72 @@ public class PanelMain extends javax.swing.JFrame {
         panelStats.initExtended();
         panelSelect.initExtended(panelSlsk);
         panelPlaylists.initExtended(panelSlsk);
-        panelRemote.initExtended(this, (String action, String value) -> {
-            switch (action) {
-                case "setPlaylist":
-                    setPlaylist(value);
-                    break;
-                case "setGenre":
-                    setGenre(value);
-                    break;
-                case "toggleTag":
-                    if (displayedFile.isFromLibrary()) {
-                        displayedFile.toggleTag(value);
-                        ArrayList<FileInfoInt> temp = new ArrayList<>();
-                        temp.add(displayedFile);
-                        Jamuz.getDb().fileTag().lock().update(temp, null);
-                        displayTags();
-                    }
-                    break;
-                case "setRating":
-                    setRating(Integer.parseInt(value), false);
-                    break;
-                case "previousTrack":
-                    pressButton(jButtonPlayerPrevious);
-                    break;
-                case "nextTrack":
-                    pressButton(jButtonPlayerNext);
-                    break;
-                case "playTrack":
-                    pressButton(jButtonPlayerPlay);
-                    break;
-                case "clearTracks":
-                    pressButton(jButtonPlayerClear);
-                    break;
-                case "forward":
-                    forward();
-                    break;
-                case "rewind":
-                    rewind();
-                    break;
-                case "pullup":
-                    moveCursor(0);
-                    break;
-                case "volUp":
-                    jSpinnerVolume.setValue(
-                            (float) jSpinnerVolume.getValue() + 5.0f);
-                    break;
-                case "volDown":
-                    jSpinnerVolume.setValue(
-                            (float) jSpinnerVolume.getValue() - 5.0f);
-                    break;
-                default:
-                    Jamuz.getLogger().log(Level.WARNING, "{0}:{1}", new Object[]{action, value});
-                    break;
+        panelRemote.initExtended(this, new ICallBackServer() {
+            @Override
+            public void received(String action, String value) {
+                switch (action) {
+                    case "setPlaylist":
+                        setPlaylist(value);
+                        break;
+                    case "setGenre":
+                        setGenre(value);
+                        break;
+                    case "toggleTag":
+                        if (displayedFile.isFromLibrary()) {
+                            displayedFile.toggleTag(value);
+                            ArrayList<FileInfoInt> temp = new ArrayList<>();
+                            temp.add(displayedFile);
+                            Jamuz.getDb().fileTag().lock().update(temp, null);
+                            displayTags();
+                        }
+                        break;
+                    case "setRating":
+                        setRating(Integer.parseInt(value), false);
+                        break;
+                    case "previousTrack":
+                        pressButton(jButtonPlayerPrevious);
+                        break;
+                    case "nextTrack":
+                        pressButton(jButtonPlayerNext);
+                        break;
+                    case "playTrack":
+                        pressButton(jButtonPlayerPlay);
+                        break;
+                    case "clearTracks":
+                        pressButton(jButtonPlayerClear);
+                        break;
+                    case "forward":
+                        forward();
+                        break;
+                    case "rewind":
+                        rewind();
+                        break;
+                    case "pullup":
+                        moveCursor(0);
+                        break;
+                    case "volUp":
+                        jSpinnerVolume.setValue(
+                                (float) jSpinnerVolume.getValue() + 5.0f);
+                        break;
+                    case "volDown":
+                        jSpinnerVolume.setValue(
+                                (float) jSpinnerVolume.getValue() - 5.0f);
+                        break;
+                    default:
+                        Jamuz.getLogger().log(Level.WARNING, "{0}:{1}", new Object[]{action, value});
+                        break;
+                }
+            }
+
+            @Override
+            public int getIdFile() {
+                //FIXME ! We don't want the playing song here (as null when on pause)
+                //, but the one ready to play, or playing
+                if (queueModel.getPlayingSong()!=null 
+                        && queueModel.getPlayingSong().getFile().isFromLibrary()) {
+                    return queueModel.getPlayingSong().getFile().getIdFile();
+                }
+                return -1;
             }
         });
         panelVideo.initExtended(this);
