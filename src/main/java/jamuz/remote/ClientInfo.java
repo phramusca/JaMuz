@@ -118,6 +118,8 @@ public class ClientInfo {
 		return isConnected;
 	}
 	
+    
+    //FIXME ! Set this on when sse is connected, for 
 	/**
 	 *
 	 * @param connected
@@ -259,7 +261,6 @@ public class ClientInfo {
         hash = 83 * hash + (this.enabled ? 1 : 0);
         hash = 83 * hash + Objects.hashCode(this.status);
         hash = 83 * hash + Objects.hashCode(this.rootPath);
-        hash = 83 * hash + (this.isConnected ? 1 : 0);
         return hash;
     }
 
@@ -279,9 +280,6 @@ public class ClientInfo {
             return false;
         }
         if (this.enabled != other.enabled) {
-            return false;
-        }
-        if (this.isConnected != other.isConnected) {
             return false;
         }
         if (!Objects.equals(this.login, other.login)) {
