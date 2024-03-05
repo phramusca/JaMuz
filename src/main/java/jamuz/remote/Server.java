@@ -88,8 +88,16 @@ public class Server {
 
 //https://medium.com/@anugrahasb1997/implementing-server-sent-events-sse-in-android-with-okhttp-eventsource-226dc9b2599d
         app.sse("/sse", client -> {
-            client.onClose(() -> sseClients.remove(client));
+            String login = client.ctx.req.getHeader("login");
+            ClientInfo clientInfo = tableModel.getClient(login);
+            
+            client.onClose(() -> {
+                //FIXME ! This is never called, but should be !!
+                clientInfo.setConnected(false);
+                sseClients.remove(client);
+            });
             sseClients.add(client);
+            clientInfo.setConnected(true);
         });
 
         app.post("/action", (req, res) -> {
