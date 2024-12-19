@@ -20,11 +20,11 @@ package jamuz.soulseek;
  *
  * @author phramusca <phramusca@gmail.com>
  */
-public class SlskdTokenResponse {
-	public int expires;
-	public int issued;
-	public String name;
-	public int notBefore;
-	public String token;
-	public String tokenType;
-}
+public record SlskdTokenResponse(
+	int expires,
+	int issued,
+	String name,
+	int notBefore,
+	String token,
+	String tokenType
+) {}
