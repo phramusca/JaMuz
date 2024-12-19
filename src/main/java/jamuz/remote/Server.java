@@ -86,19 +86,20 @@ public class Server {
     public boolean connect() {
         app = new Express();
 
-//https://medium.com/@anugrahasb1997/implementing-server-sent-events-sse-in-android-with-okhttp-eventsource-226dc9b2599d
         app.sse("/sse", client -> {
             String login = client.ctx.req.getHeader("login");
             ClientInfo clientInfo = tableModel.getClient(login);
             
             client.onClose(() -> {
                 //FIXME ! This is never called, but should be !!
+                // Is connection really closed ? check it first
                 clientInfo.setConnected(false);
                 sseClients.remove(client);
             });
             sseClients.add(client);
             clientInfo.setConnected(true);
         });
+        //https://medium.com/@anugrahasb1997/implementing-server-sent-events-sse-in-android-with-okhttp-eventsource-226dc9b2599d
 
         app.post("/action", (req, res) -> {
             String action = (String) req.body().get("action");
