@@ -16,6 +16,9 @@
  */
 package jamuz;
 
+//FIXME: Beaucoup de tracks dans JaMuz Remote en status NEW alors que pas sur disque et impossible à retélécharger
+//Peut etre un pb de download par fichier (ou album) qui ne s'est pas bien passé ? (à investiguer)
+
 //----------------------------------------------------------
 // - General TODO:
 //      - TODO: manage database backups in logs
