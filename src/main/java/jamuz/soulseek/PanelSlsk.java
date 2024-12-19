@@ -140,7 +140,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                 SlskdSearchResponse searchResponse = readJson(listFile);
                 if (searchResponse.isCompleted()) {
                     searchResponse.getProgressBar().progress("", 100);
-                    searchResponse.files.forEach(f -> f.getProgressBar().progress("", 100));
+                    searchResponse.getFiles().forEach(f -> f.getProgressBar().progress("", 100));
                 }
                 tableModelResults.addRow(searchResponse);
             }
@@ -198,7 +198,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                                 .stream()
                                 .flatMap(directory -> directory.files.stream()
                                 .filter(downloadFile
-                                        -> searchResponse.files.stream()
+                                        -> searchResponse.getFiles().stream()
                                         .anyMatch(searchFile -> searchFile.filename.equals(downloadFile.filename))
                                 )
                                 )
@@ -235,7 +235,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                                         String subDirectoryName = directory.getLeft();
                                         String filename = directory.getRight();
                                         File sourceFile = new File(FilenameUtils.concat(FilenameUtils.concat(sourcePath, subDirectoryName), filename));
-                                        String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.username + "--" + searchResponse.getPath());
+                                        String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.getUsername() + "--" + searchResponse.getPath());
                                         File destFile = new File(FilenameUtils.concat(FilenameUtils.concat(finalDestination.getValue(), newSubDirectoryName), filename));
                                         if (sourceFile.exists() && (!destFile.exists() || sourceFile.length() != destFile.length())) {
                                             FileUtils.copyFile(sourceFile, destFile);
@@ -286,9 +286,9 @@ public class PanelSlsk extends javax.swing.JPanel {
                     @Override
                     public void run() {
                         stopAndWaitDownloadMonitoring();
-                        for (SlskdSearchFile file : searchResponse.files) {
+                        for (SlskdSearchFile file : searchResponse.getFiles()) {
                             if (file.percentComplete < 100) {
-                                soulseek.deleteTransfer(searchResponse.username, file);
+                                soulseek.deleteTransfer(searchResponse.getUsername(), file);
                             }
                         }
                         soulseek.download(searchResponse);
@@ -316,8 +316,8 @@ public class PanelSlsk extends javax.swing.JPanel {
                                     Inter.get("Label.Confirm"), //NOI18N
                                     JOptionPane.YES_NO_OPTION);
                             if (n == JOptionPane.YES_OPTION) {
-                                for (SlskdSearchFile searchFile : searchResponse.files) {
-                                    soulseek.deleteTransfer(searchResponse.username, searchFile);
+                                for (SlskdSearchFile searchFile : searchResponse.getFiles()) {
+                                    soulseek.deleteTransfer(searchResponse.getUsername(), searchFile);
                                     soulseek.deleteFile(searchFile);
                                 }
                                 File file = getJsonFile(searchResponse);
@@ -686,7 +686,7 @@ public class PanelSlsk extends javax.swing.JPanel {
     }
 
     private File getJsonFile(SlskdSearchResponse searchResponse) {
-        String uniqueFilename = StringManager.removeIllegal(searchResponse.getSearchText() + "_" + searchResponse.getDate() + "_" + searchResponse.username) + ".json";
+        String uniqueFilename = StringManager.removeIllegal(searchResponse.getSearchText() + "_" + searchResponse.getDate() + "_" + searchResponse.getUsername()) + ".json";
         return Jamuz.getFile(uniqueFilename, "data", "cache", "slsk");
     }
 
