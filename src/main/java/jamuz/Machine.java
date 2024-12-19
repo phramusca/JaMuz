@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
- * Options class
+ * Machine class
  *
  * @author phramusca <phramusca@gmail.com>
  */

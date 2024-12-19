@@ -59,7 +59,7 @@ public class Jamuz {
 	private static Machine machine;
 	private static DbConnJaMuz db;
 	private static HashMap<Integer, Playlist> playlists;
-	
+
 	/**
 	 *
 	 * @param appPath
@@ -189,7 +189,7 @@ public class Jamuz {
 		return httpclient;
 	}
 
-	/**
+    /**
 	 *
 	 * @return
 	 */
