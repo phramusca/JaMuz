@@ -29,15 +29,15 @@ import org.apache.commons.io.FilenameUtils;
  * @author phramusca <phramusca@gmail.com>
  */
 public class SlskdSearchResponse {
-	public int fileCount;
-	public List<SlskdSearchFile> files;
-	public boolean hasFreeUploadSlot;
-	public int lockedFileCount;
-	public List<SlskdSearchFile> lockedFiles;
-	public int queueLength;
-	public int token;
-	public double uploadSpeed;
-	public String username;	
+	private int fileCount;
+	private List<SlskdSearchFile> files;
+	private boolean hasFreeUploadSlot;
+	private int lockedFileCount;
+	private List<SlskdSearchFile> lockedFiles;
+	private int queueLength;
+	private int token;
+	private double uploadSpeed;
+	private String username;	
 	private String date = DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN);
     private boolean completed;
     private String searchText;
@@ -169,4 +169,26 @@ public class SlskdSearchResponse {
     void update(String msg, int index) {
         this.progressBar.progress(msg, index);
     }
+
+    public int getQueueLength() {
+        return queueLength;
+    }
+
+    public boolean hasFreeUploadSlot() {
+        return hasFreeUploadSlot;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setFiles(List<SlskdSearchFile> files) {
+        this.files = files;
+    }
+
+    public int setFileCount(int size) {
+        return fileCount;
+    }
+
+    
 }

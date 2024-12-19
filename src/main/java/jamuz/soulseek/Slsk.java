@@ -85,8 +85,8 @@ public class Slsk {
             List<SlskdSearchResponse> groupedResponses = new ArrayList<>();
             for (Map.Entry<String, List<SlskdSearchFile>> entry : pathToFileMap.entrySet()) {
                 SlskdSearchResponse response = pathToResponseMap.get(entry.getKey());
-                response.fileCount = entry.getValue().size();
-                response.files = entry.getValue();
+                response.setFileCount(entry.getValue().size());
+                response.setFiles(entry.getValue());
                 response.setSearchText(query);
                 groupedResponses.add(response);
             }

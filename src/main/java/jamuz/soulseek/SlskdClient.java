@@ -89,7 +89,7 @@ public class SlskdClient {
                     .readTimeout(30, TimeUnit.SECONDS)
                     .build();
 		
-		HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/"+searchResponse.username); //NON-NLS
+		HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/"+searchResponse.getUsername()); //NON-NLS
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
 				.post(RequestBody.create(jsonArray.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
         
@@ -106,7 +106,7 @@ public class SlskdClient {
 	}
     
 	public SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
-        String username = URLEncoder.encode(searchResponse.username, StandardCharsets.UTF_8.toString()); //FIXME Z Use this elsewhere ? Does it work ?
+        String username = URLEncoder.encode(searchResponse.getUsername(), StandardCharsets.UTF_8.toString()); //FIXME Z Use this elsewhere ? Does it work ?
         String url = "transfers/downloads/" + username;
 		String bodyString = getBodyString(url, client);
 		
