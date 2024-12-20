@@ -48,8 +48,8 @@ public class Slsk {
     public Slsk() throws IOException, SlskdClient.ServerException {
         slskdClient = new SlskdClient();
 
-        allowedExtensions = new ArrayList(
-                Arrays.asList(Jamuz.getMachine().getOptionValue("files.audio").split(","))); //NOI18N;
+        String extensions = Jamuz.getMachine().getOptionValue("files.audio");
+        allowedExtensions = extensions != null ? Arrays.asList(extensions.split(",")) : new ArrayList<>();
     }
 
     public List<SlskdSearchResponse> search(String query, ICallBackSearch callBackSearch) {
