@@ -23,20 +23,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
+
+import org.junit.*;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.times;
 
 public class AppVersionTest {
 
@@ -109,9 +102,9 @@ public class AppVersionTest {
 		appVersion.unzipAsset(Mockito.mock(ICallBackVersionCheck.class));
 		assertTrue(appVersion.isUnzippedAssetValid());
 
-		Mockito.verify(mockCallback, Mockito.times(0)).onUnzipCount(Mockito.any());
-		Mockito.verify(mockCallback, Mockito.times(0)).onUnzipStart();
-		Mockito.verify(mockCallback, Mockito.times(0)).onUnzipProgress(Mockito.any(), Mockito.any(), Mockito.anyInt());
+		verify(mockCallback, times(0)).onUnzipCount(any());
+		verify(mockCallback, times(0)).onUnzipStart();
+		verify(mockCallback, times(0)).onUnzipProgress(any(), any(), anyInt());
 	}
 
 	@Test
@@ -123,9 +116,9 @@ public class AppVersionTest {
 
 		appVersion.unzipAsset(mockCallback);
 
-		Mockito.verify(mockCallback, times(1)).onUnzipCount(any());
-		Mockito.verify(mockCallback, times(1)).onUnzipStart();
-		Mockito.verify(mockCallback, atLeastOnce()).onUnzipProgress(any(), any(), anyInt());
+		verify(mockCallback, times(1)).onUnzipCount(any());
+		verify(mockCallback, times(1)).onUnzipStart();
+		verify(mockCallback, atLeastOnce()).onUnzipProgress(any(), any(), anyInt());
 	}
 
 	private File getTestAsset() throws IOException {
