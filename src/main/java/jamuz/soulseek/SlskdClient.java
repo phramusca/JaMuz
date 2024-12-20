@@ -66,7 +66,7 @@ public class SlskdClient {
 			fromJson = gson.fromJson(body, SlskdTokenResponse.class);
 		}
 		
-		TOKEN = fromJson.token;
+		TOKEN = fromJson.token();
 	}
 	
 	//TODO: Use this in a refreshToken
