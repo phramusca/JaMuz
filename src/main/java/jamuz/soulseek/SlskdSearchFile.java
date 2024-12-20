@@ -39,25 +39,24 @@ public class SlskdSearchFile {
 	public boolean isLocked;	
 
     public String id;
-    public String direction="null";
+    public String direction = "null";
     public int startOffset;
-	public String state="null";
-	public String requestedAt="null";
-	public String enqueuedAt="null";
-	public String startedAt="null";
-	public String endedAt="null";
-	public String searchedAt="null";
+	public String state = "null";
+	public String requestedAt = "null";
+	public String enqueuedAt = "null";
+	public String startedAt = "null";
+	public String endedAt = "null";
+	public String searchedAt = "null";
     public double percentComplete;
 	public double averageSpeed;
-//	@Expose(deserialize = false, serialize = false)
 	private transient ProgressBar progressBar = new ProgressBar();
     public int bytesTransferred;
     public int bytesRemaining;
-    public String elapsedTime="null";
-    public String remainingTime="null";
+    public String elapsedTime = "null";
+    public String remainingTime = "null";
 
     public SlskdSearchFile() {
-		this.state="Searched";
+		this.state = "Searched";
         this.progressBar.setMsgMax(500);
 		this.progressBar.setupAsPercentage();
         this.progressBar.setString(state);
@@ -104,7 +103,7 @@ public class SlskdSearchFile {
         this.size = size;
     }
 
-    String getPath() {
+    public String getPath() {
         return FilenameUtils.getFullPathNoEndSeparator(filename);
     }
 
@@ -116,45 +115,43 @@ public class SlskdSearchFile {
         this.progressBar = progressBar;
     }
     
-    void update(SlskdDownloadFile filteredFile) {
-		this.averageSpeed=filteredFile.averageSpeed;
-		this.bytesRemaining=filteredFile.bytesRemaining;
-		this.bytesTransferred=filteredFile.bytesTransferred;
-		this.direction=filteredFile.direction;
-		this.elapsedTime=filteredFile.elapsedTime;
-		this.endedAt=filteredFile.endedAt;
-		this.enqueuedAt=filteredFile.enqueuedAt;
-		this.id=filteredFile.id;
-		this.percentComplete=filteredFile.percentComplete;
-		
-		this.remainingTime=filteredFile.remainingTime;
-		this.requestedAt=filteredFile.requestedAt;
-		this.startOffset=filteredFile.startOffset;
-		this.startedAt=filteredFile.startedAt;
-		this.state=filteredFile.state;
+    public void update(SlskdDownloadFile filteredFile) {
+		this.averageSpeed = filteredFile.averageSpeed;
+		this.bytesRemaining = filteredFile.bytesRemaining;
+		this.bytesTransferred = filteredFile.bytesTransferred;
+		this.direction = filteredFile.direction;
+		this.elapsedTime = filteredFile.elapsedTime;
+		this.endedAt = filteredFile.endedAt;
+		this.enqueuedAt = filteredFile.enqueuedAt;
+		this.id = filteredFile.id;
+		this.percentComplete = filteredFile.percentComplete;
+		this.remainingTime = filteredFile.remainingTime;
+		this.requestedAt = filteredFile.requestedAt;
+		this.startOffset = filteredFile.startOffset;
+		this.startedAt = filteredFile.startedAt;
+		this.state = filteredFile.state;
         
         String msg = state + " (" +
             StringManager.humanReadableByteCount(bytesTransferred, true) + " / " +
                 StringManager.humanReadableByteCount(bytesRemaining, true) + ")";
         
-        if(!elapsedTime.equals("null") && !remainingTime.equals("null")) {
-            msg = msg + " [" + removeDotAndAfter(elapsedTime)+" @ "+StringManager.humanReadableByteCount(averageSpeed, true)+"/s / "+removeDotAndAfter(remainingTime)+"]";
+        if (!elapsedTime.equals("null") && !remainingTime.equals("null")) {
+            msg = msg + " [" + removeDotAndAfter(elapsedTime) + " @ " + StringManager.humanReadableByteCount(averageSpeed, true) + "/s / " + removeDotAndAfter(remainingTime) + "]";
         }
         
 		this.progressBar.progress(msg, (int) Math.round(percentComplete));
 	}
     
-    String getDate() {
+    public String getDate() {
 		String date = 
-				!endedAt.equals("null")?endedAt
-				:!startedAt.equals("null")?startedAt
-				:!enqueuedAt.equals("null")?enqueuedAt
-				:!requestedAt.equals("null")?requestedAt
-				:"--";
-		if(date.equals("--")) {
+				!endedAt.equals("null") ? endedAt
+				: !startedAt.equals("null") ? startedAt
+				: !enqueuedAt.equals("null") ? enqueuedAt
+				: !requestedAt.equals("null") ? requestedAt
+				: "--";
+		if (date.equals("--")) {
 			date = searchedAt;
 		} else {
-			//Parse and convert to local time
 			date = convertDate(date);
 		}
 		return date;
