@@ -62,6 +62,59 @@ public class SlskdSearchFile {
 		this.progressBar.setupAsPercentage();
         this.progressBar.setString(state);
     }
+
+    public SlskdSearchFile(String filename, int bitRate, int length, int size) {
+        this.filename = filename;
+        this.bitRate = bitRate;
+        this.length = length;
+        this.size = size;
+        this.progressBar = new ProgressBar();
+    }
+
+    // Getters and Setters
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public int getBitRate() {
+        return bitRate;
+    }
+
+    public void setBitRate(int bitRate) {
+        this.bitRate = bitRate;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    String getPath() {
+        return FilenameUtils.getFullPathNoEndSeparator(filename);
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public void setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
     
     void update(SlskdDownloadFile filteredFile) {
 		this.averageSpeed=filteredFile.averageSpeed;
@@ -90,18 +143,6 @@ public class SlskdSearchFile {
         
 		this.progressBar.progress(msg, (int) Math.round(percentComplete));
 	}
-    
-	public ProgressBar getProgressBar() {
-		return progressBar;
-	}
-    
-    public String getFilename() {
-        return filename;
-    }
-
-    String getPath() {
-        return FilenameUtils.getFullPathNoEndSeparator(filename);
-    }
     
     String getDate() {
 		String date = 

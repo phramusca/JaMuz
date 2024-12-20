@@ -1,0 +1,91 @@
+{
+    // Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
+    // Pointez pour afficher la description des attributs existants.
+    // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "BundleScanner",
+            "request": "launch",
+            "mainClass": "check.code.BundleScanner",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "jamuz.Main",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "PasswordFieldWithToggle",
+            "request": "launch",
+            "mainClass": "jamuz.gui.swing.PasswordFieldWithToggle",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "JMPlayer",
+            "request": "launch",
+            "mainClass": "jamuz.player.JMPlayer",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "CompareOO",
+            "request": "launch",
+            "mainClass": "test.helpers.CompareOO",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "Creation",
+            "request": "launch",
+            "mainClass": "test.helpers.Creation",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "CompareDB",
+            "request": "launch",
+            "mainClass": "test.tools.CompareDB",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "TestAcoustId",
+            "request": "launch",
+            "mainClass": "test.tools.TestAcoustId",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "ManualTesting",
+            "request": "launch",
+            "mainClass": "tests.functional.ManualTesting",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "TESTreplaygainBrowse",
+            "request": "launch",
+            "mainClass": "tests.functional.TESTreplaygainBrowse",
+            "projectName": "JaMuz"
+        },
+        {
+            "type": "java",
+            "name": "TESTreplaygainRead",
+            "request": "launch",
+            "mainClass": "tests.functional.TESTreplaygainRead",
+            "projectName": "JaMuz"
+        }
+    ]
+}

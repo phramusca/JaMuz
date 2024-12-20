@@ -60,7 +60,7 @@ public class TableModelSlskdSearchTest {
         when(mockResponse.getFiles()).thenReturn(List.of());
         when(mockResponse.getBitrate()).thenReturn(320.0);
         when(mockResponse.getSize()).thenReturn(1024.0);
-        when(mockResponse.getSpeed()).thenReturn((double) 100);
+        when(mockResponse.getUploadSpeed()).thenReturn((double) 100);
         when(mockResponse.hasFreeUploadSlot()).thenReturn(true);
         when(mockResponse.getQueueLength()).thenReturn(5);
         when(mockResponse.getUsername()).thenReturn("user");

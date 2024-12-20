@@ -65,7 +65,7 @@ public class TableModelSlskdSearch extends TableModelGeneric {
             case 3: return searchResponse.getFiles().size();
 			case 4: return searchResponse.getBitrate();
 			case 5: return searchResponse.getSize();
-			case 6: return searchResponse.getSpeed();
+			case 6: return searchResponse.getUploadSpeed();
 			case 7: return searchResponse.hasFreeUploadSlot();
 			case 8: return searchResponse.getQueueLength();
 			case 9: return searchResponse.getUsername();
