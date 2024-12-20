@@ -309,7 +309,7 @@ public class DialogSlsk extends javax.swing.JDialog {
                     setProgress("Searching...");
 
                     List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), (SlskdSearchResult search) -> {
-                        setProgress(search.state + " -- Found " + search.fileCount + " file(s), " + search.responseCount + " response(s).");
+                        setProgress(search.state() + " -- Found " + search.fileCount() + " file(s), " + search.responseCount() + " response(s).");
                     });
                     if(searchResponses!=null) {
                         if(!searchResponses.isEmpty()) {

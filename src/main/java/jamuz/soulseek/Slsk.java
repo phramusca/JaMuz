@@ -55,13 +55,13 @@ public class Slsk {
     public List<SlskdSearchResponse> search(String query, ICallBackSearch callBackSearch) {
         try {
             SlskdSearchResult search = slskdClient.search(query);
-            while (!search.isComplete) {
-                search = slskdClient.getSearch(search.id);
+            while (!search.isComplete()) {
+                search = slskdClient.getSearch(search.id());
                 callBackSearch.searching(search);
                 Thread.sleep(1000);
             }
 
-            List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id);
+            List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id());
 
             // Sort, filter (authorized extensions), and group by path
             Map<String, List<SlskdSearchFile>> pathToFileMap = new HashMap<>();
@@ -90,7 +90,7 @@ public class Slsk {
                 response.setSearchText(query);
                 groupedResponses.add(response);
             }
-            slskdClient.deleteSearch(search.id);
+            slskdClient.deleteSearch(search.id());
 
             return groupedResponses;
         } catch (IOException | SlskdClient.ServerException ex) {
