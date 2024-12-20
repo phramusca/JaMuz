@@ -26,7 +26,8 @@ import java.io.File;
 import javax.swing.JTextField;
 
 /**
- *
+ * Dialog for Soulseek options.
+ * 
  * @author phramusca <phramusca@gmail.com>
  */
 public class DialogSlskOption extends javax.swing.JDialog {
@@ -42,7 +43,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         
-        //Get and display options
+        // Get and display options
         File propertiesFile = Jamuz.getFile("Slsk.properties");
         if(propertiesFile.exists()) {
             options = new Options(propertiesFile.getAbsolutePath());
@@ -223,7 +224,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
                 || !options.get("slsk.password").equals(jTextFieldPassword.getText())
                 || !options.get("slsk.shared.location").equals(jTextFieldSharedLocation.getText()));
         if(reCreate) {
-            //This will be reset to false only when putSharedScan is done
+            // This will be reset to false only when putSharedScan is done
             options.set("slsk.reCreate", String.valueOf(reCreate));     
         }
         options.set("slsk.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
@@ -242,6 +243,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
 	private void getFolder(JTextField textField, String title) {
         Swing.selectFolder(textField, title, true);
     }
+
     /**
 	 * @param parent
      */
