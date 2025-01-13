@@ -37,13 +37,11 @@ layout: default
 
 ## JaMuz Android
 
-<img src="img/android.png" alt="JaMuz Android"> 
-
 An Android **Audio Player** and also a **Remote** for [JaMuz Desktop](#jamuz-desktop).
 
 <div class="carousel-android"></div>
 
-### Installation
+### Installation <img src="img/android.png" alt="JaMuz Android"> 
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/org.phramusca.jamuz/)
 
@@ -76,18 +74,34 @@ Please help out translating by using [WebLate](https://hosted.weblate.org/engage
 
 ## JaMuz Desktop
 
-<img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> 
-
 A **music** library **manager**, **player** and more, for **Linux**, **Raspberry** and **Windows**.
 
 <div class="carousel-desktop"></div>
 
 ### Installation
 
+#### Linux <img src="img/linux.png" alt="Linux">
+
 - Install Java (OpenJDK JRE) >=17
-  - Windows: [Eclipse Temurin OpenJDK17U-jre_x64_windows](https://adoptium.net/fr/temurin/releases/?os=windows&arch=x64&package=jre&version=17) (Pick .msi)
-  - Linux Debian based (Ubuntu, Mint,...): [openjdk-17-jre](apt://openjdk-17-jre)
-  - Raspberry: [Deb installation on Debian or Ubuntu](https://adoptium.net/installation/linux/#_deb_installation_on_debian_or_ubuntu), or in brief:
+  - Debian based (Ubuntu, Mint,...): [openjdk-17-jre](apt://openjdk-17-jre)
+  - Any other case, refer to [Adoptium](https://adoptium.net/installation/)
+- <span id="download-container-jamuz-desktop"></span>
+- Extract 7z archive
+- Double-click on `JaMuz.jar`
+
+#### Windows <img src="img/windows.png" alt="Windows">
+
+- Install Java (OpenJDK JRE) >=17: 
+  - [Eclipse Temurin OpenJDK17U-jre_x64_windows](https://adoptium.net/fr/temurin/releases/?os=windows&arch=x64&package=jre&version=17) (Pick .msi)
+- <span id="download-container-jamuz-desktop"></span>
+- Extract 7z archive
+  - Note: 7z is natively supported since October, 31, 2023 on Windows 11 too (with update [KB5031455](https://support.microsoft.com/en-us/topic/october-31-2023-kb5031455-os-builds-22621-2506-and-22631-2506-preview-6513c5ec-c5a2-4aaf-97f5-44c13d29e0d4)). Otherwise, you need to [install 7-zip](https://www.7-zip.org/).
+- Double-click on `JaMuz.jar`
+
+#### Raspberry <img src="img/raspberry.png" alt="Raspberry">
+
+- Install Java (OpenJDK JRE) >=17
+  - [Deb installation on Debian or Ubuntu](https://adoptium.net/installation/linux/#_deb_installation_on_debian_or_ubuntu), or in brief:
     ```bash
     sudo apt install -y wget apt-transport-https gpg
     sudo wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
@@ -95,11 +109,9 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
     sudo apt update
     sudo apt install temurin-17-jre
     ```
-  - Any other case, refer to [Adoptium](https://adoptium.net/installation/)
 - <span id="download-container-jamuz-desktop"></span>
 - Extract 7z archive
-  - Note: 7z is natively supported on most linux distributions and since October, 31, 2023 on Windows 11 too (with update [KB5031455](https://support.microsoft.com/en-us/topic/october-31-2023-kb5031455-os-builds-22621-2506-and-22631-2506-preview-6513c5ec-c5a2-4aaf-97f5-44c13d29e0d4)). Otherwise, you need to [install 7-zip](https://www.7-zip.org/).
-- Only Raspberry : You will need to manually install dependencies (as raspberry does not support apt:// by default):
+- Manually install dependencies (as raspberry does not support apt:// by default):
     ```bash
     sudo apt install mplayer
     sudo apt install flac

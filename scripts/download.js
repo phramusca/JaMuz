@@ -18,9 +18,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         link.textContent = `Download latest version (${assetName})`;
 
         // Specify the location on the page to append the link
-        const downloadContainer = document.getElementById(repo.containerId);
-        if (downloadContainer) {
-            downloadContainer.appendChild(link);
+        const downloadContainers = document.querySelectorAll(`#${repo.containerId}`);
+        if (downloadContainers.length > 0) {
+            downloadContainers.forEach(container => container.appendChild(link.cloneNode(true)));
         } else {
             // If the specified container doesn't exist, append the link to the body
             document.body.appendChild(link);
