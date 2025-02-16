@@ -38,6 +38,18 @@ public class Dependencies {
 			//FIXME Z Add "aplay" (from Mplayer.getAudioCards())
 		}
 	}
+    
+    public static boolean checkDocker(Component cmpnt) {
+        String url = "https://rancherdesktop.io/";
+		if(OS.isUnix()) {
+            if(check(null, "apt", "", "install packages")) {
+                url = "https://docs.docker.com/engine/install/debian/#install-using-the-repository";
+            } else {
+                url = "https://docs.docker.com/engine/install/";
+            }
+		}
+        return check(cmpnt, "docker", url, "play tracks");
+	}
 	
 	private static boolean check(Component cmpnt, String linuxCommand, String url, String reason) {
 		List<String> cmdArray = new ArrayList<>();

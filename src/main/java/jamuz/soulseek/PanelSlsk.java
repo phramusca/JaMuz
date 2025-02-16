@@ -26,6 +26,7 @@ import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.process.check.Location;
+import jamuz.utils.Dependencies;
 import jamuz.utils.Desktop;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
@@ -515,8 +516,8 @@ public class PanelSlsk extends javax.swing.JPanel {
                 enableGui(false);
                 enableOptions(false);
 
-                //Re-read options as they could have changed
-                if (!readOptions()) {
+                //Re-read options as they could have changed & check docker is available
+                if (!readOptions() || !Dependencies.checkDocker(parent)) {
                     enableStart();
                     return;
                 }

@@ -37,8 +37,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-//FIXME ! Check that docker is installed and if not => https://docs.docker.com/engine/install/ or https://rancherdesktop.io/
-
 /**
  *
  * @author phramusca <phramusca@gmail.com>
