@@ -64,7 +64,7 @@ public class FileInfoTest {
 	@Test
 	public void testClone() throws CloneNotSupportedException {
 		FileInfo fileInfo1 = new FileInfo("source", "path1");
-		FileInfo fileInfo2 = fileInfo1.clone();
+		FileInfo fileInfo2 = (FileInfo) fileInfo1.clone();
 		assertEquals(fileInfo1, fileInfo2);
 		assertNotSame(fileInfo1, fileInfo2);
 	}

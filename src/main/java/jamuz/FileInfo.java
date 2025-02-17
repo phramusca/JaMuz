@@ -33,7 +33,7 @@ import org.json.simple.JSONObject;
  *
  * @author phramusca <phramusca@gmail.com>
  */
-public class FileInfo implements java.lang.Comparable<FileInfo>, Cloneable {
+public class FileInfo implements java.lang.Comparable, Cloneable {
 
 	/**
 	 * file ID in database
@@ -645,8 +645,8 @@ public class FileInfo implements java.lang.Comparable<FileInfo>, Cloneable {
 	 * @return
 	 */
 	@Override
-	public int compareTo(FileInfo o) {
-		return this.relativeFullPath.compareTo(o.relativeFullPath);
+	public int compareTo(Object o) {
+		return (this.relativeFullPath.compareTo(((FileInfo) o).relativeFullPath));
 	}
 
 	/**
@@ -712,8 +712,8 @@ public class FileInfo implements java.lang.Comparable<FileInfo>, Cloneable {
 	 * @throws java.lang.CloneNotSupportedException
 	 */
 	@Override
-	public FileInfo clone() throws CloneNotSupportedException {
-		return (FileInfo) super.clone();
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	/**
