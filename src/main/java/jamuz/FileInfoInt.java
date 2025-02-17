@@ -99,8 +99,8 @@ public class FileInfoInt extends FileInfo {
 
 	public void setStatus(SyncStatus status) {
 		this.status = status;
-	}
-
+		}
+	
     public SyncStatus getStatus() {
         return status;
     }
@@ -1359,8 +1359,9 @@ public class FileInfoInt extends FileInfo {
 	}
 
 	@Override
-	public Map toMap() {
-		Map jsonAsMap = super.toMap();
+	public Map<String, Object> toMap() {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> jsonAsMap = (Map<String, Object>) super.toMap();
 		jsonAsMap.put("size", size);
 		jsonAsMap.put("length", length);
 		jsonAsMap.put("album", album);
