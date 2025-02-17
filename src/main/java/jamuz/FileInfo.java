@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,7 +33,7 @@ import org.json.simple.JSONObject;
  *
  * @author phramusca <phramusca@gmail.com>
  */
-public class FileInfo implements java.lang.Comparable, Cloneable {
+public class FileInfo implements java.lang.Comparable<FileInfo>, Cloneable {
 
 	/**
 	 * file ID in database
@@ -644,8 +645,8 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 * @return
 	 */
 	@Override
-	public int compareTo(Object o) {
-		return (this.relativeFullPath.compareTo(((FileInfo) o).relativeFullPath));
+	public int compareTo(FileInfo o) {
+		return this.relativeFullPath.compareTo(o.relativeFullPath);
 	}
 
 	/**
@@ -701,11 +702,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	@Override
 	public int hashCode() {
-		int hash = 7;
-		hash = 31 * hash
-				+ (null == this.relativeFullPath ? 0
-						: this.relativeFullPath.hashCode());
-		return hash;
+		return Objects.hash(relativeFullPath);
 	}
 
 	/**
@@ -715,8 +712,8 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 * @throws java.lang.CloneNotSupportedException
 	 */
 	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
+	public FileInfo clone() throws CloneNotSupportedException {
+		return (FileInfo) super.clone();
 	}
 
 	/**
