@@ -554,6 +554,9 @@ public class PanelSlsk extends javax.swing.JPanel {
                                     @Override
                                     public void onNext(com.github.dockerjava.api.model.Frame object) {
                                         appendText(new String(object.getPayload()));
+                                        
+                                        //FIXME ! JaMuz: limit the number of lines in slskd logs. This is maybe why gui freezes ater some time !
+                                        // => Write to a log file, with button to open it (with follow option ideally)
                                     }
 
                                     @Override

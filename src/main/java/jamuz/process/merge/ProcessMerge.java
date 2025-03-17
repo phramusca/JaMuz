@@ -470,6 +470,9 @@ public class ProcessMerge extends ProcessAbstract {
 			}
 		} else { //New is by default the one from JaMuz, so not comparing if forcing JaMuz
 			
+            //FIXME ! ne pas modifier le playCounter si pas de changements de lastPlayed (ce qui peut arriver après un timeout dans le merge par ex)
+            // + enlever les popup d'erreur qui peuvent bloquer le merge (ecriture de tags sur des fichiers qu n'existent plus par ex)
+            
 			//Compare playCounter	
 			if(selectedStatSource.getSource().isUpdatePlayCounter()) {
 				//Note: previousPlayCounter (for the selected database) is stored on myFileInfoDbJaMuz
