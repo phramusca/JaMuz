@@ -28,6 +28,7 @@ import org.mockito.MockedStatic;
 class FileInfoIntTest {
 
     private FileInfoInt fileInfoIntFromDb;
+    private FileInfoInt fileInfoIntForScan;
 
     @BeforeEach
     void setUp() {
@@ -49,9 +50,7 @@ class FileInfoIntTest {
                 "test cover hash", CheckedFlag.OK_WARNING, 
                 FolderInfo.CopyRight.NO_SUPPORT, 65, 84, "test toot path", SyncStatus.NEW, "1243-05-30 19:26:42", "test path mbid", new GainValues(12.1f, 53.6f));
         
-        // FIXME: Make other instances for other constructors and test accordingly
-
-
+        fileInfoIntForScan = new FileInfoInt("path/to/file.mp3", "/home/user/music");
     }
 
     @Test
@@ -59,233 +58,17 @@ class FileInfoIntTest {
         GainValues gainValues = new GainValues(12.1f, 53.6f);
         assertEquals(gainValues, fileInfoIntFromDb.getReplayGain(false));
 
-        //FIXME: Test with true (need a mock probably)
-        // assertEquals(gainValues, fileInfoIntFromDb.getReplayGain(true));
+        // Mocking AudioFileIO for readReplayGainFromFlac
+        MockedStatic<AudioFileIO> mockedStatic = Mockito.mockStatic(AudioFileIO.class);
+        mockedStatic.when(() -> AudioFileIO.read(any(File.class))).thenReturn(mock(MP3File.class));
+
+        assertEquals(new GainValues(), fileInfoIntForScan.getReplayGain(false));
+        mockedStatic.close();
+
+        FileInfoInt fileInfoIntMock = mock(FileInfoInt.class);
+        when(fileInfoIntMock.getReplayGain(true)).thenReturn(gainValues);
+        assertEquals(gainValues, fileInfoIntMock.getReplayGain(true));
     }
-
-    //FIXME: Test pathMbId (not used ??)
-
-    //FIXME: Test pathModifDate (not used ??)
-
-    @Test
-    void testGetStatus() {
-        assertEquals(SyncStatus.NEW, fileInfoIntFromDb.getStatus());
-        fileInfoIntFromDb.setStatus(SyncStatus.INFO);
-        assertEquals(SyncStatus.INFO, fileInfoIntFromDb.getStatus());
-    }
-
-    @Test
-    void testGetPercentRated() {
-        assertEquals(84, fileInfoIntFromDb.getPercentRated());
-    }
-
-    @Test
-    void testGetAlbumRating() {
-        assertEquals(65, fileInfoIntFromDb.getAlbumRating());
-    }
-
-    @Test
-    void testGetCopyRight() {
-        assertEquals(FolderInfo.CopyRight.NO_SUPPORT, fileInfoIntFromDb.getCopyRight());
-    }
-
-    @Test
-    void testGetCheckedFlag() {
-        assertEquals(CheckedFlag.OK_WARNING, fileInfoIntFromDb.getCheckedFlag());
-    }
-
-    @Test
-    void testGetCoverHash() {
-        assertEquals("test cover hash", fileInfoIntFromDb.getCoverHash());
-        fileInfoIntFromDb.setCoverHash("testhash");
-        assertEquals("testhash", fileInfoIntFromDb.getCoverHash());
-    }
-
-    @Test
-    void testGetFormattedModifDate() {
-        //FIXME: Test other getters and setters
-        // fileInfoIntFromDb.getFormattedAddedDate();
-
-        assertEquals("2056-11-18 15:34:12", fileInfoIntFromDb.getFormattedModifDate());
-        fileInfoIntFromDb.modifDate = new Date(1861920000000L);
-        assertEquals("2029-01-01 00:00:00", fileInfoIntFromDb.getFormattedModifDate());
-    }
-
-    @Test
-    void testGetLastPlayed() {
-        //FIXME: Test other getters and setters
-        // fileInfoIntFromDb.getFormattedAddedDate();
-
-        assertEquals(DateTime.parseSqlUtc("1956-12-25 22:08:58"), fileInfoIntFromDb.getLastPlayed());
-        fileInfoIntFromDb.lastPlayed = new Date(1861920000000L);
-        assertEquals(DateTime.parseSqlUtc("2029-01-01 00:00:00"), fileInfoIntFromDb.getLastPlayed());
-        fileInfoIntFromDb.setLastPlayed(new Date(1672531200000L));
-        assertEquals(DateTime.parseSqlUtc("2023-01-01 00:00:00"), fileInfoIntFromDb.getLastPlayed());
-    }
-
-    @Test
-    void testGetAddedDate() {
-        //FIXME: Test other getters and setters
-        // fileInfoIntFromDb.getFormattedAddedDate();
-
-
-        assertEquals(DateTime.parseSqlUtc("2012-04-07 12:15:28"), fileInfoIntFromDb.getAddedDate());
-        fileInfoIntFromDb.addedDate = new Date(1861920000000L);
-        assertEquals(DateTime.parseSqlUtc("2029-01-01 00:00:00"), fileInfoIntFromDb.getAddedDate());
-        fileInfoIntFromDb.setAddedDate(new Date(1672531200000L));
-        assertEquals(DateTime.parseSqlUtc("2023-01-01 00:00:00"), fileInfoIntFromDb.getAddedDate());
-    }
-
-    @Test
-    void testGetRating() {
-        assertEquals(12, fileInfoIntFromDb.getRating());
-        fileInfoIntFromDb.rating = 5;
-        assertEquals(5, fileInfoIntFromDb.getRating());
-    }
-
-    @Test
-    void testGetPlayCounter() {
-        assertEquals(15, fileInfoIntFromDb.getPlayCounter());
-        fileInfoIntFromDb.playCounter = 5;
-        assertEquals(5, fileInfoIntFromDb.getPlayCounter());
-    }
-
-    @Test
-    void testGetYear() {
-        assertEquals("test year", fileInfoIntFromDb.getYear());
-        fileInfoIntFromDb.year = "2023";
-        assertEquals("2023", fileInfoIntFromDb.getYear());
-    }
-
-    @Test
-    void testGetTrackTotal() {
-        assertEquals(9, fileInfoIntFromDb.getTrackTotal());
-        fileInfoIntFromDb.trackTotal = 10;
-        assertEquals(10, fileInfoIntFromDb.getTrackTotal());
-    }
-
-    @Test
-    void testGetTrackNo() {
-        assertEquals(4, fileInfoIntFromDb.getTrackNo());
-        fileInfoIntFromDb.trackNo = 5;
-        assertEquals(5, fileInfoIntFromDb.getTrackNo());
-    }
-
-    @Test
-    void testGetTitle() {
-        assertEquals("test title", fileInfoIntFromDb.getTitle());
-        fileInfoIntFromDb.title = "une autre valeur de titre";
-        assertEquals("une autre valeur de titre", fileInfoIntFromDb.getTitle());
-    }
-
-    @Test
-    void testGetNbCovers() {
-        assertEquals(84, fileInfoIntFromDb.getNbCovers());
-        fileInfoIntFromDb.nbCovers = 3;
-        assertEquals(3, fileInfoIntFromDb.getNbCovers());
-    }
-
-    @Test
-    void testGetGenre() {
-        assertEquals("test genre", fileInfoIntFromDb.getGenre());
-        fileInfoIntFromDb.genre = "n'importe quoi comme genre";
-        assertEquals("n'importe quoi comme genre", fileInfoIntFromDb.getGenre());
-    }
-
-    @Test
-    void testGetDiscTotal() {
-        assertEquals(14, fileInfoIntFromDb.getDiscTotal());
-        fileInfoIntFromDb.discTotal = 48;
-        assertEquals(48, fileInfoIntFromDb.getDiscTotal());
-    }
-    
-    @Test
-    void testGetDiscNo() {
-        assertEquals(2, fileInfoIntFromDb.getDiscNo());
-        fileInfoIntFromDb.discNo = 521;
-        assertEquals(521, fileInfoIntFromDb.getDiscNo());
-    }
-
-    @Test
-    void testGetComment() {
-        assertEquals("test comment", fileInfoIntFromDb.getComment());
-        fileInfoIntFromDb.comment = "Ceci n'est pas un commentaire";
-        assertEquals("Ceci n'est pas un commentaire", fileInfoIntFromDb.getComment());
-    }
-
-    @Test
-    void testGetArtist() {
-        assertEquals("test artist", fileInfoIntFromDb.getArtist());
-        fileInfoIntFromDb.artist = "un peu n'importe quoi comme artiste";
-        assertEquals("un peu n'importe quoi comme artiste", fileInfoIntFromDb.getArtist());
-    }
-
-    @Test
-    void testGetAlbumArtist() {
-        assertEquals("test album artist", fileInfoIntFromDb.getAlbumArtist());
-        fileInfoIntFromDb.albumArtist = "n'importe quoi comme artiste";
-        assertEquals("n'importe quoi comme artiste", fileInfoIntFromDb.getAlbumArtist());
-    }
-
-    @Test
-    void testGetAlbum() {
-        assertEquals("test album", fileInfoIntFromDb.getAlbum());
-        fileInfoIntFromDb.album = "Modi f zefzef efaefa";
-        assertEquals("Modi f zefzef efaefa", fileInfoIntFromDb.getAlbum());
-    }
-
-    @Test
-    void testGetBPM() {
-        assertEquals(62.15f, fileInfoIntFromDb.getBPM());
-        fileInfoIntFromDb.setBPM(120.0f);
-        assertEquals(120.0f, fileInfoIntFromDb.getBPM());
-    }
-    
-    @Test
-    void testGetSize() {
-        assertEquals(1598798, fileInfoIntFromDb.getSize());
-        fileInfoIntFromDb.size = 123456L;
-        assertEquals(123456L, fileInfoIntFromDb.getSize());
-    }
-
-    @Test
-    void testGetBitRate() {
-        assertEquals("84.544", fileInfoIntFromDb.getBitRate());
-    }
-
-    @Test
-    void testGetFormat() {
-        assertEquals("format inconnu", fileInfoIntFromDb.getFormat());
-    }
-    
-    @Test
-    void testGetLength() {
-        assertEquals(5154, fileInfoIntFromDb.getLength());
-        fileInfoIntFromDb.length = 300;
-        assertEquals(300, fileInfoIntFromDb.getLength());
-    }
-
-    //FIXME Test relativePath
-    //FIXME Test filename
-    //FIXME Test rootPath
-
-    @Test
-    void testIdPath() {
-        assertEquals(24, fileInfoIntFromDb.getIdPath());
-        fileInfoIntFromDb.setIdPath(217);
-        assertEquals(217, fileInfoIntFromDb.getIdPath());
-    }
-
-    @Test
-    void testIdFile() {
-        assertEquals(512, fileInfoIntFromDb.getIdFile());
-        fileInfoIntFromDb.setIdFile(665);
-        assertEquals(665, fileInfoIntFromDb.getIdFile());
-    }
-
-    //FIXME: Review above tests and check if all setters are tested
-
-    //FIXME: Review the following tests, and make sure none are missing
 
     @Test
     void testReadMetadata() throws Exception {
@@ -323,6 +106,7 @@ class FileInfoIntTest {
 
         // Call the method to read metadata
         fileInfoIntFromDb.readMetadata(false);
+        fileInfoIntForScan.readMetadata(false);
 
         // Verify the values set by readHeader
         assertEquals("320kbps", fileInfoIntFromDb.getBitRate());
@@ -344,16 +128,274 @@ class FileInfoIntTest {
         assertEquals(120.0f, fileInfoIntFromDb.getBPM());
     }
 
+    //FIXME: Test pathMbId (not used ??)
+
+    //FIXME: Test pathModifDate (not used ??)
+
+    @Test
+    void testGetStatus() {
+        assertEquals(SyncStatus.NEW, fileInfoIntFromDb.getStatus());
+        assertEquals(SyncStatus.INFO, fileInfoIntForScan.getStatus());
+        fileInfoIntFromDb.setStatus(SyncStatus.INFO);
+        assertEquals(SyncStatus.INFO, fileInfoIntFromDb.getStatus());
+    }
+
+    @Test
+    void testGetPercentRated() {
+        assertEquals(84, fileInfoIntFromDb.getPercentRated());
+        assertEquals(0, fileInfoIntForScan.getPercentRated());
+    }
+
+    @Test
+    void testGetAlbumRating() {
+        assertEquals(65, fileInfoIntFromDb.getAlbumRating());
+        assertEquals(0.0, fileInfoIntForScan.getAlbumRating());
+    }
+
+    @Test
+    void testGetCopyRight() {
+        assertEquals(FolderInfo.CopyRight.NO_SUPPORT, fileInfoIntFromDb.getCopyRight());
+        assertEquals(FolderInfo.CopyRight.UNDEFINED, fileInfoIntForScan.getCopyRight());
+    }
+
+    @Test
+    void testGetCheckedFlag() {
+        assertEquals(CheckedFlag.OK_WARNING, fileInfoIntFromDb.getCheckedFlag());
+        assertEquals(CheckedFlag.UNCHECKED, fileInfoIntForScan.getCheckedFlag());
+    }
+
+    @Test
+    void testGetCoverHash() {
+        assertEquals("test cover hash", fileInfoIntFromDb.getCoverHash());
+        assertEquals("", fileInfoIntForScan.getCoverHash());
+        fileInfoIntFromDb.setCoverHash("testhash");
+        assertEquals("testhash", fileInfoIntFromDb.getCoverHash());
+    }
+
+    @Test
+    void testGetFormattedModifDate() {
+        //FIXME: Test other getters and setters
+        // fileInfoIntFromDb.getFormattedAddedDate();
+
+        assertEquals("2056-11-18 15:34:12", fileInfoIntFromDb.getFormattedModifDate());
+        assertEquals("1970-01-01 00:00:00", fileInfoIntForScan.getFormattedModifDate());
+        fileInfoIntFromDb.modifDate = new Date(1861920000000L);
+        assertEquals("2029-01-01 00:00:00", fileInfoIntFromDb.getFormattedModifDate());
+    }
+
+    @Test
+    void testGetLastPlayed() {
+        //FIXME: Test other getters and setters
+        // fileInfoIntFromDb.getFormattedAddedDate();
+
+        assertEquals(DateTime.parseSqlUtc("1956-12-25 22:08:58"), fileInfoIntFromDb.getLastPlayed());
+        assertEquals(DateTime.parseSqlUtc("1970-01-01 00:00:00"), fileInfoIntForScan.getLastPlayed());
+        fileInfoIntFromDb.lastPlayed = new Date(1861920000000L);
+        assertEquals(DateTime.parseSqlUtc("2029-01-01 00:00:00"), fileInfoIntFromDb.getLastPlayed());
+        fileInfoIntFromDb.setLastPlayed(new Date(1672531200000L));
+        assertEquals(DateTime.parseSqlUtc("2023-01-01 00:00:00"), fileInfoIntFromDb.getLastPlayed());
+    }
+
+    @Test
+    void testGetAddedDate() {
+        //FIXME: Test other getters and setters
+        // fileInfoIntFromDb.getFormattedAddedDate();
+
+
+        assertEquals(DateTime.parseSqlUtc("2012-04-07 12:15:28"), fileInfoIntFromDb.getAddedDate());
+        assertEquals(DateTime.parseSqlUtc("1970-01-01 00:00:00"), fileInfoIntForScan.getAddedDate());
+        fileInfoIntFromDb.addedDate = new Date(1861920000000L);
+        assertEquals(DateTime.parseSqlUtc("2029-01-01 00:00:00"), fileInfoIntFromDb.getAddedDate());
+        fileInfoIntFromDb.setAddedDate(new Date(1672531200000L));
+        assertEquals(DateTime.parseSqlUtc("2023-01-01 00:00:00"), fileInfoIntFromDb.getAddedDate());
+    }
+
+    @Test
+    void testGetRating() {
+        assertEquals(12, fileInfoIntFromDb.getRating());
+        assertEquals(-1, fileInfoIntForScan.getRating());
+        fileInfoIntFromDb.rating = 5;
+        assertEquals(5, fileInfoIntFromDb.getRating());
+    }
+
+    @Test
+    void testGetPlayCounter() {
+        assertEquals(15, fileInfoIntFromDb.getPlayCounter());
+        assertEquals(0, fileInfoIntForScan.getPlayCounter());
+        fileInfoIntFromDb.playCounter = 5;
+        assertEquals(5, fileInfoIntFromDb.getPlayCounter());
+    }
+
+    @Test
+    void testGetYear() {
+        assertEquals("test year", fileInfoIntFromDb.getYear());
+        assertEquals("", fileInfoIntForScan.getYear());
+        fileInfoIntFromDb.year = "2023";
+        assertEquals("2023", fileInfoIntFromDb.getYear());
+    }
+
+    @Test
+    void testGetTrackTotal() {
+        assertEquals(9, fileInfoIntFromDb.getTrackTotal());
+        assertEquals(-1, fileInfoIntForScan.getTrackTotal());
+        fileInfoIntFromDb.trackTotal = 10;
+        assertEquals(10, fileInfoIntFromDb.getTrackTotal());
+    }
+
+    @Test
+    void testGetTrackNo() {
+        assertEquals(4, fileInfoIntFromDb.getTrackNo());
+        assertEquals(-1, fileInfoIntForScan.getTrackNo());
+        fileInfoIntFromDb.trackNo = 5;
+        assertEquals(5, fileInfoIntFromDb.getTrackNo());
+    }
+
+    @Test
+    void testGetTitle() {
+        assertEquals("test title", fileInfoIntFromDb.getTitle());
+        assertEquals("", fileInfoIntForScan.getTitle());
+        fileInfoIntFromDb.title = "une autre valeur de titre";
+        assertEquals("une autre valeur de titre", fileInfoIntFromDb.getTitle());
+    }
+
+    @Test
+    void testGetNbCovers() {
+        assertEquals(84, fileInfoIntFromDb.getNbCovers());
+        assertEquals(0, fileInfoIntForScan.getNbCovers());
+        fileInfoIntFromDb.nbCovers = 3;
+        assertEquals(3, fileInfoIntFromDb.getNbCovers());
+    }
+
+    @Test
+    void testGetGenre() {
+        assertEquals("test genre", fileInfoIntFromDb.getGenre());
+        assertEquals("", fileInfoIntForScan.getGenre());
+        fileInfoIntFromDb.genre = "n'importe quoi comme genre";
+        assertEquals("n'importe quoi comme genre", fileInfoIntFromDb.getGenre());
+    }
+
+    @Test
+    void testGetDiscTotal() {
+        assertEquals(14, fileInfoIntFromDb.getDiscTotal());
+        assertEquals(-1, fileInfoIntForScan.getDiscTotal());
+        fileInfoIntFromDb.discTotal = 48;
+        assertEquals(48, fileInfoIntFromDb.getDiscTotal());
+    }
+    
+    @Test
+    void testGetDiscNo() {
+        assertEquals(2, fileInfoIntFromDb.getDiscNo());
+        assertEquals(-1, fileInfoIntForScan.getDiscNo());
+        fileInfoIntFromDb.discNo = 521;
+        assertEquals(521, fileInfoIntFromDb.getDiscNo());
+    }
+
+    @Test
+    void testGetComment() {
+        assertEquals("test comment", fileInfoIntFromDb.getComment());
+        assertEquals("", fileInfoIntForScan.getComment());
+        fileInfoIntFromDb.comment = "Ceci n'est pas un commentaire";
+        assertEquals("Ceci n'est pas un commentaire", fileInfoIntFromDb.getComment());
+    }
+
+    @Test
+    void testGetArtist() {
+        assertEquals("test artist", fileInfoIntFromDb.getArtist());
+        assertEquals("", fileInfoIntForScan.getArtist());
+        fileInfoIntFromDb.artist = "un peu n'importe quoi comme artiste";
+        assertEquals("un peu n'importe quoi comme artiste", fileInfoIntFromDb.getArtist());
+    }
+
+    @Test
+    void testGetAlbumArtist() {
+        assertEquals("test album artist", fileInfoIntFromDb.getAlbumArtist());
+        assertEquals("", fileInfoIntForScan.getAlbumArtist());
+        fileInfoIntFromDb.albumArtist = "n'importe quoi comme artiste";
+        assertEquals("n'importe quoi comme artiste", fileInfoIntFromDb.getAlbumArtist());
+    }
+
+    @Test
+    void testGetAlbum() {
+        assertEquals("test album", fileInfoIntFromDb.getAlbum());
+        assertEquals("", fileInfoIntForScan.getAlbum());
+        fileInfoIntFromDb.album = "Modi f zefzef efaefa";
+        assertEquals("Modi f zefzef efaefa", fileInfoIntFromDb.getAlbum());
+    }
+
+    @Test
+    void testGetBPM() {
+        assertEquals(62.15f, fileInfoIntFromDb.getBPM());
+        assertEquals(0.0f, fileInfoIntForScan.getBPM());
+        fileInfoIntFromDb.setBPM(120.0f);
+        assertEquals(120.0f, fileInfoIntFromDb.getBPM());
+    }
+    
+    @Test
+    void testGetSize() {
+        assertEquals(1598798, fileInfoIntFromDb.getSize());
+        assertEquals(0, fileInfoIntForScan.getSize());
+        fileInfoIntFromDb.size = 123456L;
+        assertEquals(123456L, fileInfoIntFromDb.getSize());
+    }
+
+    @Test
+    void testGetBitRate() {
+        assertEquals("84.544", fileInfoIntFromDb.getBitRate());
+        assertEquals("", fileInfoIntForScan.getBitRate());
+    }
+
+    @Test
+    void testGetFormat() {
+        assertEquals("format inconnu", fileInfoIntFromDb.getFormat());
+        assertEquals("", fileInfoIntForScan.getFormat());
+    }
+    
+    @Test
+    void testGetLength() {
+        assertEquals(5154, fileInfoIntFromDb.getLength());
+        assertEquals(0, fileInfoIntForScan.getLength());
+        fileInfoIntFromDb.length = 300;
+        assertEquals(300, fileInfoIntFromDb.getLength());
+    }
+
+    //FIXME Test relativePath
+    //FIXME Test filename
+    //FIXME Test rootPath
+
+    @Test
+    void testIdPath() {
+        assertEquals(24, fileInfoIntFromDb.getIdPath());
+        assertEquals(-1, fileInfoIntForScan.getIdPath());
+        fileInfoIntFromDb.setIdPath(217);
+        assertEquals(217, fileInfoIntFromDb.getIdPath());
+    }
+
+    @Test
+    void testIdFile() {
+        assertEquals(512, fileInfoIntFromDb.getIdFile());
+        assertEquals(-1, fileInfoIntForScan.getIdFile());
+        fileInfoIntFromDb.setIdFile(665);
+        assertEquals(665, fileInfoIntFromDb.getIdFile());
+    }
+
+    //FIXME: Review above tests and check if all setters are tested
+
+    //FIXME: Review the following tests, and make sure none are missing
+
+    
+
   
     @Test
     void testGetFullPath() {
         File expectedFile = new File("root/path/test/path");
         assertEquals(expectedFile, fileInfoIntFromDb.getFullPath());
+        assertEquals(new File("/home/user/music/path/to/file.flac"), fileInfoIntForScan.getFullPath());
     }
 
     @Test
     void testGetLyrics() {
         assertEquals("", fileInfoIntFromDb.getLyrics());
+        assertEquals("", fileInfoIntForScan.getLyrics());
         fileInfoIntFromDb.lyrics = "Test lyrics";
         assertEquals("Test lyrics", fileInfoIntFromDb.getLyrics());
     }
@@ -361,16 +403,22 @@ class FileInfoIntTest {
     @Test
     void testGetCoverImage() {
         assertNull(fileInfoIntFromDb.getCoverImage());
+        assertNull(fileInfoIntForScan.getCoverImage());
     }
 
     @Test
     void testSetCoverHash() {
         fileInfoIntFromDb.setCoverHash("newhash");
         assertEquals("newhash", fileInfoIntFromDb.getCoverHash());
+        fileInfoIntForScan.setCoverHash("newhash");
+        assertEquals("newhash", fileInfoIntForScan.getCoverHash());
     }
 
     @Test
     void testFileInfoIntFromFileInfo() {
+
+        //FIXME: Check if all fields are tested
+
         FileInfo fileInfo = new FileInfo(1, 1, "test/path", 5, "2023-01-01 00:00:00", "2023-01-01 00:00:00", 10, "source", 5, 120.0f, "Test Genre", "2023-01-01 00:00:00", "2023-01-01 00:00:00", "2023-01-01 00:00:00");
         FileInfoInt fileInfoIntFromFileInfo = new FileInfoInt(fileInfo, 120.0f, "Test Genre");
         assertEquals(fileInfo.getIdFile(), fileInfoIntFromFileInfo.getIdFile());
