@@ -14,8 +14,12 @@ import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+
+import java.util.Arrays;
 import java.util.Collections;
 import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
+import org.jaudiotagger.tag.id3.AbstractID3v2Frame;
+import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,6 +28,7 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockedStatic;
+import java.util.Iterator;
 
 class FileInfoIntTest {
 
@@ -54,24 +59,7 @@ class FileInfoIntTest {
     }
 
     @Test
-    void testGetReplayGain() {
-        GainValues gainValues = new GainValues(12.1f, 53.6f);
-        assertEquals(gainValues, fileInfoIntFromDb.getReplayGain(false));
-
-        // Mocking AudioFileIO for readReplayGainFromFlac
-        MockedStatic<AudioFileIO> mockedStatic = Mockito.mockStatic(AudioFileIO.class);
-        mockedStatic.when(() -> AudioFileIO.read(any(File.class))).thenReturn(mock(MP3File.class));
-
-        assertEquals(new GainValues(), fileInfoIntForScan.getReplayGain(false));
-        mockedStatic.close();
-
-        FileInfoInt fileInfoIntMock = mock(FileInfoInt.class);
-        when(fileInfoIntMock.getReplayGain(true)).thenReturn(gainValues);
-        assertEquals(gainValues, fileInfoIntMock.getReplayGain(true));
-    }
-
-    @Test
-    void testReadMetadata() throws Exception {
+    void testReadMetadataAndReplayGain() throws Exception {
         // Mocking MP3File and AudioHeader
         MP3File mp3FileMock = mock(MP3File.class);
         AudioHeader audioHeaderMock = mock(AudioHeader.class);
@@ -104,6 +92,23 @@ class FileInfoIntTest {
         MockedStatic<AudioFileIO> mockedStatic = Mockito.mockStatic(AudioFileIO.class);
         mockedStatic.when(() -> AudioFileIO.read(any(File.class))).thenReturn(mp3FileMock);
 
+        // Mocking ReplayGain values
+        GainValues gainValues = new GainValues(12.1f, 53.6f);
+        AbstractID3v2Frame frameMock1 = mock(AbstractID3v2Frame.class);
+        AbstractID3v2Frame frameMock2 = mock(AbstractID3v2Frame.class);
+        FrameBodyTXXX frameBodyMock1 = mock(FrameBodyTXXX.class);
+        FrameBodyTXXX frameBodyMock2 = mock(FrameBodyTXXX.class);
+
+        when(frameMock1.getBody()).thenReturn(frameBodyMock1);
+        when(frameMock2.getBody()).thenReturn(frameBodyMock2);
+        when(frameBodyMock1.getDescription()).thenReturn("REPLAYGAIN_TRACK_GAIN");
+        when(frameBodyMock1.getTextWithoutTrailingNulls()).thenReturn("24.3 dB");
+        when(frameBodyMock2.getDescription()).thenReturn("REPLAYGAIN_ALBUM_GAIN");
+        when(frameBodyMock2.getTextWithoutTrailingNulls()).thenReturn("26.14 dB");
+
+        Iterator<AbstractID3v2Frame> frameIterator = Arrays.asList(frameMock1, frameMock2).iterator();
+        when(v2tagMock.getFrameOfType("TXXX")).thenReturn(frameIterator);
+
         // Call the method to read metadata
         fileInfoIntFromDb.readMetadata(false);
         fileInfoIntForScan.readMetadata(false);
@@ -126,11 +131,17 @@ class FileInfoIntTest {
         assertEquals("Test Comment", fileInfoIntFromDb.getComment());
         assertEquals("Test Genre", fileInfoIntFromDb.getGenre());
         assertEquals(120.0f, fileInfoIntFromDb.getBPM());
+
+        // Verify ReplayGain values
+        assertEquals(gainValues, fileInfoIntFromDb.getReplayGain(false));
+        assertEquals(new GainValues(24.3f, 26.14f), fileInfoIntForScan.getReplayGain(false));
+
+        FileInfoInt fileInfoIntMock = mock(FileInfoInt.class);
+        when(fileInfoIntMock.getReplayGain(true)).thenReturn(gainValues);
+        assertEquals(gainValues, fileInfoIntMock.getReplayGain(true));
+
+        mockedStatic.close();
     }
-
-    //FIXME: Test pathMbId (not used ??)
-
-    //FIXME: Test pathModifDate (not used ??)
 
     @Test
     void testGetStatus() {
