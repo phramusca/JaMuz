@@ -59,91 +59,6 @@ class FileInfoIntTest {
     }
 
     @Test
-    void testReadMetadataAndReplayGain() throws Exception {
-        // Mocking MP3File and AudioHeader
-        MP3File mp3FileMock = mock(MP3File.class);
-        AudioHeader audioHeaderMock = mock(AudioHeader.class);
-        Tag tagMock = mock(Tag.class);
-        AbstractID3v2Tag v2tagMock = mock(AbstractID3v2Tag.class);
-
-        when(audioHeaderMock.getBitRate()).thenReturn("320kbps");
-        when(audioHeaderMock.getFormat()).thenReturn("mp3");
-        when(audioHeaderMock.getTrackLength()).thenReturn(300);
-
-        when(v2tagMock.getFirst(FieldKey.ALBUM)).thenReturn("Test Album");
-        when(v2tagMock.getFirst(FieldKey.ARTIST)).thenReturn("Test Artist");
-        when(v2tagMock.getFirst(FieldKey.ALBUM_ARTIST)).thenReturn("Test Album Artist");
-        when(v2tagMock.getFirst(FieldKey.TITLE)).thenReturn("Test Title");
-        when(v2tagMock.getFirst(FieldKey.TRACK)).thenReturn("5");
-        when(v2tagMock.getFirst(FieldKey.TRACK_TOTAL)).thenReturn("10");
-        when(v2tagMock.getFirst(FieldKey.DISC_NO)).thenReturn("1");
-        when(v2tagMock.getFirst(FieldKey.DISC_TOTAL)).thenReturn("2");
-        when(v2tagMock.getFirst(FieldKey.YEAR)).thenReturn("2023");
-        when(v2tagMock.getFirst(FieldKey.COMMENT)).thenReturn("Test Comment");
-        when(v2tagMock.getFirst(FieldKey.GENRE)).thenReturn("Test Genre");
-        when(v2tagMock.getFirst(FieldKey.BPM)).thenReturn("120");
-        when(v2tagMock.getArtworkList()).thenReturn(Collections.emptyList());
-
-        when(mp3FileMock.getAudioHeader()).thenReturn(audioHeaderMock);
-        when(mp3FileMock.getTag()).thenReturn(tagMock);
-        when(mp3FileMock.hasID3v2Tag()).thenReturn(true);
-        when(mp3FileMock.getID3v2Tag()).thenReturn(v2tagMock);
-
-        MockedStatic<AudioFileIO> mockedStatic = Mockito.mockStatic(AudioFileIO.class);
-        mockedStatic.when(() -> AudioFileIO.read(any(File.class))).thenReturn(mp3FileMock);
-
-        // Mocking ReplayGain values
-        GainValues gainValues = new GainValues(12.1f, 53.6f);
-        AbstractID3v2Frame frameMock1 = mock(AbstractID3v2Frame.class);
-        AbstractID3v2Frame frameMock2 = mock(AbstractID3v2Frame.class);
-        FrameBodyTXXX frameBodyMock1 = mock(FrameBodyTXXX.class);
-        FrameBodyTXXX frameBodyMock2 = mock(FrameBodyTXXX.class);
-
-        when(frameMock1.getBody()).thenReturn(frameBodyMock1);
-        when(frameMock2.getBody()).thenReturn(frameBodyMock2);
-        when(frameBodyMock1.getDescription()).thenReturn("REPLAYGAIN_TRACK_GAIN");
-        when(frameBodyMock1.getTextWithoutTrailingNulls()).thenReturn("24.3 dB");
-        when(frameBodyMock2.getDescription()).thenReturn("REPLAYGAIN_ALBUM_GAIN");
-        when(frameBodyMock2.getTextWithoutTrailingNulls()).thenReturn("26.14 dB");
-
-        Iterator<AbstractID3v2Frame> frameIterator = Arrays.asList(frameMock1, frameMock2).iterator();
-        when(v2tagMock.getFrameOfType("TXXX")).thenReturn(frameIterator);
-
-        // Call the method to read metadata
-        fileInfoIntFromDb.readMetadata(false);
-        fileInfoIntForScan.readMetadata(false);
-
-        // Verify the values set by readHeader
-        assertEquals("320kbps", fileInfoIntFromDb.getBitRate());
-        assertEquals("mp3", fileInfoIntFromDb.getFormat());
-        assertEquals(300, fileInfoIntFromDb.getLength());
-
-        // Verify the values set by readTags
-        assertEquals("Test Album", fileInfoIntFromDb.getAlbum());
-        assertEquals("Test Artist", fileInfoIntFromDb.getArtist());
-        assertEquals("Test Album Artist", fileInfoIntFromDb.getAlbumArtist());
-        assertEquals("Test Title", fileInfoIntFromDb.getTitle());
-        assertEquals(5, fileInfoIntFromDb.getTrackNo());
-        assertEquals(10, fileInfoIntFromDb.getTrackTotal());
-        assertEquals(1, fileInfoIntFromDb.getDiscNo());
-        assertEquals(2, fileInfoIntFromDb.getDiscTotal());
-        assertEquals("2023", fileInfoIntFromDb.getYear());
-        assertEquals("Test Comment", fileInfoIntFromDb.getComment());
-        assertEquals("Test Genre", fileInfoIntFromDb.getGenre());
-        assertEquals(120.0f, fileInfoIntFromDb.getBPM());
-
-        // Verify ReplayGain values
-        assertEquals(gainValues, fileInfoIntFromDb.getReplayGain(false));
-        assertEquals(new GainValues(24.3f, 26.14f), fileInfoIntForScan.getReplayGain(false));
-
-        FileInfoInt fileInfoIntMock = mock(FileInfoInt.class);
-        when(fileInfoIntMock.getReplayGain(true)).thenReturn(gainValues);
-        assertEquals(gainValues, fileInfoIntMock.getReplayGain(true));
-
-        mockedStatic.close();
-    }
-
-    @Test
     void testGetStatus() {
         assertEquals(SyncStatus.NEW, fileInfoIntFromDb.getStatus());
         assertEquals(SyncStatus.INFO, fileInfoIntForScan.getStatus());
@@ -423,6 +338,95 @@ class FileInfoIntTest {
         assertEquals("newhash", fileInfoIntFromDb.getCoverHash());
         fileInfoIntForScan.setCoverHash("newhash");
         assertEquals("newhash", fileInfoIntForScan.getCoverHash());
+    }
+
+    @Test
+    void testReadMetadataAndReplayGain() throws Exception {
+        // FIXME: Extract mocking so that test is easier to read
+        // FIXME: test flac, ape, ... ? usefull since it is using mocks ?
+
+
+        // Mocking MP3File and AudioHeader
+        MP3File mp3FileMock = mock(MP3File.class);
+        AudioHeader audioHeaderMock = mock(AudioHeader.class);
+        Tag tagMock = mock(Tag.class);
+        AbstractID3v2Tag v2tagMock = mock(AbstractID3v2Tag.class);
+
+        when(audioHeaderMock.getBitRate()).thenReturn("320kbps");
+        when(audioHeaderMock.getFormat()).thenReturn("mp3");
+        when(audioHeaderMock.getTrackLength()).thenReturn(300);
+
+        when(v2tagMock.getFirst(FieldKey.ALBUM)).thenReturn("Test Album");
+        when(v2tagMock.getFirst(FieldKey.ARTIST)).thenReturn("Test Artist");
+        when(v2tagMock.getFirst(FieldKey.ALBUM_ARTIST)).thenReturn("Test Album Artist");
+        when(v2tagMock.getFirst(FieldKey.TITLE)).thenReturn("Test Title");
+        when(v2tagMock.getFirst(FieldKey.TRACK)).thenReturn("5");
+        when(v2tagMock.getFirst(FieldKey.TRACK_TOTAL)).thenReturn("10");
+        when(v2tagMock.getFirst(FieldKey.DISC_NO)).thenReturn("1");
+        when(v2tagMock.getFirst(FieldKey.DISC_TOTAL)).thenReturn("2");
+        when(v2tagMock.getFirst(FieldKey.YEAR)).thenReturn("2023");
+        when(v2tagMock.getFirst(FieldKey.COMMENT)).thenReturn("Test Comment");
+        when(v2tagMock.getFirst(FieldKey.GENRE)).thenReturn("Test Genre");
+        when(v2tagMock.getFirst(FieldKey.BPM)).thenReturn("120");
+        when(v2tagMock.getArtworkList()).thenReturn(Collections.emptyList());
+
+        when(mp3FileMock.getAudioHeader()).thenReturn(audioHeaderMock);
+        when(mp3FileMock.getTag()).thenReturn(tagMock);
+        when(mp3FileMock.hasID3v2Tag()).thenReturn(true);
+        when(mp3FileMock.getID3v2Tag()).thenReturn(v2tagMock);
+
+        MockedStatic<AudioFileIO> mockedStatic = Mockito.mockStatic(AudioFileIO.class);
+        mockedStatic.when(() -> AudioFileIO.read(any(File.class))).thenReturn(mp3FileMock);
+
+        // Mocking ReplayGain values
+        GainValues gainValues = new GainValues(12.1f, 53.6f);
+        AbstractID3v2Frame frameMock1 = mock(AbstractID3v2Frame.class);
+        AbstractID3v2Frame frameMock2 = mock(AbstractID3v2Frame.class);
+        FrameBodyTXXX frameBodyMock1 = mock(FrameBodyTXXX.class);
+        FrameBodyTXXX frameBodyMock2 = mock(FrameBodyTXXX.class);
+
+        when(frameMock1.getBody()).thenReturn(frameBodyMock1);
+        when(frameMock2.getBody()).thenReturn(frameBodyMock2);
+        when(frameBodyMock1.getDescription()).thenReturn("REPLAYGAIN_TRACK_GAIN");
+        when(frameBodyMock1.getTextWithoutTrailingNulls()).thenReturn("24.3 dB");
+        when(frameBodyMock2.getDescription()).thenReturn("REPLAYGAIN_ALBUM_GAIN");
+        when(frameBodyMock2.getTextWithoutTrailingNulls()).thenReturn("26.14 dB");
+
+        Iterator<AbstractID3v2Frame> frameIterator = Arrays.asList(frameMock1, frameMock2).iterator();
+        when(v2tagMock.getFrameOfType("TXXX")).thenReturn(frameIterator);
+
+        // Call the method to read metadata
+        fileInfoIntFromDb.readMetadata(false);
+        fileInfoIntForScan.readMetadata(false);
+
+        // Verify the values set by readHeader
+        assertEquals("320kbps", fileInfoIntFromDb.getBitRate());
+        assertEquals("mp3", fileInfoIntFromDb.getFormat());
+        assertEquals(300, fileInfoIntFromDb.getLength());
+
+        // Verify the values set by readTags
+        assertEquals("Test Album", fileInfoIntFromDb.getAlbum());
+        assertEquals("Test Artist", fileInfoIntFromDb.getArtist());
+        assertEquals("Test Album Artist", fileInfoIntFromDb.getAlbumArtist());
+        assertEquals("Test Title", fileInfoIntFromDb.getTitle());
+        assertEquals(5, fileInfoIntFromDb.getTrackNo());
+        assertEquals(10, fileInfoIntFromDb.getTrackTotal());
+        assertEquals(1, fileInfoIntFromDb.getDiscNo());
+        assertEquals(2, fileInfoIntFromDb.getDiscTotal());
+        assertEquals("2023", fileInfoIntFromDb.getYear());
+        assertEquals("Test Comment", fileInfoIntFromDb.getComment());
+        assertEquals("Test Genre", fileInfoIntFromDb.getGenre());
+        assertEquals(120.0f, fileInfoIntFromDb.getBPM());
+
+        // Verify ReplayGain values
+        assertEquals(gainValues, fileInfoIntFromDb.getReplayGain(false));
+        assertEquals(new GainValues(24.3f, 26.14f), fileInfoIntForScan.getReplayGain(false));
+
+        FileInfoInt fileInfoIntMock = mock(FileInfoInt.class);
+        when(fileInfoIntMock.getReplayGain(true)).thenReturn(gainValues);
+        assertEquals(gainValues, fileInfoIntMock.getReplayGain(true));
+
+        mockedStatic.close();
     }
 
     @Test
