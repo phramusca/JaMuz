@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -222,6 +223,10 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	protected boolean updateRatingModifDate = false;
 
+    public boolean isUpdateRatingModifDate() {
+        return updateRatingModifDate;
+    }
+
 	/**
 	 *
 	 */
@@ -403,7 +408,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	public ArrayList<String> readTags() {
 		ArrayList<String> out = new ArrayList<>();
 		if (idFile >= 0) {
-			Jamuz.getDb().getTags(out, idFile);
+			Jamuz.getDb().fileTag().get(out, idFile);
 		}
 		return out;
 	}
@@ -697,11 +702,7 @@ public class FileInfo implements java.lang.Comparable, Cloneable {
 	 */
 	@Override
 	public int hashCode() {
-		int hash = 7;
-		hash = 31 * hash
-				+ (null == this.relativeFullPath ? 0
-						: this.relativeFullPath.hashCode());
-		return hash;
+		return Objects.hash(relativeFullPath);
 	}
 
 	/**

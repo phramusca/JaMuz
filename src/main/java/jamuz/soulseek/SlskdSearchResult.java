@@ -20,15 +20,15 @@ package jamuz.soulseek;
  *
  * @author phramusca <phramusca@gmail.com>
  */
-public class SlskdSearchResult {
-	public int fileCount;
-	public String id;
-	public boolean isComplete;
-	public int lockedFileCount;
-	public int responseCount;
-//	public List<> responses; //TODO
-	public String searchText;
-	public String startedAt;
-	public String state;
-	public int token;
-}
+public record SlskdSearchResult(
+	int fileCount,
+	String id,
+	boolean isComplete,
+	int lockedFileCount,
+	int responseCount,
+	// List<> responses, //TODO
+	String searchText,
+	String startedAt,
+	String state,
+	int token
+) {}

@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -31,8 +32,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 /**
  * Wrapper for http://localhost:5030/swagger/index.html
@@ -53,12 +52,14 @@ public class SlskdClient {
 	public final void getToken() throws IOException, ServerException {
 		HttpUrl.Builder urlBuilder = getUrlBuilder("session"); //NON-NLS
 		
-		JSONObject obj = new JSONObject();
-		obj.put("username", "slskd");
-		obj.put("password", "slskd");
+		HashMap<String, String> credentials = new HashMap<>();
+		credentials.put("username", "slskd");
+		credentials.put("password", "slskd");
+		
+		String json = gson.toJson(credentials);
 		
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
-                    .post(RequestBody.create(obj.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
+                    .post(RequestBody.create(json, MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
 		String body = getBodyString(request, client);
 
 		SlskdTokenResponse fromJson = null;
@@ -66,7 +67,11 @@ public class SlskdClient {
 			fromJson = gson.fromJson(body, SlskdTokenResponse.class);
 		}
 		
-		TOKEN = fromJson.token;
+		if (fromJson != null) {
+			TOKEN = fromJson.token();
+		} else {
+			throw new ServerException("Failed to retrieve token from response");
+		}
 	}
 	
 	//TODO: Use this in a refreshToken
@@ -76,22 +81,25 @@ public class SlskdClient {
 	}
 	
 	public boolean postDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
-		JSONArray jsonArray = new JSONArray();
-		for (SlskdSearchFile file : searchResponse.getFiles()) {
-			if(file.percentComplete<100) {
-                JSONObject fileObj = new JSONObject();
-                fileObj.put("filename", file.filename);
-                fileObj.put("size", file.size);
-                jsonArray.add(fileObj);
-            }
-		}
+		List<HashMap<String, Object>> jsonArray = searchResponse.getFiles().stream()
+			.filter(file -> file.percentComplete < 100)
+			.map(file -> {
+				HashMap<String, Object> map = new HashMap<>();
+				map.put("filename", file.filename);
+				map.put("size", file.size);
+				return map;
+			})
+			.toList();
+
+		String json = gson.toJson(jsonArray);
+
 		OkHttpClient timeoutClient = new OkHttpClient.Builder()
                     .readTimeout(30, TimeUnit.SECONDS)
                     .build();
 		
-		HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/"+searchResponse.username); //NON-NLS
+		HttpUrl.Builder urlBuilder = getUrlBuilder("transfers/downloads/" + searchResponse.getUsername()); //NON-NLS
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
-				.post(RequestBody.create(jsonArray.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
+				.post(RequestBody.create(json, MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
         
         Response response = timeoutClient.newCall(request).execute();
 		return response.isSuccessful();
@@ -106,7 +114,7 @@ public class SlskdClient {
 	}
     
 	public SlskdDownloadUser getDownloads(SlskdSearchResponse searchResponse) throws IOException, ServerException {
-        String username = URLEncoder.encode(searchResponse.username, StandardCharsets.UTF_8.toString()); //FIXME !!!! Use this elsewhere ? Does it work ?
+        String username = URLEncoder.encode(searchResponse.getUsername(), StandardCharsets.UTF_8.toString()); //FIXME Z Use this elsewhere ? Does it work ?
         String url = "transfers/downloads/" + username;
 		String bodyString = getBodyString(url, client);
 		
@@ -118,22 +126,24 @@ public class SlskdClient {
 	}
 	
 	public SlskdSearchResult search(String queryText) throws IOException, ServerException {
-		JSONObject obj = new JSONObject();
+		HashMap<String, Object> searchParams = new HashMap<>();
 		
-//		obj.put("id", "xxx-x--x-x-x-x");			//  string($uuid)	//the unique search identifier.
-//		obj.put("fileLimit", 10000);				//  integer($int32)	//the maximum number of file results to accept before the search is considered complete. (Default = 10,000).
-//		obj.put("filterResponses", true);			//  boolean			//a value indicating whether responses are to be filtered. (Default = true).
-//		obj.put("maximumPeerQueueLength", 1000000);	//  integer($int32) //the maximum queue depth a peer may have in order for a response to be processed. (Default = 1000000).
-//		obj.put("minimumPeerUploadSpeed", 0);		//	integer($int32) //the minimum upload speed a peer must have in order for a response to be processed. (Default = 0).
-//		obj.put("minimumResponseFileCount", 1);	//	integer($int32)	//the minimum number of files a response must contain in order to be processed. (Default = 1).
-//		obj.put("responseLimit", 5);				//	integer($int32)	//the maximum number of search results to accept before the search is considered complete. (Default = 100).
-		obj.put("searchText", queryText);			//	string			//the search text.
-//		obj.put("searchTimeout", 15);				//	integer($int32)	//the search timeout value, in seconds, used to determine when the search is complete. (Default = 15).
-//		obj.put("token", 0);						//	integer($int32)	//the search token.
+		// searchParams"xxx-x--x-x-x-x");						//  string($uuid)	//the unique search identifier.
+		// searchParams.put("fileLimit", 10000);				//  integer($int32)	//the maximum number of file results to accept before the search is considered complete. (Default = 10,000).
+		// searchParams.put("filterResponses", true);			//  boolean			//a value indicating whether responses are to be filtered. (Default = true).
+		// searchParams.put("maximumPeerQueueLength", 1000000);	//  integer($int32) //the maximum queue depth a peer may have in order for a response to be processed. (Default = 1000000).
+		// searchParams.put("minimumPeerUploadSpeed", 0);		//	integer($int32) //the minimum upload speed a peer must have in order for a response to be processed. (Default = 0).
+		// searchParams.put("minimumResponseFileCount", 1);		//	integer($int32)	//the minimum number of files a response must contain in order to be processed. (Default = 1).
+		// searchParams.put("responseLimit", 5);				//	integer($int32)	//the maximum number of search results to accept before the search is considered complete. (Default = 100).
+		searchParams.put("searchText", queryText);			//	string			//the search text.
+		// searchParams.put("searchTimeout", 15);				//	integer($int32)	//the search timeout value, in seconds, used to determine when the search is complete. (Default = 15).
+		// searchParams.put("token", 0);						//	integer($int32)	//the search token.
+
+		String json = gson.toJson(searchParams);
 				
 		HttpUrl.Builder urlBuilder = getUrlBuilder("searches"); //NON-NLS
 		Request request = getRequestBuilder(urlBuilder) //NON-NLS
-                    .post(RequestBody.create(obj.toString(), MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
+                    .post(RequestBody.create(json, MediaType.parse("application/json; charset=utf-8"))).build(); //NON-NLS
 		String body = getBodyString(request, client);
 		
 		
@@ -154,7 +164,7 @@ public class SlskdClient {
 		return fromJson;
 	}
 	
-	public List<SlskdSearchResponse> getSearchResponses(String id) throws IOException, ServerException, ServerException {
+	public List<SlskdSearchResponse> getSearchResponses(String id) throws IOException, ServerException {
 		String bodyString = getBodyString("searches/" + id + "/responses", client);
 		
 		List<SlskdSearchResponse> fromJson = null;

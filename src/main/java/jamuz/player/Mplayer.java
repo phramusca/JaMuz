@@ -250,7 +250,7 @@ public class Mplayer implements Runnable {
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
-			cmdArray.add("data\\system\\bin\\mplayer.exe");
+			cmdArray.add(Jamuz.getFile("mplayer.exe", "data", "system", "bin").getAbsolutePath());
 //			cmdArray.add("-ao");
 //			cmdArray.add("dsound:device=1");
 		}

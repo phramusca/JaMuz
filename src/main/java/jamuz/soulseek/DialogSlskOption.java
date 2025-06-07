@@ -26,7 +26,8 @@ import java.io.File;
 import javax.swing.JTextField;
 
 /**
- *
+ * Dialog for Soulseek options.
+ * 
  * @author phramusca <phramusca@gmail.com>
  */
 public class DialogSlskOption extends javax.swing.JDialog {
@@ -42,7 +43,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         
-        //Get and display options
+        // Get and display options
         File propertiesFile = Jamuz.getFile("Slsk.properties");
         if(propertiesFile.exists()) {
             options = new Options(propertiesFile.getAbsolutePath());
@@ -77,6 +78,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         jTextFieldPassword = new jamuz.gui.swing.PasswordFieldWithToggle();
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -172,6 +174,11 @@ public class DialogSlskOption extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jLabel6.setFont(new java.awt.Font("Noto Sans", 1, 12)); // NOI18N
+        jLabel6.setForeground(java.awt.Color.orange);
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("You also need to have docker installed.");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -185,7 +192,8 @@ public class DialogSlskOption extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSave))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -194,12 +202,14 @@ public class DialogSlskOption extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel)
                     .addComponent(jButtonSave))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -214,7 +224,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
                 || !options.get("slsk.password").equals(jTextFieldPassword.getText())
                 || !options.get("slsk.shared.location").equals(jTextFieldSharedLocation.getText()));
         if(reCreate) {
-            //This will be reset to false only when putSharedScan is done
+            // This will be reset to false only when putSharedScan is done
             options.set("slsk.reCreate", String.valueOf(reCreate));     
         }
         options.set("slsk.on.startup", String.valueOf(Boolean.valueOf(jCheckBoxServerStartOnStartup.isSelected())));
@@ -233,6 +243,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
 	private void getFolder(JTextField textField, String title) {
         Swing.selectFolder(textField, title, true);
     }
+
     /**
 	 * @param parent
      */
@@ -269,6 +280,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabelVideoLibraryLocation;
     private javax.swing.JPanel jPanel2;
     private jamuz.gui.swing.PasswordFieldWithToggle jTextFieldPassword;

@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 /**
@@ -53,13 +53,13 @@ public class Options {
 	 * @param filename
 	 */
 	public Options(String filename) {
-		this.properties = new Properties();
+		this();
+		this.filename = filename;
 		try {
-			input = new FileInputStream(filename);
+			this.input = new FileInputStream(filename);
 		} catch (FileNotFoundException ex) {
 			Popup.error(ex);
 		}
-		this.filename = filename;
 	}
 
 	/**
@@ -95,23 +95,12 @@ public class Options {
 	 * @return
 	 */
 	public boolean save() {
-		OutputStream output = null;
-		try {
-			output = new FileOutputStream(filename);
+		try (OutputStream output = new FileOutputStream(filename)) {
 			properties.store(output, null);
 			return true;
-
 		} catch (IOException ex) {
 			Popup.error(ex);
 			return false;
-		} finally {
-			if (output != null) {
-				try {
-					output.close();
-				} catch (IOException ex) {
-					Popup.error(ex);
-				}
-			}
 		}
 	}
 
@@ -123,19 +112,19 @@ public class Options {
 		if (input == null) {
 			return false;
 		}
-		try {
-			properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
+		try (InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+			properties.load(reader);
 			return true;
 		} catch (IOException ex) {
 			Popup.error(ex);
 			return false;
 		} finally {
-			if (input != null) {
-				try {
+			try {
+				if (input != null) {
 					input.close();
-				} catch (IOException ex) {
-					Popup.error(ex);
 				}
+			} catch (IOException ex) {
+				Popup.error(ex);
 			}
 		}
 	}

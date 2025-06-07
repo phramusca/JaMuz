@@ -94,6 +94,10 @@ public class AppVersion {
         return assetFile;
     }
 
+    public int getAssetSize() {
+        return assetSize;
+    }
+
     @Override
     public String toString() {
         return "Current: " + currentVersion + ". Latest: " + latestVersion + ". ";
@@ -122,6 +126,12 @@ public class AppVersion {
 
     void unzipAsset(ICallBackVersionCheck callBackVersionCheck) throws IOException {
         callBackVersionCheck.onUnzipCount(this);
+        long totalBytes = calculateTotalBytes();
+        callBackVersionCheck.onUnzipStart();
+        unzipEntries(callBackVersionCheck, totalBytes);
+    }
+
+    private long calculateTotalBytes() throws IOException {
         long totalBytes = 0;
         try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
             SevenZArchiveEntry entry;
@@ -131,35 +141,49 @@ public class AppVersion {
                 }
             }
         }
-        callBackVersionCheck.onUnzipStart();
+        return totalBytes;
+    }
+
+    private void unzipEntries(ICallBackVersionCheck callBackVersionCheck, long totalBytes) throws IOException {
         long totalBytesRead = 0;
         try (SevenZFile sevenZFile = new SevenZFile(assetFile)) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZFile.getNextEntry()) != null) {
                 File outputFile = Jamuz.getFile(entry.getName(), "data", "cache", "system", "update", latestVersion);
                 if (entry.isDirectory()) {
-                    if (!outputFile.exists()) {
-                        outputFile.mkdirs();
-                    }
+                    createDirectory(outputFile);
                 } else {
-                    // Create parent directories if they don't exist
-                    File parentDir = outputFile.getParentFile();
-                    if (!parentDir.exists()) {
-                        parentDir.mkdirs();
-                    }
-                    // Create an output stream for the entry
-                    try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-                        byte[] buffer = new byte[8192];
-                        int bytesRead;
-                        while ((bytesRead = sevenZFile.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, bytesRead);
-                            totalBytesRead += bytesRead;
-                            int progress = (int) ((totalBytesRead * 100) / totalBytes);
-                            callBackVersionCheck.onUnzipProgress(this, entry.getName(), progress);
-                        }
-                    }
+                    totalBytesRead = writeFile(callBackVersionCheck, totalBytes, totalBytesRead, sevenZFile, entry, outputFile);
                 }
             }
+        }
+    }
+
+    private void createDirectory(File outputFile) {
+        if (!outputFile.exists()) {
+            outputFile.mkdirs();
+        }
+    }
+
+    private long writeFile(ICallBackVersionCheck callBackVersionCheck, long totalBytes, long totalBytesRead, SevenZFile sevenZFile, SevenZArchiveEntry entry, File outputFile) throws IOException {
+        createParentDirectories(outputFile);
+        try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = sevenZFile.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+                totalBytesRead += bytesRead;
+                int progress = (int) ((totalBytesRead * 100) / totalBytes);
+                callBackVersionCheck.onUnzipProgress(this, entry.getName(), progress);
+            }
+        }
+        return totalBytesRead;
+    }
+
+    private void createParentDirectories(File outputFile) {
+        File parentDir = outputFile.getParentFile();
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();
         }
     }
 }

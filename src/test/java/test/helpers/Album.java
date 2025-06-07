@@ -610,7 +610,7 @@ public class Album {
 	}
 
 	private static File getFile(String mbId) {
-		return new File(TestSettings.getRessourcesPath() + "albumFiles" + File.separator + mbId + ".ods");
+		return new File(TestSettings.getResourcesPath() + "albumFiles" + File.separator + mbId + ".ods");
 	}
 
 	private File getFile() {
@@ -665,11 +665,11 @@ public class Album {
 
 	private void checkDb() throws CannotReadException, IOException, TagException,
 			ReadOnlyFileException, InvalidAudioFrameException {
-		FolderInfo folder = Jamuz.getDb().getFolder(idPath);
+		FolderInfo folder = Jamuz.getDb().path().get(idPath);
 		Assert.assertTrue("Could not retrieve idPath=" + idPath, folder != null);
 
 		ArrayList<FileInfoInt> files = new ArrayList<>();
-		Jamuz.getDb().getFiles(files, idPath);
+		Jamuz.getDb().file().getFiles(files, idPath);
 
 		compare(files);
 	}

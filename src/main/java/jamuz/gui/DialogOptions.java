@@ -57,20 +57,18 @@ public class DialogOptions extends javax.swing.JDialog {
      */
     public static final int RET_OK = 1;
 
-    private static String machineName;
-    private static Machine selOptions;
+    private static Machine machine;
 
     /**
      * Creates new form NewOkCancelDialog
      *
      * @param parent
      * @param modal
-     * @param myMachineName
+     * @param machineName
      */
-    public DialogOptions(java.awt.Frame parent, boolean modal, String myMachineName) {
+    public DialogOptions(java.awt.Frame parent, boolean modal, String machineName) {
         super(parent, modal);
         initComponents();
-        machineName = myMachineName;
 
         // Close the dialog when Esc is pressed
         String cancelName = "cancel";
@@ -84,6 +82,10 @@ public class DialogOptions extends javax.swing.JDialog {
             }
         });
 
+        //Get selected machine name options
+        machine = new Machine(machineName);
+        machine.read();
+        
         displayOptions();
         displayStatSources();
         displayDevices();
@@ -93,15 +95,13 @@ public class DialogOptions extends javax.swing.JDialog {
      * Displays options and stat sources
      */
     public static void displayOptions() {
-        //Get selected machine name options
-        selOptions = new Machine(machineName);
-        selOptions.read();
+        
 
-        jTextFieldDescription.setText(selOptions.getDescription());
+        jTextFieldDescription.setText(machine.getDescription());
 
         jLabelDescription.setText("<html><b>" + Inter.get("Options.Title.Description") + "</b> : "
                 + MessageFormat.format(Inter.get("Options.Comment.Description"),
-                        machineName) + "</html>");  //NOI18N
+                        machine.getName()) + "</html>");  //NOI18N
 
         jButtonOptionSave.setEnabled(true);
 
@@ -132,7 +132,7 @@ public class DialogOptions extends javax.swing.JDialog {
         DefaultListModel listModel = (DefaultListModel) jListStatSources.getModel();
         listModel.clear();
         //TODO: Order by name
-        selOptions.getStatSources(true).stream().forEach((statSource) -> {
+        machine.getStatSources(true).stream().forEach((statSource) -> {
             listModel.addElement(statSource);
         });
     }
@@ -144,19 +144,19 @@ public class DialogOptions extends javax.swing.JDialog {
         //Show device list for selected machine
         DefaultListModel devicesModel = (DefaultListModel) jListDevices.getModel();
         devicesModel.clear();
-        selOptions.getDevices(true).stream().forEach((device) -> {
+        machine.getDevices(true).stream().forEach((device) -> {
             devicesModel.addElement(device);
         });
     }
 
     private static void displayOption(String id, JTextField textField, JLabel label) {
-        Option option = selOptions.getOption(id);
+        Option option = machine.getOption(id);
         textField.setText(option.getValue());
         label.setText(option.getComment());
     }
 
     private static void displayOptionCheckbox(String id, JCheckBox checkBox) {
-        Option option = selOptions.getOption(id);
+        Option option = machine.getOption(id);
         checkBox.setSelected(option.getValue().equals("true"));
         checkBox.setText(option.getComment());
     }
@@ -1126,27 +1126,27 @@ public class DialogOptions extends javax.swing.JDialog {
             return;
         }
 
-        selOptions.getOption("location.library").setValue(locationLibrary);
-        selOptions.getOption("location.add").setValue(locationAdd);
-        selOptions.getOption("location.ko").setValue(locationKO);
-        selOptions.getOption("location.manual").setValue(locationManual);
-        selOptions.getOption("location.ok").setValue(locationOK);
-        selOptions.getOption("location.transcoded").setValue(locationTranscoded);
+        machine.getOption("location.library").setValue(locationLibrary);
+        machine.getOption("location.add").setValue(locationAdd);
+        machine.getOption("location.ko").setValue(locationKO);
+        machine.getOption("location.manual").setValue(locationManual);
+        machine.getOption("location.ok").setValue(locationOK);
+        machine.getOption("location.transcoded").setValue(locationTranscoded);
 
-        selOptions.getOption("library.isMaster").setValue(jCheckBoxOptionLibraryIsMaster.isSelected() ? "true" : "false");
-        selOptions.getOption("location.mask").setValue(jTextFieldOptionMask.getText());
-        selOptions.getOption("files.audio").setValue(jTextFieldOptionsFilesAudio.getText());
-        selOptions.getOption("files.convert").setValue(jTextFieldOptionsFilesConvert.getText());
-        selOptions.getOption("files.delete").setValue(jTextFieldOptionsFilesDelete.getText());
-        selOptions.getOption("files.image").setValue(jTextFieldOptionsFilesImage.getText());
-        selOptions.getOption("files.image.delete").setValue(jCheckBoxOptionDeleteImages.isSelected() ? "true" : "false");
-        selOptions.getOption("log.count").setValue(jTextFieldOptionsLogCount.getText());
-        selOptions.getOption("log.level").setValue(jTextFieldOptionsLogLevel.getText());
-        selOptions.getOption("log.limit").setValue(jTextFieldOptionsLogLimit.getText());
-        selOptions.getOption("network.proxy").setValue(jTextFieldOptionsProxy.getText());
+        machine.getOption("library.isMaster").setValue(jCheckBoxOptionLibraryIsMaster.isSelected() ? "true" : "false");
+        machine.getOption("location.mask").setValue(jTextFieldOptionMask.getText());
+        machine.getOption("files.audio").setValue(jTextFieldOptionsFilesAudio.getText());
+        machine.getOption("files.convert").setValue(jTextFieldOptionsFilesConvert.getText());
+        machine.getOption("files.delete").setValue(jTextFieldOptionsFilesDelete.getText());
+        machine.getOption("files.image").setValue(jTextFieldOptionsFilesImage.getText());
+        machine.getOption("files.image.delete").setValue(jCheckBoxOptionDeleteImages.isSelected() ? "true" : "false");
+        machine.getOption("log.count").setValue(jTextFieldOptionsLogCount.getText());
+        machine.getOption("log.level").setValue(jTextFieldOptionsLogLevel.getText());
+        machine.getOption("log.limit").setValue(jTextFieldOptionsLogLimit.getText());
+        machine.getOption("network.proxy").setValue(jTextFieldOptionsProxy.getText());
 
-        Jamuz.getDb().updateOptions(selOptions);
-        Jamuz.getDb().updateMachine(selOptions.getOption(0).getIdMachine(), jTextFieldDescription.getText());
+        Jamuz.getDb().option().lock().update(machine);
+        Jamuz.getDb().machine().lock().update(machine.getOption(0).getIdMachine(), jTextFieldDescription.getText());
 
         PanelMain.setOptions();
         PanelOptions.fillMachineList();
@@ -1184,7 +1184,7 @@ public class DialogOptions extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonOptionSelectFolderKOActionPerformed
 
     private void jButtonStatSouceAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStatSouceAddActionPerformed
-        DialogStatSource.main(this, new StatSource(machineName));
+        DialogStatSource.main(this, new StatSource(machine.getName()));
     }//GEN-LAST:event_jButtonStatSouceAddActionPerformed
 
     private void jButtonStatSouceEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStatSouceEditActionPerformed
@@ -1202,14 +1202,14 @@ public class DialogOptions extends javax.swing.JDialog {
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 StatSource statSource = (StatSource) jListStatSources.getSelectedValue();
-                Jamuz.getDb().deleteStatSource(statSource.getId());
+                Jamuz.getDb().statSource().lock().delete(statSource.getId());
                 displayStatSources();
             }
         }
     }//GEN-LAST:event_jButtonStatSouceDelActionPerformed
 
     private void jButtonDeviceAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeviceAddActionPerformed
-        DialogDevice.main(this, new Device(machineName));
+        DialogDevice.main(this, new Device(machine.getName()));
     }//GEN-LAST:event_jButtonDeviceAddActionPerformed
 
     private void jButtonDeviceEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeviceEditActionPerformed
@@ -1227,7 +1227,7 @@ public class DialogOptions extends javax.swing.JDialog {
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 Device device = (Device) jListDevices.getSelectedValue();
-                Jamuz.getDb().deleteDevice(device.getId());
+                Jamuz.getDb().device().lock().delete(device.getId());
                 displayDevices();
             }
         }

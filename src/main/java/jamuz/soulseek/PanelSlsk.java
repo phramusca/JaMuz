@@ -26,6 +26,7 @@ import jamuz.gui.swing.PopupListener;
 import jamuz.gui.swing.ProgressCellRender;
 import jamuz.gui.swing.TableColumnModel;
 import jamuz.process.check.Location;
+import jamuz.utils.Dependencies;
 import jamuz.utils.Desktop;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
@@ -60,8 +61,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- *
- * @author phramusca <phramusca@gmail.com>
+ * Panel for managing Soulseek downloads.
+ * 
+ * @autor phramusca <phramusca@gmail.com>
  */
 public class PanelSlsk extends javax.swing.JPanel {
 
@@ -84,16 +86,14 @@ public class PanelSlsk extends javax.swing.JPanel {
     public PanelSlsk() {
         initComponents();
 
-        //Setup Search results table
+        // Setup Search results table
         jTableResults.setModel(tableModelResults);
         columnModelResults = new TableColumnModel();
-        //Assigning XTableColumnModel to allow show/hide columns
+        // Assigning XTableColumnModel to allow show/hide columns
         jTableResults.setColumnModel(columnModelResults);
         jTableResults.createDefaultColumnsFromModel();
         setColumn(columnModelResults, 0, 120);	// Date
-        TableColumn columnQueued
-                = setColumn(columnModelResults, 1, 50);	// Queued
-
+        TableColumn columnQueued = setColumn(columnModelResults, 1, 50);	// Queued
         setColumn(columnModelResults, 2, 150);	// Search text
         setColumn(columnModelResults, 3, 40);	// # files
         setColumn(columnModelResults, 4, 50);	// BitRate
@@ -103,15 +103,14 @@ public class PanelSlsk extends javax.swing.JPanel {
         setColumn(columnModelResults, 8, 50);	// Queue length
         setColumn(columnModelResults, 9, 150);	// Username
         setColumn(columnModelResults, 10, 600);	// Path
-        TableColumn column
-                = setColumn(columnModelResults, 11, 80);     // Completed
+        TableColumn column = setColumn(columnModelResults, 11, 80);     // Completed
         column.setCellRenderer(new ProgressCellRender());
         columnModelResults.setColumnVisible(columnQueued, false);
 
-        //Setup download table
+        // Setup download table
         jTableDownload.setModel(new TableModelSlskdDownload());
         columnModelDownload = new TableColumnModel();
-        //Assigning XTableColumnModel to allow show/hide columns
+        // Assigning XTableColumnModel to allow show/hide columns
         jTableDownload.setColumnModel(columnModelDownload);
         jTableDownload.createDefaultColumnsFromModel();
         setColumn(columnModelDownload, 0, 120);    // Date
@@ -119,8 +118,7 @@ public class PanelSlsk extends javax.swing.JPanel {
         setColumn(columnModelDownload, 2, 80);     // Length
         setColumn(columnModelDownload, 3, 50);     // Size
         setColumn(columnModelDownload, 4, 300);    // File
-        column
-                = setColumn(columnModelDownload, 5, 400);     // Completed
+        column = setColumn(columnModelDownload, 5, 400);     // Completed
         column.setCellRenderer(new ProgressCellRender());
     }
 
@@ -133,20 +131,20 @@ public class PanelSlsk extends javax.swing.JPanel {
 
         startDownloadMonitoring();
 
-        //Restore searches from cache
+        // Restore searches from cache
         File slskCacheFolder = Jamuz.getFile("", "data", "cache", "slsk");
         for (File listFile : slskCacheFolder.listFiles()) {
             if (listFile.exists()) {
                 SlskdSearchResponse searchResponse = readJson(listFile);
                 if (searchResponse.isCompleted()) {
                     searchResponse.getProgressBar().progress("", 100);
-                    searchResponse.files.forEach(f -> f.getProgressBar().progress("", 100));
+                    searchResponse.getFiles().forEach(f -> f.getProgressBar().progress("", 100));
                 }
                 tableModelResults.addRow(searchResponse);
             }
         }
 
-        //Get options
+        // Get options
         if (readOptions()) {
             boolean onStartup = Boolean.parseBoolean(options.get("slsk.on.startup", "false"));
             File file = new File(options.get("slsk.shared.location"));
@@ -186,11 +184,10 @@ public class PanelSlsk extends javax.swing.JPanel {
 
         @Override
         public void run() {
-
             for (int row = 0; row < tableModelResults.getRows().size(); row++) {
                 SlskdSearchResponse searchResponse = tableModelResults.getRow(row);
                 if (soulseek != null && !searchResponse.isCompleted()) {
-                    //Get downloads for username
+                    // Get downloads for username
                     SlskdDownloadUser downloads = soulseek.getDownloads(searchResponse);
                     if (downloads != null) {
                         // Filter downloads: keep only the ones matching searchResponse (if username is a mess, he could have multiple albums on the same folder)
@@ -198,7 +195,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                                 .stream()
                                 .flatMap(directory -> directory.files.stream()
                                 .filter(downloadFile
-                                        -> searchResponse.files.stream()
+                                        -> searchResponse.getFiles().stream()
                                         .anyMatch(searchFile -> searchFile.filename.equals(downloadFile.filename))
                                 )
                                 )
@@ -226,23 +223,23 @@ public class PanelSlsk extends javax.swing.JPanel {
                             Location finalDestination = new Location("location.add");
                             if (finalDestination.check()) {
                                 try {
-                                    //Redisplay (to show 100% on all files) [here all Files are Complete + to do before transfers are deleted]
+                                    // Redisplay (to show 100% on all files) [here all Files are Complete + to do before transfers are deleted]
                                     displayDownloadProgress(searchResponse, filteredFiles);
                                     String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
                                     for (SlskdDownloadFile downloadFile : filteredFiles.values()) {
-                                        //Copy file
+                                        // Copy file
                                         Pair<String, String> directory = soulseek.getDirectory(downloadFile.filename);
                                         String subDirectoryName = directory.getLeft();
                                         String filename = directory.getRight();
                                         File sourceFile = new File(FilenameUtils.concat(FilenameUtils.concat(sourcePath, subDirectoryName), filename));
-                                        String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.username + "--" + searchResponse.getPath());
+                                        String newSubDirectoryName = StringManager.removeIllegal(searchResponse.getSearchText() + "--" + searchResponse.getUsername() + "--" + searchResponse.getPath());
                                         File destFile = new File(FilenameUtils.concat(FilenameUtils.concat(finalDestination.getValue(), newSubDirectoryName), filename));
                                         if (sourceFile.exists() && (!destFile.exists() || sourceFile.length() != destFile.length())) {
                                             FileUtils.copyFile(sourceFile, destFile);
                                         }
-                                        //Delete transfer
+                                        // Delete transfer
                                         soulseek.deleteTransfer(downloadFile);
-                                        //Delete file
+                                        // Delete file
                                         soulseek.deleteFile(downloadFile);
                                     }
                                     searchResponse.setCompleted();
@@ -286,9 +283,9 @@ public class PanelSlsk extends javax.swing.JPanel {
                     @Override
                     public void run() {
                         stopAndWaitDownloadMonitoring();
-                        for (SlskdSearchFile file : searchResponse.files) {
+                        for (SlskdSearchFile file : searchResponse.getFiles()) {
                             if (file.percentComplete < 100) {
-                                soulseek.deleteTransfer(searchResponse.username, file);
+                                soulseek.deleteTransfer(searchResponse.getUsername(), file);
                             }
                         }
                         soulseek.download(searchResponse);
@@ -316,8 +313,8 @@ public class PanelSlsk extends javax.swing.JPanel {
                                     Inter.get("Label.Confirm"), //NOI18N
                                     JOptionPane.YES_NO_OPTION);
                             if (n == JOptionPane.YES_OPTION) {
-                                for (SlskdSearchFile searchFile : searchResponse.files) {
-                                    soulseek.deleteTransfer(searchResponse.username, searchFile);
+                                for (SlskdSearchFile searchFile : searchResponse.getFiles()) {
+                                    soulseek.deleteTransfer(searchResponse.getUsername(), searchFile);
                                     soulseek.deleteFile(searchFile);
                                 }
                                 File file = getJsonFile(searchResponse);
@@ -519,8 +516,8 @@ public class PanelSlsk extends javax.swing.JPanel {
                 enableGui(false);
                 enableOptions(false);
 
-                //Re-read options as they could have changed
-                if (!readOptions()) {
+                //Re-read options as they could have changed & check docker is available
+                if (!readOptions() || !Dependencies.checkDocker(parent)) {
                     enableStart();
                     return;
                 }
@@ -557,6 +554,9 @@ public class PanelSlsk extends javax.swing.JPanel {
                                     @Override
                                     public void onNext(com.github.dockerjava.api.model.Frame object) {
                                         appendText(new String(object.getPayload()));
+                                        
+                                        //FIXME ! JaMuz: limit the number of lines in slskd logs. This is maybe why gui freezes ater some time !
+                                        // => Write to a log file, with button to open it (with follow option ideally)
                                     }
 
                                     @Override
@@ -686,7 +686,7 @@ public class PanelSlsk extends javax.swing.JPanel {
     }
 
     private File getJsonFile(SlskdSearchResponse searchResponse) {
-        String uniqueFilename = StringManager.removeIllegal(searchResponse.getSearchText() + "_" + searchResponse.getDate() + "_" + searchResponse.username) + ".json";
+        String uniqueFilename = StringManager.removeIllegal(searchResponse.getSearchText() + "_" + searchResponse.getDate() + "_" + searchResponse.getUsername()) + ".json";
         return Jamuz.getFile(uniqueFilename, "data", "cache", "slsk");
     }
 

@@ -14,22 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jamuz.utils;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Internationalization class
+ *
  * @author phramusca <phramusca@gmail.com>
  */
 public class Inter {
-	
+
 	/**
 	 * Return desired string from jamuz bundle
+	 *
 	 * @param key
 	 * @return
 	 */
 	public static String get(String key) {
-		return java.util.ResourceBundle.getBundle("inter/Bundle").getString(key);
+		ResourceBundle bundle = ResourceBundle.getBundle("inter.Bundle", Locale.getDefault(), Inter.class.getClassLoader());
+		return bundle.getString(key);
 	}
-	
+
 }

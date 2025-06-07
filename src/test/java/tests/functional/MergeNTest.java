@@ -25,6 +25,7 @@ import jamuz.utils.Inter;
 import java.io.File;
 import java.util.ArrayList;
 import junit.framework.TestCase;
+
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +38,7 @@ import test.helpers.TestProcessHelper;
  *
  * @author phramusca <phramusca@gmail.com>
  */
-public class MergeNTest extends TestCase {
+public class MergeNTest extends TestCase { //TODO: do we really need to extends TestCase (here and in all other places), which is from old JUnit 3 (junit.framework.TestCase)
 
 	//FIXME TEST !!!!! Refer to "TestPlan.ods"
 	/**
@@ -212,7 +213,7 @@ public class MergeNTest extends TestCase {
 				1, //playlist.getId()is not set (only when retrieved from db)
 				Jamuz.getMachine().getName(), false
 		);
-		assertTrue("Device creation", Jamuz.getDb().updateDevice(device));
+		assertTrue("Device creation", Jamuz.getDb().device().lock().insertOrUpdate(device));
 
 		//Set stat sources
 		String rootPath;

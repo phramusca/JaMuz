@@ -17,8 +17,8 @@
 
 package jamuz.process.video;
 
-import jamuz.DbConn;
-import jamuz.DbInfo;
+import jamuz.database.DbConn;
+import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.process.video.FileInfoVideo.StreamDetails;
 import jamuz.utils.Popup;

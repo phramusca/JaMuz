@@ -32,23 +32,23 @@ public class TableModelSlskdDownload extends TableModelGeneric {
     private SlskdSearchResponse searchResponse;
 
     /**
-	 * Create the table model
+     * Create the table model
      * @param searchResponse
-	 */
-	public TableModelSlskdDownload(SlskdSearchResponse searchResponse) {
+     */
+    public TableModelSlskdDownload(SlskdSearchResponse searchResponse) {
         this();
         this.searchResponse = searchResponse;
-	}
+    }
 
     TableModelSlskdDownload() {
         this.results = new ArrayList<>();
-        this.setColumnNames(new String [] {
+        this.setColumnNames(new String[]{
             "Date", //NOI18N
-			"BitRate", //NOI18N
-			"Length", //NOI18N
-			"Size", //NOI18N
+            "BitRate", //NOI18N
+            "Length", //NOI18N
+            "Size", //NOI18N
             "File",  //NOI18N
-			"Progress", //NOI18N
+            "Progress", //NOI18N
         });
     }
 
@@ -56,129 +56,133 @@ public class TableModelSlskdDownload extends TableModelGeneric {
         return searchResponse;
     }
 
-	/**
-	 *
-	 * @param rowIndex
-	 * @param columnIndex
-	 * @return
-	 */
+    /**
+     * @param rowIndex
+     * @param columnIndex
+     * @return
+     */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         SlskdSearchFile searchFile = results.get(rowIndex);
         switch (columnIndex) {
-            case 0: return searchFile.getDate();
-            case 1: return searchFile.bitRate;
-            case 2: return StringManager.humanReadableSeconds(searchFile.length);
-            case 3: return StringManager.humanReadableByteCount(searchFile.size, true);
-            case 4: return FilenameUtils.getName(searchFile.filename);
-            case 5: return searchFile.getProgressBar();
+            case 0:
+                return searchFile.getDate();
+            case 1:
+                return searchFile.bitRate;
+            case 2:
+                return StringManager.humanReadableSeconds(searchFile.length);
+            case 3:
+                return StringManager.humanReadableByteCount(searchFile.size, true);
+            case 4:
+                return FilenameUtils.getName(searchFile.filename);
+            case 5:
+                return searchFile.getProgressBar();
+            default:
+                return null;
         }
-        return null;
     }
-	
-	@Override
+
+    @Override
     public void setValueAt(Object value, int row, int col) {
-		SlskdSearchFile searchResponse = results.get(row);
-//        switch (col) {
-//			case 3: 
-//				searchResponse.setPath((String) value);
-//				break;
-//		}
-		fireTableCellUpdated(row, col);
-	}
-	
-	/**
-	 *
-	 * @param row
-	 * @param col
-	 * @return
-	 */
-	@Override
-    public boolean isCellEditable(int row, int col){
-		return false;
+        // Uncomment and implement if needed
+		// SlskdSearchFile searchFile = results.get(row);
+        // switch (col) {
+        //     case 3:
+        //         searchFile.setPath((String) value);
+        //         break;
+        // }
+        fireTableCellUpdated(row, col);
     }
-	
-	/**
-	 *
-	 * @param row
-	 * @param col
-	 * @return
-	 */
-	public boolean isCellEnabled(int row, int col) {
-        return true;
-    }
-	
-	/**
-    * Add a row to the table
-	 * @param searchResponse
-    */
-    public void addRow(SlskdSearchFile searchResponse){
-		this.results.add(searchResponse);
-		this.fireTableDataChanged();
-    }
-	
-	/**
-    * Replace a row to the table
-	 * @param searchResponse
-	 * @param row
-    */
-    public void replaceRow(SlskdSearchFile searchResponse, int row){
-		this.results.set(row, searchResponse);
-		this.fireTableDataChanged();
-    }
-
-	/**
-	 *
-	 * @param searchResponse
-	 */
-	public void removeRow(SlskdSearchFile searchResponse){
-		this.results.remove(searchResponse);
-		this.fireTableDataChanged();
-    }
-
-	/**
-	 * Return list of lines
-	 * @return
-	 */
-	public List<SlskdSearchFile> getRows() {
-		return results;
-	}
 
     /**
-     * get line
+     * @param row
+     * @param col
+     * @return
+     */
+    @Override
+    public boolean isCellEditable(int row, int col) {
+        return false;
+    }
+
+    /**
+     * @param row
+     * @param col
+     * @return
+     */
+    public boolean isCellEnabled(int row, int col) {
+        return true;
+    }
+
+    /**
+     * Add a row to the table
+     * @param searchFile
+     */
+    public void addRow(SlskdSearchFile searchFile) {
+        this.results.add(searchFile);
+        this.fireTableDataChanged();
+    }
+
+    /**
+     * Replace a row in the table
+     * @param searchFile
+     * @param row
+     */
+    public void replaceRow(SlskdSearchFile searchFile, int row) {
+        this.results.set(row, searchFile);
+        this.fireTableDataChanged();
+    }
+
+    /**
+     * Remove a row from the table
+     * @param searchFile
+     */
+    public void removeRow(SlskdSearchFile searchFile) {
+        this.results.remove(searchFile);
+        this.fireTableDataChanged();
+    }
+
+    /**
+     * Return list of rows
+     * @return
+     */
+    public List<SlskdSearchFile> getRows() {
+        return results;
+    }
+
+    /**
+     * Get a row by index
      * @param index
      * @return
      */
     public SlskdSearchFile getRow(int index) {
         return this.results.get(index);
     }
-   
-	/**
-	 *
-	 * @return
-	 */
-	@Override
+
+    /**
+     * @return
+     */
+    @Override
     public int getRowCount() {
         return this.results.size();
     }
 
     /**
-	* Returns given column's data class
-    * @param col
-     * @return 
-    */
+     * Returns given column's data class
+     * @param col
+     * @return
+     */
     @Override
-    public Class getColumnClass(int col){
-        //Note: since all data on a given column are all the same
-		//we return data class of given column first row
+    public Class<?> getColumnClass(int col) {
+        // Note: since all data on a given column are all the same
+        // we return data class of given column first row
         return this.getValueAt(0, col).getClass();
     }
 
-	/**
-	 * Clears the table
-	 */
-	public void clear() {
-        this.results = new ArrayList<>();
+    /**
+     * Clears the table
+     */
+    public void clear() {
+        this.results.clear();
         this.fireTableDataChanged();
     }
 }

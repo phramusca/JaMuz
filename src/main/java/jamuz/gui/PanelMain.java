@@ -246,7 +246,7 @@ public class PanelMain extends javax.swing.JFrame {
 					displayedFile.toggleTag(tag);
 					ArrayList<FileInfoInt> temp = new ArrayList<>();
 					temp.add(displayedFile);
-					Jamuz.getDb().updateFileTags(temp, null);
+					Jamuz.getDb().fileTag().lock().update(temp, null);
 					displayTags();
 				}
 			}
@@ -318,7 +318,7 @@ public class PanelMain extends javax.swing.JFrame {
         //update lastPlayed (now) and playCounter (+1)
 		FileInfoInt file = queueModel.getPlayingSong().getFile();
 		if(file.isFromLibrary()) {
-			Jamuz.getDb().updateFileLastPlayedAndCounter(file);
+			Jamuz.getDb().file().lock().updateLastPlayedAndCounter(file);
 			//FIXME Z PLAYER Do not increase playCounter when moved back on queue and moved forward
 			// especially if many back and forward
 			//If not, increase playCounter too much
@@ -687,7 +687,7 @@ public class PanelMain extends javax.swing.JFrame {
                 if (tcl.getColumn() == 21) { //ComboBox is here
 					FolderInfo.CopyRight copyRight = (FolderInfo.CopyRight)tcl.getNewValue();
                     FileInfoInt myFileInfo = fileInfoList.get(tcl.getRow());
-                    Jamuz.getDb().updatePathCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
+                    Jamuz.getDb().path().lock().updateCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
 					callBackSelect.refresh();
                 }
             }
@@ -714,6 +714,7 @@ public class PanelMain extends javax.swing.JFrame {
         if (!Jamuz.getMachine().read()) {
             return false;
         }
+        Jamuz.getDb().setLocationLibrary(Jamuz.getMachine().getOptionValue("location.library"));
         //TODO OPTIONS Use listeners to address the following (and more)
 		//Rationalize to avoid potential errors
         //(especially when called from a process, this would not do the trick, 

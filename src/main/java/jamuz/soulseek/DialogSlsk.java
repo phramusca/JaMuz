@@ -32,76 +32,73 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 /**
- *
+ * Dialog for managing Soulseek searches.
+ * 
  * @author phramusca <phramusca@gmail.com>
  */
 public class DialogSlsk extends javax.swing.JDialog {
 
     private final TableModelSlskdSearch tableModelResults;
-	private final TableModelSlskdDownload tableModelDownload;
-	private final TableColumnModel columnModelResults;
-	private final TableColumnModel columnModelDownload;
+    private final TableModelSlskdDownload tableModelDownload;
+    private final TableColumnModel columnModelResults;
+    private final TableColumnModel columnModelDownload;
     private Slsk soulseek;
     private final PanelSlsk panelSlsk;
-	
+    
     /**
      * Creates new form DialogSoulseek
      * @param panelSlsk
      * @param parent
      * @param modal
-	 * @param query
+     * @param query
      */
     public DialogSlsk(PanelSlsk panelSlsk, Dialog parent, boolean modal, String query) {
         super(parent, modal);
         initComponents();
 
-		jTextFieldQuery.setText(query);
-		
-		//Setup Search results table
-		tableModelResults = new TableModelSlskdSearch();
-		jTableResults.setModel(tableModelResults);
-		columnModelResults = new TableColumnModel();
-		//Assigning XTableColumnModel to allow show/hide columns
-		jTableResults.setColumnModel(columnModelResults);
-		jTableResults.createDefaultColumnsFromModel();
-		setColumn(columnModelResults, 0, 120);	// Date
-        setColumn(columnModelResults, 1, 50);	// Queued
-        TableColumn columnSearchText =
-        setColumn(columnModelResults, 2, 150);	// Search text
-        setColumn(columnModelResults, 3, 40);	// # files
-		setColumn(columnModelResults, 4, 50);	// BitRate
-		setColumn(columnModelResults, 5, 50);	// Size
-		setColumn(columnModelResults, 6, 50);	// Speed
-		setColumn(columnModelResults, 7, 50);	// Free upload spots
-		setColumn(columnModelResults, 8, 50);	// Queue length
-		setColumn(columnModelResults, 9, 150);	// Username
-		setColumn(columnModelResults, 10, 600);	// Path
-        TableColumn column = 
-        setColumn(columnModelResults, 11, 80);     // Completed
+        jTextFieldQuery.setText(query);
+        
+        // Setup Search results table
+        tableModelResults = new TableModelSlskdSearch();
+        jTableResults.setModel(tableModelResults);
+        columnModelResults = new TableColumnModel();
+        // Assigning XTableColumnModel to allow show/hide columns
+        jTableResults.setColumnModel(columnModelResults);
+        jTableResults.createDefaultColumnsFromModel();
+        setColumn(columnModelResults, 0, 120);    // Date
+        TableColumn columnQueued = setColumn(columnModelResults, 1, 50);    // Queued
+        TableColumn columnSearchText = setColumn(columnModelResults, 2, 150);    // Search text
+        setColumn(columnModelResults, 3, 40);    // # files
+        setColumn(columnModelResults, 4, 50);    // BitRate
+        setColumn(columnModelResults, 5, 50);    // Size
+        setColumn(columnModelResults, 6, 50);    // Speed
+        setColumn(columnModelResults, 7, 50);    // Free upload spots
+        setColumn(columnModelResults, 8, 50);    // Queue length
+        setColumn(columnModelResults, 9, 150);    // Username
+        setColumn(columnModelResults, 10, 600);    // Path
+        TableColumn column = setColumn(columnModelResults, 11, 80);     // Completed
         column.setCellRenderer(new ProgressCellRender());
-        columnModelResults.setColumnVisible(column, false);
+        columnModelResults.setColumnVisible(columnQueued, false);
         columnModelResults.setColumnVisible(columnSearchText, false);
         
-		//Setup download table
-		tableModelDownload = new TableModelSlskdDownload();
-		jTableDownload.setModel(tableModelDownload);
-		columnModelDownload = new TableColumnModel();
-		//Assigning XTableColumnModel to allow show/hide columns
-		jTableDownload.setColumnModel(columnModelDownload);
-		jTableDownload.createDefaultColumnsFromModel();
-        TableColumn columnDate = 
-		setColumn(columnModelDownload, 0, 120);    // Date
-		setColumn(columnModelDownload, 1, 35);     // BitRate
-		setColumn(columnModelDownload, 2, 80);     // Length
-		setColumn(columnModelDownload, 3, 50);     // Size
-		setColumn(columnModelDownload, 4, 300);    // File
-        column = 
-        setColumn(columnModelDownload, 5, 400);     // Completed
-		column.setCellRenderer(new ProgressCellRender());
-        columnModelDownload.setColumnVisible(column, false);
+        // Setup download table
+        tableModelDownload = new TableModelSlskdDownload();
+        jTableDownload.setModel(tableModelDownload);
+        columnModelDownload = new TableColumnModel();
+        // Assigning XTableColumnModel to allow show/hide columns
+        jTableDownload.setColumnModel(columnModelDownload);
+        jTableDownload.createDefaultColumnsFromModel();
+        TableColumn columnDate = setColumn(columnModelDownload, 0, 120);    // Date
+        setColumn(columnModelDownload, 1, 35);     // BitRate
+        setColumn(columnModelDownload, 2, 80);     // Length
+        setColumn(columnModelDownload, 3, 50);     // Size
+        setColumn(columnModelDownload, 4, 300);    // File
+        column = setColumn(columnModelDownload, 5, 400);     // Completed
+        column.setCellRenderer(new ProgressCellRender());
         columnModelDownload.setColumnVisible(columnDate, false);
+        columnModelDownload.setColumnVisible(column, false);
         
-		try {
+        try {
             soulseek = new Slsk();
             startSoulseekSearch();
         } catch (IOException | SlskdClient.ServerException ex) {
@@ -109,47 +106,47 @@ public class DialogSlsk extends javax.swing.JDialog {
         }
         this.panelSlsk = panelSlsk;
     }
-	
-	private TableColumn setColumn(TableColumnModel columnModel, int index, int width) {
+    
+    private TableColumn setColumn(TableColumnModel columnModel, int index, int width) {
         TableColumn column = columnModel.getColumn(index);
-		column.setMinWidth(width);
+        column.setMinWidth(width);
         column.setPreferredWidth(width);
-        column.setMaxWidth(width*3);
-		return column;
+        column.setMaxWidth(width * 3);
+        return column;
     }
-	
-	/**
-	 *
-	 * @param enable
-	 */
-	public void enableRowSorter(boolean enable) {
-		if(enable) {
-			//Enable row tableSorter (cannot be done if model is empty)
-			if(tableModelResults.getRowCount()>0) {
-				jTableResults.setAutoCreateRowSorter(true);
-				TableRowSorter<TableModelSlskdSearch> tableSorter = new TableRowSorter<>(tableModelResults);
-				jTableResults.setRowSorter(tableSorter);
-				List <RowSorter.SortKey> sortKeys = new ArrayList<>();
+    
+    /**
+     * Enable or disable row sorter.
+     * 
+     * @param enable
+     */
+    public void enableRowSorter(boolean enable) {
+        if (enable) {
+            // Enable row tableSorter (cannot be done if model is empty)
+            if (tableModelResults.getRowCount() > 0) {
+                jTableResults.setAutoCreateRowSorter(true);
+                TableRowSorter<TableModelSlskdSearch> tableSorter = new TableRowSorter<>(tableModelResults);
+                jTableResults.setRowSorter(tableSorter);
+                List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 
                 sortKeys.add(new RowSorter.SortKey(7, SortOrder.DESCENDING)); // Free upload spots
-				sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING)); // nb of files
-				sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // BitRate
-				sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Speed
-				sortKeys.add(new RowSorter.SortKey(8, SortOrder.DESCENDING)); // Queue
-				
-				tableSorter.setSortKeys(sortKeys);
-				jTableResults.getSelectionModel().setSelectionInterval(0, 0);
-			}
-			else {
-				jTableResults.setAutoCreateRowSorter(false);
-			}
-		}
-		else {
-			jTableResults.setAutoCreateRowSorter(false);
-			jTableResults.setRowSorter(null);
-		}
-   }
-     /**
+                sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING)); // nb of files
+                sortKeys.add(new RowSorter.SortKey(4, SortOrder.DESCENDING)); // BitRate
+                sortKeys.add(new RowSorter.SortKey(6, SortOrder.DESCENDING)); // Speed
+                sortKeys.add(new RowSorter.SortKey(8, SortOrder.DESCENDING)); // Queue
+                
+                tableSorter.setSortKeys(sortKeys);
+                jTableResults.getSelectionModel().setSelectionInterval(0, 0);
+            } else {
+                jTableResults.setAutoCreateRowSorter(false);
+            }
+        } else {
+            jTableResults.setAutoCreateRowSorter(false);
+            jTableResults.setRowSorter(null);
+        }
+    }
+    
+    /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
@@ -243,20 +240,20 @@ public class DialogSlsk extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchActionPerformed
-		startSoulseekSearch();
+        startSoulseekSearch();
     }//GEN-LAST:event_jButtonSearchActionPerformed
 
-	private void enableSearch(boolean enable) {
-		jButtonSearch.setEnabled(enable);
-		jTextFieldQuery.setEnabled(enable);
-	}
-	
+    private void enableSearch(boolean enable) {
+        jButtonSearch.setEnabled(enable);
+        jTextFieldQuery.setEnabled(enable);
+    }
+    
     private void jButtonAddToDownloadsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddToDownloadsActionPerformed
         new Thread() {
-			@Override
-			public void run() {
-				int selectedRow = jTableResults.getSelectedRow(); 			
-                if(selectedRow>=0) { 
+            @Override
+            public void run() {
+                int selectedRow = jTableResults.getSelectedRow();             
+                if (selectedRow >= 0) { 
                     jButtonAddToDownloads.setEnabled(false);
                     selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
                     SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
@@ -264,43 +261,42 @@ public class DialogSlsk extends javax.swing.JDialog {
                     tableModelResults.fireTableCellUpdated(selectedRow, 1);
                     panelSlsk.addDownload(searchResponse);
                  }
-			}
-		}.start();
+            }
+        }.start();
     }//GEN-LAST:event_jButtonAddToDownloadsActionPerformed
 
-	private void displaySearchFiles() {
-		int selectedRow = jTableResults.getSelectedRow(); 			
-		if(selectedRow>=0) { 
-			selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
-			SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
-			tableModelDownload.clear();
-			for (SlskdSearchFile file : searchResponse.getFiles()) {
-				tableModelDownload.addRow(file);
-			}
+    private void displaySearchFiles() {
+        int selectedRow = jTableResults.getSelectedRow();             
+        if (selectedRow >= 0) { 
+            selectedRow = jTableResults.convertRowIndexToModel(selectedRow); 
+            SlskdSearchResponse searchResponse = tableModelResults.getRow(selectedRow);
+            tableModelDownload.clear();
+            for (SlskdSearchFile file : searchResponse.getFiles()) {
+                tableModelDownload.addRow(file);
+            }
             jButtonAddToDownloads.setEnabled(!searchResponse.isQueued());
-		}
-	}
-	
+        }
+    }
+    
     private void jTableResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultsMouseClicked
-		displaySearchFiles();
+        displaySearchFiles();
     }//GEN-LAST:event_jTableResultsMouseClicked
 
     private void jTableResultsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultsMousePressed
         // If Right mouse click, select the line under mouse
-        if ( SwingUtilities.isRightMouseButton( evt ) )
-        {
+        if (SwingUtilities.isRightMouseButton(evt)) {
             Point p = evt.getPoint();
-            int rowNumber = jTableResults.rowAtPoint( p );
+            int rowNumber = jTableResults.rowAtPoint(p);
             ListSelectionModel model = jTableResults.getSelectionModel();
-            model.setSelectionInterval( rowNumber, rowNumber );
+            model.setSelectionInterval(rowNumber, rowNumber);
         }
     }//GEN-LAST:event_jTableResultsMousePressed
 
-	private void startSoulseekSearch() {
-		new Thread() {
-			@Override
-			public void run() {
-                if(soulseek !=null) {
+    private void startSoulseekSearch() {
+        new Thread() {
+            @Override
+            public void run() {
+                if (soulseek != null) {
                     enableRowSorter(false);
                     enableSearch(false);
                     jButtonAddToDownloads.setEnabled(false);
@@ -309,10 +305,10 @@ public class DialogSlsk extends javax.swing.JDialog {
                     setProgress("Searching...");
 
                     List<SlskdSearchResponse> searchResponses = soulseek.search(jTextFieldQuery.getText(), (SlskdSearchResult search) -> {
-                        setProgress(search.state + " -- Found " + search.fileCount + " file(s), " + search.responseCount + " response(s).");
+                        setProgress(search.state() + " -- Found " + search.fileCount() + " file(s), " + search.responseCount() + " response(s).");
                     });
-                    if(searchResponses!=null) {
-                        if(!searchResponses.isEmpty()) {
+                    if (searchResponses != null) {
+                        if (!searchResponses.isEmpty()) {
                             for (SlskdSearchResponse slskdSearchResponse : searchResponses) {
                                 tableModelResults.addRow(slskdSearchResponse);
                             }
@@ -327,21 +323,23 @@ public class DialogSlsk extends javax.swing.JDialog {
                 } else {
                     Popup.warning("You are not connected.");
                 }
-			}
-		}.start();
-	}
+            }
+        }.start();
+    }
 
     public void setProgress(String msg) {
         msg = msg + " | " + jTextFieldQuery.getText();
         setTitle(msg);
     }
-	
+    
     /**
+     * Main method to launch the dialog.
+     * 
      * @param panelSlsk
-	 * @param parent
-	 * @param query
-	 * @throws java.io.IOException
-	 * @throws jamuz.soulseek.SlskdClient.ServerException
+     * @param parent
+     * @param query
+     * @throws java.io.IOException
+     * @throws jamuz.soulseek.SlskdClient.ServerException
      */
     public static void main(PanelSlsk panelSlsk, Dialog parent, String query) throws IOException, SlskdClient.ServerException {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

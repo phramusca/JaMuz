@@ -48,8 +48,6 @@ public class DialogTag extends javax.swing.JDialog {
      * @param parent
      * @param modal
      * @param file
-	 * @param playlistInfo
-	 * @param currentPosition
      */
     public DialogTag(java.awt.Frame parent, boolean modal, FileInfoInt file) {
         super(parent, modal);
@@ -67,8 +65,6 @@ public class DialogTag extends javax.swing.JDialog {
      /**
 	 * @param parent
      * @param file 
-	 * @param playlistInfo 
-	 * @param currentPosition 
 	 */
 	public static void main(Frame parent, FileInfoInt file) {
 		/* Set the Nimbus look and feel */
@@ -239,7 +235,7 @@ public class DialogTag extends javax.swing.JDialog {
         file.setTags(getHighlightedTags());
 		ArrayList<FileInfoInt> temp = new ArrayList<>();
 		temp.add(file);
-		Jamuz.getDb().updateFileTags(temp, null);
+		Jamuz.getDb().fileTag().lock().update(temp, null);
         displayAndDispose();
     }//GEN-LAST:event_jButtonSaveActionPerformed
 

@@ -73,3 +73,6 @@ JaMuz_*-*-*--*-*-*.db
 !/robot/**/*.jar
 
 /target-data-local/
+
+# /data/ is used by tests
+/data/ 

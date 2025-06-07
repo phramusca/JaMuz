@@ -16,7 +16,9 @@
  */
 package jamuz;
 
-import jamuz.DbInfo.LibType;
+import jamuz.database.DbInfo;
+import jamuz.database.DbConnJaMuz;
+import jamuz.database.DbInfo.LibType;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
@@ -57,7 +59,7 @@ public class Jamuz {
 	private static Machine machine;
 	private static DbConnJaMuz db;
 	private static HashMap<Integer, Playlist> playlists;
-	
+
 	/**
 	 *
 	 * @param appPath
@@ -65,17 +67,17 @@ public class Jamuz {
 	 */
 	public static boolean configure(String appPath) {
 		Jamuz.appPath = appPath;
-		logPath = appPath + "logs" + File.separator;  //NOI18N //NOI18N //NOI18N
+		logPath = appPath + "logs" + File.separator;  //NOI18N
 		if (!setupDatabase()) {
 			return false;
 		}
-		if(!getDb().dbConn.connect()) {
+		if(!getDb().getDbConn().connect()) {
 			return false;
 		}
-		if(!getDb().updateSchema(2)) {
+		if(!getDb().schema().lock().update(2)) {
 			return false;
 		}
-		getDb().dbConn.disconnect();
+		getDb().getDbConn().disconnect();
 		if(!db.setUp(false)) {
 			return false;
 		}
@@ -84,12 +86,13 @@ public class Jamuz {
 		if (!readPlaylists()) {
 			return false;
 		}
-		if (!getCurrentMachine()) {
+        if (!getCurrentMachine()) {
 			return false;
 		}
 		if (!getMachine().read()) {
 			return false;
 		}
+        getDb().setLocationLibrary(Jamuz.getMachine().getOptionValue("location.library"));
 		if (!createLog()) {
 			return false;
 		}
@@ -129,7 +132,7 @@ public class Jamuz {
 		Ftp.setLogger(logger);
 
 		//Log options
-		logger.log(Level.CONFIG, "JaMuz database: {0}", getDb().getDbConn().info.locationOri); //NOI18N
+		logger.log(Level.CONFIG, "JaMuz database: {0}", getDb().getDbConn().getInfo().getLocationOri()); //NOI18N
 		logConfig("location.library");
 		logConfig("library.isMaster");
 		logConfig("location.add");
@@ -186,7 +189,7 @@ public class Jamuz {
 		return httpclient;
 	}
 
-	/**
+    /**
 	 *
 	 * @return
 	 */
@@ -321,6 +324,10 @@ public class Jamuz {
 		return db;
 	}
 
+	public static void setDb(DbConnJaMuz db) {
+		Jamuz.db = db;
+	}
+
 	/**
 	 * Get Application current machine's options.
 	 *
@@ -354,7 +361,7 @@ public class Jamuz {
 	 */
 	public static void readGenres() {
 		genreListModel = new DefaultListModel();
-		getDb().getGenreListModel(genreListModel);
+		getDb().listModel().getGenreListModel(genreListModel);
 	}
 
 	/**
@@ -380,8 +387,10 @@ public class Jamuz {
 	 *
 	 */
 	public static void readTags() {
-		tags = getDb().getTags();
-		tagsModel = new DefaultListModel();
+        tagsModel = new DefaultListModel();
+        //TODO: Why not using getTagListModel ?
+//        getDb().getTagListModel(tagsModel);
+		tags = getDb().tag().get();
 		tags.forEach(tag -> {
 			tagsModel.addElement(tag);
 		});
@@ -410,7 +419,7 @@ public class Jamuz {
 	 */
 	public static boolean readPlaylists() {
 		playlists = new HashMap<>();
-		return getDb().getPlaylists(playlists);
+		return getDb().playlist().get(playlists);
 	}
 
 	/**

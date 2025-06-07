@@ -16,8 +16,8 @@
  */
 package test.tools;
 
-import jamuz.DbConnJaMuz;
-import jamuz.DbInfo;
+import jamuz.database.DbConnJaMuz;
+import jamuz.database.DbInfo;
 import jamuz.FileInfoInt;
 import jamuz.utils.DateTime;
 import jamuz.utils.Desktop;
@@ -84,10 +84,8 @@ public class CompareDB {
 		//Getting list of files from databases
 		ArrayList<FileInfoInt> filesDb1 = new ArrayList<>();
 		ArrayList<FileInfoInt> filesDb2 = new ArrayList<>();
-		String sql = "SELECT F.*, P.strPath, P.checked, P.copyRight, 0 AS albumRating, 0 AS percentRated, 'INFO' AS status, P.mbId AS pathMbId, P.modifDate AS pathModifDate "
-				+ " FROM file F JOIN path P ON F.idPath=P.idPath ";
-		db1.getFiles(filesDb1, sql, "");
-		db2.getFiles(filesDb2, sql, "");
+		db1.file().getFiles(filesDb1);
+		db2.file().getFiles(filesDb2);
 
 		//Converting lists to maps
 		Map<Integer, FileInfoInt> files1 = toMap(filesDb1);

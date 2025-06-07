@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -172,6 +173,24 @@ public class ReplayGain {
 			jsonAsMap.put("albumGain", albumGain);
 			jsonAsMap.put("trackGain", trackGain);
 			return jsonAsMap;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null || getClass() != obj.getClass()) {
+				return false;
+			}
+			GainValues that = (GainValues) obj;
+			return Float.compare(that.albumGain, albumGain) == 0 &&
+				   Float.compare(that.trackGain, trackGain) == 0;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(albumGain, trackGain);
 		}
 	}
 	

@@ -17,7 +17,7 @@
 package jamuz.process.video;
 
 import info.movito.themoviedbapi.model.tv.TvSeries;
-import jamuz.DbInfo;
+import jamuz.database.DbInfo;
 import static jamuz.process.video.PanelVideo.comboRating;
 import java.io.Serializable;
 

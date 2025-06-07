@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -49,20 +48,20 @@ public class Slsk {
     public Slsk() throws IOException, SlskdClient.ServerException {
         slskdClient = new SlskdClient();
 
-        allowedExtensions = new ArrayList(
-                Arrays.asList(Jamuz.getMachine().getOptionValue("files.audio").split(","))); //NOI18N;
+        String extensions = Jamuz.getMachine().getOptionValue("files.audio");
+        allowedExtensions = extensions != null ? Arrays.asList(extensions.split(",")) : new ArrayList<>();
     }
 
     public List<SlskdSearchResponse> search(String query, ICallBackSearch callBackSearch) {
         try {
             SlskdSearchResult search = slskdClient.search(query);
-            while (!search.isComplete) {
-                search = slskdClient.getSearch(search.id);
+            while (!search.isComplete()) {
+                search = slskdClient.getSearch(search.id());
                 callBackSearch.searching(search);
                 Thread.sleep(1000);
             }
 
-            List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id);
+            List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id());
 
             // Sort, filter (authorized extensions), and group by path
             Map<String, List<SlskdSearchFile>> pathToFileMap = new HashMap<>();
@@ -86,12 +85,12 @@ public class Slsk {
             List<SlskdSearchResponse> groupedResponses = new ArrayList<>();
             for (Map.Entry<String, List<SlskdSearchFile>> entry : pathToFileMap.entrySet()) {
                 SlskdSearchResponse response = pathToResponseMap.get(entry.getKey());
-                response.fileCount = entry.getValue().size();
-                response.files = entry.getValue();
+                response.setFileCount(entry.getValue().size());
+                response.setFiles(entry.getValue());
                 response.setSearchText(query);
                 groupedResponses.add(response);
             }
-            slskdClient.deleteSearch(search.id);
+            slskdClient.deleteSearch(search.id());
 
             return groupedResponses;
         } catch (IOException | SlskdClient.ServerException ex) {

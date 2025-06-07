@@ -30,6 +30,7 @@ import jamuz.utils.Inter;
 import java.io.File;
 import java.util.ArrayList;
 import junit.framework.TestCase;
+
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -412,7 +413,7 @@ public class MergeCheckNTest extends TestCase {
 				1, //playlist.getId()is not set (only when retrieved from db)
 				Jamuz.getMachine().getName(), false
 		);
-		assertTrue("Device creation", Jamuz.getDb().updateDevice(device));
+		assertTrue("Device creation", Jamuz.getDb().device().lock().insertOrUpdate(device));
 
 		//Set stat sources
 		String rootPath;

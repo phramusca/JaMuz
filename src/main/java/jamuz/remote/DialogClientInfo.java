@@ -195,7 +195,7 @@ public class DialogClientInfo extends javax.swing.JDialog {
 			this.clientInfo.getStatSource().getSource().setRootPath(jTextFieldRootPath.getText());
 			this.clientInfo.enable(jCheckBoxEnabled.isSelected());
 			
-			if(Jamuz.getDb().updateClient(this.clientInfo)) {
+			if(Jamuz.getDb().client().lock().insertOrUpdate(this.clientInfo)) {
 				this.dispose();
 				PanelRemote.refreshList();
 			}

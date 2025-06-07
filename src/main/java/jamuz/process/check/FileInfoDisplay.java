@@ -284,14 +284,6 @@ public class FileInfoDisplay extends FileInfoInt {
 	}
 
 	/**
-	 * Set Album Artist
-	 * @param albumArtist
-	 */
-	public void setAlbumArtist(String albumArtist) {
-		this.albumArtist = albumArtist;
-	}
-
-	/**
 	 * Set year
 	 * @param year
 	 */

@@ -32,136 +32,104 @@ import org.junit.Test;
  */
 public class BenchmarkTest {
 
-	/**
-	 *
-	 */
-	public BenchmarkTest() {
-	}
+    public BenchmarkTest() {
+    }
 
-	/**
-	 *
-	 */
-	@BeforeClass
-	public static void setUpClass() {
-	}
+    @BeforeClass
+    public static void setUpClass() {
+    }
 
-	/**
-	 *
-	 */
-	@AfterClass
-	public static void tearDownClass() {
-	}
+    @AfterClass
+    public static void tearDownClass() {
+    }
 
-	/**
-	 *
-	 */
-	@Before
-	public void setUp() {
-	}
+    @Before
+    public void setUp() {
+    }
 
-	/**
-	 *
-	 */
-	@After
-	public void tearDown() {
-	}
+    @After
+    public void tearDown() {
+    }
 
-	/**
-	 * Test of get method, of class Benchmark.
-	 *
-	 * @throws java.lang.InterruptedException
-	 */
-	@Test
-	public void testGet() throws InterruptedException {
-		System.out.println("get");
-		Benchmark instance = new Benchmark(16);
-		String result = instance.get();
-		assertEquals("Ecoulé: -, restant: -", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: -, restant: 02s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: -, restant: 02s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: -, restant: 02s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 01s, restant: 02s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 01s, restant: 02s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 01s, restant: 02s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 02s, restant: 02s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 02s, restant: 02s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 02s, restant: 01s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 03s, restant: 01s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 03s, restant: 01s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 03s, restant: 01s", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 03s, restant: -", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 04s, restant: -", result);
-		//At this point we are out of initial benchmark size
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 04s, restant: -", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 04s, restant: -", result);
-		Thread.sleep(300);
-		result = instance.get();
-		assertEquals("Ecoulé: 05s, restant: -", result);
-	}
+    @Test
+    public void testGet() throws InterruptedException {
+        Benchmark instance = new Benchmark(16);
+        String result = instance.get();
+        assertEquals("Ecoulé: -, restant: -", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: -, restant: 02s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: -, restant: 02s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: -, restant: 02s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 01s, restant: 02s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 01s, restant: 02s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 01s, restant: 02s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 02s, restant: 02s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 02s, restant: 02s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 02s, restant: 01s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 03s, restant: 01s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 03s, restant: 01s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 03s, restant: 01s", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 03s, restant: -", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 04s, restant: -", result);
+        // At this point we are out of initial benchmark size
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 04s, restant: -", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 04s, restant: -", result);
+        Thread.sleep(300);
+        result = instance.get();
+        assertEquals("Ecoulé: 05s, restant: -", result);
+    }
 
-	/**
-	 * Test of setSize method, of class Benchmark.
-	 */
-	@Test
-	public void testSetSize() {
-		System.out.println("setSize");
-		//No sense to test this method
-	}
+    @Test
+    public void testSetSize() {
+        Benchmark instance = new Benchmark(10);
+        instance.setSize(20);
+        assertEquals(20, instance.getSize());
+    }
 
-	/**
-	 * Test of mean method, of class Benchmark.
-	 */
-	@Test
-	public void testMean() {
-		System.out.println("mean");
-		List<Long> numbers = new ArrayList<>(Arrays.asList(2L, 9L, 12L, 3L, 7L));
-		long expResult = 7L;
-		long result = Benchmark.mean(numbers);
-		assertEquals(expResult, result);
-	}
+    @Test
+    public void testMean() {
+        List<Long> numbers = new ArrayList<>(Arrays.asList(2L, 9L, 12L, 3L, 7L));
+        long expResult = 7L;
+        long result = Benchmark.mean(numbers);
+        assertEquals(expResult, result);
+    }
 
-	/**
-	 * Test of sum method, of class Benchmark.
-	 */
-	@Test
-	public void testSum() {
-		System.out.println("sum");
-		List<Long> numbers = new ArrayList<>(Arrays.asList(2L, 9L, 12L, 3L, 7L));
-		long expResult = 33L;
-		long result = Benchmark.sum(numbers);
-		assertEquals(expResult, result);
-	}
-
+    @Test
+    public void testSum() {
+        List<Long> numbers = new ArrayList<>(Arrays.asList(2L, 9L, 12L, 3L, 7L));
+        long expResult = 33L;
+        long result = Benchmark.sum(numbers);
+        assertEquals(expResult, result);
+    }
 }

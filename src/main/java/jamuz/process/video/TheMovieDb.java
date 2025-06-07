@@ -33,7 +33,7 @@ import info.movito.themoviedbapi.model.core.ResponseStatusException;
 import info.movito.themoviedbapi.model.core.SessionToken;
 import info.movito.themoviedbapi.model.tv.TvSeason;
 import info.movito.themoviedbapi.model.tv.TvSeries;
-import jamuz.DbInfo;
+import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.utils.Popup;
 import java.util.ArrayList;

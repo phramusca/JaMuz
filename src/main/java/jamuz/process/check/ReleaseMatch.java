@@ -193,7 +193,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 
 	private boolean checkExactAlbum() {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
-		Jamuz.getDb().checkAlbumExact(myList, album, idPath);
+		Jamuz.getDb().album().checkExact(myList, album, idPath);
 		if(myList.size()>0) {
 			this.duplicates.addAll(myList);
 			return true;
@@ -203,7 +203,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 	
 	private boolean checkSimilarAlbum() {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
-		Jamuz.getDb().checkAlbumSimilar(myList, album, idPath);
+		Jamuz.getDb().album().checkSimilar(myList, album, idPath);
 		if(myList.size()>0) {
 			duplicates.addAll(myList);
 			return true;
@@ -213,7 +213,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 	
 	private boolean checkDuplicateMbId() {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
-		Jamuz.getDb().checkAlbumDuplicate(myList, id);
+		Jamuz.getDb().album().checkDuplicate(myList, id);
 		if(myList.size()>0) {
 			duplicates.addAll(myList);
 			return true;
@@ -223,7 +223,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 	
 	private boolean checkDuplicateAlbumArtistNumber() {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
-		Jamuz.getDb().checkAlbumDuplicate(myList, artist, album, idPath, discNb, discTotal);
+		Jamuz.getDb().album().checkDuplicate(myList, artist, album, idPath, discNb, discTotal);
 		if(myList.size()>0) {
 			duplicates.addAll(myList);
 			return true;
@@ -233,7 +233,7 @@ public class ReleaseMatch implements java.lang.Comparable {
 	
 	private boolean checkSimilarAlbumArtist() {
 		ArrayList<DuplicateInfo> myList = new ArrayList<>();
-		Jamuz.getDb().checkAlbumDuplicate(myList, artist, album, idPath);
+		Jamuz.getDb().album().checkDuplicate(myList, artist, album, idPath);
 		if(myList.size()>0) {
 			duplicates.addAll(myList);
 			return true;

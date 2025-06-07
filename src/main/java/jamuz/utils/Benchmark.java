@@ -2,8 +2,8 @@
  * Copyright (C) 2014 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU General Public License as published par
+ * the Free Software Foundation, either version 3 of the License, ou
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author phramusca <phramusca@gmail.com>
+ * Utility class for benchmarking.
+ * 
+ * @autor phramusca <phramusca@gmail.com>
  */
 public class Benchmark {
 
@@ -34,64 +35,67 @@ public class Benchmark {
     private final List<Long> partialTimes;
     
     /**
-     * Creates and starts a benchmark
-     * @param size
+     * Creates and starts a benchmark.
+     * @param size the number of iterations to benchmark
      */
     public Benchmark(int size) {
-        this.size=size;
-        this.index=0;
+        this.size = size;
+        this.index = 0;
         this.partialTimes = new ArrayList<>();
         this.startTime = System.currentTimeMillis();
         this.partialTime = this.startTime;
     }
 
     /**
-     * Return ellapsed and remaining
-     * @return
+     * Returns the elapsed and remaining time.
+     * @return a formatted string with elapsed and remaining time
      */
     public String get() {
-        long currentTime=System.currentTimeMillis();
-        long ellapsedTime=currentTime-this.startTime;
-        long actionTime=currentTime-this.partialTime;
-        this.partialTime=currentTime;
+        long currentTime = System.currentTimeMillis();
+        long elapsedTime = currentTime - this.startTime;
+        long actionTime = currentTime - this.partialTime;
+        this.partialTime = currentTime;
         this.partialTimes.add(actionTime);
-        long remainingTime = mean(this.partialTimes)*(this.size-this.index);
+        long remainingTime = mean(this.partialTimes) * (this.size - this.index);
         this.index++;
         
-        String ellapsed = StringManager.humanReadableSeconds(ellapsedTime/1000);
-        String remaining = StringManager.humanReadableSeconds(remainingTime/1000);
+        String elapsed = StringManager.humanReadableSeconds(elapsedTime / 1000);
+        String remaining = StringManager.humanReadableSeconds(remainingTime / 1000);
         
-        return MessageFormat.format("{0}: {2}, {1}: {3}", Inter.get("Label.ellapsed"), Inter.get("Label.remaining"), ellapsed, remaining); //NOI18N
+        return MessageFormat.format("{0}: {2}, {1}: {3}", Inter.get("Label.elapsed"), Inter.get("Label.remaining"), elapsed, remaining); //NOI18N
     }
 
-	/**
-	 *
-	 * @param size
-	 */
-	public void setSize(int size) {
-		this.size = size;
-	}
+    /**
+     * Sets the size of the benchmark.
+     * @param size the number of iterations to benchmark
+     */
+    public void setSize(int size) {
+        this.size = size;
+    }
  
-	/**
-	 *
-	 * @param numbers
-	 * @return
-	 */
-	public static long mean(List<Long> numbers) {
-        return Math.round(sum(numbers)/(double)numbers.size());
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * Calculates the mean of a list of numbers.
+     * @param numbers the list of numbers
+     * @return the mean of the numbers
+     */
+    public static long mean(List<Long> numbers) {
+        return Math.round(sum(numbers) / (double) numbers.size());
     }
         
-	/**
-	 *
-	 * @param numbers
-	 * @return
-	 */
-	public static long sum(List<Long> numbers) {
-        long sum=0L;
-        for(long number : numbers) {
-            sum+=number;
+    /**
+     * Calculates the sum of a list of numbers.
+     * @param numbers the list of numbers
+     * @return the sum of the numbers
+     */
+    public static long sum(List<Long> numbers) {
+        long sum = 0L;
+        for (long number : numbers) {
+            sum += number;
         }
         return sum;
     }
-		
 }

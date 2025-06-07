@@ -17,6 +17,7 @@
 
 package jamuz.process.check;
 
+import jamuz.Jamuz;
 import jamuz.utils.OS;
 import jamuz.utils.Popup;
 import java.io.File;
@@ -51,7 +52,7 @@ public class MetaFlac {
 		if (files != null) {
 			List<String> cmdArray = new ArrayList<>();
 			if(OS.isWindows()) {
-				cmdArray.add("data\\system\\bin\\metaflac.exe");
+				cmdArray.add(Jamuz.getFile("metaflac.exe", "data", "system", "bin").getAbsolutePath());
 			}
             else {
                 //TODO: Test if it works in MacOS for instance
