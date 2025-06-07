@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 phramusca ( https://github.com/phramusca/JaMuz/ )
+ * Copyright (C) 2012 phramusca <phramusca@gmail.com>
  * 
  *  Helped a LOT by https://beradrian.wordpress.com/tag/mplayer/
  *

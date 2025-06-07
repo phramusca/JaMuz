@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 phramusca ( https://github.com/phramusca/JaMuz/ )
+ * Copyright (C) 2011 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ import ws.schild.jave.encode.EncodingAttributes;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public class FileInfoInt extends FileInfo {
 //Tag information
@@ -1490,6 +1490,6 @@ public class FileInfoInt extends FileInfo {
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		return super.clone(); //To change body of generated methods, choose Tools | Templates.
+		return super.clone();
 	}
 }

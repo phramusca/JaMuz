@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 raph
+ * Copyright (C) 2020 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class Result {
 	String id;

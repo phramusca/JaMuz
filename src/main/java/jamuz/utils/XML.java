@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 phramusca ( https://github.com/phramusca/JaMuz/ )
+ * Copyright (C) 2017 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public class XML {
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 raph
+ * Copyright (C) 2022 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ import java.util.Date;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DbVersion {
 	private final int version;

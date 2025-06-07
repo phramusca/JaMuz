@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 phramusca ( https://github.com/phramusca/JaMuz/ )
+ * Copyright (C) 2014 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ import javax.swing.table.TableRowSorter;
 
 /**
  *
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 
 
@@ -197,7 +197,7 @@ public class PanelBook extends javax.swing.JPanel {
 
 		@Override
 		public Object clone() throws CloneNotSupportedException {
-			return super.clone(); //To change body of generated methods, choose Tools | Templates.
+			return super.clone();
 		}
     }
     

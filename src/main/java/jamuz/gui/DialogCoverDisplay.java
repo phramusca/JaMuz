@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 phramusca ( https://github.com/phramusca/JaMuz/ )
+ * Copyright (C) 2012 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * A JDialog extension to display an album cover
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DialogCoverDisplay extends javax.swing.JDialog {
 

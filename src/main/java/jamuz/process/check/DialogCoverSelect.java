@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 phramusca ( https://github.com/phramusca/JaMuz/ )
+ * Copyright (C) 2012 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * A JDialog extension to select an album cover.
- * @author phramusca ( https://github.com/phramusca/JaMuz/ )
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DialogCoverSelect extends javax.swing.JDialog {
    
