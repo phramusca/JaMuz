@@ -68,7 +68,11 @@ public class DaoDeviceWrite {
                 stUpdateDevice.setString(1, device.getName());
                 stUpdateDevice.setString(2, device.getSource());
                 stUpdateDevice.setString(3, device.getDestination());
-                stUpdateDevice.setInt(4, (device.getIdPlaylist() > 0) ? device.getIdPlaylist() : java.sql.Types.INTEGER);
+                if (device.getIdPlaylist() > 0) {
+                    stUpdateDevice.setInt(4, device.getIdPlaylist());
+                } else {
+                    stUpdateDevice.setNull(4, java.sql.Types.INTEGER);
+                }
                 stUpdateDevice.setInt(5, device.getId());
 
                 int nbRowsAffected = stUpdateDevice.executeUpdate();
@@ -93,7 +97,11 @@ public class DaoDeviceWrite {
                 stInsertDevice.setString(2, device.getSource());
                 stInsertDevice.setString(3, device.getDestination());
                 stInsertDevice.setString(4, device.getMachineName());
-                stInsertDevice.setInt(5, (device.getIdPlaylist() > 0) ? device.getIdPlaylist() : java.sql.Types.INTEGER);
+                if (device.getIdPlaylist() > 0) {
+                    stInsertDevice.setInt(5, device.getIdPlaylist());
+                } else {
+                    stInsertDevice.setNull(5, java.sql.Types.INTEGER);
+                }
 
                 int nbRowsAffected = stInsertDevice.executeUpdate();
                 if (nbRowsAffected > 0) {

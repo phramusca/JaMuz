@@ -273,11 +273,6 @@
             <artifactId>beaglebuddy_mp3</artifactId>
             <version>0.0.1</version>
         </dependency>
-        <!--        <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>java-express</artifactId>
-            <version>0.1.1</version>
-        </dependency>-->
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>jaudiotagger</artifactId>
