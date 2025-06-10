@@ -91,8 +91,9 @@ public class Server {
             ClientInfo clientInfo = tableModel.getClient(login);
             
             client.onClose(() -> {
-                //FIXME ! This is never called, but should be !!
-                // Is connection really closed ? check it first
+                //FIXME ! HEARTBEAT/DISCONNECT This is never called ...
+                //Replace with heartbeat from client and disconnect if not receiving for a time
+                //And with a /disconnect api endpoint
                 clientInfo.setConnected(false);
                 sseClients.remove(client);
             });

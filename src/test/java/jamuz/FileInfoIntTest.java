@@ -100,7 +100,7 @@ class FileInfoIntTest {
 
     @Test
     void testGetFormattedModifDate() {
-        //FIXME: Test other getters and setters
+        //FIXME TEST Test other getters and setters
         // fileInfoIntFromDb.getFormattedAddedDate();
 
         assertEquals("2056-11-18 15:34:12", fileInfoIntFromDb.getFormattedModifDate());
@@ -111,7 +111,7 @@ class FileInfoIntTest {
 
     @Test
     void testGetLastPlayed() {
-        //FIXME: Test other getters and setters
+        //FIXME TEST: Test other getters and setters
         // fileInfoIntFromDb.getFormattedAddedDate();
 
         assertEquals(DateTime.parseSqlUtc("1956-12-25 22:08:58"), fileInfoIntFromDb.getLastPlayed());
@@ -124,7 +124,7 @@ class FileInfoIntTest {
 
     @Test
     void testGetAddedDate() {
-        //FIXME: Test other getters and setters
+        //FIXME TEST: Test other getters and setters
         // fileInfoIntFromDb.getFormattedAddedDate();
 
 
@@ -284,9 +284,9 @@ class FileInfoIntTest {
         assertEquals(300, fileInfoIntFromDb.getLength());
     }
 
-    //FIXME Test relativePath
-    //FIXME Test filename
-    //FIXME Test rootPath
+    //FIXME TEST relativePath
+    //FIXME TEST filename
+    //FIXME TEST rootPath
 
     @Test
     void testIdPath() {
@@ -304,9 +304,9 @@ class FileInfoIntTest {
         assertEquals(665, fileInfoIntFromDb.getIdFile());
     }
 
-    //FIXME: Review above tests and check if all setters are tested
+    //FIXME TEST: Review above tests and check if all setters are tested
 
-    //FIXME: Review the following tests, and make sure none are missing
+    //FIXME TEST: Review the following tests, and make sure none are missing
 
     
 
@@ -342,8 +342,8 @@ class FileInfoIntTest {
 
     @Test
     void testReadMetadataAndReplayGain() throws Exception {
-        // FIXME: Extract mocking so that test is easier to read
-        // FIXME: test flac, ape, ... ? usefull since it is using mocks ?
+        // FIXME TEST: Extract mocking so that test is easier to read
+        // FIXME TEST: test flac, ape, ... ? usefull since it is using mocks ?
 
 
         // Mocking MP3File and AudioHeader
@@ -432,7 +432,7 @@ class FileInfoIntTest {
     @Test
     void testFileInfoIntFromFileInfo() {
 
-        //FIXME: Check if all fields are tested
+        //FIXME TEST: Check if all fields are tested
 
         FileInfo fileInfo = new FileInfo(1, 1, "test/path", 5, "2023-01-01 00:00:00", "2023-01-01 00:00:00", 10, "source", 5, 120.0f, "Test Genre", "2023-01-01 00:00:00", "2023-01-01 00:00:00", "2023-01-01 00:00:00");
         FileInfoInt fileInfoIntFromFileInfo = new FileInfoInt(fileInfo, 120.0f, "Test Genre");
