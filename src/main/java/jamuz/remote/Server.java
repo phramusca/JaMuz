@@ -16,7 +16,7 @@
  */
 package jamuz.remote;
 
-//FIXME ! Do not popup errors when on server
+//FIXME SSE Do not popup errors when on server
 // => either send errors to client and/or log
 // => incl. SQL errors: see repercussions elsewhere in code
 import express.Express;
@@ -91,7 +91,7 @@ public class Server {
             ClientInfo clientInfo = tableModel.getClient(login);
             
             client.onClose(() -> {
-                //FIXME ! HEARTBEAT/DISCONNECT This is never called ...
+                //FIXME SSE HEARTBEAT/DISCONNECT This is never called ... well it happened, but unexpectedally
                 //Replace with heartbeat from client and disconnect if not receiving for a time
                 //And with a /disconnect api endpoint
                 clientInfo.setConnected(false);

@@ -119,7 +119,7 @@ public class ClientInfo {
 	}
 	
     
-    //FIXME ! Set this on when sse is connected, for 
+    //FIXME SSE Set this on when sse is connected, for 
 	/**
 	 *
 	 * @param connected

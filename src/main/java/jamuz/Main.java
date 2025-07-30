@@ -18,7 +18,6 @@ package jamuz;
 
 // FIXME ! 2 Finir branche feature/sse
 // FIXME ! 3 Revoir l'historique git depuis la dernière version livrée, jsuqu'à feature/unit-tests (rebase interactif pour grouper les changements afin de faciliter l'écriture du changelog)
-// FIXME ! 4 Include items from Desktop pot-its as FIXME or TO-DO
 // FIXME ! 5 Continuer avec les autres "FIXME !", puis refaire un branche unit-tests et finir
 // FIXME ! 6 Faire une release
 // FIXME ! 7 Finir les derniers FIXME
