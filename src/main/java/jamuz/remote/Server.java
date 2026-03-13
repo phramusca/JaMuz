@@ -111,11 +111,19 @@ public class Server {
 
         app.use((req, res) -> {
             String login = req.get("login");
+            if (login == null || login.isBlank()) {
+                res.sendStatus(Status._401.getCode());
+                return;
+            }
 
             if (!tableModel.contains(login)) {
                 String password = req.get("password");
                 String rootPath = req.get("rootPath");
                 String model = req.get("model");
+                if (password == null || password.isBlank() || rootPath == null || rootPath.isBlank() || model == null || model.isBlank()) {
+                    res.sendStatus(Status._401.getCode());
+                    return;
+                }
                 boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
                 ClientInfo info = new ClientInfo(login, password, rootPath, model, enableNewClients);
                 createClient(info);
