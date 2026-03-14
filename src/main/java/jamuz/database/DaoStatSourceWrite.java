@@ -18,7 +18,7 @@ package jamuz.database;
 
 import jamuz.Jamuz;
 import jamuz.process.merge.StatSource;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -101,8 +101,8 @@ public class DaoStatSourceWrite {
                     }
                 }
             } catch (SQLException ex) {
-                Popup.error("setStatSource(" + statSource.toString() + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "setStatSource(" + statSource.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -124,7 +124,8 @@ public class DaoStatSourceWrite {
                             new Object[]{nbRowsAffected});
                 }
             } catch (SQLException ex) {
-                Popup.error("updateLastMergeDate(" + idStatSource + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "updateLastMergeDate(" + idStatSource + ")", ex);
+                throw new RuntimeException(ex);
             }
             return "1970-01-01 00:00:00";
         }
@@ -168,8 +169,8 @@ public class DaoStatSourceWrite {
 
                 return nbRowsAffected > 0;
             } catch (SQLException ex) {
-                Popup.error("deleteStatSource(" + id + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "deleteStatSource(" + id + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

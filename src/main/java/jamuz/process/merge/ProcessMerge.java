@@ -264,16 +264,20 @@ public class ProcessMerge extends ProcessAbstract {
 		//TODO: offer the choice to user: "Apply changes ?"
 		//Copy back databases back 
 		if(!simulate) {
-			if(isRemote) {
-				selectedStatSource.updateLastMergeDate();
-			} else {
-				for (StatSource statSource : sources) {
-					checkAbort();
-					if(!copyDB(statSource.getSource(), false)) {
-						return false;
+			try {
+				if(isRemote) {
+					selectedStatSource.updateLastMergeDate();
+				} else {
+					for (StatSource statSource : sources) {
+						checkAbort();
+						if(!copyDB(statSource.getSource(), false)) {
+							return false;
+						}
+						statSource.updateLastMergeDate();
 					}
-					statSource.updateLastMergeDate();
 				}
+			} catch (RuntimeException ex) {
+				Jamuz.getLogger().log(java.util.logging.Level.SEVERE, "ProcessMerge updateLastMergeDate", ex);
 			}
 		}
 		return true;

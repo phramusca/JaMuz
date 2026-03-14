@@ -1206,8 +1206,12 @@ public class DialogOptions extends javax.swing.JDialog {
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 StatSource statSource = (StatSource) jListStatSources.getSelectedValue();
-                Jamuz.getDb().statSource().lock().delete(statSource.getId());
-                displayStatSources();
+                try {
+                    Jamuz.getDb().statSource().lock().delete(statSource.getId());
+                    displayStatSources();
+                } catch (RuntimeException ex) {
+                    Popup.error("delete stat source", ex);
+                }
             }
         }
     }//GEN-LAST:event_jButtonStatSouceDelActionPerformed
