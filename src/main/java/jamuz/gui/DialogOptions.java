@@ -1227,8 +1227,12 @@ public class DialogOptions extends javax.swing.JDialog {
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 Device device = (Device) jListDevices.getSelectedValue();
-                Jamuz.getDb().device().lock().delete(device.getId());
-                displayDevices();
+                try {
+                    Jamuz.getDb().device().lock().delete(device.getId());
+                    displayDevices();
+                } catch (RuntimeException ex) {
+                    Popup.error("delete device", ex);
+                }
             }
         }
     }//GEN-LAST:event_jButtonDeviceDelActionPerformed

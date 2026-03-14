@@ -16,12 +16,14 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
 import jamuz.process.sync.Device;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 
 /**
  *
@@ -88,8 +90,8 @@ public class DaoDevice {
                 return true;
             }
         } catch (SQLException ex) {
-            Popup.error("getDevices", ex); // NOI18N
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getDevices", ex);
+            throw new RuntimeException(ex);
         }
     }
 

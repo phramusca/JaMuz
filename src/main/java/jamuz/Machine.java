@@ -18,9 +18,11 @@ package jamuz;
 
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 
 /**
  * Machine class
@@ -63,7 +65,12 @@ public class Machine {
 			if (!Jamuz.getDb().statSource().get(statSources, this.name, false)) {
 				return false;
 			}
-			return Jamuz.getDb().device().get(devices, this.name, false);
+			try {
+				return Jamuz.getDb().device().get(devices, this.name, false);
+			} catch (RuntimeException ex) {
+				Jamuz.getLogger().log(Level.SEVERE, "Machine.read() devices", ex);
+				return false;
+			}
 		} else {
 			return false;
 		}
@@ -175,7 +182,11 @@ public class Machine {
 	public Collection<Device> getDevices(boolean force) {
 		if (force) {
 			devices = new LinkedHashMap<>();
-			Jamuz.getDb().device().get(devices, this.name, false);
+			try {
+				Jamuz.getDb().device().get(devices, this.name, false);
+			} catch (RuntimeException ex) {
+				Jamuz.getLogger().log(Level.SEVERE, "Machine.getDevices(true)", ex);
+			}
 		}
 		return devices.values();
 	}

@@ -18,7 +18,7 @@ package jamuz.database;
 
 import jamuz.Jamuz;
 import jamuz.process.sync.Device;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -54,8 +54,8 @@ public class DaoDeviceWrite {
                     return insertDevice(device);
                 }
             } catch (SQLException ex) {
-                Popup.error("setDevice(" + device.toString() + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "setDevice(" + device.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -136,13 +136,8 @@ public class DaoDeviceWrite {
                     return false;
                 }
             } catch (SQLException ex) {
-                // FIXME Z OPTIONS Happens when the device is linked to a stat source =>
-                // => Popup this nicely to the user!
-                // Instead of:
-                // java.sql.SQLException: [SQLITE_CONSTRAINT]
-                // Abort due to constraint violation (foreign key constraint failed)
-                Popup.error("deleteDevice(" + id + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "deleteDevice(" + id + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
