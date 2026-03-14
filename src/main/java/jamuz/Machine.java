@@ -59,16 +59,16 @@ public class Machine {
 		StringBuilder zText = new StringBuilder();
 		if (Jamuz.getDb().machine().lock().getOrInsert(this.name, zText, false)) {
 			this.description = zText.toString();
-			if (!Jamuz.getDb().option().get(options, this.name)) {
-				return false;
-			}
-			if (!Jamuz.getDb().statSource().get(statSources, this.name, false)) {
-				return false;
-			}
 			try {
+				if (!Jamuz.getDb().option().get(options, this.name)) {
+					return false;
+				}
+				if (!Jamuz.getDb().statSource().get(statSources, this.name, false)) {
+					return false;
+				}
 				return Jamuz.getDb().device().get(devices, this.name, false);
 			} catch (RuntimeException ex) {
-				Jamuz.getLogger().log(Level.SEVERE, "Machine.read() devices", ex);
+				Jamuz.getLogger().log(Level.SEVERE, "Machine.read()", ex);
 				return false;
 			}
 		} else {
@@ -145,7 +145,11 @@ public class Machine {
 	public Collection<StatSource> getStatSources(boolean force) {
 		if (force) {
 			statSources = new LinkedHashMap<>();
-			Jamuz.getDb().statSource().get(statSources, this.name, false);
+			try {
+				Jamuz.getDb().statSource().get(statSources, this.name, false);
+			} catch (RuntimeException ex) {
+				Jamuz.getLogger().log(Level.SEVERE, "Machine.getStatSources(true)", ex);
+			}
 		}
 		return statSources.values();
 	}
