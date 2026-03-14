@@ -43,6 +43,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -123,9 +124,16 @@ public class Server {
         }
 
         app.post("/action", (req, res) -> {
-            String action = (String) req.body().get("action");
-            String value = (String) req.body().getOrDefault("value", "");
-            callBackServer.received(action, value);
+            Map<String, ?> body = req.body();
+            String action = body != null ? (String) body.get("action") : null;
+            String value = body != null && body.containsKey("value") ? String.valueOf(body.get("value")) : "";
+            if (action == null || action.isBlank()) {
+                res.sendStatus(Status._400.getCode());
+                return;
+            }
+            final String actionFinal = action;
+            final String valueFinal = value != null ? value : "";
+            SwingUtilities.invokeLater(() -> callBackServer.received(actionFinal, valueFinal));
             res.sendStatus(Status._200.getCode());
         });
 
