@@ -478,12 +478,10 @@ public class ProcessMerge extends ProcessAbstract {
 				fileNew.setTags(getTagsJaMuz(fileJaMuz));
 			}
 		} else { //New is by default the one from JaMuz, so not comparing if forcing JaMuz
-			
-            //FIXME SSE ne pas modifier le playCounter si pas de changements de lastPlayed (ce qui peut arriver après un timeout dans le merge par ex)
-            // + enlever les popup d'erreur qui peuvent bloquer le merge (ecriture de tags sur des fichiers qu n'existent plus par ex)
-            
-			//Compare playCounter	
-			if(selectedStatSource.getSource().isUpdatePlayCounter()) {
+			// Compare playCounter only when lastPlayed has changed (avoids wrong delta after timeout/abort where lastPlayed wasn't updated)
+			boolean lastPlayedChanged = selectedStatSource.getSource().isUpdateLastPlayed()
+					&& !fileSelectedDb.getLastPlayed().equals(fileJaMuz.getLastPlayed());
+			if(selectedStatSource.getSource().isUpdatePlayCounter() && lastPlayedChanged) {
 				//Note: previousPlayCounter (for the selected database) is stored on myFileInfoDbJaMuz
 				//as retrieved during getStatistics on JaMuzDB
 				int playCounterToAdd;
@@ -501,11 +499,11 @@ public class ProcessMerge extends ProcessAbstract {
 				else {
 					//Current playCounter is less than previous playCounter !!
 					//This can happen if somehow the statistics have been reset in selected database
-					//BUT can also happen if the merge is aborted or fails (for any reason) 
+					//BUT can also happen if the merge is aborted or fails (for any reason)
 					//while merging and before the selected DB has been copied back
 					//=> NOT adding anything. The correct playCounter will be reached later on
 					//=> Restarting from current reference, which is JaMuz
-					//(we can only miss some play counts IF the reset is made on selected DB. 
+					//(we can only miss some play counts IF the reset is made on selected DB.
 					//Better than adding some each time the process is aborted)
 					//Do not think -or think well - of updating previousPlayCounter after selected DB is copied back as
 					//the problem will be on the if() above, and could cause more problems :
@@ -513,6 +511,9 @@ public class ProcessMerge extends ProcessAbstract {
 					playCounterToAdd=0;
 				}
 				fileNew.setPlayCounter(fileJaMuz.getPlayCounter()+playCounterToAdd);
+			} else if(selectedStatSource.getSource().isUpdatePlayCounter() && !lastPlayedChanged) {
+				// No lastPlayed change (e.g. after timeout): keep JaMuz playCounter, do not add from selected
+				fileNew.setPlayCounter(fileJaMuz.getPlayCounter());
 			}
 			//Compare lastPlayed, only if required (not for Mixxx as an example)
 			if(selectedStatSource.getSource().isUpdateLastPlayed()) {
