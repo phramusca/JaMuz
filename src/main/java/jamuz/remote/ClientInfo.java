@@ -119,9 +119,8 @@ public class ClientInfo {
 	}
 	
     
-    //FIXME SSE Set this on when sse is connected, for 
 	/**
-	 *
+	 * Set when SSE client connects/disconnects (on /sse connect and on /disconnect or onClose).
 	 * @param connected
 	 */
 	public void setConnected(boolean connected) {
