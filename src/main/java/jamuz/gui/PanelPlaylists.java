@@ -647,15 +647,17 @@ public class PanelPlaylists extends javax.swing.JPanel {
                 Playlist playlist = new Playlist(0, input, false, 1, LimitUnit.Gio, false,
                     Playlist.Type.Songs, Match.All, false, "");
 
-                if (playlist.insert()) {
-					enableComboListner=false;
-                    fillPlaylistCombo();
-                    jTextFieldPlaylistName.setText(input);
-                    enablePlaylistEdit(true);
-					enableComboListner=true;
-					//We want to trigger the new created playlist
-					//so it is displayed
-					jComboBoxPlaylist.setSelectedItem(playlist);
+                try {
+                    if (playlist.insert()) {
+                        enableComboListner = false;
+                        fillPlaylistCombo();
+                        jTextFieldPlaylistName.setText(input);
+                        enablePlaylistEdit(true);
+                        enableComboListner = true;
+                        jComboBoxPlaylist.setSelectedItem(playlist);
+                    }
+                } catch (RuntimeException ex) {
+                    Popup.error("insert playlist", ex);
                 }
             }
         }
@@ -683,12 +685,16 @@ public class PanelPlaylists extends javax.swing.JPanel {
                 playlist.setName(newName);
             }
         }
-        playlist.update();
-		enableComboListner=false;
-        fillPlaylistCombo();
-        playlist = Jamuz.getPlaylist(playlist.getId()); //because playlist object has changed
-        enablePlaylistEdit(false);
-		jComboBoxPlaylist.setSelectedItem(playlist);
+        try {
+            playlist.update();
+            enableComboListner = false;
+            fillPlaylistCombo();
+            playlist = Jamuz.getPlaylist(playlist.getId());
+            enablePlaylistEdit(false);
+            jComboBoxPlaylist.setSelectedItem(playlist);
+        } catch (RuntimeException ex) {
+            Popup.error("update playlist", ex);
+        }
 		//We DO NOT want playlist to be redisplayed
 		//as we are out of edition mode so it has already been done
 		enableComboListner=true;
@@ -702,10 +708,16 @@ public class PanelPlaylists extends javax.swing.JPanel {
 				JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
 				Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
-				if (playlist.delete()) {
-					enableComboListner=false;
-					fillPlaylistCombo();
-					enableComboListner=true;
+				try {
+					if (playlist.delete()) {
+						enableComboListner = false;
+						fillPlaylistCombo();
+						enableComboListner = true;
+					} else {
+						Popup.warning("Playlist is linked to a sync device or another playlist so cannot delete it.");
+					}
+				} catch (RuntimeException ex) {
+					Popup.error("delete playlist", ex);
 				}
 			}
 		}

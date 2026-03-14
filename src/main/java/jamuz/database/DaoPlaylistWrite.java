@@ -18,7 +18,7 @@ package jamuz.database;
 
 import jamuz.Jamuz;
 import jamuz.Playlist;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -74,8 +74,8 @@ public class DaoPlaylistWrite {
 					}
 				}
 			} catch (SQLException ex) {
-				Popup.error("insertPlaylist(" + playlist + ")", ex); // NOI18N
-				return false;
+				Jamuz.getLogger().log(Level.SEVERE, "insertPlaylist(" + playlist + ")", ex);
+				throw new RuntimeException(ex);
 			}
 		}
 	}
@@ -132,8 +132,8 @@ public class DaoPlaylistWrite {
 					}
 				}
 			} catch (SQLException ex) {
-				Popup.error("updatePlaylist(" + playlist.toString() + ")", ex);
-				return false;
+				Jamuz.getLogger().log(Level.SEVERE, "updatePlaylist(" + playlist.toString() + ")", ex);
+				throw new RuntimeException(ex);
 			}
 		}
 	}
@@ -223,13 +223,12 @@ public class DaoPlaylistWrite {
 					if (nbRowsAffected > 0) {
 						return true;
 					} else {
-						Popup.warning("Playlist is linked to a sync device or another playlist so cannot delete it.");
-						return false;
+						return false; // e.g. linked to device or another playlist
 					}
 				}
 			} catch (SQLException ex) {
-				Popup.error("deletePlaylist(" + id + ")", ex);
-				return false;
+				Jamuz.getLogger().log(Level.SEVERE, "deletePlaylist(" + id + ")", ex);
+				throw new RuntimeException(ex);
 			}
 		}
 	}

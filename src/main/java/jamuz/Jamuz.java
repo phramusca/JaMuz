@@ -419,7 +419,12 @@ public class Jamuz {
 	 */
 	public static boolean readPlaylists() {
 		playlists = new HashMap<>();
-		return getDb().playlist().get(playlists);
+		try {
+			return getDb().playlist().get(playlists);
+		} catch (RuntimeException ex) {
+			getLogger().log(Level.SEVERE, "readPlaylists", ex);
+			return false;
+		}
 	}
 
 	/**
