@@ -19,7 +19,7 @@ package jamuz.database;
 import jamuz.Jamuz;
 import jamuz.Machine;
 import jamuz.Option;
-import jamuz.utils.Popup;
+
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -89,8 +89,8 @@ public class DaoOptionWrite {
                     return true;
                 }
             } catch (SQLException ex) {
-                Popup.error(ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "update(Machine)", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -128,8 +128,8 @@ public class DaoOptionWrite {
                     }
                 }
             } catch (SQLException ex) {
-                Popup.error("setOption(" + myOption.toString() + "," + value + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "setOption(" + myOption.toString() + "," + value + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

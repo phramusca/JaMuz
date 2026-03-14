@@ -16,13 +16,14 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
 import jamuz.Option;
-import jamuz.utils.Inter;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 /**
  *
@@ -79,15 +80,13 @@ public class DaoOption {
                 }
 
                 if (myOptions.isEmpty()) {
-                    Popup.warning(Inter.get("Error.NoOption") + " \"" + machineName + "\"."); // NOI18N //NOI18N
                     return false;
                 }
-
                 return true;
             }
         } catch (SQLException ex) {
-            Popup.error("getOptions(\"" + machineName + "\")", ex); // NOI18N
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getOptions(\"" + machineName + "\")", ex);
+            throw new RuntimeException(ex);
         }
     }
 
