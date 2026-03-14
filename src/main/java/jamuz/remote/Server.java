@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
@@ -60,6 +63,7 @@ public class Server {
     private final TableModelRemote tableModel; //contains clients info from database
     Queue<SseClient> sseClients = new ConcurrentLinkedQueue<>();
     private final ICallBackServer callBackServer;
+    private ScheduledExecutorService sseHeartbeatExecutor;
 
     /**
      *
@@ -75,7 +79,12 @@ public class Server {
 
     public void sendSseEvent(String event, String data, String id) {
         for (SseClient sseClient : sseClients) {
-            sseClient.sendEvent(event, data, id);
+            try {
+                System.out.println("Sending SSE event to client: " + event + " " + data + " " + id);
+                sseClient.sendEvent(event, data, id);
+            } catch (Exception e) {
+                Logger.getLogger(Server.class.getName()).log(Level.FINE, "SSE send to client", e);
+            }
         }
     }
 
@@ -100,7 +109,17 @@ public class Server {
             sseClients.add(client);
             clientInfo.setConnected(true);
         });
-        //https://medium.com/@anugrahasb1997/implementing-server-sent-events-sse-in-android-with-okhttp-eventsource-226dc9b2599d
+
+        // Heartbeat: send a ping every 5s so the client's read timeout is not hit (no data = timeout after ~10s)
+        if (sseHeartbeatExecutor == null) {
+            sseHeartbeatExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "SSE-heartbeat");
+                t.setDaemon(true);
+                return t;
+            });
+            // initialDelay: 5s before first ping ; period: 5s between each ping
+            sseHeartbeatExecutor.scheduleAtFixedRate(() -> sendSseEvent("ping", "", ""), 5, 5, TimeUnit.SECONDS);
+        }
 
         app.post("/action", (req, res) -> {
             String action = (String) req.body().get("action");
@@ -362,6 +381,18 @@ public class Server {
      *
      */
     public void close() {
+        if (sseHeartbeatExecutor != null) {
+            sseHeartbeatExecutor.shutdown();
+            try {
+                if (!sseHeartbeatExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
+                    sseHeartbeatExecutor.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                sseHeartbeatExecutor.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+            sseHeartbeatExecutor = null;
+        }
         app.stop();
     }
 
