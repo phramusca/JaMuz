@@ -40,8 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +60,8 @@ public class Server {
     private Express app;
     private int port;
     private final TableModelRemote tableModel; //contains clients info from database
-    Queue<SseClient> sseClients = new ConcurrentLinkedQueue<>();
+    /** SSE clients by login (from header). Use this to know which ClientInfo/login each client is. */
+    private final Map<String, SseClient> sseClientsByLogin = new ConcurrentHashMap<>();
     private final ICallBackServer callBackServer;
     private ScheduledExecutorService sseHeartbeatExecutor;
 
@@ -78,12 +78,12 @@ public class Server {
     }
 
     public void sendSseEvent(String event, String data, String id) {
-        for (SseClient sseClient : sseClients) {
+        for (Map.Entry<String, SseClient> entry : sseClientsByLogin.entrySet()) {
             try {
-                System.out.println("Sending SSE event to client: " + event + " " + data + " " + id);
-                sseClient.sendEvent(event, data, id);
+                System.out.println("Sending SSE event \"" + event + "\" to client \"" + entry.getKey() + "\" | data: " + data + " | id: " + id);
+                entry.getValue().sendEvent(event, data, id);
             } catch (Exception e) {
-                Logger.getLogger(Server.class.getName()).log(Level.FINE, "SSE send to client", e);
+                Logger.getLogger(Server.class.getName()).log(Level.FINE, "SSE send to client " + entry.getKey(), e);
             }
         }
     }
@@ -98,16 +98,20 @@ public class Server {
         app.sse("/sse", client -> {
             String login = client.ctx.req.getHeader("login");
             ClientInfo clientInfo = tableModel.getClient(login);
-            
+            if (login != null) {
+                sseClientsByLogin.put(login, client);
+            }
             client.onClose(() -> {
-                //FIXME SSE HEARTBEAT/DISCONNECT This is never called ... well it happened, but unexpectedally
-                //Replace with heartbeat from client and disconnect if not receiving for a time
-                //And with a /disconnect api endpoint
-                clientInfo.setConnected(false);
-                sseClients.remove(client);
+                if (login != null) {
+                    sseClientsByLogin.remove(login, client);
+                }
+                if (clientInfo != null) {
+                    clientInfo.setConnected(false);
+                }
             });
-            sseClients.add(client);
-            clientInfo.setConnected(true);
+            if (clientInfo != null) {
+                clientInfo.setConnected(true);
+            }
         });
 
         // Heartbeat: send a ping every 5s so the client's read timeout is not hit (no data = timeout after ~10s)
