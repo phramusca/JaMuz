@@ -836,10 +836,14 @@ public class PanelOptions extends javax.swing.JPanel {
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					if (Jamuz.getDb().tag().lock().update((String) jListTags.getSelectedValue(), newTag)) {
-						if (Jamuz.getDb().file().lock().updateModifDate(newTag)) {
-							refreshListTagsModel();
+					try {
+						if (Jamuz.getDb().tag().lock().update((String) jListTags.getSelectedValue(), newTag)) {
+							if (Jamuz.getDb().file().lock().updateModifDate(newTag)) {
+								refreshListTagsModel();
+							}
 						}
+					} catch (RuntimeException ex) {
+						Popup.error("update tag", ex);
 					}
 				}
 			}
@@ -863,9 +867,14 @@ public class PanelOptions extends javax.swing.JPanel {
 					Inter.get("Label.Confirm"), //NOI18N 
 					JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				if (Jamuz.getDb().tag().lock().delete((String) jListTags.getSelectedValue())) {
-					Popup.warning("Problem deleting tag. It is probably applied to at least a track, so cannot delete it.");  //NOI18N
-					refreshListTagsModel();
+				try {
+					if (Jamuz.getDb().tag().lock().delete((String) jListTags.getSelectedValue())) {
+						refreshListTagsModel();
+					} else {
+						Popup.warning("Problem deleting tag. It is probably applied to at least a track, so cannot delete it.");  //NOI18N
+					}
+				} catch (RuntimeException ex) {
+					Popup.error("delete tag", ex);
 				}
 			}
 		}
@@ -876,9 +885,13 @@ public class PanelOptions extends javax.swing.JPanel {
 		DefaultListModel model = (DefaultListModel) jListTags.getModel();
 		if (model.contains(input)) {
 			Popup.warning(MessageFormat.format(Inter.get("Msg.Options.Tag.Exists"), input));  //NOI18N 
-		} else if (!input.isBlank()) {  //NOI18N 
-			Jamuz.getDb().tag().lock().insert(input);
-			refreshListTagsModel();
+		} else if (!input.isBlank()) {  //NOI18N
+			try {
+				Jamuz.getDb().tag().lock().insert(input);
+				refreshListTagsModel();
+			} catch (RuntimeException ex) {
+				Popup.error("insert tag", ex);
+			}
 		}
     }//GEN-LAST:event_jButtonTagsAddActionPerformed
 

@@ -16,11 +16,13 @@
  */
 package jamuz.database;
 
-import jamuz.utils.Popup;
+import jamuz.Jamuz;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 /**
  *
@@ -62,7 +64,8 @@ public class DaoTag {
                 tags.add(dbConn.getStringValue(rs, "value"));
             }
         } catch (SQLException ex) {
-            Popup.error("getTags()", ex); // NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "getTags()", ex);
+            throw new RuntimeException(ex);
         }
 
         return tags;

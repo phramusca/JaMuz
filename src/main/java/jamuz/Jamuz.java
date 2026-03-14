@@ -388,12 +388,13 @@ public class Jamuz {
 	 */
 	public static void readTags() {
         tagsModel = new DefaultListModel();
-        //TODO: Why not using getTagListModel ?
-//        getDb().getTagListModel(tagsModel);
-		tags = getDb().tag().get();
-		tags.forEach(tag -> {
-			tagsModel.addElement(tag);
-		});
+		try {
+			tags = getDb().tag().get();
+			tags.forEach(tag -> tagsModel.addElement(tag));
+		} catch (RuntimeException ex) {
+			getLogger().log(Level.SEVERE, "readTags", ex);
+			tags = new ArrayList<>();
+		}
 	}
 
 	/**
