@@ -19,7 +19,7 @@ package jamuz.database;
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -118,8 +118,8 @@ public class DaoPlayCounterWrite {
                 return true;
 
             } catch (SQLException ex) {
-                Popup.error("setPreviousPlayCounter(" + idStatSource + ")", ex); // NOI18N
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "setPreviousPlayCounter(" + idStatSource + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

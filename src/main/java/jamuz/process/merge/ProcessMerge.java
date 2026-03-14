@@ -1010,9 +1010,13 @@ public class ProcessMerge extends ProcessAbstract {
 		if(!simulate) {	
 			progressBar.progress(Inter.get("Msg.Check.Scan.Setup")); //NOI18N
 			if(!filesToUpdatePlayCounter.isEmpty()) {
-				//Remove potential duplicates 
-				filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter));
-				if(!dBJaMuz.playCounter().lock().update(filesToUpdatePlayCounter, selectedStatSource.getId())) {
+				try {
+					filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter));
+					if(!dBJaMuz.playCounter().lock().update(filesToUpdatePlayCounter, selectedStatSource.getId())) {
+						return false;
+					}
+				} catch (RuntimeException ex) {
+					Jamuz.getLogger().log(java.util.logging.Level.SEVERE, "ProcessMerge playCounter update", ex);
 					return false;
 				}
 			}
