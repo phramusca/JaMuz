@@ -1,6 +1,7 @@
 package jamuz;
 
 import jamuz.process.check.FolderInfo;
+import jamuz.process.check.ReplayGain;
 import jamuz.process.sync.SyncStatus;
 import jamuz.utils.DateTime;
 import jamuz.process.check.FolderInfo.CheckedFlag;
@@ -23,11 +24,14 @@ import org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockedStatic;
+import org.apache.commons.io.FilenameUtils;
+
 import java.util.Iterator;
 
 class FileInfoIntTest {
@@ -313,9 +317,10 @@ class FileInfoIntTest {
   
     @Test
     void testGetFullPath() {
-        File expectedFile = new File("root/path/test/path");
-        assertEquals(expectedFile, fileInfoIntFromDb.getFullPath());
-        assertEquals(new File("/home/user/music/path/to/file.flac"), fileInfoIntForScan.getFullPath());
+        // fileInfoIntFromDb has rootPath "test toot path" and relativeFullPath "path/to/file.mp3"
+        File expectedFromDb = new File(FilenameUtils.concat("test toot path", "path/to/file.mp3"));
+        assertEquals(expectedFromDb, fileInfoIntFromDb.getFullPath());
+        assertEquals(new File("/home/user/music/path/to/file.mp3"), fileInfoIntForScan.getFullPath());
     }
 
     @Test
@@ -328,8 +333,9 @@ class FileInfoIntTest {
 
     @Test
     void testGetCoverImage() {
-        assertNull(fileInfoIntFromDb.getCoverImage());
-        assertNull(fileInfoIntForScan.getCoverImage());
+        // getCoverImage() lazy-loads and sets empty placeholder if no cover in metadata, so it never returns null
+        assertNotNull(fileInfoIntFromDb.getCoverImage());
+        assertNotNull(fileInfoIntForScan.getCoverImage());
     }
 
     @Test
@@ -378,7 +384,12 @@ class FileInfoIntTest {
         MockedStatic<AudioFileIO> mockedStatic = Mockito.mockStatic(AudioFileIO.class);
         mockedStatic.when(() -> AudioFileIO.read(any(File.class))).thenReturn(mp3FileMock);
 
-        // Mocking ReplayGain values
+        // Mock ReplayGain.read() so fileInfoIntForScan.getReplayGain(false) does not touch the filesystem
+        MockedStatic<ReplayGain> replayGainMock = Mockito.mockStatic(ReplayGain.class);
+        replayGainMock.when(() -> ReplayGain.read(any(File.class), anyString()))
+                .thenReturn(new GainValues(24.3f, 26.14f));
+
+        // Mocking ReplayGain values (ID3 TXXX for fromDb)
         GainValues gainValues = new GainValues(12.1f, 53.6f);
         AbstractID3v2Frame frameMock1 = mock(AbstractID3v2Frame.class);
         AbstractID3v2Frame frameMock2 = mock(AbstractID3v2Frame.class);
@@ -426,6 +437,7 @@ class FileInfoIntTest {
         when(fileInfoIntMock.getReplayGain(true)).thenReturn(gainValues);
         assertEquals(gainValues, fileInfoIntMock.getReplayGain(true));
 
+        replayGainMock.close();
         mockedStatic.close();
     }
 
@@ -433,10 +445,15 @@ class FileInfoIntTest {
     void testFileInfoIntFromFileInfo() {
 
         //FIXME TEST: Check if all fields are tested
+        // FileInfoInt(FileInfo, float, String) uses Jamuz.getMachine().getOptionValue("location.library") for rootPath
+        Machine machineMock = mock(Machine.class);
+        when(machineMock.getOptionValue("location.library")).thenReturn("/test/library");
+        try (MockedStatic<Jamuz> jamuzMock = Mockito.mockStatic(Jamuz.class)) {
+            jamuzMock.when(Jamuz::getMachine).thenReturn(machineMock);
 
-        FileInfo fileInfo = new FileInfo(1, 1, "test/path", 5, "2023-01-01 00:00:00", "2023-01-01 00:00:00", 10, "source", 5, 120.0f, "Test Genre", "2023-01-01 00:00:00", "2023-01-01 00:00:00", "2023-01-01 00:00:00");
-        FileInfoInt fileInfoIntFromFileInfo = new FileInfoInt(fileInfo, 120.0f, "Test Genre");
-        assertEquals(fileInfo.getIdFile(), fileInfoIntFromFileInfo.getIdFile());
+            FileInfo fileInfo = new FileInfo(1, 1, "test/path", 5, "2023-01-01 00:00:00", "2023-01-01 00:00:00", 10, "source", 5, 120.0f, "Test Genre", "2023-01-01 00:00:00", "2023-01-01 00:00:00", "2023-01-01 00:00:00");
+            FileInfoInt fileInfoIntFromFileInfo = new FileInfoInt(fileInfo, 120.0f, "Test Genre");
+            assertEquals(fileInfo.getIdFile(), fileInfoIntFromFileInfo.getIdFile());
         assertEquals(fileInfo.getIdPath(), fileInfoIntFromFileInfo.getIdPath());
         assertEquals(fileInfo.getRelativeFullPath(), fileInfoIntFromFileInfo.getRelativeFullPath());
         assertEquals(fileInfo.getRating(), fileInfoIntFromFileInfo.getRating());
@@ -449,5 +466,6 @@ class FileInfoIntTest {
         assertEquals(fileInfo.getFormattedRatingModifDate(), fileInfoIntFromFileInfo.getFormattedRatingModifDate());
         assertEquals(fileInfo.getFormattedTagsModifDate(), fileInfoIntFromFileInfo.getFormattedTagsModifDate());
         assertEquals(fileInfo.getFormattedGenreModifDate(), fileInfoIntFromFileInfo.getFormattedGenreModifDate());
+        }
     }
 }
