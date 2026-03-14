@@ -20,7 +20,6 @@ import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.process.merge.StatSource;
 import jamuz.utils.DateTime;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -195,9 +194,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 			return getStatistics(files);
 
 		} catch (SQLException ex) {
-			Popup.error(ex);
-			Jamuz.getLogger().log(Level.SEVERE, "getStatistics: " + statSource, ex); // NOI18N
-			return false;
+			Jamuz.getLogger().log(Level.SEVERE, "getStatistics: " + statSource, ex);
+			throw new RuntimeException(ex);
 		}
 
 	}
@@ -260,10 +258,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 
 			return true;
 		} catch (SQLException ex) {
-			// Proper error handling. We should not have such an error unless above code
-			// changes
-			Popup.error("setUp", ex); // NOI18N
-			return false;
+			Jamuz.getLogger().log(Level.SEVERE, "setUp", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 
@@ -307,8 +303,8 @@ public class DbConnJaMuz extends StatSourceSQL {
 					previousPlayCounter, bpm, genre, ratingModifDate, tagsModifDate,
 					genreModifDate);
 		} catch (SQLException ex) {
-			Popup.error("getStats", ex); // NOI18N
-			return null;
+			Jamuz.getLogger().log(Level.SEVERE, "getStats", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 

@@ -27,7 +27,6 @@ import java.util.logging.Level;
 import org.sqlite.SQLiteConfig;
 
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 
 /**
  * Used to connect to a database
@@ -103,14 +102,14 @@ public class DbConn {
 							this.info.pwd); // NOI18N
 					break;
 				default:
-					Popup.error(Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\"  " + " \"" // NOI18N
-							+ this.info.libType + "\"  "); // NOI18N
-					return false;
+					String msg = Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\" \"" + this.info.libType + "\"";
+					Jamuz.getLogger().log(Level.SEVERE, msg);
+					throw new RuntimeException(msg);
 			}
 			return true;
 		} catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-			Popup.error(Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\"", ex); // NOI18N
-			return false;
+			Jamuz.getLogger().log(Level.SEVERE, Inter.get("Error.ConnectDatabase") + " \"" + this.info.locationWork + "\"", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 
@@ -161,8 +160,8 @@ public class DbConn {
 			}
 			return source;
 		} catch (SQLException ex) {
-			Popup.error(ex);
-			return ""; // NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "getStringValue", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 }

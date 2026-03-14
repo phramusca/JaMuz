@@ -21,7 +21,6 @@ import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -126,20 +125,18 @@ public class DbInfo {
 					if (myFile.exists()) {
 						return true;
 					} else {
-						Popup.error(java.text.MessageFormat.format(
-								Inter.get("Error.PathNotFound"),
-								new Object[]{locationOri})); //NOI18N
-						return false;
+						String msg = java.text.MessageFormat.format(Inter.get("Error.PathNotFound"), new Object[]{locationOri});
+						Jamuz.getLogger().log(Level.SEVERE, msg);
+						throw new RuntimeException(msg);
 					}
 				}
 			case MySQL:
 				//TODO: Check database connect
 				return true;
 			default:
-				Popup.error(java.text.MessageFormat.format(
-						Inter.get("Error.DbTypeNotSupported"),
-						new Object[]{this.libType})); //NOI18N
-				return false;
+				String msg = java.text.MessageFormat.format(Inter.get("Error.DbTypeNotSupported"), new Object[]{this.libType});
+				Jamuz.getLogger().log(Level.SEVERE, msg);
+				throw new RuntimeException(msg);
 		}
 	}
 
@@ -159,18 +156,16 @@ public class DbInfo {
 					if (receive) {
 						fileName = this.ftpFileName;
 						if (!(myFTP.getFile())) {
-							Popup.error(MessageFormat.format(
-									Inter.get("Error.DatabaseFileRetrieve"),
-									new Object[]{this.locationOri}));  //NOI18N
-							return false;
+							String msg = MessageFormat.format(Inter.get("Error.DatabaseFileRetrieve"), new Object[]{this.locationOri});
+							Jamuz.getLogger().log(Level.SEVERE, msg);
+							throw new RuntimeException(msg);
 						}
 						this.locationWork = locationWork + fileName;
 					} else {
 						if (!(myFTP.sendFile())) {
-							Popup.error(MessageFormat.format(
-									Inter.get("Error.DataBaseFileSend"),
-									new Object[]{this.locationOri}));  //NOI18N
-							return false;
+							String msg = MessageFormat.format(Inter.get("Error.DataBaseFileSend"), new Object[]{this.locationOri});
+							Jamuz.getLogger().log(Level.SEVERE, msg);
+							throw new RuntimeException(msg);
 						}
 					}
 					return true;
@@ -189,19 +184,17 @@ public class DbInfo {
 					try {
 						FileSystem.copyFile(sourceFile, destinationFile);
 					} catch (IOException ex) {
-						Popup.error("sourceFile=" + sourceFile + ", destinationFile="
-								+ destinationFile, ex);
-						return false;
+						Jamuz.getLogger().log(Level.SEVERE, "sourceFile=" + sourceFile + ", destinationFile=" + destinationFile, ex);
+						throw new RuntimeException(ex);
 					}
 				}
 			case MySQL:  //NOI18N
 				//No need to retrieve a mysql database ...
 				return true;
 			default:
-				Popup.error(MessageFormat.format(
-						Inter.get("Error.DbTypeNotSupported"),
-						new Object[]{this.libType}));  //NOI18N
-				return false;
+				String msg = MessageFormat.format(Inter.get("Error.DbTypeNotSupported"), new Object[]{this.libType});
+				Jamuz.getLogger().log(Level.SEVERE, msg);
+				throw new RuntimeException(msg);
 		}
 	}
 	
@@ -223,8 +216,8 @@ public class DbInfo {
 				try {
 					FileSystem.copyFile(workingFile, backupFile);
 				} catch (IOException ex) {
-					Popup.error(ex);
-					return false;
+					Jamuz.getLogger().log(Level.SEVERE, "backupDB copyFile", ex);
+					throw new RuntimeException(ex);
 				}
 				return true;
 			case MySQL:  //NOI18N
@@ -330,12 +323,13 @@ public class DbInfo {
 					return true;
 
 				} catch (IOException | InterruptedException ex) {
-					Popup.error(ex);
-					return false;
+					Jamuz.getLogger().log(Level.SEVERE, "backupDB MySQL", ex);
+					throw new RuntimeException(ex);
 				}
 			default:
-				Popup.error(MessageFormat.format(Inter.get("Error.DbTypeNotSupported"), new Object[]{this.libType}));  //NOI18N
-				return false;
+				String msg = MessageFormat.format(Inter.get("Error.DbTypeNotSupported"), new Object[]{this.libType});
+				Jamuz.getLogger().log(Level.SEVERE, msg);
+				throw new RuntimeException(msg);
 		}
 	}
 
