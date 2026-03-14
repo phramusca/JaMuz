@@ -35,7 +35,6 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.DateTime;
 import jamuz.utils.Inter;
 import jamuz.utils.LogText;
-import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.Utils;
 import java.io.File;
@@ -127,12 +126,14 @@ public class ProcessMerge extends ProcessAbstract {
 	 */
     @Override
 	public void run() {
-        String popupMsg=Inter.get("Msg.MergeComplete");  //NOI18N
+        String popupMsg = Inter.get("Msg.MergeComplete");  //NOI18N
         try {
             resetAbort();
-            if(sources.size()<=0) {
-                Popup.info("You must select at least one source.");
-                popupMsg="";
+            if (sources.size() <= 0) {
+                String msg = "You must select at least one source.";
+                Jamuz.getLogger().log(Level.INFO, msg);
+                callback.showInfo(msg);
+                popupMsg = "";
                 return;
             }
             mergeReport="";  //NOI18N
@@ -150,19 +151,23 @@ public class ProcessMerge extends ProcessAbstract {
                 popupMsg=""; 
             }
         } catch (InterruptedException ex) {
-            popupMsg=Inter.get("Msg.MergeAborted");  //NOI18N
+            popupMsg = Inter.get("Msg.MergeAborted");  //NOI18N
         } catch (CloneNotSupportedException ex) {
-            popupMsg="Clone not supported. Should never happen!"; //NOI18N
+            popupMsg = "Clone not supported. Should never happen!"; //NOI18N
+        } catch (RuntimeException ex) {
+            Jamuz.getLogger().log(Level.SEVERE, "ProcessMerge", ex);
+            popupMsg = ex.getMessage() != null ? ex.getMessage() : ex.toString();
+            callback.showError(popupMsg);
         }
         finally {
             progressBar.reset();
-			progressBar.setString(
-					DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)
-					+" | "+popupMsg+" "+completedList.size()
-					+" change(s). " + errorList.size() + " error(s).");
-			callback.completed(errorList, isRemote?mergeListDbSelected:completedList, popupMsg, mergeReport);
+            progressBar.setString(
+                    DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)
+                    + " | " + popupMsg + " " + completedList.size()
+                    + " change(s). " + errorList.size() + " error(s).");
+            callback.completed(errorList, isRemote ? mergeListDbSelected : completedList, popupMsg, mergeReport);
         }
-	} 
+    } 
 
 	private boolean mergeMain() throws InterruptedException, CloneNotSupportedException {
 		
@@ -1035,27 +1040,24 @@ public class ProcessMerge extends ProcessAbstract {
         }
         //Create Log for JaMuz database
         logDbJaMuz = new LogText(logSubPath);
-        if(!logDbJaMuz.createFile(prefix+"1-"+dBJaMuz.getName() + ".txt")) {
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
-					new Object[] {prefix+dBJaMuz.getName()+".txt"}));  //NOI18N
-            return false;
+        if (!logDbJaMuz.createFile(prefix + "1-" + dBJaMuz.getName() + ".txt")) {
+            String msg = MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[]{prefix + dBJaMuz.getName() + ".txt"});
+            Jamuz.getLogger().log(Level.SEVERE, msg);
+            throw new RuntimeException(msg);
         }
-        //Create Log for NEW info (after comparison)
         logDbNew = new LogText(logSubPath);
-        if(!logDbNew.createFile(prefix+"2-"+"NEW" + ".txt")) {  //NOI18N
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
-					new Object[] {prefix+"NEW.txt"}));  //NOI18N
-            return false;
+        if (!logDbNew.createFile(prefix + "2-" + "NEW" + ".txt")) {
+            String msg = MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[]{prefix + "NEW.txt"});
+            Jamuz.getLogger().log(Level.SEVERE, msg);
+            throw new RuntimeException(msg);
         }
-		//Create Log for selected database
         logDbSelected = new LogText(logSubPath);
-        String name=selectedStatSource.getSource().getName()
-                +" ["+DateTime.formatUTC(selectedStatSource.lastMergeDate, 
-						DateTime.DateTimeFormat.FILE, false)+"]";
-        if(!logDbSelected.createFile(prefix + "3-" + name + ".txt")) {
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
-					new Object[] {prefix + name + ".txt"}));  //NOI18N
-            return false;
+        String name = selectedStatSource.getSource().getName()
+                + " [" + DateTime.formatUTC(selectedStatSource.lastMergeDate, DateTime.DateTimeFormat.FILE, false) + "]";
+        if (!logDbSelected.createFile(prefix + "3-" + name + ".txt")) {
+            String msg = MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[]{prefix + name + ".txt"});
+            Jamuz.getLogger().log(Level.SEVERE, msg);
+            throw new RuntimeException(msg);
         }
         return true;
     }

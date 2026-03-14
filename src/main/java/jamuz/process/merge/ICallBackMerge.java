@@ -40,4 +40,23 @@ public interface ICallBackMerge {
 	 *
 	 */
 	public void refresh();
+
+	/**
+	 * Show an info message to the user (e.g. "You must select at least one source").
+	 * No-op when called from server; UI implementation can use Popup.info().
+	 */
+	default void showInfo(String msg) {
+	}
+
+	/**
+	 * Show a warning to the user. No-op when called from server.
+	 */
+	default void showWarning(String msg) {
+	}
+
+	/**
+	 * Show an error to the user. No-op when called from server.
+	 */
+	default void showError(String msg) {
+	}
 }

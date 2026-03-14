@@ -428,6 +428,21 @@ public class PanelMerge extends javax.swing.JPanel {
 		@Override
 		public void refresh() {
 		}
+
+		@Override
+		public void showInfo(String msg) {
+			Popup.info(msg);
+		}
+
+		@Override
+		public void showWarning(String msg) {
+			Popup.warning(msg);
+		}
+
+		@Override
+		public void showError(String msg) {
+			Popup.error(msg);
+		}
 	}
 	
 	private static boolean isRunning() {

@@ -51,4 +51,22 @@ public interface ICallBackSync {
 	 * @param msg
 	 */
 	public void addRow(String file, String msg);
+
+	/**
+	 * Show an info message to the user. No-op when called from server; UI can use Popup.info().
+	 */
+	default void showInfo(String msg) {
+	}
+
+	/**
+	 * Show a warning to the user. No-op when called from server.
+	 */
+	default void showWarning(String msg) {
+	}
+
+	/**
+	 * Show an error to the user. No-op when called from server.
+	 */
+	default void showError(String msg) {
+	}
 }

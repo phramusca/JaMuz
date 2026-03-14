@@ -26,11 +26,11 @@ import javax.swing.JOptionPane;
  * @author phramusca <phramusca@gmail.com>
  */
 public class Popup {
-	
+
 	//TODO: Make "JaMuz" configurable
 	private static final String appName = "JaMuz";  //NOI18N
 	private static Logger logger=null; //Can't be static. Why should it be (as netbeans says) ?
-	
+
 	/**
 	 * Set the logger
 	 * @param logger
@@ -38,7 +38,7 @@ public class Popup {
 	public static void setLogger(Logger logger) {
 		Popup.logger = logger;
 	}
-	
+
 	/**
 	 * Popup an info to the user (ex: "Process complete.")
 	 * @param str
@@ -46,13 +46,13 @@ public class Popup {
 	public static void info(String str) {
 		javax.swing.JOptionPane.showMessageDialog(null, str, appName, JOptionPane.INFORMATION_MESSAGE);
 	}
-	
+
 	/**
 	 * Warn user (ex: "Cannot find configuration file ...")
 	 * @param str
 	 */
 	public static void warning(String str) {
-        if(logger!=null) {
+		if (logger != null) {
 			Popup.logger.log(Level.WARNING, str);
 		}
 		javax.swing.JOptionPane.showMessageDialog(null, str, appName + " - " + Inter.get("Label.WARNING"), JOptionPane.WARNING_MESSAGE);  //NOI18N
@@ -70,12 +70,12 @@ public class Popup {
 	 * @param str
 	 */
 	public static void error(String str) {
-		if(logger!=null) {
+		if (logger != null) {
 			Popup.logger.severe(str);
 		}
 		popupError(str);
-    }
-	
+	}
+
 	/**
 	 * Popup an error with additional text
 	 * @param msg
@@ -87,7 +87,7 @@ public class Popup {
 				ex.toString(),
 				traceElement.toString(),
 				msg);
-		if(logger!=null) {
+		if (logger != null) {
 			Popup.logger.log(Level.SEVERE, errorMessage, ex);
 		}
 		popupError(errorMessage);
@@ -108,10 +108,9 @@ public class Popup {
 	 * @param ex
 	 */
 	public static void error(Exception ex) {
-		if(logger!=null) { //Can happen at application start before logger is setup
+		if (logger != null) { //Can happen at application start before logger is setup
 			Popup.logger.log(Level.SEVERE, appName, ex);
-		}
-		else {
+		} else {
 			System.out.println(ex.toString());
 			StackTraceElement[] stackTrace = ex.getStackTrace();
 			for (StackTraceElement stackTraceElement : stackTrace) {

@@ -465,6 +465,21 @@ public class PanelRemote extends javax.swing.JPanel {
 
 		@Override
 		public void addRow(String file, String msg) {}
+
+		@Override
+		public void showInfo(String msg) {
+			Popup.info(msg);
+		}
+
+		@Override
+		public void showWarning(String msg) {
+			Popup.warning(msg);
+		}
+
+		@Override
+		public void showError(String msg) {
+			Popup.error(msg);
+		}
 	}
 	
 	static void refreshList() {

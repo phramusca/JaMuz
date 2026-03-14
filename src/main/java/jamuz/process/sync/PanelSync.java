@@ -22,6 +22,7 @@ import jamuz.gui.DialogOptions;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.gui.swing.TableModel;
 import jamuz.utils.Inter;
+import jamuz.utils.Popup;
 import java.awt.Frame;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -317,6 +318,21 @@ public class PanelSync extends javax.swing.JPanel {
 		@Override
 		public void addRow(String file, String msg) {
 			addRowSync(file, msg);
+		}
+
+		@Override
+		public void showInfo(String msg) {
+			Popup.info(msg);
+		}
+
+		@Override
+		public void showWarning(String msg) {
+			Popup.warning(msg);
+		}
+
+		@Override
+		public void showError(String msg) {
+			Popup.error(msg);
 		}
 	}
 	
