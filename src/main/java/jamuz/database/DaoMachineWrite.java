@@ -17,7 +17,6 @@
 package jamuz.database;
 
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -117,8 +116,8 @@ public class DaoMachineWrite {
                     }
                 }
             } catch (SQLException ex) {
-                Popup.error("isMachine(" + hostname + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "isMachine(" + hostname + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -147,8 +146,8 @@ public class DaoMachineWrite {
                     return false;
                 }
             } catch (SQLException ex) {
-                Popup.error("updateMachine(" + idMachine + ", \"" + description + "\")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "updateMachine(" + idMachine + ", \"" + description + "\")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -173,8 +172,8 @@ public class DaoMachineWrite {
                     return false;
                 }
             } catch (SQLException ex) {
-                Popup.error("deleteMachine(" + machineName + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "deleteMachine(" + machineName + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

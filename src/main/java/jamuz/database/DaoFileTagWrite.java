@@ -18,7 +18,6 @@ package jamuz.database;
 
 import jamuz.FileInfo;
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -154,8 +153,8 @@ public class DaoFileTagWrite {
                 }
                 return true;
             } catch (SQLException ex) {
-                Popup.error("insertTagFiles(" + idFile + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "insertTagFiles(" + idFile + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -186,8 +185,8 @@ public class DaoFileTagWrite {
 
                 return true;
             } catch (SQLException ex) {
-                Popup.error("deleteTagFiles()", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "deleteTagFiles()", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
