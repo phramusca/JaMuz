@@ -137,8 +137,6 @@ public class DaoFileWrite {
                 Jamuz.getLogger().log(Level.SEVERE, "stDeleteFile(" + idFile + ")", ex);
                 throw new RuntimeException(ex);
             }
-
-            return false;
         }
     }
 
@@ -168,8 +166,6 @@ public class DaoFileWrite {
                 Jamuz.getLogger().log(Level.SEVERE, "setFileSaved(" + idFile + ")", ex);
                 throw new RuntimeException(ex);
             }
-
-            return false;
         }
     }
 

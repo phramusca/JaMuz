@@ -16,9 +16,6 @@
  */
 package jamuz.remote;
 
-//FIXME SSE Do not popup errors when on server
-// => either send errors to client and/or log
-// => incl. SQL errors: see repercussions elsewhere in code
 import express.Express;
 import express.http.Status;
 import io.javalin.http.sse.SseClient;

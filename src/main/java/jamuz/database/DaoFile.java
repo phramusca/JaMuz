@@ -407,9 +407,7 @@ public class DaoFile {
      */
     public boolean getFiles(ArrayList<FileInfoInt> files, SyncStatus status, Device device, String limit, String destExt) {
         try (PreparedStatement ps = prepareStatement(status, device, limit, destExt, false)) {
-            if (getFiles(files, ps)) {
-                return true;
-            }
+            return getFiles(files, ps);
         } catch (SQLException ex) {
             Jamuz.getLogger().log(Level.SEVERE, "getFiles()", ex);
             throw new RuntimeException(ex);
@@ -495,9 +493,7 @@ public class DaoFile {
 
         try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
             ps.setString(1, destExt);
-            if (getFiles(files, ps)) {
-                return true;
-            }
+            return getFiles(files, ps);
         } catch (SQLException ex) {
             Jamuz.getLogger().log(Level.SEVERE, "getFiles()", ex);
             throw new RuntimeException(ex);
@@ -515,9 +511,7 @@ public class DaoFile {
                 + " FROM file F JOIN path P ON F.idPath=P.idPath ";
 
         try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
-            if (getFiles(files, ps)) {
-                return true;
-            }
+            return getFiles(files, ps);
         } catch (SQLException ex) {
             Jamuz.getLogger().log(Level.SEVERE, "getFiles()", ex);
             throw new RuntimeException(ex);

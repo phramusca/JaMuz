@@ -123,8 +123,6 @@ public class DaoPathWrite {
                 Jamuz.getLogger().log(Level.SEVERE, "updatePath(" + idPath + ", " + modifDate.toString() + ")", ex);
                 throw new RuntimeException(ex);
             }
-
-            return false;
         }
     }
 
@@ -157,8 +155,6 @@ public class DaoPathWrite {
                 Jamuz.getLogger().log(Level.SEVERE, "setCheckedFlag(" + idPath + "," + checkedFlag + ")", ex);
                 throw new RuntimeException(ex);
             }
-
-            return false;
         }
     }
 
@@ -183,8 +179,6 @@ public class DaoPathWrite {
                 Jamuz.getLogger().log(Level.SEVERE, "setCheckedFlagReset()", ex);
                 throw new RuntimeException(ex);
             }
-
-            return false;
         }
     }
 
@@ -216,8 +210,6 @@ public class DaoPathWrite {
                 Jamuz.getLogger().log(Level.SEVERE, "updateCopyRight(" + idPath + ", " + copyRight + ")", ex);
                 throw new RuntimeException(ex);
             }
-
-            return false;
         }
     }
 
@@ -247,8 +239,6 @@ public class DaoPathWrite {
                 Jamuz.getLogger().log(Level.SEVERE, "deletePath(" + idPath + ")", ex);
                 throw new RuntimeException(ex);
             }
-
-            return false;
         }
     }
 
