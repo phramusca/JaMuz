@@ -747,10 +747,14 @@ public class PanelOptions extends javax.swing.JPanel {
 		DefaultListModel model = (DefaultListModel) jListGenres.getModel();
 		if (model.contains(input)) {
 			Popup.warning(MessageFormat.format(Inter.get("Msg.Options.GenreExists"), input));  //NOI18N 
-		} else if (!input.isBlank()) {  //NOI18N 
-			Jamuz.getDb().genre().lock().insert(input);
-			PanelMain.fillGenreLists();
-			jListGenres.setModel(Jamuz.getGenreListModel());
+		} else if (!input.isBlank()) {  //NOI18N
+			try {
+				Jamuz.getDb().genre().lock().insert(input);
+				PanelMain.fillGenreLists();
+				jListGenres.setModel(Jamuz.getGenreListModel());
+			} catch (RuntimeException ex) {
+				Popup.error("insert genre", ex);
+			}
 		}
     }//GEN-LAST:event_jButtonGenresAddActionPerformed
 
@@ -763,9 +767,13 @@ public class PanelOptions extends javax.swing.JPanel {
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					Jamuz.getDb().genre().lock().update((String) jListGenres.getSelectedValue(), input);
-					PanelMain.fillGenreLists();
-					jListGenres.setModel(Jamuz.getGenreListModel());
+					try {
+						Jamuz.getDb().genre().lock().update((String) jListGenres.getSelectedValue(), input);
+						PanelMain.fillGenreLists();
+						jListGenres.setModel(Jamuz.getGenreListModel());
+					} catch (RuntimeException ex) {
+						Popup.error("update genre", ex);
+					}
 				}
 			}
 		}
@@ -780,9 +788,13 @@ public class PanelOptions extends javax.swing.JPanel {
 					Inter.get("Label.Confirm"), //NOI18N 
 					JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				Jamuz.getDb().genre().lock().delete((String) jListGenres.getSelectedValue());
-				PanelMain.fillGenreLists();
-				jListGenres.setModel(Jamuz.getGenreListModel());
+				try {
+					Jamuz.getDb().genre().lock().delete((String) jListGenres.getSelectedValue());
+					PanelMain.fillGenreLists();
+					jListGenres.setModel(Jamuz.getGenreListModel());
+				} catch (RuntimeException ex) {
+					Popup.error("delete genre", ex);
+				}
 			}
 		}
     }//GEN-LAST:event_jButtonGenresDelActionPerformed
