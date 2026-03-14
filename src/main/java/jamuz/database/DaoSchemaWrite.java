@@ -18,6 +18,7 @@ package jamuz.database;
 
 import jamuz.Jamuz;
 import jamuz.utils.Popup;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -129,8 +130,8 @@ public class DaoSchemaWrite {
                     return false;
                 }
             } catch (SQLException ex) {
-                Popup.error("insertVersionHistory(" + version + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "insertVersionHistory(" + version + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -149,8 +150,8 @@ public class DaoSchemaWrite {
                     return false;
                 }
             } catch (SQLException ex) {
-                Popup.error("updateVersionHistory(" + version + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "updateVersionHistory(" + version + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

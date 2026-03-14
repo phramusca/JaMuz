@@ -74,7 +74,12 @@ public class Jamuz {
 		if(!getDb().getDbConn().connect()) {
 			return false;
 		}
-		if(!getDb().schema().lock().update(2)) {
+		try {
+			if (!getDb().schema().lock().update(2)) {
+				return false;
+			}
+		} catch (RuntimeException ex) {
+			getLogger().log(Level.SEVERE, "schema update", ex);
 			return false;
 		}
 		getDb().getDbConn().disconnect();
