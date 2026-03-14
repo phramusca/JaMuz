@@ -99,8 +99,12 @@ public class PanelRemote extends javax.swing.JPanel {
         jTableRemote.addMouseListener(popupListener);
 		
         fillIPsCombo();
-        
-		server.fillClients();
+
+		try {
+			server.fillClients();
+		} catch (RuntimeException ex) {
+			Popup.error("load clients", ex);
+		}
 		if(onStartup) {
 			startStopRemoteServer();
 		}

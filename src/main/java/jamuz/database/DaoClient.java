@@ -16,14 +16,16 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
 import jamuz.remote.ClientInfo;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 
 /**
  *
@@ -104,8 +106,8 @@ public class DaoClient {
                 return true;
             }
         } catch (SQLException ex) {
-            Popup.error("getClients", ex); // NOI18N
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getClients", ex);
+            throw new RuntimeException(ex);
         }
     }
 

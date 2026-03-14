@@ -159,9 +159,15 @@ public class Server {
                     res.sendStatus(Status._401.getCode());
                     return;
                 }
-                boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
-                ClientInfo info = new ClientInfo(login, password, rootPath, model, enableNewClients);
-                createClient(info);
+                try {
+                    boolean enableNewClients = Boolean.parseBoolean(Jamuz.getOptions().get("server.enable.new.clients", "false"));
+                    ClientInfo info = new ClientInfo(login, password, rootPath, model, enableNewClients);
+                    createClient(info);
+                } catch (RuntimeException ex) {
+                    Jamuz.getLogger().log(Level.SEVERE, "createClient " + login, ex);
+                    res.sendStatus(Status._500.getCode());
+                    return;
+                }
             }
             if (!tableModel.contains(login) || !tableModel.getClient(login).isEnabled()) {
                 res.sendStatus(Status._401.getCode());
