@@ -1545,7 +1545,7 @@ public class PanelMain extends javax.swing.JFrame {
     }
 
     public static String getSelectPlaylist() {
-        return jComboBoxPlaylist.getSelectedItem().toString();
+        return jComboBoxPlaylist.getSelectedItem() != null ? jComboBoxPlaylist.getSelectedItem().toString() : null;
     }
 
     //TODO: Move to a dedicated class

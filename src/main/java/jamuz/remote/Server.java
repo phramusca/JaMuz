@@ -132,6 +132,18 @@ public class Server {
             res.sendStatus(Status._200.getCode());
         });
 
+        app.get("/disconnect", (req, res) -> {
+            String login = req.get("login");
+            if (login != null && !login.isBlank()) {
+                sseClientsByLogin.remove(login);
+                ClientInfo info = tableModel.getClient(login);
+                if (info != null) {
+                    info.setConnected(false);
+                }
+            }
+            res.sendStatus(Status._200.getCode());
+        });
+
         app.use((req, res) -> {
             String login = req.get("login");
             if (login == null || login.isBlank()) {
