@@ -175,9 +175,14 @@ public class PanelOptions extends javax.swing.JPanel {
 		if (n == JOptionPane.YES_OPTION) {
 			enableResetCheckedFlagButtons(false);
 			progressBarCheckedFlag.setIndeterminate(Inter.get("Msg.Check.Scan.ResetCheckedFlag")); //NOI18N
-			Jamuz.getDb().path().lock().updateCheckedFlagReset(checkedFlag);
-			progressBarCheckedFlag.reset();
-			enableResetCheckedFlagButtons(true);
+			try {
+				Jamuz.getDb().path().lock().updateCheckedFlagReset(checkedFlag);
+			} catch (RuntimeException ex) {
+				Popup.error("reset check flag", ex);
+			} finally {
+				progressBarCheckedFlag.reset();
+				enableResetCheckedFlagButtons(true);
+			}
 		}
 	}
 

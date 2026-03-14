@@ -638,8 +638,12 @@ public class PanelMain extends javax.swing.JFrame {
                 if (tcl.getColumn() == 21) { //ComboBox is here
                     FolderInfo.CopyRight copyRight = (FolderInfo.CopyRight) tcl.getNewValue();
                     FileInfoInt myFileInfo = fileInfoList.get(tcl.getRow());
-                    Jamuz.getDb().path().lock().updateCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
-                    callBackSelect.refresh();
+                    try {
+                        Jamuz.getDb().path().lock().updateCopyRight(myFileInfo.getIdPath(), copyRight.getValue());
+                        callBackSelect.refresh();
+                    } catch (RuntimeException ex) {
+                        Popup.error("update copyRight", ex);
+                    }
                 }
             }
         };

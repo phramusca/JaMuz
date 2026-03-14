@@ -19,7 +19,7 @@ package jamuz.database;
 import jamuz.Jamuz;
 import jamuz.process.check.FolderInfo;
 import jamuz.utils.DateTime;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import org.apache.commons.io.FilenameUtils;
 
-//FIXME Z Only log in Dao classes and throw exceptions (need to evaluate the consequences first) and update tests to check (no) exception is thrown
 /**
  *
  * @author raph
@@ -81,7 +80,8 @@ public class DaoPathWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("insertPath(" + relativePath + ", " + modifDate.toString() + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "insertPath(" + relativePath + ", " + modifDate.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -120,7 +120,8 @@ public class DaoPathWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("updatePath(" + idPath + ", " + modifDate.toString() + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "updatePath(" + idPath + ", " + modifDate.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -153,7 +154,8 @@ public class DaoPathWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("setCheckedFlag(" + idPath + "," + checkedFlag + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "setCheckedFlag(" + idPath + "," + checkedFlag + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -178,7 +180,8 @@ public class DaoPathWrite {
                 return true;
 
             } catch (SQLException ex) {
-                Popup.error("setCheckedFlagReset()", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "setCheckedFlagReset()", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -210,7 +213,8 @@ public class DaoPathWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("updateCopyRight(" + idPath + ", " + copyRight + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "updateCopyRight(" + idPath + ", " + copyRight + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -240,7 +244,8 @@ public class DaoPathWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("deletePath(" + idPath + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "deletePath(" + idPath + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
