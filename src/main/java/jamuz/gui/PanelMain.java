@@ -283,13 +283,7 @@ public class PanelMain extends javax.swing.JFrame {
 
             @Override
             public int getIdFile() {
-                //FIXME SSE We don't want the playing song here (as null when on pause)
-                //, but the one ready to play, or playing
-                if (queueModel.getPlayingSong()!=null 
-                        && queueModel.getPlayingSong().getFile().isFromLibrary()) {
-                    return queueModel.getPlayingSong().getFile().getIdFile();
-                }
-                return -1;
+                return queueModel.getPlayingSong() == null ? displayedFile.getIdFile() : queueModel.getPlayingSong().getFile().getIdFile();
             }
         });
         panelVideo.initExtended(this);
