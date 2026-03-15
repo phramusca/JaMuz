@@ -6,8 +6,10 @@ fromVersion=$1
 fromPath="../../../../../../../../../"
 latestVersion=$2
 latestPath="../../../"
+# Normalize for version comparison (strip leading 'v')
+fromVer="${fromVersion#v}"
+latestVer="${latestVersion#v}"
 
-configFile="update.csv"
 logFile="${fromPath%/}/logs/update_log_${fromVersion}_${latestVersion}.txt"
 
 # Functions
@@ -18,6 +20,11 @@ copy_files() {
 
   local source="${latestPath%/}/${relativePath}"
   local destination="${fromPath%/}/${relativePath}"
+
+  if [ ! -e "$source" ]; then
+    log_message "Source path $source not found. Skipping."
+    return
+  fi
 
   log_message "Copying: $source -> $destination (overwrite=$overwrite)"
 
@@ -40,6 +47,10 @@ remove_files() {
 
   if [ -n "$relativePath" ]; then
     local destination="${fromPath%/}/${relativePath}"
+    if [ ! -e "$destination" ]; then
+      log_message "Path $destination not found. Skipping remove."
+      return
+    fi
     log_message "Removing $destination"
     rm -r "$destination" 2>&1 | tee -a "$logFile"
   fi
@@ -74,13 +85,27 @@ log_message "-----------------------------------------------------"
 cd "$(dirname "$(readlink -f "$0")")"
 log_message "Working folder: $(pwd)"
 
-log_message "Start looping through $configFile"
-while IFS=, read -r operation relativePath overwrite || [ -n "$operation" ]; do
-  case "$operation" in
-  "Copy") copy_files "$relativePath" "$overwrite" ;;
-  "Remove") remove_files "$relativePath" ;;
-  esac
-done <"$configFile"
+# Run one CSV per version step in (fromVersion, latestVersion], like DB migrations
+# Collect versions from update_X.Y.Z.csv, sort, then run each in range in order
+for csv in update_*.csv; do
+  [ -f "$csv" ] || continue
+  v="${csv#update_}"
+  echo "${v%.csv}"
+done | sort -V | while read -r v; do
+  # Run this version if fromVer < v <= latestVer
+  sorted_after_from=$(printf '%s\n' "$fromVer" "$v" | sort -V | tail -1)
+  sorted_before_latest=$(printf '%s\n' "$v" "$latestVer" | sort -V | head -1)
+  if [ "$sorted_after_from" = "$v" ] && [ "$sorted_before_latest" = "$v" ]; then
+    csv="update_${v}.csv"
+    log_message "Applying migration $csv (version $v)"
+    while IFS=, read -r operation relativePath overwrite || [ -n "$operation" ]; do
+      case "$operation" in
+      "Copy") copy_files "$relativePath" "$overwrite" ;;
+      "Remove") remove_files "$relativePath" ;;
+      esac
+    done <"$csv"
+  fi
+done
 
 log_message "Copying the new JAR file"
 cp -f "${latestPath}JaMuz.jar" "${fromPath}JaMuz.jar" 2>&1 | tee -a "$logFile"

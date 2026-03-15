@@ -44,5 +44,9 @@ jobs:
 
     - name: Copy dist to Windows
       run: |
-        cp -r dist /mnt/c
+        if [ -d /mnt/c ] && [ -w /mnt/c ]; then
+          cp -r dist /mnt/c
+        else
+          echo "Skipping: /mnt/c not available (not WSL or no permission)."
+        fi
       working-directory: ${{ github.workspace }}

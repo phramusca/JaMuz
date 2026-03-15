@@ -76,30 +76,18 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
       - [Start job](https://github.com/phramusca/JaMuz/actions/workflows/maven_local.yml)
       - Get `dist` folder in ~/actions-runner/_work/JaMuz/JaMuz/
     - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
-    - Create the `target-data/data/system/update/update.csv` file for updating from previous version to current (the one being released).
+    - **Update migrations (one CSV per version step, like DB migrations).** The scripts receive the current and target versions (`$1` / `$2`) and run every `update_X.Y.Z.csv` for versions in `(fromVersion, latestVersion]` in order. So 0.7.0 → 0.7.2 runs `update_0.7.1.csv` then `update_0.7.2.csv`.
+      - When releasing version **x.y.z**, add `target-data/data/system/update/update_x.y.z.csv` with only the Copy/Remove for *that* version (delta since the previous release). Leave the file empty if there are no file changes. Keep all previous `update_*.csv` files in the repo (they are shipped in the package so that upgrades from any older version work).
+      - CSV format (same as before):
 
       ```csv
-      Copy,data/system/tests/empty/testCopy DirNoSlashNoOverwrite,false
-      Copy,data/system/tests/empty/testCopy DirSlashOverwrite/,true
-      Copy,data/system/tests/empty/testCopy FileNoOverwrite/existing.txt,false
-      Copy,data/system/tests/empty/testCopy FileOverwrite/new.txt,true
-      Remove,data/system/tests/empty/testRemove DirNoSlash
-      Remove,data/system/tests/empty/testRemove File/existing.txt
-      Copy,data/system/tests/filled/testCopy DirNoSlashNoOverwrite,false
-      Copy,data/system/tests/filled/testCopy DirSlashOverwrite/,true
-      Copy,data/system/tests/filled/testCopy FileNoOverwrite/existing.txt,false
-      Copy,data/system/tests/filled/testCopy FileOverwrite/new.txt,true
-      Remove,data/system/tests/filled/testRemove DirNoSlash
-      Remove,data/system/tests/filled/testRemove File/new.txt
+      Copy,data/system/path/to/file,false
+      Remove,data/system/path/to/obsolete
       ```
 
-        1. `Action` can be:
-            - `Remove`.
-            - `Copy`.
+        1. `Action`: `Copy` or `Remove`.
         2. `Relative path` of a file or directory.
-        3. `Overwrite` bool (`Copy` action only), to overwrite, or not, files already in destination (version being updated).
-
-    - **Update script to manage updates from different previous versions**, using first and second parameters received by scripts.
+        3. `Overwrite` bool (`Copy` only): overwrite or not files already in the user's install.
 
 1. Update pom.xml (remove "-dev" suffix)
 

@@ -6,7 +6,6 @@ param (
 
 $fromPath = "..\..\..\..\..\..\..\..\..\"
 $latestPath = "..\..\..\" 
-$configFile = "update.csv"
 $logFile = Join-Path $fromPath "logs\update_log_${fromVersion}_${latestVersion}.txt"
 
 # Functions
@@ -41,9 +40,14 @@ function Copy-Files {
     $source = Join-Path $latestPath $relativePath
     $destination = Join-Path $fromPath $relativePath
 
+    if (-not (Test-Path $source)) {
+        Log-Message "Source path $source not found. Skipping."
+        return
+    }
+
     Log-Message "Copying: $source -> $destination (overwrite=$overwrite)"
 
-    if ((Test-Path $source) -and ((Get-Item $source).PSIsContainer)) {
+    if ((Get-Item $source).PSIsContainer) {
         # Source is a directory
         $files = Get-ChildItem -Path $source -File -Recurse
         foreach ($file in $files) {
@@ -52,11 +56,8 @@ function Copy-Files {
             Copy-File $($file.FullName) $fileDestination
         }
     }
-    elseif (Test-Path $source) {
-        Copy-File $source $destination
-    }
     else {
-        Log-Message "Source path $source not found. Skipping."
+        Copy-File $source $destination
     }
 }
 
@@ -85,8 +86,12 @@ function Remove-Files {
         [string]$relativePath
     )
 
-    if ($relativePath -ne $null) {
+    if ($relativePath -ne $null -and $relativePath -ne '') {
         $destination = Join-Path $fromPath $relativePath
+        if (-not (Test-Path $destination)) {
+            Log-Message "Path $destination not found. Skipping remove."
+            return
+        }
         Log-Message "Removing $destination"
         Remove-Item -Recurse $destination -ErrorAction SilentlyContinue 2>&1 | Tee-Object -FilePath $logFile -Append
     }
@@ -145,20 +150,40 @@ Log-Message "-----------------------------------------------------"
 Log-Message "Starting update from $fromVersion to $latestVersion"
 Log-Message "-----------------------------------------------------"
 
-Log-Message "Start looping through $configFile"
-Get-Content $configFile | ForEach-Object {
-    $fields = $_ -split ','
-    $operation = $fields[0].Trim()
-    $relativePath = $fields[1].Trim()
-    if ($fields.Count -ge 3) {
-        $overwrite = [bool]::Parse($fields[2].Trim())
+# Run one CSV per version step in (fromVersion, latestVersion], like DB migrations
+$csvFiles = Get-ChildItem -Path "update_*.csv" -ErrorAction SilentlyContinue
+$versionStrings = $csvFiles | ForEach-Object {
+    if ($_.Name -match '^update_(.+)\.csv$') { $matches[1] }
+}
+$versionsToRun = $versionStrings | Sort-Object { try { [version]($_.Replace('v', '') -replace '[^\d.]', '') } catch { $_.ToString() } }
+
+foreach ($v in $versionsToRun) {
+    try {
+        $fromV = [version]($fromVersion.Replace('v', '') -replace '[^\d.]', '')
+        $toV = [version]($latestVersion.Replace('v', '') -replace '[^\d.]', '')
+        $curV = [version]($v.Replace('-', '.') -replace '[^\d.]', '')
+    } catch {
+        continue
     }
-    else {
-        $overwrite = $false
-    }
-    switch ($operation) {
-        "Copy" { Copy-Files $relativePath $overwrite }
-        "Remove" { Remove-Files $relativePath }
+    if ($curV -gt $fromV -and $curV -le $toV) {
+        $csv = "update_$v.csv"
+        Log-Message "Applying migration $csv (version $v)"
+        Get-Content $csv | ForEach-Object {
+            $line = $_.Trim()
+            if ($line -eq '') { return }
+            $fields = $line -split ','
+            $operation = $fields[0].Trim()
+            $relativePath = $fields[1].Trim()
+            if ($fields.Count -ge 3) {
+                $overwrite = [bool]::Parse($fields[2].Trim())
+            } else {
+                $overwrite = $false
+            }
+            switch ($operation) {
+                "Copy" { Copy-Files $relativePath $overwrite }
+                "Remove" { Remove-Files $relativePath }
+            }
+        }
     }
 }
 
