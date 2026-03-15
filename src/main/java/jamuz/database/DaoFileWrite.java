@@ -21,7 +21,7 @@ import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.process.check.ReplayGain;
 import jamuz.utils.DateTime;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -103,7 +103,8 @@ public class DaoFileWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error(fileInfo.toString(), ex);
+                Jamuz.getLogger().log(Level.SEVERE, "insert " + fileInfo.toString(), ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -133,10 +134,9 @@ public class DaoFileWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("stDeleteFile(" + idFile + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "stDeleteFile(" + idFile + ")", ex);
+                throw new RuntimeException(ex);
             }
-
-            return false;
         }
     }
 
@@ -163,10 +163,9 @@ public class DaoFileWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("setFileSaved(" + idFile + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "setFileSaved(" + idFile + ")", ex);
+                throw new RuntimeException(ex);
             }
-
-            return false;
         }
     }
 
@@ -225,7 +224,8 @@ public class DaoFileWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("updateTags(" + fileInfo.toString() + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "updateTags(" + fileInfo.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -258,7 +258,8 @@ public class DaoFileWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("updateLastPlayedAndCounter(" + fileInfo.toString() + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "updateLastPlayedAndCounter(" + fileInfo.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -289,7 +290,8 @@ public class DaoFileWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("updateRating(" + fileInfo.toString() + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "updateRating(" + fileInfo.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -320,7 +322,8 @@ public class DaoFileWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("updateGenre(" + fileInfo.toString() + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "updateGenre(" + fileInfo.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -353,7 +356,8 @@ public class DaoFileWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("updateIdPath(" + idPath + ", " + newIdPath + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "updateIdPath(" + idPath + ", " + newIdPath + ")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -387,7 +391,8 @@ public class DaoFileWrite {
                 }
 
             } catch (SQLException ex) {
-                Popup.error("updateModifDate(" + idFile + ", \"" + modifDate.toString() + "\", \"" + name + "\")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "updateModifDate(" + idFile + ", \"" + modifDate.toString() + "\", \"" + name + "\")", ex);
+                throw new RuntimeException(ex);
             }
 
             return false;
@@ -422,8 +427,8 @@ public class DaoFileWrite {
                     }
                 }
             } catch (SQLException ex) {
-                Popup.error("updateTagsModifDate(" + newTag + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "updateTagsModifDate(" + newTag + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -449,8 +454,8 @@ public class DaoFileWrite {
                     return false;
                 }
             } catch (SQLException ex) {
-                Popup.error("updateTagsModifDate(" + fileInfo.toString() + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "updateTagsModifDate(" + fileInfo.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

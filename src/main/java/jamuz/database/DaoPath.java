@@ -16,14 +16,16 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
 import jamuz.process.check.FolderInfo;
 import jamuz.utils.DateTime;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -120,8 +122,8 @@ public class DaoPath {
                 return true;
             }
         } catch (SQLException ex) {
-            Popup.error("getFolderInfoList(" + sqlWhere + ")", ex);
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getFolderInfoList(" + sqlWhere + ")", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -142,8 +144,8 @@ public class DaoPath {
                 return rs.next() ? rs.getInt(1) : -1;
             }
         } catch (SQLException ex) {
-            Popup.error("isPathExists(" + path + ")", ex); // NOI18N
-            return -1;
+            Jamuz.getLogger().log(Level.SEVERE, "isPathExists(" + path + ")", ex);
+            throw new RuntimeException(ex);
         }
     }
 

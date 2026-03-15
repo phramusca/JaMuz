@@ -18,7 +18,7 @@ package jamuz.database;
 
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -89,8 +89,8 @@ public class DaoDeviceFileWrite {
 
                 return insertedOrUpdated;
             } catch (SQLException ex) {
-                Popup.error("insertDeviceFile(" + idDevice + ")", ex); // NOI18N
-                return insertedOrUpdated;
+                Jamuz.getLogger().log(Level.SEVERE, "insertDeviceFile(" + idDevice + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -139,8 +139,8 @@ public class DaoDeviceFileWrite {
 
                 return inserted;
             } catch (SQLException ex) {
-                Popup.error("insertDeviceFile(" + idDevice + ")", ex); // NOI18N
-                return inserted;
+                Jamuz.getLogger().log(Level.SEVERE, "insertDeviceFile(" + idDevice + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -171,8 +171,8 @@ public class DaoDeviceFileWrite {
                 }
                 return true;
             } catch (SQLException ex) {
-                Popup.error("deleteDeviceFiles()", ex); // NOI18N
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "deleteDeviceFiles()", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

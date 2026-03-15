@@ -175,9 +175,14 @@ public class PanelOptions extends javax.swing.JPanel {
 		if (n == JOptionPane.YES_OPTION) {
 			enableResetCheckedFlagButtons(false);
 			progressBarCheckedFlag.setIndeterminate(Inter.get("Msg.Check.Scan.ResetCheckedFlag")); //NOI18N
-			Jamuz.getDb().path().lock().updateCheckedFlagReset(checkedFlag);
-			progressBarCheckedFlag.reset();
-			enableResetCheckedFlagButtons(true);
+			try {
+				Jamuz.getDb().path().lock().updateCheckedFlagReset(checkedFlag);
+			} catch (RuntimeException ex) {
+				Popup.error("reset check flag", ex);
+			} finally {
+				progressBarCheckedFlag.reset();
+				enableResetCheckedFlagButtons(true);
+			}
 		}
 	}
 
@@ -747,10 +752,14 @@ public class PanelOptions extends javax.swing.JPanel {
 		DefaultListModel model = (DefaultListModel) jListGenres.getModel();
 		if (model.contains(input)) {
 			Popup.warning(MessageFormat.format(Inter.get("Msg.Options.GenreExists"), input));  //NOI18N 
-		} else if (!input.isBlank()) {  //NOI18N 
-			Jamuz.getDb().genre().lock().insert(input);
-			PanelMain.fillGenreLists();
-			jListGenres.setModel(Jamuz.getGenreListModel());
+		} else if (!input.isBlank()) {  //NOI18N
+			try {
+				Jamuz.getDb().genre().lock().insert(input);
+				PanelMain.fillGenreLists();
+				jListGenres.setModel(Jamuz.getGenreListModel());
+			} catch (RuntimeException ex) {
+				Popup.error("insert genre", ex);
+			}
 		}
     }//GEN-LAST:event_jButtonGenresAddActionPerformed
 
@@ -763,9 +772,13 @@ public class PanelOptions extends javax.swing.JPanel {
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					Jamuz.getDb().genre().lock().update((String) jListGenres.getSelectedValue(), input);
-					PanelMain.fillGenreLists();
-					jListGenres.setModel(Jamuz.getGenreListModel());
+					try {
+						Jamuz.getDb().genre().lock().update((String) jListGenres.getSelectedValue(), input);
+						PanelMain.fillGenreLists();
+						jListGenres.setModel(Jamuz.getGenreListModel());
+					} catch (RuntimeException ex) {
+						Popup.error("update genre", ex);
+					}
 				}
 			}
 		}
@@ -780,9 +793,13 @@ public class PanelOptions extends javax.swing.JPanel {
 					Inter.get("Label.Confirm"), //NOI18N 
 					JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				Jamuz.getDb().genre().lock().delete((String) jListGenres.getSelectedValue());
-				PanelMain.fillGenreLists();
-				jListGenres.setModel(Jamuz.getGenreListModel());
+				try {
+					Jamuz.getDb().genre().lock().delete((String) jListGenres.getSelectedValue());
+					PanelMain.fillGenreLists();
+					jListGenres.setModel(Jamuz.getGenreListModel());
+				} catch (RuntimeException ex) {
+					Popup.error("delete genre", ex);
+				}
 			}
 		}
     }//GEN-LAST:event_jButtonGenresDelActionPerformed
@@ -824,10 +841,14 @@ public class PanelOptions extends javax.swing.JPanel {
 						Inter.get("Label.Confirm"), //NOI18N 
 						JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION) {
-					if (Jamuz.getDb().tag().lock().update((String) jListTags.getSelectedValue(), newTag)) {
-						if (Jamuz.getDb().file().lock().updateModifDate(newTag)) {
-							refreshListTagsModel();
+					try {
+						if (Jamuz.getDb().tag().lock().update((String) jListTags.getSelectedValue(), newTag)) {
+							if (Jamuz.getDb().file().lock().updateModifDate(newTag)) {
+								refreshListTagsModel();
+							}
 						}
+					} catch (RuntimeException ex) {
+						Popup.error("update tag", ex);
 					}
 				}
 			}
@@ -851,9 +872,14 @@ public class PanelOptions extends javax.swing.JPanel {
 					Inter.get("Label.Confirm"), //NOI18N 
 					JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				if (Jamuz.getDb().tag().lock().delete((String) jListTags.getSelectedValue())) {
-					Popup.warning("Problem deleting tag. It is probably applied to at least a track, so cannot delete it.");  //NOI18N
-					refreshListTagsModel();
+				try {
+					if (Jamuz.getDb().tag().lock().delete((String) jListTags.getSelectedValue())) {
+						refreshListTagsModel();
+					} else {
+						Popup.warning("Problem deleting tag. It is probably applied to at least a track, so cannot delete it.");  //NOI18N
+					}
+				} catch (RuntimeException ex) {
+					Popup.error("delete tag", ex);
 				}
 			}
 		}
@@ -864,9 +890,13 @@ public class PanelOptions extends javax.swing.JPanel {
 		DefaultListModel model = (DefaultListModel) jListTags.getModel();
 		if (model.contains(input)) {
 			Popup.warning(MessageFormat.format(Inter.get("Msg.Options.Tag.Exists"), input));  //NOI18N 
-		} else if (!input.isBlank()) {  //NOI18N 
-			Jamuz.getDb().tag().lock().insert(input);
-			refreshListTagsModel();
+		} else if (!input.isBlank()) {  //NOI18N
+			try {
+				Jamuz.getDb().tag().lock().insert(input);
+				refreshListTagsModel();
+			} catch (RuntimeException ex) {
+				Popup.error("insert tag", ex);
+			}
 		}
     }//GEN-LAST:event_jButtonTagsAddActionPerformed
 

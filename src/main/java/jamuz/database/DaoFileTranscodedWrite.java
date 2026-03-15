@@ -19,7 +19,6 @@ package jamuz.database;
 import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.process.check.ReplayGain;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -93,7 +92,8 @@ public class DaoFileTranscodedWrite {
                     }
                 }
             } catch (SQLException ex) {
-                Popup.error("insertOrUpdateDeviceFilesTranslated(ArrayList<FileInfoInt> files)", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "insertOrUpdateDeviceFilesTranslated", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

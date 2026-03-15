@@ -16,12 +16,14 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
 import jamuz.Playlist;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 /**
  *
@@ -68,8 +70,8 @@ public class DaoPlaylist {
 
             return true;
         } catch (SQLException ex) {
-            Popup.error("getPlaylists", ex);
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getPlaylists", ex);
+            throw new RuntimeException(ex);
         }
     }
 

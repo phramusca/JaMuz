@@ -18,7 +18,6 @@ package jamuz.database;
 
 import jamuz.FileInfo;
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -97,9 +96,8 @@ public abstract class StatSourceSQL extends StatSourceAbstract {
 			}
 			return true;
 		} catch (SQLException ex) {
-			Popup.error(ex);
-			Jamuz.getLogger().log(Level.SEVERE, "getStatistics", ex);  //NOI18N
-			return false;
+			Jamuz.getLogger().log(Level.SEVERE, "getStatistics", ex);
+			throw new RuntimeException(ex);
 		} finally {
 			try {
 				if (rs != null) {
@@ -132,8 +130,8 @@ public abstract class StatSourceSQL extends StatSourceAbstract {
 					addedDate, playCounter, this.getName(), 0, Float.valueOf(0),
 					"", "", "", "");
 		} catch (SQLException ex) {
-			Popup.error("getStatistics", ex);  //NOI18N
-			return null;
+			Jamuz.getLogger().log(Level.SEVERE, "getStatistics", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 
@@ -158,8 +156,8 @@ public abstract class StatSourceSQL extends StatSourceAbstract {
 			dbConn.getConnection().setAutoCommit(true);
 			return results;
 		} catch (SQLException ex) {
-			Popup.error(ex);
-			return new int[0];
+			Jamuz.getLogger().log(Level.SEVERE, "updateFileStatistics", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 

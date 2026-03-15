@@ -18,9 +18,11 @@ package jamuz;
 
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 
 /**
  * Machine class
@@ -57,13 +59,18 @@ public class Machine {
 		StringBuilder zText = new StringBuilder();
 		if (Jamuz.getDb().machine().lock().getOrInsert(this.name, zText, false)) {
 			this.description = zText.toString();
-			if (!Jamuz.getDb().option().get(options, this.name)) {
+			try {
+				if (!Jamuz.getDb().option().get(options, this.name)) {
+					return false;
+				}
+				if (!Jamuz.getDb().statSource().get(statSources, this.name, false)) {
+					return false;
+				}
+				return Jamuz.getDb().device().get(devices, this.name, false);
+			} catch (RuntimeException ex) {
+				Jamuz.getLogger().log(Level.SEVERE, "Machine.read()", ex);
 				return false;
 			}
-			if (!Jamuz.getDb().statSource().get(statSources, this.name, false)) {
-				return false;
-			}
-			return Jamuz.getDb().device().get(devices, this.name, false);
 		} else {
 			return false;
 		}
@@ -138,7 +145,11 @@ public class Machine {
 	public Collection<StatSource> getStatSources(boolean force) {
 		if (force) {
 			statSources = new LinkedHashMap<>();
-			Jamuz.getDb().statSource().get(statSources, this.name, false);
+			try {
+				Jamuz.getDb().statSource().get(statSources, this.name, false);
+			} catch (RuntimeException ex) {
+				Jamuz.getLogger().log(Level.SEVERE, "Machine.getStatSources(true)", ex);
+			}
 		}
 		return statSources.values();
 	}
@@ -175,7 +186,11 @@ public class Machine {
 	public Collection<Device> getDevices(boolean force) {
 		if (force) {
 			devices = new LinkedHashMap<>();
-			Jamuz.getDb().device().get(devices, this.name, false);
+			try {
+				Jamuz.getDb().device().get(devices, this.name, false);
+			} catch (RuntimeException ex) {
+				Jamuz.getLogger().log(Level.SEVERE, "Machine.getDevices(true)", ex);
+			}
 		}
 		return devices.values();
 	}

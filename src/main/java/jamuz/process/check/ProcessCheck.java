@@ -511,8 +511,12 @@ public class ProcessCheck {
         }
 
         private boolean scan() throws InterruptedException {
-            //Get list of folders from library
-            if(!Jamuz.getDb().path().get(foldersDb)) {
+            try {
+                if (!Jamuz.getDb().path().get(foldersDb)) {
+                    return false;
+                }
+            } catch (RuntimeException ex) {
+                Jamuz.getLogger().log(Level.SEVERE, "ProcessCheck.scan path().get", ex);
                 return false;
             }
             checkAbort();
@@ -522,16 +526,24 @@ public class ProcessCheck {
         }
 
 		private boolean scanDeleted() throws InterruptedException {
-            //Get list of folders from library
-            if(!Jamuz.getDb().path().get(foldersDb)) {
+            try {
+                if (!Jamuz.getDb().path().get(foldersDb)) {
+                    return false;
+                }
+            } catch (RuntimeException ex) {
+                Jamuz.getLogger().log(Level.SEVERE, "ProcessCheck.scanDeleted path().get", ex);
                 return false;
             }
             return sendFoldersDbToScanQueue(ScanType.SCAN_DELETED);
 		}
 		
 		private boolean transcode() throws InterruptedException {
-            //Get list of folders from library
-            if(!Jamuz.getDb().path().get(foldersDb)) {
+            try {
+                if (!Jamuz.getDb().path().get(foldersDb)) {
+                    return false;
+                }
+            } catch (RuntimeException ex) {
+                Jamuz.getLogger().log(Level.SEVERE, "ProcessCheck.transcode path().get", ex);
                 return false;
             }
             return sendFoldersDbToScanQueue(ScanType.TRANSCODE);
@@ -542,7 +554,12 @@ public class ProcessCheck {
         }
         
         private boolean scanDbUnchecked() throws InterruptedException {
-            if(!Jamuz.getDb().path().get(foldersDb, CheckedFlag.UNCHECKED)) {
+            try {
+                if (!Jamuz.getDb().path().get(foldersDb, CheckedFlag.UNCHECKED)) {
+                    return false;
+                }
+            } catch (RuntimeException ex) {
+                Jamuz.getLogger().log(Level.SEVERE, "ProcessCheck.scanDbUnchecked path().get", ex);
                 return false;
             }
             sendFoldersDbToScanQueue(ScanType.SCAN);
@@ -550,7 +567,12 @@ public class ProcessCheck {
         }
 
         private boolean scanFolder(int idPath) throws InterruptedException {
-            if(!Jamuz.getDb().path().get(foldersDb, idPath)) {
+            try {
+                if (!Jamuz.getDb().path().get(foldersDb, idPath)) {
+                    return false;
+                }
+            } catch (RuntimeException ex) {
+                Jamuz.getLogger().log(Level.SEVERE, "ProcessCheck.scanFolder path().get", ex);
                 return false;
             }
             sendFoldersDbToScanQueue(ScanType.SCAN);

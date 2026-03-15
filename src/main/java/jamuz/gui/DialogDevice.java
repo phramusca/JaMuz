@@ -216,12 +216,15 @@ public class DialogDevice extends javax.swing.JDialog {
 			Playlist playlist = (Playlist) jComboBoxPlaylist.getSelectedItem();
 			this.device.setIdPlaylist(playlist.getId());
 			
-			if(Jamuz.getDb().device().lock().insertOrUpdate(this.device)) {
-				this.dispose();
-				DialogOptions.displayDevices();
-			}
-			else {
-				Popup.warning(Inter.get("Error.Saving")); //NOI18N
+			try {
+				if (Jamuz.getDb().device().lock().insertOrUpdate(this.device)) {
+					this.dispose();
+					DialogOptions.displayDevices();
+				} else {
+					Popup.warning(Inter.get("Error.Saving")); //NOI18N
+				}
+			} catch (RuntimeException ex) {
+				Popup.error("save device", ex);
 			}
 		}
 	}//GEN-LAST:event_jButtonSaveActionPerformed

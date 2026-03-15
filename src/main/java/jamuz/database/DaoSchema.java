@@ -16,13 +16,15 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
 import jamuz.utils.DateTime;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -80,8 +82,8 @@ public class DaoSchema {
 
             return true;
         } catch (SQLException ex) {
-            Popup.error("getVersionHistory", ex);
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getVersionHistory", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -93,8 +95,8 @@ public class DaoSchema {
                 return new ImmutablePair<>(true, rs.getInt(1) > 0);
             }
         } catch (SQLException ex) {
-            Popup.error("existsTableVersionHistory()", ex);
-            return new ImmutablePair<>(false, false);
+            Jamuz.getLogger().log(Level.SEVERE, "existsTableVersionHistory()", ex);
+            throw new RuntimeException(ex);
         }
     }
 

@@ -17,13 +17,15 @@
 package jamuz.database;
 
 import jamuz.FileInfoInt;
+import jamuz.Jamuz;
 import jamuz.StatItem;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.ReplayGain;
 import jamuz.process.sync.Device;
 import jamuz.process.sync.SyncStatus;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
+
+import java.util.logging.Level;
 import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -80,8 +82,8 @@ public class DaoFile {
                 return rs.getDouble(1);
             }
         } catch (SQLException ex) {
-            Popup.error("getYear(" + maxOrMin + ")", ex);
-            return -1.0;
+            Jamuz.getLogger().log(Level.SEVERE, "getYear(" + maxOrMin + ")", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -132,8 +134,8 @@ public class DaoFile {
                 }
             }
         } catch (SQLException ex) {
-            Popup.error("getStatItem(" + field + "," + value + ")", ex);
-            return new StatItem(label, value, -1, -1, -1, -1, -1, Color.BLACK);
+            Jamuz.getLogger().log(Level.SEVERE,"getStatItem(" + field + "," + value + ")", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -162,7 +164,8 @@ public class DaoFile {
                 }
             }
         } catch (SQLException ex) {
-            Popup.error("getSelectionList4Stats(" + field + ")", ex);
+            Jamuz.getLogger().log(Level.SEVERE, "getSelectionList4Stats(" + field + ")", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -208,7 +211,8 @@ public class DaoFile {
                 }
             }
         } catch (SQLException ex) {
-            Popup.error("getPercentRatedForStats()", ex);
+            Jamuz.getLogger().log(Level.SEVERE, "getPercentRatedForStats()", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -259,8 +263,8 @@ public class DaoFile {
                 selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight)) {
             return getFiles(files, ps);
         } catch (SQLException ex) {
-            Popup.error("getFiles()", ex);
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getFiles()", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -386,8 +390,8 @@ public class DaoFile {
             getFiles(myFileInfoList, ps);
             return myFileInfoList.isEmpty() ? null : myFileInfoList.get(0);
         } catch (SQLException ex) {
-            Popup.error("getFile()", ex);
-            return null;
+            Jamuz.getLogger().log(Level.SEVERE, "getFile()", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -403,14 +407,11 @@ public class DaoFile {
      */
     public boolean getFiles(ArrayList<FileInfoInt> files, SyncStatus status, Device device, String limit, String destExt) {
         try (PreparedStatement ps = prepareStatement(status, device, limit, destExt, false)) {
-            if (getFiles(files, ps)) {
-                return true;
-            }
+            return getFiles(files, ps);
         } catch (SQLException ex) {
-            Popup.error("getFiles()", ex);
+            Jamuz.getLogger().log(Level.SEVERE, "getFiles()", ex);
+            throw new RuntimeException(ex);
         }
-
-        return false;
     }
 
     /**
@@ -426,9 +427,9 @@ public class DaoFile {
         try (PreparedStatement ps = prepareStatement(status, device, limit, destExt, true)) {
             return getFilesCount(ps);
         } catch (SQLException ex) {
-            Popup.error("getFilesCount()", ex);
+            Jamuz.getLogger().log(Level.SEVERE, "getFilesCount()", ex);
+            throw new RuntimeException(ex);
         }
-        return -1;
     }
 
     private PreparedStatement prepareStatement(SyncStatus status, Device device, String limit, String destExt, boolean getCount) throws SQLException {
@@ -492,14 +493,11 @@ public class DaoFile {
 
         try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
             ps.setString(1, destExt);
-            if (getFiles(files, ps)) {
-                return true;
-            }
+            return getFiles(files, ps);
         } catch (SQLException ex) {
-            Popup.error("getFiles()", ex);
+            Jamuz.getLogger().log(Level.SEVERE, "getFiles()", ex);
+            throw new RuntimeException(ex);
         }
-
-        return false;
     }
 
     /**
@@ -513,14 +511,11 @@ public class DaoFile {
                 + " FROM file F JOIN path P ON F.idPath=P.idPath ";
 
         try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
-            if (getFiles(files, ps)) {
-                return true;
-            }
+            return getFiles(files, ps);
         } catch (SQLException ex) {
-            Popup.error("getFiles()", ex);
+            Jamuz.getLogger().log(Level.SEVERE, "getFiles()", ex);
+            throw new RuntimeException(ex);
         }
-
-        return false;
     }
 
     /**
@@ -539,7 +534,7 @@ public class DaoFile {
                 return true;
             }
         } catch (SQLException ex) {
-            Popup.error("getFiles()", ex);
+            Jamuz.getLogger().log(Level.SEVERE,"getFiles()", ex);
         }
 
         return false;
@@ -565,8 +560,8 @@ public class DaoFile {
             ps.setInt(1, device.getId());
             return getFiles(files, ps);
         } catch (SQLException ex) {
-            Popup.error("getFiles()", ex); // Handle or log the exception appropriately
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getFiles()", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -594,8 +589,8 @@ public class DaoFile {
 
             return getFiles(files, ps);
         } catch (SQLException ex) {
-            Popup.error("getFiles()", ex); // Handle or log the exception appropriately
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getFiles()", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -659,8 +654,8 @@ public class DaoFile {
             }
             return true;
         } catch (SQLException ex) {
-            Popup.error("getFileInfoList()", ex); // NOI18N
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getFileInfoList()", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -669,8 +664,8 @@ public class DaoFile {
         try (ResultSet rs = ps.executeQuery()) {
             return rs.getInt(1);
         } catch (SQLException ex) {
-            Popup.error("getIdFileMax()", ex);
-            return null;
+            Jamuz.getLogger().log(Level.SEVERE, "getIdFileMax()", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -698,8 +693,8 @@ public class DaoFile {
                 selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight)) {
             return getFilesStats(ps);
         } catch (SQLException ex) {
-            Popup.error("getFilesStats()", ex);
-            return "";
+            Jamuz.getLogger().log(Level.SEVERE, "getFilesStats()", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -722,8 +717,8 @@ public class DaoFile {
                     StringManager.humanReadableByteCount(totalSize, false));
 
         } catch (SQLException ex) {
-            Popup.error("getFilesStats()", ex); // NOI18N
-            return "";
+            Jamuz.getLogger().log(Level.SEVERE, "getFilesStats()", ex);
+            throw new RuntimeException(ex);
         }
     }
 

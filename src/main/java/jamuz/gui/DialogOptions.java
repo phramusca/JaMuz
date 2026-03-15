@@ -1145,9 +1145,13 @@ public class DialogOptions extends javax.swing.JDialog {
         machine.getOption("log.limit").setValue(jTextFieldOptionsLogLimit.getText());
         machine.getOption("network.proxy").setValue(jTextFieldOptionsProxy.getText());
 
-        Jamuz.getDb().option().lock().update(machine);
-        Jamuz.getDb().machine().lock().update(machine.getOption(0).getIdMachine(), jTextFieldDescription.getText());
-
+        try {
+            Jamuz.getDb().option().lock().update(machine);
+            Jamuz.getDb().machine().lock().update(machine.getOption(0).getIdMachine(), jTextFieldDescription.getText());
+        } catch (RuntimeException ex) {
+            Popup.error("save options", ex);
+            return;
+        }
         PanelMain.setOptions();
         PanelOptions.fillMachineList();
         doClose(RET_OK);
@@ -1202,8 +1206,12 @@ public class DialogOptions extends javax.swing.JDialog {
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 StatSource statSource = (StatSource) jListStatSources.getSelectedValue();
-                Jamuz.getDb().statSource().lock().delete(statSource.getId());
-                displayStatSources();
+                try {
+                    Jamuz.getDb().statSource().lock().delete(statSource.getId());
+                    displayStatSources();
+                } catch (RuntimeException ex) {
+                    Popup.error("delete stat source", ex);
+                }
             }
         }
     }//GEN-LAST:event_jButtonStatSouceDelActionPerformed
@@ -1227,8 +1235,12 @@ public class DialogOptions extends javax.swing.JDialog {
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
                 Device device = (Device) jListDevices.getSelectedValue();
-                Jamuz.getDb().device().lock().delete(device.getId());
-                displayDevices();
+                try {
+                    Jamuz.getDb().device().lock().delete(device.getId());
+                    displayDevices();
+                } catch (RuntimeException ex) {
+                    Popup.error("delete device", ex);
+                }
             }
         }
     }//GEN-LAST:event_jButtonDeviceDelActionPerformed

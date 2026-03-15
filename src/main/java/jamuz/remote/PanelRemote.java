@@ -16,7 +16,6 @@
  */
 package jamuz.remote;
 
-import jamuz.FileInfoInt;
 import jamuz.Jamuz;
 import jamuz.gui.DialogQRcode;
 import jamuz.gui.swing.PopupListener;
@@ -39,7 +38,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -49,7 +47,6 @@ import javax.swing.JMenuItem;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
-import org.json.simple.JSONObject;
 
 /**
  *
@@ -70,9 +67,9 @@ public class PanelRemote extends javax.swing.JPanel {
 	/**
 	 *
 	 * @param parent
-	 * @param callback
+     * @param callBackServer
 	 */
-	public void initExtended(Frame parent, ICallBackServer callback) {
+	public void initExtended(Frame parent, ICallBackServer callBackServer) {
 		this.parent = parent;
 		boolean onStartup = Boolean.parseBoolean(Jamuz.getOptions().get("server.on.startup", "false"));
 		jCheckBoxServerStartOnStartup.setSelected(onStartup);
@@ -83,7 +80,7 @@ public class PanelRemote extends javax.swing.JPanel {
         String getPort = Jamuz.getOptions().get("server.port", "2013");
 		int port = getPort.isBlank()?2013:Integer.parseInt(Jamuz.getOptions().get("server.port", "2013"));
 		jSpinnerPort.setValue(port);
-		server = new Server(port, callback);
+		server = new Server(port, callBackServer);
 
 		jTableRemote.setModel(server.getTableModel());
 		jTableRemote.setRowSorter(null);
@@ -102,8 +99,12 @@ public class PanelRemote extends javax.swing.JPanel {
         jTableRemote.addMouseListener(popupListener);
 		
         fillIPsCombo();
-        
-		server.fillClients();
+
+		try {
+			server.fillClients();
+		} catch (RuntimeException ex) {
+			Popup.error("load clients", ex);
+		}
 		if(onStartup) {
 			startStopRemoteServer();
 		}
@@ -115,71 +116,7 @@ public class PanelRemote extends javax.swing.JPanel {
         column.setPreferredWidth(width);
         column.setMaxWidth(width*3);
     }
-		
-	/**
-	 *
-	 * @param fileInfo
-	 * @param playlistInfo
-	 * @param currentPosition
-	 */
-	public static void send(FileInfoInt fileInfo, String playlistInfo, int currentPosition) {		
-		fileInfo.getTags();
-		Map jsonAsMap = new HashMap();
-        jsonAsMap.put("type", "fileInfoInt");
-		jsonAsMap.put("fileInfoInt", fileInfo.toMap());
-		jsonAsMap.put("playlistInfo", playlistInfo);
-		jsonAsMap.put("currentPosition", currentPosition);
-        send(jsonAsMap);
-    }
-	
-	/**
-	 *
-	 * @param clientId
-	 * @param displayedFile
-	 * @param maxWidth
-	 */
-	public static void sendCover(String clientId, FileInfoInt displayedFile, int maxWidth) {
-		if(server!=null) {
-			server.sendCover(clientId, displayedFile, maxWidth);
-		}
-	}
-	
-	/**
-	 *
-	 * @param jsonAsMap
-	 */
-	public static void send(Map jsonAsMap) {
-        if(server!=null) {
-            server.send(jsonAsMap);
-        }
-    }
-	
-	/**
-	 *
-	 * @param clientId
-	 * @param obj
-	 * @return
-	 */
-	public static boolean send(String clientId, JSONObject obj) {
-        if(server!=null) {
-            return server.send(clientId, obj);
-        }
-		return false;
-    }
-	
-	/**
-	 *
-	 * @param clientId
-	 * @return
-	 */
-	public static boolean isConnected(String clientId) {
-		if(server!=null) {
-            return server.isConnected(clientId);
-        }
-		return false;
-	}
-	
-    
+
 	private Map<String, InetAddress> getIPs() throws UnknownHostException {
 		try {
             Map<String, InetAddress> IPs = new LinkedHashMap<>();
@@ -247,7 +184,6 @@ public class PanelRemote extends javax.swing.JPanel {
 	private void startStopRemoteServer() {
 		enableConfig(false);
 		if(server!=null) {
-			server.closeClients();
 			if(jButtonStart.getText().equals(Inter.get("Button.Start"))) {
 				server.setPort((Integer) jSpinnerPort.getValue());
 				if(server.connect()) {
@@ -268,6 +204,10 @@ public class PanelRemote extends javax.swing.JPanel {
         jButtonStart.setEnabled(true);
 	}
    
+    public void sendSseEvent(String event, String data, String id) {
+        server.sendSseEvent(event, data, id);
+    }
+    
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
@@ -525,6 +465,21 @@ public class PanelRemote extends javax.swing.JPanel {
 
 		@Override
 		public void addRow(String file, String msg) {}
+
+		@Override
+		public void showInfo(String msg) {
+			Popup.info(msg);
+		}
+
+		@Override
+		public void showWarning(String msg) {
+			Popup.warning(msg);
+		}
+
+		@Override
+		public void showError(String msg) {
+			Popup.error(msg);
+		}
 	}
 	
 	static void refreshList() {

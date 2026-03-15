@@ -16,7 +16,9 @@
  */
 package jamuz.database;
 
-import jamuz.utils.Popup;
+import jamuz.Jamuz;
+
+import java.util.logging.Level;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -73,8 +75,8 @@ public class DaoFileTag {
                 return true;
             }
         } catch (SQLException ex) {
-            Popup.error("getTags(" + idFile + ")", ex); // NOI18N
-            return false;
+            Jamuz.getLogger().log(Level.SEVERE, "getTags(" + idFile + ")", ex);
+            throw new RuntimeException(ex);
         }
     }
 

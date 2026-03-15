@@ -17,15 +17,17 @@
 package jamuz.database;
 
 import jamuz.FileInfoInt;
+import jamuz.Jamuz;
 import jamuz.gui.swing.ListElement;
 import jamuz.process.check.FolderInfoResult;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.logging.Level;
 import javax.swing.DefaultListModel;
 
 /**
@@ -89,7 +91,8 @@ public class DaoListModel {
         try (PreparedStatement ps = dbConn.connection.prepareStatement(sql)) {
             getListModel(myListModel, ps, field);
         } catch (SQLException ex) {
-            Popup.error("getFilesStats()", ex);
+            Jamuz.getLogger().log(Level.SEVERE, "getFilesStats()", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -115,7 +118,8 @@ public class DaoListModel {
                 myListModel.addElement(elementToAdd);
             }
         } catch (SQLException ex) {
-            Popup.error("fillList(\"" + field + "\")", ex); // NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "fillList(\"" + field + "\")", ex);
+            throw new RuntimeException(ex);
         }
     }
 
@@ -244,7 +248,8 @@ public class DaoListModel {
         try (PreparedStatement ps = prepareStatement4ListModel(sql, selGenre, selArtist, selAlbum, selRatings, selCheckedFlag, yearFrom, yearTo, bpmFrom, bpmTo, copyRight, field)) {
             getListModel(myListModel, ps, field);
         } catch (SQLException ex) {
-            Popup.error("getFilesStats()", ex);
+            Jamuz.getLogger().log(Level.SEVERE, "getFilesStats()", ex);
+            throw new RuntimeException(ex);
         }
 
         if (field.equals("album") && myListModel.size() > 1) {

@@ -27,7 +27,6 @@ import jamuz.process.check.Location;
 import jamuz.utils.Benchmark;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import java.io.File;
@@ -88,9 +87,11 @@ public class ProcessSync extends ProcessAbstract {
                 callback.refresh();
             }
         } catch (InterruptedException ex) {
-            Popup.info(Inter.get("Msg.Process.Aborted") //NOI18N
+            String msg = Inter.get("Msg.Process.Aborted")
                     + "\nYou shall sync again if some files have been deleted on destination\n"
-                    + "OR you will face some merge \"not found\" issues.");  //TODO: Inter
+                    + "OR you will face some merge \"not found\" issues.";
+            Jamuz.getLogger().log(Level.INFO, msg);
+            callback.showInfo(msg);
         } finally {
             //Updating database only if toInsertInDeviceFiles has items 
             //This prevents problems in case aborted before any change has been made 
@@ -148,7 +149,9 @@ public class ProcessSync extends ProcessAbstract {
             for (FileInfoInt file : filesToMaybeTranscode) {
                 try {
                     if (file.transcodeRequired(destPath, destExt)) {
-                        Popup.warning("Some files requires transcoding but are not yet transcoded. Please use the Check tab to do so. ");
+                        String msg = "Some files requires transcoding but are not yet transcoded. Please use the Check tab to do so.";
+                        Jamuz.getLogger().log(Level.WARNING, msg);
+                        callback.showWarning(msg);
                         progressBar.reset();
                         callback.refresh();
                         return false;
@@ -186,9 +189,11 @@ public class ProcessSync extends ProcessAbstract {
         //Inspire from file tagger in check
 
         if (!new File(this.device.getDestination()).exists()) {
-            Popup.warning(java.text.MessageFormat.format(
+            String msg = MessageFormat.format(
                     "<html>" + Inter.get("Msg.Sync.DestinationDoesNotExist") + "</html>",
-                    new Object[]{this.device.getDestination()}));  //NOI18N
+                    new Object[]{this.device.getDestination()});
+            Jamuz.getLogger().log(Level.WARNING, msg);
+            callback.showWarning(msg);
             return false;
         }
 

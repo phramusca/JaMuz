@@ -145,7 +145,7 @@ public class TableModelRemote extends TableModelGeneric {
      * Clear the table
      */
     public void clear() {
-        if(clients.size()>0) {
+        if(!clients.isEmpty()) {
             clients.clear();
 			this.fireTableDataChanged();
 //            this.fireIntervalRemoved(this, 0, lastIndex);

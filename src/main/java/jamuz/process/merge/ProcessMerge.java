@@ -35,7 +35,6 @@ import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.DateTime;
 import jamuz.utils.Inter;
 import jamuz.utils.LogText;
-import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.Utils;
 import java.io.File;
@@ -127,12 +126,14 @@ public class ProcessMerge extends ProcessAbstract {
 	 */
     @Override
 	public void run() {
-        String popupMsg=Inter.get("Msg.MergeComplete");  //NOI18N
+        String popupMsg = Inter.get("Msg.MergeComplete");  //NOI18N
         try {
             resetAbort();
-            if(sources.size()<=0) {
-                Popup.info("You must select at least one source.");
-                popupMsg="";
+            if (sources.size() <= 0) {
+                String msg = "You must select at least one source.";
+                Jamuz.getLogger().log(Level.INFO, msg);
+                callback.showInfo(msg);
+                popupMsg = "";
                 return;
             }
             mergeReport="";  //NOI18N
@@ -150,19 +151,23 @@ public class ProcessMerge extends ProcessAbstract {
                 popupMsg=""; 
             }
         } catch (InterruptedException ex) {
-            popupMsg=Inter.get("Msg.MergeAborted");  //NOI18N
+            popupMsg = Inter.get("Msg.MergeAborted");  //NOI18N
         } catch (CloneNotSupportedException ex) {
-            popupMsg="Clone not supported. Should never happen!"; //NOI18N
+            popupMsg = "Clone not supported. Should never happen!"; //NOI18N
+        } catch (RuntimeException ex) {
+            Jamuz.getLogger().log(Level.SEVERE, "ProcessMerge", ex);
+            popupMsg = ex.getMessage() != null ? ex.getMessage() : ex.toString();
+            callback.showError(popupMsg);
         }
         finally {
             progressBar.reset();
-			progressBar.setString(
-					DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)
-					+" | "+popupMsg+" "+completedList.size()
-					+" change(s). " + errorList.size() + " error(s).");
-			callback.completed(errorList, isRemote?mergeListDbSelected:completedList, popupMsg, mergeReport);
+            progressBar.setString(
+                    DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN)
+                    + " | " + popupMsg + " " + completedList.size()
+                    + " change(s). " + errorList.size() + " error(s).");
+            callback.completed(errorList, isRemote ? mergeListDbSelected : completedList, popupMsg, mergeReport);
         }
-	} 
+    } 
 
 	private boolean mergeMain() throws InterruptedException, CloneNotSupportedException {
 		
@@ -264,16 +269,20 @@ public class ProcessMerge extends ProcessAbstract {
 		//TODO: offer the choice to user: "Apply changes ?"
 		//Copy back databases back 
 		if(!simulate) {
-			if(isRemote) {
-				selectedStatSource.updateLastMergeDate();
-			} else {
-				for (StatSource statSource : sources) {
-					checkAbort();
-					if(!copyDB(statSource.getSource(), false)) {
-						return false;
+			try {
+				if(isRemote) {
+					selectedStatSource.updateLastMergeDate();
+				} else {
+					for (StatSource statSource : sources) {
+						checkAbort();
+						if(!copyDB(statSource.getSource(), false)) {
+							return false;
+						}
+						statSource.updateLastMergeDate();
 					}
-					statSource.updateLastMergeDate();
 				}
+			} catch (RuntimeException ex) {
+				Jamuz.getLogger().log(java.util.logging.Level.SEVERE, "ProcessMerge updateLastMergeDate", ex);
 			}
 		}
 		return true;
@@ -469,12 +478,10 @@ public class ProcessMerge extends ProcessAbstract {
 				fileNew.setTags(getTagsJaMuz(fileJaMuz));
 			}
 		} else { //New is by default the one from JaMuz, so not comparing if forcing JaMuz
-			
-            //FIXME ! ne pas modifier le playCounter si pas de changements de lastPlayed (ce qui peut arriver après un timeout dans le merge par ex)
-            // + enlever les popup d'erreur qui peuvent bloquer le merge (ecriture de tags sur des fichiers qu n'existent plus par ex)
-            
-			//Compare playCounter	
-			if(selectedStatSource.getSource().isUpdatePlayCounter()) {
+			// Compare playCounter only when lastPlayed has changed (avoids wrong delta after timeout/abort where lastPlayed wasn't updated)
+			boolean lastPlayedChanged = selectedStatSource.getSource().isUpdateLastPlayed()
+					&& !fileSelectedDb.getLastPlayed().equals(fileJaMuz.getLastPlayed());
+			if(selectedStatSource.getSource().isUpdatePlayCounter() && lastPlayedChanged) {
 				//Note: previousPlayCounter (for the selected database) is stored on myFileInfoDbJaMuz
 				//as retrieved during getStatistics on JaMuzDB
 				int playCounterToAdd;
@@ -492,11 +499,11 @@ public class ProcessMerge extends ProcessAbstract {
 				else {
 					//Current playCounter is less than previous playCounter !!
 					//This can happen if somehow the statistics have been reset in selected database
-					//BUT can also happen if the merge is aborted or fails (for any reason) 
+					//BUT can also happen if the merge is aborted or fails (for any reason)
 					//while merging and before the selected DB has been copied back
 					//=> NOT adding anything. The correct playCounter will be reached later on
 					//=> Restarting from current reference, which is JaMuz
-					//(we can only miss some play counts IF the reset is made on selected DB. 
+					//(we can only miss some play counts IF the reset is made on selected DB.
 					//Better than adding some each time the process is aborted)
 					//Do not think -or think well - of updating previousPlayCounter after selected DB is copied back as
 					//the problem will be on the if() above, and could cause more problems :
@@ -504,6 +511,9 @@ public class ProcessMerge extends ProcessAbstract {
 					playCounterToAdd=0;
 				}
 				fileNew.setPlayCounter(fileJaMuz.getPlayCounter()+playCounterToAdd);
+			} else if(selectedStatSource.getSource().isUpdatePlayCounter() && !lastPlayedChanged) {
+				// No lastPlayed change (e.g. after timeout): keep JaMuz playCounter, do not add from selected
+				fileNew.setPlayCounter(fileJaMuz.getPlayCounter());
 			}
 			//Compare lastPlayed, only if required (not for Mixxx as an example)
 			if(selectedStatSource.getSource().isUpdateLastPlayed()) {
@@ -1006,9 +1016,13 @@ public class ProcessMerge extends ProcessAbstract {
 		if(!simulate) {	
 			progressBar.progress(Inter.get("Msg.Check.Scan.Setup")); //NOI18N
 			if(!filesToUpdatePlayCounter.isEmpty()) {
-				//Remove potential duplicates 
-				filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter));
-				if(!dBJaMuz.playCounter().lock().update(filesToUpdatePlayCounter, selectedStatSource.getId())) {
+				try {
+					filesToUpdatePlayCounter = new ArrayList(new LinkedHashSet(filesToUpdatePlayCounter));
+					if(!dBJaMuz.playCounter().lock().update(filesToUpdatePlayCounter, selectedStatSource.getId())) {
+						return false;
+					}
+				} catch (RuntimeException ex) {
+					Jamuz.getLogger().log(java.util.logging.Level.SEVERE, "ProcessMerge playCounter update", ex);
 					return false;
 				}
 			}
@@ -1027,27 +1041,24 @@ public class ProcessMerge extends ProcessAbstract {
         }
         //Create Log for JaMuz database
         logDbJaMuz = new LogText(logSubPath);
-        if(!logDbJaMuz.createFile(prefix+"1-"+dBJaMuz.getName() + ".txt")) {
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
-					new Object[] {prefix+dBJaMuz.getName()+".txt"}));  //NOI18N
-            return false;
+        if (!logDbJaMuz.createFile(prefix + "1-" + dBJaMuz.getName() + ".txt")) {
+            String msg = MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[]{prefix + dBJaMuz.getName() + ".txt"});
+            Jamuz.getLogger().log(Level.SEVERE, msg);
+            throw new RuntimeException(msg);
         }
-        //Create Log for NEW info (after comparison)
         logDbNew = new LogText(logSubPath);
-        if(!logDbNew.createFile(prefix+"2-"+"NEW" + ".txt")) {  //NOI18N
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
-					new Object[] {prefix+"NEW.txt"}));  //NOI18N
-            return false;
+        if (!logDbNew.createFile(prefix + "2-" + "NEW" + ".txt")) {
+            String msg = MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[]{prefix + "NEW.txt"});
+            Jamuz.getLogger().log(Level.SEVERE, msg);
+            throw new RuntimeException(msg);
         }
-		//Create Log for selected database
         logDbSelected = new LogText(logSubPath);
-        String name=selectedStatSource.getSource().getName()
-                +" ["+DateTime.formatUTC(selectedStatSource.lastMergeDate, 
-						DateTime.DateTimeFormat.FILE, false)+"]";
-        if(!logDbSelected.createFile(prefix + "3-" + name + ".txt")) {
-            Popup.error(MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), 
-					new Object[] {prefix + name + ".txt"}));  //NOI18N
-            return false;
+        String name = selectedStatSource.getSource().getName()
+                + " [" + DateTime.formatUTC(selectedStatSource.lastMergeDate, DateTime.DateTimeFormat.FILE, false) + "]";
+        if (!logDbSelected.createFile(prefix + "3-" + name + ".txt")) {
+            String msg = MessageFormat.format(Inter.get("Error.Merge.CreatingLOG"), new Object[]{prefix + name + ".txt"});
+            Jamuz.getLogger().log(Level.SEVERE, msg);
+            throw new RuntimeException(msg);
         }
         return true;
     }

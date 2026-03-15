@@ -946,7 +946,13 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			ArrayList<String> genreList = group(filesAudio, "getGenre");  //NOI18N
 			if(genreList.size()==1) {
                 //TODO: Use genre cache (in some combo or else, not to query db each time !!)
-				if(Jamuz.getDb().genre().isSupported(genreList.get(0))) {
+				boolean genreSupported = false;
+				try {
+					genreSupported = Jamuz.getDb().genre().isSupported(genreList.get(0));
+				} catch (RuntimeException e) {
+					Jamuz.getLogger().log(java.util.logging.Level.SEVERE, "isSupported(genre)", e);
+				}
+				if (genreSupported) {
 					results.get("genre").value=genreList.get(0);  //NOI18N
 				}
 			}

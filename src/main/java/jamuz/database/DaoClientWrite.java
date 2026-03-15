@@ -18,7 +18,6 @@ package jamuz.database;
 
 import jamuz.Jamuz;
 import jamuz.remote.ClientInfo;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -60,8 +59,8 @@ public class DaoClientWrite {
                     return insertClient(clientInfo);
                 }
             } catch (SQLException ex) {
-                Popup.error("setClientInfo(" + clientInfo.toString() + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "setClientInfo(" + clientInfo.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

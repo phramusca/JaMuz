@@ -18,7 +18,7 @@ package jamuz.database;
 
 import jamuz.Jamuz;
 import jamuz.process.sync.Device;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -54,8 +54,8 @@ public class DaoDeviceWrite {
                     return insertDevice(device);
                 }
             } catch (SQLException ex) {
-                Popup.error("setDevice(" + device.toString() + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "setDevice(" + device.toString() + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -68,7 +68,11 @@ public class DaoDeviceWrite {
                 stUpdateDevice.setString(1, device.getName());
                 stUpdateDevice.setString(2, device.getSource());
                 stUpdateDevice.setString(3, device.getDestination());
-                stUpdateDevice.setInt(4, (device.getIdPlaylist() > 0) ? device.getIdPlaylist() : java.sql.Types.INTEGER);
+                if (device.getIdPlaylist() > 0) {
+                    stUpdateDevice.setInt(4, device.getIdPlaylist());
+                } else {
+                    stUpdateDevice.setNull(4, java.sql.Types.INTEGER);
+                }
                 stUpdateDevice.setInt(5, device.getId());
 
                 int nbRowsAffected = stUpdateDevice.executeUpdate();
@@ -93,7 +97,11 @@ public class DaoDeviceWrite {
                 stInsertDevice.setString(2, device.getSource());
                 stInsertDevice.setString(3, device.getDestination());
                 stInsertDevice.setString(4, device.getMachineName());
-                stInsertDevice.setInt(5, (device.getIdPlaylist() > 0) ? device.getIdPlaylist() : java.sql.Types.INTEGER);
+                if (device.getIdPlaylist() > 0) {
+                    stInsertDevice.setInt(5, device.getIdPlaylist());
+                } else {
+                    stInsertDevice.setNull(5, java.sql.Types.INTEGER);
+                }
 
                 int nbRowsAffected = stInsertDevice.executeUpdate();
                 if (nbRowsAffected > 0) {
@@ -128,13 +136,8 @@ public class DaoDeviceWrite {
                     return false;
                 }
             } catch (SQLException ex) {
-                // FIXME Z OPTIONS Happens when the device is linked to a stat source =>
-                // => Popup this nicely to the user!
-                // Instead of:
-                // java.sql.SQLException: [SQLITE_CONSTRAINT]
-                // Abort due to constraint violation (foreign key constraint failed)
-                Popup.error("deleteDevice(" + id + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "deleteDevice(" + id + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

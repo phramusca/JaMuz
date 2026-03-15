@@ -74,7 +74,12 @@ public class Jamuz {
 		if(!getDb().getDbConn().connect()) {
 			return false;
 		}
-		if(!getDb().schema().lock().update(2)) {
+		try {
+			if (!getDb().schema().lock().update(2)) {
+				return false;
+			}
+		} catch (RuntimeException ex) {
+			getLogger().log(Level.SEVERE, "schema update", ex);
 			return false;
 		}
 		getDb().getDbConn().disconnect();
@@ -388,12 +393,13 @@ public class Jamuz {
 	 */
 	public static void readTags() {
         tagsModel = new DefaultListModel();
-        //TODO: Why not using getTagListModel ?
-//        getDb().getTagListModel(tagsModel);
-		tags = getDb().tag().get();
-		tags.forEach(tag -> {
-			tagsModel.addElement(tag);
-		});
+		try {
+			tags = getDb().tag().get();
+			tags.forEach(tag -> tagsModel.addElement(tag));
+		} catch (RuntimeException ex) {
+			getLogger().log(Level.SEVERE, "readTags", ex);
+			tags = new ArrayList<>();
+		}
 	}
 
 	/**
@@ -419,7 +425,12 @@ public class Jamuz {
 	 */
 	public static boolean readPlaylists() {
 		playlists = new HashMap<>();
-		return getDb().playlist().get(playlists);
+		try {
+			return getDb().playlist().get(playlists);
+		} catch (RuntimeException ex) {
+			getLogger().log(Level.SEVERE, "readPlaylists", ex);
+			return false;
+		}
 	}
 
 	/**

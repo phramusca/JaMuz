@@ -16,15 +16,17 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
 import jamuz.process.check.DuplicateInfo;
 import jamuz.process.check.FolderInfo;
 import jamuz.utils.DateTime;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -83,7 +85,8 @@ public class DaoPathAlbum {
                 getDuplicates(myList, stSelectAlbumSimilar, 1);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkSimilarAlbum(" + album + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "checkSimilarAlbum(" + album + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
         return false;
@@ -109,7 +112,8 @@ public class DaoPathAlbum {
                 getDuplicates(myList, stSelectAlbumExact, 1);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkExactAlbum(" + album + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "checkExactAlbum(" + album + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
         return false;
@@ -134,7 +138,8 @@ public class DaoPathAlbum {
                 getDuplicates(myList, stSelectDuplicates, 2);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkDuplicate(" + mbId + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "checkDuplicate(" + mbId + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
         return false;
@@ -173,7 +178,8 @@ public class DaoPathAlbum {
                 getDuplicates(myList, stSelectDuplicates, 2);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkDuplicate(" + albumArtist + "," + album + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "checkDuplicate(" + albumArtist + "," + album + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
         return false;
@@ -204,7 +210,8 @@ public class DaoPathAlbum {
                 getDuplicates(myList, stSelectDuplicates, 1);
                 return true;
             } catch (SQLException ex) {
-                Popup.error("checkDuplicate(" + albumArtist + "," + album + ")", ex);
+                Jamuz.getLogger().log(Level.SEVERE, "checkDuplicate(" + albumArtist + "," + album + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
         return false;
@@ -238,7 +245,8 @@ public class DaoPathAlbum {
                         errorlevel, discNo, discTotal, folderInfo));
             }
         } catch (SQLException ex) {
-            Popup.error("getDuplicates(...)", ex);
+            Jamuz.getLogger().log(Level.SEVERE, "getDuplicates(...)", ex);
+            throw new RuntimeException(ex);
         }
     }
 

@@ -118,8 +118,9 @@ public class ClientInfo {
 		return isConnected;
 	}
 	
+    
 	/**
-	 *
+	 * Set when SSE client connects/disconnects (on /sse connect and on /disconnect or onClose).
 	 * @param connected
 	 */
 	public void setConnected(boolean connected) {
@@ -259,7 +260,6 @@ public class ClientInfo {
         hash = 83 * hash + (this.enabled ? 1 : 0);
         hash = 83 * hash + Objects.hashCode(this.status);
         hash = 83 * hash + Objects.hashCode(this.rootPath);
-        hash = 83 * hash + (this.isConnected ? 1 : 0);
         return hash;
     }
 
@@ -279,9 +279,6 @@ public class ClientInfo {
             return false;
         }
         if (this.enabled != other.enabled) {
-            return false;
-        }
-        if (this.isConnected != other.isConnected) {
             return false;
         }
         if (!Objects.equals(this.login, other.login)) {

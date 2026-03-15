@@ -17,7 +17,7 @@
 package jamuz.database;
 
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -59,8 +59,8 @@ public class DaoTagWrite {
                     return false;
                 }
             } catch (SQLException ex) {
-                Popup.error("insertTag(" + tag + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "insertTag(" + tag + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -83,8 +83,8 @@ public class DaoTagWrite {
                     }
                 }
             } catch (SQLException ex) {
-                Popup.error("isTag(" + tag + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "isTag(" + tag + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -112,8 +112,8 @@ public class DaoTagWrite {
                     return false;
                 }
             } catch (SQLException ex) {
-                Popup.error("updateTag(" + oldTag + ", " + newTag + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "updateTag(" + oldTag + ", " + newTag + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -138,8 +138,8 @@ public class DaoTagWrite {
                 int nbRowsAffected = stDeleteTag.executeUpdate();
                 return nbRowsAffected > 0;
             } catch (SQLException ex) {
-                Popup.error("deleteTag(" + tag + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "deleteTag(" + tag + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

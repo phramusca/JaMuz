@@ -17,7 +17,7 @@
 package jamuz.database;
 
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -66,9 +66,8 @@ public class DaoGenreWrite {
                     }
                 }
             } catch (SQLException ex) {
-                Jamuz.getLogger().log(Level.SEVERE, "stInsertGenre, genre=\"{0}\" "
-                        + "Exception: {1}", new Object[]{genre, ex.toString()});
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "insertGenre, genre=\"" + genre + "\"", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -98,8 +97,8 @@ public class DaoGenreWrite {
                     }
                 }
             } catch (SQLException ex) {
-                Popup.error("updateGenre(" + oldGenre + ", " + newGenre + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "updateGenre(" + oldGenre + ", " + newGenre + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }
@@ -127,8 +126,8 @@ public class DaoGenreWrite {
                     }
                 }
             } catch (SQLException ex) {
-                Popup.error("deleteGenre(" + genre + ")", ex);
-                return false;
+                Jamuz.getLogger().log(Level.SEVERE, "deleteGenre(" + genre + ")", ex);
+                throw new RuntimeException(ex);
             }
         }
     }

@@ -162,3 +162,4 @@ public class AppVersionTest {
 		assertEquals(100, appVersion.getAssetSize());
 	}
 }
+
