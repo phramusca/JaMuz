@@ -99,6 +99,10 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Check [created release](https://github.com/phramusca/JaMuz/releases).
 
+1. Test the update process by enabling the "Pre-release ?" checkbox.
+
+1. If the upgrade is successful, remove the pre-release status from the [created release](https://github.com/phramusca/JaMuz/releases) and mark it as the latest release.
+
 1. Update pom.xml
 
     ```xml
