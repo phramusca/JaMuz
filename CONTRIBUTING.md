@@ -2,8 +2,6 @@
 
 By contributing to this project you agree to license your contribution under the terms of the [GNU GPLv3](LICENSE).
 
-[[_TOC_]]
-
 ## Issues
 
 [Open an issue](https://github.com/phramusca/JaMuz/issues?state=open) for anything you would like to see in JaMuz, but please check other issues first.
@@ -97,7 +95,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Update CHANGELOG.md
 
-1. Tag last commit "vx.y.z" and push. This will trigger the [release github action](https://github.com/phramusca/JaMuz/actions/workflows/maven.yml).
+1. Tag last commit "vx.y.z" and push. This will trigger the [release github action](https://github.com/phramusca/JaMuz/actions/workflows/maven.yml), which publishes the release automatically (body is extracted from CHANGELOG.md).
 
 1. Check [created release](https://github.com/phramusca/JaMuz/releases).
 
@@ -109,9 +107,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Commit (named vx.y.z-dev) & PUSH
 
-1. Edit [created release](https://github.com/phramusca/JaMuz/releases) and "Publish release".
-
-1. [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) with link to new release.
+1. **Optionally** [Edit gh-pages](https://github.com/phramusca/JaMuz/edit/gh-pages/index.md) — links there already point to the latest release.
 
 ### Github self-hosted runner
 
