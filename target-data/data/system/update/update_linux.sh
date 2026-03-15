@@ -92,7 +92,8 @@ for csv in update_*.csv; do
   v="${csv#update_}"
   echo "${v%.csv}"
 done | sort -V | while read -r v; do
-  # Run this version if fromVer < v <= latestVer
+  # Run this version only if fromVer < v <= latestVer (exclude v = fromVer)
+  [ "$v" = "$fromVer" ] && continue
   sorted_after_from=$(printf '%s\n' "$fromVer" "$v" | sort -V | tail -1)
   sorted_before_latest=$(printf '%s\n' "$v" "$latestVer" | sort -V | head -1)
   if [ "$sorted_after_from" = "$v" ] && [ "$sorted_before_latest" = "$v" ]; then

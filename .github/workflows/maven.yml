@@ -76,6 +76,7 @@ jobs:
         name: JaMuz Desktop ${{ github.ref_name }}
         body_path: ${{ github.workspace }}/release_body.txt
         draft: false
+        prerelease: true
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
