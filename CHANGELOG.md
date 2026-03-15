@@ -1,5 +1,42 @@
 # JaMuz change log #
 
+## v0.7.2 ##
+
+### What's new ? ###
+
+- **Update mechanism**: One CSV per version step (like DB migrations); scripts skip Copy when source is missing and Remove when path is missing (e.g. 0.7.0 → 0.7.2 without test data in package). Local workflow: copy dist to Windows only when under WSL (/mnt/c).
+- **Remote control (SSE)**: Reactivated; heartbeat and timeout; authentication and client login; fix playing song and disconnect; display remote connection; send idFile and position/length; proper JSON handling.
+- **ProcessMerge**: Play counter updated only when lastPlayed changed.
+- **Error handling**: DAO layer refactor — log + throw on SQLException; popups only in UI; callbacks for ProcessMerge/ProcessSync (showInfo/Warning/Error).
+- **Database / DAO**: Try-with-resources and PreparedStatement usage; DaoClientWrite, DaoDeviceWrite, DaoFileWrite, DaoPathWrite, DaoOption, DaoPlaylist, DaoSchema, DaoTag, etc. refactored; lock() for DB access.
+- **Soulseek**: SlskdClient with Gson; Slskd* unit tests; Docker check; UI adjustments.
+- **Version check**: AppVersion and AppVersionCheck refactor; OkHttp for release fetch; unit tests.
+- **Unit tests**: DaoFile, DaoDevice, DaoClient, DaoPlaylist, DaoOption, DaoGenre, DaoPath, DaoPlayCounter, DaoListModel; FileInfoIntTest; DeviceFileTest; Slskd* tests.
+- Translation updates, fixes, cleanup.
+
+### Package content ###
+
+| Path                 | Incl. | Description                                                                                       |
+| -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
+| /data/cache          | No    | Cache folder. You can remove it, files will be re-created.                                        |
+| /data/icon/genre     | Yes   | Genre icons. You can add more.                                                                    |
+| /data/icon/tag       | Yes   | Tag icons. You can add more.                                                                      |
+| /data/system         | Yes   | System files. You should not touch this.                                                          |
+| /data/AudioLinks.txt | Yes   | You can edit links to your favorite audio information providers.                                  |
+| /data/BookLinks.txt  | Yes   | You can edit links to your favorite book information providers.                                   |
+| /data/VideoLinks.txt | Yes   | You can edit links to your favorite video information providers.                                  |
+| /data/Patterns.txt   | No    | Saved patterns for music file scanner. If you want to clean it up.                                |
+| /doc                 | Yes   | Includes sample JaMuz.xml.                                                                        |
+| /logs                | No    | LOG files (and databases backups).                                                                |
+| ***/JaMuz.db***      | Yes   | ***Your new music library (back it up regularly !)***.                                            |
+| ***/JaMuz.jar***     | Yes   | ***Program itself*** (*on linux, set execution permission*).                                      |
+| /JaMuz.properties    | Yes   | Configuration file (avoid manual edition).                                                        |
+| /JaMuz.xml           | No    | Configuration file (optional). Used to setup your database location. See /doc/JaMuz.xml template. |
+| /myMovieDb.db        | Yes   | Database for Video tab.                                                                           |
+| /Slsk.properties     | Yes   | Configuration file for slskd (avoid manual edition).                                              |
+
+> Compatible with JaMuz Android v0.5.x minimum
+
 ## v0.7.1 ##
 
 ### What's new ? ###
