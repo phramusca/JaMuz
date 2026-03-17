@@ -68,7 +68,8 @@ public class Mplayer implements Runnable {
 	private boolean goNext=true;
 	private final Object lockPlayer = new Object();
 	private int lastPosition=0;
-	private AudioCard audioCard= new AudioCard("Default", "default");
+	// When empty, we don't force any audio output and let mplayer pick the system default.
+	private AudioCard audioCard= new AudioCard("Système (auto)", "");
 	private final EventListenerList listeners = new EventListenerList();
 	
     /**
@@ -178,6 +179,7 @@ public class Mplayer implements Runnable {
 	 */
 	public ArrayList<AudioCard> getAudioCards() {
 		ArrayList<AudioCard> audioCards = new ArrayList<>();
+		audioCards.add(new AudioCard("Système (auto)", ""));
 		//Build mplayer command array
 		List<String> cmdArray = new ArrayList<>();
 		if(OS.isWindows()) {
@@ -206,13 +208,11 @@ public class Mplayer implements Runnable {
 						String line;
 						while((line = iputBufferedReader.readLine()) != null) {
 							if(line.startsWith("sysdefault:")) {  //NOI18N
-								////"-ao", "alsa:device=sysdefault=Device"
-								//sysdefault:CARD=PCH
-								//sysdefault:CARD=Device
+								// Example: sysdefault:CARD=Device
 								audioCards.add(
 									new AudioCard(
-										line.replaceAll("sysdefault:CARD=", ""), 
-										"alsa:device="+line.replaceAll(":CARD", "")
+										line.replace("sysdefault:CARD=", ""),
+										"alsa:device=" + line
 									)
 								);
 							}
@@ -257,8 +257,10 @@ public class Mplayer implements Runnable {
 		else {
 			//TODO: Test if it works in MacOS for instance
 			cmdArray.add("mplayer");
-			cmdArray.add("-ao");
-			cmdArray.add("alsa:device="+audioCard.getValue());
+			if(audioCard != null && !audioCard.getValue().isBlank()) {
+				cmdArray.add("-ao");
+				cmdArray.add(audioCard.getValue());
+			}
 			// -novideo    
 			//   Ne pas jouer/encoder la vidéo. 
 			//   Dans bien des cas, cela ne fonctionnera pas, utilisez à la place -vc null -vo null.

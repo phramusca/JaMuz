@@ -46,6 +46,7 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -183,6 +184,12 @@ public class PanelSelect extends javax.swing.JPanel {
 		refreshTable();
 		
 		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
+		jComboBoxSoundCard.addActionListener((java.awt.event.ActionEvent e) -> {
+			Object selected = jComboBoxSoundCard.getSelectedItem();
+			if(selected instanceof Mplayer.AudioCard) {
+				mplayer.setAudioCard((Mplayer.AudioCard) selected);
+			}
+		});
 		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, new PopupMenuListener() {
 			@Override
 			public boolean deleteStarted() {
@@ -837,6 +844,7 @@ public class PanelSelect extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
    
+    // Dedicated instance for Preview (can use a different audio device than the main player).
     private static final Mplayer mplayer= new Mplayer();
 	
 	/**
@@ -847,6 +855,13 @@ public class PanelSelect extends javax.swing.JPanel {
         if(jLabelPreviewDisplay!=null) {
             jLabelPreviewDisplay.setText("");
         }
+	}
+	
+	public static void setPreviewDisplay(String text) {
+		if(jLabelPreviewDisplay==null) {
+			return;
+		}
+		SwingUtilities.invokeLater(() -> jLabelPreviewDisplay.setText(text == null ? "" : text));
 	}
     
 	/**
