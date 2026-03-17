@@ -174,6 +174,27 @@ public class Mplayer implements Runnable {
 	public void setAudioCard(AudioCard audioCard) {
 		this.audioCard = audioCard;
 	}
+
+	/**
+	 * @return current file path being played, or null if none
+	 */
+	public String getFilePath() {
+		return filePath;
+	}
+
+	/**
+	 * @return true if a playback process is running
+	 */
+	public boolean isPlaying() {
+		return process != null && process.isAlive();
+	}
+
+	/**
+	 * Sets the position to resume from at next play(..., true).
+	 */
+	public void setResumePosition(int seconds) {
+		this.lastPosition = seconds;
+	}
 	
 	/**
 	 *

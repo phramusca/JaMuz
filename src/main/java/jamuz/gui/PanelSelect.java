@@ -183,6 +183,27 @@ public class PanelSelect extends javax.swing.JPanel {
 		refreshTable();
 		
 		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
+		jComboBoxSoundCard.addItemListener(evt -> {
+			if(evt.getStateChange() != java.awt.event.ItemEvent.SELECTED) return;
+			Object item = evt.getItem();
+			if(!(item instanceof Mplayer.AudioCard)) return;
+			if(!mplayer.isPlaying()) return;
+			String path = mplayer.getFilePath();
+			if(path == null) return;
+			int pos = (int) Math.round(mplayer.getPosition());
+			if(pos < 0) pos = 0;
+			final String pathFinal = path;
+			final int posFinal = pos;
+			final Mplayer.AudioCard cardFinal = (Mplayer.AudioCard)item;
+			// Restart playback on new output in background to avoid blocking EDT
+			new Thread(() -> {
+				mplayer.stop();
+				try { Thread.sleep(400); } catch(InterruptedException ignored) {}
+				mplayer.setAudioCard(cardFinal);
+				mplayer.setResumePosition(posFinal);
+				mplayer.play(pathFinal, true);
+			}, "PreviewSwitchOutput").start();
+		});
 		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, jComboBoxSoundCard, new PopupMenuListener() {
 			@Override
 			public boolean deleteStarted() {
@@ -665,13 +686,17 @@ public class PanelSelect extends javax.swing.JPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(jButtonPreviewStop)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBoxSoundCard, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabelPreviewDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jButtonPreviewStop)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxSoundCard, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addComponent(jLabelPreviewDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
