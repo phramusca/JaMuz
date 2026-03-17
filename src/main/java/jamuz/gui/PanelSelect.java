@@ -183,7 +183,7 @@ public class PanelSelect extends javax.swing.JPanel {
 		refreshTable();
 		
 		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
-		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, new PopupMenuListener() {
+		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, jComboBoxSoundCard, new PopupMenuListener() {
 			@Override
 			public boolean deleteStarted() {
 				jTableSelect.setRowSorter(null);
@@ -844,9 +844,16 @@ public class PanelSelect extends javax.swing.JPanel {
 	 */
 	public static void stopMplayer() {
 		mplayer.stop();
-        if(jLabelPreviewDisplay!=null) {
-            jLabelPreviewDisplay.setText("");
-        }
+        setPreviewDisplayText("");
+	}
+
+	/**
+	 * Sets the preview area label (e.g. "1 Song title" while preview is playing).
+	 */
+	public static void setPreviewDisplayText(String text) {
+		if(jLabelPreviewDisplay!=null) {
+			jLabelPreviewDisplay.setText(text != null ? text : "");
+		}
 	}
     
 	/**

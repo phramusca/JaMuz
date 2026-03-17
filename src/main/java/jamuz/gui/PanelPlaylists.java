@@ -76,7 +76,7 @@ public class PanelPlaylists extends javax.swing.JPanel {
 		});
         jTablePlaylist.setRowSorter(null);
         tableModelPlaylist.clear();	
-		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTablePlaylist, tableModelPlaylist, fileInfoList, null, new PopupMenuListener() {
+		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTablePlaylist, tableModelPlaylist, fileInfoList, null, null, new PopupMenuListener() {
 			@Override
 			public boolean deleteStarted() {
 				enablePlaylistEdit(false);

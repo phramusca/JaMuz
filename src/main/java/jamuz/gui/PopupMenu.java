@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import javax.swing.JComboBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -69,6 +70,7 @@ public class PopupMenu {
 	TableModel tableModel;
 	ArrayList<FileInfoInt> fileInfoList;
 	Mplayer mplayer;
+	private final JComboBox<?> soundCardCombo;
 	ActionListener menuListener;
 	private final PopupMenuListener popupMenuListener;
 
@@ -80,18 +82,19 @@ public class PopupMenu {
 	 * @param tableModel
 	 * @param fileInfoList
 	 * @param mplayer
+	 * @param soundCardCombo combo of AudioCard for preview output (can be null)
 	 * @param popupMenuListener
 	 */
-	public PopupMenu(PanelSlsk panelSlsk, JPopupMenu jPopupMenu1, JTable jTableSelect, 
-			TableModel tableModel, ArrayList<FileInfoInt> fileInfoList, 
-			Mplayer mplayer, PopupMenuListener popupMenuListener) {
+	public PopupMenu(PanelSlsk panelSlsk, JPopupMenu jPopupMenu1, JTable jTableSelect,
+			TableModel tableModel, ArrayList<FileInfoInt> fileInfoList,
+			Mplayer mplayer, JComboBox<?> soundCardCombo, PopupMenuListener popupMenuListener) {
         this.panelSlsk = panelSlsk;
-		
 		this.jPopupMenu1 = jPopupMenu1;
 		this.jTableSelect = jTableSelect;
 		this.tableModel = tableModel;
 		this.fileInfoList = fileInfoList;
 		this.mplayer = mplayer;
+		this.soundCardCombo = soundCardCombo;
 		setup();
 		this.popupMenuListener = popupMenuListener;
 	}
@@ -116,12 +119,14 @@ public class PopupMenu {
 				public void actionPerformed(ActionEvent e) {
 					FileInfoInt selected = getSelected();
 					if(selected!=null) {
-						//FIXME Z Uncomment 2 below lines
-						//	mplayer.setAudioCard((Mplayer.AudioCard)jComboBoxSoundCard.getSelectedItem());
-						//	jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
-						if(mplayer!=null) {
-							mplayer.play(selected.getFullPath().getAbsolutePath(), false);
+						if(soundCardCombo!=null) {
+							Object item = soundCardCombo.getSelectedItem();
+							if(item instanceof Mplayer.AudioCard) {
+								mplayer.setAudioCard((Mplayer.AudioCard)item);
+							}
 						}
+						PanelSelect.setPreviewDisplayText(selected.getTrackNo() + " " + selected.getTitle());
+						mplayer.play(selected.getFullPath().getAbsolutePath(), false);
 					}
 				}
 			}));

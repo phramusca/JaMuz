@@ -34,6 +34,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -68,7 +70,8 @@ public class Mplayer implements Runnable {
 	private boolean goNext=true;
 	private final Object lockPlayer = new Object();
 	private int lastPosition=0;
-	private AudioCard audioCard= new AudioCard("Default", "default");
+	// By default, let the OS choose the audio output (system default)
+	private AudioCard audioCard= new AudioCard("Default (system)", "");
 	private final EventListenerList listeners = new EventListenerList();
 	
     /**
@@ -178,68 +181,89 @@ public class Mplayer implements Runnable {
 	 */
 	public ArrayList<AudioCard> getAudioCards() {
 		ArrayList<AudioCard> audioCards = new ArrayList<>();
-		//Build mplayer command array
-		List<String> cmdArray = new ArrayList<>();
+		// Always provide a "system default" entry: no -ao => OS/Pulse chooses output
+		audioCards.add(new AudioCard("Default (system)", ""));
+
 		if(OS.isWindows()) {
-			//FIXME WINDOWS what is "aplay" equivalent to list audio cards in Windows ?
+			//FIXME WINDOWS: list audio devices for preview (e.g. mplayer -ao help / dsound)
 			return audioCards;
 		}
-		else {
-			//TODO: Test if it works in MacOS for instance
-			cmdArray.add("aplay");
-			cmdArray.add("-L");
-		}
+
+		// Use "aplay -l" to list physical PLAYBACK devices; each line gives (card, device) => hw=X.Y
+		// Works on Mint (Nvidia + Generic), Raspberry (vc4hdmi0/1, IQaudIODAC), and with USB cards
+		List<String> cmdArray = new ArrayList<>();
+		cmdArray.add("aplay");
+		cmdArray.add("-l");
 		Runtime runtime = Runtime.getRuntime();
 		try {
-			//Start process
-			String[] stockArr = new String[cmdArray.size()];
-			stockArr = cmdArray.toArray(stockArr);
-			Process processSoundCards = runtime.exec(stockArr);
-
-			// Reading Input Stream
+			Process processSoundCards = runtime.exec(cmdArray.toArray(new String[0]));
 			Thread readInputThread = new Thread("Thread.Mplayer.getAudioCards") {
 				@Override
 				public void run() {
-					BufferedReader iputBufferedReader=null;
-					try {
-						iputBufferedReader = new BufferedReader(new InputStreamReader(processSoundCards.getInputStream()));
+					try (BufferedReader reader = new BufferedReader(
+							new InputStreamReader(processSoundCards.getInputStream(), "UTF-8"))) {
 						String line;
-						while((line = iputBufferedReader.readLine()) != null) {
-							if(line.startsWith("sysdefault:")) {  //NOI18N
-								////"-ao", "alsa:device=sysdefault=Device"
-								//sysdefault:CARD=PCH
-								//sysdefault:CARD=Device
-								audioCards.add(
-									new AudioCard(
-										line.replaceAll("sysdefault:CARD=", ""), 
-										"alsa:device="+line.replaceAll(":CARD", "")
-									)
-								);
-							}
+						while((line = reader.readLine()) != null) {
+							addAudioCardFromAplayL(audioCards, line);
 						}
 					} catch(IOException ex) {
 						Jamuz.getLogger().log(Level.SEVERE, "", ex);  //NOI18N
-						//TODO: return false
-					} finally {
-						if(iputBufferedReader!=null) {
-							try {
-								iputBufferedReader.close();
-							} catch (IOException ex) {
-								Logger.getLogger(Mplayer.class.getName()).log(Level.SEVERE, null, ex);
-							}
-						}
 					}
 				}
 			};
 			readInputThread.start();
-
 			processSoundCards.waitFor();
 			readInputThread.join();
-			
 		} catch (IOException | InterruptedException ex) {
 			Popup.error(ex);
-		} 
+		}
 		return audioCards;
+	}
+
+	/** Pattern: … first "N :" = card index, optional "[Label]", comma, then "M :" = device index, rest = description. Language-agnostic (line may start with "carte "/"card "/etc.). */
+	private static final Pattern APLAY_L_LINE = Pattern.compile(
+		"^.*?(\\d+)\\s*:\\s*(?:[^\\[]*\\[([^\\]]+)\\])?[^,]*,.*?(\\d+)\\s*:\\s*(.+)$");
+
+	/**
+	 * Parse one line from "aplay -l" and add a playback device as AudioCard if applicable.
+	 * Structure (any locale): "… cardIndex : … [CardLabel], … deviceIndex : DeviceDescription"
+	 * We only rely on digits, colons, brackets and comma — no "carte"/"device" etc.
+	 */
+	private void addAudioCardFromAplayL(List<AudioCard> audioCards, String line) {
+		if(line == null || line.trim().isEmpty()) {
+			return;
+		}
+		Matcher m = APLAY_L_LINE.matcher(line.trim());
+		if(!m.matches()) {
+			return;
+		}
+		int cardIdx = Integer.parseInt(m.group(1));
+		String cardLabel = m.group(2);
+		if(cardLabel == null || cardLabel.isEmpty()) {
+			cardLabel = "Card " + cardIdx;
+		} else {
+			cardLabel = cardLabel.trim();
+		}
+		int devIdx = Integer.parseInt(m.group(3));
+		String deviceDesc = m.group(4).trim();
+		// Keep " [xxx]" in display name when it adds info (e.g. "HDMI 0 [PL3494WQ]" for the connected display)
+		int br = deviceDesc.indexOf(" [");
+		int brEnd = br > 0 ? deviceDesc.indexOf(']', br) : -1;
+		if(br > 0 && brEnd > br) {
+			String beforeBracket = deviceDesc.substring(0, br).trim();
+			String inBracket = deviceDesc.substring(br + 2, brEnd).trim();
+			// Strip bracket part only if it's redundant (same as or contained in the name before)
+			if(inBracket.equalsIgnoreCase(beforeBracket) || beforeBracket.contains(inBracket)) {
+				deviceDesc = beforeBracket;
+			}
+			// else keep full "Name [Short]" (e.g. "HDMI 0 [PL3494WQ]")
+		}
+		if(deviceDesc.isEmpty()) {
+			deviceDesc = "Device " + devIdx;
+		}
+		String displayName = cardLabel + " - " + deviceDesc;
+		String value = "alsa:device=hw=" + cardIdx + "." + devIdx;
+		audioCards.add(new AudioCard(displayName, value));
 	}
 	
 	/**
@@ -257,8 +281,12 @@ public class Mplayer implements Runnable {
 		else {
 			//TODO: Test if it works in MacOS for instance
 			cmdArray.add("mplayer");
-			cmdArray.add("-ao");
-			cmdArray.add("alsa:device="+audioCard.getValue());
+			// If an explicit audio output is set (preview, specific ALSA device, etc.),
+			// pass it to mplayer. Otherwise, let mplayer / the OS choose the default.
+			if(audioCard!=null && audioCard.getValue()!=null && !audioCard.getValue().isEmpty()) {
+				cmdArray.add("-ao");
+				cmdArray.add(audioCard.getValue());
+			}
 			// -novideo    
 			//   Ne pas jouer/encoder la vidéo. 
 			//   Dans bien des cas, cela ne fonctionnera pas, utilisez à la place -vc null -vo null.
@@ -279,6 +307,12 @@ public class Mplayer implements Runnable {
 			//Start process
 			String[] stockArr = new String[cmdArray.size()];
 			stockArr = cmdArray.toArray(stockArr);
+			// TODO remove: temporary debug
+			System.out.println("[Mplayer] command: " + String.join(" ", stockArr));
+			System.out.println("[Mplayer] args count: " + stockArr.length);
+			for (int i = 0; i < stockArr.length; i++) {
+				System.out.println("[Mplayer]   [" + i + "] " + stockArr[i]);
+			}
 			process = runtime.exec(stockArr);
 
 			writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
