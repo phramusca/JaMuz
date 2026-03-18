@@ -72,6 +72,8 @@ public class Mplayer implements Runnable {
 	private int lastPosition=0;
 	// By default, let the OS choose the audio output (system default)
 	private AudioCard audioCard= new AudioCard("Default (system)", "");
+	// If true, we will apply lastPosition once mplayer is ready (see startMplayer()).
+	private boolean resumeRequested = false;
 	private final EventListenerList listeners = new EventListenerList();
 	
     /**
@@ -190,10 +192,38 @@ public class Mplayer implements Runnable {
 	}
 
 	/**
+	 * Waits for the playback thread to finish (process exited and device released).
+	 * Use after stop() before starting a new playback on another device to avoid "Device or resource busy".
+	 *
+	 * @param timeoutMs maximum time to wait
+	 * @return true if the thread ended within the timeout
+	 */
+	public boolean waitForPlaybackToEnd(long timeoutMs) {
+		Thread t = playerThread;
+		if (t == null || t == Thread.currentThread()) {
+			return true;
+		}
+		try {
+			t.join(timeoutMs);
+			return !t.isAlive();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return false;
+		}
+	}
+
+	/**
 	 * Sets the position to resume from at next play(..., true).
 	 */
 	public void setResumePosition(int seconds) {
 		this.lastPosition = seconds;
+	}
+
+	/**
+	 * @return last resume position (in seconds) stored from the previous pause/seek.
+	 */
+	public int getLastPosition() {
+		return lastPosition;
 	}
 	
 	/**
@@ -202,8 +232,6 @@ public class Mplayer implements Runnable {
 	 */
 	public ArrayList<AudioCard> getAudioCards() {
 		ArrayList<AudioCard> audioCards = new ArrayList<>();
-		// Always provide a "system default" entry: no -ao => OS/Pulse chooses output
-		audioCards.add(new AudioCard("Default (system)", ""));
 
 		if(OS.isWindows()) {
 			//FIXME WINDOWS: list audio devices for preview (e.g. mplayer -ao help / dsound)
@@ -302,6 +330,14 @@ public class Mplayer implements Runnable {
 		else {
 			//TODO: Test if it works in MacOS for instance
 			cmdArray.add("mplayer");
+			// When resuming a preview/main playback, start directly at lastPosition.
+			// This avoids a "start then seek" behavior and is more deterministic than set_property time_pos.
+			boolean doSeek = resumeRequested && lastPosition > 0;
+			resumeRequested = false;
+			if(doSeek) {
+				cmdArray.add("-ss");
+				cmdArray.add(Integer.toString(lastPosition));
+			}
 			// If an explicit audio output is set (preview, specific ALSA device, etc.),
 			// pass it to mplayer. Otherwise, let mplayer / the OS choose the default.
 			if(audioCard!=null && audioCard.getValue()!=null && !audioCard.getValue().isEmpty()) {
@@ -313,9 +349,9 @@ public class Mplayer implements Runnable {
 			//   Dans bien des cas, cela ne fonctionnera pas, utilisez à la place -vc null -vo null.
 			cmdArray.add("-novideo");
 			cmdArray.add("-vc");
-			cmdArray.add("-null");
+			cmdArray.add("null");
 			cmdArray.add("-vo");
-			cmdArray.add("-null");
+			cmdArray.add("null");
 		}
 		
 		cmdArray.add("-slave");
@@ -370,6 +406,7 @@ public class Mplayer implements Runnable {
 			positionUpdater.start();
 
 			fireVolumeChanged(getVolume());
+
 					
 			//Waiting for process
 			process.waitFor();
@@ -435,6 +472,7 @@ public class Mplayer implements Runnable {
 				}
 
 				this.filePath = filePath;
+				this.resumeRequested = resume;
 
 				this.play();
 
@@ -446,7 +484,6 @@ public class Mplayer implements Runnable {
 				if(!resume) {
 					lastPosition=0;
 				}
-				this.setPosition(lastPosition);
 
 				return lyrics;
 			}

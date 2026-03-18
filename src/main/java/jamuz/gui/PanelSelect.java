@@ -191,18 +191,24 @@ public class PanelSelect extends javax.swing.JPanel {
 			String path = mplayer.getFilePath();
 			if(path == null) return;
 			int pos = (int) Math.round(mplayer.getPosition());
+			if(pos < 0) {
+				pos = mplayer.getLastPosition();
+			}
 			if(pos < 0) pos = 0;
 			final String pathFinal = path;
 			final int posFinal = pos;
 			final Mplayer.AudioCard cardFinal = (Mplayer.AudioCard)item;
-			// Restart playback on new output in background to avoid blocking EDT
-			new Thread(() -> {
+			// Restart playback on new output in background; wait for old process to exit so ALSA device is released
+			Thread t = new Thread(() -> {
 				mplayer.stop();
-				try { Thread.sleep(400); } catch(InterruptedException ignored) {}
+				// Wait for playback thread to finish so the ALSA device is released (avoids "Device or resource busy")
+				mplayer.waitForPlaybackToEnd(3000);
 				mplayer.setAudioCard(cardFinal);
 				mplayer.setResumePosition(posFinal);
 				mplayer.play(pathFinal, true);
-			}, "PreviewSwitchOutput").start();
+			}, "PreviewSwitchOutput");
+			t.setDaemon(true);
+			t.start();
 		});
 		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, jComboBoxSoundCard, new PopupMenuListener() {
 			@Override
@@ -874,6 +880,7 @@ public class PanelSelect extends javax.swing.JPanel {
 
 	/**
 	 * Sets the preview area label (e.g. "1 Song title" while preview is playing).
+     * @param text
 	 */
 	public static void setPreviewDisplayText(String text) {
 		if(jLabelPreviewDisplay!=null) {
