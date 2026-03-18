@@ -116,9 +116,9 @@ public class PopupMenu {
 				public void actionPerformed(ActionEvent e) {
 					FileInfoInt selected = getSelected();
 					if(selected!=null) {
-						// Audio card is set via PanelSelect combobox listener.
-						String trackPrefix = selected.getTrackNo() > 0 ? (selected.getTrackNo() + " ") : "";
-						PanelSelect.setPreviewDisplay(trackPrefix + selected.getTitle());
+						//FIXME Z Uncomment 2 below lines
+						//	mplayer.setAudioCard((Mplayer.AudioCard)jComboBoxSoundCard.getSelectedItem());
+						//	jLabelPreviewDisplay.setText(fileInfoInt.getTrackNo()+" "+fileInfoInt.getTitle());
 						if(mplayer!=null) {
 							mplayer.play(selected.getFullPath().getAbsolutePath(), false);
 						}
