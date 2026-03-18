@@ -75,7 +75,7 @@ public class Jamuz {
 			return false;
 		}
 		try {
-			if (!getDb().schema().lock().update(2)) {
+			if (!getDb().schema().lock().update(3)) {
 				return false;
 			}
 		} catch (RuntimeException ex) {
@@ -155,6 +155,8 @@ public class Jamuz {
 		logConfig("files.image.delete");
 		logConfig("files.convert");
 		logConfig("files.delete");
+		logConfig("audio.main.output");
+		logConfig("audio.preview.output");
 
 		//Set library location (JaMuz's rootPath)
 		db.setRootPath(getMachine().getOptionValue("location.library"));  //NOI18N

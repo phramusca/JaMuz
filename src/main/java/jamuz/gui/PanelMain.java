@@ -671,6 +671,9 @@ public class PanelMain extends javax.swing.JFrame {
         PanelMerge.setOptions();
         PanelCheck.setOptions();
         PanelSync.setOptions();
+
+        // Refresh preview output combo selection after options save.
+        PanelSelect.syncPreviewOutputSelectionFromOptions();
         return true;
     }
 
@@ -1149,6 +1152,18 @@ public class PanelMain extends javax.swing.JFrame {
         playerInfo.setMax(myFileInfo.getLength());
         String audioFileName = myFileInfo.getFullPath().getAbsolutePath();
         boolean enablejSliderPlayerLength = true;
+
+        // Apply main output from machine options (empty => system default, no -ao passed)
+        try {
+            String mainOutput = Jamuz.getMachine().getOptionValue("audio.main.output");
+            if(mainOutput == null) {
+                mainOutput = "";
+            }
+            mplayer.setAudioCard(mplayer.new AudioCard("Main output", mainOutput));
+        } catch (Exception ex) {
+            // Fallback to whatever Mplayer default is.
+            Jamuz.getLogger().log(Level.WARNING, "Apply main audio output failed", ex);
+        }
 
         mplayer.play(audioFileName, resume);
 

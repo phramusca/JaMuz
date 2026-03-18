@@ -21,6 +21,7 @@ import jamuz.Machine;
 import jamuz.Option;
 import jamuz.process.merge.StatSource;
 import jamuz.process.sync.Device;
+import jamuz.player.Mplayer;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -85,7 +86,8 @@ public class DialogOptions extends javax.swing.JDialog {
         //Get selected machine name options
         machine = new Machine(machineName);
         machine.read();
-        
+        populateAudioOutputCombos();
+
         displayOptions();
         displayStatSources();
         displayDevices();
@@ -122,6 +124,71 @@ public class DialogOptions extends javax.swing.JDialog {
         displayOption("log.level", jTextFieldOptionsLogLevel, jLabelOptionsLogLevel);
         displayOption("log.limit", jTextFieldOptionsLogLimit, jLabelOptionsLogLimit);
         displayOption("network.proxy", jTextFieldOptionsProxy, jLabelOptionsProxy);
+
+        // Audio outputs selection (machine options)
+        Option optMain = machine.getOption("audio.main.output");
+        if(optMain != null) {
+            jLabelOptionsAudioMainOutput.setText(optMain.getComment());
+            String mainValue = optMain.getValue();
+            Object match = null;
+            for(int i=0;i<jComboBoxOptionsAudioMainOutput.getItemCount();i++) {
+                Object it = jComboBoxOptionsAudioMainOutput.getItemAt(i);
+                if(it instanceof Mplayer.AudioCard) {
+                    Mplayer.AudioCard card = (Mplayer.AudioCard)it;
+                    if(mainValue != null && mainValue.equals(card.getValue())) {
+                        match = it;
+                        break;
+                    }
+                }
+            }
+            if(match != null) {
+                jComboBoxOptionsAudioMainOutput.setSelectedItem(match);
+            }
+        }
+
+        Option optPreview = machine.getOption("audio.preview.output");
+        if(optPreview != null) {
+            jLabelOptionsAudioPreviewOutput.setText(optPreview.getComment());
+            String previewValue = optPreview.getValue();
+            Object match = null;
+            for(int i=0;i<jComboBoxOptionsAudioPreviewOutput.getItemCount();i++) {
+                Object it = jComboBoxOptionsAudioPreviewOutput.getItemAt(i);
+                if(it instanceof Mplayer.AudioCard) {
+                    Mplayer.AudioCard card = (Mplayer.AudioCard)it;
+                    if(previewValue != null && previewValue.equals(card.getValue())) {
+                        match = it;
+                        break;
+                    }
+                }
+            }
+            if(match != null) {
+                jComboBoxOptionsAudioPreviewOutput.setSelectedItem(match);
+            }
+        }
+    }
+
+    /**
+     * Populate audio output combos from system ALSA devices (mplayer -ao via aplay -l).
+     */
+    private static void populateAudioOutputCombos() {
+        if (jComboBoxOptionsAudioMainOutput == null || jComboBoxOptionsAudioPreviewOutput == null) {
+            return;
+        }
+        jComboBoxOptionsAudioMainOutput.removeAllItems();
+        jComboBoxOptionsAudioPreviewOutput.removeAllItems();
+        try {
+            Mplayer tmpPlayer = new Mplayer();
+
+            // Main output: include system default (empty => do not pass -ao to mplayer)
+            jComboBoxOptionsAudioMainOutput.addItem(tmpPlayer.new AudioCard("Default (system)", ""));
+
+            for (Object it : tmpPlayer.getAudioCards().toArray()) {
+                jComboBoxOptionsAudioMainOutput.addItem(it);
+                jComboBoxOptionsAudioPreviewOutput.addItem(it);
+            }
+        } catch (Exception ignored) {
+            // best-effort
+        }
     }
 
     /**
@@ -187,6 +254,11 @@ public class DialogOptions extends javax.swing.JDialog {
         jButtonOptionSelectFolder = new javax.swing.JButton();
         jLabelOptionLocationLibrary = new javax.swing.JLabel();
         jCheckBoxOptionLibraryIsMaster = new javax.swing.JCheckBox();
+        jPanelAudioOutputs = new javax.swing.JPanel();
+        jLabelOptionsAudioMainOutput = new javax.swing.JLabel();
+        jComboBoxOptionsAudioMainOutput = new javax.swing.JComboBox();
+        jLabelOptionsAudioPreviewOutput = new javax.swing.JLabel();
+        jComboBoxOptionsAudioPreviewOutput = new javax.swing.JComboBox();
         jPanelCheckLocations = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jTextFieldOptionLocationAdd = new javax.swing.JTextField();
@@ -338,6 +410,39 @@ public class DialogOptions extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jPanelAudioOutputs.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabelOptionsAudioMainOutput.setText("Audio main");
+
+        jLabelOptionsAudioPreviewOutput.setText("Audio preview");
+
+        javax.swing.GroupLayout jPanelAudioOutputsLayout = new javax.swing.GroupLayout(jPanelAudioOutputs);
+        jPanelAudioOutputs.setLayout(jPanelAudioOutputsLayout);
+        jPanelAudioOutputsLayout.setHorizontalGroup(
+            jPanelAudioOutputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelAudioOutputsLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(jPanelAudioOutputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelOptionsAudioPreviewOutput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxOptionsAudioPreviewOutput, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxOptionsAudioMainOutput, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelOptionsAudioMainOutput, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanelAudioOutputsLayout.setVerticalGroup(
+            jPanelAudioOutputsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelAudioOutputsLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabelOptionsAudioMainOutput)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxOptionsAudioMainOutput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelOptionsAudioPreviewOutput)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxOptionsAudioPreviewOutput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanelMachineAndLibraryLayout = new javax.swing.GroupLayout(jPanelMachineAndLibrary);
         jPanelMachineAndLibrary.setLayout(jPanelMachineAndLibraryLayout);
         jPanelMachineAndLibraryLayout.setHorizontalGroup(
@@ -346,7 +451,8 @@ public class DialogOptions extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanelMachineAndLibraryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelAudioOutputs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelMachineAndLibraryLayout.setVerticalGroup(
@@ -356,7 +462,9 @@ public class DialogOptions extends javax.swing.JDialog {
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanelAudioOutputs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(Inter.get("Option.Tab.Machine"), jPanelMachineAndLibrary); // NOI18N
@@ -1144,6 +1252,16 @@ public class DialogOptions extends javax.swing.JDialog {
         machine.getOption("log.level").setValue(jTextFieldOptionsLogLevel.getText());
         machine.getOption("log.limit").setValue(jTextFieldOptionsLogLimit.getText());
         machine.getOption("network.proxy").setValue(jTextFieldOptionsProxy.getText());
+        
+        // Audio outputs selection
+        Object mainSel = jComboBoxOptionsAudioMainOutput.getSelectedItem();
+        if(mainSel instanceof Mplayer.AudioCard) {
+            machine.getOption("audio.main.output").setValue(((Mplayer.AudioCard)mainSel).getValue());
+        }
+        Object previewSel = jComboBoxOptionsAudioPreviewOutput.getSelectedItem();
+        if(previewSel instanceof Mplayer.AudioCard) {
+            machine.getOption("audio.preview.output").setValue(((Mplayer.AudioCard)previewSel).getValue());
+        }
 
         try {
             Jamuz.getDb().option().lock().update(machine);
@@ -1307,6 +1425,8 @@ public class DialogOptions extends javax.swing.JDialog {
     private javax.swing.JButton jButtonStatSouceEdit;
     private static javax.swing.JCheckBox jCheckBoxOptionDeleteImages;
     private static javax.swing.JCheckBox jCheckBoxOptionLibraryIsMaster;
+    private static javax.swing.JComboBox jComboBoxOptionsAudioMainOutput;
+    private static javax.swing.JComboBox jComboBoxOptionsAudioPreviewOutput;
     private static javax.swing.JLabel jLabelDescription;
     private static javax.swing.JLabel jLabelOptionLocationAdd;
     private static javax.swing.JLabel jLabelOptionLocationKO;
@@ -1315,6 +1435,8 @@ public class DialogOptions extends javax.swing.JDialog {
     private static javax.swing.JLabel jLabelOptionLocationOK;
     private static javax.swing.JLabel jLabelOptionLocationTranscoded;
     private static javax.swing.JLabel jLabelOptionMask;
+    private static javax.swing.JLabel jLabelOptionsAudioMainOutput;
+    private static javax.swing.JLabel jLabelOptionsAudioPreviewOutput;
     private static javax.swing.JLabel jLabelOptionsFilesAudio;
     private static javax.swing.JLabel jLabelOptionsFilesConvert;
     private static javax.swing.JLabel jLabelOptionsFilesDelete;
@@ -1341,6 +1463,7 @@ public class DialogOptions extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelAudioOutputs;
     private javax.swing.JPanel jPanelCheckLocations;
     private javax.swing.JPanel jPanelCheckOptions;
     private javax.swing.JPanel jPanelMachineAndLibrary;

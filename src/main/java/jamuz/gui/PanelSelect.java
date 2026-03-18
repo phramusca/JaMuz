@@ -20,6 +20,7 @@ package jamuz.gui;
 import jamuz.FileInfoInt;
 import jamuz.IconBuffer;
 import jamuz.IconBufferCover;
+import jamuz.Option;
 import jamuz.Jamuz;
 import jamuz.gui.swing.ListCellRendererSelector;
 import jamuz.gui.swing.ListElement;
@@ -57,6 +58,9 @@ public class PanelSelect extends javax.swing.JPanel {
 	//FIXME Z When no cover, it messes up the list: cannot sort or display "Extra" columns
     private static TableModel tableModel;
     private static final TableColumnModel TABLE_COLUMN_MODEL = new TableColumnModel();
+
+	// Keep a reference to the preview output combo so we can re-sync after option changes.
+	private static javax.swing.JComboBox<?> jComboBoxSoundCardRef;
     
     private static FillMainListThread tFillMainTable;
     private static FillListsThread tFilllists;
@@ -183,11 +187,34 @@ public class PanelSelect extends javax.swing.JPanel {
 		refreshTable();
 		
 		jComboBoxSoundCard.setModel(new DefaultComboBoxModel(mplayer.getAudioCards().toArray()));
+		jComboBoxSoundCardRef = jComboBoxSoundCard;
+
+		syncPreviewOutputSelectionFromOptions();
+
 		jComboBoxSoundCard.addItemListener(evt -> {
 			if(evt.getStateChange() != java.awt.event.ItemEvent.SELECTED) return;
 			Object item = evt.getItem();
 			if(!(item instanceof Mplayer.AudioCard)) return;
+			final Mplayer.AudioCard cardFinal = (Mplayer.AudioCard)item;
+
+			// Persist preview output selection in machine options (best-effort).
+			try {
+				Option opt = Jamuz.getMachine().getOption("audio.preview.output");
+				if(opt != null) {
+					String val = cardFinal.getValue();
+					opt.setValue(val);
+					Jamuz.getDb().option().lock().update(opt, val);
+				}
+			} catch (Exception ignored) {
+				// best-effort
+			}
+
+			// Apply immediately for the next preview start.
+			mplayer.setAudioCard(cardFinal);
+
+			// If preview isn't playing, do not restart/re-seek yet.
 			if(!mplayer.isPlaying()) return;
+
 			String path = mplayer.getFilePath();
 			if(path == null) return;
 			int pos = (int) Math.round(mplayer.getPosition());
@@ -197,7 +224,7 @@ public class PanelSelect extends javax.swing.JPanel {
 			if(pos < 0) pos = 0;
 			final String pathFinal = path;
 			final int posFinal = pos;
-			final Mplayer.AudioCard cardFinal = (Mplayer.AudioCard)item;
+
 			// Restart playback on new output in background; wait for old process to exit so ALSA device is released
 			Thread t = new Thread(() -> {
 				mplayer.stop();
@@ -228,6 +255,52 @@ public class PanelSelect extends javax.swing.JPanel {
 				refreshTable();
 			}
 		});
+	}
+
+	/**
+	 * Ensures the preview output combo is selected according to persisted machine options.
+	 * This is called from the PanelSelect constructor and also after options are saved.
+	 */
+	public static void syncPreviewOutputSelectionFromOptions() {
+		if (jComboBoxSoundCardRef == null) {
+			return;
+		}
+		try {
+			String previewOutput = Jamuz.getMachine().getOptionValue("audio.preview.output");
+
+			// If empty => pick first available device and persist so UI stays consistent.
+			if (previewOutput == null || previewOutput.isEmpty()) {
+				if (jComboBoxSoundCardRef.getItemCount() > 0) {
+					Object first = jComboBoxSoundCardRef.getItemAt(0);
+					if (first instanceof Mplayer.AudioCard) {
+						String val = ((Mplayer.AudioCard) first).getValue();
+						Option opt = Jamuz.getMachine().getOption("audio.preview.output");
+						if (opt != null) {
+							Jamuz.getDb().option().lock().update(opt, val);
+						}
+						jComboBoxSoundCardRef.setSelectedItem(first);
+					}
+				}
+				return;
+			}
+
+			// Else select the item matching by value.
+			Object match = null;
+			for (int i = 0; i < jComboBoxSoundCardRef.getItemCount(); i++) {
+				Object it = jComboBoxSoundCardRef.getItemAt(i);
+				if (it instanceof Mplayer.AudioCard) {
+					if (previewOutput.equals(((Mplayer.AudioCard) it).getValue())) {
+						match = it;
+						break;
+					}
+				}
+			}
+			if (match != null) {
+				jComboBoxSoundCardRef.setSelectedItem(match);
+			}
+		} catch (Exception ignored) {
+			// best-effort sync
+		}
 	}
 	
     private static void setYearSpinners() {
