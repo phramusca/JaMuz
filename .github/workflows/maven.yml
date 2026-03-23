@@ -12,6 +12,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout code
@@ -66,19 +68,27 @@ jobs:
         echo "$RELEASE_BODY" > release_body.txt
       shell: bash
 
-    - name: Publish Release
+    # Immutable releases: assets are locked as soon as the release is published.
+    # Prereleases were published before uploads finished → 422. Draft first, then publish.
+    # See softprops/action-gh-release@v2 README ("immutable-release repository").
+    - name: Create draft release with assets
       id: publish_release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           JaMuz_${{ github.ref_name }}.7z
         tag_name: ${{ github.ref_name }}
         name: JaMuz Desktop ${{ github.ref_name }}
         body_path: ${{ github.workspace }}/release_body.txt
-        draft: false
+        draft: true
         prerelease: true
       env:
-       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish release (undraft)
+      run: gh release edit "${{ github.ref_name }}" --draft=false
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
