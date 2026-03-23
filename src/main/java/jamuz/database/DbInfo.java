@@ -386,4 +386,11 @@ public class DbInfo {
 		this.locationWork = locationWork;
 	}
 
+	/**
+	 * @return database engine type (SQLite, MySQL, …)
+	 */
+	public LibType getLibType() {
+		return libType;
+	}
+
 }

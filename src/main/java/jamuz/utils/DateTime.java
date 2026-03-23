@@ -130,7 +130,7 @@ public class DateTime {
 	 * @return
 	 */
 	public static Date parseUTC(String date, DateTimeFormat format) {
-		if(date.isBlank()) {
+		if (date == null || date.isBlank()) {
             return new Date(0); 
         }
         try {

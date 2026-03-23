@@ -19,6 +19,7 @@ package jamuz;
 import jamuz.database.DbInfo;
 import jamuz.database.DbConnJaMuz;
 import jamuz.database.DbInfo.LibType;
+import jamuz.database.SchemaUpgradeLog;
 import jamuz.utils.Ftp;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
@@ -68,6 +69,8 @@ public class Jamuz {
 	public static boolean configure(String appPath) {
 		Jamuz.appPath = appPath;
 		logPath = appPath + "logs" + File.separator;  //NOI18N
+		SchemaUpgradeLog.init(logPath);
+		SchemaUpgradeLog.line("configure: start (schema log enabled)");
 		if (!setupDatabase()) {
 			return false;
 		}
@@ -80,7 +83,11 @@ public class Jamuz {
 			}
 		} catch (RuntimeException ex) {
 			getLogger().log(Level.SEVERE, "schema update", ex);
+			SchemaUpgradeLog.line("configure: schema update failed: " + ex);
 			return false;
+		} finally {
+			SchemaUpgradeLog.line("configure: schema check step finished");
+			SchemaUpgradeLog.closeQuietly();
 		}
 		getDb().getDbConn().disconnect();
 		if(!db.setUp(false)) {
