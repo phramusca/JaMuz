@@ -1,5 +1,37 @@
 # JaMuz change log #
 
+## v0.7.5 ##
+
+### What's new ? ###
+
+- **Database schema upgrade**: migrations run on the **same JDBC connection** (no external `sqlite3`); SQL errors are no longer ignored.
+- **Upgrade logging**: append-only `logs/schema_upgrade.log` (steps, SQL preview, failures); backup path and log file mentioned in the confirmation dialog.
+- **Backup before upgrade**: copy under `logs/` (`*_schema_backup_*.db`), prefer **`VACUUM INTO`**, fallback file copy after WAL checkpoint; upgrade aborts if backup fails.
+- **UI**: non-modal progress window during schema upgrade (no “frozen app” effect).
+- **Recovery**: auto-fix `versionHistory` row with missing `upgradeEnd`; `DateTime` null-safe on NULL dates.
+- **Dev**: `database/revert_schema_v3_to_v2.sql` — manual rollback script for tests (v3 → v2).
+
+### Package content ###
+
+| Path                 | Incl. | Description                                                                                       |
+| -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
+| /data/cache          | No    | Cache folder. You can remove it, files will be re-created.                                        |
+| /data/icon/genre     | Yes   | Genre icons. You can add more.                                                                    |
+| /data/icon/tag       | Yes   | Tag icons. You can add more.                                                                      |
+| /data/system         | Yes   | System files. You should not touch this.                                                          |
+| /data/AudioLinks.txt | Yes   | You can edit links to your favorite audio information providers.                                  |
+| /data/BookLinks.txt  | Yes   | You can edit links to your favorite book information providers.                                   |
+| /data/VideoLinks.txt | Yes   | You can edit links to your favorite video information providers.                                  |
+| /data/Patterns.txt   | No    | Saved patterns for music file scanner. If you want to clean it up.                                |
+| /doc                 | Yes   | Includes sample JaMuz.xml.                                                                        |
+| /logs                | No    | LOG files (and databases backups).                                                                |
+| ***/JaMuz.db***      | Yes   | ***Your new music library (back it up regularly !)***.                                            |
+| ***/JaMuz.jar***     | Yes   | ***Program itself*** (*on linux, set execution permission*).                                      |
+| /JaMuz.properties    | Yes   | Configuration file (avoid manual edition).                                                        |
+| /JaMuz.xml           | No    | Configuration file (optional). Used to setup your database location. See /doc/JaMuz.xml template. |
+| /myMovieDb.db        | Yes   | Database for Video tab.                                                                           |
+| /Slsk.properties     | Yes   | Configuration file for slskd (avoid manual edition).                                              |
+
 ## v0.7.4 ##
 
 ### What's new ? ###
