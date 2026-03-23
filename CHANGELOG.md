@@ -9,7 +9,6 @@
 - **Backup before upgrade**: copy under `logs/` (`*_schema_backup_*.db`), prefer **`VACUUM INTO`**, fallback file copy after WAL checkpoint; upgrade aborts if backup fails.
 - **UI**: non-modal progress window during schema upgrade (no “frozen app” effect).
 - **Recovery**: auto-fix `versionHistory` row with missing `upgradeEnd`; `DateTime` null-safe on NULL dates.
-- **Dev**: `database/revert_schema_v3_to_v2.sql` — manual rollback script for tests (v3 → v2).
 
 ### Package content ###
 
