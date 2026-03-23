@@ -68,15 +68,16 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
     - Check that JaMuz properly handles update.
       - Export prod schema and compare with JaMuz_creation.sql.
 
-1. Check changes to release content:
+1. **Optional** Check changes to `target-data` release content file updates:
   
     - Create a new local release candidate with [local self-hosted runner](#github-self-hosted-runner)
       - [Start job](https://github.com/phramusca/JaMuz/actions/workflows/maven_local.yml)
       - Get `dist` folder in ~/actions-runner/_work/JaMuz/JaMuz/
     - Compare it to [previous release](https://github.com/phramusca/JaMuz/releases)
-    - **Update migrations (one CSV per version step, like DB migrations).** The scripts receive the current and target versions (`$1` / `$2`) and run every `update_X.Y.Z.csv` for versions in `(fromVersion, latestVersion]` in order. So 0.7.0 → 0.7.2 runs `update_0.7.1.csv` then `update_0.7.2.csv`.
-      - When releasing version **x.y.z**, add `target-data/data/system/update/update_x.y.z.csv` with only the Copy/Remove for *that* version (delta since the previous release). Leave the file empty if there are no file changes. Keep all previous `update_*.csv` files in the repo (they are shipped in the package so that upgrades from any older version work).
-      - CSV format (same as before):
+    - The `update_*.csv` mechanism **only** controls **Copy/Remove of packaged files** that live under `target-data/` (system data shipped with JaMuz: SQL scripts, resources, etc.). 
+      - **You can skip this entire sub-step** if this release does not need to add, overwrite, or remove any such files for users who upgrade (e.g. only code or DB logic changed, nothing new under `target-data` that existing installs must receive).
+      - **Update migrations (one CSV per version step, same ordering idea as DB migrations).** The scripts receive the current and target versions (`$1` / `$2`) and run every `update_X.Y.Z.csv` for versions in `(fromVersion, latestVersion]` in order. So 0.7.0 → 0.7.2 runs `update_0.7.1.csv` then `update_0.7.2.csv`.
+      - CSV format:
 
       ```csv
       Copy,data/system/path/to/file,false

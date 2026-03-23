@@ -167,6 +167,10 @@ foreach ($v in $versionsToRun) {
     }
     if ($curV -gt $fromV -and $curV -le $toV) {
         $csv = "update_$v.csv"
+        if (-not (Test-Path -LiteralPath $csv -PathType Leaf)) {
+            Log-Message "No $csv (skipping, same as empty)"
+            continue
+        }
         Log-Message "Applying migration $csv (version $v)"
         Get-Content $csv | ForEach-Object {
             $line = $_.Trim()

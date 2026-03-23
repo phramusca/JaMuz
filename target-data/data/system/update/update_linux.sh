@@ -86,7 +86,9 @@ cd "$(dirname "$(readlink -f "$0")")"
 log_message "Working folder: $(pwd)"
 
 # Run one CSV per version step in (fromVersion, latestVersion], like DB migrations
-# Collect versions from update_X.Y.Z.csv, sort, then run each in range in order
+# Collect versions from update_X.Y.Z.csv, sort, then run each in range in order.
+# Missing CSV for a version = no file ops (same as an empty CSV); no need to ship a 0-byte file.
+shopt -s nullglob
 for csv in update_*.csv; do
   [ -f "$csv" ] || continue
   v="${csv#update_}"
@@ -98,6 +100,10 @@ done | sort -V | while read -r v; do
   sorted_before_latest=$(printf '%s\n' "$v" "$latestVer" | sort -V | head -1)
   if [ "$sorted_after_from" = "$v" ] && [ "$sorted_before_latest" = "$v" ]; then
     csv="update_${v}.csv"
+    if [ ! -f "$csv" ]; then
+      log_message "No $csv (skipping, same as empty)"
+      continue
+    fi
     log_message "Applying migration $csv (version $v)"
     while IFS=, read -r operation relativePath overwrite || [ -n "$operation" ]; do
       case "$operation" in
@@ -107,6 +113,7 @@ done | sort -V | while read -r v; do
     done <"$csv"
   fi
 done
+shopt -u nullglob
 
 log_message "Copying the new JAR file"
 cp -f "${latestPath}JaMuz.jar" "${fromPath}JaMuz.jar" 2>&1 | tee -a "$logFile"
