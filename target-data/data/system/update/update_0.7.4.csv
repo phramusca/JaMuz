@@ -1,0 +1,3 @@
+Copy,data/system/sql/3.sql,false
+Copy,data/system/update/update_linux.sh,true
+Copy,data/system/update/update_windows.ps1,true

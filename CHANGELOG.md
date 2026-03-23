@@ -1,10 +1,12 @@
 # JaMuz change log #
 
-## v0.7.3 ##
+## v0.7.4 ##
 
 ### What's new ? ###
 
-- Fix audio output selection (linux).
+- Fix audio output selection (linux); per-machine options `audio.main.output` / `audio.preview.output` (DB schema v3, migration `data/system/sql/3.sql`).
+- In-place upgrade: ships refreshed `update_linux.sh` / `update_windows.ps1` (missing `update_*.csv` treated like empty; `nullglob`).
+- GitHub Actions: draft release with assets, then publish (compatible with immutable releases).
 
 ### Package content ###
 
