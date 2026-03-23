@@ -1,7 +1,7 @@
 BEGIN TRANSACTION;
 
 INSERT INTO "versionHistory" ("version", "upgradeStart", "upgradeEnd") 
-	VALUES ('2', datetime('now'), datetime('now'));
+	VALUES ('3', datetime('now'), datetime('now'));
 
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('1', 'location.library', '', 'path');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('2', 'library.isMaster', 'false', 'bool');
@@ -20,4 +20,6 @@ INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('14
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('15', 'location.manual', '', 'path');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('16', 'location.transcoded', '', 'path');
 INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('17', 'files.image.delete', 'false', 'bool');
+INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('18', 'audio.main.output', '', 'string');
+INSERT INTO "optiontype" ("idOptionType", "name", "default", "type") VALUES ('19', 'audio.preview.output', '', 'string');
 COMMIT;
