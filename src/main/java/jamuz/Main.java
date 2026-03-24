@@ -16,12 +16,13 @@
  */
 package jamuz;
 
-// FIXME ! 3 Revoir l'historique git depuis la dernière version livrée, jsuqu'à feature/unit-tests (rebase interactif pour grouper les changements afin de faciliter l'écriture du changelog)
-// FIXME ! 5 Continuer avec les autres "FIXME !", puis refaire un branche unit-tests et finir
+// FIXME ! 1 Continuer avec les autres "FIXME !"
+// FIXME ! 2 Faire une release
+// FIXME ! 3 Refaire un branche unit-tests et finir les "FIXME TEST"
+// FIXME ! 4 Faire une release
+// FIXME ! 5 Finir les derniers FIXME
 // FIXME ! 6 Faire une release
-// FIXME ! 7 Finir les derniers FIXME
-// FIXME ! 8 Faire une release
-// FIXME ! 9 Finir les derniers TO-DO
+// FIXME ! 7 Finir les derniers TO-DO
 
 //----------------------------------------------------------
 // - General TODO:

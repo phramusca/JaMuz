@@ -157,7 +157,7 @@ public class SlskdDocker {
         createAndStartContainer();
     }
 
-    //FIXME ! doc `docker pull slskd/slskd`, or better :
+    //FIXME ! soulseek ! doc `docker pull slskd/slskd`, or better :
 //    String imageName = "slskd/slskd";
 //        dockerClient.pullImageCmd(imageName)
 //                .exec(new PullImageResultCallback())
