@@ -38,6 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.EventListenerList;
@@ -74,7 +75,46 @@ public class Mplayer implements Runnable {
 	private AudioCard audioCard= new AudioCard("Default (system)", "");
 	// If true, we will apply lastPosition once mplayer is ready (see startMplayer()).
 	private boolean resumeRequested = false;
+	/** Wall time when current mplayer process was started (for failure heuristics). */
+	private long mplayerStartedAtMs;
+	/** Set from stderr when ALSA/AO init fails; MPlayer sometimes still exits with code 0. */
+	private final AtomicBoolean aoOpenFailed = new AtomicBoolean(false);
+	/**
+	 * True after exit code ≠ 0, AO init failure, or start exception — used so preview UI can
+	 * switch output and call play() again while {@link #isPlaying()} is already false.
+	 */
+	private volatile boolean lastPlaybackAttemptFailed = false;
 	private final EventListenerList listeners = new EventListenerList();
+
+	/** MPlayer stderr lines that mean playback did not get a working audio device. */
+	private static boolean isAoFatalStderrLine(String line) {
+		if (line == null || line.isEmpty()) {
+			return false;
+		}
+		// Keep substrings specific enough to avoid false positives from unrelated messages.
+		return line.contains("Could not open/initialize audio device")
+				|| line.contains("Failed to initialize audio driver")
+				|| line.contains("Playback open error:")
+				|| line.contains("Unknown error 524")
+				|| line.contains("open '/dev/snd/pcm") && line.contains("failed (-524)");
+	}
+
+	/**
+	 * After a failed open or decode, preview can change ALSA device and restart without a running process.
+	 */
+	public boolean isLastPlaybackAttemptFailed() {
+		return lastPlaybackAttemptFailed;
+	}
+
+	/**
+	 * Forget current preview file / failure state (e.g. user clicked preview stop).
+	 */
+	public void discardPlaybackSession() {
+		synchronized (lockPlayer) {
+			lastPlaybackAttemptFailed = false;
+			filePath = null;
+		}
+	}
 	
     /**
      * Mplayer player
@@ -269,6 +309,19 @@ public class Mplayer implements Runnable {
 		return audioCards;
 	}
 
+	/**
+	 * Raw {@code device=hw=} often triggers ALSA "Unable to set format: Invalid argument" on HDMI/USB.
+	 * {@code plughw} adds conversion; we also normalize any legacy / odd casing from stored options.
+	 */
+	private static String normalizeAlsaAo(String ao) {
+		if (ao == null || ao.isEmpty()) {
+			return ao;
+		}
+		String t = ao.trim();
+		// Case-insensitive: DB or hand-edited values may not match startsWith("alsa:device=hw=")
+		return t.replaceAll("(?i)device=hw=", "device=plughw=");
+	}
+
 	/** Pattern: … first "N :" = card index, optional "[Label]", comma, then "M :" = device index, rest = description. Language-agnostic (line may start with "carte "/"card "/etc.). */
 	private static final Pattern APLAY_L_LINE = Pattern.compile(
 		"^.*?(\\d+)\\s*:\\s*(?:[^\\[]*\\[([^\\]]+)\\])?[^,]*,.*?(\\d+)\\s*:\\s*(.+)$");
@@ -311,7 +364,9 @@ public class Mplayer implements Runnable {
 			deviceDesc = "Device " + devIdx;
 		}
 		String displayName = cardLabel + " - " + deviceDesc;
-		String value = "alsa:device=hw=" + cardIdx + "." + devIdx;
+		// plughw adds ALSA plug (rate/format conversion). Raw "hw=" often fails on HDMI
+		// (no matching sample rate) or shows no sound while aplay -l lists the device.
+		String value = "alsa:device=plughw=" + cardIdx + "." + devIdx;
 		audioCards.add(new AudioCard(displayName, value));
 	}
 	
@@ -340,9 +395,21 @@ public class Mplayer implements Runnable {
 			}
 			// If an explicit audio output is set (preview, specific ALSA device, etc.),
 			// pass it to mplayer. Otherwise, let mplayer / the OS choose the default.
+			boolean explicitLinuxAo = false;
 			if(audioCard!=null && audioCard.getValue()!=null && !audioCard.getValue().isEmpty()) {
+				String ao = normalizeAlsaAo(audioCard.getValue());
+				Jamuz.getLogger().log(Level.INFO, "MPlayer explicit -ao (after normalize): {0}", ao);
 				cmdArray.add("-ao");
-				cmdArray.add(audioCard.getValue());
+				cmdArray.add(ao);
+				explicitLinuxAo = !OS.isWindows();
+			}
+			// Software volume when a specific ALSA device is set (HDMI/USB often have no hw mixer).
+			// Leave default output unchanged so PulseAudio/PipeWire keep their usual volume path.
+			if (explicitLinuxAo) {
+				cmdArray.add("-softvol");
+				// Helps when the device rejects the decoder's sample format (common HDMI / Pi).
+				cmdArray.add("-af");
+				cmdArray.add("format=s16le");
 			}
 			// -novideo    
 			//   Ne pas jouer/encoder la vidéo. 
@@ -364,25 +431,25 @@ public class Mplayer implements Runnable {
 			//Start process
 			String[] stockArr = new String[cmdArray.size()];
 			stockArr = cmdArray.toArray(stockArr);
-			// TODO remove: temporary debug
-			System.out.println("[Mplayer] command: " + String.join(" ", stockArr));
-			System.out.println("[Mplayer] args count: " + stockArr.length);
-			for (int i = 0; i < stockArr.length; i++) {
-				System.out.println("[Mplayer]   [" + i + "] " + stockArr[i]);
-			}
+			mplayerStartedAtMs = System.currentTimeMillis();
+			aoOpenFailed.set(false);
 			process = runtime.exec(stockArr);
 
 			writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 			inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
 			// Reading Error Stream
+			final Process procRef = process;
 			Thread readErrorThread = new Thread("Thread.Mplayer.process.mplayer.ErrorStream") {
 				@Override
 				public void run() {
 					try {
-						errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+						errorReader = new BufferedReader(new InputStreamReader(procRef.getErrorStream()));
 						String line;
 						while((line = errorReader.readLine()) != null) {
+							if (isAoFatalStderrLine(line)) {
+								aoOpenFailed.set(true);
+							}
 							Jamuz.getLogger().log(Level.SEVERE, line);  //NOI18N
 						}
 					} catch(IOException ex) {
@@ -410,6 +477,19 @@ public class Mplayer implements Runnable {
 					
 			//Waiting for process
 			process.waitFor();
+			// Drain stderr before deciding: AO errors can arrive just before EOF on the error stream.
+			try {
+				readErrorThread.join(3000);
+			} catch (InterruptedException ie) {
+				Thread.currentThread().interrupt();
+			}
+			final long playedMs = System.currentTimeMillis() - mplayerStartedAtMs;
+			int exitCode = 0;
+			try {
+				exitCode = process.exitValue();
+			} catch (IllegalThreadStateException ignored) {
+			}
+			final boolean aoFailed = aoOpenFailed.get();
 			synchronized(lockPlayer) {
 
 				if(positionUpdater!=null) {
@@ -417,15 +497,27 @@ public class Mplayer implements Runnable {
 					positionUpdater.purge();
 				}
 				process = null;
+				// Do not chain "next track" if mplayer failed (bad -ao, missing file, etc.).
+				// MPlayer sometimes exits 0 after "no sound" / ALSA open failure — use stderr too.
+				if (goNext && (exitCode != 0 || aoFailed)) {
+					goNext = false;
+					Jamuz.getLogger().log(Level.WARNING,
+							"MPlayer ended with exit {0}, aoFailed={1}, after {2} ms — not advancing queue",
+							new Object[]{exitCode, aoFailed, playedMs});
+				}
 				if(goNext) {
 					firePlaybackFinished();
 				}
+				lastPlaybackAttemptFailed = (exitCode != 0 || aoFailed);
 				lockPlayer.notify();
 			}
 
 			return true;
 
 		} catch (IOException | InterruptedException ex) {
+			synchronized (lockPlayer) {
+				lastPlaybackAttemptFailed = true;
+			}
 			Popup.error(ex);
 			return false;
 		}
@@ -470,6 +562,7 @@ public class Mplayer implements Runnable {
 				if(this.stop()) {
 					lockPlayer.wait(5000);
 				}
+				lastPlaybackAttemptFailed = false;
 
 				this.filePath = filePath;
 				this.resumeRequested = resume;

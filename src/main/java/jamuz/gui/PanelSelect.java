@@ -212,30 +212,42 @@ public class PanelSelect extends javax.swing.JPanel {
 			// Apply immediately for the next preview start.
 			mplayer.setAudioCard(cardFinal);
 
-			// If preview isn't playing, do not restart/re-seek yet.
-			if(!mplayer.isPlaying()) return;
-
 			String path = mplayer.getFilePath();
-			if(path == null) return;
+			if(path == null) {
+				return;
+			}
 			int pos = (int) Math.round(mplayer.getPosition());
 			if(pos < 0) {
 				pos = mplayer.getLastPosition();
 			}
-			if(pos < 0) pos = 0;
+			if(pos < 0) {
+				pos = 0;
+			}
 			final String pathFinal = path;
 			final int posFinal = pos;
 
-			// Restart playback on new output in background; wait for old process to exit so ALSA device is released
-			Thread t = new Thread(() -> {
-				mplayer.stop();
-				// Wait for playback thread to finish so the ALSA device is released (avoids "Device or resource busy")
-				mplayer.waitForPlaybackToEnd(3000);
-				mplayer.setAudioCard(cardFinal);
-				mplayer.setResumePosition(posFinal);
-				mplayer.play(pathFinal, true);
-			}, "PreviewSwitchOutput");
-			t.setDaemon(true);
-			t.start();
+			if(mplayer.isPlaying()) {
+				// Restart on new output; wait for old process to exit so ALSA device is released
+				Thread t = new Thread(() -> {
+					mplayer.stop();
+					mplayer.waitForPlaybackToEnd(3000);
+					mplayer.setAudioCard(cardFinal);
+					mplayer.setResumePosition(posFinal);
+					mplayer.play(pathFinal, true);
+				}, "PreviewSwitchOutput");
+				t.setDaemon(true);
+				t.start();
+			} else if(mplayer.isLastPlaybackAttemptFailed()) {
+				// e.g. ALSA open failed (HDMI1): no running process but same file — switch device and retry
+				Thread t = new Thread(() -> {
+					mplayer.waitForPlaybackToEnd(3000);
+					mplayer.setAudioCard(cardFinal);
+					mplayer.setResumePosition(posFinal);
+					mplayer.play(pathFinal, true);
+				}, "PreviewSwitchOutputAfterFailure");
+				t.setDaemon(true);
+				t.start();
+			}
 		});
 		myPopupMenu = new PopupMenu(panelSlsk, jPopupMenu1, jTableSelect, tableModel, fileInfoList, mplayer, jComboBoxSoundCard, new PopupMenuListener() {
 			@Override
@@ -948,6 +960,7 @@ public class PanelSelect extends javax.swing.JPanel {
 	 */
 	public static void stopMplayer() {
 		mplayer.stop();
+		mplayer.discardPlaybackSession();
         setPreviewDisplayText("");
 	}
 
