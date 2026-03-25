@@ -90,7 +90,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
         2. `Relative path` of a file or directory.
         3. `Overwrite` bool (`Copy` only): overwrite or not files already in the user's install.
 
-1. **If** `slsk.docker.image.tag` changed in `target-data-local/Slsk.properties`, then align `DEFAULT_DOCKER_IMAGE_TAG` in `SlskdDocker`.
+1. **Soulseek Docker image tag**: keep the default **only** in code (`SlskdDocker.DEFAULT_DOCKER_IMAGE_TAG`). **Do not** add `slsk.docker.image.tag` to `target-data/Slsk.properties`: shipping it would pin that value for fresh installs and, for upgrades, either block adopting a new default or force a new `update_*.csv` row on every tag change. Users who want a non-default tag add `slsk.docker.image.tag` in **their** `Slsk.properties` next to the JAR; JaMuz reads it when present. To change the shipped default, update `DEFAULT_DOCKER_IMAGE_TAG` only.
 
 1. Update pom.xml (remove "-dev" suffix)
 
