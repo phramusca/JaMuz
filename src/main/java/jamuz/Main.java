@@ -16,13 +16,12 @@
  */
 package jamuz;
 
-// FIXME ! 1 Continuer avec les autres "FIXME !"
+// FIXME ! 1 Refaire un branche unit-tests et finir les "FIXME TEST"
 // FIXME ! 2 Faire une release
-// FIXME ! 3 Refaire un branche unit-tests et finir les "FIXME TEST"
+// FIXME ! 3 Finir les derniers FIXME
 // FIXME ! 4 Faire une release
-// FIXME ! 5 Finir les derniers FIXME
+// FIXME ! 5 Finir les derniers TO-DO
 // FIXME ! 6 Faire une release
-// FIXME ! 7 Finir les derniers TO-DO
 
 //----------------------------------------------------------
 // - General TODO:
