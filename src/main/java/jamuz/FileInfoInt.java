@@ -196,6 +196,9 @@ public class FileInfoInt extends FileInfo {
 	 */
 	private String coverHash = ""; //NOI18N
 	private BufferedImage coverImage = null;
+
+	/** True when {@link #coverImage} is the generated "No Cover" placeholder, not tag artwork. */
+	private boolean coverIsPlaceholder = false;
 	private boolean hasID3v1 = false;
 
 //File information
@@ -678,6 +681,7 @@ public class FileInfoInt extends FileInfo {
 		try {
 			coverImage = (BufferedImage) myArt.getImage();
 			readCoverHash();
+			coverIsPlaceholder = false;
 		} catch (IndexOutOfBoundsException | NullPointerException | NoSuchAlgorithmException ex) {
 			//Do nothing
 		}
@@ -698,6 +702,14 @@ public class FileInfoInt extends FileInfo {
 
 	private void setEmptyCover() {
 		coverImage = ImageUtils.getEmptyCover();
+		coverIsPlaceholder = true;
+	}
+
+	/**
+	 * @return {@code true} if the in-memory cover is the generated placeholder (must not be written to disk cache).
+	 */
+	public boolean isCoverPlaceholder() {
+		return coverIsPlaceholder;
 	}
 
 	private int getInt(String value) {
@@ -1198,6 +1210,7 @@ public class FileInfoInt extends FileInfo {
 	 */
 	public void unsetCover() {
 		this.coverImage = null;
+		this.coverIsPlaceholder = false;
 	}
 
 	/**

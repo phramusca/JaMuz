@@ -103,7 +103,6 @@ public class IconBuffer {
 		} else if (iconFileExists(name, "jpg", location)) { //NOI18N
 			image = readImage(name, "jpg", location); //NOI18N
 		}
-        //FIXME ! Only store if image is not "NO COVER" (bug may be elsewhere, to be investigated. Seen on rpi on fresh install)
 		//Making all versions at once. Yes, why not ? Doing so, We're reading file only once.
 		Map<IconVersion, ImageIcon> versionMap = new HashMap<>();
 		if (image != null) {

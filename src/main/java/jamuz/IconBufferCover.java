@@ -33,14 +33,14 @@ public class IconBufferCover {
 	/**
 	 * Cover Icon Size
 	 */
-	private static final int coverIconSize = 50;
+	private static final int COVER_ICON_SIZE = 50;
 
 	/**
 	 *
 	 * @return
 	 */
 	public static int getCoverIconSize() {
-		return coverIconSize;
+		return COVER_ICON_SIZE;
 	}
 
 	/**
@@ -57,10 +57,16 @@ public class IconBufferCover {
 		}
 		if (readIfNotFound) {
 			BufferedImage coverImage = file.getCoverImage();
-			icon = new ImageIcon(coverImage.getScaledInstance(coverIconSize, coverIconSize, java.awt.Image.SCALE_SMOOTH));
+			String coverHash = file.getCoverHash();
+			boolean writeCache = !file.isCoverPlaceholder() && !coverHash.isBlank();
+			icon = new ImageIcon(coverImage.getScaledInstance(COVER_ICON_SIZE, COVER_ICON_SIZE, java.awt.Image.SCALE_SMOOTH));
 			file.unsetCover();
-			ImageUtils.write(icon, getCacheFile(file.getCoverHash()), true);
-		}
+			if (writeCache) {
+				ImageUtils.write(icon, getCacheFile(coverHash), true);
+			}
+		} else {
+            return new ImageIcon(ImageUtils.getEmptyCover().getScaledInstance(COVER_ICON_SIZE, COVER_ICON_SIZE, java.awt.Image.SCALE_SMOOTH));
+        }
 		return icon;
 
 	}
