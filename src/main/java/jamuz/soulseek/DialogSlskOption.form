@@ -116,6 +116,7 @@
                       <Component id="jLabelVideoLibraryLocation" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelSlskdDockerImage" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -133,6 +134,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jCheckBoxServerStartOnStartup" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jLabelSlskdDockerImageValue" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -157,6 +159,11 @@
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextFieldPassword" min="-2" max="-2" attributes="0"/>
                       <Component id="jCheckBoxServerStartOnStartup" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabelSlskdDockerImage" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelSlskdDockerImageValue" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -217,6 +224,20 @@
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="jamuz/soulseek/Bundle.properties" key="PanelMain.jCheckBoxServerStartOnStartup.toolTipText" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelSlskdDockerImage">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="inter/Bundle.properties" key="Label.SlskdDockerImage" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelSlskdDockerImageValue">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="inter/Bundle.properties" key="Label.SlskdDockerImage.hint" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>

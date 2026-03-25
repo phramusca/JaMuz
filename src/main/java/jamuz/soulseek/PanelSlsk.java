@@ -528,7 +528,8 @@ public class PanelSlsk extends javax.swing.JPanel {
                         options.get("slsk.password"),
                         Jamuz.getFile("", "slskd").getAbsolutePath(),
                         options.get("slsk.shared.location"),
-                        Boolean.parseBoolean(options.get("slsk.reCreate", "true")));
+                        Boolean.parseBoolean(options.get("slsk.reCreate", "true")),
+                        options.get("slsk.docker.image.tag", SlskdDocker.DEFAULT_DOCKER_IMAGE_TAG));
 
                 if (jButtonStart.getText().equals(Inter.get("Button.Start"))) {
                     jButtonStart.setText("Starting ...");

@@ -44,17 +44,20 @@ public class DialogSlskOption extends javax.swing.JDialog {
         initComponents();
         
         // Get and display options
+        String dockerTagDisplay = SlskdDocker.DEFAULT_DOCKER_IMAGE_TAG;
         File propertiesFile = Jamuz.getFile("Slsk.properties");
-        if(propertiesFile.exists()) {
+        if (propertiesFile.exists()) {
             options = new Options(propertiesFile.getAbsolutePath());
-            if(options.read()) {
+            if (options.read()) {
                 jTextFieldUsername.setText(options.get("slsk.username"));
                 jTextFieldPassword.setText(options.get("slsk.password"));
                 boolean onStartup = Boolean.parseBoolean(options.get("slsk.on.startup", "false"));
                 jCheckBoxServerStartOnStartup.setSelected(onStartup);
                 jTextFieldSharedLocation.setText(options.get("slsk.shared.location"));
+                dockerTagDisplay = options.get("slsk.docker.image.tag", SlskdDocker.DEFAULT_DOCKER_IMAGE_TAG);
             }
         }
+        jLabelSlskdDockerImageValue.setText(SlskdDocker.DOCKER_IMAGE_REPOSITORY + ":" + dockerTagDisplay);
     }
         
     /**
@@ -79,6 +82,8 @@ public class DialogSlskOption extends javax.swing.JDialog {
         jTextFieldPassword = new jamuz.gui.swing.PasswordFieldWithToggle();
         jCheckBoxServerStartOnStartup = new javax.swing.JCheckBox();
         jLabel6 = new javax.swing.JLabel();
+        jLabelSlskdDockerImage = new javax.swing.JLabel();
+        jLabelSlskdDockerImageValue = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -129,6 +134,9 @@ public class DialogSlskOption extends javax.swing.JDialog {
         jCheckBoxServerStartOnStartup.setText(Inter.get("PanelMain.jCheckBoxServerStartOnStartup.text")); // NOI18N
         jCheckBoxServerStartOnStartup.setToolTipText(Inter.get("PanelMain.jCheckBoxServerStartOnStartup.toolTipText")); // NOI18N
 
+        jLabelSlskdDockerImage.setText(Inter.get("Label.SlskdDockerImage")); // NOI18N
+        jLabelSlskdDockerImageValue.setToolTipText(Inter.get("Label.SlskdDockerImage.hint")); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -138,7 +146,8 @@ public class DialogSlskOption extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelVideoLibraryLocation)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabelSlskdDockerImage))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -151,7 +160,8 @@ public class DialogSlskOption extends javax.swing.JDialog {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jCheckBoxServerStartOnStartup)))
+                        .addComponent(jCheckBoxServerStartOnStartup))
+                    .addComponent(jLabelSlskdDockerImageValue))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -171,6 +181,10 @@ public class DialogSlskOption extends javax.swing.JDialog {
                     .addComponent(jLabel5)
                     .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jCheckBoxServerStartOnStartup))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelSlskdDockerImage)
+                    .addComponent(jLabelSlskdDockerImageValue))
                 .addContainerGap())
         );
 
@@ -286,5 +300,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
     private jamuz.gui.swing.PasswordFieldWithToggle jTextFieldPassword;
     private javax.swing.JTextField jTextFieldSharedLocation;
     private javax.swing.JTextField jTextFieldUsername;
+    private javax.swing.JLabel jLabelSlskdDockerImage;
+    private javax.swing.JLabel jLabelSlskdDockerImageValue;
     // End of variables declaration//GEN-END:variables
 }

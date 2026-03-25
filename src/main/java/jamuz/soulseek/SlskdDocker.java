@@ -21,6 +21,7 @@ import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.HealthState;
 import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.exception.DockerException;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Bind;
@@ -46,6 +47,19 @@ public class SlskdDocker {
 //    https://github.com/slskd/slskd/tree/master
 //    https://github.com/docker-java/docker-java/blob/main/docs/getting_started.md
 //    https://www.baeldung.com/docker-java-api
+
+    /**
+     * Official Docker image for slskd; only the tag is configurable ({@code slsk.docker.image.tag}).
+     *
+     * @see <a href="https://hub.docker.com/r/slskd/slskd">slskd/slskd on Docker Hub</a>
+     */
+    public static final String DOCKER_IMAGE_REPOSITORY = "slskd/slskd";
+
+    /**
+     * Tag par défaut si {@code slsk.docker.image.tag} est absent de {@code Slsk.properties}.
+     */
+    public static final String DEFAULT_DOCKER_IMAGE_TAG = "0.24.5";
+
     private static final String CONTAINER_NAME = "jamuz-slskd";
     private final boolean SLSKD_SWAGGER;
     private final boolean SLSKD_NO_AUTH;
@@ -55,6 +69,8 @@ public class SlskdDocker {
     private final String musicPath;
     private final DockerClient dockerClient;
     private final boolean reCreate;
+    private final String dockerImageTag;
+    private final String dockerImage;
 
     /**
      *
@@ -65,9 +81,10 @@ public class SlskdDocker {
      * @param SLSKD_SWAGGER
      * @param SLSKD_NO_AUTH
      * @param reCreate
+     * @param dockerImageTag tag of the Docker image {@value #DOCKER_IMAGE_REPOSITORY} (ex. {@code 0.24.5})
      */
-    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH, boolean reCreate) {
-        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, SLSKD_SWAGGER, SLSKD_NO_AUTH, reCreate, DockerClientBuilder.getInstance().build());
+    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH, boolean reCreate, String dockerImageTag) {
+        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, SLSKD_SWAGGER, SLSKD_NO_AUTH, reCreate, normalizeDockerImageTag(dockerImageTag), DockerClientBuilder.getInstance().build());
     }
 
     /**
@@ -77,9 +94,10 @@ public class SlskdDocker {
      * @param serverPath
      * @param musicPath
      * @param reCreate
+     * @param dockerImageTag tag of the Docker image {@value #DOCKER_IMAGE_REPOSITORY} (ex. {@code 0.24.5})
      */
-    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean reCreate) {
-        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, false, true, reCreate);
+    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean reCreate, String dockerImageTag) {
+        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, false, true, reCreate, dockerImageTag);
     }
 
     /**
@@ -92,8 +110,9 @@ public class SlskdDocker {
      * @param SLSKD_NO_AUTH
      * @param reCreate
      * @param dockerClient
+     * @param dockerImageTag normalized tag (non empty)
      */
-    private SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH, boolean reCreate, DockerClient dockerClient) {
+    private SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH, boolean reCreate, String dockerImageTag, DockerClient dockerClient) {
         this.SLSKD_SWAGGER = SLSKD_SWAGGER;
         this.SLSKD_NO_AUTH = SLSKD_NO_AUTH;
         this.SLSKD_SLSK_USERNAME = SLSKD_SLSK_USERNAME;
@@ -102,6 +121,33 @@ public class SlskdDocker {
         this.musicPath = musicPath;
         this.dockerClient = dockerClient;
         this.reCreate = reCreate;
+        this.dockerImageTag = dockerImageTag;
+        this.dockerImage = DOCKER_IMAGE_REPOSITORY + ":" + dockerImageTag;
+    }
+
+    private static String normalizeDockerImageTag(String dockerImageTag) {
+        if (dockerImageTag == null || dockerImageTag.isBlank()) {
+            return DEFAULT_DOCKER_IMAGE_TAG;
+        }
+        return dockerImageTag.trim();
+    }
+
+    private void pullImageIfAbsent() {
+        try {
+            dockerClient.inspectImageCmd(dockerImage).exec();
+        } catch (NotFoundException e) {
+            try {
+                PullImageResultCallbackWithRethrow callback = new PullImageResultCallbackWithRethrow();
+                dockerClient.pullImageCmd(DOCKER_IMAGE_REPOSITORY)
+                        .withTag(dockerImageTag)
+                        .exec(callback)
+                        .awaitCompletion();
+                callback.rethrowFirstErrorIfAny();
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                throw new DockerException("Interrupted while pulling Docker image " + dockerImage, 0, ie);
+            }
+        }
     }
 
     public boolean start() {
@@ -157,15 +203,10 @@ public class SlskdDocker {
         createAndStartContainer();
     }
 
-    //FIXME ! soulseek ! doc `docker pull slskd/slskd`, or better :
-//    String imageName = "slskd/slskd";
-//        dockerClient.pullImageCmd(imageName)
-//                .exec(new PullImageResultCallback())
-//                .awaitSuccess();
     private void createAndStartContainer() {
-        
+        pullImageIfAbsent();
         CreateContainerResponse container
-                = dockerClient.createContainerCmd("slskd/slskd:latest")
+                = dockerClient.createContainerCmd(dockerImage)
                         .withName(CONTAINER_NAME)
                         .withEnv("SLSKD_REMOTE_CONFIGURATION=true",
                                 "SLSKD_REMOTE_FILE_MANAGEMENT=true",
@@ -242,6 +283,15 @@ public class SlskdDocker {
 
     State getState(Container container) {
         return State.valueOf(container.getState());
+    }
+
+    /**
+     * Subclass to call {@code throwFirstError()} (protected in {@link PullImageResultCallback}).
+     */
+    private static final class PullImageResultCallbackWithRethrow extends PullImageResultCallback {
+        void rethrowFirstErrorIfAny() {
+            throwFirstError();
+        }
     }
 
     enum State {
