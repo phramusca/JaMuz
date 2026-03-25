@@ -123,6 +123,11 @@ public class PanelMain extends javax.swing.JFrame {
     private static final int[] RIGHTS_COLS = {21};
 
     /**
+     * Welcome year for the player
+     */
+    private static final String WELCOME_YEAR = "2026";
+
+    /**
      * Creates new form MainGUI
      */
     public PanelMain() {
@@ -157,7 +162,7 @@ public class PanelMain extends javax.swing.JFrame {
         jLabelPlayerTitle.setText("Welcome to");  //NOI18N
         jLabelPlayerAlbum.setText("Jamuz");  //NOI18N
         jLabelPlayerArtist.setText("---");  //NOI18N
-        jLabelPlayerYear.setText(Inter.get("Label.PlayerYear"));  //NOI18N
+        jLabelPlayerYear.setText(WELCOME_YEAR);  //NOI18N
         PanelCover coverImg = (PanelCover) jPanelPlayerCover;
         coverImg.setImage(null);
         //Set rating combobox renderer

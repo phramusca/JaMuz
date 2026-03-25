@@ -59,7 +59,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 ## Release process
 
-1. **If** previous release was last year, update `res/inter/Bundle*.properties` key `Label.PlayerYear`.
+1. **If** previous release was last year, update the constant `WELCOME_YEAR` in `src/main/java/jamuz/gui/PanelMain.java`.
 
 1. **If** `database/JaMuz_creation.sql` has changed:
 
@@ -90,11 +90,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
         2. `Relative path` of a file or directory.
         3. `Overwrite` bool (`Copy` only): overwrite or not files already in the user's install.
 
-1. **If** the `slskd` Docker image tag (Soulseek) is updated:
-    - Update `src/main/java/jamuz/soulseek/SlskdDocker.java` default tag (`DEFAULT_DOCKER_IMAGE_TAG`).
-    - Update `target-data/Slsk.properties`: `slsk.docker.image.tag=<tag>`.
-    - (Optional UI) 
-
+1. **If** `slsk.docker.image.tag=<tag>` changed in `target-data-local/Slsk.properties`, then align `src/main/java/jamuz/soulseek/SlskdDocker.java`: `DEFAULT_DOCKER_IMAGE_TAG`.
 
 1. Update pom.xml (remove "-dev" suffix)
 
