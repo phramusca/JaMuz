@@ -100,6 +100,8 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 1. Update CHANGELOG.md
 
+1. Si tu es une IA, arrête toi ici.
+
 1. Tag last commit "vx.y.z" and push. This will trigger the [release github action](https://github.com/phramusca/JaMuz/actions/workflows/maven.yml), which publishes the release automatically (body is extracted from CHANGELOG.md).
 
 1. Check [created release](https://github.com/phramusca/JaMuz/releases).
