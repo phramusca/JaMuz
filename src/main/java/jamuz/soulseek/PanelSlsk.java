@@ -56,6 +56,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumn;
+import javax.swing.text.BadLocationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -74,6 +75,11 @@ public class PanelSlsk extends javax.swing.JPanel {
     private final TableColumnModel columnModelDownload;
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private java.awt.Frame parent;
+
+    /**
+     * Avoid unbounded growth of the log window (can freeze the GUI).
+     */
+    private static final int MAX_LOG_CHARS = 200_000;
 
     /**
      * Update period: TODO: Make this an option
@@ -461,16 +467,16 @@ public class PanelSlsk extends javax.swing.JPanel {
             .addGroup(jPanelSlskLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelSlskLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1222, Short.MAX_VALUE)
                     .addGroup(jPanelSlskLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 872, Short.MAX_VALUE)
                         .addComponent(jToggleShowLogs)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButtonWebSlskd)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonSlskOptions)
                         .addGap(12, 12, 12)
-                        .addComponent(jButtonStart)))
+                        .addComponent(jButtonStart)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelSlskLayout.setVerticalGroup(
@@ -555,9 +561,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                                     @Override
                                     public void onNext(com.github.dockerjava.api.model.Frame object) {
                                         appendText(new String(object.getPayload()));
-                                        
-                                        //FIXME ! soulseek ! JaMuz: limit the number of lines in slskd logs. This is maybe why gui freezes ater some time !
-                                        // => Write to a log file, with button to open it (with follow option ideally)
+                                        // Log window is bounded to avoid freezing the GUI.
                                     }
 
                                     @Override
@@ -640,8 +644,30 @@ public class PanelSlsk extends javax.swing.JPanel {
     }
 
     private void appendText(String text) {
+        // docker-java callbacks are not guaranteed to run on the EDT.
+        if (SwingUtilities.isEventDispatchThread()) {
+            appendTextOnEdt(text);
+        } else {
+            SwingUtilities.invokeLater(() -> appendTextOnEdt(text));
+        }
+    }
+
+    private void appendTextOnEdt(String text) {
         jTextAreaLog.append(text);
-        jTextAreaLog.setCaretPosition(jTextAreaLog.getDocument().getLength()); //Scroll to bottom
+
+        // Trim oldest content if the log grows too large.
+        int len = jTextAreaLog.getDocument().getLength();
+        if (len > MAX_LOG_CHARS) {
+            int excess = len - MAX_LOG_CHARS;
+            try {
+                jTextAreaLog.getDocument().remove(0, excess);
+            } catch (BadLocationException e) {
+                // Best-effort: ignore trimming errors.
+            }
+        }
+
+        // Scroll to bottom.
+        jTextAreaLog.setCaretPosition(jTextAreaLog.getDocument().getLength());
     }
 
     private void jTableResultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableResultsMouseClicked
