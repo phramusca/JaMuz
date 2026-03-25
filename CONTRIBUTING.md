@@ -59,7 +59,9 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
 
 ## Release process
 
-1. If `database/JaMuz_creation.sql` has changed:
+1. **If** previous release was last year, update `res/inter/Bundle*.properties` key `Label.PlayerYear`.
+
+1. **If** `database/JaMuz_creation.sql` has changed:
 
     - Create a file `data/system/sql/`$version`.sql`.
       - `$version` is the new database version.
@@ -68,7 +70,7 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
     - Check that JaMuz properly handles update.
       - Export prod schema and compare with JaMuz_creation.sql.
 
-1. **Optional** Check changes to `target-data` release content file updates:
+1. **If** `target-data` content has changed:
   
     - Create a new local release candidate with [local self-hosted runner](#github-self-hosted-runner)
       - [Start job](https://github.com/phramusca/JaMuz/actions/workflows/maven_local.yml)
@@ -87,6 +89,12 @@ In addition to the currently supported stat sources (Guayadeque, Kodi, Media Mon
         1. `Action`: `Copy` or `Remove`.
         2. `Relative path` of a file or directory.
         3. `Overwrite` bool (`Copy` only): overwrite or not files already in the user's install.
+
+1. **If** the `slskd` Docker image tag (Soulseek) is updated:
+    - Update `src/main/java/jamuz/soulseek/SlskdDocker.java` default tag (`DEFAULT_DOCKER_IMAGE_TAG`).
+    - Update `target-data/Slsk.properties`: `slsk.docker.image.tag=<tag>`.
+    - (Optional UI) 
+
 
 1. Update pom.xml (remove "-dev" suffix)
 

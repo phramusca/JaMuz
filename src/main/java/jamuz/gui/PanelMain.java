@@ -157,8 +157,7 @@ public class PanelMain extends javax.swing.JFrame {
         jLabelPlayerTitle.setText("Welcome to");  //NOI18N
         jLabelPlayerAlbum.setText("Jamuz");  //NOI18N
         jLabelPlayerArtist.setText("---");  //NOI18N
-        //FIXME ! Use a global value and/or add instructions on release guide
-        jLabelPlayerYear.setText("2024");  //NOI18N
+        jLabelPlayerYear.setText(Inter.get("Label.PlayerYear"));  //NOI18N
         PanelCover coverImg = (PanelCover) jPanelPlayerCover;
         coverImg.setImage(null);
         //Set rating combobox renderer
