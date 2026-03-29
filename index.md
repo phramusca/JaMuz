@@ -30,10 +30,10 @@ layout: default
 <!-- Initialize download links -->
 <script src="./scripts/download.js"></script>
 
-| [JaMuz Desktop](#jamuz-desktop) | [JaMuz Android](#jamuz-android) |
-|--|--|
-| <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> | <img src="img/android.png" alt="JaMuz Android">  |
-| Manage, play and serve your music collection to JaMuz Android. | Play, tag, rate and remote control JaMuz Desktop. |
+| [JaMuz Desktop](#jamuz-desktop)                                                                                               | [JaMuz Android](#jamuz-android)                   |
+| ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| <img src="img/linux.png" alt="Linux"> <img src="img/windows.png" alt="Windows"> <img src="img/raspberry.png" alt="Raspberry"> | <img src="img/android.png" alt="JaMuz Android">   |
+| Manage, play and serve your music collection to JaMuz Android.                                                                | Play, tag, rate and remote control JaMuz Desktop. |
 
 ## JaMuz Android
 
@@ -41,7 +41,7 @@ An Android **Audio Player** and also a **Remote** for [JaMuz Desktop](#jamuz-des
 
 <div class="carousel-android"></div>
 
-### Installation <img src="img/android.png" alt="JaMuz Android"> 
+### Installation <img src="img/android.png" alt="JaMuz Android">
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/org.phramusca.jamuz/)
 
@@ -80,33 +80,15 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 
 ### Installation
 
-#### Linux <img src="img/linux.png" alt="Linux">
+- Install dependencies, mostly Java (OpenJDK JRE) ≥17:
 
-- Install Java (OpenJDK JRE) >=17
-  - Debian based (Ubuntu, Mint,...): [openjdk-17-jre](apt://openjdk-17-jre)
-  - Any other case, refer to [Adoptium](https://adoptium.net/installation/)
+| Linux <img src="img/linux.png" alt="Linux">                                                       | Raspberry <img src="img/raspberry.png" alt="Raspberry"> | Windows <img src="img/windows.png" alt="Windows">                                                                                   |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [openjdk-21-jre](apt://openjdk-21-jre) or refer to [Adoptium](https://adoptium.net/installation/) | `sudo apt install openjdk-21-jre mplayer flac mp3gain`  | [Eclipse Temurin JRE 17 x64 Windows](https://adoptium.net/fr/temurin/releases/?os=windows&arch=x64&package=jre&version=17) (`.msi`) |
+
 - <span id="download-container-jamuz-desktop"></span>
 - Extract 7z archive
-- Double-click on `JaMuz.jar`
-
-#### Windows <img src="img/windows.png" alt="Windows">
-
-- Install Java (OpenJDK JRE) >=17: 
-  - [Eclipse Temurin OpenJDK17U-jre_x64_windows](https://adoptium.net/fr/temurin/releases/?os=windows&arch=x64&package=jre&version=17) (Pick .msi)
-- <span id="download-container-jamuz-desktop"></span>
-- Extract 7z archive
-  - Note: 7z is natively supported since October, 31, 2023 on Windows 11 (with update [KB5031455](https://support.microsoft.com/en-us/topic/october-31-2023-kb5031455-os-builds-22621-2506-and-22631-2506-preview-6513c5ec-c5a2-4aaf-97f5-44c13d29e0d4)). Otherwise, you need to [install 7-zip](https://www.7-zip.org/).
-- Double-click on `JaMuz.jar`
-
-#### Raspberry <img src="img/raspberry.png" alt="Raspberry">
-
-- Install dependencies:
-    ```bash
-    sudo apt install openjdk-17-jre mplayer flac mp3gain
-    ```
-- <span id="download-container-jamuz-desktop"></span>
-- Extract 7z archive
-- Double-click on `JaMuz.jar`
+- Double-click `JaMuz.jar`
 
 ### Features
 
