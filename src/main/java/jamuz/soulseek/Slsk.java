@@ -19,11 +19,14 @@ package jamuz.soulseek;
 import jamuz.Jamuz;
 import jamuz.utils.Popup;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
@@ -34,6 +37,10 @@ import org.apache.commons.lang3.tuple.Pair;
  * @author phramusca <phramusca@gmail.com>
  */
 public class Slsk {
+
+    private static final Duration SEARCH_POLL_INTERVAL = Duration.ofSeconds(1);
+    /** Upper bound for polling until the API marks the search complete (Soulseek can be slow). */
+    private static final Duration SEARCH_WAIT_MAX = Duration.ofMinutes(30);
 
     private final SlskdClient slskdClient;
     private final List<String> allowedExtensions;
@@ -55,10 +62,21 @@ public class Slsk {
     public List<SlskdSearchResponse> search(String query, ICallBackSearch callBackSearch) {
         try {
             SlskdSearchResult search = slskdClient.search(query);
+            Instant deadline = Instant.now().plus(SEARCH_WAIT_MAX);
             while (!search.isComplete()) {
+                if (Instant.now().isAfter(deadline)) {
+                    Logger.getLogger(Slsk.class.getName()).log(Level.WARNING,
+                            "search timed out after {0}: {1}", new Object[]{SEARCH_WAIT_MAX, query});
+                    try {
+                        slskdClient.deleteSearch(search.id());
+                    } catch (IOException cleanupEx) {
+                        Logger.getLogger(Slsk.class.getName()).log(Level.FINE, null, cleanupEx);
+                    }
+                    return null;
+                }
                 search = slskdClient.getSearch(search.id());
                 callBackSearch.searching(search);
-                Thread.sleep(1000);
+                TimeUnit.NANOSECONDS.sleep(SEARCH_POLL_INTERVAL.toNanos());
             }
 
             List<SlskdSearchResponse> searchResponses = slskdClient.getSearchResponses(search.id());
@@ -96,6 +114,7 @@ public class Slsk {
         } catch (IOException | SlskdClient.ServerException ex) {
             Popup.error("search " + query, ex);
         } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
             Logger.getLogger(Slsk.class.getName()).log(Level.WARNING, null, ex);
         }
         return null;

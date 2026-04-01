@@ -36,15 +36,20 @@ import jamuz.utils.Popup;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
  * @author phramusca <phramusca@gmail.com>
  */
 public class SlskdDocker {
+
+    private static final Duration HEALTH_POLL_INTERVAL = Duration.ofSeconds(1);
+    private static final Duration HEALTH_WAIT_MAX = Duration.ofMinutes(5);
 
 //    https://github.com/slskd/slskd/tree/master
 //    https://github.com/docker-java/docker-java/blob/main/docs/getting_started.md
@@ -83,6 +88,7 @@ public class SlskdDocker {
      * @param excludeMultiline one line per path (relative to the shared root, or absolute under it);
      *                         no {@code !} or {@code -} prefix required (added for slskd); a leading
      *                         {@code !} or {@code -} is accepted and stripped if present
+     * @return 
      * @see <a href="https://github.com/slskd/slskd/blob/master/docs/config.md">slskd configuration (shares)</a>
      */
     public static String buildSharedDirEnvValue(String hostMusicPath, String excludeMultiline) {
@@ -143,7 +149,13 @@ public class SlskdDocker {
     }
 
     /**
+     * @param SLSKD_SLSK_USERNAME
+     * @param SLSKD_SLSK_PASSWORD
+     * @param serverPath
+     * @param musicPath
      * @param sharedExcludeMultiline lines of subfolders to exclude from the slskd share (see {@link #buildSharedDirEnvValue})
+     * @param reCreate
+     * @param dockerImageTag
      */
     public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean reCreate, String dockerImageTag, String sharedExcludeMultiline) {
         this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, false, true, reCreate, normalizeDockerImageTag(dockerImageTag), sharedExcludeMultiline, DockerClientBuilder.getInstance().build());
@@ -281,6 +293,9 @@ public class SlskdDocker {
     public String checkContainerHealthAndFetchLogs(ResultCallback<Frame> resultCallback) {
         try {
             Container container = getContainer();
+            if (container == null) {
+                return "Error: container not found";
+            }
             Instant pastTime = Instant.now().minusSeconds(120);
             int sinceTimestamp = (int) pastTime.getEpochSecond();
             dockerClient.logContainerCmd(container.getId())
@@ -290,7 +305,8 @@ public class SlskdDocker {
                     .withSince(sinceTimestamp)
                     .exec(resultCallback);
 
-            while (true) {
+            Instant deadline = Instant.now().plus(HEALTH_WAIT_MAX);
+            while (Instant.now().isBefore(deadline)) {
                 State state = getState(container);
                 switch (state) {
                     case created:
@@ -302,7 +318,7 @@ public class SlskdDocker {
                             resultCallback.close(); // Close log streaming
                             return "Container is healthy!";
                         }
-                        Thread.sleep(1000);
+                        TimeUnit.NANOSECONDS.sleep(HEALTH_POLL_INTERVAL.toNanos());
                         break;
                     case dead:
                     case exited:
@@ -312,7 +328,16 @@ public class SlskdDocker {
                         throw new AssertionError();
                 }
             }
-        } catch (NotFoundException | IOException | InterruptedException e) {
+            try {
+                resultCallback.close();
+            } catch (IOException ignored) {
+                // best effort
+            }
+            return "Timeout: container did not become healthy within " + HEALTH_WAIT_MAX;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return "Error: interrupted while waiting for container health";
+        } catch (NotFoundException | IOException e) {
             return "Error: " + e.getMessage();
         }
     }
