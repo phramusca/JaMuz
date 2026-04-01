@@ -39,8 +39,8 @@ import org.apache.commons.lang3.tuple.Pair;
 public class Slsk {
 
     private static final Duration SEARCH_POLL_INTERVAL = Duration.ofSeconds(1);
-    /** Upper bound for polling until the API marks the search complete (Soulseek can be slow). */
-    private static final Duration SEARCH_WAIT_MAX = Duration.ofMinutes(30);
+    /** Upper bound for polling until the API marks the search complete. */
+    private static final Duration SEARCH_WAIT_MAX = Duration.ofMinutes(1);
 
     private final SlskdClient slskdClient;
     private final List<String> allowedExtensions;

@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 public class SlskdDocker {
 
     private static final Duration HEALTH_POLL_INTERVAL = Duration.ofSeconds(1);
-    private static final Duration HEALTH_WAIT_MAX = Duration.ofMinutes(5);
+    private static final Duration HEALTH_WAIT_MAX = Duration.ofMinutes(60);
 
 //    https://github.com/slskd/slskd/tree/master
 //    https://github.com/docker-java/docker-java/blob/main/docs/getting_started.md
