@@ -143,19 +143,6 @@ public class SlskdDocker {
     }
 
     /**
-     *
-     * @param SLSKD_SLSK_USERNAME
-     * @param SLSKD_SLSK_PASSWORD
-     * @param serverPath
-     * @param musicPath
-     * @param reCreate
-     * @param dockerImageTag tag of the Docker image {@value #DOCKER_IMAGE_REPOSITORY} (ex. {@code 0.24.5})
-     */
-    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean reCreate, String dockerImageTag) {
-        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, false, true, reCreate, dockerImageTag, null);
-    }
-
-    /**
      * @param sharedExcludeMultiline lines of subfolders to exclude from the slskd share (see {@link #buildSharedDirEnvValue})
      */
     public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean reCreate, String dockerImageTag, String sharedExcludeMultiline) {

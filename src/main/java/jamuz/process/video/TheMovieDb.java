@@ -411,7 +411,7 @@ public class TheMovieDb {
     
     private List<TvSeries> searchTv(String name, int year) {
         TmdbSearch search = new TmdbSearch(tmdbApi);
-        TvResultsPage page = search.searchTv(name, language, 1);
+        TvResultsPage page = search.searchTv(name, year, language, false, 1);
         return page.getResults();
     }
     
