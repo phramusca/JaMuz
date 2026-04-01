@@ -80,15 +80,16 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 
 ### Installation
 
-- Install dependencies, mostly Java (OpenJDK JRE) ≥17:
+1. Install dependencies, mostly Java (OpenJDK JRE) ≥17, but 21 is better:
 
-| Linux <img src="img/linux.png" alt="Linux">                                                       | Raspberry <img src="img/raspberry.png" alt="Raspberry"> | Windows <img src="img/windows.png" alt="Windows">                                                                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [openjdk-21-jre](apt://openjdk-21-jre) or refer to [Adoptium](https://adoptium.net/installation/) | `sudo apt install openjdk-21-jre mplayer flac mp3gain`  | [Eclipse Temurin JRE 21 x64](https://adoptium.net/fr/download?link=https%3A%2F%2Fgithub.com%2Fadoptium%2Ftemurin21-binaries%2Freleases%2Fdownload%2Fjdk-21.0.10%252B7%2FOpenJDK21U-jdk_x64_windows_hotspot_21.0.10_7.msi&vendor=Adoptium)  or refer to [Adoptium](https://adoptium.net/installation/) |
+    | Linux <img src="img/linux.png" alt="Linux">                                                       | Raspberry <img src="img/raspberry.png" alt="Raspberry"> | Windows <img src="img/windows.png" alt="Windows">                                                                                                                                                                                                                                                     |
+    | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | [openjdk-21-jre](apt://openjdk-21-jre) or refer to [Adoptium](https://adoptium.net/installation/) | `sudo apt install openjdk-21-jre mplayer flac mp3gain`  | [Eclipse Temurin JRE 21 x64](https://adoptium.net/fr/download?link=https%3A%2F%2Fgithub.com%2Fadoptium%2Ftemurin21-binaries%2Freleases%2Fdownload%2Fjdk-21.0.10%252B7%2FOpenJDK21U-jdk_x64_windows_hotspot_21.0.10_7.msi&vendor=Adoptium)  or refer to [Adoptium](https://adoptium.net/installation/) |
 
-- <span id="download-container-jamuz-desktop"></span>
-- Extract 7z archive
-- Double-click `JaMuz.jar`
+1. Install JaMuz
+    - <span id="download-container-jamuz-desktop"></span>
+    - Extract 7z archive
+    - Double-click `JaMuz.jar`
 
 ### Features
 
