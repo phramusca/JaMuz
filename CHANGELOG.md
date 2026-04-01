@@ -1,5 +1,35 @@
 # JaMuz change log #
 
+## v0.7.7-beta1 ##
+
+### What's new ? ###
+
+- **Dependencies**: OkHttp 5 — use `okhttp-jvm` for Maven (the `okhttp` artifact is an empty stub without Gradle metadata); `mockwebserver` aligned to 5.x for tests.
+- **TheMovieDb**: adapt `TmdbSearch.searchTv` to the updated API (year + language + flags + page).
+- **Soulseek / Docker**: bounded wait for container health with timeout; clearer polling interval; interrupt handling.
+- **Soulseek search**: bounded poll for search completion (timeout + cleanup); interrupt handling.
+
+### Package content ###
+
+| Path                 | Incl. | Description                                                                                       |
+| -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
+| /data/cache          | No    | Cache folder. You can remove it, files will be re-created.                                        |
+| /data/icon/genre     | Yes   | Genre icons. You can add more.                                                                    |
+| /data/icon/tag       | Yes   | Tag icons. You can add more.                                                                      |
+| /data/system         | Yes   | System files. You should not touch this.                                                          |
+| /data/AudioLinks.txt | Yes   | You can edit links to your favorite audio information providers.                                  |
+| /data/BookLinks.txt  | Yes   | You can edit links to your favorite book information providers.                                   |
+| /data/VideoLinks.txt | Yes   | You can edit links to your favorite video information providers.                                  |
+| /data/Patterns.txt   | No    | Saved patterns for music file scanner. If you want to clean it up.                                |
+| /doc                 | Yes   | Includes sample JaMuz.xml.                                                                        |
+| /logs                | No    | LOG files (and databases backups).                                                                |
+| ***/JaMuz.db***      | Yes   | ***Your new music library (back it up regularly !)***.                                            |
+| ***/JaMuz.jar***     | Yes   | ***Program itself*** (*on linux, set execution permission*).                                      |
+| /JaMuz.properties    | Yes   | Configuration file (avoid manual edition).                                                        |
+| /JaMuz.xml           | No    | Configuration file (optional). Used to setup your database location. See /doc/JaMuz.xml template. |
+| /myMovieDb.db        | Yes   | Database for Video tab.                                                                           |
+| /Slsk.properties     | Yes   | Configuration file for slskd (avoid manual edition).                                              |
+
 ## v0.7.6 ##
 
 ### What's new ? ###
