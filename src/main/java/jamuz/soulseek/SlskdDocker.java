@@ -34,6 +34,8 @@ import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.core.DockerClientBuilder;
 import jamuz.utils.Popup;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +58,7 @@ public class SlskdDocker {
     public static final String DOCKER_IMAGE_REPOSITORY = "slskd/slskd";
 
     /**
-     * Tag par défaut si {@code slsk.docker.image.tag} est absent de {@code Slsk.properties}.
+     * Default tag when {@code slsk.docker.image.tag} is missing from {@code Slsk.properties}.
      */
     public static final String DEFAULT_DOCKER_IMAGE_TAG = "0.24.5";
 
@@ -71,6 +73,59 @@ public class SlskdDocker {
     private final boolean reCreate;
     private final String dockerImageTag;
     private final String dockerImage;
+    private final String sharedExcludeMultiline;
+
+    /**
+     * Value for {@code SLSKD_SHARED_DIR}: the {@code /music} share in the container, plus exclusions
+     * {@code !/music/...} (absolute paths inside the container), semicolon-separated.
+     *
+     * @param hostMusicPath host path of the shared folder (mounted at {@code /music})
+     * @param excludeMultiline one line per path (relative to the shared root, or absolute under it);
+     *                         no {@code !} or {@code -} prefix required (added for slskd); a leading
+     *                         {@code !} or {@code -} is accepted and stripped if present
+     * @see <a href="https://github.com/slskd/slskd/blob/master/docs/config.md">slskd configuration (shares)</a>
+     */
+    public static String buildSharedDirEnvValue(String hostMusicPath, String excludeMultiline) {
+        List<String> segments = new ArrayList<>();
+        segments.add("/music");
+        if (excludeMultiline == null || excludeMultiline.isBlank()) {
+            return String.join(";", segments);
+        }
+        for (String line : excludeMultiline.split("\\R")) {
+            String trimmed = line.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+            if (trimmed.startsWith("!") || trimmed.startsWith("-")) {
+                trimmed = trimmed.substring(1).trim();
+            }
+            String containerPath = toContainerExcludedPath(hostMusicPath, trimmed);
+            if (containerPath != null && !containerPath.isEmpty()) {
+                segments.add("!" + containerPath);
+            }
+        }
+        return String.join(";", segments);
+    }
+
+    private static String toContainerExcludedPath(String hostMusicRoot, String userPath) {
+        try {
+            Path root = Paths.get(hostMusicRoot).normalize().toAbsolutePath();
+            Path resolved = Paths.get(userPath).isAbsolute()
+                    ? Paths.get(userPath).normalize().toAbsolutePath()
+                    : root.resolve(userPath).normalize().toAbsolutePath();
+            if (!resolved.startsWith(root)) {
+                return null;
+            }
+            Path rel = root.relativize(resolved);
+            if (rel.getNameCount() == 0) {
+                return null;
+            }
+            String relUnix = rel.toString().replace('\\', '/');
+            return "/music/" + relUnix;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      *
@@ -84,7 +139,7 @@ public class SlskdDocker {
      * @param dockerImageTag tag of the Docker image {@value #DOCKER_IMAGE_REPOSITORY} (ex. {@code 0.24.5})
      */
     public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH, boolean reCreate, String dockerImageTag) {
-        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, SLSKD_SWAGGER, SLSKD_NO_AUTH, reCreate, normalizeDockerImageTag(dockerImageTag), DockerClientBuilder.getInstance().build());
+        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, SLSKD_SWAGGER, SLSKD_NO_AUTH, reCreate, normalizeDockerImageTag(dockerImageTag), null, DockerClientBuilder.getInstance().build());
     }
 
     /**
@@ -97,7 +152,14 @@ public class SlskdDocker {
      * @param dockerImageTag tag of the Docker image {@value #DOCKER_IMAGE_REPOSITORY} (ex. {@code 0.24.5})
      */
     public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean reCreate, String dockerImageTag) {
-        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, false, true, reCreate, dockerImageTag);
+        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, false, true, reCreate, dockerImageTag, null);
+    }
+
+    /**
+     * @param sharedExcludeMultiline lines of subfolders to exclude from the slskd share (see {@link #buildSharedDirEnvValue})
+     */
+    public SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean reCreate, String dockerImageTag, String sharedExcludeMultiline) {
+        this(SLSKD_SLSK_USERNAME, SLSKD_SLSK_PASSWORD, serverPath, musicPath, false, true, reCreate, normalizeDockerImageTag(dockerImageTag), sharedExcludeMultiline, DockerClientBuilder.getInstance().build());
     }
 
     /**
@@ -112,7 +174,7 @@ public class SlskdDocker {
      * @param dockerClient
      * @param dockerImageTag normalized tag (non empty)
      */
-    private SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH, boolean reCreate, String dockerImageTag, DockerClient dockerClient) {
+    private SlskdDocker(String SLSKD_SLSK_USERNAME, String SLSKD_SLSK_PASSWORD, String serverPath, String musicPath, boolean SLSKD_SWAGGER, boolean SLSKD_NO_AUTH, boolean reCreate, String dockerImageTag, String sharedExcludeMultiline, DockerClient dockerClient) {
         this.SLSKD_SWAGGER = SLSKD_SWAGGER;
         this.SLSKD_NO_AUTH = SLSKD_NO_AUTH;
         this.SLSKD_SLSK_USERNAME = SLSKD_SLSK_USERNAME;
@@ -123,6 +185,7 @@ public class SlskdDocker {
         this.reCreate = reCreate;
         this.dockerImageTag = dockerImageTag;
         this.dockerImage = DOCKER_IMAGE_REPOSITORY + ":" + dockerImageTag;
+        this.sharedExcludeMultiline = sharedExcludeMultiline;
     }
 
     private static String normalizeDockerImageTag(String dockerImageTag) {
@@ -214,7 +277,7 @@ public class SlskdDocker {
                                 "SLSKD_SLSK_USERNAME=" + SLSKD_SLSK_USERNAME,
                                 "SLSKD_SLSK_PASSWORD=" + SLSKD_SLSK_PASSWORD,
                                 "SLSKD_SWAGGER=" + SLSKD_SWAGGER,
-                                "SLSKD_SHARED_DIR=/music")
+                                "SLSKD_SHARED_DIR=" + buildSharedDirEnvValue(musicPath, sharedExcludeMultiline))
                         .withExposedPorts(ExposedPort.tcp(5030), ExposedPort.tcp(5031), ExposedPort.tcp(50300))
                         .withHostConfig(HostConfig.newHostConfig()
                                 .withPortBindings(

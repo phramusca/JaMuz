@@ -114,6 +114,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabelVideoLibraryLocation" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelSharedExclude" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabelSlskdDockerImage" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -125,6 +126,7 @@
                           <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                           <Component id="jButtonSelectSharedLocation" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jScrollPaneSharedExclude" alignment="0" min="-2" pref="690" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="jTextFieldUsername" min="-2" pref="313" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -148,6 +150,11 @@
                       <Component id="jLabelVideoLibraryLocation" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextFieldSharedLocation" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButtonSelectSharedLocation" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabelSharedExclude" min="-2" max="-2" attributes="0"/>
+                      <Component id="jScrollPaneSharedExclude" min="-2" pref="92" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -241,6 +248,28 @@
             </Property>
           </Properties>
         </Component>
+        <Component class="javax.swing.JLabel" name="jLabelSharedExclude">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="inter/Bundle.properties" key="Label.SlskSharedExclude" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="inter/Bundle.properties" key="Label.SlskSharedExclude.hint" replaceFormat="Inter.get(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Container class="javax.swing.JScrollPane" name="jScrollPaneSharedExclude">
+          <SubComponents>
+            <Component class="javax.swing.JTextArea" name="jTextAreaSharedExclude">
+              <Properties>
+                <Property name="columns" type="int" value="40"/>
+                <Property name="rows" type="int" value="4"/>
+                <Property name="lineWrap" type="boolean" value="true"/>
+                <Property name="wrapStyleWord" type="boolean" value="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JLabel" name="jLabel6">

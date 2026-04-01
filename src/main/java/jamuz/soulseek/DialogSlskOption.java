@@ -54,6 +54,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
                 boolean onStartup = Boolean.parseBoolean(options.get("slsk.on.startup", "false"));
                 jCheckBoxServerStartOnStartup.setSelected(onStartup);
                 jTextFieldSharedLocation.setText(options.get("slsk.shared.location"));
+                jTextAreaSharedExclude.setText(options.get("slsk.shared.exclude", ""));
                 dockerTagDisplay = options.get("slsk.docker.image.tag", SlskdDocker.DEFAULT_DOCKER_IMAGE_TAG);
             }
         }
@@ -84,6 +85,9 @@ public class DialogSlskOption extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jLabelSlskdDockerImage = new javax.swing.JLabel();
         jLabelSlskdDockerImageValue = new javax.swing.JLabel();
+        jLabelSharedExclude = new javax.swing.JLabel();
+        jScrollPaneSharedExclude = new javax.swing.JScrollPane();
+        jTextAreaSharedExclude = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -137,6 +141,14 @@ public class DialogSlskOption extends javax.swing.JDialog {
         jLabelSlskdDockerImage.setText(Inter.get("Label.SlskdDockerImage")); // NOI18N
         jLabelSlskdDockerImageValue.setToolTipText(Inter.get("Label.SlskdDockerImage.hint")); // NOI18N
 
+        jLabelSharedExclude.setText(Inter.get("Label.SlskSharedExclude")); // NOI18N
+        jLabelSharedExclude.setToolTipText(Inter.get("Label.SlskSharedExclude.hint")); // NOI18N
+        jTextAreaSharedExclude.setColumns(40);
+        jTextAreaSharedExclude.setRows(4);
+        jTextAreaSharedExclude.setLineWrap(true);
+        jTextAreaSharedExclude.setWrapStyleWord(true);
+        jScrollPaneSharedExclude.setViewportView(jTextAreaSharedExclude);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -145,6 +157,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelVideoLibraryLocation)
+                    .addComponent(jLabelSharedExclude)
                     .addComponent(jLabel3)
                     .addComponent(jLabel5)
                     .addComponent(jLabelSlskdDockerImage))
@@ -154,6 +167,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
                         .addComponent(jTextFieldSharedLocation, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
                         .addGap(14, 14, 14)
                         .addComponent(jButtonSelectSharedLocation))
+                    .addComponent(jScrollPaneSharedExclude, javax.swing.GroupLayout.DEFAULT_SIZE, 690, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -172,6 +186,10 @@ public class DialogSlskOption extends javax.swing.JDialog {
                     .addComponent(jLabelVideoLibraryLocation)
                     .addComponent(jTextFieldSharedLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSelectSharedLocation))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelSharedExclude)
+                    .addComponent(jScrollPaneSharedExclude, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -234,9 +252,14 @@ public class DialogSlskOption extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
+        File propertiesFile = Jamuz.getFile("Slsk.properties");
+        if (options == null) {
+            options = new Options(propertiesFile.getAbsolutePath());
+        }
         boolean reCreate = (!options.get("slsk.username").equals(jTextFieldUsername.getText())
                 || !options.get("slsk.password").equals(jTextFieldPassword.getText())
-                || !options.get("slsk.shared.location").equals(jTextFieldSharedLocation.getText()));
+                || !options.get("slsk.shared.location").equals(jTextFieldSharedLocation.getText())
+                || !options.get("slsk.shared.exclude", "").equals(jTextAreaSharedExclude.getText()));
         if(reCreate) {
             // This will be reset to false only when putSharedScan is done
             options.set("slsk.reCreate", String.valueOf(reCreate));     
@@ -245,6 +268,7 @@ public class DialogSlskOption extends javax.swing.JDialog {
         options.set("slsk.username", jTextFieldUsername.getText());
         options.set("slsk.password", jTextFieldPassword.getText());
         options.set("slsk.shared.location", jTextFieldSharedLocation.getText());
+        options.set("slsk.shared.exclude", jTextAreaSharedExclude.getText());
         if(options.save()) {
             this.dispose();
         }
@@ -302,5 +326,8 @@ public class DialogSlskOption extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldUsername;
     private javax.swing.JLabel jLabelSlskdDockerImage;
     private javax.swing.JLabel jLabelSlskdDockerImageValue;
+    private javax.swing.JLabel jLabelSharedExclude;
+    private javax.swing.JScrollPane jScrollPaneSharedExclude;
+    private javax.swing.JTextArea jTextAreaSharedExclude;
     // End of variables declaration//GEN-END:variables
 }
