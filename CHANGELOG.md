@@ -4,10 +4,9 @@
 
 ### What's new ? ###
 
-- **Dependencies**: OkHttp 5 — use `okhttp-jvm` for Maven (the `okhttp` artifact is an empty stub without Gradle metadata); `mockwebserver` aligned to 5.x for tests.
-- **TheMovieDb**: adapt `TmdbSearch.searchTv` to the updated API (year + language + flags + page).
-- **Soulseek / Docker**: bounded wait for container health with timeout; clearer polling interval; interrupt handling.
-- **Soulseek search**: bounded poll for search completion (timeout + cleanup); interrupt handling.
+- **Soulseek / slskd**: exclude folders from the shared music library (`slsk.shared.exclude` in Soulseek options / `Slsk.properties`; passed into the Docker container for `SLSKD_SHARED_DIR`).
+
+- Also: OkHttp 5 / TheMovieDb library compatibility, and timeouts for Soulseek search and Docker health wait.
 
 ### Package content ###
 
