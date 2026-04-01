@@ -80,35 +80,15 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
 
 ### Installation
 
-<table>
-  <tbody>
-    <tr>
-      <th colspan="3" scope="colgroup">1. Install dependencies</th>
-    </tr>
-    <tr>
-      <th scope="col">Linux <img src="img/linux.png" alt="Linux"></th>
-      <th scope="col">Raspberry <img src="img/raspberry.png" alt="Raspberry"></th>
-      <th scope="col">Windows <img src="img/windows.png" alt="Windows"></th>
-    </tr>
-    <tr>
-      <th><a href="apt://openjdk-21-jre">openjdk-21-jre</a> or refer to <a href="https://adoptium.net/installation/">Adoptium</a></td>
-      <th><code>sudo apt install openjdk-21-jre mplayer flac mp3gain</code></td>
-      <th><a href="https://adoptium.net/fr/download?link=https%3A%2F%2Fgithub.com%2Fadoptium%2Ftemurin21-binaries%2Freleases%2Fdownload%2Fjdk-21.0.10%252B7%2FOpenJDK21U-jdk_x64_windows_hotspot_21.0.10_7.msi&amp;vendor=Adoptium">Eclipse Temurin JRE 21 x64</a> or refer to <a href="https://adoptium.net/installation/">Adoptium</a></td>
-    </tr>
-    <tr>
-      <th colspan="3" scope="colgroup">2. Install JaMuz  <img src="img/linux.png" alt="Linux"><img src="img/raspberry.png" alt="Raspberry"><img src="img/windows.png" alt="Windows"></th>
-    </tr>
-    <tr>
-      <td colspan="3"><span id="download-container-jamuz-desktop"></span></td>
-    </tr>
-    <tr>
-      <td colspan="3">Extract the 7z archive</td>
-    </tr>
-    <tr>
-      <td colspan="3">Double-click <code>JaMuz.jar</code></td>
-    </tr>
-  </tbody>
-</table>
+- Install dependencies, mostly Java (OpenJDK JRE) ≥17:
+
+| Linux <img src="img/linux.png" alt="Linux">                                                       | Raspberry <img src="img/raspberry.png" alt="Raspberry"> | Windows <img src="img/windows.png" alt="Windows">                                                                                                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [openjdk-21-jre](apt://openjdk-21-jre) or refer to [Adoptium](https://adoptium.net/installation/) | `sudo apt install openjdk-21-jre mplayer flac mp3gain`  | [Eclipse Temurin JRE 21 x64](https://adoptium.net/fr/download?link=https%3A%2F%2Fgithub.com%2Fadoptium%2Ftemurin21-binaries%2Freleases%2Fdownload%2Fjdk-21.0.10%252B7%2FOpenJDK21U-jdk_x64_windows_hotspot_21.0.10_7.msi&vendor=Adoptium)  or refer to [Adoptium](https://adoptium.net/installation/) |
+
+- <span id="download-container-jamuz-desktop"></span>
+- Extract 7z archive
+- Double-click `JaMuz.jar`
 
 ### Features
 
