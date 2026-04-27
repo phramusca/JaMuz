@@ -36,7 +36,7 @@ import test.helpers.FileInfoIntComparator;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DaoFileTest {
 

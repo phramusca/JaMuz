@@ -28,7 +28,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DaoFileTranscodedTest {
 

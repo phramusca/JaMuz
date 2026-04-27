@@ -39,7 +39,7 @@ import java.time.Duration;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DaoDeviceFileTest {
 

@@ -29,7 +29,7 @@ import test.helpers.TestUnitSettings;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DaoSchemaTest {
     

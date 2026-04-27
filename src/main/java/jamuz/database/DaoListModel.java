@@ -32,7 +32,7 @@ import javax.swing.DefaultListModel;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DaoListModel {
 

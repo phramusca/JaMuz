@@ -18,7 +18,7 @@ package jamuz.database;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DaoPathAlbumWrite {
     private final DbConn dbConn;

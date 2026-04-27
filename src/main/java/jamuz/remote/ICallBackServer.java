@@ -18,7 +18,7 @@ package jamuz.remote;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public interface ICallBackServer {
     public void received(String action, String value);

@@ -26,7 +26,7 @@ import java.util.logging.Level;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DaoFileTranscodedWrite {
 

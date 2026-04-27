@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DaoPathAlbumWriteTest {
     

@@ -28,7 +28,7 @@ import org.junit.Ignore;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public class DaoFileTagWriteTest {
     
