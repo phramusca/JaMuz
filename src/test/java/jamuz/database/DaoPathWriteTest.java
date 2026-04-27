@@ -17,138 +17,103 @@
 package jamuz.database;
 
 import jamuz.process.check.FolderInfo;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import test.helpers.TestUnitSettings;
 
-
-/**
- *
- * @author phramusca <phramusca@gmail.com>
- */
+/** Tests for {@link DaoPathWrite}. */
 public class DaoPathWriteTest {
-    
-    public DaoPathWriteTest() {
-    }
+
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoPathWrite writer;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoPathWrite(dbConnJaMuz.getDbConn());
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void wipePathWriteRows() throws SQLException {
+        try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
+            st.executeUpdate("DELETE FROM path WHERE strPath LIKE 'pathWrite/%'");
+        }
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
- 
-    /**
-     * Test of insert method, of class DaoPathWrite.
-     */
-    @Test
-    public void testInsert() {
-        System.out.println("insert");
-        String relativePath = "";
-        Date modifDate = null;
-        FolderInfo.CheckedFlag checkedFlag = null;
-        String mbId = "";
-        int[] key = null;
-        DaoPathWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.insert(relativePath, modifDate, checkedFlag, mbId, key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    private int insertPath(String relPath) {
+        int[] key = new int[1];
+        assertTrue(writer.insert(relPath, new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbid-path", key));
+        return key[0];
     }
 
-    /**
-     * Test of update method, of class DaoPathWrite.
-     */
-    @Test
-    public void testUpdate() {
-        System.out.println("update");
-        int idPath = 0;
-        Date modifDate = null;
-        FolderInfo.CheckedFlag checkedFlag = null;
-        String path = "";
-        String mbId = "";
-        DaoPathWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.update(idPath, modifDate, checkedFlag, path, mbId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    private int intScalar(String sql, Object... args) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(sql)) {
+            for (int i = 0; i < args.length; i++) {
+                st.setObject(i + 1, args[i]);
+            }
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getInt(1);
+            }
+        }
     }
 
-    /**
-     * Test of updateCheckedFlag method, of class DaoPathWrite.
-     */
     @Test
-    public void testUpdateCheckedFlag() {
-        System.out.println("updateCheckedFlag");
-        int idPath = 0;
-        FolderInfo.CheckedFlag checkedFlag = null;
-        DaoPathWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateCheckedFlag(idPath, checkedFlag);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void shouldInsertUpdateDeletePath() {
+        int id = insertPath("pathWrite/ins/a");
+        assertTrue(writer.update(id, new Date(), FolderInfo.CheckedFlag.OK,
+                "pathWrite/upd/a", "mbid2"));
+        assertEquals("pathWrite/upd/a",
+                stringScalar("SELECT strPath FROM path WHERE idPath = ?", id));
+        assertTrue(writer.delete(id));
+        assertFalse(writer.delete(id));
     }
 
-    /**
-     * Test of updateCheckedFlagReset method, of class DaoPathWrite.
-     */
-    @Test
-    public void testUpdateCheckedFlagReset() {
-        System.out.println("updateCheckedFlagReset");
-        FolderInfo.CheckedFlag checkedFlag = null;
-        DaoPathWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateCheckedFlagReset(checkedFlag);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    private String stringScalar(String sql, Object arg) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(sql)) {
+            st.setObject(1, arg);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getString(1);
+            }
+        }
     }
 
-    /**
-     * Test of updateCopyRight method, of class DaoPathWrite.
-     */
     @Test
-    public void testUpdateCopyRight() {
-        System.out.println("updateCopyRight");
-        int idPath = 0;
-        int copyRight = 0;
-        DaoPathWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateCopyRight(idPath, copyRight);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void shouldUpdateCheckedFlagAndCopyRight() throws SQLException {
+        int id = insertPath("pathWrite/chk");
+        assertEquals(FolderInfo.CheckedFlag.UNCHECKED.getValue(),
+                intScalar("SELECT checked FROM path WHERE idPath = ?", id));
+        assertTrue(writer.updateCheckedFlag(id, FolderInfo.CheckedFlag.OK_WARNING));
+        assertEquals(FolderInfo.CheckedFlag.OK_WARNING.getValue(),
+                intScalar("SELECT checked FROM path WHERE idPath = ?", id));
+
+        assertTrue(writer.updateCopyRight(id, 2));
+        assertEquals(2, intScalar("SELECT copyRight FROM path WHERE idPath = ?", id));
     }
 
-    /**
-     * Test of delete method, of class DaoPathWrite.
-     */
     @Test
-    public void testDelete() {
-        System.out.println("delete");
-        int idPath = 0;
-        DaoPathWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.delete(idPath);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void shouldResetCheckedFlagBatch() throws SQLException {
+        int id = insertPath("pathWrite/reset");
+        assertTrue(writer.updateCheckedFlag(id, FolderInfo.CheckedFlag.KO));
+        assertEquals(FolderInfo.CheckedFlag.KO.getValue(),
+                intScalar("SELECT checked FROM path WHERE idPath = ?", id));
+        assertTrue(writer.updateCheckedFlagReset(FolderInfo.CheckedFlag.KO));
+        assertEquals(FolderInfo.CheckedFlag.UNCHECKED.getValue(),
+                intScalar("SELECT checked FROM path WHERE idPath = ?", id));
     }
-    
 }

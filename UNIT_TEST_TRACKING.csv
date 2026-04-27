@@ -1,71 +1,71 @@
 fichier;perimetre;junit;nb_tests;nb_squelettes_prototype;nb_fixme_test;nb_ignore;nb_system_out;etat_synthese;harmoniser;manques_ou_actions
-tests/functional/CheckNTest.java;fonctionnel;junit4;1;0;2;0;0;hors_perimetre_unitaire;Suivi separe (plan fonctionnel / TestPlan);—
-tests/functional/Merge1Test.java;fonctionnel;junit4;1;0;0;0;0;hors_perimetre_unitaire;Suivi separe (plan fonctionnel / TestPlan);—
-tests/functional/MergeCheckNTest.java;fonctionnel;junit4;1;0;7;0;0;hors_perimetre_unitaire;Suivi separe (plan fonctionnel / TestPlan);—
-tests/functional/MergeNTest.java;fonctionnel;junit4;1;0;6;0;0;hors_perimetre_unitaire;Suivi separe (plan fonctionnel / TestPlan);—
-jamuz/AppVersionCheckTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/AppVersionTest.java;unitaire;junit4;12;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/FileInfoIntTest.java;unitaire;junit5;36;0;11;0;0;a_completer_fixme;"Traiter FIXME; choisir alignement JUnit (ce fichier seul en JUnit 5)";Lire commentaires FIXME TEST dans le fichier
-jamuz/FileInfoTest.java;unitaire;junit4;8;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/database/DaoClientTest.java;unitaire;junit4;4;3;2;3;4;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoClientWriteTest.java;unitaire;junit4;1;1;0;1;1;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoDeviceFileTest.java;unitaire;junit4;2;1;3;1;1;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoDeviceFileWriteTest.java;unitaire;junit4;3;3;0;3;3;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoDeviceTest.java;unitaire;junit4;5;4;3;4;5;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoDeviceWriteTest.java;unitaire;junit4;2;2;0;2;2;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoFileTagTest.java;unitaire;junit4;3;2;2;2;3;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoFileTagWriteTest.java;unitaire;junit4;1;1;0;1;1;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoFileTest.java;unitaire;junit4;11;10;4;0;11;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoFileTranscodedTest.java;unitaire;junit4;2;1;3;0;2;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoFileTranscodedWriteTest.java;unitaire;junit4;1;1;0;0;1;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoFileWriteTest.java;unitaire;junit4;11;11;0;0;11;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoGenreTest.java;unitaire;junit4;3;2;1;2;3;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoGenreWriteTest.java;unitaire;junit4;3;3;0;3;3;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoListModelTest.java;unitaire;junit4;6;5;3;0;6;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoMachineTest.java;unitaire;junit4;2;1;2;1;2;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoMachineWriteTest.java;unitaire;junit4;3;3;0;3;3;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoOptionTest.java;unitaire;junit4;2;2;0;2;2;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoOptionWriteTest.java;unitaire;junit4;2;2;0;2;2;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoPathAlbumTest.java;unitaire;junit4;7;6;3;0;7;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoPathAlbumWriteTest.java;unitaire;junit4;1;1;0;0;0;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoPathTest.java;unitaire;junit4;7;6;3;0;7;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoPathWriteTest.java;unitaire;junit4;6;6;0;0;6;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoPlayCounterTest.java;unitaire;junit4;2;1;3;0;2;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoPlayCounterWriteTest.java;unitaire;junit4;1;1;0;0;1;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoPlaylistTest.java;unitaire;junit4;3;2;2;2;3;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoPlaylistWriteTest.java;unitaire;junit4;3;3;0;3;3;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoSchemaTest.java;unitaire;junit4;3;2;3;0;3;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoSchemaWriteTest.java;unitaire;junit4;1;1;0;0;1;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoStatSourceTest.java;unitaire;junit4;5;4;4;4;5;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoStatSourceWriteTest.java;unitaire;junit4;3;3;0;3;3;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DaoTagTest.java;unitaire;junit4;3;2;1;2;3;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DaoTagWriteTest.java;unitaire;junit4;4;4;0;4;4;bloque_squelettes;"Remplacer squelettes NetBeans par tests reels ou supprimer; noms explicites (should…When…)";Definir comportements attendus (DAO/API)
-jamuz/database/DbConnJaMuzTest.java;unitaire;junit4;26;25;1;0;34;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DbConnTest.java;unitaire;junit4;11;8;0;4;11;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DbInfoTest.java;unitaire;junit4;8;7;3;0;8;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/DbVersionTest.java;unitaire;junit4;4;3;3;0;4;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/StatSourceAbstractTest.java;unitaire;junit4;24;23;3;0;24;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/database/StatSourceSQLTest.java;unitaire;junit4;12;11;3;0;12;mixte_squelettes;"Eliminer squelettes restants; reduire println; noms explicites";Cas negatifs + contraintes (voir FIXME dans fichier)
-jamuz/process/video/IconBufferVideoTest.java;unitaire;junit4;1;0;0;0;1;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/soulseek/SlskdDockerSharedDirTest.java;unitaire;junit4;5;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/soulseek/SlskdSearchFileTest.java;unitaire;junit4;7;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/soulseek/SlskdSearchResponseTest.java;unitaire;junit4;8;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/soulseek/SlskdSearchResultTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/soulseek/SlskdTokenResponseTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/soulseek/TableModelSlskdDownloadTest.java;unitaire;junit4;7;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/soulseek/TableModelSlskdSearchTest.java;unitaire;junit4;7;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/BenchmarkTest.java;unitaire;junit4;4;0;0;0;0;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/ClipboardImageTest.java;unitaire;junit4;1;0;0;0;1;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/ClipboardTextTest.java;unitaire;junit4;4;0;0;0;4;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/DateTimeTest.java;unitaire;junit4;8;0;0;0;15;revue_logs;Remplacer System.out par assertions ou logs de test;Verifier stabilite / determinisme
-jamuz/utils/DesktopTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/EncryptionTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/FileSystemTest.java;unitaire;junit4;5;0;0;0;3;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/FtpTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/InterTest.java;unitaire;junit4;1;0;0;0;1;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/OSTest.java;unitaire;junit4;4;0;0;0;4;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/PopupTest.java;unitaire;junit4;7;0;0;0;7;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/ProcessAbstractTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/QRCodeTest.java;unitaire;junit4;2;0;0;0;2;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/SSHTest.java;unitaire;junit4;5;0;0;0;5;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
-jamuz/utils/SwingTest.java;unitaire;junit4;6;0;0;0;6;plutot_propre;Harmonisation opportuniste (noms, style) si retouche;Revue legere
+tests/functional/CheckNTest.java;fonctionnel;junit4;1;0;2;0;0;hors_perimetre_unitaire;Track separately (functional plan / TestPlan);—
+tests/functional/Merge1Test.java;fonctionnel;junit4;1;0;0;0;0;hors_perimetre_unitaire;Track separately (functional plan / TestPlan);—
+tests/functional/MergeCheckNTest.java;fonctionnel;junit4;1;0;7;0;0;hors_perimetre_unitaire;Track separately (functional plan / TestPlan);—
+tests/functional/MergeNTest.java;fonctionnel;junit4;1;0;6;0;0;hors_perimetre_unitaire;Track separately (functional plan / TestPlan);—
+jamuz/AppVersionCheckTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/AppVersionTest.java;unitaire;junit4;12;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/FileInfoIntTest.java;unitaire;junit5;36;0;11;0;0;a_completer_fixme;"Address FIXME; pick JUnit alignment (this file alone is JUnit 5)";Read FIXME TEST comments in the file
+jamuz/FileInfoTest.java;unitaire;junit4;8;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoClientTest.java;unitaire;junit4;4;3;2;3;4;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoClientWriteTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoDeviceFileTest.java;unitaire;junit4;2;1;3;1;1;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoDeviceFileWriteTest.java;unitaire;junit4;5;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoDeviceTest.java;unitaire;junit4;5;4;3;4;5;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoDeviceWriteTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoFileTagTest.java;unitaire;junit4;3;2;2;2;3;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoFileTagWriteTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoFileTest.java;unitaire;junit4;11;10;4;0;11;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoFileTranscodedTest.java;unitaire;junit4;2;1;3;0;2;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoFileTranscodedWriteTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoFileWriteTest.java;unitaire;junit4;10;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoGenreTest.java;unitaire;junit4;3;2;1;2;3;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoGenreWriteTest.java;unitaire;junit4;2;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoListModelTest.java;unitaire;junit4;6;5;3;0;6;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoMachineTest.java;unitaire;junit4;2;1;2;1;2;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoMachineWriteTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoOptionTest.java;unitaire;junit4;2;2;0;2;2;bloque_squelettes;"Replace NetBeans stubs with real tests or remove; explicit names (should…When…)";Define expected behaviour (DAO/API)
+jamuz/database/DaoOptionWriteTest.java;unitaire;junit4;2;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoPathAlbumTest.java;unitaire;junit4;7;6;3;0;7;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoPathAlbumWriteTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoPathTest.java;unitaire;junit4;7;6;3;0;7;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoPathWriteTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoPlayCounterTest.java;unitaire;junit4;2;1;3;0;2;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoPlayCounterWriteTest.java;unitaire;junit4;2;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoPlaylistTest.java;unitaire;junit4;3;2;2;2;3;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoPlaylistWriteTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoSchemaTest.java;unitaire;junit4;3;2;3;0;3;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoSchemaWriteTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoStatSourceTest.java;unitaire;junit4;5;4;4;4;5;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoStatSourceWriteTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DaoTagTest.java;unitaire;junit4;3;2;1;2;3;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DaoTagWriteTest.java;unitaire;junit4;4;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DbConnJaMuzTest.java;unitaire;junit4;26;25;1;0;34;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DbConnTest.java;unitaire;junit4;11;8;0;4;11;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DbInfoTest.java;unitaire;junit4;6;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DbVersionTest.java;unitaire;junit4;4;3;3;0;4;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/StatSourceAbstractTest.java;unitaire;junit4;24;23;3;0;24;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/StatSourceSQLTest.java;unitaire;junit4;12;11;3;0;12;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/process/video/IconBufferVideoTest.java;unitaire;junit4;1;0;0;0;1;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/soulseek/SlskdDockerSharedDirTest.java;unitaire;junit4;5;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/soulseek/SlskdSearchFileTest.java;unitaire;junit4;7;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/soulseek/SlskdSearchResponseTest.java;unitaire;junit4;8;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/soulseek/SlskdSearchResultTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/soulseek/SlskdTokenResponseTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/soulseek/TableModelSlskdDownloadTest.java;unitaire;junit4;7;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/soulseek/TableModelSlskdSearchTest.java;unitaire;junit4;7;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/BenchmarkTest.java;unitaire;junit4;4;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/ClipboardImageTest.java;unitaire;junit4;1;0;0;0;1;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/ClipboardTextTest.java;unitaire;junit4;4;0;0;0;4;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/DateTimeTest.java;unitaire;junit4;8;0;0;0;15;revue_logs;Replace System.out with assertions or test logging;Check stability / determinism
+jamuz/utils/DesktopTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/EncryptionTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/FileSystemTest.java;unitaire;junit4;5;0;0;0;3;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/FtpTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/InterTest.java;unitaire;junit4;1;0;0;0;1;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/OSTest.java;unitaire;junit4;4;0;0;0;4;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/PopupTest.java;unitaire;junit4;7;0;0;0;7;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/ProcessAbstractTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/QRCodeTest.java;unitaire;junit4;2;0;0;0;2;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/SSHTest.java;unitaire;junit4;5;0;0;0;5;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/utils/SwingTest.java;unitaire;junit4;6;0;0;0;6;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review

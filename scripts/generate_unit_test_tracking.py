@@ -24,34 +24,34 @@ def analyze_file(path: str) -> tuple[str, ...]:
     scope = "fonctionnel" if rel.startswith("tests/functional/") else "unitaire"
 
     if scope == "fonctionnel":
-        etat, harm, manque = "hors_perimetre_unitaire", "Suivi separe (plan fonctionnel / TestPlan)", "—"
+        etat, harm, manque = "hors_perimetre_unitaire", "Track separately (functional plan / TestPlan)", "—"
     elif proto >= tests and tests > 0:
         etat = "bloque_squelettes"
         harm = (
-            "Remplacer squelettes NetBeans par tests reels ou supprimer; "
-            "noms explicites (should…When…)"
+            "Replace NetBeans stubs with real tests or remove; "
+            "explicit names (should…When…)"
         )
-        manque = "Definir comportements attendus (DAO/API)"
+        manque = "Define expected behaviour (DAO/API)"
     elif proto > 0:
         etat = "mixte_squelettes"
-        harm = "Eliminer squelettes restants; reduire println; noms explicites"
-        manque = "Cas negatifs + contraintes (voir FIXME dans fichier)"
+        harm = "Remove remaining stubs; reduce println; explicit names"
+        manque = "Negative cases + constraints (see FIXME in file)"
     elif fixme > 0:
         etat = "a_completer_fixme"
         harm = (
-            "Traiter FIXME; choisir alignement JUnit (ce fichier seul en JUnit 5)"
+            "Address FIXME; pick JUnit alignment (this file alone is JUnit 5)"
             if junit == "junit5"
-            else "Traiter FIXME; noms should…When…; AAA si gros blocs"
+            else "Address FIXME; should…When… names; arrange-act-assert for large tests"
         )
-        manque = "Lire commentaires FIXME TEST dans le fichier"
+        manque = "Read FIXME TEST comments in the file"
     elif println > 8:
         etat = "revue_logs"
-        harm = "Remplacer System.out par assertions ou logs de test"
-        manque = "Verifier stabilite / determinisme"
+        harm = "Replace System.out with assertions or test logging"
+        manque = "Check stability / determinism"
     else:
         etat = "plutot_propre"
-        harm = "Harmonisation opportuniste (noms, style) si retouche"
-        manque = "Revue legere"
+        harm = "Opportunistic harmonisation (names, style) when editing"
+        manque = "Light review"
 
     return (
         rel,

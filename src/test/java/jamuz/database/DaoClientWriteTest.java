@@ -31,10 +31,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import test.helpers.TestUnitSettings;
 
-/**
- * Tests ciblés sur {@link DaoClientWrite} (insert / update), avec base SQLite
- * temporaire — même principe que {@link DaoClientTest}.
- */
+/** SQLite-backed tests for {@link DaoClientWrite} insert/update behaviour (same setup pattern as {@link DaoClientTest}). */
 public class DaoClientWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
@@ -113,10 +110,7 @@ public class DaoClientWriteTest {
         assertFalse(fromDb.isEnabled());
     }
 
-    /**
-     * Régression : l’ancien code passait {@code java.sql.Types.INTEGER} (valeur 4) à
-     * {@link PreparedStatement#setInt}, ce qui écrivait 4 au lieu de NULL.
-     */
+    /** Regression: older code passed {@code java.sql.Types.INTEGER} (value 4) to {@link PreparedStatement#setInt}, persisting 4 instead of NULL. */
     @Test
     public void shouldPersistNullDeviceAndStatSourceWhenAbsentOnInsert() throws SQLException {
         ClientInfo bare = new ClientInfo("null-fk-client", "p", "/r", "BareName", true);

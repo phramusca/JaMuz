@@ -16,72 +16,63 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
 import jamuz.Machine;
 import jamuz.Option;
-import org.junit.After;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
+import test.helpers.TestUnitSettings;
 
-/**
- *
- * @author phramusca <phramusca@gmail.com>
- */
+/** Tests for {@link DaoOptionWrite}. */
 public class DaoOptionWriteTest {
-	
-	public DaoOptionWriteTest() {
-	}
-	
-	@BeforeClass
-	public static void setUpClass() {
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-	}
-	
-	@Before
-	public void setUp() {
-	}
-	
-	@After
-	public void tearDown() {
-	}
 
-	/**
-	 * Test of update method, of class DaoOptionWrite.
-	 */
-	@Test
-	@Ignore // Refer to DaoMachineTest
-	public void testUpdate_Machine() {
-		System.out.println("update");
-		Machine machine = null;
-		DaoOptionWrite instance = null;
-		boolean expResult = false;
-		boolean result = instance.update(machine);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
+    private static final String HOST = "OptWriteTestHost";
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoOptionWrite writer;
 
-	/**
-	 * Test of update method, of class DaoOptionWrite.
-	 */
-	@Test
-	@Ignore // Refer to DaoMachineTest
-	public void testUpdate_Option_String() {
-		System.out.println("update");
-		Option myOption = null;
-		String value = "";
-		DaoOptionWrite instance = null;
-		boolean expResult = false;
-		boolean result = instance.update(myOption, value);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-	
+    @BeforeClass
+    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoOptionWrite(dbConnJaMuz.getDbConn());
+        dbConnJaMuz.machine().lock().getOrInsert(HOST, new StringBuilder(), false);
+        Jamuz.setDb(dbConnJaMuz);
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
+    }
+
+    @Test
+    public void shouldUpdateAllOptionsForMachine() {
+        Machine m = new Machine(HOST);
+        assertTrue(m.read());
+        String newValue = m.getOption(0).getValue() + "-x";
+        m.getOption(0).setValue(newValue);
+        assertTrue(writer.update(m));
+    }
+
+    @Test
+    public void shouldUpdateSingleOptionValue() throws SQLException {
+        Machine m = new Machine(HOST);
+        assertTrue(m.read());
+        Option first = m.getOption(0);
+        String value = "optSingleValue";
+        assertTrue(writer.update(first, value));
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT value FROM option WHERE idMachine = ? AND idOptionType = ?")) {
+            st.setInt(1, first.getIdMachine());
+            st.setInt(2, first.getIdOptionType());
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                assertEquals(value, rs.getString(1));
+            }
+        }
+    }
 }

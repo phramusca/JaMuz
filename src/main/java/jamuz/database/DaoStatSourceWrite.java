@@ -147,8 +147,12 @@ public class DaoStatSourceWrite {
             try (PreparedStatement stGetLastMergeDate = dbConn.connection.prepareStatement(
                     "SELECT lastMergeDate FROM statsource WHERE idStatSource=?")) {
                 stGetLastMergeDate.setInt(1, idStatSource);
-                ResultSet rs = stGetLastMergeDate.executeQuery();
-                return dbConn.getStringValue(rs, "lastMergeDate", "1970-01-01 00:00:00");
+                try (ResultSet rs = stGetLastMergeDate.executeQuery()) {
+                    if (!rs.next()) {
+                        return "1970-01-01 00:00:00";
+                    }
+                    return dbConn.getStringValue(rs, "lastMergeDate", "1970-01-01 00:00:00");
+                }
             }
         }
     }

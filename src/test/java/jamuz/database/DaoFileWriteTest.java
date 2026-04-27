@@ -32,9 +32,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import test.helpers.TestUnitSettings;
 
-/**
- * Tests sur {@link DaoFileWrite}.
- */
+/** Tests for {@link DaoFileWrite}. */
 public class DaoFileWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;

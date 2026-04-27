@@ -16,23 +16,34 @@
  */
 package jamuz.database;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-
+import test.helpers.TestUnitSettings;
 
 /**
- *
- * @author phramusca <phramusca@gmail.com>
+ * {@link DaoPathAlbumWrite} currently holds only the DB reference; behaviour tests depend on future APIs.
  */
 public class DaoPathAlbumWriteTest {
-    
-    public DaoPathAlbumWriteTest() {
+
+    private static DbConnJaMuz dbConnJaMuz;
+
+    @BeforeClass
+    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void daoPathAlbumWriteCanBeConstructedWithSameDbConn() {
+        DaoPathAlbumWrite w = new DaoPathAlbumWrite(dbConnJaMuz.getDbConn());
+        assertNotNull(w);
     }
-    
 }
