@@ -194,7 +194,7 @@ public abstract class VideoAbstract implements Comparable {
         if(mppaRating.contains(":")) {
             switch(mppaRating.split(":")[1]) { //TODO: Check if this is still valid for other scrappers as cinepassion ("France:-16" par ex.)
                 //TODO: Use this switch to return an icon instead
-                //Voir /home/raph/Creations/Dev/NetBeans/JaMuz/Source/JaMuz_DEV/data/Logos_adoptEs_par_le_csa_20020918.jpg
+                //Voir ~/Creations/Dev/NetBeans/JaMuz/Source/JaMuz_DEV/data/Logos_adoptEs_par_le_csa_20020918.jpg
                 case "Rated U": 
                     this.mppaRating = Inter.get("Label.GeneAudience"); //NOI18N
                     break;
@@ -225,7 +225,7 @@ public abstract class VideoAbstract implements Comparable {
         String newFileName = StringManager.removeIllegal(newName) + "." + fileInfo.getExt(); //NOI18N
         
         //TODO: Better Handle files with no info. Ex:
-        ///home/raph/Vidéos/Films/Archive/Walt Disney/1937 - Blanche Neige.avi
+        //~/Vidéos/Films/Archive/Walt Disney/1937 - Blanche Neige.avi
         //newFileName="{Empty} [0].avi"
         if(newFileName.startsWith("{Empty} [0]")) { //NOI18N
 //            fileInfo.setStatus(Inter.get("Msg.Video.NoInfo"));

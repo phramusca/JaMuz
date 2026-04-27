@@ -46,10 +46,10 @@ public class BundleScanner {
 	public static void main(String[] args) {
 
 		filesToSearch = new ArrayList<>();
-		browseFS(new File("/home/raph/Documents/04-Creations/Dev/NetBeans/JaMuz/JaMuz_DEV/src/jamuz"));
+		browseFS(new File("~/Documents/04-Creations/Dev/NetBeans/JaMuz/JaMuz_DEV/src/jamuz"));
 
 		translations = new TreeMap<>();
-		File[] files = FileSystem.replaceHome("/home/raph/Documents/04-Creations/Dev/NetBeans/JaMuz/JaMuz_DEV/src/jamuz")
+		File[] files = FileSystem.replaceHome("~/Documents/04-Creations/Dev/NetBeans/JaMuz/JaMuz_DEV/src/jamuz")
 				.listFiles((File dir, String name) -> (name.endsWith(".properties")
 				&& name.startsWith("Bundle")));
 		int nbFiles = 0;

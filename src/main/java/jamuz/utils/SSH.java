@@ -157,7 +157,7 @@ public class SSH {
             channel.setInputStream(null);
             ((ChannelExec) channel).setErrStream(System.err); 
 //TODO: Get error stream to catch messages as :
-//mv: impossible d'évaluer «/home/raph/Vidéos/Films/American Bluff [2013].avi»: Aucun fichier ou dossier de ce type
+//mv: impossible d'évaluer «~/Vidéos/Films/American Bluff [2013].avi»: Aucun fichier ou dossier de ce type
             in = channel.getInputStream();
             channel.connect();
             byte[] tmp = new byte[1024];

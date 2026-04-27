@@ -33,18 +33,18 @@ public class TESTreplaygainBrowse {
 	 */
 	public static void main(String[] args) {
 
-//		String pathStr = "/home/raph/Bureau/ReplayGain/Musique-copy/King Yellowman/";
-		String pathStr = "/home/raph/Bureau/ReplayGain/FLAC-not set/";
+//		String pathStr = "~/Bureau/ReplayGain/Musique-copy/King Yellowman/";
+		String pathStr = "~/Bureau/ReplayGain/FLAC-not set/";
 		boolean recalculate = true;
 
 		////////////////////////////////////////////////////////////////////////////
 		//Configure application
-		if (!Jamuz.configure("/home/raph/Bureau/ReplayGain/")) {
+		if (!Jamuz.configure("~/Bureau/ReplayGain/")) {
 			System.exit(1);
 		}
 		FolderInfo folderInfo = new FolderInfo(
 				pathStr,
-				"/home/raph/Bureau/");
+				"~/Bureau/");
 		ProgressBar progressBar = new ProgressBar();
 		System.out.println("Recomputing Replaygain (" + recalculate + "). Please wait ...");
 		folderInfo.browse(recalculate, true, progressBar);
