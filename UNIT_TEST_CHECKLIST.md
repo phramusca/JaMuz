@@ -4,6 +4,24 @@ Ce document est volontairement **court et structuré**. Le détail **fichier par
 
 ---
 
+## Fichiers déjà traités (squelettes → vrais tests)
+
+À mettre à jour à chaque lot. Les entrées **code** indiquent un correctif dans `src/main` lié au fichier de test.
+
+| Fichier test | Notes |
+|--------------|--------|
+| `jamuz/database/DaoClientWriteTest.java` | + correctif `DaoClientWrite` (`setNull` pour FK device/source) |
+| `jamuz/database/DaoDeviceFileWriteTest.java` | |
+| `jamuz/database/DaoDeviceWriteTest.java` | |
+| `jamuz/database/DaoFileTagWriteTest.java` | |
+| `jamuz/database/DaoFileTranscodedWriteTest.java` | |
+| `jamuz/database/DaoFileWriteTest.java` | |
+| `jamuz/database/DaoGenreWriteTest.java` | + correctif `DaoGenre.isSupported` (`ResultSet.next`) |
+
+*Dernière mise à jour de ce tableau : 2026-04-27.*
+
+---
+
 ## 1. Fichiers à utiliser
 
 | Fichier | Rôle |

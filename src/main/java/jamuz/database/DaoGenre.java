@@ -38,7 +38,7 @@ public class DaoGenre {
                 "SELECT COUNT(*) FROM genre WHERE value=?")) {
             stCheckGenre.setString(1, genre);
             try (ResultSet rs = stCheckGenre.executeQuery()) {
-                return rs.getInt(1) > 0;
+                return rs.next() && rs.getInt(1) > 0;
             }
         } catch (SQLException ex) {
             Jamuz.getLogger().log(Level.SEVERE, "checkGenre(" + genre + ")", ex);

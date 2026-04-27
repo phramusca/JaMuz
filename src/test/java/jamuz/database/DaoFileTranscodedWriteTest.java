@@ -17,50 +17,89 @@
 package jamuz.database;
 
 import jamuz.FileInfoInt;
+import jamuz.process.check.FolderInfo;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import org.junit.After;
+import java.util.Date;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import test.helpers.TestUnitSettings;
 
 /**
- *
- * @author phramusca <phramusca@gmail.com>
+ * Tests sur {@link DaoFileTranscodedWrite#insertOrUpdate}.
  */
 public class DaoFileTranscodedWriteTest {
-    
-    public DaoFileTranscodedWriteTest() {
-    }
+
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoFileTranscodedWrite writer;
+    private static final String ROOT = "/root/tr/";
+    private static int pathId;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoFileTranscodedWrite(dbConnJaMuz.getDbConn());
+        dbConnJaMuz.file().setLocationLibrary(ROOT);
+        int[] keyPath = new int[1];
+        dbConnJaMuz.path().lock().insert("rel/tr/", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbid", keyPath);
+        pathId = keyPath[0];
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void setUp() throws Exception {
+    private static FileInfoInt insertSourceFile(String name) throws SQLException {
+        FileInfoInt f = new FileInfoInt("rel/tr/" + name, ROOT);
+        f.setIdPath(pathId);
+        int[] key = new int[1];
+        assertTrue(dbConnJaMuz.file().lock().insert(f, key));
+        f.setIdFile(key[0]);
+        f.setRating(0);
+        return f;
     }
 
-    @After
-    public void tearDown() throws Exception {
+    private static String transcodedModifDate(int idFile, String ext) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT modifDate FROM fileTranscoded WHERE idFile = ? AND ext = ?")) {
+            st.setInt(1, idFile);
+            st.setString(2, ext);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getString("modifDate");
+            }
+        }
     }
 
-    /**
-     * Test of insertOrUpdate method, of class DaoFileTranscodedWrite.
-     */
+    private static ArrayList<FileInfoInt> singleton(FileInfoInt f) {
+        ArrayList<FileInfoInt> batch = new ArrayList<>();
+        batch.add(f);
+        return batch;
+    }
+
     @Test
-    public void testInsertOrUpdate() {
-        System.out.println("insertOrUpdate");
-        ArrayList<FileInfoInt> files = null;
-        DaoFileTranscodedWrite instance = null;
-        instance.insertOrUpdate(files);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void shouldInsertThenUpsertFileTranscodedRow() throws SQLException {
+        FileInfoInt base = insertSourceFile("src.ext");
+        FileInfoInt row = dbConnJaMuz.file().getFile(base.getIdFile(), ROOT);
+        row.setExt("opus");
+
+        writer.insertOrUpdate(singleton(row));
+        String firstModif = transcodedModifDate(row.getIdFile(), "opus");
+        assertFalse(firstModif.isEmpty());
+
+        Date far = new Date(200_000_000_000L);
+        assertTrue(dbConnJaMuz.file().lock().updateModifDate(row.getIdFile(), far, row.getFilename()));
+        FileInfoInt row2 = dbConnJaMuz.file().getFile(row.getIdFile(), ROOT);
+        row2.setExt("opus");
+        writer.insertOrUpdate(singleton(row2));
+
+        String secondModif = transcodedModifDate(row.getIdFile(), "opus");
+        assertNotEquals(firstModif, secondModif);
     }
-    
 }

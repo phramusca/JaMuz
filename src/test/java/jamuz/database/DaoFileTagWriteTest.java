@@ -16,56 +16,77 @@
  */
 package jamuz.database;
 
-import jamuz.FileInfo;
+import jamuz.FileInfoInt;
+import jamuz.process.check.FolderInfo;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import org.junit.After;
+import java.util.Date;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
+import test.helpers.TestUnitSettings;
 
 /**
- *
- * @author phramusca <phramusca@gmail.com>
+ * Tests sur {@link DaoFileTagWrite#update}.
  */
 public class DaoFileTagWriteTest {
-    
-    public DaoFileTagWriteTest() {
-    }
+
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoFileTagWrite writer;
+    private static int pathId;
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoFileTagWrite(dbConnJaMuz.getDbConn(), dbConnJaMuz.tag(), dbConnJaMuz.file());
+        dbConnJaMuz.file().setLocationLibrary("/root/tagwrite/");
+        int[] keyPath = new int[1];
+        dbConnJaMuz.path().lock().insert("rel/tag/", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbid", keyPath);
+        pathId = keyPath[0];
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void setUp() throws Exception {
+    private static FileInfoInt insertBareFile(String filename) throws SQLException {
+        FileInfoInt f = new FileInfoInt("rel/tag/" + filename, "/root/tagwrite/");
+        f.setIdPath(pathId);
+        int[] key = new int[1];
+        assertTrue(dbConnJaMuz.file().lock().insert(f, key));
+        f.setIdFile(key[0]);
+        f.setRating(0);
+        return f;
     }
 
-    @After
-    public void tearDown() throws Exception {
+    private static int countTagFilesForFile(int idFile) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT COUNT(*) FROM tagFile WHERE idFile = ?")) {
+            st.setInt(1, idFile);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getInt(1);
+            }
+        }
     }
 
-    /**
-     * Test of update method, of class DaoFileTagWrite.
-     */
     @Test
-    @Ignore
-    public void testUpdate() {
-        System.out.println("update");
-        ArrayList<? extends FileInfo> files = null;
-        int[] results = null;
-        DaoFileTagWrite instance = null;
-        int[] expResult = null;
-        int[] result = instance.update(files, results);
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void shouldPersistTagsWhenUpdate() throws SQLException {
+        FileInfoInt f = insertBareFile("tagged.ext");
+        ArrayList<String> tags = new ArrayList<>();
+        tags.add("tagWriteAlpha");
+        tags.add("tagWriteBravo");
+        f.setTags(tags);
+
+        ArrayList<FileInfoInt> files = new ArrayList<>();
+        files.add(f);
+        int[] results = new int[]{1};
+        assertArrayEquals(results, writer.update(files, results));
+        assertEquals(2, countTagFilesForFile(f.getIdFile()));
     }
-    
 }
