@@ -99,8 +99,16 @@ public class DaoClientWrite {
                 stInsertClient.setString(1, clientInfo.getLogin());
                 stInsertClient.setString(2, clientInfo.getPwd());
                 stInsertClient.setString(3, clientInfo.getName() + "-" + clientInfo.getLogin().substring(0, 5));
-                stInsertClient.setInt(4, (clientInfo.getDevice() != null) ? clientInfo.getDevice().getId() : java.sql.Types.INTEGER);
-                stInsertClient.setInt(5, (clientInfo.getStatSource() != null) ? clientInfo.getStatSource().getId() : java.sql.Types.INTEGER);
+                if (clientInfo.getDevice() != null) {
+                    stInsertClient.setInt(4, clientInfo.getDevice().getId());
+                } else {
+                    stInsertClient.setNull(4, java.sql.Types.INTEGER);
+                }
+                if (clientInfo.getStatSource() != null) {
+                    stInsertClient.setInt(5, clientInfo.getStatSource().getId());
+                } else {
+                    stInsertClient.setNull(5, java.sql.Types.INTEGER);
+                }
                 stInsertClient.setBoolean(6, clientInfo.isEnabled());
 
                 int nbRowsAffected = stInsertClient.executeUpdate();
