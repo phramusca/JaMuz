@@ -71,6 +71,16 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/soulseek/ICallBackSearchTest.java` | JUnit5 contract/reflection check |
 | `jamuz/remote/ICallBackServerTest.java` | JUnit5 contract/reflection check |
 | `jamuz/ICallBackVersionUpdateTest.java` | JUnit5 contract/reflection check |
+| `jamuz/ICallBackVersionCheckTest.java` | JUnit5 contract/reflection check |
+| `jamuz/gui/ICallBackSelectTest.java` | JUnit5 contract/reflection check |
+| `jamuz/process/check/ICallBackReCheckTest.java` | JUnit5 contract/reflection check |
+| `jamuz/process/check/ICallBackReplaceTest.java` | JUnit5 contract/reflection check |
+| `jamuz/process/check/ICallBackCheckPanelTest.java` | JUnit5 contract/reflection check |
+| `jamuz/process/check/ICallBackDuplicatePanelTest.java` | JUnit5 contract/reflection check |
+| `jamuz/process/check/ICallBackScannerTest.java` | JUnit5 contract/reflection check |
+| `jamuz/process/check/ICallBackCoverTest.java` | JUnit5 contract/reflection check |
+| `jamuz/process/check/ICallBackDuplicateDialogTest.java` | JUnit5 contract/reflection check |
+| `jamuz/process/merge/ICallBackMergeTest.java` | JUnit5 contract/reflection check |
 
 *Table last updated: 2026-04-28 (late night).*
 
