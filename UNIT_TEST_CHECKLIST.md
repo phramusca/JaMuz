@@ -37,6 +37,16 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/database/DaoGenreTest.java` | |
 | `jamuz/database/DaoListModelTest.java` | |
 | `jamuz/database/DaoMachineTest.java` | |
+| `jamuz/database/DaoPathAlbumTest.java` | |
+| `jamuz/database/DaoPathTest.java` | |
+| `jamuz/database/DaoPlayCounterTest.java` | |
+| `jamuz/database/DaoPlaylistTest.java` | |
+| `jamuz/database/DaoSchemaTest.java` | |
+| `jamuz/database/DaoStatSourceTest.java` | |
+| `jamuz/database/DaoTagTest.java` | |
+| `jamuz/database/DbVersionTest.java` | |
+| `jamuz/database/StatSourceSQLTest.java` | |
+| `jamuz/database/StatSourceAbstractTest.java` | |
 
 *Table last updated: 2026-04-28.*
 
