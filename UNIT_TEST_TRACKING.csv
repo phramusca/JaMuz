@@ -5,7 +5,7 @@ tests/functional/MergeCheckNTest.java;fonctionnel;junit4;1;0;7;0;0;hors_perimetr
 tests/functional/MergeNTest.java;fonctionnel;junit4;1;0;6;0;0;hors_perimetre_unitaire;Track separately (functional plan / TestPlan);—
 jamuz/AppVersionCheckTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/AppVersionTest.java;unitaire;junit4;12;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
-jamuz/FileInfoIntTest.java;unitaire;junit5;36;0;11;0;0;a_completer_fixme;"Address FIXME; pick JUnit alignment (this file alone is JUnit 5)";Read FIXME TEST comments in the file
+jamuz/FileInfoIntTest.java;unitaire;junit5;37;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/FileInfoTest.java;unitaire;junit4;8;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/database/DaoClientTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/database/DaoClientWriteTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
@@ -57,7 +57,7 @@ jamuz/soulseek/TableModelSlskdSearchTest.java;unitaire;junit4;7;0;0;0;0;plutot_p
 jamuz/utils/BenchmarkTest.java;unitaire;junit4;4;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/utils/ClipboardImageTest.java;unitaire;junit4;1;0;0;0;1;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/utils/ClipboardTextTest.java;unitaire;junit4;4;0;0;0;4;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
-jamuz/utils/DateTimeTest.java;unitaire;junit4;8;0;0;0;15;revue_logs;Replace System.out with assertions or test logging;Check stability / determinism
+jamuz/utils/DateTimeTest.java;unitaire;junit4;5;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/utils/DesktopTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/utils/EncryptionTest.java;unitaire;junit4;3;0;0;0;3;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/utils/FileSystemTest.java;unitaire;junit4;5;0;0;0;3;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
