@@ -101,6 +101,26 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/process/merge/StatSourceJaMuzRemoteTest.java` | JUnit5 source flags and no-op behavior |
 | `jamuz/process/merge/StatSourceMediaMonkeyTest.java` | JUnit5 source flags and unsupported tags |
 | `jamuz/process/merge/StatSourceMyTunesTest.java` | JUnit5 source flags and unsupported tags |
+| `jamuz/gui/swing/ButtonProcessTest.java` | JUnit5 constructor/state behavior |
+| `jamuz/gui/swing/CheckBoxListTest.java` | JUnit5 default model/selection behavior |
+| `jamuz/utils/LogTextTest.java` | JUnit5 log file create/write behavior |
+| `jamuz/IconBufferCoverTest.java` | JUnit5 constant behavior |
+| `jamuz/gui/swing/ProgressBarTest.java` | JUnit5 progress string/value behavior |
+| `jamuz/OptionsTest.java` | JUnit5 read/save property behavior |
+| `jamuz/utils/XMLTest.java` | JUnit5 XML utility behavior |
+| `jamuz/gui/swing/SortedListModelTest.java` | JUnit5 sorted model operations |
+| `jamuz/process/check/FileInfoDuplicateReplaceTest.java` | JUnit5 duplicate-replace data behavior |
+| `jamuz/process/check/PatternProcessorTest.java` | JUnit5 pattern extraction behavior |
+| `jamuz/process/merge/StatSourceKodiTest.java` | JUnit5 source flags and unsupported tags |
+| `jamuz/acoustid/AcoustIDTest.java` | JUnit5 fpcalc error-path behavior |
+| `jamuz/gui/swing/ListModelSelectorTest.java` | JUnit5 empty model behavior |
+| `jamuz/gui/ListCellRendererGenreTest.java` | JUnit5 renderer text behavior |
+| `jamuz/gui/swing/ListCellRendererSelectorTest.java` | JUnit5 renderer selector behavior |
+| `jamuz/process/video/TableCellRendererTooltipTest.java` | JUnit5 tooltip binding behavior |
+| `jamuz/process/book/IconBufferBookTest.java` | JUnit5 icon-buffer constants/cache miss behavior |
+| `jamuz/process/book/BookTest.java` | JUnit5 book metadata and comparison behavior |
+| `jamuz/process/book/TableRowFilterBookTest.java` | JUnit5 default row-filter include behavior |
+| `jamuz/process/video/MyVideoAbstractTest.java` | JUnit5 flags/rating/year helper behavior |
 
 *Table last updated: 2026-04-28 (late night).*
 
