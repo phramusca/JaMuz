@@ -100,6 +100,6 @@ public class DaoFileTranscodedWriteTest {
         writer.insertOrUpdate(singleton(row2));
 
         String secondModif = transcodedModifDate(row.getIdFile(), "opus");
-        assertNotEquals(firstModif, secondModif);
+        assertFalse(firstModif.equals(secondModif));
     }
 }

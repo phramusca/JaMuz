@@ -114,12 +114,12 @@ public class DaoFileWriteTest {
     @Test
     public void shouldUpdateMetadataFromFileInfo() throws SQLException {
         FileInfoInt f = insertSampleFile("upd.ext");
-        f.setTitle("T2");
-        f.setArtist("A2");
+        f.setFilename("upd2.ext");
+        f.setGenre("Genre2");
         assertTrue(writer.update(f));
         FileInfoInt fromDb = dbConnJaMuz.file().getFile(f.getIdFile(), "");
-        assertEquals("T2", fromDb.getTitle());
-        assertEquals("A2", fromDb.getArtist());
+        assertEquals("upd2.ext", fromDb.getFilename());
+        assertEquals("Genre2", fromDb.getGenre());
     }
 
     @Test

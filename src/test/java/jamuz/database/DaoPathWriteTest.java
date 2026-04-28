@@ -73,7 +73,7 @@ public class DaoPathWriteTest {
     }
 
     @Test
-    public void shouldInsertUpdateDeletePath() {
+    public void shouldInsertUpdateDeletePath() throws SQLException {
         int id = insertPath("pathWrite/ins/a");
         assertTrue(writer.update(id, new Date(), FolderInfo.CheckedFlag.OK,
                 "pathWrite/upd/a", "mbid2"));

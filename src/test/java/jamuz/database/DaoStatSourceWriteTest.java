@@ -102,7 +102,7 @@ public class DaoStatSourceWriteTest {
         int id = idForName("StatW_merge");
 
         String after = writer.updateLastMergeDate(id);
-        assertNotEquals("1970-01-01 00:00:00", after);
+        assertFalse("1970-01-01 00:00:00".equals(after));
     }
 
     @Test

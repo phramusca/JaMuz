@@ -27,8 +27,18 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/database/DaoStatSourceWriteTest.java` | + fix in `DaoStatSourceWrite.getLastMergeDateFromDatabase` (`ResultSet.next`) |
 | `jamuz/database/DaoTagWriteTest.java` | |
 | `jamuz/database/DbInfoTest.java` | |
+| `jamuz/database/DaoOptionTest.java` | |
+| `jamuz/database/DaoClientTest.java` | |
+| `jamuz/database/DaoDeviceFileTest.java` | |
+| `jamuz/database/DaoDeviceTest.java` | |
+| `jamuz/database/DaoFileTagTest.java` | |
+| `jamuz/database/DaoFileTest.java` | |
+| `jamuz/database/DaoFileTranscodedTest.java` | |
+| `jamuz/database/DaoGenreTest.java` | |
+| `jamuz/database/DaoListModelTest.java` | |
+| `jamuz/database/DaoMachineTest.java` | |
 
-*Table last updated: 2026-04-27.*
+*Table last updated: 2026-04-28.*
 
 ---
 
