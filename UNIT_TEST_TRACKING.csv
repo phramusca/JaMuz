@@ -40,8 +40,8 @@ jamuz/database/DaoStatSourceTest.java;unitaire;junit4;2;0;0;0;0;plutot_propre;Op
 jamuz/database/DaoStatSourceWriteTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/database/DaoTagTest.java;unitaire;junit4;2;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/database/DaoTagWriteTest.java;unitaire;junit4;4;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
-jamuz/database/DbConnJaMuzTest.java;unitaire;junit4;26;25;1;0;34;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
-jamuz/database/DbConnTest.java;unitaire;junit4;11;8;0;4;11;mixte_squelettes;"Remove remaining stubs; reduce println; explicit names";Negative cases + constraints (see FIXME in file)
+jamuz/database/DbConnJaMuzTest.java;unitaire;junit4;2;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
+jamuz/database/DbConnTest.java;unitaire;junit4;3;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/database/DbInfoTest.java;unitaire;junit4;6;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/database/DbVersionTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review
 jamuz/database/StatSourceAbstractTest.java;unitaire;junit4;1;0;0;0;0;plutot_propre;Opportunistic harmonisation (names, style) when editing;Light review

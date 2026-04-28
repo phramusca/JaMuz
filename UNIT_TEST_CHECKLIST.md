@@ -47,6 +47,8 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/database/DbVersionTest.java` | |
 | `jamuz/database/StatSourceSQLTest.java` | |
 | `jamuz/database/StatSourceAbstractTest.java` | |
+| `jamuz/database/DbConnJaMuzTest.java` | |
+| `jamuz/database/DbConnTest.java` | |
 
 *Table last updated: 2026-04-28.*
 
