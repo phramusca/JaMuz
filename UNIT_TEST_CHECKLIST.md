@@ -61,6 +61,16 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/acoustid/RecordingTest.java` | new JUnit5 dedicated test |
 | `jamuz/acoustid/ResultTest.java` | new JUnit5 dedicated test |
 | `jamuz/acoustid/ResultsTest.java` | new JUnit5 dedicated test |
+| `jamuz/soulseek/SlskdDownloadFileTest.java` | new JUnit5 dedicated test |
+| `jamuz/soulseek/SlskdDownloadDirectoryTest.java` | new JUnit5 dedicated test |
+| `jamuz/soulseek/SlskdDownloadUserTest.java` | new JUnit5 dedicated test |
+| `jamuz/process/check/ActionResultTest.java` | new JUnit5 dedicated test |
+| `jamuz/process/video/VideoRatingTest.java` | new JUnit5 dedicated test |
+| `jamuz/gui/swing/FileSizeComparableTest.java` | new JUnit5 dedicated test |
+| `jamuz/utils/UtilsTest.java` | new JUnit5 dedicated test |
+| `jamuz/soulseek/ICallBackSearchTest.java` | JUnit5 contract/reflection check |
+| `jamuz/remote/ICallBackServerTest.java` | JUnit5 contract/reflection check |
+| `jamuz/ICallBackVersionUpdateTest.java` | JUnit5 contract/reflection check |
 
 *Table last updated: 2026-04-28 (late night).*
 
