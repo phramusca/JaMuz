@@ -51,8 +51,18 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/database/DbConnTest.java` | |
 | `jamuz/FileInfoIntTest.java` | FIXME cleanup + coverage additions (JUnit5) |
 | `jamuz/utils/DateTimeTest.java` | removed println noise, kept deterministic assertions |
+| `jamuz/OptionTest.java` | new JUnit5 dedicated test |
+| `jamuz/StatItemTest.java` | new JUnit5 dedicated test |
+| `jamuz/KeysTest.java` | new JUnit5 dedicated test |
+| `jamuz/LogFormatTest.java` | new JUnit5 dedicated test |
+| `jamuz/process/sync/SyncStatusTest.java` | new JUnit5 dedicated test |
+| `jamuz/acoustid/AcoustIdResultTest.java` | new JUnit5 dedicated test |
+| `jamuz/acoustid/ChromaPrintTest.java` | new JUnit5 dedicated test |
+| `jamuz/acoustid/RecordingTest.java` | new JUnit5 dedicated test |
+| `jamuz/acoustid/ResultTest.java` | new JUnit5 dedicated test |
+| `jamuz/acoustid/ResultsTest.java` | new JUnit5 dedicated test |
 
-*Table last updated: 2026-04-28 (night).*
+*Table last updated: 2026-04-28 (late night).*
 
 ---
 
@@ -60,10 +70,10 @@ Update this table with each batch. **code** means a production fix in `src/main`
 
 | File | Role |
 |------|------|
-| **`UNIT_TEST_TRACKING.csv`** | Tracking: **one row per** `*Test.java` under `src/test/java`. Auto columns + “harmonise” / “gaps” hints. |
-| **`UNIT_TEST_CHECKLIST.md`** (this file) | How to read the CSV, status lexicon, **global** summary (harmonisation / gaps). |
+| **`UNIT_TEST_TRACKING.csv`** | Unified tracking with both `*Test.java` rows and `src/main` class rows in the same file. |
+| **`UNIT_TEST_CHECKLIST.md`** (this file) | Execution notes and batch history. |
 
-**Regenerate the CSV** (counters and status), from the `JaMuz/` directory:
+**Regenerate the CSV** from `JaMuz/`:
 
 ```bash
 python3 scripts/generate_unit_test_tracking.py
@@ -73,34 +83,33 @@ python3 scripts/generate_unit_test_tracking.py
 
 ## 2. CSV columns (`UNIT_TEST_TRACKING.csv`)
 
-Separator: **semicolon** (`;`) for easy use in LibreOffice / Excel.
+Separator: **semicolon** (`;`).
 
 | Column | Meaning |
 |--------|---------|
-| `fichier` | Path relative to `src/test/java/`. |
-| `perimetre` | `unitaire` or `fonctionnel` (`tests/functional/`). |
-| `junit` | `junit4`, `junit5`, or `inconnu` (unusual imports). |
-| `nb_tests` | Methods annotated `@Test` (JUnit 4 or Jupiter). |
-| `nb_squelettes_prototype` | Lines with `fail("The test case is a prototype.")` (unfilled NetBeans stubs). |
-| `nb_fixme_test` | Occurrences of `FIXME TEST` in the file. |
-| `nb_ignore` | Occurrences of `@Ignore`. |
-| `nb_system_out` | Occurrences of `System.out.println`. |
-| `etat_synthese` | Machine-readable summary (see §3). |
-| `harmoniser` | Harmonisation hint **for this file**. |
-| `manques_ou_actions` | Coverage / TODO hint **for this file**. |
+| `entry_type` | `test` or `main_class`. |
+| `file` | Relative path under `src/test/java` or `src/main/java`. |
+| `linked_class_or_test` | For tests: linked main class. For main classes: linked `*Test.java` when it exists. |
+| `scope` | `unit`, `functional`, or `missing_test` (for uncovered main classes). |
+| `junit` | `junit4`, `junit5`, `none`, or `unknown`. |
+| `nb_tests`..`nb_system_out` | Counters (meaningful for test rows). |
+| `status` | Lifecycle state for test quality or class coverage. |
+| `harmonize` | Standardization guidance. |
+| `gaps_or_actions` | Next action. |
 
 ---
 
-## 3. Lexicon: `etat_synthese`
+## 3. Status lexicon
 
 | Value | Meaning |
 |--------|---------|
-| `hors_perimetre_unitaire` | Under `tests/functional/`: out of “unit tests only” scope; track separately. |
-| `bloque_squelettes` | All (or almost all) `@Test` methods are still prototypes: **priority** replace or remove. |
-| `mixte_squelettes` | At least one real test, but stubs remain: clean up so `mvn test` reflects reality. |
-| `a_completer_fixme` | Few or no stubs, but `FIXME TEST` items remain. |
-| `revue_logs` | Many `println`s: noise and risk for CI / report readability. |
-| `plutot_propre` | No strong automated signal; light review if you touch the module. |
+| `rather_clean` | Test row appears clean at tracker level. |
+| `to_complete_fixme` | Test still contains FIXME work. |
+| `review_logs` | Test still has noisy `System.out.println`. |
+| `blocked_prototypes` / `mixed_prototypes` | Legacy prototype stubs remain. |
+| `out_of_unit_scope` | Functional test row (`tests/functional`). |
+| `main_with_dedicated_test` | Main class has a same-name dedicated test class. |
+| `main_without_dedicated_test` | Main class still lacks a dedicated test class (priority for new JUnit5 tests). |
 
 ---
 
