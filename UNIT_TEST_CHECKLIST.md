@@ -81,6 +81,26 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/process/check/ICallBackCoverTest.java` | JUnit5 contract/reflection check |
 | `jamuz/process/check/ICallBackDuplicateDialogTest.java` | JUnit5 contract/reflection check |
 | `jamuz/process/merge/ICallBackMergeTest.java` | JUnit5 contract/reflection check |
+| `jamuz/gui/PopupMenuListenerTest.java` | JUnit5 contract test |
+| `jamuz/player/MPlaybackListenerTest.java` | JUnit5 contract test |
+| `jamuz/process/sync/ICallBackSyncTest.java` | JUnit5 contract test |
+| `jamuz/process/check/CoverMBTest.java` | JUnit5 inherited behavior test |
+| `jamuz/gui/swing/ProgressCellRenderTest.java` | JUnit5 renderer return contract |
+| `jamuz/gui/swing/TableValueTest.java` | JUnit5 value/display behavior |
+| `jamuz/gui/swing/TableHorizontalTest.java` | JUnit5 viewport width behavior |
+| `jamuz/gui/SchemaUpgradeProgressTest.java` | JUnit5 no-crash lifecycle test |
+| `jamuz/gui/swing/CheckBoxListItemTest.java` | JUnit5 selection and payload behavior |
+| `jamuz/gui/swing/ComboBoxRendererTest.java` | JUnit5 icon selection behavior |
+| `jamuz/database/SchemaUpgradeLogTest.java` | JUnit5 file logging behavior |
+| `jamuz/gui/swing/ListElementTest.java` | JUnit5 equality/hash/clone behavior |
+| `jamuz/gui/swing/PopupListenerTest.java` | JUnit5 non-popup mouse event behavior |
+| `jamuz/gui/swing/TableModelGenericTest.java` | JUnit5 abstract model contract |
+| `jamuz/gui/swing/PasswordFieldWithToggleTest.java` | JUnit5 text/password state behavior |
+| `jamuz/gui/swing/ButtonBrowseURLTest.java` | JUnit5 editor value behavior |
+| `jamuz/process/video/ButtonOpenVideoTest.java` | JUnit5 editor value behavior |
+| `jamuz/process/merge/StatSourceJaMuzRemoteTest.java` | JUnit5 source flags and no-op behavior |
+| `jamuz/process/merge/StatSourceMediaMonkeyTest.java` | JUnit5 source flags and unsupported tags |
+| `jamuz/process/merge/StatSourceMyTunesTest.java` | JUnit5 source flags and unsupported tags |
 
 *Table last updated: 2026-04-28 (late night).*
 
