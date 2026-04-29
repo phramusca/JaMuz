@@ -141,6 +141,26 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/soulseek/SlskTest.java` | JUnit5 class load contract |
 | `jamuz/gui/DialogPlaylistOrderTest.java` | JUnit5 class load contract |
 | `jamuz/process/sync/DeviceTest.java` | JUnit5 basic fields/equality behavior |
+| `jamuz/process/check/MetaFlacTest.java` | JUnit5 constructor safety test |
+| `jamuz/process/check/ButtonCheckTest.java` | JUnit5 class contract |
+| `jamuz/process/book/DbConnBookTest.java` | JUnit5 db-connector constructor |
+| `jamuz/process/check/TableModelCheckTest.java` | JUnit5 table-model baseline behavior |
+| `jamuz/IconBufferTest.java` | JUnit5 constants/enum behavior |
+| `jamuz/process/check/TableModelReplaceTest.java` | JUnit5 table-model baseline behavior |
+| `jamuz/process/check/ReleaseLastFmTest.java` | JUnit5 class instantiation contract |
+| `jamuz/gui/DialogCoverDisplayTest.java` | JUnit5 class load contract |
+| `jamuz/utils/StringManagerTest.java` | JUnit5 string helper behavior |
+| `jamuz/process/check/DuplicateInfoTest.java` | JUnit5 DTO mutation/display behavior |
+| `jamuz/MachineTest.java` | JUnit5 machine core state behavior |
+| `jamuz/gui/swing/TableModelTest.java` | JUnit5 table add/remove behavior |
+| `jamuz/remote/DialogClientInfoTest.java` | JUnit5 class load contract |
+| `jamuz/gui/ListModelPlayerQueueTest.java` | JUnit5 queue add behavior |
+| `jamuz/soulseek/SlskdClientTest.java` | JUnit5 exception type behavior |
+| `jamuz/process/book/ProcessBookTest.java` | JUnit5 process constructor behavior |
+| `jamuz/utils/ImageUtilsTest.java` | JUnit5 image helper behavior |
+| `jamuz/process/video/TableRowFilterVideoTest.java` | JUnit5 filter setter behavior |
+| `jamuz/gui/swing/TableColumnModelBehaviorTest.java` | JUnit5 column visibility behavior |
+| `jamuz/gui/DialogDeviceTest.java` | JUnit5 class load contract |
 
 *Table last updated: 2026-04-28 (late night).*
 
