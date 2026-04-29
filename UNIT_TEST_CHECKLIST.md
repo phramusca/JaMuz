@@ -161,8 +161,28 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/process/video/TableRowFilterVideoTest.java` | JUnit5 filter setter behavior |
 | `jamuz/gui/swing/TableColumnModelBehaviorTest.java` | JUnit5 column visibility behavior |
 | `jamuz/gui/DialogDeviceTest.java` | JUnit5 class load contract |
+| `jamuz/gui/swing/TableColumnModelTest.java` | JUnit5 class instantiation contract |
+| `jamuz/process/check/ReleaseMBTest.java` | JUnit5 constructor contract |
+| `jamuz/process/check/TableModelCheckTracksTest.java` | JUnit5 table-model baseline behavior |
+| `jamuz/process/book/TableModelBookTest.java` | JUnit5 table-model baseline behavior |
+| `jamuz/process/merge/StatSourceTest.java` | JUnit5 core source object behavior |
+| `jamuz/process/video/DialogVideoCleanupConfirmTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/VideoMovieTest.java` | JUnit5 inheritance contract |
+| `jamuz/process/check/DialogCoverSelectTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/TableModelVideoTest.java` | JUnit5 table-model baseline behavior |
+| `jamuz/process/merge/StatSourceGuayadequeTest.java` | JUnit5 source capability flags |
+| `jamuz/remote/ClientInfoTest.java` | JUnit5 client fields and progress behavior |
+| `jamuz/process/video/DialogVideoCleanupTest.java` | JUnit5 class load contract |
+| `jamuz/gui/DialogTagTest.java` | JUnit5 class load contract |
+| `jamuz/gui/FramePlayerInfoTest.java` | JUnit5 class load contract |
+| `jamuz/soulseek/DialogSlskOptionTest.java` | JUnit5 class load contract |
+| `jamuz/process/check/ReplayGainTest.java` | JUnit5 constructor contract |
+| `jamuz/process/check/FileInfoDisplayTest.java` | JUnit5 filename mapping behavior |
+| `jamuz/process/merge/StatSourceMixxxTest.java` | JUnit5 source capability flags |
+| `jamuz/process/sync/PanelSyncTest.java` | JUnit5 class load contract |
+| `jamuz/process/sync/ProcessSyncTest.java` | JUnit5 constructor dependency contract |
 
-*Table last updated: 2026-04-28 (late night).*
+*Table last updated: 2026-04-29.*
 
 ---
 

@@ -68,6 +68,8 @@ test;jamuz/gui/DialogCoverDisplayTest.java;jamuz/gui/DialogCoverDisplay.java;uni
 test;jamuz/gui/DialogDeviceTest.java;jamuz/gui/DialogDevice.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/DialogPlaylistOrderTest.java;jamuz/gui/DialogPlaylistOrder.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/DialogQRcodeTest.java;jamuz/gui/DialogQRcode.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/gui/DialogTagTest.java;jamuz/gui/DialogTag.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/gui/FramePlayerInfoTest.java;jamuz/gui/FramePlayerInfo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/ICallBackSelectTest.java;jamuz/gui/ICallBackSelect.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/ListCellRendererGenreTest.java;jamuz/gui/ListCellRendererGenre.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/ListModelPlayerQueueTest.java;jamuz/gui/ListModelPlayerQueue.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -93,6 +95,7 @@ test;jamuz/gui/swing/ProgressCellRenderTest.java;jamuz/gui/swing/ProgressCellRen
 test;jamuz/gui/swing/SortedListModelTest.java;jamuz/gui/swing/SortedListModel.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/swing/TableCellListenerTest.java;jamuz/gui/swing/TableCellListener.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/swing/TableColumnModelBehaviorTest.java;jamuz/gui/swing/TableColumnModelBehavior.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/gui/swing/TableColumnModelTest.java;jamuz/gui/swing/TableColumnModel.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/swing/TableHorizontalTest.java;jamuz/gui/swing/TableHorizontal.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/swing/TableModelGenericTest.java;jamuz/gui/swing/TableModelGeneric.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/swing/TableModelTest.java;jamuz/gui/swing/TableModel.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -106,11 +109,14 @@ test;jamuz/process/book/DialogBookExportTest.java;jamuz/process/book/DialogBookE
 test;jamuz/process/book/DialogBookOptionTest.java;jamuz/process/book/DialogBookOption.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/book/IconBufferBookTest.java;jamuz/process/book/IconBufferBook.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/book/ProcessBookTest.java;jamuz/process/book/ProcessBook.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/book/TableModelBookTest.java;jamuz/process/book/TableModelBook.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/book/TableRowFilterBookTest.java;jamuz/process/book/TableRowFilterBook.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/ActionResultTest.java;jamuz/process/check/ActionResult.java;unit;junit5;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/ButtonCheckTest.java;jamuz/process/check/ButtonCheck.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/CoverMBTest.java;jamuz/process/check/CoverMB.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/DialogCoverSelectTest.java;jamuz/process/check/DialogCoverSelect.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/DuplicateInfoTest.java;jamuz/process/check/DuplicateInfo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/FileInfoDisplayTest.java;jamuz/process/check/FileInfoDisplay.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/FileInfoDuplicateReplaceTest.java;jamuz/process/check/FileInfoDuplicateReplace.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/ICallBackCheckPanelTest.java;jamuz/process/check/ICallBackCheckPanel.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/ICallBackCoverTest.java;jamuz/process/check/ICallBackCover.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -123,28 +129,42 @@ test;jamuz/process/check/LocationTest.java;jamuz/process/check/Location.java;uni
 test;jamuz/process/check/MetaFlacTest.java;jamuz/process/check/MetaFlac.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/PatternProcessorTest.java;jamuz/process/check/PatternProcessor.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/ReleaseLastFmTest.java;jamuz/process/check/ReleaseLastFm.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/ReleaseMBTest.java;jamuz/process/check/ReleaseMB.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/ReplayGainTest.java;jamuz/process/check/ReplayGain.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/TableModelCheckTest.java;jamuz/process/check/TableModelCheck.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/TableModelCheckTracksTest.java;jamuz/process/check/TableModelCheckTracks.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/TableModelReplaceTest.java;jamuz/process/check/TableModelReplace.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/merge/ICallBackMergeTest.java;jamuz/process/merge/ICallBackMerge.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/merge/StatSourceGuayadequeTest.java;jamuz/process/merge/StatSourceGuayadeque.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/merge/StatSourceJaMuzRemoteTest.java;jamuz/process/merge/StatSourceJaMuzRemote.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/merge/StatSourceKodiTest.java;jamuz/process/merge/StatSourceKodi.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/merge/StatSourceMediaMonkeyTest.java;jamuz/process/merge/StatSourceMediaMonkey.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/merge/StatSourceMixxxTest.java;jamuz/process/merge/StatSourceMixxx.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/merge/StatSourceMyTunesTest.java;jamuz/process/merge/StatSourceMyTunes.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/merge/StatSourceTest.java;jamuz/process/merge/StatSource.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/sync/DeviceTest.java;jamuz/process/sync/Device.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/sync/ICallBackSyncTest.java;jamuz/process/sync/ICallBackSync.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/sync/PanelSyncTest.java;jamuz/process/sync/PanelSync.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/sync/ProcessSyncTest.java;jamuz/process/sync/ProcessSync.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/sync/SyncStatusTest.java;jamuz/process/sync/SyncStatus.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/ButtonOpenVideoTest.java;jamuz/process/video/ButtonOpenVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/DialogVideoCleanupConfirmTest.java;jamuz/process/video/DialogVideoCleanupConfirm.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/DialogVideoCleanupTest.java;jamuz/process/video/DialogVideoCleanup.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/DialogVideoExportTest.java;jamuz/process/video/DialogVideoExport.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/IconBufferVideoTest.java;jamuz/process/video/IconBufferVideo.java;unit;junit4;1;0;0;0;1;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/MyMovieDbTest.java;jamuz/process/video/MyMovieDb.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/MyTvShowTest.java;jamuz/process/video/MyTvShow.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/MyVideoAbstractTest.java;jamuz/process/video/MyVideoAbstract.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/TableCellRendererTooltipTest.java;jamuz/process/video/TableCellRendererTooltip.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/TableModelVideoTest.java;jamuz/process/video/TableModelVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/TableRowFilterVideoTest.java;jamuz/process/video/TableRowFilterVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/VideoMovieTest.java;jamuz/process/video/VideoMovie.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/VideoRatingTest.java;jamuz/process/video/VideoRating.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/remote/ClientInfoTest.java;jamuz/remote/ClientInfo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/remote/DialogClientInfoTest.java;jamuz/remote/DialogClientInfo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/remote/ICallBackServerTest.java;jamuz/remote/ICallBackServer.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/remote/TableModelRemoteTest.java;jamuz/remote/TableModelRemote.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/soulseek/DialogSlskOptionTest.java;jamuz/soulseek/DialogSlskOption.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/ICallBackSearchTest.java;jamuz/soulseek/ICallBackSearch.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskTest.java;jamuz/soulseek/Slsk.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskdClientTest.java;jamuz/soulseek/SlskdClient.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -249,8 +269,8 @@ main_class;jamuz/gui/DialogPlaylistFilter.java;;missing_test;none;0;0;0;0;0;main
 main_class;jamuz/gui/DialogPlaylistOrder.java;jamuz/gui/DialogPlaylistOrderTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/DialogQRcode.java;jamuz/gui/DialogQRcodeTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/DialogStatSource.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/gui/DialogTag.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/gui/FramePlayerInfo.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/gui/DialogTag.java;jamuz/gui/DialogTagTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/gui/FramePlayerInfo.java;jamuz/gui/FramePlayerInfoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/ICallBackSelect.java;jamuz/gui/ICallBackSelectTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/ListCellRendererGenre.java;jamuz/gui/ListCellRendererGenreTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/ListModelPlayerQueue.java;jamuz/gui/ListModelPlayerQueueTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
@@ -281,7 +301,7 @@ main_class;jamuz/gui/swing/ProgressBar.java;jamuz/gui/swing/ProgressBarTest.java
 main_class;jamuz/gui/swing/ProgressCellRender.java;jamuz/gui/swing/ProgressCellRenderTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/swing/SortedListModel.java;jamuz/gui/swing/SortedListModelTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/swing/TableCellListener.java;jamuz/gui/swing/TableCellListenerTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/gui/swing/TableColumnModel.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/gui/swing/TableColumnModel.java;jamuz/gui/swing/TableColumnModelTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/swing/TableHorizontal.java;jamuz/gui/swing/TableHorizontalTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/swing/TableModel.java;jamuz/gui/swing/TableModelTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/swing/TableModelGeneric.java;jamuz/gui/swing/TableModelGenericTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
@@ -298,7 +318,7 @@ main_class;jamuz/process/book/DialogBookOption.java;jamuz/process/book/DialogBoo
 main_class;jamuz/process/book/IconBufferBook.java;jamuz/process/book/IconBufferBookTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/book/PanelBook.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/book/ProcessBook.java;jamuz/process/book/ProcessBookTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/process/book/TableModelBook.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/book/TableModelBook.java;jamuz/process/book/TableModelBookTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/book/TableRowFilterBook.java;jamuz/process/book/TableRowFilterBookTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/ActionResult.java;jamuz/process/check/ActionResultTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/ButtonCheck.java;jamuz/process/check/ButtonCheckTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
@@ -306,12 +326,12 @@ main_class;jamuz/process/check/CheckDisplay.java;;missing_test;none;0;0;0;0;0;ma
 main_class;jamuz/process/check/Cover.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/check/CoverMB.java;jamuz/process/check/CoverMBTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/DialogCheck.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/process/check/DialogCoverSelect.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/check/DialogCoverSelect.java;jamuz/process/check/DialogCoverSelectTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/DialogDuplicate.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/check/DialogDuplicateReplace.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/check/DialogScanner.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/check/DuplicateInfo.java;jamuz/process/check/DuplicateInfoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/process/check/FileInfoDisplay.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/check/FileInfoDisplay.java;jamuz/process/check/FileInfoDisplayTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/FileInfoDuplicateReplace.java;jamuz/process/check/FileInfoDuplicateReplaceTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/FolderInfo.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/check/FolderInfoResult.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
@@ -330,31 +350,31 @@ main_class;jamuz/process/check/PanelDuplicate.java;;missing_test;none;0;0;0;0;0;
 main_class;jamuz/process/check/PatternProcessor.java;jamuz/process/check/PatternProcessorTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/ProcessCheck.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/check/ReleaseLastFm.java;jamuz/process/check/ReleaseLastFmTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/process/check/ReleaseMB.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/check/ReleaseMB.java;jamuz/process/check/ReleaseMBTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/ReleaseMatch.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/process/check/ReplayGain.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/check/ReplayGain.java;jamuz/process/check/ReplayGainTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/TableModelCheck.java;jamuz/process/check/TableModelCheckTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/process/check/TableModelCheckTracks.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/check/TableModelCheckTracks.java;jamuz/process/check/TableModelCheckTracksTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/TableModelReplace.java;jamuz/process/check/TableModelReplaceTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/merge/ICallBackMerge.java;jamuz/process/merge/ICallBackMergeTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/merge/PanelMerge.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/merge/ProcessMerge.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/process/merge/StatSource.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/process/merge/StatSourceGuayadeque.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/merge/StatSource.java;jamuz/process/merge/StatSourceTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/process/merge/StatSourceGuayadeque.java;jamuz/process/merge/StatSourceGuayadequeTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/merge/StatSourceJaMuzRemote.java;jamuz/process/merge/StatSourceJaMuzRemoteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/merge/StatSourceKodi.java;jamuz/process/merge/StatSourceKodiTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/merge/StatSourceMediaMonkey.java;jamuz/process/merge/StatSourceMediaMonkeyTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/process/merge/StatSourceMixxx.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/merge/StatSourceMixxx.java;jamuz/process/merge/StatSourceMixxxTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/merge/StatSourceMyTunes.java;jamuz/process/merge/StatSourceMyTunesTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/sync/Device.java;jamuz/process/sync/DeviceTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/sync/ICallBackSync.java;jamuz/process/sync/ICallBackSyncTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/process/sync/PanelSync.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/process/sync/ProcessSync.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/sync/PanelSync.java;jamuz/process/sync/PanelSyncTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/process/sync/ProcessSync.java;jamuz/process/sync/ProcessSyncTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/sync/SyncStatus.java;jamuz/process/sync/SyncStatusTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/ButtonOpenVideo.java;jamuz/process/video/ButtonOpenVideoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/DbConnVideo.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/process/video/DialogVideoCleanup.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/process/video/DialogVideoCleanupConfirm.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/video/DialogVideoCleanup.java;jamuz/process/video/DialogVideoCleanupTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/process/video/DialogVideoCleanupConfirm.java;jamuz/process/video/DialogVideoCleanupConfirmTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/DialogVideoExport.java;jamuz/process/video/DialogVideoExportTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/DialogVideoOption.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/video/FileInfoVideo.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
@@ -365,21 +385,21 @@ main_class;jamuz/process/video/MyVideoAbstract.java;jamuz/process/video/MyVideoA
 main_class;jamuz/process/video/PanelVideo.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/video/ProcessVideo.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/video/TableCellRendererTooltip.java;jamuz/process/video/TableCellRendererTooltipTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/process/video/TableModelVideo.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/video/TableModelVideo.java;jamuz/process/video/TableModelVideoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/TableRowFilterVideo.java;jamuz/process/video/TableRowFilterVideoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/TheMovieDb.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/process/video/VideoAbstract.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/process/video/VideoMovie.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/video/VideoMovie.java;jamuz/process/video/VideoMovieTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/VideoRating.java;jamuz/process/video/VideoRatingTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/VideoTvShow.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/remote/ClientInfo.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/remote/ClientInfo.java;jamuz/remote/ClientInfoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/remote/DialogClientInfo.java;jamuz/remote/DialogClientInfoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/remote/ICallBackServer.java;jamuz/remote/ICallBackServerTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/remote/PanelRemote.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/remote/Server.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/remote/TableModelRemote.java;jamuz/remote/TableModelRemoteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/soulseek/DialogSlsk.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
-main_class;jamuz/soulseek/DialogSlskOption.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/soulseek/DialogSlskOption.java;jamuz/soulseek/DialogSlskOptionTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/soulseek/ICallBackSearch.java;jamuz/soulseek/ICallBackSearchTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/soulseek/PanelSlsk.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
 main_class;jamuz/soulseek/Slsk.java;jamuz/soulseek/SlskTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
