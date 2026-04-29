@@ -181,6 +181,26 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/process/merge/StatSourceMixxxTest.java` | JUnit5 source capability flags |
 | `jamuz/process/sync/PanelSyncTest.java` | JUnit5 class load contract |
 | `jamuz/process/sync/ProcessSyncTest.java` | JUnit5 constructor dependency contract |
+| `jamuz/soulseek/DialogSlskTest.java` | JUnit5 class load contract |
+| `jamuz/soulseek/SlskdDockerTest.java` | JUnit5 class load contract |
+| `jamuz/gui/PopupMenuTest.java` | JUnit5 class load contract |
+| `jamuz/player/JMPlayerTest.java` | JUnit5 class load contract |
+| `jamuz/process/check/MP3gainTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/FileInfoVideoTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/ProcessVideoTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/VideoTvShowTest.java` | JUnit5 inheritance contract |
+| `jamuz/process/check/CoverTest.java` | JUnit5 enum contract |
+| `jamuz/gui/DialogStatSourceTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/DialogVideoOptionTest.java` | JUnit5 class load contract |
+| `jamuz/process/merge/PanelMergeTest.java` | JUnit5 class load contract |
+| `jamuz/process/check/FolderInfoResultTest.java` | JUnit5 constructor contract |
+| `jamuz/remote/ServerTest.java` | JUnit5 class load contract |
+| `jamuz/JamuzTest.java` | JUnit5 class contract |
+| `jamuz/process/check/DialogDuplicateTest.java` | JUnit5 class load contract |
+| `jamuz/gui/DialogPlaylistFilterTest.java` | JUnit5 class load contract |
+| `jamuz/remote/PanelRemoteTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/TheMovieDbTest.java` | JUnit5 constructor shape contract |
+| `jamuz/process/check/PanelDuplicateTest.java` | JUnit5 class load contract |
 
 *Table last updated: 2026-04-29.*
 
