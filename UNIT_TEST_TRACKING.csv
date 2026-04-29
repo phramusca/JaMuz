@@ -130,6 +130,7 @@ test;jamuz/process/check/ButtonCheckTest.java;jamuz/process/check/ButtonCheck.ja
 test;jamuz/process/check/CheckDisplayTest.java;jamuz/process/check/CheckDisplay.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/CoverMBTest.java;jamuz/process/check/CoverMB.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/CoverTest.java;jamuz/process/check/Cover.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/DialogCheckTest.java;jamuz/process/check/DialogCheck.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/DialogCoverSelectTest.java;jamuz/process/check/DialogCoverSelect.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/DialogDuplicateReplaceTest.java;jamuz/process/check/DialogDuplicateReplace.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/DialogDuplicateTest.java;jamuz/process/check/DialogDuplicate.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -138,6 +139,7 @@ test;jamuz/process/check/DuplicateInfoTest.java;jamuz/process/check/DuplicateInf
 test;jamuz/process/check/FileInfoDisplayTest.java;jamuz/process/check/FileInfoDisplay.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/FileInfoDuplicateReplaceTest.java;jamuz/process/check/FileInfoDuplicateReplace.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/FolderInfoResultTest.java;jamuz/process/check/FolderInfoResult.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/FolderInfoTest.java;jamuz/process/check/FolderInfo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/ICallBackCheckPanelTest.java;jamuz/process/check/ICallBackCheckPanel.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/ICallBackCoverTest.java;jamuz/process/check/ICallBackCover.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/ICallBackDuplicateDialogTest.java;jamuz/process/check/ICallBackDuplicateDialog.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -365,7 +367,7 @@ main_class;jamuz/process/check/ButtonCheck.java;jamuz/process/check/ButtonCheckT
 main_class;jamuz/process/check/CheckDisplay.java;jamuz/process/check/CheckDisplayTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/Cover.java;jamuz/process/check/CoverTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/CoverMB.java;jamuz/process/check/CoverMBTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/process/check/DialogCheck.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/check/DialogCheck.java;jamuz/process/check/DialogCheckTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/DialogCoverSelect.java;jamuz/process/check/DialogCoverSelectTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/DialogDuplicate.java;jamuz/process/check/DialogDuplicateTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/DialogDuplicateReplace.java;jamuz/process/check/DialogDuplicateReplaceTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
@@ -373,7 +375,7 @@ main_class;jamuz/process/check/DialogScanner.java;jamuz/process/check/DialogScan
 main_class;jamuz/process/check/DuplicateInfo.java;jamuz/process/check/DuplicateInfoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/FileInfoDisplay.java;jamuz/process/check/FileInfoDisplayTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/FileInfoDuplicateReplace.java;jamuz/process/check/FileInfoDuplicateReplaceTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/process/check/FolderInfo.java;;missing_test;none;0;0;0;0;0;main_without_dedicated_test;Keep JUnit5 for new tests;Add dedicated JUnit5 test class
+main_class;jamuz/process/check/FolderInfo.java;jamuz/process/check/FolderInfoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/FolderInfoResult.java;jamuz/process/check/FolderInfoResultTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/ICallBackCheckPanel.java;jamuz/process/check/ICallBackCheckPanelTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/check/ICallBackCover.java;jamuz/process/check/ICallBackCoverTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant

@@ -221,6 +221,8 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/gui/PanelSelectTest.java` | JUnit5 class load contract |
 | `jamuz/gui/DialogOptionsTest.java` | JUnit5 class load contract |
 | `jamuz/gui/PanelMainTest.java` | JUnit5 class load contract |
+| `jamuz/process/check/DialogCheckTest.java` | JUnit5 class load contract |
+| `jamuz/process/check/FolderInfoTest.java` | JUnit5 class load contract |
 
 *Table last updated: 2026-04-29.*
 
