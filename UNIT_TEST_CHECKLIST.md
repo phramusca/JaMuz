@@ -201,6 +201,26 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/remote/PanelRemoteTest.java` | JUnit5 class load contract |
 | `jamuz/process/video/TheMovieDbTest.java` | JUnit5 constructor shape contract |
 | `jamuz/process/check/PanelDuplicateTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/DbConnVideoTest.java` | JUnit5 constructor contract |
+| `jamuz/process/check/DialogDuplicateReplaceTest.java` | JUnit5 class load contract |
+| `jamuz/process/check/DialogScannerTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/VideoAbstractTest.java` | JUnit5 nested status contract |
+| `jamuz/process/check/CheckDisplayTest.java` | JUnit5 class load contract |
+| `jamuz/process/check/ReleaseMatchTest.java` | JUnit5 nested track contract |
+| `jamuz/process/book/PanelBookTest.java` | JUnit5 class load contract |
+| `jamuz/player/MplayerTest.java` | JUnit5 class load contract |
+| `jamuz/soulseek/PanelSlskTest.java` | JUnit5 class load contract |
+| `jamuz/process/check/PanelCheckTest.java` | JUnit5 class load contract |
+| `jamuz/gui/PanelStatsTest.java` | JUnit5 class load contract |
+| `jamuz/process/check/ProcessCheckTest.java` | JUnit5 class load contract |
+| `jamuz/gui/PanelPlaylistsTest.java` | JUnit5 class load contract |
+| `jamuz/gui/PanelOptionsTest.java` | JUnit5 class load contract |
+| `jamuz/process/merge/ProcessMergeTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/PanelVideoTest.java` | JUnit5 class load contract |
+| `jamuz/PlaylistTest.java` | JUnit5 class load contract |
+| `jamuz/gui/PanelSelectTest.java` | JUnit5 class load contract |
+| `jamuz/gui/DialogOptionsTest.java` | JUnit5 class load contract |
+| `jamuz/gui/PanelMainTest.java` | JUnit5 class load contract |
 
 *Table last updated: 2026-04-29.*
 
