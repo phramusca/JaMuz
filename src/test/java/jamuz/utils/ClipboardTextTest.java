@@ -68,7 +68,6 @@ public class ClipboardTextTest {
 	 */
 	@Test
 	public void testLostOwnership() {
-		System.out.println("lostOwnership");
 		//Not used, no need to test
 	}
 
@@ -78,7 +77,6 @@ public class ClipboardTextTest {
 	 */
 	@Test
 	public void testClipboardContents() {
-		System.out.println("setClipboardContents");
 		String aString = "the beautiful text I'm sending, wouah !";
 		ClipboardText instance = new ClipboardText();
 		instance.setClipboardContents(aString);
@@ -91,7 +89,6 @@ public class ClipboardTextTest {
 	 */
 	@Test
 	public void testSetClipboardContents() {
-		System.out.println("setClipboardContents");
 		//Refer to testClipboardContents() above
 	}
 
@@ -100,7 +97,6 @@ public class ClipboardTextTest {
 	 */
 	@Test
 	public void testGetClipboardContents() {
-		System.out.println("getClipboardContents");
 		//Refer to testClipboardContents() above
 	}
 

@@ -67,7 +67,6 @@ public class SwingTest {
 	 */
 	@Test
 	public void testEnableComponents() {
-		System.out.println("enableComponents");
 //		Container container = null;
 //		boolean enable = false;
 //		Swing.enableComponents(container, enable);
@@ -79,7 +78,6 @@ public class SwingTest {
 	 */
 	@Test
 	public void testSelectFolder() {
-		System.out.println("selectFolder");
 //		String defaultFolder = "";
 //		String title = "";
 //		String expResult = "";
@@ -93,7 +91,6 @@ public class SwingTest {
 	 */
 	@Test
 	public void testSelectTab() {
-		System.out.println("selectTab");
 //		JTabbedPane tabbedPane = null;
 //		String title = "";
 //		Swing.selectTab(tabbedPane, title);
@@ -105,7 +102,6 @@ public class SwingTest {
 	 */
 	@Test
 	public void testSelectFile_String() {
-		System.out.println("selectFile");
 //		String defaultFile = "";
 //		String expResult = "";
 //		String result = Swing.selectFile(defaultFile);
@@ -118,7 +114,6 @@ public class SwingTest {
 	 */
 	@Test
 	public void testSelectFile_3args_1() {
-		System.out.println("selectFile");
 //		String defaultFile = "";
 //		Swing.FileType fileType = null;
 //		String title = "";
@@ -133,7 +128,6 @@ public class SwingTest {
 	 */
 	@Test
 	public void testSelectFile_3args_2() {
-		System.out.println("selectFile");
 //		String defaultFile = "";
 //		List<Swing.FileType> fileTypes = null;
 //		String title = "";

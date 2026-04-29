@@ -67,7 +67,6 @@ public class FtpTest {
 	 */
 	@Test
 	public void testSetLogger() {
-		System.out.println("setLogger");
 		//Nothing to test here
 	}
 
@@ -76,7 +75,6 @@ public class FtpTest {
 	 */
 	@Test
 	public void testGetFile() {
-		System.out.println("getFile");
 //		Ftp instance = null;
 //		boolean expResult = false;
 //		boolean result = instance.getFile();
@@ -89,7 +87,6 @@ public class FtpTest {
 	 */
 	@Test
 	public void testSendFile() {
-		System.out.println("sendFile");
 //		Ftp instance = null;
 //		boolean expResult = false;
 //		boolean result = instance.sendFile();

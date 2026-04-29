@@ -67,7 +67,6 @@ public class PopupTest {
 	 */
 	@Test
 	public void testSetLogger() {
-		System.out.println("setLogger");
 //		Logger logger = null;
 //		Popup.setLogger(logger);
 		//Cannot assert.
@@ -78,7 +77,6 @@ public class PopupTest {
 	 */
 	@Test
 	public void testInfo() {
-		System.out.println("info");
 //		String str = "Hello !";
 //		Popup.info(str);
 		//Cannot assert, manual test
@@ -89,7 +87,6 @@ public class PopupTest {
 	 */
 	@Test
 	public void testWarning() {
-		System.out.println("warning");
 //		String str = "";
 //		Popup.warning(str);
 		//Cannot assert, manual test
@@ -100,7 +97,6 @@ public class PopupTest {
 	 */
 	@Test
 	public void testError_String() {
-		System.out.println("error");
 //		String str = "";
 //		Popup.error(str);
 		//Cannot assert, manual test
@@ -111,7 +107,6 @@ public class PopupTest {
 	 */
 	@Test
 	public void testError_String_Exception() {
-		System.out.println("error");
 //		String str = "";
 //		Exception ex = null;
 //		Popup.error(str, ex);
@@ -123,7 +118,6 @@ public class PopupTest {
 	 */
 	@Test
 	public void testError_Exception() {
-		System.out.println("error");
 //		Exception ex = null;
 //		Popup.error(ex);
 		//Cannot assert, manual test
@@ -134,7 +128,6 @@ public class PopupTest {
 	 */
 	@Test
 	public void testError_3args() {
-		System.out.println("error");
 //		String methodName = "";
 //		String sql = "";
 //		Exception ex = null;

@@ -67,7 +67,6 @@ public class OSTest {
 	 */
 	@Test
 	public void testIsWindows() {
-		System.out.println("isWindows");
 //		boolean expResult = false;
 //		boolean result = OS.isWindows();
 //		assertEquals(expResult, result);
@@ -79,7 +78,6 @@ public class OSTest {
 	 */
 	@Test
 	public void testIsUnix() {
-		System.out.println("isUnix");
 //		boolean expResult = false;
 //		boolean result = OS.isUnix();
 //		assertEquals(expResult, result);
@@ -91,7 +89,6 @@ public class OSTest {
 	 */
 	@Test
 	public void testDetect() {
-		System.out.println("detect");
 //		boolean expResult = false;
 //		boolean result = OS.detect();
 //		assertEquals(expResult, result);
@@ -103,7 +100,6 @@ public class OSTest {
 	 */
 	@Test
 	public void testGetName() {
-//		System.out.println("getName");
 //		String expResult = "";
 //		String result = OS.getName();
 //		assertEquals(expResult, result);

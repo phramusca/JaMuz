@@ -90,7 +90,6 @@ public class FileSystemTest {
 	 */
 	@Test
 	public void testMoveFile() throws IOException {
-		System.out.println("moveFile");
 		// Given
 		File moveSource = new File(FilenameUtils.concat(TestSettings.getAppFolder(), "tempShouldBeDeleted.mp3"));
 		FileSystem.copyFile(source, moveSource);
@@ -118,8 +117,6 @@ public class FileSystemTest {
 	 */
 	@Test
 	public void testCopyFile() throws Exception {
-		System.out.println("copyFile");
-
 		// Given
 		assertTrue(source.exists());
 		assertTrue(source.length() == 961029);
@@ -176,7 +173,6 @@ public class FileSystemTest {
 	 */
 	@Test
 	public void testSize() {
-		System.out.println("size");
 		File file = new File(FilenameUtils.concat(TestSettings.getResourcesPath(), "audioFiles"));
 		long result = FileSystem.size(file.toPath());
 		assertEquals(7011134, result);

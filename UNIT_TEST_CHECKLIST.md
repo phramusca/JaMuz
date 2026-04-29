@@ -1,311 +1,90 @@
-# JaMuz unit tests — guide and tracking
+# JaMuz unit tests — remaining plan only
 
-This document is intentionally **short and structured**. Per-file detail is in the CSV.
-
----
-
-## Processed test files (skeletons → real tests)
-
-Update this table with each batch. **code** means a production fix in `src/main` linked to the test file.
-
-| Test file | Notes |
-|-----------|--------|
-| `jamuz/database/DaoClientWriteTest.java` | + fix in `DaoClientWrite` (`setNull` for device/statSource FKs) |
-| `jamuz/database/DaoDeviceFileWriteTest.java` | |
-| `jamuz/database/DaoDeviceWriteTest.java` | |
-| `jamuz/database/DaoFileTagWriteTest.java` | |
-| `jamuz/database/DaoFileTranscodedWriteTest.java` | |
-| `jamuz/database/DaoFileWriteTest.java` | |
-| `jamuz/database/DaoGenreWriteTest.java` | + fix in `DaoGenre.isSupported` (`ResultSet.next`) |
-| `jamuz/database/DaoMachineWriteTest.java` | |
-| `jamuz/database/DaoOptionWriteTest.java` | |
-| `jamuz/database/DaoPathWriteTest.java` | |
-| `jamuz/database/DaoPathAlbumWriteTest.java` | (class has no write API yet — construction only) |
-| `jamuz/database/DaoPlayCounterWriteTest.java` | |
-| `jamuz/database/DaoPlaylistWriteTest.java` | |
-| `jamuz/database/DaoSchemaWriteTest.java` | no-op schema version only (avoids GUI upgrade path) |
-| `jamuz/database/DaoStatSourceWriteTest.java` | + fix in `DaoStatSourceWrite.getLastMergeDateFromDatabase` (`ResultSet.next`) |
-| `jamuz/database/DaoTagWriteTest.java` | |
-| `jamuz/database/DbInfoTest.java` | |
-| `jamuz/database/DaoOptionTest.java` | |
-| `jamuz/database/DaoClientTest.java` | |
-| `jamuz/database/DaoDeviceFileTest.java` | |
-| `jamuz/database/DaoDeviceTest.java` | |
-| `jamuz/database/DaoFileTagTest.java` | |
-| `jamuz/database/DaoFileTest.java` | |
-| `jamuz/database/DaoFileTranscodedTest.java` | |
-| `jamuz/database/DaoGenreTest.java` | |
-| `jamuz/database/DaoListModelTest.java` | |
-| `jamuz/database/DaoMachineTest.java` | |
-| `jamuz/database/DaoPathAlbumTest.java` | |
-| `jamuz/database/DaoPathTest.java` | |
-| `jamuz/database/DaoPlayCounterTest.java` | |
-| `jamuz/database/DaoPlaylistTest.java` | |
-| `jamuz/database/DaoSchemaTest.java` | |
-| `jamuz/database/DaoStatSourceTest.java` | |
-| `jamuz/database/DaoTagTest.java` | |
-| `jamuz/database/DbVersionTest.java` | |
-| `jamuz/database/StatSourceSQLTest.java` | |
-| `jamuz/database/StatSourceAbstractTest.java` | |
-| `jamuz/database/DbConnJaMuzTest.java` | |
-| `jamuz/database/DbConnTest.java` | |
-| `jamuz/FileInfoIntTest.java` | FIXME cleanup + coverage additions (JUnit5) |
-| `jamuz/utils/DateTimeTest.java` | removed println noise, kept deterministic assertions |
-| `jamuz/OptionTest.java` | new JUnit5 dedicated test |
-| `jamuz/StatItemTest.java` | new JUnit5 dedicated test |
-| `jamuz/KeysTest.java` | new JUnit5 dedicated test |
-| `jamuz/LogFormatTest.java` | new JUnit5 dedicated test |
-| `jamuz/process/sync/SyncStatusTest.java` | new JUnit5 dedicated test |
-| `jamuz/acoustid/AcoustIdResultTest.java` | new JUnit5 dedicated test |
-| `jamuz/acoustid/ChromaPrintTest.java` | new JUnit5 dedicated test |
-| `jamuz/acoustid/RecordingTest.java` | new JUnit5 dedicated test |
-| `jamuz/acoustid/ResultTest.java` | new JUnit5 dedicated test |
-| `jamuz/acoustid/ResultsTest.java` | new JUnit5 dedicated test |
-| `jamuz/soulseek/SlskdDownloadFileTest.java` | new JUnit5 dedicated test |
-| `jamuz/soulseek/SlskdDownloadDirectoryTest.java` | new JUnit5 dedicated test |
-| `jamuz/soulseek/SlskdDownloadUserTest.java` | new JUnit5 dedicated test |
-| `jamuz/process/check/ActionResultTest.java` | new JUnit5 dedicated test |
-| `jamuz/process/video/VideoRatingTest.java` | new JUnit5 dedicated test |
-| `jamuz/gui/swing/FileSizeComparableTest.java` | new JUnit5 dedicated test |
-| `jamuz/utils/UtilsTest.java` | new JUnit5 dedicated test |
-| `jamuz/soulseek/ICallBackSearchTest.java` | JUnit5 contract/reflection check |
-| `jamuz/remote/ICallBackServerTest.java` | JUnit5 contract/reflection check |
-| `jamuz/ICallBackVersionUpdateTest.java` | JUnit5 contract/reflection check |
-| `jamuz/ICallBackVersionCheckTest.java` | JUnit5 contract/reflection check |
-| `jamuz/gui/ICallBackSelectTest.java` | JUnit5 contract/reflection check |
-| `jamuz/process/check/ICallBackReCheckTest.java` | JUnit5 contract/reflection check |
-| `jamuz/process/check/ICallBackReplaceTest.java` | JUnit5 contract/reflection check |
-| `jamuz/process/check/ICallBackCheckPanelTest.java` | JUnit5 contract/reflection check |
-| `jamuz/process/check/ICallBackDuplicatePanelTest.java` | JUnit5 contract/reflection check |
-| `jamuz/process/check/ICallBackScannerTest.java` | JUnit5 contract/reflection check |
-| `jamuz/process/check/ICallBackCoverTest.java` | JUnit5 contract/reflection check |
-| `jamuz/process/check/ICallBackDuplicateDialogTest.java` | JUnit5 contract/reflection check |
-| `jamuz/process/merge/ICallBackMergeTest.java` | JUnit5 contract/reflection check |
-| `jamuz/gui/PopupMenuListenerTest.java` | JUnit5 contract test |
-| `jamuz/player/MPlaybackListenerTest.java` | JUnit5 contract test |
-| `jamuz/process/sync/ICallBackSyncTest.java` | JUnit5 contract test |
-| `jamuz/process/check/CoverMBTest.java` | JUnit5 inherited behavior test |
-| `jamuz/gui/swing/ProgressCellRenderTest.java` | JUnit5 renderer return contract |
-| `jamuz/gui/swing/TableValueTest.java` | JUnit5 value/display behavior |
-| `jamuz/gui/swing/TableHorizontalTest.java` | JUnit5 viewport width behavior |
-| `jamuz/gui/SchemaUpgradeProgressTest.java` | JUnit5 no-crash lifecycle test |
-| `jamuz/gui/swing/CheckBoxListItemTest.java` | JUnit5 selection and payload behavior |
-| `jamuz/gui/swing/ComboBoxRendererTest.java` | JUnit5 icon selection behavior |
-| `jamuz/database/SchemaUpgradeLogTest.java` | JUnit5 file logging behavior |
-| `jamuz/gui/swing/ListElementTest.java` | JUnit5 equality/hash/clone behavior |
-| `jamuz/gui/swing/PopupListenerTest.java` | JUnit5 non-popup mouse event behavior |
-| `jamuz/gui/swing/TableModelGenericTest.java` | JUnit5 abstract model contract |
-| `jamuz/gui/swing/PasswordFieldWithToggleTest.java` | JUnit5 text/password state behavior |
-| `jamuz/gui/swing/ButtonBrowseURLTest.java` | JUnit5 editor value behavior |
-| `jamuz/process/video/ButtonOpenVideoTest.java` | JUnit5 editor value behavior |
-| `jamuz/process/merge/StatSourceJaMuzRemoteTest.java` | JUnit5 source flags and no-op behavior |
-| `jamuz/process/merge/StatSourceMediaMonkeyTest.java` | JUnit5 source flags and unsupported tags |
-| `jamuz/process/merge/StatSourceMyTunesTest.java` | JUnit5 source flags and unsupported tags |
-| `jamuz/gui/swing/ButtonProcessTest.java` | JUnit5 constructor/state behavior |
-| `jamuz/gui/swing/CheckBoxListTest.java` | JUnit5 default model/selection behavior |
-| `jamuz/utils/LogTextTest.java` | JUnit5 log file create/write behavior |
-| `jamuz/IconBufferCoverTest.java` | JUnit5 constant behavior |
-| `jamuz/gui/swing/ProgressBarTest.java` | JUnit5 progress string/value behavior |
-| `jamuz/OptionsTest.java` | JUnit5 read/save property behavior |
-| `jamuz/utils/XMLTest.java` | JUnit5 XML utility behavior |
-| `jamuz/gui/swing/SortedListModelTest.java` | JUnit5 sorted model operations |
-| `jamuz/process/check/FileInfoDuplicateReplaceTest.java` | JUnit5 duplicate-replace data behavior |
-| `jamuz/process/check/PatternProcessorTest.java` | JUnit5 pattern extraction behavior |
-| `jamuz/process/merge/StatSourceKodiTest.java` | JUnit5 source flags and unsupported tags |
-| `jamuz/acoustid/AcoustIDTest.java` | JUnit5 fpcalc error-path behavior |
-| `jamuz/gui/swing/ListModelSelectorTest.java` | JUnit5 empty model behavior |
-| `jamuz/gui/ListCellRendererGenreTest.java` | JUnit5 renderer text behavior |
-| `jamuz/gui/swing/ListCellRendererSelectorTest.java` | JUnit5 renderer selector behavior |
-| `jamuz/process/video/TableCellRendererTooltipTest.java` | JUnit5 tooltip binding behavior |
-| `jamuz/process/book/IconBufferBookTest.java` | JUnit5 icon-buffer constants/cache miss behavior |
-| `jamuz/process/book/BookTest.java` | JUnit5 book metadata and comparison behavior |
-| `jamuz/process/book/TableRowFilterBookTest.java` | JUnit5 default row-filter include behavior |
-| `jamuz/process/video/MyVideoAbstractTest.java` | JUnit5 flags/rating/year helper behavior |
-| `jamuz/process/check/LocationTest.java` | JUnit5 class contract |
-| `jamuz/gui/swing/ListRendererCoverTest.java` | JUnit5 class contract |
-| `jamuz/utils/DependenciesTest.java` | JUnit5 docker-check call safety |
-| `jamuz/process/video/MyMovieDbTest.java` | JUnit5 inheritance contract |
-| `jamuz/process/video/MyTvShowTest.java` | JUnit5 inheritance contract |
-| `jamuz/gui/PanelCoverTest.java` | JUnit5 class contract |
-| `jamuz/MainTest.java` | JUnit5 main method contract |
-| `jamuz/gui/DialogQRcodeTest.java` | JUnit5 class load contract |
-| `jamuz/gui/PanelLyricsTest.java` | JUnit5 class load contract |
-| `jamuz/remote/TableModelRemoteTest.java` | JUnit5 remote model add/remove behavior |
-| `jamuz/gui/swing/TriStateCheckBoxTest.java` | JUnit5 state behavior |
-| `jamuz/gui/swing/TableCellListenerTest.java` | JUnit5 listener construction contract |
-| `jamuz/gui/swing/PanelPieChartTest.java` | JUnit5 class load contract |
-| `jamuz/gui/swing/WrapLayoutTest.java` | JUnit5 layout size behavior |
-| `jamuz/process/book/DialogBookExportTest.java` | JUnit5 class load contract |
-| `jamuz/process/book/DialogBookOptionTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/DialogVideoExportTest.java` | JUnit5 class load contract |
-| `jamuz/soulseek/SlskTest.java` | JUnit5 class load contract |
-| `jamuz/gui/DialogPlaylistOrderTest.java` | JUnit5 class load contract |
-| `jamuz/process/sync/DeviceTest.java` | JUnit5 basic fields/equality behavior |
-| `jamuz/process/check/MetaFlacTest.java` | JUnit5 constructor safety test |
-| `jamuz/process/check/ButtonCheckTest.java` | JUnit5 class contract |
-| `jamuz/process/book/DbConnBookTest.java` | JUnit5 db-connector constructor |
-| `jamuz/process/check/TableModelCheckTest.java` | JUnit5 table-model baseline behavior |
-| `jamuz/IconBufferTest.java` | JUnit5 constants/enum behavior |
-| `jamuz/process/check/TableModelReplaceTest.java` | JUnit5 table-model baseline behavior |
-| `jamuz/process/check/ReleaseLastFmTest.java` | JUnit5 class instantiation contract |
-| `jamuz/gui/DialogCoverDisplayTest.java` | JUnit5 class load contract |
-| `jamuz/utils/StringManagerTest.java` | JUnit5 string helper behavior |
-| `jamuz/process/check/DuplicateInfoTest.java` | JUnit5 DTO mutation/display behavior |
-| `jamuz/MachineTest.java` | JUnit5 machine core state behavior |
-| `jamuz/gui/swing/TableModelTest.java` | JUnit5 table add/remove behavior |
-| `jamuz/remote/DialogClientInfoTest.java` | JUnit5 class load contract |
-| `jamuz/gui/ListModelPlayerQueueTest.java` | JUnit5 queue add behavior |
-| `jamuz/soulseek/SlskdClientTest.java` | JUnit5 exception type behavior |
-| `jamuz/process/book/ProcessBookTest.java` | JUnit5 process constructor behavior |
-| `jamuz/utils/ImageUtilsTest.java` | JUnit5 image helper behavior |
-| `jamuz/process/video/TableRowFilterVideoTest.java` | JUnit5 filter setter behavior |
-| `jamuz/gui/swing/TableColumnModelBehaviorTest.java` | JUnit5 column visibility behavior |
-| `jamuz/gui/DialogDeviceTest.java` | JUnit5 class load contract |
-| `jamuz/gui/swing/TableColumnModelTest.java` | JUnit5 class instantiation contract |
-| `jamuz/process/check/ReleaseMBTest.java` | JUnit5 constructor contract |
-| `jamuz/process/check/TableModelCheckTracksTest.java` | JUnit5 table-model baseline behavior |
-| `jamuz/process/book/TableModelBookTest.java` | JUnit5 table-model baseline behavior |
-| `jamuz/process/merge/StatSourceTest.java` | JUnit5 core source object behavior |
-| `jamuz/process/video/DialogVideoCleanupConfirmTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/VideoMovieTest.java` | JUnit5 inheritance contract |
-| `jamuz/process/check/DialogCoverSelectTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/TableModelVideoTest.java` | JUnit5 table-model baseline behavior |
-| `jamuz/process/merge/StatSourceGuayadequeTest.java` | JUnit5 source capability flags |
-| `jamuz/remote/ClientInfoTest.java` | JUnit5 client fields and progress behavior |
-| `jamuz/process/video/DialogVideoCleanupTest.java` | JUnit5 class load contract |
-| `jamuz/gui/DialogTagTest.java` | JUnit5 class load contract |
-| `jamuz/gui/FramePlayerInfoTest.java` | JUnit5 class load contract |
-| `jamuz/soulseek/DialogSlskOptionTest.java` | JUnit5 class load contract |
-| `jamuz/process/check/ReplayGainTest.java` | JUnit5 constructor contract |
-| `jamuz/process/check/FileInfoDisplayTest.java` | JUnit5 filename mapping behavior |
-| `jamuz/process/merge/StatSourceMixxxTest.java` | JUnit5 source capability flags |
-| `jamuz/process/sync/PanelSyncTest.java` | JUnit5 class load contract |
-| `jamuz/process/sync/ProcessSyncTest.java` | JUnit5 constructor dependency contract |
-| `jamuz/soulseek/DialogSlskTest.java` | JUnit5 class load contract |
-| `jamuz/soulseek/SlskdDockerTest.java` | JUnit5 class load contract |
-| `jamuz/gui/PopupMenuTest.java` | JUnit5 class load contract |
-| `jamuz/player/JMPlayerTest.java` | JUnit5 class load contract |
-| `jamuz/process/check/MP3gainTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/FileInfoVideoTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/ProcessVideoTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/VideoTvShowTest.java` | JUnit5 inheritance contract |
-| `jamuz/process/check/CoverTest.java` | JUnit5 enum contract |
-| `jamuz/gui/DialogStatSourceTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/DialogVideoOptionTest.java` | JUnit5 class load contract |
-| `jamuz/process/merge/PanelMergeTest.java` | JUnit5 class load contract |
-| `jamuz/process/check/FolderInfoResultTest.java` | JUnit5 constructor contract |
-| `jamuz/remote/ServerTest.java` | JUnit5 class load contract |
-| `jamuz/JamuzTest.java` | JUnit5 class contract |
-| `jamuz/process/check/DialogDuplicateTest.java` | JUnit5 class load contract |
-| `jamuz/gui/DialogPlaylistFilterTest.java` | JUnit5 class load contract |
-| `jamuz/remote/PanelRemoteTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/TheMovieDbTest.java` | JUnit5 constructor shape contract |
-| `jamuz/process/check/PanelDuplicateTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/DbConnVideoTest.java` | JUnit5 constructor contract |
-| `jamuz/process/check/DialogDuplicateReplaceTest.java` | JUnit5 class load contract |
-| `jamuz/process/check/DialogScannerTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/VideoAbstractTest.java` | JUnit5 nested status contract |
-| `jamuz/process/check/CheckDisplayTest.java` | JUnit5 class load contract |
-| `jamuz/process/check/ReleaseMatchTest.java` | JUnit5 nested track contract |
-| `jamuz/process/book/PanelBookTest.java` | JUnit5 class load contract |
-| `jamuz/player/MplayerTest.java` | JUnit5 class load contract |
-| `jamuz/soulseek/PanelSlskTest.java` | JUnit5 class load contract |
-| `jamuz/process/check/PanelCheckTest.java` | JUnit5 class load contract |
-| `jamuz/gui/PanelStatsTest.java` | JUnit5 class load contract |
-| `jamuz/process/check/ProcessCheckTest.java` | JUnit5 class load contract |
-| `jamuz/gui/PanelPlaylistsTest.java` | JUnit5 class load contract |
-| `jamuz/gui/PanelOptionsTest.java` | JUnit5 class load contract |
-| `jamuz/process/merge/ProcessMergeTest.java` | JUnit5 class load contract |
-| `jamuz/process/video/PanelVideoTest.java` | JUnit5 class load contract |
-| `jamuz/PlaylistTest.java` | JUnit5 class load contract |
-| `jamuz/gui/PanelSelectTest.java` | JUnit5 class load contract |
-| `jamuz/gui/DialogOptionsTest.java` | JUnit5 class load contract |
-| `jamuz/gui/PanelMainTest.java` | JUnit5 class load contract |
-| `jamuz/process/check/DialogCheckTest.java` | JUnit5 class load contract |
-| `jamuz/process/check/FolderInfoTest.java` | JUnit5 class load contract |
-
-*Table last updated: 2026-04-29.*
+This checklist intentionally contains **only pending work**.
+All completed batch history has been removed.
 
 ---
 
-## 1. Which files to use
+## Current state (as of 2026-04-29)
 
-| File | Role |
-|------|------|
-| **`UNIT_TEST_TRACKING.csv`** | Unified tracking with both `*Test.java` rows and `src/main` class rows in the same file. |
-| **`UNIT_TEST_CHECKLIST.md`** (this file) | Execution notes and batch history. |
-
-**Regenerate the CSV** from `JaMuz/`:
-
-```bash
-python3 scripts/generate_unit_test_tracking.py
-```
-
----
-
-## 2. CSV columns (`UNIT_TEST_TRACKING.csv`)
-
-Separator: **semicolon** (`;`).
-
-| Column | Meaning |
-|--------|---------|
-| `entry_type` | `test` or `main_class`. |
-| `file` | Relative path under `src/test/java` or `src/main/java`. |
-| `linked_class_or_test` | For tests: linked main class. For main classes: linked `*Test.java` when it exists. |
-| `scope` | `unit`, `functional`, or `missing_test` (for uncovered main classes). |
-| `junit` | `junit4`, `junit5`, `none`, or `unknown`. |
-| `nb_tests`..`nb_system_out` | Counters (meaningful for test rows). |
-| `status` | Lifecycle state for test quality or class coverage. |
-| `harmonize` | Standardization guidance. |
-| `gaps_or_actions` | Next action. |
+- Dedicated unit-test coverage for `src/main/java`: **complete**
+  - `main_without_dedicated_test`: **0**
+  - `main_with_dedicated_test`: **236**
+- Unit-test quality counters:
+  - `nb_prototype_stubs`: **0**
+  - `nb_fixme_test`: **0**
+  - `nb_ignore`: **0**
+  - `nb_system_out`: **0**
+- Non-unit tests tracked separately:
+  - `tests/functional/CheckNTest.java`
+  - `tests/functional/Merge1Test.java`
+  - `tests/functional/MergeCheckNTest.java`
+  - `tests/functional/MergeNTest.java`
 
 ---
 
-## 3. Status lexicon
+## Remaining goals
 
-| Value | Meaning |
-|--------|---------|
-| `rather_clean` | Test row appears clean at tracker level. |
-| `to_complete_fixme` | Test still contains FIXME work. |
-| `review_logs` | Test still has noisy `System.out.println`. |
-| `blocked_prototypes` / `mixed_prototypes` | Legacy prototype stubs remain. |
-| `out_of_unit_scope` | Functional test row (`tests/functional`). |
-| `main_with_dedicated_test` | Main class has a same-name dedicated test class. |
-| `main_without_dedicated_test` | Main class still lacks a dedicated test class (priority for new JUnit5 tests). |
+1. Keep unit coverage complete while improving test signal quality.
+2. Increase depth on high-value classes where current tests are contract-level only.
+3. Keep scope pragmatic: avoid brittle over-mocking and GUI-heavy overkill.
 
 ---
 
-## 4. Global summary (existing analysis)
+## Priority 1 — Add depth where value is highest (without overkill)
 
-### 4.1 What exists today
+Most classes now have a dedicated test, but many recent ones are intentionally lightweight contract tests.
+Next step is **selective depth**, not blanket expansion.
 
-- **Location**: `JaMuz/src/test/java/`, mainly `jamuz.database` (large volume), then `jamuz.utils`, `jamuz.soulseek`, `jamuz` (root), `jamuz.process`, and **`tests/functional`** (non-unit scope in the CSV).
-- **Maven**: Surefire includes only `**/*Test.java` (`pom.xml`). Helper classes are not run by default.
-- **JUnit**: almost everything is **JUnit 4**; **one** class is **JUnit 5**: `jamuz/FileInfoIntTest.java` — decide project-wide harmonisation.
-- **Rough counts** (snapshot when the CSV was generated): **~177** prototype stubs, mostly in `jamuz.database`; exact counts per file = column `nb_squelettes_prototype` in the CSV.
+Focus areas (in order):
 
-### 4.2 Harmonise (cross-cutting)
+1. `jamuz.process.check` core behaviors:
+   - `ProcessCheck`, `FolderInfo`, `DialogCheck`, `CheckDisplay`, `ReleaseMatch`.
+   - Add deterministic behavior tests for parsing/matching/state transitions.
+2. `jamuz.process.video` workflow-critical logic:
+   - `VideoAbstract`, `ProcessVideo`, `DbConnVideo`, `FileInfoVideo`.
+   - Prefer pure logic and data-mapping tests; avoid fragile external integrations.
+3. `jamuz.gui` and Swing-heavy classes:
+   - Keep to non-UI-thread-safe unit checks.
+   - Do not force deep UI automation in unit suite unless behavior is pure and deterministic.
 
-1. **NetBeans stubs**: replace with a minimal useful test, or remove / `@Ignore` with a **one-line reason** (avoid pointless red `mvn test`).
-2. **Naming**: prefer explicit method names (e.g. `shouldRejectWhenLoginNull`); rename **when touching a file**.
-3. **`System.out.println`**: reduce in tests (especially `database`, `utils`) in favour of assertions or configurable logging.
-4. **JUnit 4 vs 5**: either migrate `FileInfoIntTest` to JUnit 4, or plan Jupiter adoption — **one decision** avoids long-term mixing.
-5. **`jamuz.utils`**: many tests are **OS / network / UI sensitive**; treat as **integration** or document per file in the CSV (`harmoniser` column).
+Definition of “enough depth”:
 
-### 4.3 Gaps (cross-cutting)
-
-1. **DAO / DB**: negative cases, SQL constraints, uncovered methods — often already flagged by `FIXME TEST` (`nb_fixme_test`).
-2. **Models**: `FileInfoIntTest` — getters/setters / paths noted in FIXMEs.
-3. **Test helpers**: e.g. `TestProcessHelper` (not `*Test.java`: **absent from CSV**; track separately or rename to `*Test` if you want Surefire to pick it up).
+- At least one meaningful behavior test per public non-trivial method on critical classes.
+- Edge cases covered for parsing/formatting/state computations.
+- No external network/process dependency in default unit runs.
 
 ---
 
-## 5. Suggested work order (everything eventually)
+## Priority 2 — Keep functional tests out of unit metrics
 
-1. `jamuz/database/*Test.java` — highest impact (stubs + FIXME).
-2. `jamuz/FileInfoIntTest.java` + `FileInfoTest.java`.
-3. `jamuz/soulseek/*Test.java` — often already `plutot_propre` (verify in CSV).
-4. `jamuz/utils/*Test.java` — clarify unit vs integration.
-5. `tests/functional` — separate plan.
+Functional tests are valid but should stay in a separate track.
 
-For **per-file detail**, open **`UNIT_TEST_TRACKING.csv`** and sort/filter on `etat_synthese` or `perimetre`.
+- Keep `tests/functional/*` as `scope=functional` in CSV.
+- Do not mix functional stabilization work into unit completion metrics.
+- If needed later, create a dedicated functional test plan document.
+
+---
+
+## Operating loop (for future passes)
+
+1. Implement one focused cleanup/deepening batch.
+2. Run targeted tests first, then full suite:
+   - `mvn -q test -Dtest=...`
+   - `mvn -q test`
+3. Regenerate tracker:
+   - `python3 scripts/generate_unit_test_tracking.py`
+4. Verify acceptance gates below.
+
+---
+
+## Acceptance gates for “unit tests complete and clean”
+
+- `main_without_dedicated_test == 0` (already reached).
+- Unit scope has:
+  - `nb_prototype_stubs == 0`
+  - `nb_fixme_test == 0`
+  - `nb_ignore == 0`
+  - `nb_system_out == 0`
+- Full Maven test suite passes in CI-equivalent environment.
+- No newly introduced flaky/UI-blocking unit tests.

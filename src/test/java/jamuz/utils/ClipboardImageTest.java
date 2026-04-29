@@ -67,7 +67,6 @@ public class ClipboardImageTest {
 	 */
 	@Test
 	public void testGetImageFromClipboard() {
-		System.out.println("getImageFromClipboard");
 //		Image expResult = null;
 //		Image result = ClipboardImage.getImageFromClipboard();
 //		assertEquals(expResult, result);

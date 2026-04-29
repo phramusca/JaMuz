@@ -69,7 +69,6 @@ public class IconBufferVideoTest {
 	 */
 	@Test
 	public void testGetCoverIcon() {
-		System.out.println("getCoverIcon");
 		String url = "http://thetvdb.com/banners/posters/273181-9.jpg";
 //		Redirects to url=		 "https://www.thetvdb.com/banners/posters/273181-9.jpg";
 		boolean readIfNotFound = true;

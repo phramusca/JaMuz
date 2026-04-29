@@ -68,7 +68,6 @@ public class EncryptionTest {
 	 */
 	@Test
 	public void testEncryptDecrypt() {
-		System.out.println("encrypt & decrypt");
 		String Data = "Oh the beautifull message I want to encrypt";
 		String secret = "Shush, don't tell my secret to anyone";
 		String encryptedData = Encryption.encrypt(Data, secret);
@@ -81,7 +80,6 @@ public class EncryptionTest {
 	 */
 	@Test
 	public void testEncrypt() {
-		System.out.println("encrypt");
 		//Refer to testEncryptDecrypt() above
 	}
 
@@ -90,7 +88,6 @@ public class EncryptionTest {
 	 */
 	@Test
 	public void testDecrypt() {
-		System.out.println("decrypt");
 		//Refer to testEncryptDecrypt() above
 	}
 

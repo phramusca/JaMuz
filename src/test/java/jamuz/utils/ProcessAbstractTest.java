@@ -52,7 +52,6 @@ public class ProcessAbstractTest {
 	 */
 	@Test
 	public void testAbort() {
-		System.out.println("abort");
 //		ProcessAbstract instance = null;
 //		instance.abort();
 		//Cannot assert.
@@ -63,7 +62,6 @@ public class ProcessAbstractTest {
 	 */
 	@Test
 	public void testResetAbort() {
-		System.out.println("resetAbort");
 //		ProcessAbstract instance = null;
 //		instance.resetAbort();
 		//Cannot assert.
@@ -74,7 +72,6 @@ public class ProcessAbstractTest {
 	 */
 	@Test
 	public void testCheckAbort() throws Exception {
-		System.out.println("checkAbort");
 //		ProcessAbstract instance = null;
 //		instance.checkAbort();
 		//Cannot assert.

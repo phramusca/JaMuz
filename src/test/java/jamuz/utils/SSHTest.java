@@ -67,7 +67,6 @@ public class SSHTest {
 	 */
 	@Test
 	public void testConnect() {
-		System.out.println("connect");
 		SSH instance = null;
 //		boolean expResult = false;
 //		boolean result = instance.connect();
@@ -80,7 +79,6 @@ public class SSHTest {
 	 */
 	@Test
 	public void testIsConnected() {
-		System.out.println("isConnected");
 //		SSH instance = null;
 //		boolean expResult = false;
 //		boolean result = instance.isConnected();
@@ -93,7 +91,6 @@ public class SSHTest {
 	 */
 	@Test
 	public void testDisconnect() {
-		System.out.println("disconnect");
 //		SSH instance = null;
 //		instance.disconnect();
 		// Hard to test SSH. Simple jsch wrapper. Manually validated
@@ -104,7 +101,6 @@ public class SSHTest {
 	 */
 	@Test
 	public void testMoveFile() {
-		System.out.println("moveFile");
 //		String source = "";
 //		String destination = "";
 //		SSH instance = null;
@@ -119,7 +115,6 @@ public class SSHTest {
 	 */
 	@Test
 	public void testSendAndReceive() {
-		System.out.println("sendAndReceive");
 //		String myCmd = "";
 //		StringBuilder result_2 = null;
 //		SSH instance = null;

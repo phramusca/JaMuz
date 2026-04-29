@@ -67,7 +67,6 @@ public class InterTest {
 	 */
 	@Test
 	public void testGet() {
-		System.out.println("get");
 //		String key = "";
 //		String expResult = "";
 //		String result = Inter.get(key);

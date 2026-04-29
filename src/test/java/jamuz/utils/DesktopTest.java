@@ -67,7 +67,6 @@ public class DesktopTest {
 	 */
 	@Test
 	public void testOpenBrowser() {
-		System.out.println("openBrowser");
 //		String url = "https://phramusca.github.io/JaMuz/";
 //		Desktop.openBrowser(url);
 		//Cannot assert, only manual test
@@ -78,7 +77,6 @@ public class DesktopTest {
 	 */
 	@Test
 	public void testOpenFile() {
-		System.out.println("openFile");
 //		String path = "";
 //		Desktop.openFile(path);
 		//Cannot assert, only manual test
@@ -89,7 +87,6 @@ public class DesktopTest {
 	 */
 	@Test
 	public void testOpenFolder() {
-		System.out.println("openFolder");
 //		String path = "";
 //		Desktop.openFolder(path);
 		//Cannot assert, only manual test

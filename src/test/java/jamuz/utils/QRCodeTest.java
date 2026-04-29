@@ -67,7 +67,6 @@ public class QRCodeTest {
 	 */
 	@Test
 	public void testCreate_3args() {
-		System.out.println("create");
 //		String url = "";
 //		String path = "";
 //		String extension = "";
@@ -80,7 +79,6 @@ public class QRCodeTest {
 	 */
 	@Test
 	public void testCreate_String_int() {
-		System.out.println("create");
 //		String myCodeText = "";
 //		int size = 0;
 //		BufferedImage expResult = null;
