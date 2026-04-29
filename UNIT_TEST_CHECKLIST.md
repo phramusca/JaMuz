@@ -121,6 +121,26 @@ Update this table with each batch. **code** means a production fix in `src/main`
 | `jamuz/process/book/BookTest.java` | JUnit5 book metadata and comparison behavior |
 | `jamuz/process/book/TableRowFilterBookTest.java` | JUnit5 default row-filter include behavior |
 | `jamuz/process/video/MyVideoAbstractTest.java` | JUnit5 flags/rating/year helper behavior |
+| `jamuz/process/check/LocationTest.java` | JUnit5 class contract |
+| `jamuz/gui/swing/ListRendererCoverTest.java` | JUnit5 class contract |
+| `jamuz/utils/DependenciesTest.java` | JUnit5 docker-check call safety |
+| `jamuz/process/video/MyMovieDbTest.java` | JUnit5 inheritance contract |
+| `jamuz/process/video/MyTvShowTest.java` | JUnit5 inheritance contract |
+| `jamuz/gui/PanelCoverTest.java` | JUnit5 class contract |
+| `jamuz/MainTest.java` | JUnit5 main method contract |
+| `jamuz/gui/DialogQRcodeTest.java` | JUnit5 class load contract |
+| `jamuz/gui/PanelLyricsTest.java` | JUnit5 class load contract |
+| `jamuz/remote/TableModelRemoteTest.java` | JUnit5 remote model add/remove behavior |
+| `jamuz/gui/swing/TriStateCheckBoxTest.java` | JUnit5 state behavior |
+| `jamuz/gui/swing/TableCellListenerTest.java` | JUnit5 listener construction contract |
+| `jamuz/gui/swing/PanelPieChartTest.java` | JUnit5 class load contract |
+| `jamuz/gui/swing/WrapLayoutTest.java` | JUnit5 layout size behavior |
+| `jamuz/process/book/DialogBookExportTest.java` | JUnit5 class load contract |
+| `jamuz/process/book/DialogBookOptionTest.java` | JUnit5 class load contract |
+| `jamuz/process/video/DialogVideoExportTest.java` | JUnit5 class load contract |
+| `jamuz/soulseek/SlskTest.java` | JUnit5 class load contract |
+| `jamuz/gui/DialogPlaylistOrderTest.java` | JUnit5 class load contract |
+| `jamuz/process/sync/DeviceTest.java` | JUnit5 basic fields/equality behavior |
 
 *Table last updated: 2026-04-28 (late night).*
 
