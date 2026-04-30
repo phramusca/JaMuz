@@ -15,6 +15,14 @@ class ResultsTest {
     }
 
     @Test
+    void shouldReturnNullWhenStatusOkButNoResults() {
+        Results results = new Results();
+        results.status = "ok";
+        results.results = new java.util.ArrayList<>();
+        assertNull(results.getBest(), "getBest() with ok status but empty results should be null");
+    }
+
+    @Test
     void shouldExposeChromaprint() {
         Results results = new Results();
         results.chromaprint = new ChromaPrint("c", "10");

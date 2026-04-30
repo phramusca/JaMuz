@@ -6,7 +6,7 @@ test;tests/functional/MergeNTest.java;tests/functional/MergeN.java;functional;ju
 test;jamuz/AppVersionCheckTest.java;jamuz/AppVersionCheck.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/AppVersionTest.java;jamuz/AppVersion.java;unit;junit4;12;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/FileInfoIntTest.java;jamuz/FileInfoInt.java;unit;junit5;37;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/FileInfoTest.java;jamuz/FileInfo.java;unit;junit4;8;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/FileInfoTest.java;jamuz/FileInfo.java;unit;junit5;17;0;0;0;0;clean;—;setPath decomposition, ext lowercased, setExt, setFilename, compareTo, equalsStats (same/rating/playCounter/genre)
 test;jamuz/ICallBackVersionCheckTest.java;jamuz/ICallBackVersionCheck.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/ICallBackVersionUpdateTest.java;jamuz/ICallBackVersionUpdate.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/IconBufferCoverTest.java;jamuz/IconBufferCover.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -25,7 +25,7 @@ test;jamuz/acoustid/AcoustIdResultTest.java;jamuz/acoustid/AcoustIdResult.java;u
 test;jamuz/acoustid/ChromaPrintTest.java;jamuz/acoustid/ChromaPrint.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/acoustid/RecordingTest.java;jamuz/acoustid/Recording.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/acoustid/ResultTest.java;jamuz/acoustid/Result.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/acoustid/ResultsTest.java;jamuz/acoustid/Results.java;unit;junit5;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/acoustid/ResultsTest.java;jamuz/acoustid/Results.java;unit;junit5;3;0;0;0;0;clean;—;getBest: error status→null, ok+empty→null, chromaprint getter
 test;jamuz/database/DaoClientTest.java;jamuz/database/DaoClient.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/database/DaoClientWriteTest.java;jamuz/database/DaoClientWrite.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/database/DaoDeviceFileTest.java;jamuz/database/DaoDeviceFile.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review

@@ -57,13 +57,22 @@ Next step is **selective depth**, not blanket expansion.
 - **`VideoAbstract.Status`** — 5 tests: initial state, `set()` message content, separator
   accumulation, multiple-set chaining.
 
+### Done (2026-04-30, batch 3)
+
+- **`FileInfo`** — 17 tests (JUnit4→JUnit5): `setPath` path decomposition (components, ext lowercased,
+  no-ext), `setExt`, `setFilename` rebuild, `compareTo` alphabetical sort, `equalsStats`
+  (same/rating/playCounter/genre).  
+  Note: the file was JUnit4 (not run in full suite) — converted to JUnit5 as part of this batch.
+- **`Results`** — 3 tests: added `getBest()` with `status="ok"` but empty results → null
+  (previously only tested error status and chromaprint getter).
+
 ### Remaining focus areas
 
-1. `jamuz.process.check` — still to deepen:
-   - `ProcessCheck`, `FolderInfo` (DB-heavy; skip or use in-memory SQLite), `CheckDisplay` (Swing-wired; keep contract only).
-2. `jamuz.process.video` — still to deepen:
-   - `DbConnVideo` (needs in-memory DB).
-3. Other `rather_clean` utility classes with untested logic (scan CSV for `nb_tests == 1`).
+1. Other `junit4`-tagged tests in CSV: not executed by the full suite (no `junit-vintage-engine`).
+   - Consider converting high-value JUnit4 test files to JUnit5 for actual execution.
+2. `jamuz.process.check` / `jamuz.process.video` DB-heavy classes: skip unless in-memory SQLite
+   feasible without major effort.
+3. Contract-only classes (`CheckDisplay`, Swing panels): intentionally kept lightweight.
 
 Definition of “enough depth”:
 
