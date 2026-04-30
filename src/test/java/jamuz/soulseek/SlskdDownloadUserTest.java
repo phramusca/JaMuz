@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SlskdDownloadUserTest {
 
     @Test
-    void shouldStoreUsernameAndDirectories() {
+    void fields_canBeSetAndRead() {
         SlskdDownloadDirectory dir = new SlskdDownloadDirectory();
         dir.directory = "/share";
 
@@ -17,5 +17,11 @@ class SlskdDownloadUserTest {
 
         assertEquals("alice", user.username);
         assertEquals("/share", user.directories.get(0).directory);
+    }
+
+    @Test
+    void directories_defaultIsNull() {
+        SlskdDownloadUser user = new SlskdDownloadUser();
+        assertNull(user.directories);
     }
 }

@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SlskdDownloadDirectoryTest {
 
     @Test
-    void shouldStoreDirectoryFields() {
+    void fields_canBeSetAndRead() {
         SlskdDownloadFile file = new SlskdDownloadFile();
         file.filename = "a.mp3";
 
@@ -19,5 +19,11 @@ class SlskdDownloadDirectoryTest {
         assertEquals("/music", dir.directory);
         assertEquals(1, dir.fileCount);
         assertEquals("a.mp3", dir.files.get(0).filename);
+    }
+
+    @Test
+    void fileCount_defaultIsZero() {
+        SlskdDownloadDirectory dir = new SlskdDownloadDirectory();
+        assertEquals(0, dir.fileCount);
     }
 }
