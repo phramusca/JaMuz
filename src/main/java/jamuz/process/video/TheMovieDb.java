@@ -16,6 +16,8 @@
  */
 package jamuz.process.video;
 
+import java.util.logging.Level;
+
 import info.movito.themoviedbapi.TmdbAccount;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbAuthentication;
@@ -316,7 +318,7 @@ public class TheMovieDb {
     }
     
 	private void popup(ResponseStatusException ex) {
-		Popup.error("Code "+ex.getResponseStatus().getStatusCode()+": "+ex.getResponseStatus().getStatusMessage());
+		Jamuz.getLogger().log(Level.SEVERE, "Code "+ex.getResponseStatus().getStatusCode()+": "+ex.getResponseStatus().getStatusMessage());
 	}
 	
     private Map<Integer, TvSeries> getWatchListTv() {

@@ -112,7 +112,7 @@ public class Slsk {
 
             return groupedResponses;
         } catch (IOException | SlskdClient.ServerException ex) {
-            Popup.error("search " + query, ex);
+            Jamuz.getLogger().log(Level.SEVERE, "search " + query, ex);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
             Logger.getLogger(Slsk.class.getName()).log(Level.WARNING, null, ex);
@@ -133,7 +133,7 @@ public class Slsk {
         try {
             return slskdClient.postDownloads(searchResponse);
         } catch (IOException | SlskdClient.ServerException ex) {
-            Popup.error("download " + searchResponse.getSearchText(), ex);
+            Jamuz.getLogger().log(Level.SEVERE, "download " + searchResponse.getSearchText(), ex);
         }
         return false;
     }
@@ -142,7 +142,7 @@ public class Slsk {
         try {
             return slskdClient.deleteDirectory(base64subDir);
         } catch (IOException ex) {
-            Popup.error("deleteDirectory " + base64subDir, ex);
+            Jamuz.getLogger().log(Level.SEVERE, "deleteDirectory " + base64subDir, ex);
         }
         return false;
     }
@@ -151,7 +151,7 @@ public class Slsk {
         try {
             return slskdClient.deleteTransfer(downloadFile.username, downloadFile.id);
         } catch (IOException ex) {
-            Popup.error("deleteTransfer " + downloadFile.filename, ex);
+            Jamuz.getLogger().log(Level.SEVERE, "deleteTransfer " + downloadFile.filename, ex);
         }
         return false;
     }
@@ -160,7 +160,7 @@ public class Slsk {
         try {
             return slskdClient.deleteTransfer(username, downloadFile.id);
         } catch (IOException ex) {
-            Popup.error("deleteTransfer " + username + ", " + downloadFile.filename, ex);
+            Jamuz.getLogger().log(Level.SEVERE, "deleteTransfer " + username + ", " + downloadFile.filename, ex);
         }
         return false;
     }
@@ -169,7 +169,7 @@ public class Slsk {
         try {
             return deleteFilename(downloadFile.filename, false);
         } catch (IOException ex) {
-            Popup.error("deleteFile " + downloadFile.filename, ex);
+            Jamuz.getLogger().log(Level.SEVERE, "deleteFile " + downloadFile.filename, ex);
         }
         return false;
     }
@@ -178,7 +178,7 @@ public class Slsk {
         try {
             return deleteFilename(searchFile.filename, searchFile.percentComplete < 100);
         } catch (IOException ex) {
-            Popup.error("deleteFile " + searchFile.filename, ex);
+            Jamuz.getLogger().log(Level.SEVERE, "deleteFile " + searchFile.filename, ex);
         }
         return false;
     }

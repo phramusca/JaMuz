@@ -17,6 +17,8 @@
 
 package jamuz.process.check;
 
+import java.util.logging.Level;
+
 import jamuz.Jamuz;
 import jamuz.utils.OS;
 import jamuz.utils.Popup;
@@ -89,12 +91,12 @@ public class MetaFlac {
 				process.waitFor();
 				return true;
 			} catch (IOException | InterruptedException ex) {
-				Popup.error(ex);
+				Jamuz.getLogger().log(Level.SEVERE, null, ex);
 				return false;
 			}
 		}
 		else {
-			Popup.error("No files found for metaflac in \""+path+"\"");  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "No files found for metaflac in \""+path+"\"");  //NOI18N
 			return false;
 		}
 	}

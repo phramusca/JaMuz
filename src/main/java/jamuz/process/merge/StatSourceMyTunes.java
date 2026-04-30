@@ -26,6 +26,9 @@
 
 package jamuz.process.merge;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 import jamuz.database.DbInfo;
 import jamuz.FileInfo;
 import jamuz.database.StatSourceSQL;
@@ -72,7 +75,7 @@ public class StatSourceMyTunes extends StatSourceSQL {
              return true;
         } catch (SQLException ex) {
             //Proper error handling. We should not have such an error unless above code changes
-            Popup.error("StatSourceMyTunes, setUp", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "StatSourceMyTunes, setUp", ex);   //NOI18N
             return false;
         }
     }

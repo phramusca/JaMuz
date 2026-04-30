@@ -17,6 +17,8 @@
 
 package jamuz.process.book;
 
+import java.util.logging.Level;
+
 import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.utils.FileSystem;
@@ -70,10 +72,10 @@ public class ProcessBook extends ProcessAbstract {
             try {
                 exportFiles();
             } catch (InterruptedException ex) {
-                Popup.error(Inter.get("Msg.Process.Aborted"), ex); //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, Inter.get("Msg.Process.Aborted"), ex); //NOI18N
             }
             finally {
-				Popup.info("Export book complete");
+				Jamuz.getLogger().log(Level.INFO, "Export book complete");
                 PanelBook.progressBar.reset();
                 PanelBook.enableProcess(true);
             }
@@ -91,7 +93,7 @@ public class ProcessBook extends ProcessAbstract {
 		
 		//The following should never happen as it is checked in PanelBook already
 		if(filestoExport.size()<=0) {
-			Popup.warning("You should select some files to export first");
+			Jamuz.getLogger().log(Level.WARNING, "You should select some files to export first");
 			return false;
 		}
 		
@@ -144,7 +146,7 @@ public class ProcessBook extends ProcessAbstract {
             try {
                 listDbfiles(getDb);
             } catch (InterruptedException ex) {
-                Popup.error(Inter.get("Msg.Process.Aborted"), ex); //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, Inter.get("Msg.Process.Aborted"), ex); //NOI18N
             }
             finally {
                 PanelBook.progressBar.reset();

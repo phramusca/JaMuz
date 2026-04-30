@@ -17,6 +17,8 @@
 
 package jamuz.process.book;
 
+import java.util.logging.Level;
+
 import jamuz.database.DbConn;
 import jamuz.database.DbInfo;
 import jamuz.Jamuz;
@@ -102,7 +104,7 @@ public class DbConnBook extends DbConn {
 			}
 			return true;
 		} catch (SQLException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
         finally {
@@ -140,7 +142,7 @@ public class DbConnBook extends DbConn {
 //				return false;
 //			}
 //		} catch (SQLException ex) {
-//			Popup.error("updateFile("+idFile+", "+newFilename+")", ex);  //NOI18N
+//			Jamuz.getLogger().log(Level.SEVERE, "updateFile("+idFile+", "+newFilename+")", ex);  //NOI18N
 //			return false;
 //		}
 //	}

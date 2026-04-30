@@ -799,7 +799,7 @@ public class ProcessCheck {
             try {
                 folder.analyse(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
             } catch (CloneNotSupportedException ex) {
-                Popup.error(ex);
+                Jamuz.getLogger().log(Level.SEVERE, null, ex);
             }
             folder.action=Action.ANALYZING;
             this.checkAbort();

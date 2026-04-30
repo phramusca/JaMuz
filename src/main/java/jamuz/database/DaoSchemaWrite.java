@@ -103,7 +103,7 @@ public class DaoSchemaWrite {
         synchronized (dbConn) {
             SchemaUpgradeProgress ui = SchemaUpgradeProgress.showOnEdt();
             try {
-                Popup.info(MessageFormat.format(Inter.get("SchemaUpgrade.Prompt"), oldVersion, newVersion));
+                Jamuz.getLogger().log(Level.INFO, MessageFormat.format(Inter.get("SchemaUpgrade.Prompt"), oldVersion, newVersion));
                 SchemaUpgradeLog.line("Upgrade confirmed: " + oldVersion + " -> " + newVersion);
 
                 ui.setMessage(Inter.get("SchemaUpgrade.Status.Backup"));
@@ -124,7 +124,7 @@ public class DaoSchemaWrite {
                     }
                     if (!updateSchemaToNewVersion(nextVersion)) {
                         SchemaUpgradeLog.line("updateSchemaToNewVersion failed for " + nextVersion);
-                        Popup.error(Inter.get("SchemaUpgrade.FailedSeeLog"));
+                        Jamuz.getLogger().log(Level.SEVERE, Inter.get("SchemaUpgrade.FailedSeeLog"));
                         return false;
                     }
                     if (oldVersion == 0) {
@@ -135,7 +135,7 @@ public class DaoSchemaWrite {
                     }
                     if (!updateVersionHistory(nextVersion)) {
                         SchemaUpgradeLog.line("updateVersionHistory failed for " + nextVersion);
-                        Popup.error(Inter.get("SchemaUpgrade.FailedSeeLog"));
+                        Jamuz.getLogger().log(Level.SEVERE, Inter.get("SchemaUpgrade.FailedSeeLog"));
                         return false;
                     }
                     SchemaUpgradeLog.line("Step completed: version " + nextVersion);
@@ -154,7 +154,7 @@ public class DaoSchemaWrite {
             FileUtils.forceMkdir(logsDir);
         } catch (IOException ex) {
             SchemaUpgradeLog.line("Cannot create logs directory: " + ex.getMessage());
-            Popup.error(MessageFormat.format(Inter.get("Error.SchemaUpgrade.BackupFailed"), ex.getMessage()));
+            Jamuz.getLogger().log(Level.SEVERE, MessageFormat.format(Inter.get("Error.SchemaUpgrade.BackupFailed"), ex.getMessage()));
             return false;
         }
         if (dbConn.info.getLibType() != DbInfo.LibType.Sqlite) {
@@ -194,7 +194,7 @@ public class DaoSchemaWrite {
                 return true;
             } catch (IOException ioe) {
                 SchemaUpgradeLog.line("Backup copy failed: " + ioe.getMessage());
-                Popup.error(MessageFormat.format(Inter.get("Error.SchemaUpgrade.BackupFailed"), ioe.getMessage()));
+                Jamuz.getLogger().log(Level.SEVERE, MessageFormat.format(Inter.get("Error.SchemaUpgrade.BackupFailed"), ioe.getMessage()));
                 return false;
             }
         }

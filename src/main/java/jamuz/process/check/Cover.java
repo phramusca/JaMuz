@@ -17,6 +17,8 @@
 
 package jamuz.process.check;
 
+import java.util.logging.Level;
+
 import fm.last.musicbrainz.coverart.CoverArt;
 import fm.last.musicbrainz.coverart.CoverArtArchiveClient;
 import fm.last.musicbrainz.coverart.CoverArtException;
@@ -210,7 +212,7 @@ public class Cover implements java.lang.Comparable {
                     }
                 }
             } catch (CoverArtException e) {
-              Popup.error(e);
+              Jamuz.getLogger().log(Level.SEVERE, null, e);
             }
         }
 	}
@@ -257,7 +259,7 @@ public class Cover implements java.lang.Comparable {
         //				mbImage.getTypes()
                         image = ImageIO.read(coverArtImage.getLargeThumbnail());
                     } catch (IOException ex) {
-                        Popup.error(ex);
+                        Jamuz.getLogger().log(Level.SEVERE, null, ex);
                     }
                 }
             }

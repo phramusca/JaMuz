@@ -17,6 +17,8 @@
 
 package jamuz.process.video;
 
+import java.util.logging.Level;
+
 import jamuz.Jamuz;
 import jamuz.utils.ImageUtils;
 import jamuz.utils.Popup;
@@ -79,7 +81,7 @@ public class IconBufferVideo {
             }
             return null;
         } catch (IOException ex) {
-            Popup.error(ex);
+            Jamuz.getLogger().log(Level.SEVERE, null, ex);
             return null;
         }
     }

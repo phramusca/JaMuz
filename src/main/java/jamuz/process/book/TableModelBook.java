@@ -16,6 +16,9 @@
  */
 package jamuz.process.book;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 import jamuz.gui.swing.TableModelGeneric;
 import jamuz.utils.Inter;
 import jamuz.utils.Popup;
@@ -251,7 +254,7 @@ public class TableModelBook extends TableModelGeneric {
 			try {
 				tLoadIcons.join();
 			} catch (InterruptedException ex) {
-				Popup.error(ex);
+				Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			}
 		}
 
@@ -272,7 +275,7 @@ public class TableModelBook extends TableModelGeneric {
                 loadIcons();
             }
             catch (InterruptedException ex) {
-                Popup.info(Inter.get("Msg.Process.Aborted"));  //NOI18N
+                Jamuz.getLogger().log(Level.INFO, Inter.get("Msg.Process.Aborted"));  //NOI18N
             } 
 		}
 	}

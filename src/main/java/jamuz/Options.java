@@ -16,6 +16,9 @@
  */
 package jamuz;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 import jamuz.utils.Popup;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -58,7 +61,7 @@ public class Options {
 		try {
 			this.input = new FileInputStream(filename);
 		} catch (FileNotFoundException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -99,7 +102,7 @@ public class Options {
 			properties.store(output, null);
 			return true;
 		} catch (IOException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}
@@ -116,7 +119,7 @@ public class Options {
 			properties.load(reader);
 			return true;
 		} catch (IOException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		} finally {
 			try {
@@ -124,7 +127,7 @@ public class Options {
 					input.close();
 				}
 			} catch (IOException ex) {
-				Popup.error(ex);
+				Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			}
 		}
 	}

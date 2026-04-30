@@ -16,6 +16,9 @@
  */
 package jamuz.soulseek;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
@@ -242,7 +245,7 @@ public class SlskdDocker {
                 return false;
             }
         } catch (DockerException ex) {
-            Popup.error(ex);
+            Jamuz.getLogger().log(Level.SEVERE, null, ex);
         }
         return false;
     }

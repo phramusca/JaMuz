@@ -75,7 +75,7 @@ public class MP3gain {
 		if (file.isDirectory()) {
 			files = file.listFiles();
 			if (files == null) {
-				Popup.error("No files found for mp3gain in \""+path+"\"");  //NOI18N
+				Jamuz.getLogger().log(Level.SEVERE, "No files found for mp3gain in \""+path+"\"");  //NOI18N
 				return false;
 			}
 		} else {
@@ -285,7 +285,7 @@ public class MP3gain {
 			return true;
 
 		} catch (IOException | InterruptedException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}
@@ -331,14 +331,14 @@ public class MP3gain {
 				return true;
 
 			} catch (IOException | InterruptedException ex) {
-				Popup.error(ex);
+				Jamuz.getLogger().log(Level.SEVERE, null, ex);
 				return false;
 			}
 		}
 		else {
 			// This should never happen as this function
 			// will be called only if folder contains MP3 files
-			Popup.error("No MP3 files found for mp3gain in \""+path+"\"");  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "No MP3 files found for mp3gain in \""+path+"\"");  //NOI18N
 			return false;
 		}
 	}
@@ -385,14 +385,14 @@ public class MP3gain {
 				return true;
 
 			} catch (IOException | InterruptedException ex) {
-				Popup.error(ex);
+				Jamuz.getLogger().log(Level.SEVERE, null, ex);
 				return false;
 			}
 		}
 		else {
 			// This should never happen as this function
 			// will be called only if folder contains MP3 files
-			Popup.error("No MP3 files found for mp3gain in \""+path+"\"");  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "No MP3 files found for mp3gain in \""+path+"\"");  //NOI18N
 			return false;
 		}
 	}
