@@ -6,13 +6,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ResultTest {
 
-    @Test
-    void shouldParseScoreAsDouble() throws Exception {
+    private Result resultWithScore(String scoreStr) throws Exception {
         Result result = new Result();
         Field score = Result.class.getDeclaredField("score");
         score.setAccessible(true);
-        score.set(result, "0.87");
+        score.set(result, scoreStr);
+        return result;
+    }
 
-        assertEquals(0.87, result.getScore(), 0.0001);
+    @Test
+    void getScore_parsesValidDouble() throws Exception {
+        assertEquals(0.87, resultWithScore("0.87").getScore(), 0.0001);
+    }
+
+    @Test
+    void getScore_parsesIntegerScore() throws Exception {
+        assertEquals(1.0, resultWithScore("1").getScore(), 0.0001);
+    }
+
+    @Test
+    void getScore_withInvalidString_throwsNumberFormatException() throws Exception {
+        assertThrows(NumberFormatException.class, () -> resultWithScore("not-a-number").getScore());
     }
 }

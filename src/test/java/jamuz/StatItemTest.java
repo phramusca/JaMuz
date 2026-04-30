@@ -6,23 +6,62 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StatItemTest {
 
+    private StatItem item(String label) {
+        return new StatItem(label, "v", 10, 3, 200, 1200, 4.2, Color.BLUE);
+    }
+
     @Test
-    void shouldExposeStatValuesAndMutableLabelPercentage() {
-        StatItem item = new StatItem("50 percent", "v", 10, 3, 200, 1200, 4.2, Color.BLUE);
+    void constructor_exposesAllFields() {
+        StatItem i = item("lbl");
+        assertEquals(10, i.getCountFile());
+        assertEquals(3, i.getCountPath());
+        assertEquals(200, i.getSize());
+        assertEquals(1200, i.getLength());
+        assertEquals(4.2, i.getRating());
+        assertEquals("lbl", i.getLabel());
+        assertEquals("v", i.getValue());
+        assertEquals(Color.BLUE, i.getColor());
+    }
 
-        assertEquals(10, item.getCountFile());
-        assertEquals(3, item.getCountPath());
-        assertEquals(200, item.getSize());
-        assertEquals(1200, item.getLength());
-        assertEquals(4.2, item.getRating());
-        assertEquals("50 percent", item.getLabel());
-        assertEquals("50 %", item.getLabelForChart());
-        assertEquals("v", item.getValue());
-        assertEquals(Color.BLUE, item.getColor());
+    @Test
+    void getPercentage_defaultIsMinusOne() {
+        assertEquals(-1f, item("x").getPercentage());
+    }
 
-        item.setLabel("new");
-        item.setPercentage(42.5f);
-        assertEquals("new", item.getLabel());
-        assertEquals(42.5f, item.getPercentage());
+    @Test
+    void setPercentage_updatesValue() {
+        StatItem i = item("x");
+        i.setPercentage(75.5f);
+        assertEquals(75.5f, i.getPercentage());
+    }
+
+    @Test
+    void setLabel_updatesLabel() {
+        StatItem i = item("old");
+        i.setLabel("new");
+        assertEquals("new", i.getLabel());
+    }
+
+    @Test
+    void getLabelForChart_replacesPercentWordWithSymbol() {
+        // "percent" → "%"
+        assertEquals("50 %", item("50 percent").getLabelForChart());
+    }
+
+    @Test
+    void getLabelForChart_replacesPercentSymbolWithDash() {
+        // "%" → "-"
+        assertEquals("50-", item("50%").getLabelForChart());
+    }
+
+    @Test
+    void getLabelForChart_mixedPercentSymbolAndWord() {
+        // "%" replaced first with "-", then "percent" replaced with "%"
+        assertEquals("50- %", item("50% percent").getLabelForChart());
+    }
+
+    @Test
+    void getLabelForChart_withPlainLabel_returnsUnchanged() {
+        assertEquals("rock", item("rock").getLabelForChart());
     }
 }

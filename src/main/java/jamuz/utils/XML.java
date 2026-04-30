@@ -81,13 +81,12 @@ public class XML {
 	public static ArrayList<Element> getElements(Document doc, String tagName) {
 		ArrayList<Element> elements=new ArrayList<>();
 		NodeList nodeList = doc.getElementsByTagName(tagName);
-		System.out.println(nodeList.getLength());
-		
+
 		for(int i=0; i<nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
 			elements.add((Element) node);
 		}
-		return elements;
+        return elements;
 	}
 	
 	/**
