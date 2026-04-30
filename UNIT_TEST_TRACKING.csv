@@ -194,9 +194,9 @@ test;jamuz/process/video/TableModelVideoTest.java;jamuz/process/video/TableModel
 test;jamuz/process/video/TableRowFilterVideoTest.java;jamuz/process/video/TableRowFilterVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/TheMovieDbTest.java;jamuz/process/video/TheMovieDb.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/VideoAbstractTest.java;jamuz/process/video/VideoAbstract.java;unit;junit5;5;0;0;0;0;clean;—;Status: initial state, set message, multiple messages accumulation
-test;jamuz/process/video/VideoMovieTest.java;jamuz/process/video/VideoMovie.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/VideoMovieTest.java;jamuz/process/video/VideoMovie.java;unit;junit5;4;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/VideoRatingTest.java;jamuz/process/video/VideoRating.java;unit;junit5;3;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/process/video/VideoTvShowTest.java;jamuz/process/video/VideoTvShow.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/VideoTvShowTest.java;jamuz/process/video/VideoTvShow.java;unit;junit5;4;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/remote/ClientInfoTest.java;jamuz/remote/ClientInfo.java;unit;junit5;8;0;0;0;0;clean;—;isConnected default, setConnected, setStatus timestamp, status empty default, equals/hashCode
 test;jamuz/remote/DialogClientInfoTest.java;jamuz/remote/DialogClientInfo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/remote/ICallBackServerTest.java;jamuz/remote/ICallBackServer.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review

@@ -10,7 +10,7 @@ All completed batch history has been removed.
 - Dedicated unit-test coverage for `src/main/java`: **complete**
   - `main_without_dedicated_test`: **0**
   - `main_with_dedicated_test`: **236**
-- All unit tests run with JUnit5 (no more silent JUnit4 skipping): **506 tests, 0 failures, 4 skipped** (network/GUI)
+- All unit tests run with JUnit5 (no more silent JUnit4 skipping): **660 tests, 0 failures, 6 skipped** (network/GUI)
 - Unit-test quality counters:
   - `nb_prototype_stubs`: **0**
   - `nb_fixme_test`: **0**
@@ -21,82 +21,99 @@ All completed batch history has been removed.
   - `tests/functional/Merge1Test.java`
   - `tests/functional/MergeCheckNTest.java`
   - `tests/functional/MergeNTest.java`
+- Status distribution (test files):
+  - `clean`: **114**
+  - `rather_clean`: **124** (91 are intentionally lightweight GUI/Swing files)
 
 ---
 
-## Remaining goals
+## Architecture improvement: Popup refactoring (COMPLETE)
 
-1. Keep unit coverage complete while improving test signal quality.
-2. Increase depth on high-value classes where current tests are contract-level only.
-3. Keep scope pragmatic: avoid brittle over-mocking and GUI-heavy overkill.
+All non-GUI classes have been cleaned of direct `Popup.*` calls:
+
+- `jamuz/utils/` package (8 files): XML, FileSystem, SSH, OS, QRCode, LogText, ClipboardText, Desktop, Dependencies
+- Service/model packages (30 files): database/, FileInfoInt, IconBuffer*, Options, player/, process/book/,
+  process/check/, process/merge/, process/video/, soulseek/
+- `pom.xml`: headless mode enforced via `-Djava.awt.headless=true` in Surefire config
+
+Remaining intentional `Popup` usage: `jamuz/gui/**`, `Jamuz.java`, `Main.java` (entry points and UI layers — correct).
 
 ---
 
-## Priority 1 — Add depth where value is highest (without overkill)
+## Priority 1 — Depth expansion (ongoing)
 
-Most classes now have a dedicated test, but many recent ones are intentionally lightweight contract tests.
-Next step is **selective depth**, not blanket expansion.
+Most classes have a dedicated test; many remain at contract-level.
+Focus is **selective depth** on classes with meaningful pure logic.
 
-### Done (2026-04-30, batch 1)
+### Done (batches 1–3, see git log)
 
-- **`FolderInfoResult`** — 26 tests: `colorField`, `formatNumber`, error-level state machine
-  (`setKO/setWarning/setOK/restoreFolderErrorLevel`), `analyseTrack` (string / year / number),
-  display color, `equals`/`hashCode`/`toString`.
-- **`ReleaseMatch`** — 16 tests: `Track` getters and zero-padded formatting (`getTrackNoFull`,
-  `getDiscNoFull`), original constructor, `getYearInt` edge cases (blank / invalid / valid),
-  `compareTo` sort semantics (score desc, year asc), `toString` color/content rules.
-- **`FileInfoVideo`** — 11 tests: quality detection thresholds (HD1080 / HD720 / SD / UNKNOWN),
-  `isHD`, `getVideoStreamDetails`, `getFormattedEpisodeNumber`, audio/subtitles stream details.
+- `FolderInfoResult`, `ReleaseMatch`, `FileInfoVideo`, `StringManager`, `VideoAbstract.Status`,
+  `FileInfo` (JUnit4→5), `Results`
 
-### Done (2026-04-30, batch 2)
+### Done (batch 4+, 2026-04-30 session)
 
-- **`StringManager`** — 30 tests: `removeIllegal` (illegal chars, consecutive, clean input),
-  `truncate` (short / at-limit / over-limit), `getNullableText` (null / non-null / empty),
-  `humanReadableByteCount` (SI / binary / negative), `secondsToMMSS` / `secondsToHHMM` (negative
-  / zero / values), `humanReadableSeconds` (zero / seconds / minutes / hours / days),
-  `parseSlashList` (single / multiple / no-spaces), `Left` / `Right`.
-- **`VideoAbstract.Status`** — 5 tests: initial state, `set()` message content, separator
-  accumulation, multiple-set chaining.
+- **`StatSource`** (7 tests): defaults, isSelected, hidden flag, equals/hashCode
+- **`Device`** (5 tests): constructor, setters, equals/hashCode
+- **`Playlist`** (5 tests): constructor, setters, compareTo, LimitUnit/Type enums
+- **`Option`** (5 tests): all fields, setValue, toString
+- **`Keys`** (3 tests): save always false, set is no-op, get returns Missing
+- **`IconBuffer`** (4 tests): iconSize, IconVersion enum, getCoverIcon with missing file
+- **`IconBufferCover`** (2 tests): getCoverIconSize, NPE contract for null file
+- **`MetaFlac`** (2 tests): constructor, process with non-existent path returns false
+- **`Recording`** (3 tests): id storage including empty/null
+- **`MyTvShow`** (6 tests): id/homepage from TvSeries, getSerie/setSerie, toString contains name
+- **`Options`** (6 tests): set/save/read round trip, missing key placeholder, non-writable path
+- **`VideoRating`** (3 tests): rating/display accessors, zero/empty edge cases
+- **`SlskdDownloadFile`** (3 tests): getKey format, zero size, default fields non-null
+- **`SlskdDownloadDirectory`** (2 tests): field read/write, fileCount default
+- **`SlskdDownloadUser`** (2 tests): field read/write, directories default null
+- **`MyVideoAbstract`** (7 tests): defaults, setIsFavorite/setIsInWatchList/setUserRating + cache calls, getYear parsing
+- **`SlskdDocker`** (3 tests): constants, buildSharedDirEnvValue (no-exclude, with-exclude)
+- **`FileInfoDisplay`** (4 tests): constructor, default TableValues, clone, isAudioFile
+- **`JMPlayer`** (5 tests): constructor, getMPlayerPath, setMPlayerPath, isPlaying default, getPlayingFile default
+- **`Book`** (8 tests): constructor, getFormat, isLocal, getTags, isSelected/setSelected, compareTo, toString
+- **`MyMovieDb`** (6 tests): id/homepage, getMovieDb/setMovieDb, toString contains title
+- **`ReleaseLastFm`** (2 tests): constructor, getCoverList before search is null
+- **`ReleaseMB`** (2 tests): constructor, getCoverList before search is null
+  - **Bug fix**: `ReleaseMB.getCoverList()` called `Collections.sort(null)` before any search → added null guard
 
-### Done (2026-04-30, batch 3)
+### Remaining `rather_clean` non-GUI classes (30 files)
 
-- **`FileInfo`** — 17 tests (JUnit4→JUnit5): `setPath` path decomposition (components, ext lowercased,
-  no-ext), `setExt`, `setFilename` rebuild, `compareTo` alphabetical sort, `equalsStats`
-  (same/rating/playCounter/genre).  
-  Note: the file was JUnit4 (not run in full suite) — converted to JUnit5 as part of this batch.
-- **`Results`** — 3 tests: added `getBest()` with `status="ok"` but empty results → null
-  (previously only tested error status and chromaprint getter).
+These are intentionally lightweight contract tests.
+Deepen only if clear pure-logic value exists (avoid DB/network/process deps):
 
-### JUnit4 → JUnit5 conversion: COMPLETE (2026-04-30)
+| File | nb_tests | Notes |
+|---|---|---|
+| `jamuz/FileInfoIntTest.java` | 37 | Tag read/write — large class, some coverage exists |
+| `jamuz/JamuzTest.java` | 1 | Entry point, hard to unit-test |
+| `jamuz/MainTest.java` | 1 | Entry point, hard to unit-test |
+| `jamuz/acoustid/AcoustIDTest.java` | 1 | Needs fpcalc binary |
+| `jamuz/player/MPlaybackListenerTest.java` | 3 | Interface, already covers method names |
+| `jamuz/player/MplayerTest.java` | 1 | External process dependency |
+| `jamuz/process/book/DbConnBookTest.java` | 1 | DB-heavy |
+| `jamuz/process/book/IconBufferBookTest.java` | 1 | GUI cache |
+| `jamuz/process/book/ProcessBookTest.java` | 1 | DB + process |
+| `jamuz/process/check/CheckDisplayTest.java` | 1 | Swing-heavy constructor |
+| `jamuz/process/check/CoverTest.java` | 7 | Already well covered |
+| `jamuz/process/check/FileInfoDuplicateReplaceTest.java` | 1 | Already reasonable |
+| `jamuz/process/check/FolderInfoTest.java` | 1 | DB-heavy |
+| `jamuz/process/check/LocationTest.java` | 1 | Needs Jamuz.getMachine() |
+| `jamuz/process/check/MP3gainTest.java` | 1 | External process |
+| `jamuz/process/check/ProcessCheckTest.java` | 1 | DB + process |
+| `jamuz/process/merge/ProcessMergeTest.java` | 1 | DB + callbacks |
+| `jamuz/process/merge/StatSource*Test.java` | 1 each | Already cover capabilities flags |
+| `jamuz/process/sync/ProcessSyncTest.java` | 1 | DB + process |
+| `jamuz/process/video/DbConnVideoTest.java` | 1 | DB-heavy |
+| `jamuz/process/video/ProcessVideoTest.java` | 1 | DB + process |
+| `jamuz/process/video/TheMovieDbTest.java` | 1 | Network-heavy |
+| `jamuz/process/video/VideoMovieTest.java` | 1 | Subtype check only |
+| `jamuz/process/video/VideoTvShowTest.java` | 1 | Subtype check only |
+| `jamuz/remote/ServerTest.java` | 1 | Network port |
+| `jamuz/utils/DependenciesTest.java` | 1 | Docker-dependent |
 
-All previously-silent JUnit4 test files have been converted to JUnit5 in 5 commits:
-
-1. **Utils purs** — DateTime, Encryption, OS, Inter, Benchmark, AppVersionCheck, QRCode, ClipboardImage
-2. **Soulseek data models** — SlskdSearchFile, SlskdSearchResponse, SlskdDockerSharedDir, TableModelSlskd*
-3. **Database (39 files)** — all DAO + DbConn + DbInfo + DbVersion + StatSource  
-   _Production bugs fixed: `getGeneratedKeys()` → `last_insert_rowid()`, `DbConn.disconnect()` NPE,  
-   AUTOINCREMENT reset, path normalization, client name insert-suffix vs update_
-4. **Utils restants** — ClipboardText, ProcessAbstract, FileSystem, Popup, Swing, Desktop, SSH, Ftp
-5. **AppVersionTest** (Mockito JUnit5) + IconBufferVideoTest
-
-Infrastructure additions:
-- `Jamuz.setMachine(Machine)` — allows tests to inject a minimal Machine without full app init
-- `TestUnitSettings.setupJamuzGlobals()` — initialises `Jamuz.db` and `Jamuz.machine` for tests needing `FolderInfo`
-- commons-io upgraded 2.14.0 → 2.16.1 (required by commons-compress 1.28.0's `ChecksumInputStream`)
-
-### Remaining focus areas
-
-1. `jamuz.process.check` / `jamuz.process.video` DB-heavy classes: skip unless in-memory SQLite
-   feasible without major effort.
-2. Contract-only classes (`CheckDisplay`, Swing panels): intentionally kept lightweight.
-3. `AppVersionCheck` async tests (`@Disabled`): need injectable `OkHttpClient` or base-URL parameter
-   to mock the GitHub API endpoint properly.
-
-Definition of “enough depth”:
-
-- At least one meaningful behavior test per public non-trivial method on critical classes.
-- Edge cases covered for parsing/formatting/state computations.
-- No external network/process dependency in default unit runs.
+**Recommendation**: most of these have legitimate reasons to stay lightweight. The few worth expanding:
+- `VideoMovieTest`, `VideoTvShowTest`: could add constructor/field tests (low effort)
+- `MPlaybackListenerTest`: interface already well-tested
 
 ---
 
@@ -122,7 +139,7 @@ Functional tests are valid but should stay in a separate track.
 
 ---
 
-## Acceptance gates for “unit tests complete and clean”
+## Acceptance gates for "unit tests complete and clean"
 
 - `main_without_dedicated_test == 0` (already reached).
 - Unit scope has:
