@@ -154,8 +154,8 @@ test;jamuz/process/check/PanelCheckTest.java;jamuz/process/check/PanelCheck.java
 test;jamuz/process/check/PanelDuplicateTest.java;jamuz/process/check/PanelDuplicate.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/PatternProcessorTest.java;jamuz/process/check/PatternProcessor.java;unit;junit5;4;0;0;0;0;clean;—;artist+album, exact depth, missing separator, single capture
 test;jamuz/process/check/ProcessCheckTest.java;jamuz/process/check/ProcessCheck.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/process/check/ReleaseLastFmTest.java;jamuz/process/check/ReleaseLastFm.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/process/check/ReleaseMBTest.java;jamuz/process/check/ReleaseMB.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/ReleaseLastFmTest.java;jamuz/process/check/ReleaseLastFm.java;unit;junit5;2;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/ReleaseMBTest.java;jamuz/process/check/ReleaseMB.java;unit;junit5;2;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/ReleaseMatchTest.java;jamuz/process/check/ReleaseMatch.java;unit;junit5;16;0;0;0;0;clean;—;Track getters/formatting, original constructor, getYearInt edge cases, compareTo sort order, toString formatting
 test;jamuz/process/check/ReplayGainTest.java;jamuz/process/check/ReplayGain.java;unit;junit5;6;0;0;0;0;clean;—;GainValues default/parameterized, isValid, toString, equals/hashCode, toMap
 test;jamuz/process/check/TableModelCheckTest.java;jamuz/process/check/TableModelCheck.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -184,7 +184,7 @@ test;jamuz/process/video/DialogVideoExportTest.java;jamuz/process/video/DialogVi
 test;jamuz/process/video/DialogVideoOptionTest.java;jamuz/process/video/DialogVideoOption.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/FileInfoVideoTest.java;jamuz/process/video/FileInfoVideo.java;unit;junit5;11;0;0;0;0;clean;—;isHD quality thresholds, getVideoStreamDetails, getFormattedEpisodeNumber, audio/subtitles formatting
 test;jamuz/process/video/IconBufferVideoTest.java;jamuz/process/video/IconBufferVideo.java;unit;junit5;1;0;0;0;0;clean;—;@Disabled live-network test
-test;jamuz/process/video/MyMovieDbTest.java;jamuz/process/video/MyMovieDb.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/MyMovieDbTest.java;jamuz/process/video/MyMovieDb.java;unit;junit5;6;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/MyTvShowTest.java;jamuz/process/video/MyTvShow.java;unit;junit5;6;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/MyVideoAbstractTest.java;jamuz/process/video/MyVideoAbstract.java;unit;junit5;7;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/PanelVideoTest.java;jamuz/process/video/PanelVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
