@@ -1,147 +1,126 @@
 package jamuz.soulseek;
 
 import jamuz.utils.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SlskdSearchResponseTest {
+class SlskdSearchResponseTest {
 
-	private SlskdSearchResponse searchResponse;
+    private SlskdSearchResponse searchResponse;
 
-	@Before
-	public void setUp() {
-		searchResponse = new SlskdSearchResponse();
-	}
+    @BeforeEach
+    void setUp() {
+        searchResponse = new SlskdSearchResponse();
+    }
 
-	@Test
-	public void testClass() {
-		List<SlskdSearchFile> files = new ArrayList<>();
-		SlskdSearchFile file1 = new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000);
-		SlskdSearchFile file2 = new SlskdSearchFile("path2/file2.mp3", 128, 200, 3000000);
+    @Test
+    void settersAndGetters_workCorrectly() {
+        List<SlskdSearchFile> files = new ArrayList<>();
+        SlskdSearchFile file1 = new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000);
+        SlskdSearchFile file2 = new SlskdSearchFile("path2/file2.mp3", 128, 200, 3000000);
+        files.add(file1);
+        files.add(file2);
 
-		files.add(file1);
-		files.add(file2);
+        SlskdSearchResponse sr = new SlskdSearchResponse();
+        sr.setFileCount(2);
+        sr.setFiles(files);
+        sr.setHasFreeUploadSlot(true);
+        sr.setLockedFileCount(1);
+        sr.setLockedFiles(new ArrayList<>());
+        sr.setQueueLength(5);
+        sr.setToken(123);
+        sr.setUploadSpeed(1.5);
+        sr.setUsername("testUser");
+        sr.setDate(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN));
+        sr.setCompleted();
+        sr.setSearchText("testSearch");
+        sr.setQueued();
+        sr.setTableModelDownload(null);
 
-		SlskdSearchResponse searchResponse = new SlskdSearchResponse();
-		searchResponse.setFileCount(2);
-		searchResponse.setFiles(files);
-		searchResponse.setHasFreeUploadSlot(true);
-		searchResponse.setLockedFileCount(1);
-		searchResponse.setLockedFiles(new ArrayList<>());
-		searchResponse.setQueueLength(5);
-		searchResponse.setToken(123);
-		searchResponse.setUploadSpeed(1.5);
-		searchResponse.setUsername("testUser");
-		searchResponse.setDate(DateTime.getCurrentLocal(DateTime.DateTimeFormat.HUMAN));
-		searchResponse.setCompleted();
-		searchResponse.setSearchText("testSearch");
-		searchResponse.setQueued();
-		searchResponse.setTableModelDownload(null);
+        assertEquals(2, sr.getFileCount());
+        assertEquals(files, sr.getFiles());
+        assertTrue(sr.hasFreeUploadSlot());
+        assertEquals(1, sr.getLockedFileCount());
+        assertEquals(5, sr.getQueueLength());
+        assertEquals(123, sr.getToken());
+        assertEquals(1.5, sr.getUploadSpeed(), 0.0);
+        assertEquals("testUser", sr.getUsername());
+        assertTrue(sr.isCompleted());
+        assertEquals("testSearch", sr.getSearchText());
+        assertTrue(sr.isQueued());
+        assertNotNull(sr.getProgressBar());
+        assertNull(sr.getTableModelDownload());
+    }
 
-		assertEquals(2, searchResponse.getFileCount());
-		assertEquals(files, searchResponse.getFiles());
-		assertTrue(searchResponse.hasFreeUploadSlot());
-		assertEquals(1, searchResponse.getLockedFileCount());
-		assertEquals(5, searchResponse.getQueueLength());
-		assertEquals(123, searchResponse.getToken());
-		assertEquals(1.5, searchResponse.getUploadSpeed(), 0.0);
-		assertEquals("testUser", searchResponse.getUsername());
-		assertTrue(searchResponse.isCompleted());
-		assertEquals("testSearch", searchResponse.getSearchText());
-		assertTrue(searchResponse.isQueued());
-		assertNotNull(searchResponse.getProgressBar());
-		assertNull(searchResponse.getTableModelDownload());
-	}
+    @Test
+    void filterAndSortFiles_filtersExtensionAndSortsByBitrate() {
+        List<SlskdSearchFile> files = new ArrayList<>();
+        SlskdSearchFile file1 = new SlskdSearchFile("path2/file2.mp3", 128, 200, 3000000);
+        SlskdSearchFile file2 = new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000);
+        files.add(file1);
+        files.add(file2);
+        searchResponse.setFiles(files);
 
-	@Test
-	public void testFilterAndSortFiles() {
-		List<SlskdSearchFile> files = new ArrayList<>();
-		SlskdSearchFile file1 = new SlskdSearchFile("path2/file2.mp3", 128, 200, 3000000);
-		SlskdSearchFile file2 = new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000);
-        SlskdSearchFile file3 = new SlskdSearchFile("path3/file3.flac", 320, 180, 5000000);
+        searchResponse.filterAndSortFiles(List.of("mp3"));
 
-		files.add(file1);
-		files.add(file2);
-		searchResponse.setFiles(files);
+        List<SlskdSearchFile> sortedFiles = searchResponse.getFiles();
+        assertEquals("path1/file1.mp3", sortedFiles.get(0).getFilename());
+        assertEquals("path2/file2.mp3", sortedFiles.get(1).getFilename());
+    }
 
-		List<String> allowedExtensions = List.of("mp3");
-		searchResponse.filterAndSortFiles(allowedExtensions);
+    @Test
+    void cloneWithoutFiles_copiesMetadataNotFiles() {
+        SlskdSearchResponse clone = searchResponse.cloneWithoutFiles();
+        assertEquals(0, clone.getFileCount());
+        assertTrue(clone.getFiles().isEmpty());
+        assertEquals(searchResponse.hasFreeUploadSlot(), clone.hasFreeUploadSlot());
+        assertEquals(searchResponse.getQueueLength(), clone.getQueueLength());
+        assertEquals(searchResponse.getToken(), clone.getToken());
+        assertEquals(searchResponse.getUploadSpeed(), clone.getUploadSpeed(), 0.0);
+        assertEquals(searchResponse.getUsername(), clone.getUsername());
+        assertEquals(searchResponse.getDate(), clone.getDate());
+    }
 
-		List<SlskdSearchFile> sortedFiles = searchResponse.getFiles();
-		assertEquals("path1/file1.mp3", sortedFiles.get(0).getFilename());
-		assertEquals("path2/file2.mp3", sortedFiles.get(1).getFilename());
-	}
+    @Test
+    void getBitrate_returnsAverageAcrossFiles() {
+        List<SlskdSearchFile> files = new ArrayList<>();
+        files.add(new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000));
+        files.add(new SlskdSearchFile("path2/file2.mp3", 128, 200, 3000000));
+        searchResponse.setFiles(files);
+        assertEquals(224, searchResponse.getBitrate(), 0.0);
+    }
 
-	@Test
-	public void testCloneWithoutFiles() {
-		SlskdSearchResponse clone = searchResponse.cloneWithoutFiles();
-		assertEquals(0, clone.getFileCount());
-		assertTrue(clone.getFiles().isEmpty());
-		assertEquals(searchResponse.hasFreeUploadSlot(), clone.hasFreeUploadSlot());
-		assertEquals(searchResponse.getQueueLength(), clone.getQueueLength());
-		assertEquals(searchResponse.getToken(), clone.getToken());
-		assertEquals(searchResponse.getUploadSpeed(), clone.getUploadSpeed(), 0.0);
-		assertEquals(searchResponse.getUsername(), clone.getUsername());
-		assertEquals(searchResponse.getDate(), clone.getDate());
-	}
+    @Test
+    void getSize_returnsTotalAcrossFiles() {
+        List<SlskdSearchFile> files = new ArrayList<>();
+        files.add(new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000));
+        files.add(new SlskdSearchFile("path2/file2.mp3", 128, 200, 3000000));
+        searchResponse.setFiles(files);
+        assertEquals(8000000, searchResponse.getSize(), 0.0);
+    }
 
-	@Test
-	public void testGetBitrate() {
-		List<SlskdSearchFile> files = new ArrayList<>();
-		SlskdSearchFile file1 = new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000);
-		SlskdSearchFile file2 = new SlskdSearchFile("path2/file2.mp3", 128, 200, 3000000);
+    @Test
+    void getPath_returnsDirectoryOfFirstFile() {
+        searchResponse.setFiles(List.of(new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000)));
+        assertEquals("path1", searchResponse.getPath());
+    }
 
-		files.add(file1);
-		files.add(file2);
-		searchResponse.setFiles(files);
+    @Test
+    void getTableModel_createsModelWithCorrectRowCount() {
+        searchResponse.setFiles(List.of(new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000)));
+        TableModelSlskdDownload tableModel = searchResponse.getTableModel();
+        assertNotNull(tableModel);
+        assertEquals(1, tableModel.getRowCount());
+        assertEquals("file1.mp3", tableModel.getValueAt(0, 4));
+    }
 
-		assertEquals(224, searchResponse.getBitrate(), 0.0);
-	}
-
-	@Test
-	public void testGetSize() {
-		List<SlskdSearchFile> files = new ArrayList<>();
-		SlskdSearchFile file1 = new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000);
-		SlskdSearchFile file2 = new SlskdSearchFile("path2/file2.mp3", 128, 200, 3000000);
-
-		files.add(file1);
-		files.add(file2);
-		searchResponse.setFiles(files);
-
-		assertEquals(8000000, searchResponse.getSize(), 0.0);
-	}
-
-	@Test
-	public void testGetPath() {
-		List<SlskdSearchFile> files = new ArrayList<>();
-		SlskdSearchFile file1 = new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000);
-
-		files.add(file1);
-		searchResponse.setFiles(files);
-
-		assertEquals("path1", searchResponse.getPath());
-	}
-
-	@Test
-	public void testGetTableModel() {
-		List<SlskdSearchFile> files = new ArrayList<>();
-		files.add(new SlskdSearchFile("path1/file1.mp3", 320, 180, 5000000));
-
-		searchResponse.setFiles(files);
-
-		TableModelSlskdDownload tableModel = searchResponse.getTableModel();
-		assertNotNull(tableModel);
-		assertEquals(1, tableModel.getRowCount());
-		assertEquals("file1.mp3", tableModel.getValueAt(0, 4));
-	}
-
-	@Test
-	public void testUpdate() {
-		searchResponse.update("test", 1);
-		assertEquals(1, searchResponse.getProgressBar().getValue());
-	}
+    @Test
+    void update_setsProgressBarValue() {
+        searchResponse.update("test", 1);
+        assertEquals(1, searchResponse.getProgressBar().getValue());
+    }
 }

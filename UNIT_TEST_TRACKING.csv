@@ -209,17 +209,17 @@ test;jamuz/soulseek/ICallBackSearchTest.java;jamuz/soulseek/ICallBackSearch.java
 test;jamuz/soulseek/PanelSlskTest.java;jamuz/soulseek/PanelSlsk.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskTest.java;jamuz/soulseek/Slsk.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskdClientTest.java;jamuz/soulseek/SlskdClient.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/soulseek/SlskdDockerSharedDirTest.java;jamuz/soulseek/SlskdDockerSharedDir.java;unit;junit4;5;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/soulseek/SlskdDockerSharedDirTest.java;jamuz/soulseek/SlskdDockerSharedDir.java;unit;junit5;5;0;0;0;0;clean;—;buildSharedDirEnvValue: empty/null/blank exclude; relative paths with prefixes; absolute under root; skips outside root (fixed bad assertions: "!" prefix is intentional)
 test;jamuz/soulseek/SlskdDockerTest.java;jamuz/soulseek/SlskdDocker.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskdDownloadDirectoryTest.java;jamuz/soulseek/SlskdDownloadDirectory.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskdDownloadFileTest.java;jamuz/soulseek/SlskdDownloadFile.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskdDownloadUserTest.java;jamuz/soulseek/SlskdDownloadUser.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/soulseek/SlskdSearchFileTest.java;jamuz/soulseek/SlskdSearchFile.java;unit;junit4;7;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/soulseek/SlskdSearchResponseTest.java;jamuz/soulseek/SlskdSearchResponse.java;unit;junit4;8;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/soulseek/SlskdSearchResultTest.java;jamuz/soulseek/SlskdSearchResult.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/soulseek/SlskdTokenResponseTest.java;jamuz/soulseek/SlskdTokenResponse.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/soulseek/TableModelSlskdDownloadTest.java;jamuz/soulseek/TableModelSlskdDownload.java;unit;junit4;7;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/soulseek/TableModelSlskdSearchTest.java;jamuz/soulseek/TableModelSlskdSearch.java;unit;junit4;7;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/soulseek/SlskdSearchFileTest.java;jamuz/soulseek/SlskdSearchFile.java;unit;junit5;8;0;0;0;0;clean;—;constructor; getters/setters; getPath; update; getDate (tz-agnostic + fallback); getDate no dates; getKey
+test;jamuz/soulseek/SlskdSearchResponseTest.java;jamuz/soulseek/SlskdSearchResponse.java;unit;junit5;8;0;0;0;0;clean;—;setters/getters; filterAndSort; cloneWithoutFiles; getBitrate avg; getSize total; getPath; getTableModel; update progress
+test;jamuz/soulseek/SlskdSearchResultTest.java;jamuz/soulseek/SlskdSearchResult.java;unit;junit5;1;0;0;0;0;clean;—;record accessors round-trip
+test;jamuz/soulseek/SlskdTokenResponseTest.java;jamuz/soulseek/SlskdTokenResponse.java;unit;junit5;1;0;0;0;0;clean;—;record accessors round-trip
+test;jamuz/soulseek/TableModelSlskdDownloadTest.java;jamuz/soulseek/TableModelSlskdDownload.java;unit;junit5;7;0;0;0;0;clean;—;addRow; replaceRow; removeRow; clear; getValueAt; isCellEditable; getColumnClass
+test;jamuz/soulseek/TableModelSlskdSearchTest.java;jamuz/soulseek/TableModelSlskdSearch.java;unit;junit5;7;0;0;0;0;clean;—;addRow; replaceRow; removeRow; clear; getValueAt (with Mockito); isCellEditable; isCellEnabled
 test;jamuz/utils/BenchmarkTest.java;jamuz/utils/Benchmark.java;unit;junit4;4;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/utils/ClipboardImageTest.java;jamuz/utils/ClipboardImage.java;unit;junit5;1;0;0;0;0;clean;—;getImageFromClipboard does not throw (skipped in headless)
 test;jamuz/utils/ClipboardTextTest.java;jamuz/utils/ClipboardText.java;unit;junit4;4;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
