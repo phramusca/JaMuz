@@ -16,7 +16,9 @@
  */
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import com.jcraft.jsch.Channel;
+import java.util.logging.Level;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -76,7 +78,7 @@ public class SSH {
 
 
         } catch (JSchException ex) {
-            Popup.error(ex);
+            Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
         }
     }
@@ -178,14 +180,14 @@ public class SSH {
                 }
             }
         } catch (JSchException | IOException ex) {
-            Popup.error(ex);
+            Jamuz.getLogger().log(Level.SEVERE, null, ex);
             return 131;
         } finally {
             if(in!=null) {
                 try {
                     in.close();
                 } catch (IOException ex) {
-                    Popup.error(ex);
+                    Jamuz.getLogger().log(Level.SEVERE, null, ex);
                     return 132;
                 }
             }

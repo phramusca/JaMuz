@@ -17,6 +17,9 @@
 
 package jamuz.utils;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 /**
  * OS detection class
  * @author phramusca <phramusca@gmail.com>
@@ -65,7 +68,7 @@ public class OS {
 //		}
 		else {
 			//OS could not be detected or not supported !
-			Popup.error(java.text.MessageFormat.format(Inter.get("Error.OSnotSupported"), new Object[] {name}));  //NOI18N
+			Jamuz.getLogger().log(Level.WARNING, Inter.get("Error.OSnotSupported"), name);  //NOI18N
 			return false;
 		}
 		return true;

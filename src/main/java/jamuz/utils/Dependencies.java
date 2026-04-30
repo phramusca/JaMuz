@@ -1,6 +1,8 @@
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import java.awt.Component;
+import java.util.logging.Level;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +75,7 @@ public class Dependencies {
 						Desktop.openBrowser(url);
 					}
 				} else {
-					Popup.error(ex);
+					Jamuz.getLogger().log(Level.SEVERE, null, ex);
 				}
 			}
 		}

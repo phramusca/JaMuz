@@ -17,7 +17,9 @@
 
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import java.io.File;
+import java.util.logging.Level;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -60,8 +62,7 @@ public class LogText {
 			this.logPrintWriter = new PrintWriter(outFile);
 			return true;
 		} catch (IOException ex) {
-			Popup.error(Inter.get("Error.IOException")
-					+" (create LogText file):\n"+ex.toString());  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "LogText.createFile", ex);
 			return false;
 		}
 	}

@@ -17,7 +17,6 @@
 
 package jamuz.utils;
 
-import java.awt.GraphicsEnvironment;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -45,10 +44,6 @@ public class Popup {
 	 * @param str
 	 */
 	public static void info(String str) {
-		if (GraphicsEnvironment.isHeadless()) {
-			if (logger != null) { Popup.logger.info(str); }
-			return;
-		}
 		javax.swing.JOptionPane.showMessageDialog(null, str, appName, JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -59,9 +54,6 @@ public class Popup {
 	public static void warning(String str) {
 		if (logger != null) {
 			Popup.logger.log(Level.WARNING, str);
-		}
-		if (GraphicsEnvironment.isHeadless()) {
-			return;
 		}
 		javax.swing.JOptionPane.showMessageDialog(null, str, appName + " - " + Inter.get("Label.WARNING"), JOptionPane.WARNING_MESSAGE);  //NOI18N
 	}
@@ -141,14 +133,6 @@ public class Popup {
 	}
 	
 	private static void popupError(String str) {
-		if (GraphicsEnvironment.isHeadless()) {
-			if (logger != null) {
-				Popup.logger.severe(str);
-			} else {
-				System.err.println("[POPUP-ERROR] " + str);
-			}
-			return;
-		}
 		javax.swing.JOptionPane.showMessageDialog(null, str, appName + " - " + Inter.get("Label.ERROR"), JOptionPane.ERROR_MESSAGE);  //NOI18N
 	}
 	
