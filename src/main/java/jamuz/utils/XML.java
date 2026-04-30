@@ -19,6 +19,8 @@ package jamuz.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,8 +50,8 @@ public class XML {
 			doc.getDocumentElement().normalize();
 			return doc;
 		} catch (ParserConfigurationException | SAXException | IOException ex) {
-			//Proper error handling. filename is displayed in ex, so no need to add it again
-			Popup.error(ex); 
+			Logger.getLogger(XML.class.getName()).log(Level.SEVERE, "XML.open: {0}", filename);
+			Logger.getLogger(XML.class.getName()).log(Level.SEVERE, null, ex);
 			return null;
         }
 	}
