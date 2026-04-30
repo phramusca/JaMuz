@@ -20,23 +20,23 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /**
  * Exercises {@link DaoSchemaWrite#update(int)} in the no-op case (already at the target version) to
  * avoid running GUI-driven upgrade paths in unit tests.
  */
-public class DaoSchemaWriteTest {
+class DaoSchemaWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static int currentSchemaVersion;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
                 "SELECT version FROM versionHistory ORDER BY version DESC LIMIT 1")) {
@@ -47,13 +47,13 @@ public class DaoSchemaWriteTest {
         }
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldReportNoOpWhenDatabaseAlreadyAtRequestedVersion() {
+    void shouldReportNoOpWhenDatabaseAlreadyAtRequestedVersion() {
         assertTrue(dbConnJaMuz.schema().lock().update(currentSchemaVersion));
     }
 }

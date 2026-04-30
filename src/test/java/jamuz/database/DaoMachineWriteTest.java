@@ -21,32 +21,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoMachineWrite}. */
-public class DaoMachineWriteTest {
+class DaoMachineWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoMachineWrite writer;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoMachineWrite(dbConnJaMuz.getDbConn());
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void removeMwTestMachines() throws SQLException {
+    @BeforeEach
+    void removeMwTestMachines() throws SQLException {
         try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
             st.executeUpdate("DELETE FROM machine WHERE name LIKE 'MwTest%'");
         }
@@ -64,15 +64,20 @@ public class DaoMachineWriteTest {
     }
 
     @Test
-    public void shouldInsertMachineWhenMissingAndFillDescriptionWhenPresent() {
+    void shouldInsertThenRetrieveMachine() throws SQLException {
         StringBuilder desc = new StringBuilder();
         assertTrue(writer.getOrInsert("MwTestHostIns", desc, false));
-        assertTrue(writer.getOrInsert("MwTestHostIns", desc, false));
-        assertFalse(desc.toString().isEmpty());
+        // Update the machine with a description so we can verify retrieval
+        int id = machineId("MwTestHostIns");
+        assertTrue(writer.update(id, "test-description"));
+        // Second call: machine already exists — should return true and fill desc
+        StringBuilder desc2 = new StringBuilder();
+        assertTrue(writer.getOrInsert("MwTestHostIns", desc2, false));
+        assertEquals("test-description", desc2.toString());
     }
 
     @Test
-    public void shouldUpdateMachineDescription() throws SQLException {
+    void shouldUpdateMachineDescription() throws SQLException {
         assertTrue(writer.getOrInsert("MwTestHostUp", new StringBuilder(), false));
         int id = machineId("MwTestHostUp");
         assertTrue(writer.update(id, "new-description"));
@@ -87,7 +92,7 @@ public class DaoMachineWriteTest {
     }
 
     @Test
-    public void shouldDeleteMachineByName() throws SQLException {
+    void shouldDeleteMachineByName() throws SQLException {
         assertTrue(writer.getOrInsert("MwTestHostDel", new StringBuilder(), false));
         assertTrue(writer.delete("MwTestHostDel"));
         assertFalse(writer.delete("MwTestHostDel"));

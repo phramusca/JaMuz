@@ -5,38 +5,38 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoPath}. */
-public class DaoPathTest {
+class DaoPathTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static int idPath;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         int[] key = new int[1];
         dbConnJaMuz.path().lock().insert("daoPath/test", new Date(), FolderInfo.CheckedFlag.OK, "mbid", key);
         idPath = key[0];
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldExposeWriteLock() {
+    void shouldExposeWriteLock() {
         assertNotNull(dbConnJaMuz.path().lock());
     }
 
     @Test
-    public void shouldReadPathsByDifferentSelectors() {
+    void shouldReadPathsByDifferentSelectors() {
         ConcurrentHashMap<String, FolderInfo> byChecked = new ConcurrentHashMap<>();
         assertTrue(dbConnJaMuz.path().get(byChecked, FolderInfo.CheckedFlag.OK));
         assertFalse(byChecked.isEmpty());

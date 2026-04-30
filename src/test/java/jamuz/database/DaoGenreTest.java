@@ -2,34 +2,34 @@ package jamuz.database;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoGenre}. */
-public class DaoGenreTest {
+class DaoGenreTest {
 
     private static DbConnJaMuz dbConnJaMuz;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldExposeWriteLock() {
+    void shouldExposeWriteLock() {
         assertNotNull(dbConnJaMuz.genre().lock());
     }
 
     @Test
-    public void shouldSupportCrudOnGenreValues() {
+    void shouldSupportCrudOnGenreValues() {
         assertTrue(dbConnJaMuz.genre().isSupported("Reggae"));
         assertTrue(dbConnJaMuz.genre().lock().update("Reggae", "ReggaeTest"));
         assertTrue(dbConnJaMuz.genre().isSupported("ReggaeTest"));

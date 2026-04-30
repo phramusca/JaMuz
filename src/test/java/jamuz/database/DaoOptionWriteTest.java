@@ -23,34 +23,34 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoOptionWrite}. */
-public class DaoOptionWriteTest {
+class DaoOptionWriteTest {
 
     private static final String HOST = "OptWriteTestHost";
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoOptionWrite writer;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoOptionWrite(dbConnJaMuz.getDbConn());
         dbConnJaMuz.machine().lock().getOrInsert(HOST, new StringBuilder(), false);
         Jamuz.setDb(dbConnJaMuz);
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldUpdateAllOptionsForMachine() {
+    void shouldUpdateAllOptionsForMachine() {
         Machine m = new Machine(HOST);
         assertTrue(m.read());
         String newValue = m.getOption(0).getValue() + "-x";
@@ -59,16 +59,18 @@ public class DaoOptionWriteTest {
     }
 
     @Test
-    public void shouldUpdateSingleOptionValue() throws SQLException {
+    void shouldUpdateSingleOptionValue() throws SQLException {
         Machine m = new Machine(HOST);
         assertTrue(m.read());
-        Option first = m.getOption(0);
-        String value = "optSingleValue";
-        assertTrue(writer.update(first, value));
+        // Use the 'library.isMaster' option (type=bool) to avoid path-normalisation side effects
+        // Option index 1 corresponds to idOptionType=2 (library.isMaster)
+        Option boolOption = m.getOption(1);
+        String value = "true";
+        assertTrue(writer.update(boolOption, value));
         try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
                 "SELECT value FROM option WHERE idMachine = ? AND idOptionType = ?")) {
-            st.setInt(1, first.getIdMachine());
-            st.setInt(2, first.getIdOptionType());
+            st.setInt(1, boolOption.getIdMachine());
+            st.setInt(2, boolOption.getIdOptionType());
             try (ResultSet rs = st.executeQuery()) {
                 assertTrue(rs.next());
                 assertEquals(value, rs.getString(1));

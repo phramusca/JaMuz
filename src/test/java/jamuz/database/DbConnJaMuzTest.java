@@ -8,29 +8,29 @@ import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DbConnJaMuz}. */
-public class DbConnJaMuzTest {
+class DbConnJaMuzTest {
 
     private static DbConnJaMuz dbConnJaMuz;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldExposeAllDaoAccessors() {
+    void shouldExposeAllDaoAccessors() {
         assertNotNull(dbConnJaMuz.genre());
         assertNotNull(dbConnJaMuz.tag());
         assertNotNull(dbConnJaMuz.fileTag());
@@ -51,7 +51,7 @@ public class DbConnJaMuzTest {
     }
 
     @Test
-    public void shouldAllowConcurrentPathAndFileInsertions() throws InterruptedException {
+    void shouldAllowConcurrentPathAndFileInsertions() throws InterruptedException {
         dbConnJaMuz.file().setLocationLibrary("/root/concurrency/");
         ExecutorService pool = Executors.newFixedThreadPool(8);
         for (int i = 0; i < 20; i++) {

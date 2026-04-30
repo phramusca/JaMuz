@@ -18,38 +18,38 @@ package jamuz.database;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /**
  * Tests sur {@link DaoGenreWrite}.
  */
-public class DaoGenreWriteTest {
+class DaoGenreWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoGenreWrite writer;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoGenreWrite(dbConnJaMuz.getDbConn(), dbConnJaMuz.genre());
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldRejectInsertWhenGenreAlreadyInDatabase() {
+    void shouldRejectInsertWhenGenreAlreadyInDatabase() {
         assertFalse(writer.insert("Rock"));
     }
 
     @Test
-    public void shouldInsertUpdateAndDeleteCustomGenre() {
+    void shouldInsertUpdateAndDeleteCustomGenre() {
         String g = "UnitGenreWrite999";
         assertFalse(dbConnJaMuz.genre().isSupported(g));
         assertTrue(writer.insert(g));

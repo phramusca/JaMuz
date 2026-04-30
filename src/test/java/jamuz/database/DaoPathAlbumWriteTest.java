@@ -18,31 +18,31 @@ package jamuz.database;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /**
  * {@link DaoPathAlbumWrite} currently holds only the DB reference; behaviour tests depend on future APIs.
  */
-public class DaoPathAlbumWriteTest {
+class DaoPathAlbumWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void daoPathAlbumWriteCanBeConstructedWithSameDbConn() {
+    void daoPathAlbumWriteCanBeConstructedWithSameDbConn() {
         DaoPathAlbumWrite w = new DaoPathAlbumWrite(dbConnJaMuz.getDbConn());
         assertNotNull(w);
     }

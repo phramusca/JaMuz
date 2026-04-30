@@ -23,7 +23,6 @@ import jamuz.utils.DateTime;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Date;
 import java.util.logging.Level;
 import org.apache.commons.io.FilenameUtils;
@@ -57,8 +56,7 @@ public class DaoPathWrite {
     public boolean insert(String relativePath, Date modifDate, FolderInfo.CheckedFlag checkedFlag, String mbId, int[] key) {
         synchronized (dbConn) {
             try (PreparedStatement stInsertPath = dbConn.getConnection().prepareStatement(
-                    "INSERT INTO path (strPath, modifDate, checked, mbId) VALUES (?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS)) {
+                    "INSERT INTO path (strPath, modifDate, checked, mbId) VALUES (?, ?, ?, ?)")) {
 
                 relativePath = FilenameUtils.separatorsToUnix(relativePath);
                 stInsertPath.setString(1, relativePath);
@@ -68,7 +66,8 @@ public class DaoPathWrite {
 
                 int nbRowsAffected = stInsertPath.executeUpdate();
                 if (nbRowsAffected == 1) {
-                    try (ResultSet keys = stInsertPath.getGeneratedKeys()) {
+                    try (PreparedStatement stKey = dbConn.getConnection().prepareStatement("SELECT last_insert_rowid()");
+                         ResultSet keys = stKey.executeQuery()) {
                         if (keys.next()) {
                             key[0] = keys.getInt(1);
                             return true;

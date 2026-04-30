@@ -8,25 +8,25 @@ import jamuz.remote.ClientInfo;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoClient}. */
-public class DaoClientTest {
+class DaoClientTest {
 
     private static DbConnJaMuz dbConnJaMuz;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         seedOneClient("client-read-1");
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
@@ -54,19 +54,19 @@ public class DaoClientTest {
     }
 
     @Test
-    public void shouldExposeWriteLock() {
+    void shouldExposeWriteLock() {
         assertNotNull(dbConnJaMuz.client().lock());
     }
 
     @Test
-    public void shouldReadClientByLogin() {
+    void shouldReadClientByLogin() {
         ClientInfo client = dbConnJaMuz.client().get("client-read-1");
         assertEquals("client-read-1", client.getLogin());
         assertTrue(client.isEnabled());
     }
 
     @Test
-    public void shouldReadAllClients() {
+    void shouldReadAllClients() {
         LinkedHashMap<Integer, ClientInfo> clients = new LinkedHashMap<>();
         assertTrue(dbConnJaMuz.client().get(clients));
         assertFalse(clients.isEmpty());

@@ -7,19 +7,19 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import javax.swing.DefaultListModel;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoListModel}. */
-public class DaoListModelTest {
+class DaoListModelTest {
 
     private static DbConnJaMuz dbConnJaMuz;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         dbConnJaMuz.machine().lock().getOrInsert("ListModelHost", new StringBuilder(), false);
         dbConnJaMuz.tag().lock().insertIfMissing("listmodel-tag");
@@ -36,13 +36,13 @@ public class DaoListModelTest {
         dbConnJaMuz.file().lock().insert(f, keyFile);
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldReadGenreTagAndMachineModels() {
+    void shouldReadGenreTagAndMachineModels() {
         DefaultListModel genres = new DefaultListModel();
         dbConnJaMuz.listModel().getGenreListModel(genres);
         assertTrue(genres.size() > 0);
@@ -58,7 +58,7 @@ public class DaoListModelTest {
     }
 
     @Test
-    public void shouldFillSelectorLists() {
+    void shouldFillSelectorLists() {
         boolean[] ratings = new boolean[]{true, true, true, true, true, true};
         boolean[] checked = new boolean[]{true, true, true, true};
         DefaultListModel artists = new DefaultListModel();

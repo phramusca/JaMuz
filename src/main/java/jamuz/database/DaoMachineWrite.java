@@ -20,7 +20,6 @@ import jamuz.Jamuz;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 
 /**
@@ -63,15 +62,15 @@ public class DaoMachineWrite {
                     } else {
                         // Insert a new machine
                         try (PreparedStatement stInsertMachine = dbConn.connection.prepareStatement(
-                                "INSERT INTO machine (name, hidden) VALUES (?, ?)",
-                                Statement.RETURN_GENERATED_KEYS)) {
+                                "INSERT INTO machine (name, hidden) VALUES (?, ?)")) {
 
                             stInsertMachine.setString(1, hostname);
                             stInsertMachine.setBoolean(2, hidden);
                             int nbRowsAffected = stInsertMachine.executeUpdate();
 
                             if (nbRowsAffected == 1) {
-                                try (ResultSet keys = stInsertMachine.getGeneratedKeys()) {
+                                try (PreparedStatement stKey = dbConn.connection.prepareStatement("SELECT last_insert_rowid()");
+                                     ResultSet keys = stKey.executeQuery()) {
                                     if (keys.next()) {
                                         int idMachine = keys.getInt(1);
                                         // Insert default options

@@ -1,14 +1,14 @@
 package jamuz.database;
 
 import java.util.Date;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Tests for {@link DbVersion}. */
-public class DbVersionTest {
+class DbVersionTest {
 
     @Test
-    public void shouldExposeVersionAndDates() {
+    void shouldExposeVersionAndDates() {
         Date start = new Date(1000L);
         Date end = new Date(2000L);
         DbVersion v = new DbVersion(7, start, end);

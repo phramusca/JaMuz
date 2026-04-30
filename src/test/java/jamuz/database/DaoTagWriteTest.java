@@ -21,32 +21,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoTagWrite}. */
-public class DaoTagWriteTest {
+class DaoTagWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoTagWrite writer;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoTagWrite(dbConnJaMuz.getDbConn());
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void wipeTagWriteRows() throws SQLException {
+    @BeforeEach
+    void wipeTagWriteRows() throws SQLException {
         try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
             st.executeUpdate("DELETE FROM tagFile WHERE idTag IN (SELECT id FROM tag WHERE value LIKE 'TagW_%')");
             st.executeUpdate("DELETE FROM tag WHERE value LIKE 'TagW_%'");
@@ -65,20 +65,20 @@ public class DaoTagWriteTest {
     }
 
     @Test
-    public void shouldInsertDistinctTags() {
+    void shouldInsertDistinctTags() {
         assertTrue(writer.insert("TagW_one"));
         assertFalse(writer.insert("TagW_one"));
         assertTrue(writer.insert("TagW_two"));
     }
 
     @Test
-    public void insertIfMissingCreatesOrAcknowledgesExistingTag() {
+    void insertIfMissingCreatesOrAcknowledgesExistingTag() {
         assertTrue(writer.insertIfMissing("TagW_miss"));
         assertTrue(writer.insertIfMissing("TagW_miss"));
     }
 
     @Test
-    public void shouldRenameTagValue() throws SQLException {
+    void shouldRenameTagValue() throws SQLException {
         assertTrue(writer.insert("TagW_old"));
         assertTrue(writer.update("TagW_old", "TagW_new"));
         assertFalse(tagExists("TagW_old"));
@@ -86,7 +86,7 @@ public class DaoTagWriteTest {
     }
 
     @Test
-    public void shouldDeleteUnusedTag() {
+    void shouldDeleteUnusedTag() {
         assertTrue(writer.insert("TagW_del"));
         assertTrue(writer.delete("TagW_del"));
         assertFalse(writer.delete("TagW_del"));

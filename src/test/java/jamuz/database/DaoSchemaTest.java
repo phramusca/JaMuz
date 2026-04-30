@@ -3,34 +3,34 @@ package jamuz.database;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoSchema}. */
-public class DaoSchemaTest {
+class DaoSchemaTest {
 
     private static DbConnJaMuz dbConnJaMuz;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldExposeWriteLock() {
+    void shouldExposeWriteLock() {
         assertNotNull(dbConnJaMuz.schema().lock());
     }
 
     @Test
-    public void shouldReadVersionHistory() {
+    void shouldReadVersionHistory() {
         ArrayList<DbVersion> versions = new ArrayList<>();
         assertTrue(dbConnJaMuz.schema().getVersionHistory(versions));
         assertFalse(versions.isEmpty());

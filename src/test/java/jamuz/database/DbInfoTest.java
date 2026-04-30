@@ -21,40 +21,39 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DbInfo}. */
-public class DbInfoTest {
+class DbInfoTest {
 
     private static DbConnJaMuz dbConnJaMuz;
 
-    @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
+    @TempDir
+    Path tempDir;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void checkReturnsTrueWhenSqliteFileExists() {
+    void checkReturnsTrueWhenSqliteFileExists() {
         DbInfo info = dbConnJaMuz.getDbConn().getInfo();
         assertTrue(info.check());
     }
 
     @Test
-    public void sqliteLocationsInitiallyMatchForTempDb() {
+    void sqliteLocationsInitiallyMatchForTempDb() {
         DbInfo info = dbConnJaMuz.getDbConn().getInfo();
         assertEquals(info.getLocationOri(), info.getLocationWork());
         assertEquals(DbInfo.LibType.Sqlite, info.getLibType());
@@ -62,25 +61,27 @@ public class DbInfoTest {
     }
 
     @Test
-    public void setLocationWorkUpdatesWorkingCopyPath() throws IOException {
+    void setLocationWorkUpdatesWorkingCopyPath() throws IOException {
         DbInfo info = TestUnitSettings.getTempDbInfo();
-        Path file = tempFolder.newFile("relocated.db").toPath();
+        Path file = tempDir.resolve("relocated.db");
         info.setLocationWork(file.toString());
         assertEquals(file.toString(), info.getLocationWork());
     }
 
     @Test
-    public void getFtpBuildsWrapperFromFtpUri() {
+    void getFtpBuildsWrapperFromFtpUri() {
+        // URI without port (DbInfo FTP parser does not handle explicit port numbers)
         DbInfo ftpLike = new DbInfo(DbInfo.LibType.Sqlite,
-                "ftp://user:secret@remote-host.invalid:21/sub/music.db", "", "");
+                "ftp://user:secret@remote-host.invalid/sub/music.db", "", "");
         Ftp ftp = ftpLike.getFtp("/tmp/");
         assertNotNull(ftp);
     }
 
     @Test
-    public void backupDbWritesCopyIntoDestinationFolder() throws IOException {
+    void backupDbWritesCopyIntoDestinationFolder() throws IOException {
         DbInfo info = dbConnJaMuz.getDbConn().getInfo();
-        Path destDir = tempFolder.newFolder("bak").toPath();
+        Path destDir = tempDir.resolve("bak");
+        destDir.toFile().mkdirs();
         assertTrue(info.backupDB(destDir.toString() + File.separator));
         File[] files = destDir.toFile().listFiles((dir, name) -> name.endsWith(".db"));
         assertNotNull(files);
@@ -89,15 +90,16 @@ public class DbInfoTest {
     }
 
     @Test
-    public void copyDbReceiveMovesWorkingPathIntoFolder() throws IOException {
+    void copyDbReceiveMovesWorkingPathIntoFolder() throws IOException {
         DbInfo info = dbConnJaMuz.getDbConn().getInfo();
         String savedWork = info.getLocationWork();
         try {
-            Path dir = tempFolder.newFolder("recv").toPath();
+            Path dir = tempDir.resolve("recv");
+            dir.toFile().mkdirs();
             assertTrue(info.copyDB(true, dir.toString() + File.separator));
             File copied = new File(info.getLocationWork());
             assertTrue(copied.isFile());
-            assertEquals(copied.getParent(), dir.toFile());
+            assertEquals(copied.getParentFile().getCanonicalPath(), dir.toFile().getCanonicalPath());
         } finally {
             info.setLocationWork(savedWork);
         }

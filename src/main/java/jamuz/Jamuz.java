@@ -352,6 +352,15 @@ public class Jamuz {
 	}
 
 	/**
+	 * Override the current machine (useful for tests).
+	 *
+	 * @param m
+	 */
+	public static void setMachine(Machine m) {
+		machine = m;
+	}
+
+	/**
 	 * Get Application options. Currently only video options.
 	 *
 	 * @return

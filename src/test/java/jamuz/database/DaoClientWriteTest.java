@@ -25,20 +25,20 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** SQLite-backed tests for {@link DaoClientWrite} insert/update behaviour (same setup pattern as {@link DaoClientTest}). */
-public class DaoClientWriteTest {
+class DaoClientWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoClientWrite writer;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoClientWrite(dbConnJaMuz.getDbConn(), dbConnJaMuz.device(), dbConnJaMuz.statSource());
         seedMachinePlaylistDeviceStatSource();
@@ -46,8 +46,8 @@ public class DaoClientWriteTest {
         Jamuz.readPlaylists();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
@@ -79,7 +79,7 @@ public class DaoClientWriteTest {
     }
 
     @Test
-    public void shouldInsertClientWhenIdIsUnset() {
+    void shouldInsertClientWhenIdIsUnset() {
         ClientInfo clientInfo = newClientForInsert("ins-writer-1");
         assertTrue(writer.insertOrUpdate(clientInfo));
 
@@ -90,7 +90,7 @@ public class DaoClientWriteTest {
     }
 
     @Test
-    public void shouldUpdateClientWhenIdIsSet() {
+    void shouldUpdateClientWhenIdIsSet() {
         ClientInfo inserted = newClientForInsert("upd-writer-1");
         assertTrue(writer.insertOrUpdate(inserted));
 
@@ -105,14 +105,15 @@ public class DaoClientWriteTest {
         assertTrue(writer.insertOrUpdate(updated));
 
         ClientInfo fromDb = dbConnJaMuz.client().get("upd-writer-2");
-        assertEquals("newName-upd-w", fromDb.getName());
+        // updateClient stores the name as-is (no login suffix; suffix only added on INSERT)
+        assertEquals("newName", fromDb.getName());
         assertEquals("newPwd", fromDb.getPwd());
         assertFalse(fromDb.isEnabled());
     }
 
     /** Regression: older code passed {@code java.sql.Types.INTEGER} (value 4) to {@link PreparedStatement#setInt}, persisting 4 instead of NULL. */
     @Test
-    public void shouldPersistNullDeviceAndStatSourceWhenAbsentOnInsert() throws SQLException {
+    void shouldPersistNullDeviceAndStatSourceWhenAbsentOnInsert() throws SQLException {
         ClientInfo bare = new ClientInfo("null-fk-client", "p", "/r", "BareName", true);
         assertTrue(writer.insertOrUpdate(bare));
 

@@ -21,34 +21,34 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoStatSourceWrite}. */
-public class DaoStatSourceWriteTest {
+class DaoStatSourceWriteTest {
 
     private static final String MACHINE = "StatWriteTestHost";
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoStatSourceWrite writer;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoStatSourceWrite(dbConnJaMuz.getDbConn());
         dbConnJaMuz.machine().lock().getOrInsert(MACHINE, new StringBuilder(), false);
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void wipeStatSourcesUnderPrefix() throws SQLException {
+    @BeforeEach
+    void wipeStatSourcesUnderPrefix() throws SQLException {
         try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
                 "DELETE FROM statSource WHERE name LIKE ?")) {
             st.setString(1, "StatW_%");
@@ -76,7 +76,7 @@ public class DaoStatSourceWriteTest {
     }
 
     @Test
-    public void shouldInsertAndUpdateStatSource() throws SQLException {
+    void shouldInsertAndUpdateStatSource() throws SQLException {
         StatSource inserted = newSource("StatW_new");
         assertTrue(writer.insertOrUpdate(inserted));
         int id = idForName("StatW_new");
@@ -96,7 +96,7 @@ public class DaoStatSourceWriteTest {
     }
 
     @Test
-    public void shouldRefreshLastMergeDate() throws SQLException {
+    void shouldRefreshLastMergeDate() throws SQLException {
         StatSource ss = newSource("StatW_merge");
         assertTrue(writer.insertOrUpdate(ss));
         int id = idForName("StatW_merge");
@@ -106,7 +106,7 @@ public class DaoStatSourceWriteTest {
     }
 
     @Test
-    public void shouldDeleteStatSource() throws SQLException {
+    void shouldDeleteStatSource() throws SQLException {
         StatSource ss = newSource("StatW_del");
         assertTrue(writer.insertOrUpdate(ss));
         int id = idForName("StatW_del");

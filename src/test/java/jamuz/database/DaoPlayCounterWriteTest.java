@@ -26,15 +26,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoPlayCounterWrite}. */
-public class DaoPlayCounterWriteTest {
+class DaoPlayCounterWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoPlayCounterWrite writer;
@@ -45,8 +45,8 @@ public class DaoPlayCounterWriteTest {
     private static int pathId;
     private static int idStatSource;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoPlayCounterWrite(dbConnJaMuz.getDbConn());
         statWriter = new DaoStatSourceWrite(dbConnJaMuz.getDbConn());
@@ -75,13 +75,13 @@ public class DaoPlayCounterWriteTest {
         pathId = keyPath[0];
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void wipePlayCountersAndFiles() throws SQLException {
+    @BeforeEach
+    void wipePlayCountersAndFiles() throws SQLException {
         try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
             st.executeUpdate("DELETE FROM playCounter");
             st.executeUpdate("DELETE FROM file WHERE idPath = " + pathId);
@@ -111,7 +111,7 @@ public class DaoPlayCounterWriteTest {
     }
 
     @Test
-    public void shouldInsertPlayCounterWhenRowMissing() throws SQLException {
+    void shouldInsertPlayCounterWhenRowMissing() throws SQLException {
         FileInfoInt f = insertFile("a.mp3", 11);
         ArrayList<FileInfoInt> files = new ArrayList<>();
         files.add(f);
@@ -120,7 +120,7 @@ public class DaoPlayCounterWriteTest {
     }
 
     @Test
-    public void shouldUpdateExistingPlayCounterRow() throws SQLException {
+    void shouldUpdateExistingPlayCounterRow() throws SQLException {
         FileInfoInt f = insertFile("b.mp3", 3);
         ArrayList<FileInfoInt> files = new ArrayList<>();
         files.add(f);

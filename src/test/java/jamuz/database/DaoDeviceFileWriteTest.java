@@ -28,37 +28,37 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /**
  * Tests sur {@link DaoDeviceFileWrite} (insert batch, upsert, delete).
  */
-public class DaoDeviceFileWriteTest {
+class DaoDeviceFileWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoDeviceFileWrite writer;
     private static int deviceId = 1;
     private static int pathId;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoDeviceFileWrite(dbConnJaMuz.getDbConn());
         seedPlaylistMachineDeviceAndPath();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void clearDeviceFileRows() throws SQLException {
+    @BeforeEach
+    void clearDeviceFileRows() throws SQLException {
         try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
                 "DELETE FROM deviceFile")) {
             st.executeUpdate();
@@ -120,12 +120,12 @@ public class DaoDeviceFileWriteTest {
     }
 
     @Test
-    public void shouldReturnEmptyWhenInsertOrIgnoreWithNoFiles() {
+    void shouldReturnEmptyWhenInsertOrIgnoreWithNoFiles() {
         assertTrue(writer.insertOrIgnore(new ArrayList<>(), deviceId).isEmpty());
     }
 
     @Test
-    public void shouldInsertOrIgnoreOneRowAndExposeNewStatus() throws SQLException {
+    void shouldInsertOrIgnoreOneRowAndExposeNewStatus() throws SQLException {
         FileInfoInt a = insertFileRow("one.ext");
         ArrayList<FileInfoInt> batch = new ArrayList<>();
         batch.add(a);
@@ -137,7 +137,7 @@ public class DaoDeviceFileWriteTest {
     }
 
     @Test
-    public void shouldNotDuplicateRowWhenInsertOrIgnoreCalledTwice() throws SQLException {
+    void shouldNotDuplicateRowWhenInsertOrIgnoreCalledTwice() throws SQLException {
         FileInfoInt f = insertFileRow("dup.ext");
         ArrayList<FileInfoInt> batch = new ArrayList<>();
         batch.add(f);
@@ -148,7 +148,7 @@ public class DaoDeviceFileWriteTest {
     }
 
     @Test
-    public void shouldUpdateStatusOnInsertOrUpdateAfterInitialInsert() throws SQLException {
+    void shouldUpdateStatusOnInsertOrUpdateAfterInitialInsert() throws SQLException {
         FileInfoInt f = insertFileRow("up.ext");
         ArrayList<FileInfoInt> batch = new ArrayList<>();
         batch.add(f);
@@ -162,7 +162,7 @@ public class DaoDeviceFileWriteTest {
     }
 
     @Test
-    public void shouldRemoveAllDeviceFileRowsWhenDelete() throws SQLException {
+    void shouldRemoveAllDeviceFileRowsWhenDelete() throws SQLException {
         FileInfoInt f1 = insertFileRow("del1.ext");
         FileInfoInt f2 = insertFileRow("del2.ext");
         ArrayList<FileInfoInt> batch = new ArrayList<>();

@@ -21,26 +21,26 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoPlaylistWrite}. */
-public class DaoPlaylistWriteTest {
+class DaoPlaylistWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoPlaylistWrite writer;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoPlaylistWrite(dbConnJaMuz.getDbConn());
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
@@ -61,14 +61,14 @@ public class DaoPlaylistWriteTest {
     }
 
     @Test
-    public void shouldInsertPlaylist() throws SQLException {
+    void shouldInsertPlaylist() throws SQLException {
         Playlist p = basePlaylist("PlWriteInsert");
         assertTrue(writer.insert(p));
         assertTrue(findPlaylistId("PlWriteInsert") > 0);
     }
 
     @Test
-    public void shouldUpdatePlaylistMetadata() throws SQLException {
+    void shouldUpdatePlaylistMetadata() throws SQLException {
         Playlist inserted = basePlaylist("PlWriteUpdate");
         assertTrue(writer.insert(inserted));
         int id = findPlaylistId("PlWriteUpdate");
@@ -90,7 +90,7 @@ public class DaoPlaylistWriteTest {
     }
 
     @Test
-    public void shouldDeletePlaylistWhenNotReferenced() throws SQLException {
+    void shouldDeletePlaylistWhenNotReferenced() throws SQLException {
         Playlist p = basePlaylist("PlWriteDelete");
         assertTrue(writer.insert(p));
         int id = findPlaylistId("PlWriteDelete");

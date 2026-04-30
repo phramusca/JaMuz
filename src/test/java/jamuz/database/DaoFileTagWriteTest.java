@@ -24,23 +24,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /**
  * Tests sur {@link DaoFileTagWrite#update}.
  */
-public class DaoFileTagWriteTest {
+class DaoFileTagWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoFileTagWrite writer;
     private static int pathId;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoFileTagWrite(dbConnJaMuz.getDbConn(), dbConnJaMuz.tag(), dbConnJaMuz.file());
         dbConnJaMuz.file().setLocationLibrary("/root/tagwrite/");
@@ -49,8 +49,8 @@ public class DaoFileTagWriteTest {
         pathId = keyPath[0];
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
@@ -76,7 +76,7 @@ public class DaoFileTagWriteTest {
     }
 
     @Test
-    public void shouldPersistTagsWhenUpdate() throws SQLException {
+    void shouldPersistTagsWhenUpdate() throws SQLException {
         FileInfoInt f = insertBareFile("tagged.ext");
         ArrayList<String> tags = new ArrayList<>();
         tags.add("tagWriteAlpha");

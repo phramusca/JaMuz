@@ -5,19 +5,19 @@ import jamuz.process.sync.Device;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoDevice}. */
-public class DaoDeviceTest {
+class DaoDeviceTest {
 
     private static DbConnJaMuz dbConnJaMuz;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         String host = "DeviceReadHost";
         dbConnJaMuz.machine().lock().getOrInsert(host, new StringBuilder(), false);
@@ -28,25 +28,25 @@ public class DaoDeviceTest {
         dbConnJaMuz.device().lock().insertOrUpdate(d);
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldExposeWriteLock() {
+    void shouldExposeWriteLock() {
         assertNotNull(dbConnJaMuz.device().lock());
     }
 
     @Test
-    public void shouldReadDeviceByNameLookup() {
+    void shouldReadDeviceByNameLookup() {
         Device d = dbConnJaMuz.device().get("DeviceReadHost");
         assertEquals(1, d.getId());
         assertEquals("DeviceRead", d.getName());
     }
 
     @Test
-    public void shouldReadDevicesByHost() {
+    void shouldReadDevicesByHost() {
         LinkedHashMap<Integer, Device> devices = new LinkedHashMap<>();
         assertTrue(dbConnJaMuz.device().get(devices, "DeviceReadHost", true));
         assertEquals(1, devices.size());

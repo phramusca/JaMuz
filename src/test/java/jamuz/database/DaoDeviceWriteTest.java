@@ -24,24 +24,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /**
  * Tests sur {@link DaoDeviceWrite}.
  */
-public class DaoDeviceWriteTest {
+class DaoDeviceWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoDeviceWrite writer;
     private static final String HOST = "DaoDeviceWriteHost";
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoDeviceWrite(dbConnJaMuz.getDbConn());
 
@@ -53,16 +53,18 @@ public class DaoDeviceWriteTest {
         Jamuz.readPlaylists();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void wipeDevices() throws SQLException {
+    @BeforeEach
+    void wipeDevices() throws SQLException {
         try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
             st.executeUpdate("DELETE FROM deviceFile");
             st.executeUpdate("DELETE FROM device");
+            // Reset AUTOINCREMENT counter so IDs are predictable across test methods
+            st.executeUpdate("DELETE FROM sqlite_sequence WHERE name='device'");
         }
     }
 
@@ -77,28 +79,41 @@ public class DaoDeviceWriteTest {
         }
     }
 
+    private static int deviceIdByName(String name) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT idDevice FROM device WHERE name = ?")) {
+            st.setString(1, name);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next(), "Device '" + name + "' should exist");
+                return rs.getInt(1);
+            }
+        }
+    }
+
     @Test
-    public void shouldInsertDeviceWhenIdIsUnset() throws SQLException {
+    void shouldInsertDeviceWhenIdIsUnset() throws SQLException {
         Device d = new Device(-1, "nIns", "sIns", "dIns", 1, HOST, false);
         assertTrue(writer.insertOrUpdate(d));
         assertEquals("nIns", deviceNameInDb(1));
     }
 
     @Test
-    public void shouldUpdateDeviceWhenIdIsSet() throws SQLException {
+    void shouldUpdateDeviceWhenIdIsSet() throws SQLException {
         Device d = new Device(-1, "nUpd", "sUpd", "dUpd", 1, HOST, true);
         assertTrue(writer.insertOrUpdate(d));
+        int insertedId = deviceIdByName("nUpd");
 
-        Device updated = new Device(1, "nUpd2", "s2", "d2", 1, "", false);
+        Device updated = new Device(insertedId, "nUpd2", "s2", "d2", 1, "", false);
         assertTrue(writer.insertOrUpdate(updated));
-        assertEquals("nUpd2", deviceNameInDb(1));
+        assertEquals("nUpd2", deviceNameInDb(insertedId));
     }
 
     @Test
-    public void shouldDeleteDeviceById() throws SQLException {
+    void shouldDeleteDeviceById() throws SQLException {
         Device d = new Device(-1, "toDel", "s", "d", 1, HOST, true);
         assertTrue(writer.insertOrUpdate(d));
-        assertTrue(writer.delete(1));
-        assertFalse(writer.delete(1));
+        int deviceId = deviceIdByName("toDel");
+        assertTrue(writer.delete(deviceId));
+        assertFalse(writer.delete(deviceId));
     }
 }

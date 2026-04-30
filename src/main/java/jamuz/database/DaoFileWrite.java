@@ -25,7 +25,6 @@ import jamuz.utils.DateTime;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -59,8 +58,7 @@ public class DaoFileWrite {
                     + "length, bitRate, size, modifDate, trackTotal, discTotal, BPM, nbCovers, "
                     + "rating, lastPlayed, playCounter, addedDate, coverHash, trackGain, albumGain) " // NOI18N
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-                    + "0, \"1970-01-01 00:00:00\", 0, datetime('now'), ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS)) {
+                    + "0, \"1970-01-01 00:00:00\", 0, datetime('now'), ?, ?, ?)")) {
 
                 stInsertFileTag.setString(1, fileInfo.getFilename());
                 stInsertFileTag.setInt(2, fileInfo.getIdPath());
@@ -91,7 +89,8 @@ public class DaoFileWrite {
                 int nbRowsAffected = stInsertFileTag.executeUpdate();
 
                 if (nbRowsAffected == 1) {
-                    try (ResultSet keys = stInsertFileTag.getGeneratedKeys()) {
+                    try (PreparedStatement stKey = dbConn.connection.prepareStatement("SELECT last_insert_rowid()");
+                         ResultSet keys = stKey.executeQuery()) {
                         if (keys.next()) {
                             key[0] = keys.getInt(1);
                             return true;

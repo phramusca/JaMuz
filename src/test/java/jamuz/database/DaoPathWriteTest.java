@@ -23,32 +23,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoPathWrite}. */
-public class DaoPathWriteTest {
+class DaoPathWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoPathWrite writer;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = new DaoPathWrite(dbConnJaMuz.getDbConn());
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void wipePathWriteRows() throws SQLException {
+    @BeforeEach
+    void wipePathWriteRows() throws SQLException {
         try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
             st.executeUpdate("DELETE FROM path WHERE strPath LIKE 'pathWrite/%'");
         }
@@ -73,7 +73,7 @@ public class DaoPathWriteTest {
     }
 
     @Test
-    public void shouldInsertUpdateDeletePath() throws SQLException {
+    void shouldInsertUpdateDeletePath() throws SQLException {
         int id = insertPath("pathWrite/ins/a");
         assertTrue(writer.update(id, new Date(), FolderInfo.CheckedFlag.OK,
                 "pathWrite/upd/a", "mbid2"));
@@ -94,7 +94,7 @@ public class DaoPathWriteTest {
     }
 
     @Test
-    public void shouldUpdateCheckedFlagAndCopyRight() throws SQLException {
+    void shouldUpdateCheckedFlagAndCopyRight() throws SQLException {
         int id = insertPath("pathWrite/chk");
         assertEquals(FolderInfo.CheckedFlag.UNCHECKED.getValue(),
                 intScalar("SELECT checked FROM path WHERE idPath = ?", id));
@@ -107,7 +107,7 @@ public class DaoPathWriteTest {
     }
 
     @Test
-    public void shouldResetCheckedFlagBatch() throws SQLException {
+    void shouldResetCheckedFlagBatch() throws SQLException {
         int id = insertPath("pathWrite/reset");
         assertTrue(writer.updateCheckedFlag(id, FolderInfo.CheckedFlag.KO));
         assertEquals(FolderInfo.CheckedFlag.KO.getValue(),

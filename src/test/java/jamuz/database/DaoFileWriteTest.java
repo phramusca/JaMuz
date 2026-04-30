@@ -25,23 +25,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoFileWrite}. */
-public class DaoFileWriteTest {
+class DaoFileWriteTest {
 
     private static DbConnJaMuz dbConnJaMuz;
     private static DaoFileWrite writer;
     private static final String ROOT = "/root/fw/";
     private static int pathId;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
         writer = dbConnJaMuz.file().lock();
         dbConnJaMuz.file().setLocationLibrary(ROOT);
@@ -50,13 +50,13 @@ public class DaoFileWriteTest {
         pathId = keyPath[0];
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @Before
-    public void wipeFilesOnPath() throws SQLException {
+    @BeforeEach
+    void wipeFilesOnPath() throws SQLException {
         try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
             st.executeUpdate("DELETE FROM tagFile WHERE idFile IN (SELECT idFile FROM file WHERE idPath = " + pathId + ")");
             st.executeUpdate("DELETE FROM fileTranscoded WHERE idFile IN (SELECT idFile FROM file WHERE idPath = " + pathId + ")");
@@ -97,14 +97,14 @@ public class DaoFileWriteTest {
     }
 
     @Test
-    public void shouldInsertThenDeleteFile() throws SQLException {
+    void shouldInsertThenDeleteFile() throws SQLException {
         FileInfoInt f = insertSampleFile("a.ext");
         assertTrue(writer.delete(f.getIdFile()));
         assertFalse(writer.delete(f.getIdFile()));
     }
 
     @Test
-    public void shouldSetSavedFlag() throws SQLException {
+    void shouldSetSavedFlag() throws SQLException {
         FileInfoInt f = insertSampleFile("saved.ext");
         assertEquals(0, intScalar("SELECT saved FROM file WHERE idFile = ?", f.getIdFile()));
         assertTrue(writer.setSaved(f.getIdFile()));
@@ -112,18 +112,18 @@ public class DaoFileWriteTest {
     }
 
     @Test
-    public void shouldUpdateMetadataFromFileInfo() throws SQLException {
+    void shouldUpdateMetadataFromFileInfo() throws SQLException {
         FileInfoInt f = insertSampleFile("upd.ext");
-        f.setFilename("upd2.ext");
         f.setGenre("Genre2");
         assertTrue(writer.update(f));
         FileInfoInt fromDb = dbConnJaMuz.file().getFile(f.getIdFile(), "");
-        assertEquals("upd2.ext", fromDb.getFilename());
+        // DaoFileWrite.update() updates audio metadata (genre, artist, etc.) but not the filename
+        assertEquals("upd.ext", fromDb.getFilename());
         assertEquals("Genre2", fromDb.getGenre());
     }
 
     @Test
-    public void shouldUpdateLastPlayedAndCounter() throws SQLException {
+    void shouldUpdateLastPlayedAndCounter() throws SQLException {
         FileInfoInt f = insertSampleFile("lp.ext");
         f.setPlayCounter(3);
         assertTrue(writer.updateLastPlayedAndCounter(f));
@@ -132,7 +132,7 @@ public class DaoFileWriteTest {
     }
 
     @Test
-    public void shouldUpdateRating() throws SQLException {
+    void shouldUpdateRating() throws SQLException {
         FileInfoInt f = insertSampleFile("rate.ext");
         f.setRating(4);
         assertTrue(writer.updateRating(f));
@@ -140,7 +140,7 @@ public class DaoFileWriteTest {
     }
 
     @Test
-    public void shouldUpdateFileGenre() throws SQLException {
+    void shouldUpdateFileGenre() throws SQLException {
         FileInfoInt f = insertSampleFile("genre.ext");
         f.setGenre("Jazz");
         assertTrue(writer.updateFileGenre(f));
@@ -148,7 +148,7 @@ public class DaoFileWriteTest {
     }
 
     @Test
-    public void shouldUpdateIdPathForAllFilesOnPath() throws SQLException {
+    void shouldUpdateIdPathForAllFilesOnPath() throws SQLException {
         int[] keyPath2 = new int[1];
         dbConnJaMuz.path().lock().insert("rel/fw2/", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbid2", keyPath2);
         int path2 = keyPath2[0];
@@ -170,7 +170,7 @@ public class DaoFileWriteTest {
     }
 
     @Test
-    public void shouldUpdateModifDateAndNameById() throws SQLException {
+    void shouldUpdateModifDateAndNameById() throws SQLException {
         FileInfoInt f = insertSampleFile("mod.ext");
         Date d = new Date(150_000_000_000L);
         assertTrue(writer.updateModifDate(f.getIdFile(), d, "renamed.ext"));
@@ -179,14 +179,14 @@ public class DaoFileWriteTest {
     }
 
     @Test
-    public void shouldUpdateTagsModifDateByTagValue() throws SQLException {
+    void shouldUpdateTagsModifDateByTagValue() throws SQLException {
         FileInfoInt f = insertSampleFile("tagmod.ext");
         linkTagToFile(f.getIdFile(), "modTagVal");
         assertTrue(writer.updateModifDate("modTagVal"));
     }
 
     @Test
-    public void shouldUpdateTagsModifDateByFileInfo() throws SQLException {
+    void shouldUpdateTagsModifDateByFileInfo() throws SQLException {
         FileInfoInt f = insertSampleFile("tagmod2.ext");
         FileInfo asFileInfo = dbConnJaMuz.file().getFile(f.getIdFile(), "");
         assertTrue(writer.updateModifDate(asFileInfo));

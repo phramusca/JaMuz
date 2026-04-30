@@ -4,12 +4,12 @@ import jamuz.FileInfo;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for base behaviours in {@link StatSourceSQL}. */
-public class StatSourceSQLTest {
+class StatSourceSQLTest {
 
     private static final class DummyStatSource extends StatSourceSQL {
         DummyStatSource(DbInfo info) {
@@ -32,7 +32,7 @@ public class StatSourceSQLTest {
     }
 
     @Test
-    public void shouldExposeDbConnAndBaseHelpers() throws IOException {
+    void shouldExposeDbConnAndBaseHelpers() throws IOException {
         DummyStatSource src = new DummyStatSource(TestUnitSettings.getTempDbInfo());
         assertNotNull(src.getDbConn());
         assertEquals("a/b", src.getPath("a\\b"));

@@ -8,34 +8,34 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestUnitSettings;
 
 /** Tests for {@link DaoDeviceFile}. */
-public class DaoDeviceFileTest {
+class DaoDeviceFileTest {
 
     private static DbConnJaMuz dbConnJaMuz;
 
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void shouldExposeWriteLock() {
+    void shouldExposeWriteLock() {
         assertNotNull(dbConnJaMuz.deviceFile().lock());
     }
 
     @Test
-    public void shouldReadFilesLinkedToDeviceAfterInsertOrIgnore() {
+    void shouldReadFilesLinkedToDeviceAfterInsertOrIgnore() {
         dbConnJaMuz.machine().lock().getOrInsert("DeviceFileHost", new StringBuilder(), false);
         dbConnJaMuz.playlist().lock().insert(new Playlist(0, "plDeviceFile", false, 0, Playlist.LimitUnit.Gio, false,
                 Playlist.Type.Albums, Playlist.Match.All, false, "ext"));
