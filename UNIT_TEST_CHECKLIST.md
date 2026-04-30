@@ -10,6 +10,7 @@ All completed batch history has been removed.
 - Dedicated unit-test coverage for `src/main/java`: **complete**
   - `main_without_dedicated_test`: **0**
   - `main_with_dedicated_test`: **236**
+- All unit tests run with JUnit5 (no more silent JUnit4 skipping): **506 tests, 0 failures, 4 skipped** (network/GUI)
 - Unit-test quality counters:
   - `nb_prototype_stubs`: **0**
   - `nb_fixme_test`: **0**
@@ -66,13 +67,30 @@ Next step is **selective depth**, not blanket expansion.
 - **`Results`** — 3 tests: added `getBest()` with `status="ok"` but empty results → null
   (previously only tested error status and chromaprint getter).
 
+### JUnit4 → JUnit5 conversion: COMPLETE (2026-04-30)
+
+All previously-silent JUnit4 test files have been converted to JUnit5 in 5 commits:
+
+1. **Utils purs** — DateTime, Encryption, OS, Inter, Benchmark, AppVersionCheck, QRCode, ClipboardImage
+2. **Soulseek data models** — SlskdSearchFile, SlskdSearchResponse, SlskdDockerSharedDir, TableModelSlskd*
+3. **Database (39 files)** — all DAO + DbConn + DbInfo + DbVersion + StatSource  
+   _Production bugs fixed: `getGeneratedKeys()` → `last_insert_rowid()`, `DbConn.disconnect()` NPE,  
+   AUTOINCREMENT reset, path normalization, client name insert-suffix vs update_
+4. **Utils restants** — ClipboardText, ProcessAbstract, FileSystem, Popup, Swing, Desktop, SSH, Ftp
+5. **AppVersionTest** (Mockito JUnit5) + IconBufferVideoTest
+
+Infrastructure additions:
+- `Jamuz.setMachine(Machine)` — allows tests to inject a minimal Machine without full app init
+- `TestUnitSettings.setupJamuzGlobals()` — initialises `Jamuz.db` and `Jamuz.machine` for tests needing `FolderInfo`
+- commons-io upgraded 2.14.0 → 2.16.1 (required by commons-compress 1.28.0's `ChecksumInputStream`)
+
 ### Remaining focus areas
 
-1. Other `junit4`-tagged tests in CSV: not executed by the full suite (no `junit-vintage-engine`).
-   - Consider converting high-value JUnit4 test files to JUnit5 for actual execution.
-2. `jamuz.process.check` / `jamuz.process.video` DB-heavy classes: skip unless in-memory SQLite
+1. `jamuz.process.check` / `jamuz.process.video` DB-heavy classes: skip unless in-memory SQLite
    feasible without major effort.
-3. Contract-only classes (`CheckDisplay`, Swing panels): intentionally kept lightweight.
+2. Contract-only classes (`CheckDisplay`, Swing panels): intentionally kept lightweight.
+3. `AppVersionCheck` async tests (`@Disabled`): need injectable `OkHttpClient` or base-URL parameter
+   to mock the GitHub API endpoint properly.
 
 Definition of “enough depth”:
 

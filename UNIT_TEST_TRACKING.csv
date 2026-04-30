@@ -4,7 +4,7 @@ test;tests/functional/Merge1Test.java;tests/functional/Merge1.java;functional;ju
 test;tests/functional/MergeCheckNTest.java;tests/functional/MergeCheckN.java;functional;junit4;1;0;7;0;0;out_of_unit_scope;Track separately (functional plan / TestPlan);—
 test;tests/functional/MergeNTest.java;tests/functional/MergeN.java;functional;junit4;1;0;6;0;0;out_of_unit_scope;Track separately (functional plan / TestPlan);—
 test;jamuz/AppVersionCheckTest.java;jamuz/AppVersionCheck.java;unit;junit5;2;0;0;3;0;clean;—;constructor calls onCheck once; getAppVersion non-null; 3 async tests @Disabled (need injectable OkHttpClient)
-test;jamuz/AppVersionTest.java;jamuz/AppVersion.java;unit;junit4;12;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/AppVersionTest.java;jamuz/AppVersion.java;unit;junit5;12;0;0;0;0;clean;—;full JUnit5 + Mockito conversion
 test;jamuz/FileInfoIntTest.java;jamuz/FileInfoInt.java;unit;junit5;37;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/FileInfoTest.java;jamuz/FileInfo.java;unit;junit5;17;0;0;0;0;clean;—;setPath decomposition, ext lowercased, setExt, setFilename, compareTo, equalsStats (same/rating/playCounter/genre)
 test;jamuz/ICallBackVersionCheckTest.java;jamuz/ICallBackVersionCheck.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -26,46 +26,46 @@ test;jamuz/acoustid/ChromaPrintTest.java;jamuz/acoustid/ChromaPrint.java;unit;ju
 test;jamuz/acoustid/RecordingTest.java;jamuz/acoustid/Recording.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/acoustid/ResultTest.java;jamuz/acoustid/Result.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/acoustid/ResultsTest.java;jamuz/acoustid/Results.java;unit;junit5;3;0;0;0;0;clean;—;getBest: error status→null, ok+empty→null, chromaprint getter
-test;jamuz/database/DaoClientTest.java;jamuz/database/DaoClient.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoClientWriteTest.java;jamuz/database/DaoClientWrite.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoDeviceFileTest.java;jamuz/database/DaoDeviceFile.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoDeviceFileWriteTest.java;jamuz/database/DaoDeviceFileWrite.java;unit;junit4;5;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoDeviceTest.java;jamuz/database/DaoDevice.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoDeviceWriteTest.java;jamuz/database/DaoDeviceWrite.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoFileTagTest.java;jamuz/database/DaoFileTag.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoFileTagWriteTest.java;jamuz/database/DaoFileTagWrite.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoFileTest.java;jamuz/database/DaoFile.java;unit;junit4;4;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoFileTranscodedTest.java;jamuz/database/DaoFileTranscoded.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoFileTranscodedWriteTest.java;jamuz/database/DaoFileTranscodedWrite.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoFileWriteTest.java;jamuz/database/DaoFileWrite.java;unit;junit4;10;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoGenreTest.java;jamuz/database/DaoGenre.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoGenreWriteTest.java;jamuz/database/DaoGenreWrite.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoListModelTest.java;jamuz/database/DaoListModel.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoMachineTest.java;jamuz/database/DaoMachine.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoMachineWriteTest.java;jamuz/database/DaoMachineWrite.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoOptionTest.java;jamuz/database/DaoOption.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoOptionWriteTest.java;jamuz/database/DaoOptionWrite.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoPathAlbumTest.java;jamuz/database/DaoPathAlbum.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoPathAlbumWriteTest.java;jamuz/database/DaoPathAlbumWrite.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoPathTest.java;jamuz/database/DaoPath.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoPathWriteTest.java;jamuz/database/DaoPathWrite.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoPlayCounterTest.java;jamuz/database/DaoPlayCounter.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoPlayCounterWriteTest.java;jamuz/database/DaoPlayCounterWrite.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoPlaylistTest.java;jamuz/database/DaoPlaylist.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoPlaylistWriteTest.java;jamuz/database/DaoPlaylistWrite.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoSchemaTest.java;jamuz/database/DaoSchema.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoSchemaWriteTest.java;jamuz/database/DaoSchemaWrite.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoStatSourceTest.java;jamuz/database/DaoStatSource.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoStatSourceWriteTest.java;jamuz/database/DaoStatSourceWrite.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoTagTest.java;jamuz/database/DaoTag.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DaoTagWriteTest.java;jamuz/database/DaoTagWrite.java;unit;junit4;4;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DbConnJaMuzTest.java;jamuz/database/DbConnJaMuz.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DbConnTest.java;jamuz/database/DbConn.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DbInfoTest.java;jamuz/database/DbInfo.java;unit;junit4;6;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/DbVersionTest.java;jamuz/database/DbVersion.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/database/DaoClientTest.java;jamuz/database/DaoClient.java;unit;junit5;3;0;0;0;0;clean;—;—
+test;jamuz/database/DaoClientWriteTest.java;jamuz/database/DaoClientWrite.java;unit;junit5;3;0;0;0;0;clean;—;insert name suffix bug fixed; updateClient stores name as-is
+test;jamuz/database/DaoDeviceFileTest.java;jamuz/database/DaoDeviceFile.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoDeviceFileWriteTest.java;jamuz/database/DaoDeviceFileWrite.java;unit;junit5;5;0;0;0;0;clean;—;—
+test;jamuz/database/DaoDeviceTest.java;jamuz/database/DaoDevice.java;unit;junit5;3;0;0;0;0;clean;—;—
+test;jamuz/database/DaoDeviceWriteTest.java;jamuz/database/DaoDeviceWrite.java;unit;junit5;3;0;0;0;0;clean;—;AUTOINCREMENT reset in @BeforeEach
+test;jamuz/database/DaoFileTagTest.java;jamuz/database/DaoFileTag.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoFileTagWriteTest.java;jamuz/database/DaoFileTagWrite.java;unit;junit5;1;0;0;0;0;clean;—;—
+test;jamuz/database/DaoFileTest.java;jamuz/database/DaoFile.java;unit;junit5;4;0;0;0;0;clean;—;year>=0 fix
+test;jamuz/database/DaoFileTranscodedTest.java;jamuz/database/DaoFileTranscoded.java;unit;junit5;1;0;0;0;0;clean;—;—
+test;jamuz/database/DaoFileTranscodedWriteTest.java;jamuz/database/DaoFileTranscodedWrite.java;unit;junit5;1;0;0;0;0;clean;—;—
+test;jamuz/database/DaoFileWriteTest.java;jamuz/database/DaoFileWrite.java;unit;junit5;10;0;0;0;0;clean;—;filename not updated by metadata-only update
+test;jamuz/database/DaoGenreTest.java;jamuz/database/DaoGenre.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoGenreWriteTest.java;jamuz/database/DaoGenreWrite.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoListModelTest.java;jamuz/database/DaoListModel.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoMachineTest.java;jamuz/database/DaoMachine.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoMachineWriteTest.java;jamuz/database/DaoMachineWrite.java;unit;junit5;3;0;0;0;0;clean;—;—
+test;jamuz/database/DaoOptionTest.java;jamuz/database/DaoOption.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoOptionWriteTest.java;jamuz/database/DaoOptionWrite.java;unit;junit5;2;0;0;0;0;clean;—;path normalisation side-effect; use bool option
+test;jamuz/database/DaoPathAlbumTest.java;jamuz/database/DaoPathAlbum.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoPathAlbumWriteTest.java;jamuz/database/DaoPathAlbumWrite.java;unit;junit5;1;0;0;0;0;clean;—;—
+test;jamuz/database/DaoPathTest.java;jamuz/database/DaoPath.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoPathWriteTest.java;jamuz/database/DaoPathWrite.java;unit;junit5;3;0;0;0;0;clean;—;—
+test;jamuz/database/DaoPlayCounterTest.java;jamuz/database/DaoPlayCounter.java;unit;junit5;1;0;0;0;0;clean;—;—
+test;jamuz/database/DaoPlayCounterWriteTest.java;jamuz/database/DaoPlayCounterWrite.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoPlaylistTest.java;jamuz/database/DaoPlaylist.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoPlaylistWriteTest.java;jamuz/database/DaoPlaylistWrite.java;unit;junit5;3;0;0;0;0;clean;—;—
+test;jamuz/database/DaoSchemaTest.java;jamuz/database/DaoSchema.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoSchemaWriteTest.java;jamuz/database/DaoSchemaWrite.java;unit;junit5;1;0;0;0;0;clean;—;—
+test;jamuz/database/DaoStatSourceTest.java;jamuz/database/DaoStatSource.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoStatSourceWriteTest.java;jamuz/database/DaoStatSourceWrite.java;unit;junit5;3;0;0;0;0;clean;—;—
+test;jamuz/database/DaoTagTest.java;jamuz/database/DaoTag.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DaoTagWriteTest.java;jamuz/database/DaoTagWrite.java;unit;junit5;4;0;0;0;0;clean;—;—
+test;jamuz/database/DbConnJaMuzTest.java;jamuz/database/DbConnJaMuz.java;unit;junit5;2;0;0;0;0;clean;—;—
+test;jamuz/database/DbConnTest.java;jamuz/database/DbConn.java;unit;junit5;3;0;0;0;0;clean;—;—
+test;jamuz/database/DbInfoTest.java;jamuz/database/DbInfo.java;unit;junit5;6;0;0;0;0;clean;—;TemporaryFolder→@TempDir; FTP URI without port
+test;jamuz/database/DbVersionTest.java;jamuz/database/DbVersion.java;unit;junit5;1;0;0;0;0;clean;—;—
 test;jamuz/database/SchemaUpgradeLogTest.java;jamuz/database/SchemaUpgradeLog.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/StatSourceAbstractTest.java;jamuz/database/StatSourceAbstract.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/database/StatSourceSQLTest.java;jamuz/database/StatSourceSQL.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/database/StatSourceAbstractTest.java;jamuz/database/StatSourceAbstract.java;unit;junit5;1;0;0;0;0;clean;—;—
+test;jamuz/database/StatSourceSQLTest.java;jamuz/database/StatSourceSQL.java;unit;junit5;1;0;0;0;0;clean;—;—
 test;jamuz/gui/DialogCoverDisplayTest.java;jamuz/gui/DialogCoverDisplay.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/DialogDeviceTest.java;jamuz/gui/DialogDevice.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/DialogOptionsTest.java;jamuz/gui/DialogOptions.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -183,7 +183,7 @@ test;jamuz/process/video/DialogVideoCleanupTest.java;jamuz/process/video/DialogV
 test;jamuz/process/video/DialogVideoExportTest.java;jamuz/process/video/DialogVideoExport.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/DialogVideoOptionTest.java;jamuz/process/video/DialogVideoOption.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/FileInfoVideoTest.java;jamuz/process/video/FileInfoVideo.java;unit;junit5;11;0;0;0;0;clean;—;isHD quality thresholds, getVideoStreamDetails, getFormattedEpisodeNumber, audio/subtitles formatting
-test;jamuz/process/video/IconBufferVideoTest.java;jamuz/process/video/IconBufferVideo.java;unit;junit4;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/IconBufferVideoTest.java;jamuz/process/video/IconBufferVideo.java;unit;junit5;1;0;0;0;0;clean;—;@Disabled live-network test
 test;jamuz/process/video/MyMovieDbTest.java;jamuz/process/video/MyMovieDb.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/MyTvShowTest.java;jamuz/process/video/MyTvShow.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/MyVideoAbstractTest.java;jamuz/process/video/MyVideoAbstract.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -220,30 +220,30 @@ test;jamuz/soulseek/SlskdSearchResultTest.java;jamuz/soulseek/SlskdSearchResult.
 test;jamuz/soulseek/SlskdTokenResponseTest.java;jamuz/soulseek/SlskdTokenResponse.java;unit;junit5;1;0;0;0;0;clean;—;record accessors round-trip
 test;jamuz/soulseek/TableModelSlskdDownloadTest.java;jamuz/soulseek/TableModelSlskdDownload.java;unit;junit5;7;0;0;0;0;clean;—;addRow; replaceRow; removeRow; clear; getValueAt; isCellEditable; getColumnClass
 test;jamuz/soulseek/TableModelSlskdSearchTest.java;jamuz/soulseek/TableModelSlskdSearch.java;unit;junit5;7;0;0;0;0;clean;—;addRow; replaceRow; removeRow; clear; getValueAt (with Mockito); isCellEditable; isCellEnabled
-test;jamuz/utils/BenchmarkTest.java;jamuz/utils/Benchmark.java;unit;junit4;4;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/utils/BenchmarkTest.java;jamuz/utils/Benchmark.java;unit;junit5;4;0;0;0;0;clean;—;timing assertions replaced with format check
 test;jamuz/utils/ClipboardImageTest.java;jamuz/utils/ClipboardImage.java;unit;junit5;1;0;0;0;0;clean;—;getImageFromClipboard does not throw (skipped in headless)
-test;jamuz/utils/ClipboardTextTest.java;jamuz/utils/ClipboardText.java;unit;junit4;4;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/utils/ClipboardTextTest.java;jamuz/utils/ClipboardText.java;unit;junit5;1;0;0;0;0;clean;—;headless-aware roundtrip
 test;jamuz/utils/DateTimeTest.java;jamuz/utils/DateTime.java;unit;junit5;5;0;0;0;0;clean;—;formatUTC(pattern), formatUTC(enum), formatUTCtoSql*; currentDateHelpers; parseSqlUtc round-trip
 test;jamuz/utils/DependenciesTest.java;jamuz/utils/Dependencies.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/utils/DesktopTest.java;jamuz/utils/Desktop.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/utils/DesktopTest.java;jamuz/utils/Desktop.java;unit;junit5;1;0;0;0;0;clean;—;class-load smoke test (UI only)
 test;jamuz/utils/EncryptionTest.java;jamuz/utils/Encryption.java;unit;junit5;2;0;0;0;0;clean;—;encrypt-decrypt round-trip; different secrets produce different ciphertext
-test;jamuz/utils/FileSystemTest.java;jamuz/utils/FileSystem.java;unit;junit4;5;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/utils/FtpTest.java;jamuz/utils/Ftp.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/utils/FileSystemTest.java;jamuz/utils/FileSystem.java;unit;junit5;4;0;0;0;0;clean;—;Hamcrest→JUnit5 assertions; replaceHome, move, copy, size
+test;jamuz/utils/FtpTest.java;jamuz/utils/Ftp.java;unit;junit5;1;0;0;0;0;clean;—;constructor contract (no live FTP server)
 test;jamuz/utils/ImageUtilsTest.java;jamuz/utils/ImageUtils.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/utils/InterTest.java;jamuz/utils/Inter.java;unit;junit5;1;0;0;0;0;clean;—;get() returns non-blank for known key
 test;jamuz/utils/LogTextTest.java;jamuz/utils/LogText.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/utils/OSTest.java;jamuz/utils/OS.java;unit;junit5;4;0;0;0;0;clean;—;detect() true on CI; getName() non-null after detect; Windows XOR Unix; at least one flag set
-test;jamuz/utils/PopupTest.java;jamuz/utils/Popup.java;unit;junit4;7;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/utils/ProcessAbstractTest.java;jamuz/utils/ProcessAbstract.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/utils/PopupTest.java;jamuz/utils/Popup.java;unit;junit5;1;0;0;0;0;clean;—;class-load smoke test (UI only)
+test;jamuz/utils/ProcessAbstractTest.java;jamuz/utils/ProcessAbstract.java;unit;junit5;2;0;0;0;0;clean;—;abort/reset/checkAbort real assertions
 test;jamuz/utils/QRCodeTest.java;jamuz/utils/QRCode.java;unit;junit5;1;0;0;0;0;clean;—;create() returns non-null BufferedImage with correct dimensions
-test;jamuz/utils/SSHTest.java;jamuz/utils/SSH.java;unit;junit4;5;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/utils/SSHTest.java;jamuz/utils/SSH.java;unit;junit5;1;0;0;0;0;clean;—;constructor contract; isConnected() NPE pre-connect (TODO)
 test;jamuz/utils/StringManagerTest.java;jamuz/utils/StringManager.java;unit;junit5;30;0;0;0;0;clean;—;removeIllegal, truncate, getNullableText, humanReadableByteCount, secondsToMMSS, secondsToHHMM, humanReadableSeconds, parseSlashList, Left, Right
-test;jamuz/utils/SwingTest.java;jamuz/utils/Swing.java;unit;junit4;6;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/utils/SwingTest.java;jamuz/utils/Swing.java;unit;junit5;1;0;0;0;0;clean;—;class-load smoke test (UI only)
 test;jamuz/utils/UtilsTest.java;jamuz/utils/Utils.java;unit;junit5;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/utils/XMLTest.java;jamuz/utils/XML.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-main_class;jamuz/AppVersion.java;jamuz/AppVersionTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/AppVersionCheck.java;jamuz/AppVersionCheckTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/FileInfo.java;jamuz/FileInfoTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/AppVersion.java;jamuz/AppVersionTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/AppVersionCheck.java;jamuz/AppVersionCheckTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/FileInfo.java;jamuz/FileInfoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/FileInfoInt.java;jamuz/FileInfoIntTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/ICallBackVersionCheck.java;jamuz/ICallBackVersionCheckTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/ICallBackVersionUpdate.java;jamuz/ICallBackVersionUpdateTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
@@ -264,46 +264,46 @@ main_class;jamuz/acoustid/ChromaPrint.java;jamuz/acoustid/ChromaPrintTest.java;u
 main_class;jamuz/acoustid/Recording.java;jamuz/acoustid/RecordingTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/acoustid/Result.java;jamuz/acoustid/ResultTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/acoustid/Results.java;jamuz/acoustid/ResultsTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoClient.java;jamuz/database/DaoClientTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoClientWrite.java;jamuz/database/DaoClientWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoDevice.java;jamuz/database/DaoDeviceTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoDeviceFile.java;jamuz/database/DaoDeviceFileTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoDeviceFileWrite.java;jamuz/database/DaoDeviceFileWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoDeviceWrite.java;jamuz/database/DaoDeviceWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoFile.java;jamuz/database/DaoFileTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoFileTag.java;jamuz/database/DaoFileTagTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoFileTagWrite.java;jamuz/database/DaoFileTagWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoFileTranscoded.java;jamuz/database/DaoFileTranscodedTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoFileTranscodedWrite.java;jamuz/database/DaoFileTranscodedWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoFileWrite.java;jamuz/database/DaoFileWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoGenre.java;jamuz/database/DaoGenreTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoGenreWrite.java;jamuz/database/DaoGenreWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoListModel.java;jamuz/database/DaoListModelTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoMachine.java;jamuz/database/DaoMachineTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoMachineWrite.java;jamuz/database/DaoMachineWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoOption.java;jamuz/database/DaoOptionTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoOptionWrite.java;jamuz/database/DaoOptionWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoPath.java;jamuz/database/DaoPathTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoPathAlbum.java;jamuz/database/DaoPathAlbumTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoPathAlbumWrite.java;jamuz/database/DaoPathAlbumWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoPathWrite.java;jamuz/database/DaoPathWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoPlayCounter.java;jamuz/database/DaoPlayCounterTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoPlayCounterWrite.java;jamuz/database/DaoPlayCounterWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoPlaylist.java;jamuz/database/DaoPlaylistTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoPlaylistWrite.java;jamuz/database/DaoPlaylistWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoSchema.java;jamuz/database/DaoSchemaTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoSchemaWrite.java;jamuz/database/DaoSchemaWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoStatSource.java;jamuz/database/DaoStatSourceTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoStatSourceWrite.java;jamuz/database/DaoStatSourceWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoTag.java;jamuz/database/DaoTagTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DaoTagWrite.java;jamuz/database/DaoTagWriteTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DbConn.java;jamuz/database/DbConnTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DbConnJaMuz.java;jamuz/database/DbConnJaMuzTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DbInfo.java;jamuz/database/DbInfoTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/DbVersion.java;jamuz/database/DbVersionTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoClient.java;jamuz/database/DaoClientTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoClientWrite.java;jamuz/database/DaoClientWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoDevice.java;jamuz/database/DaoDeviceTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoDeviceFile.java;jamuz/database/DaoDeviceFileTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoDeviceFileWrite.java;jamuz/database/DaoDeviceFileWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoDeviceWrite.java;jamuz/database/DaoDeviceWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoFile.java;jamuz/database/DaoFileTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoFileTag.java;jamuz/database/DaoFileTagTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoFileTagWrite.java;jamuz/database/DaoFileTagWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoFileTranscoded.java;jamuz/database/DaoFileTranscodedTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoFileTranscodedWrite.java;jamuz/database/DaoFileTranscodedWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoFileWrite.java;jamuz/database/DaoFileWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoGenre.java;jamuz/database/DaoGenreTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoGenreWrite.java;jamuz/database/DaoGenreWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoListModel.java;jamuz/database/DaoListModelTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoMachine.java;jamuz/database/DaoMachineTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoMachineWrite.java;jamuz/database/DaoMachineWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoOption.java;jamuz/database/DaoOptionTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoOptionWrite.java;jamuz/database/DaoOptionWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoPath.java;jamuz/database/DaoPathTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoPathAlbum.java;jamuz/database/DaoPathAlbumTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoPathAlbumWrite.java;jamuz/database/DaoPathAlbumWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoPathWrite.java;jamuz/database/DaoPathWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoPlayCounter.java;jamuz/database/DaoPlayCounterTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoPlayCounterWrite.java;jamuz/database/DaoPlayCounterWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoPlaylist.java;jamuz/database/DaoPlaylistTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoPlaylistWrite.java;jamuz/database/DaoPlaylistWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoSchema.java;jamuz/database/DaoSchemaTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoSchemaWrite.java;jamuz/database/DaoSchemaWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoStatSource.java;jamuz/database/DaoStatSourceTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoStatSourceWrite.java;jamuz/database/DaoStatSourceWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoTag.java;jamuz/database/DaoTagTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DaoTagWrite.java;jamuz/database/DaoTagWriteTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DbConn.java;jamuz/database/DbConnTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DbConnJaMuz.java;jamuz/database/DbConnJaMuzTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DbInfo.java;jamuz/database/DbInfoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/DbVersion.java;jamuz/database/DbVersionTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/database/SchemaUpgradeLog.java;jamuz/database/SchemaUpgradeLogTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/StatSourceAbstract.java;jamuz/database/StatSourceAbstractTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/database/StatSourceSQL.java;jamuz/database/StatSourceSQLTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/StatSourceAbstract.java;jamuz/database/StatSourceAbstractTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/database/StatSourceSQL.java;jamuz/database/StatSourceSQLTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/DialogCoverDisplay.java;jamuz/gui/DialogCoverDisplayTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/DialogDevice.java;jamuz/gui/DialogDeviceTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/gui/DialogOptions.java;jamuz/gui/DialogOptionsTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
@@ -420,7 +420,7 @@ main_class;jamuz/process/video/DialogVideoCleanupConfirm.java;jamuz/process/vide
 main_class;jamuz/process/video/DialogVideoExport.java;jamuz/process/video/DialogVideoExportTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/DialogVideoOption.java;jamuz/process/video/DialogVideoOptionTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/FileInfoVideo.java;jamuz/process/video/FileInfoVideoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;—;Coverage: quality detection + stream details fully tested
-main_class;jamuz/process/video/IconBufferVideo.java;jamuz/process/video/IconBufferVideoTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/process/video/IconBufferVideo.java;jamuz/process/video/IconBufferVideoTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/MyMovieDb.java;jamuz/process/video/MyMovieDbTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/MyTvShow.java;jamuz/process/video/MyTvShowTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/process/video/MyVideoAbstract.java;jamuz/process/video/MyVideoAbstractTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
@@ -450,30 +450,30 @@ main_class;jamuz/soulseek/SlskdDocker.java;jamuz/soulseek/SlskdDockerTest.java;u
 main_class;jamuz/soulseek/SlskdDownloadDirectory.java;jamuz/soulseek/SlskdDownloadDirectoryTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/soulseek/SlskdDownloadFile.java;jamuz/soulseek/SlskdDownloadFileTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/soulseek/SlskdDownloadUser.java;jamuz/soulseek/SlskdDownloadUserTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/soulseek/SlskdSearchFile.java;jamuz/soulseek/SlskdSearchFileTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/soulseek/SlskdSearchResponse.java;jamuz/soulseek/SlskdSearchResponseTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/soulseek/SlskdSearchResult.java;jamuz/soulseek/SlskdSearchResultTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/soulseek/SlskdTokenResponse.java;jamuz/soulseek/SlskdTokenResponseTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/soulseek/TableModelSlskdDownload.java;jamuz/soulseek/TableModelSlskdDownloadTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/soulseek/TableModelSlskdSearch.java;jamuz/soulseek/TableModelSlskdSearchTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/Benchmark.java;jamuz/utils/BenchmarkTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/ClipboardImage.java;jamuz/utils/ClipboardImageTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/ClipboardText.java;jamuz/utils/ClipboardTextTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/DateTime.java;jamuz/utils/DateTimeTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/soulseek/SlskdSearchFile.java;jamuz/soulseek/SlskdSearchFileTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/soulseek/SlskdSearchResponse.java;jamuz/soulseek/SlskdSearchResponseTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/soulseek/SlskdSearchResult.java;jamuz/soulseek/SlskdSearchResultTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/soulseek/SlskdTokenResponse.java;jamuz/soulseek/SlskdTokenResponseTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/soulseek/TableModelSlskdDownload.java;jamuz/soulseek/TableModelSlskdDownloadTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/soulseek/TableModelSlskdSearch.java;jamuz/soulseek/TableModelSlskdSearchTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/Benchmark.java;jamuz/utils/BenchmarkTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/ClipboardImage.java;jamuz/utils/ClipboardImageTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/ClipboardText.java;jamuz/utils/ClipboardTextTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/DateTime.java;jamuz/utils/DateTimeTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/utils/Dependencies.java;jamuz/utils/DependenciesTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/Desktop.java;jamuz/utils/DesktopTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/Encryption.java;jamuz/utils/EncryptionTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/FileSystem.java;jamuz/utils/FileSystemTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/Ftp.java;jamuz/utils/FtpTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/Desktop.java;jamuz/utils/DesktopTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/Encryption.java;jamuz/utils/EncryptionTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/FileSystem.java;jamuz/utils/FileSystemTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/Ftp.java;jamuz/utils/FtpTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/utils/ImageUtils.java;jamuz/utils/ImageUtilsTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/Inter.java;jamuz/utils/InterTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/Inter.java;jamuz/utils/InterTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/utils/LogText.java;jamuz/utils/LogTextTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/OS.java;jamuz/utils/OSTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/Popup.java;jamuz/utils/PopupTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/ProcessAbstract.java;jamuz/utils/ProcessAbstractTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/QRCode.java;jamuz/utils/QRCodeTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/SSH.java;jamuz/utils/SSHTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/OS.java;jamuz/utils/OSTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/Popup.java;jamuz/utils/PopupTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/ProcessAbstract.java;jamuz/utils/ProcessAbstractTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/QRCode.java;jamuz/utils/QRCodeTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/SSH.java;jamuz/utils/SSHTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/utils/StringManager.java;jamuz/utils/StringManagerTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
-main_class;jamuz/utils/Swing.java;jamuz/utils/SwingTest.java;unit;junit4;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
+main_class;jamuz/utils/Swing.java;jamuz/utils/SwingTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/utils/Utils.java;jamuz/utils/UtilsTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
 main_class;jamuz/utils/XML.java;jamuz/utils/XMLTest.java;unit;junit5;0;0;0;0;0;main_with_dedicated_test;Improve coverage depth if needed;Increase scenario coverage where relevant
