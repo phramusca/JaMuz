@@ -1,162 +1,53 @@
-/*
- * Copyright (C) 2023 raph
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package jamuz.database;
 
 import jamuz.process.check.FolderInfo;
-import java.util.concurrent.ConcurrentHashMap;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import test.helpers.TestUnitSettings;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
+/** Tests for {@link DaoPath}. */
+class DaoPathTest {
 
-/**
- *
- * @author raph
- */
-public class DaoPathTest {
-    
-    public DaoPathTest() {
-    }
-    
-   private static DbConnJaMuz dbConnJaMuz;
-    
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    private static DbConnJaMuz dbConnJaMuz;
+    private static int idPath;
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        int[] key = new int[1];
+        dbConnJaMuz.path().lock().insert("daoPath/test", new Date(), FolderInfo.CheckedFlag.OK, "mbid", key);
+        idPath = key[0];
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+
+    @Test
+    void shouldExposeWriteLock() {
+        assertNotNull(dbConnJaMuz.path().lock());
     }
 
     @Test
-	public void testxxxxxxxxxxxxxx() {
+    void shouldReadPathsByDifferentSelectors() {
+        ConcurrentHashMap<String, FolderInfo> byChecked = new ConcurrentHashMap<>();
+        assertTrue(dbConnJaMuz.path().get(byChecked, FolderInfo.CheckedFlag.OK));
+        assertFalse(byChecked.isEmpty());
 
-		System.out.println("testxxxxxxxxxxxxxx");
+        ConcurrentHashMap<String, FolderInfo> byId = new ConcurrentHashMap<>();
+        assertTrue(dbConnJaMuz.path().get(byId, idPath));
+        assertEquals(1, byId.size());
 
-        //FIXME TEST Make unit test
-		//FIXME TEST Negative cases
-		//FIXME TEST Check other constraints
-	}
+        FolderInfo folder = dbConnJaMuz.path().get(idPath);
+        assertNotNull(folder);
 
-    /**
-     * Test of lock method, of class DaoPath.
-     */
-    @Test
-    public void testLock() {
-        System.out.println("lock");
-        DaoPath instance = null;
-        DaoPathWrite expResult = null;
-        DaoPathWrite result = instance.lock();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(idPath, dbConnJaMuz.path().getIdPath("daoPath/test"));
     }
-
-    /**
-     * Test of get method, of class DaoPath.
-     */
-    @Test
-    public void testGet_ConcurrentHashMap_FolderInfoCheckedFlag() {
-        System.out.println("get");
-        ConcurrentHashMap<String, FolderInfo> folders = null;
-        FolderInfo.CheckedFlag checkedFlag = null;
-        DaoPath instance = null;
-        boolean expResult = false;
-        boolean result = instance.get(folders, checkedFlag);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of get method, of class DaoPath.
-     */
-    @Test
-    public void testGet_ConcurrentHashMap_int() {
-        System.out.println("get");
-        ConcurrentHashMap<String, FolderInfo> folders = null;
-        int idPath = 0;
-        DaoPath instance = null;
-        boolean expResult = false;
-        boolean result = instance.get(folders, idPath);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of get method, of class DaoPath.
-     */
-    @Test
-    public void testGet_int() {
-        System.out.println("get");
-        int idPath = 0;
-        DaoPath instance = null;
-        FolderInfo expResult = null;
-        FolderInfo result = instance.get(idPath);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of get method, of class DaoPath.
-     */
-    @Test
-    public void testGet_ConcurrentHashMap() {
-        System.out.println("get");
-        ConcurrentHashMap<String, FolderInfo> folders = null;
-        DaoPath instance = null;
-        boolean expResult = false;
-        boolean result = instance.get(folders);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getIdPath method, of class DaoPath.
-     */
-    @Test
-    public void testGetIdPath() {
-        System.out.println("getIdPath");
-        String path = "";
-        DaoPath instance = null;
-        int expResult = 0;
-        int result = instance.getIdPath(path);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
 }

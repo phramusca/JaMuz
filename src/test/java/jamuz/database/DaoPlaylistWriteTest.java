@@ -17,85 +17,84 @@
 package jamuz.database;
 
 import jamuz.Playlist;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
-/**
- *
- * @author phramusca <phramusca@gmail.com>
- */
-public class DaoPlaylistWriteTest {
-	
-	public DaoPlaylistWriteTest() {
-	}
-	
-	@BeforeClass
-	public static void setUpClass() {
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-	}
-	
-	@Before
-	public void setUp() {
-	}
-	
-	@After
-	public void tearDown() {
-	}
+/** Tests for {@link DaoPlaylistWrite}. */
+class DaoPlaylistWriteTest {
 
-	/**
-	 * Test of insert method, of class DaoPlaylistWrite.
-	 */
-	@Test
-	@Ignore // Refer to DaoPlaylistTest
-	public void testInsert() {
-		System.out.println("insert");
-		Playlist playlist = null;
-		DaoPlaylistWrite instance = null;
-		boolean expResult = false;
-		boolean result = instance.insert(playlist);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoPlaylistWrite writer;
 
-	/**
-	 * Test of update method, of class DaoPlaylistWrite.
-	 */
-	@Test
-	@Ignore // Refer to DaoPlaylistTest
-	public void testUpdate() {
-		System.out.println("update");
-		Playlist playlist = null;
-		DaoPlaylistWrite instance = null;
-		boolean expResult = false;
-		boolean result = instance.update(playlist);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoPlaylistWrite(dbConnJaMuz.getDbConn());
+    }
 
-	/**
-	 * Test of delete method, of class DaoPlaylistWrite.
-	 */
-	@Test
-	@Ignore // Refer to DaoPlaylistTest
-	public void testDelete() {
-		System.out.println("delete");
-		int id = 0;
-		DaoPlaylistWrite instance = null;
-		boolean expResult = false;
-		boolean result = instance.delete(id);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-	
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
+    }
+
+    private Playlist basePlaylist(String name) {
+        return new Playlist(0, name, false, 0, Playlist.LimitUnit.Gio, false,
+                Playlist.Type.Albums, Playlist.Match.All, false, "mp3");
+    }
+
+    private int findPlaylistId(String name) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT idPlaylist FROM playlist WHERE name = ?")) {
+            st.setString(1, name);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getInt(1);
+            }
+        }
+    }
+
+    @Test
+    void shouldInsertPlaylist() throws SQLException {
+        Playlist p = basePlaylist("PlWriteInsert");
+        assertTrue(writer.insert(p));
+        assertTrue(findPlaylistId("PlWriteInsert") > 0);
+    }
+
+    @Test
+    void shouldUpdatePlaylistMetadata() throws SQLException {
+        Playlist inserted = basePlaylist("PlWriteUpdate");
+        assertTrue(writer.insert(inserted));
+        int id = findPlaylistId("PlWriteUpdate");
+
+        Playlist loaded = new Playlist(id, "PlWriteUpdated", true, 10, Playlist.LimitUnit.Gio, true,
+                Playlist.Type.Songs, Playlist.Match.All, true, "flac");
+        assertTrue(writer.update(loaded));
+
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT name, limitDo, random FROM playlist WHERE idPlaylist = ?")) {
+            st.setInt(1, id);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                assertEquals("PlWriteUpdated", rs.getString("name"));
+                assertTrue(rs.getBoolean("limitDo"));
+                assertTrue(rs.getBoolean("random"));
+            }
+        }
+    }
+
+    @Test
+    void shouldDeletePlaylistWhenNotReferenced() throws SQLException {
+        Playlist p = basePlaylist("PlWriteDelete");
+        assertTrue(writer.insert(p));
+        int id = findPlaylistId("PlWriteDelete");
+        assertTrue(writer.delete(id));
+        assertFalse(writer.delete(id));
+    }
 }

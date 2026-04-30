@@ -17,7 +17,9 @@
 
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import java.awt.Toolkit;
+import java.util.logging.Level;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
@@ -71,7 +73,7 @@ public class ClipboardText implements ClipboardOwner {
       }
       catch (UnsupportedFlavorException | IOException ex){
         //highly unlikely since we are using a standard DataFlavor
-        Popup.error(ex);
+        Jamuz.getLogger().log(Level.SEVERE, null, ex);
       }
     }
     return result;

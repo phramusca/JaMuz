@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 raph
+ * Copyright (C) 2023 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,34 @@
  */
 package jamuz.database;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
+import java.io.IOException;
+import java.sql.SQLException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
 /**
- *
- * @author raph
+ * {@link DaoPathAlbumWrite} currently holds only the DB reference; behaviour tests depend on future APIs.
  */
-public class DaoPathAlbumWriteTest {
-    
-    public DaoPathAlbumWriteTest() {
+class DaoPathAlbumWriteTest {
+
+    private static DbConnJaMuz dbConnJaMuz;
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+    }
+
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
     @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void daoPathAlbumWriteCanBeConstructedWithSameDbConn() {
+        DaoPathAlbumWrite w = new DaoPathAlbumWrite(dbConnJaMuz.getDbConn());
+        assertNotNull(w);
     }
-    
 }

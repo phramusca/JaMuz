@@ -1,14 +1,32 @@
-# JaMuz change log #
+# JaMuz change log
 
-## v0.7.7-beta1 ##
+## Tests unitaires & qualité du code
 
-### What's new ? ###
+### Couverture de tests étendue (+160 tests, 666 au total)
+
+- Conversion complète de JUnit 4 vers **JUnit 5** pour tous les tests existants
+- Couverture approfondie sur ~35 classes (`AppVersionCheck`, `ReleaseMB`, `MyVideoAbstract`, `SlskdDocker`, `Book`, `VideoMovie`, `VideoTvShow`, `IconBuffer`, `Options`, etc.)
+- Correction de bugs produit découverts lors des tests : NPE dans `ReleaseMB.getCoverList()`, imports manquants dans `Main.java`
+
+### Refactoring architecture : suppression des `Popup` dans les classes non-GUI
+
+- Tous les appels `Popup.error()` dans les utilitaires et services remplacés par `Jamuz.getLogger().log()`
+- Meilleure séparation des responsabilités : les popups UI restent dans les classes GUI et les tests unitaires ne sont plus bloqués par des popups UI
+
+### `AppVersionCheck` désormais pleinement testable
+
+- Injection de `OkHttpClient` et de l'URL de base pour les tests
+- Tests isolés via `MockWebServer` (plus de dépendance réseau, `@Disabled` supprimés)
+
+## v0.7.7-beta1
+
+### What's new ?
 
 - **Soulseek / slskd**: exclude folders from the shared music library (`slsk.shared.exclude` in Soulseek options / `Slsk.properties`; passed into the Docker container for `SLSKD_SHARED_DIR`).
 
 - Also: OkHttp 5 / TheMovieDb library compatibility, and timeouts for Soulseek search and Docker health wait.
 
-### Package content ###
+### Package content
 
 | Path                 | Incl. | Description                                                                                       |
 | -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
@@ -29,16 +47,16 @@
 | /myMovieDb.db        | Yes   | Database for Video tab.                                                                           |
 | /Slsk.properties     | Yes   | Configuration file for slskd (avoid manual edition).                                              |
 
-## v0.7.6 ##
+## v0.7.6
 
-### What's new ? ###
+### What's new ?
 
 - **Soulseek / Docker**: pull the image only when it is missing locally; optional tag override via `slsk.docker.image.tag` in the user’s `Slsk.properties` beside the JAR.
 - **Soulseek logs**: log text size cap and Swing updates on the EDT to reduce UI freezes.
 - **Cover cache**: avoid writing the “no cover” placeholder into the on-disk cache.
 - **Playback**: mplayer error handling and HDMI on Raspberry Pi.
 
-### Package content ###
+### Package content
 
 | Path                 | Incl. | Description                                                                                       |
 | -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
@@ -59,9 +77,9 @@
 | /myMovieDb.db        | Yes   | Database for Video tab.                                                                           |
 | /Slsk.properties     | Yes   | Configuration file for slskd (avoid manual edition).                                              |
 
-## v0.7.5 ##
+## v0.7.5
 
-### What's new ? ###
+### What's new ?
 
 - **Database schema upgrade**: migrations run on the **same JDBC connection** (no external `sqlite3`); SQL errors are no longer ignored.
 - **Upgrade logging**: append-only `logs/schema_upgrade.log` (steps, SQL preview, failures); backup path and log file mentioned in the confirmation dialog.
@@ -69,7 +87,7 @@
 - **UI**: non-modal progress window during schema upgrade (no “frozen app” effect).
 - **Recovery**: auto-fix `versionHistory` row with missing `upgradeEnd`; `DateTime` null-safe on NULL dates.
 
-### Package content ###
+### Package content
 
 | Path                 | Incl. | Description                                                                                       |
 | -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
@@ -90,15 +108,15 @@
 | /myMovieDb.db        | Yes   | Database for Video tab.                                                                           |
 | /Slsk.properties     | Yes   | Configuration file for slskd (avoid manual edition).                                              |
 
-## v0.7.4 ##
+## v0.7.4
 
-### What's new ? ###
+### What's new ?
 
 - Fix audio output selection (linux); per-machine options `audio.main.output` / `audio.preview.output` (DB schema v3, migration `data/system/sql/3.sql`).
 - In-place upgrade: ships refreshed `update_linux.sh` / `update_windows.ps1` (missing `update_*.csv` treated like empty; `nullglob`).
 - GitHub Actions: draft release with assets, then publish (compatible with immutable releases).
 
-### Package content ###
+### Package content
 
 | Path                 | Incl. | Description                                                                                       |
 | -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
@@ -119,9 +137,9 @@
 | /myMovieDb.db        | Yes   | Database for Video tab.                                                                           |
 | /Slsk.properties     | Yes   | Configuration file for slskd (avoid manual edition).                                              |
 
-## v0.7.2 ##
+## v0.7.2
 
-### What's new ? ###
+### What's new ?
 
 - **Update mechanism**: One CSV per version step (like DB migrations); scripts skip Copy when source is missing and Remove when path is missing (e.g. 0.7.0 → 0.7.2 without test data in package). Local workflow: copy dist to Windows only when under WSL (/mnt/c).
 - **Remote control (SSE)**: Reactivated; heartbeat and timeout; authentication and client login; fix playing song and disconnect; display remote connection; send idFile and position/length; proper JSON handling.
@@ -133,7 +151,7 @@
 - **Unit tests**: DaoFile, DaoDevice, DaoClient, DaoPlaylist, DaoOption, DaoGenre, DaoPath, DaoPlayCounter, DaoListModel; FileInfoIntTest; DeviceFileTest; Slskd* tests.
 - Translation updates, fixes, cleanup.
 
-### Package content ###
+### Package content
 
 | Path                 | Incl. | Description                                                                                       |
 | -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
@@ -156,13 +174,13 @@
 
 > Compatible with JaMuz Android v0.5.x minimum
 
-## v0.7.1 ##
+## v0.7.1
 
-### What's new ? ###
+### What's new ?
 
 - Minor, moved data files.
 
-### Package content ###
+### Package content
 
 | Path                 | Incl. | Description                                                                                       |
 | -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
@@ -185,9 +203,9 @@
 
 > Compatible with JaMuz Android v0.5.x minimum
 
-## v0.7.0 ##
+## v0.7.0
 
-### What's new ? ###
+### What's new ?
 
 - Version check and auto-update
 - Jamuz Android sync:
@@ -203,7 +221,7 @@
 - Moved to maven
 - New release process with github actions
 
-### Package content ###
+### Package content
 
 | Path                 | Incl. | Description                                                                                       |
 | -------------------- | ----- | ------------------------------------------------------------------------------------------------- |
@@ -226,11 +244,11 @@
 
 ***Compatible with JaMuz Remote v0.5.x minimum***
 
-## v0.6.0 ##
+## v0.6.0
 
 ***Compatible with JaMuz Remote v0.5.x minimum***
 
-### What's new ? ###
+### What's new ?
 
 - Contextual menus reviewed and fixed
 - Client edition menu reviewed and fixed
@@ -240,7 +258,7 @@
 - Compatible with JaMuz Remote v0.5.x minimum
 - Fix default options: NO MORE auto convertions (wma:mp3,ogg:mp3,m4a:mp3,mpc:mp3) and files deletion (db,ini,txt,m3u,pls,htm,html,doc,nfo,url,sfv,wpl,sfk)
 
-### Package content ###
+### Package content
 
 | Path              | Description                                           |
 | ----------------- | ----------------------------------------------------- |
@@ -255,17 +273,17 @@
 | /myMovieDb.db     | Database fro Video tab                                |
 | /JaMuz.xml        | Configuration file (optional). See template in /doc   |
 
-## v0.5.1 ##
+## v0.5.1
 
 ***Compatible with JaMuz Remote v0.5.x minimum***
 
-### What's new ? ###
+### What's new ?
 
 - Various fixes
 - Translations updates
 - Database updates handled. Support from 0.5.0
 
-### Package content ###
+### Package content
 
 | Path              | Description                                           |
 | ----------------- | ----------------------------------------------------- |
@@ -280,11 +298,11 @@
 | /myMovieDb.db     | Database fro Video tab                                |
 | /JaMuz.xml        | Configuration file (optional). See template in /doc   |
 
-## v0.5.0-beta ##
+## v0.5.0-beta
 
 ***Compatible with JaMuz Remote v0.5.x minimum***
 
-### What's new ? ###
+### What's new ?
 
 - Improved Check process:
   - Improved duplicates handling:
@@ -304,7 +322,7 @@
 - New translation: Portuguese. Others updated.
 - Compatible with JaMuz Remote v0.5.x minimum
 
-### Package content ###
+### Package content
 
 | Path              | Description                                           |
 | ----------------- | ----------------------------------------------------- |
@@ -319,11 +337,11 @@
 | /myMovieDb.db     | Database fro Video tab                                |
 | /JaMuz.xml        | Configuration file (optional). See template in /doc   |
 
-## v0.4.1-beta ##
+## v0.4.1-beta
 
 ***Compatible with JaMuz Remote v0.4.x only***
 
-### What's new ? ###
+### What's new ?
 
 - Better duplicate searching
 - Auto set number of check processes based on available threads.
@@ -334,7 +352,7 @@
 - Various and many fixes
 - Remove MB wait (good idea ?)
 
-### Package content ###
+### Package content
 
 | Path              | Description                                           |
 | ----------------- | ----------------------------------------------------- |
@@ -348,16 +366,16 @@
 | /JaMuz.properties | Configuration file                                    |
 | /JaMuz.xml        | Configuration file (optional)                         |
 
-## v0.4.0-beta ##
+## v0.4.0-beta
 
 ***Compatible with JaMuz Remote v0.4.x only***
 
-### What's new ? ###
+### What's new ?
 
 - Sync improved and easy setup
 - New translation (Portuguese (Brazil))
 
-### Package content ###
+### Package content
 
 | Path              | Description                                           |
 | ----------------- | ----------------------------------------------------- |
@@ -371,17 +389,17 @@
 | /JaMuz.properties | Configuration file                                    |
 | /JaMuz.xml        | Configuration file (optional)                         |
 
-## v0.3.0-beta ##
+## v0.3.0-beta
 
 ***Compatible with JaMuz Remote v0.3.x only***
 
-### What's new ? ###
+### What's new ?
 
 - Log cleanup feature
 - Sync fixes
 - New and improved translations
 
-### Package content ###
+### Package content
 
 | Path              | Description                                           |
 | ----------------- | ----------------------------------------------------- |
@@ -395,135 +413,135 @@
 | /JaMuz.properties | Configuration file                                    |
 | /JaMuz.xml        | Configuration file (optional)                         |
 
-## v0.2.2-beta ##
+## v0.2.2-beta
 
 ***Compatible with JaMuz Remote v0.2.x only***
 
-### What's new ? ###
+### What's new ?
 
 - Remote: merge progress in table
 - Video: cleanup feature, renaming fixed, stable
 - Books: fixes, stable
 
-## v0.2.1-beta ##
+## v0.2.1-beta
 
 ***Compatible with JaMuz Remote v0.2.x only***
 
-### What's new ? ###
+### What's new ?
 
 - Move merge with JaMuz Remote to Remote panel.
 
-## v0.2.0-beta ##
+## v0.2.0-beta
 
 ***Compatible with JaMuz Remote v0.2.x only***
 
-### What's new ? ###
+### What's new ?
 
 - Lot of changes.
 
-## v0.1.0-beta ##
+## v0.1.0-beta
 
 **Deprecated**
 
 2nd release, first beta version
 
-## v0.0.24-alpha ##
+## v0.0.24-alpha
 
 **Deprecated**
 
 - Alpha
 - 1st released version
 
-## Previous releases, before github ##
+## Previous releases, before github
 
-### 0.0.22 ###
+### 0.0.22
 
 - Check: multi-thread + bug fix
 
-### 0.0.21 ###
+### 0.0.21
 
 - Raccourcis clavier (MultiRemote). Check actions. Video: support notes séries. Débuggé sync et merge.
 
-### 0.0.20 ###
+### 0.0.20
 
 - Vidéo: support séries télé, liens externes, filtres. Check: MANUAL action. Lyrics editor.
 
-### 0.0.19 ###
+### 0.0.19
 
 - Ajout support TheMovieDb dans Videos + divers
 
-### 0.0.18 ###
+### 0.0.18
 
 - Ajout test junit, stabilisation merge, video, stats tabs. Removed Best Of tab
 
-### 0.0.17 ###
+### 0.0.17
 
 - Check: analyse auto. Video: fini (ou presque)
 
-### 0.0.16 ###
+### 0.0.16
 
 - Correction problème de merge avec appareil quand chemin changé dans JaMuz
 
-### 0.0.15 ###
+### 0.0.15
 
 - Debug lecteur et améliorations partie vidéo
 
-### 0.0.14 ###
+### 0.0.14
 
 - Améliorations onglet Choisir
 
-### 0.0.13 ###
+### 0.0.13
 
 - Amélioration sélecteur pochettes (onglet Vérifier)
 
-### 0.0.12 ###
+### 0.0.12
 
 - Qq trucs, à lister
 
-### 0.0.11 ###
+### 0.0.11
 
 - Qq trucs, à lister, voir VERSION.txt
 
-### 0.0.10 ###
+### 0.0.10
 
 - Onglet choisir: Album coloré selon le check ET menu popup
 
-### 0.0.9 ###
+### 0.0.9
 
 - Bug fix
 
-### 0.0.8 ###
+### 0.0.8
 
 - Qq trucs, à lister
 
-### 0.0.7 ###
+### 0.0.7
 
 - Amélioration vitesse copie pour synchro vers appareil (batch base de données)
 
-### 0.0.6 ###
+### 0.0.6
 
 - Ajout IHM pour affichage plein écran sur 2ème écran, et autres améliorations
 
-### 0.0.5 ###
+### 0.0.5
 
 - Correction problème vérification dossiers
 
-### 0.0.4 ###
+### 0.0.4
 
 - Finalisation suport playlist et device, vérification albums, et autres améliorations
 
-### 0.0.3 ###
+### 0.0.3
 
 - Ajout synchro vers appareil et nombreuses améliorations
 
-### 0.0.2 ###
+### 0.0.2
 
 - Amélioration du Check, notamment ajout du "Check library"
 
-### 0.0.1 ###
+### 0.0.1
 
 - Première version avec le numéro de version dans le titre (MANIFEST)
 
-### 0.0.0 ###
+### 0.0.0
 
 - Première version (sans numéro)

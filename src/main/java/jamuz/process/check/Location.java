@@ -16,9 +16,10 @@
  */
 package jamuz.process.check;
 
+import java.util.logging.Level;
+
 import jamuz.Jamuz;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import java.io.File;
 
 /**
@@ -57,7 +58,7 @@ public class Location {
 	public boolean check() {
 		File checked = new File(this.value);
 		if (!checked.exists()) {
-			Popup.warning(java.text.MessageFormat.format(Inter.get("Error.Check.SourcePathNotFound"), this.value, Inter.get("Options.Title." + this.optionId)));  //NOI18N
+			Jamuz.getLogger().log(Level.WARNING, java.text.MessageFormat.format(Inter.get("Error.Check.SourcePathNotFound"), this.value, Inter.get("Options.Title." + this.optionId)));  //NOI18N
 			return false;
 		}
 		return true;

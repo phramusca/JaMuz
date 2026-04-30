@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 raph
+ * Copyright (C) 2023 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,86 +16,48 @@
  */
 package jamuz.database;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
+import java.io.IOException;
+import java.sql.SQLException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
 /**
- *
- * @author raph
+ * Tests sur {@link DaoGenreWrite}.
  */
-public class DaoGenreWriteTest {
+class DaoGenreWriteTest {
 
-    public DaoGenreWriteTest() {
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoGenreWrite writer;
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoGenreWrite(dbConnJaMuz.getDbConn(), dbConnJaMuz.genre());
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     * Test of insert method, of class DaoGenreWrite.
-     */
     @Test
-    @Ignore // Refer to DaoGenTest
-    public void testInsert() {
-        System.out.println("insert");
-        String genre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.insert(genre);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldRejectInsertWhenGenreAlreadyInDatabase() {
+        assertFalse(writer.insert("Rock"));
     }
 
-    /**
-     * Test of update method, of class DaoGenreWrite.
-     */
     @Test
-    @Ignore // Refer to DaoGenTest
-    public void testUpdate() {
-        System.out.println("update");
-        String oldGenre = "";
-        String newGenre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.update(oldGenre, newGenre);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldInsertUpdateAndDeleteCustomGenre() {
+        String g = "UnitGenreWrite999";
+        assertFalse(dbConnJaMuz.genre().isSupported(g));
+        assertTrue(writer.insert(g));
+        assertTrue(dbConnJaMuz.genre().isSupported(g));
+        assertTrue(writer.update(g, g + "Ren"));
+        assertTrue(dbConnJaMuz.genre().isSupported(g + "Ren"));
+        assertFalse(dbConnJaMuz.genre().isSupported(g));
+        assertTrue(writer.delete(g + "Ren"));
+        assertFalse(dbConnJaMuz.genre().isSupported(g + "Ren"));
     }
-
-    /**
-     * Test of delete method, of class DaoGenreWrite.
-     */
-    @Test
-    @Ignore // Refer to DaoGenTest
-    public void testDelete() {
-        System.out.println("delete");
-        String genre = "";
-        DaoGenreWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.delete(genre);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
 }

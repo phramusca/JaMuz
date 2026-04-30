@@ -26,7 +26,6 @@ import jamuz.process.check.FolderInfo.CheckedFlag;
 import static jamuz.process.check.PanelCheck.enableRowSorter;
 import jamuz.utils.Benchmark;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import java.awt.Color;
@@ -799,7 +798,7 @@ public class ProcessCheck {
             try {
                 folder.analyse(PanelCheck.progressBarListAnalysisDequeue.get(progressBarId));
             } catch (CloneNotSupportedException ex) {
-                Popup.error(ex);
+                Jamuz.getLogger().log(Level.SEVERE, null, ex);
             }
             folder.action=Action.ANALYZING;
             this.checkAbort();

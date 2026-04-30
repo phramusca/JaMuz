@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 raph
+ * Copyright (C) 2023 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,155 +17,91 @@
 package jamuz.database;
 
 import jamuz.utils.Ftp;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import test.helpers.TestUnitSettings;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.SQLException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
+/** Tests for {@link DbInfo}. */
+class DbInfoTest {
 
-/**
- *
- * @author raph
- */
-public class DbInfoTest {
-    
-    public DbInfoTest() {
-    }
-    
-   private static DbConnJaMuz dbConnJaMuz;
-    
-    @BeforeClass
-    public static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+    private static DbConnJaMuz dbConnJaMuz;
+
+    @TempDir
+    Path tempDir;
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
         dbConnJaMuz = TestUnitSettings.createTempDatabase();
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    @AfterAll
+    static void tearDownClass() {
         TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+
+    @Test
+    void checkReturnsTrueWhenSqliteFileExists() {
+        DbInfo info = dbConnJaMuz.getDbConn().getInfo();
+        assertTrue(info.check());
     }
 
     @Test
-	public void testxxxxxxxxxxxxxx() {
-
-		System.out.println("testxxxxxxxxxxxxxx");
-
-        //FIXME TEST Make unit test
-		//FIXME TEST Negative cases
-		//FIXME TEST Check other constraints
-	}
-
-    /**
-     * Test of getFtp method, of class DbInfo.
-     */
-    @Test
-    public void testGetFtp() {
-        System.out.println("getFtp");
-        String localFolder = "";
-        DbInfo instance = null;
-        Ftp expResult = null;
-        Ftp result = instance.getFtp(localFolder);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void sqliteLocationsInitiallyMatchForTempDb() {
+        DbInfo info = dbConnJaMuz.getDbConn().getInfo();
+        assertEquals(info.getLocationOri(), info.getLocationWork());
+        assertEquals(DbInfo.LibType.Sqlite, info.getLibType());
+        assertTrue(info.getLocationWork().endsWith(".db"));
     }
 
-    /**
-     * Test of check method, of class DbInfo.
-     */
     @Test
-    public void testCheck() {
-        System.out.println("check");
-        DbInfo instance = null;
-        boolean expResult = false;
-        boolean result = instance.check();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void setLocationWorkUpdatesWorkingCopyPath() throws IOException {
+        DbInfo info = TestUnitSettings.getTempDbInfo();
+        Path file = tempDir.resolve("relocated.db");
+        info.setLocationWork(file.toString());
+        assertEquals(file.toString(), info.getLocationWork());
     }
 
-    /**
-     * Test of copyDB method, of class DbInfo.
-     */
     @Test
-    public void testCopyDB() {
-        System.out.println("copyDB");
-        boolean receive = false;
-        String locationWork = "";
-        DbInfo instance = null;
-        boolean expResult = false;
-        boolean result = instance.copyDB(receive, locationWork);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void getFtpBuildsWrapperFromFtpUri() {
+        // URI without port (DbInfo FTP parser does not handle explicit port numbers)
+        DbInfo ftpLike = new DbInfo(DbInfo.LibType.Sqlite,
+                "ftp://user:secret@remote-host.invalid/sub/music.db", "", "");
+        Ftp ftp = ftpLike.getFtp("/tmp/");
+        assertNotNull(ftp);
     }
 
-    /**
-     * Test of backupDB method, of class DbInfo.
-     */
     @Test
-    public void testBackupDB() {
-        System.out.println("backupDB");
-        String destinationPath = "";
-        DbInfo instance = null;
-        boolean expResult = false;
-        boolean result = instance.backupDB(destinationPath);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void backupDbWritesCopyIntoDestinationFolder() throws IOException {
+        DbInfo info = dbConnJaMuz.getDbConn().getInfo();
+        Path destDir = tempDir.resolve("bak");
+        destDir.toFile().mkdirs();
+        assertTrue(info.backupDB(destDir.toString() + File.separator));
+        File[] files = destDir.toFile().listFiles((dir, name) -> name.endsWith(".db"));
+        assertNotNull(files);
+        assertEquals(1, files.length);
+        assertTrue(files[0].length() > 0L);
     }
 
-    /**
-     * Test of getLocationOri method, of class DbInfo.
-     */
     @Test
-    public void testGetLocationOri() {
-        System.out.println("getLocationOri");
-        DbInfo instance = null;
-        String expResult = "";
-        String result = instance.getLocationOri();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void copyDbReceiveMovesWorkingPathIntoFolder() throws IOException {
+        DbInfo info = dbConnJaMuz.getDbConn().getInfo();
+        String savedWork = info.getLocationWork();
+        try {
+            Path dir = tempDir.resolve("recv");
+            dir.toFile().mkdirs();
+            assertTrue(info.copyDB(true, dir.toString() + File.separator));
+            File copied = new File(info.getLocationWork());
+            assertTrue(copied.isFile());
+            assertEquals(copied.getParentFile().getCanonicalPath(), dir.toFile().getCanonicalPath());
+        } finally {
+            info.setLocationWork(savedWork);
+        }
     }
-
-    /**
-     * Test of getLocationWork method, of class DbInfo.
-     */
-    @Test
-    public void testGetLocationWork() {
-        System.out.println("getLocationWork");
-        DbInfo instance = null;
-        String expResult = "";
-        String result = instance.getLocationWork();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setLocationWork method, of class DbInfo.
-     */
-    @Test
-    public void testSetLocationWork() {
-        System.out.println("setLocationWork");
-        String locationWork = "";
-        DbInfo instance = null;
-        instance.setLocationWork(locationWork);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 raph
+ * Copyright (C) 2023 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,209 +16,179 @@
  */
 package jamuz.database;
 
-import static org.junit.Assert.*;
-
 import jamuz.FileInfo;
 import jamuz.FileInfoInt;
+import jamuz.process.check.FolderInfo;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
-/**
- *
- * @author raph
- */
-public class DaoFileWriteTest {
-    
-    public DaoFileWriteTest() {
+/** Tests for {@link DaoFileWrite}. */
+class DaoFileWriteTest {
+
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoFileWrite writer;
+    private static final String ROOT = "/root/fw/";
+    private static int pathId;
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = dbConnJaMuz.file().lock();
+        dbConnJaMuz.file().setLocationLibrary(ROOT);
+        int[] keyPath = new int[1];
+        dbConnJaMuz.path().lock().insert("rel/fw/", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbid", keyPath);
+        pathId = keyPath[0];
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
+    @BeforeEach
+    void wipeFilesOnPath() throws SQLException {
+        try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
+            st.executeUpdate("DELETE FROM tagFile WHERE idFile IN (SELECT idFile FROM file WHERE idPath = " + pathId + ")");
+            st.executeUpdate("DELETE FROM fileTranscoded WHERE idFile IN (SELECT idFile FROM file WHERE idPath = " + pathId + ")");
+            st.executeUpdate("DELETE FROM file WHERE idPath = " + pathId);
+        }
     }
 
-    @Before
-    public void setUp() throws Exception {
+    private FileInfoInt insertSampleFile(String filename) throws SQLException {
+        FileInfoInt f = new FileInfoInt("rel/fw/" + filename, ROOT);
+        f.setIdPath(pathId);
+        int[] key = new int[1];
+        assertTrue(writer.insert(f, key));
+        f.setIdFile(key[0]);
+        f.setRating(0);
+        return f;
     }
 
-    @After
-    public void tearDown() throws Exception {
+    private int intScalar(String sql, int... params) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(sql)) {
+            for (int i = 0; i < params.length; i++) {
+                st.setInt(i + 1, params[i]);
+            }
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getInt(1);
+            }
+        }
     }
 
-    /**
-     * Test of insert method, of class DaoFileWrite.
-     */
+    private void linkTagToFile(int idFile, String tagValue) throws SQLException {
+        assertTrue(dbConnJaMuz.tag().lock().insertIfMissing(tagValue));
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "INSERT INTO tagFile (idFile, idTag) SELECT ?, id FROM tag WHERE value = ?")) {
+            st.setInt(1, idFile);
+            st.setString(2, tagValue);
+            st.executeUpdate();
+        }
+    }
+
     @Test
-    public void testInsert() {
-        System.out.println("insert");
-        FileInfoInt fileInfo = null;
-        int[] key = null;
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.insert(fileInfo, key);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldInsertThenDeleteFile() throws SQLException {
+        FileInfoInt f = insertSampleFile("a.ext");
+        assertTrue(writer.delete(f.getIdFile()));
+        assertFalse(writer.delete(f.getIdFile()));
     }
 
-    /**
-     * Test of delete method, of class DaoFileWrite.
-     */
     @Test
-    public void testDelete() {
-        System.out.println("delete");
-        int idFile = 0;
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.delete(idFile);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldSetSavedFlag() throws SQLException {
+        FileInfoInt f = insertSampleFile("saved.ext");
+        assertEquals(0, intScalar("SELECT saved FROM file WHERE idFile = ?", f.getIdFile()));
+        assertTrue(writer.setSaved(f.getIdFile()));
+        assertEquals(1, intScalar("SELECT saved FROM file WHERE idFile = ?", f.getIdFile()));
     }
 
-    /**
-     * Test of setSaved method, of class DaoFileWrite.
-     */
     @Test
-    public void testSetSaved() {
-        System.out.println("setSaved");
-        int idFile = 0;
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.setSaved(idFile);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldUpdateMetadataFromFileInfo() throws SQLException {
+        FileInfoInt f = insertSampleFile("upd.ext");
+        f.setGenre("Genre2");
+        assertTrue(writer.update(f));
+        FileInfoInt fromDb = dbConnJaMuz.file().getFile(f.getIdFile(), "");
+        // DaoFileWrite.update() updates audio metadata (genre, artist, etc.) but not the filename
+        assertEquals("upd.ext", fromDb.getFilename());
+        assertEquals("Genre2", fromDb.getGenre());
     }
 
-    /**
-     * Test of update method, of class DaoFileWrite.
-     */
     @Test
-    public void testUpdate() {
-        System.out.println("update");
-        FileInfoInt fileInfo = null;
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.update(fileInfo);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldUpdateLastPlayedAndCounter() throws SQLException {
+        FileInfoInt f = insertSampleFile("lp.ext");
+        f.setPlayCounter(3);
+        assertTrue(writer.updateLastPlayedAndCounter(f));
+        FileInfoInt fromDb = dbConnJaMuz.file().getFile(f.getIdFile(), "");
+        assertEquals(4, fromDb.getPlayCounter());
     }
 
-    /**
-     * Test of updateLastPlayedAndCounter method, of class DaoFileWrite.
-     */
     @Test
-    public void testUpdateLastPlayedAndCounter() {
-        System.out.println("updateLastPlayedAndCounter");
-        FileInfoInt fileInfo = null;
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateLastPlayedAndCounter(fileInfo);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldUpdateRating() throws SQLException {
+        FileInfoInt f = insertSampleFile("rate.ext");
+        f.setRating(4);
+        assertTrue(writer.updateRating(f));
+        assertEquals(4, intScalar("SELECT rating FROM file WHERE idFile = ?", f.getIdFile()));
     }
 
-    /**
-     * Test of updateRating method, of class DaoFileWrite.
-     */
     @Test
-    public void testUpdateRating() {
-        System.out.println("updateRating");
-        FileInfoInt fileInfo = null;
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateRating(fileInfo);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldUpdateFileGenre() throws SQLException {
+        FileInfoInt f = insertSampleFile("genre.ext");
+        f.setGenre("Jazz");
+        assertTrue(writer.updateFileGenre(f));
+        assertEquals("Jazz", dbConnJaMuz.file().getFile(f.getIdFile(), "").getGenre());
     }
 
-    /**
-     * Test of updateFileGenre method, of class DaoFileWrite.
-     */
     @Test
-    public void testUpdateFileGenre() {
-        System.out.println("updateFileGenre");
-        FileInfoInt fileInfo = null;
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateFileGenre(fileInfo);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldUpdateIdPathForAllFilesOnPath() throws SQLException {
+        int[] keyPath2 = new int[1];
+        dbConnJaMuz.path().lock().insert("rel/fw2/", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbid2", keyPath2);
+        int path2 = keyPath2[0];
+        try {
+            FileInfoInt f = new FileInfoInt("rel/fw2/move.ext", ROOT);
+            f.setIdPath(pathId);
+            int[] key = new int[1];
+            assertTrue(writer.insert(f, key));
+            f.setIdFile(key[0]);
+            f.setRating(0);
+            assertTrue(writer.updateIdPath(pathId, path2));
+            assertEquals(path2, intScalar("SELECT idPath FROM file WHERE idFile = ?", f.getIdFile()));
+        } finally {
+            try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
+                st.executeUpdate("DELETE FROM file WHERE idPath = " + path2);
+                st.executeUpdate("DELETE FROM path WHERE idPath = " + path2);
+            }
+        }
     }
 
-    /**
-     * Test of updateIdPath method, of class DaoFileWrite.
-     */
     @Test
-    public void testUpdateIdPath() {
-        System.out.println("updateIdPath");
-        int idPath = 0;
-        int newIdPath = 0;
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateIdPath(idPath, newIdPath);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldUpdateModifDateAndNameById() throws SQLException {
+        FileInfoInt f = insertSampleFile("mod.ext");
+        Date d = new Date(150_000_000_000L);
+        assertTrue(writer.updateModifDate(f.getIdFile(), d, "renamed.ext"));
+        FileInfoInt fromDb = dbConnJaMuz.file().getFile(f.getIdFile(), "");
+        assertEquals("renamed.ext", fromDb.getFilename());
     }
 
-    /**
-     * Test of updateModifDate method, of class DaoFileWrite.
-     */
     @Test
-    public void testUpdateModifDate_3args() {
-        System.out.println("updateModifDate");
-        int idFile = 0;
-        Date modifDate = null;
-        String name = "";
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateModifDate(idFile, modifDate, name);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldUpdateTagsModifDateByTagValue() throws SQLException {
+        FileInfoInt f = insertSampleFile("tagmod.ext");
+        linkTagToFile(f.getIdFile(), "modTagVal");
+        assertTrue(writer.updateModifDate("modTagVal"));
     }
 
-    /**
-     * Test of updateModifDate method, of class DaoFileWrite.
-     */
     @Test
-    public void testUpdateModifDate_String() {
-        System.out.println("updateModifDate");
-        String newTag = "";
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateModifDate(newTag);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldUpdateTagsModifDateByFileInfo() throws SQLException {
+        FileInfoInt f = insertSampleFile("tagmod2.ext");
+        FileInfo asFileInfo = dbConnJaMuz.file().getFile(f.getIdFile(), "");
+        assertTrue(writer.updateModifDate(asFileInfo));
     }
-
-    /**
-     * Test of updateModifDate method, of class DaoFileWrite.
-     */
-    @Test
-    public void testUpdateModifDate_FileInfo() {
-        System.out.println("updateModifDate");
-        FileInfo fileInfo = null;
-        DaoFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.updateModifDate(fileInfo);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
 }

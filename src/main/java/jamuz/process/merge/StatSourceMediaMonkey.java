@@ -17,10 +17,12 @@
 
 package jamuz.process.merge;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 import jamuz.database.DbInfo;
 import jamuz.FileInfo;
 import jamuz.database.StatSourceSQL;
-import jamuz.utils.Popup;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -69,7 +71,7 @@ public class StatSourceMediaMonkey extends StatSourceSQL {
              return true;
         } catch (SQLException ex) {
             //Proper error handling. We should not have such an error unless above code changes
-            Popup.error("StatSourceMediaMonkey, setUp", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "StatSourceMediaMonkey, setUp", ex);   //NOI18N
             return false;
         }
     }

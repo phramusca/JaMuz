@@ -16,9 +16,11 @@
  */
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,8 +50,8 @@ public class XML {
 			doc.getDocumentElement().normalize();
 			return doc;
 		} catch (ParserConfigurationException | SAXException | IOException ex) {
-			//Proper error handling. filename is displayed in ex, so no need to add it again
-			Popup.error(ex); 
+			Jamuz.getLogger().log(Level.SEVERE, "XML.open: {0}", filename);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return null;
         }
 	}
@@ -81,13 +83,12 @@ public class XML {
 	public static ArrayList<Element> getElements(Document doc, String tagName) {
 		ArrayList<Element> elements=new ArrayList<>();
 		NodeList nodeList = doc.getElementsByTagName(tagName);
-		System.out.println(nodeList.getLength());
-		
+
 		for(int i=0; i<nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
 			elements.add((Element) node);
 		}
-		return elements;
+        return elements;
 	}
 	
 	/**

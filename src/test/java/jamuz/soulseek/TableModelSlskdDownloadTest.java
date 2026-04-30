@@ -1,19 +1,17 @@
 package jamuz.soulseek;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import jamuz.gui.swing.ProgressBar;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class TableModelSlskdDownloadTest {
+class TableModelSlskdDownloadTest {
 
     private TableModelSlskdDownload tableModel;
     private SlskdSearchFile searchFile;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         tableModel = new TableModelSlskdDownload();
         searchFile = new SlskdSearchFile();
         searchFile.bitRate = 320;
@@ -23,41 +21,41 @@ public class TableModelSlskdDownloadTest {
     }
 
     @Test
-    public void testAddRow() {
+    void addRow_increasesRowCount() {
         tableModel.addRow(searchFile);
         assertEquals(1, tableModel.getRowCount());
         assertEquals(searchFile, tableModel.getRow(0));
     }
 
     @Test
-    public void testReplaceRow() {
+    void replaceRow_replacesAtIndex() {
         tableModel.addRow(searchFile);
-        SlskdSearchFile newSearchFile = new SlskdSearchFile();
-        newSearchFile.bitRate = 128;
-        newSearchFile.length = 200;
-        newSearchFile.size = 3000000;
-        newSearchFile.filename = "new_test.mp3";
-        tableModel.replaceRow(newSearchFile, 0);
+        SlskdSearchFile newFile = new SlskdSearchFile();
+        newFile.bitRate = 128;
+        newFile.length = 200;
+        newFile.size = 3000000;
+        newFile.filename = "new_test.mp3";
+        tableModel.replaceRow(newFile, 0);
         assertEquals(1, tableModel.getRowCount());
-        assertEquals(newSearchFile, tableModel.getRow(0));
+        assertEquals(newFile, tableModel.getRow(0));
     }
 
     @Test
-    public void testRemoveRow() {
+    void removeRow_decreasesRowCount() {
         tableModel.addRow(searchFile);
         tableModel.removeRow(searchFile);
         assertEquals(0, tableModel.getRowCount());
     }
 
     @Test
-    public void testClear() {
+    void clear_removesAllRows() {
         tableModel.addRow(searchFile);
         tableModel.clear();
         assertEquals(0, tableModel.getRowCount());
     }
 
     @Test
-    public void testGetValueAt() {
+    void getValueAt_returnsCorrectCellValues() {
         tableModel.addRow(searchFile);
         assertEquals("null", tableModel.getValueAt(0, 0));
         assertEquals(320, tableModel.getValueAt(0, 1));
@@ -68,12 +66,12 @@ public class TableModelSlskdDownloadTest {
     }
 
     @Test
-    public void testIsCellEditable() {
+    void isCellEditable_alwaysFalse() {
         assertFalse(tableModel.isCellEditable(0, 0));
     }
 
     @Test
-    public void testGetColumnClass() {
+    void getColumnClass_returnsCorrectTypes() {
         tableModel.addRow(searchFile);
         assertEquals(String.class, tableModel.getColumnClass(0));
         assertEquals(Integer.class, tableModel.getColumnClass(1));

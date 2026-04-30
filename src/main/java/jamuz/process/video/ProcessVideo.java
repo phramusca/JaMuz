@@ -17,11 +17,12 @@
 
 package jamuz.process.video;
 
+import java.util.logging.Level;
+
 import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.SSH;
 import java.io.File;
@@ -81,7 +82,7 @@ public class ProcessVideo extends ProcessAbstract {
             try {
                 exportFiles();
             } catch (InterruptedException ex) {
-                Popup.error(Inter.get("Msg.Process.Aborted"), ex); //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, Inter.get("Msg.Process.Aborted"), ex); //NOI18N
             }
             finally {
                 PanelVideo.progressBar.reset();
@@ -100,7 +101,7 @@ public class ProcessVideo extends ProcessAbstract {
 				.filter(video -> video.isSelected()).collect(Collectors.toList());
 		
 		if(Jamuz.getOptions().get("video.destination").isBlank()) {
-			Popup.warning("Invalid destination folder.");
+			Jamuz.getLogger().log(Level.WARNING, "Invalid destination folder.");
 			return false;
 		}
 		
@@ -169,7 +170,7 @@ public class ProcessVideo extends ProcessAbstract {
             try {
                 listDbfiles(move, getDb, doSearch);
             } catch (InterruptedException ex) {
-                Popup.error(Inter.get("Msg.Process.Aborted"), ex); //NOI18N
+                Jamuz.getLogger().log(Level.SEVERE, Inter.get("Msg.Process.Aborted"), ex); //NOI18N
             }
             finally {
                 PanelVideo.progressBar.reset();
@@ -237,7 +238,7 @@ public class ProcessVideo extends ProcessAbstract {
 			if (!kodiDbFile.exists()) {
 				//TODO: Explain that backup kodi db is not available
 				//and so user must first run video process with "Get Db" checked
-				Popup.error(java.text.MessageFormat.format(Inter.get("Error.PathNotFound"), new Object[] {kodiBackupFile})); //NOI18N
+				Jamuz.getLogger().log(Level.SEVERE, java.text.MessageFormat.format(Inter.get("Error.PathNotFound"), new Object[] {kodiBackupFile})); //NOI18N
 				return false;
 			} else if(kodiDbFile.isDirectory()) {
 				return false;

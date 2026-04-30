@@ -21,7 +21,6 @@ import jamuz.database.DbConn;
 import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.process.video.FileInfoVideo.StreamDetails;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -72,7 +71,7 @@ public class DbConnVideo extends DbConn {
                 return -1;
             }
         } catch (SQLException ex) {
-            Popup.error("getIdPath(\""+strPath+"\"", ex);  //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "getIdPath(\""+strPath+"\"", ex);  //NOI18N
 			return -1;
         }
         finally {
@@ -175,7 +174,7 @@ public class DbConnVideo extends DbConn {
 			}
 			return true;
 		} catch (SQLException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
         finally {
@@ -228,7 +227,7 @@ public class DbConnVideo extends DbConn {
             }
             return streamDetails;
         } catch (SQLException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return streamDetails;
 		}
         finally {
@@ -352,7 +351,7 @@ public class DbConnVideo extends DbConn {
 			}
 			return true;
 		} catch (SQLException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
         finally {
@@ -475,7 +474,7 @@ public class DbConnVideo extends DbConn {
 			}
 			return true;
 		} catch (SQLException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
         finally {
@@ -531,7 +530,7 @@ public class DbConnVideo extends DbConn {
 			connection.setAutoCommit(true);
 			return true;
 		} catch (SQLException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
         finally {
@@ -571,7 +570,7 @@ public class DbConnVideo extends DbConn {
 				return false;
 			}
 		} catch (SQLException ex) {
-			Popup.error("updateFile("+idFile+", "+newFilename+")", ex);  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "updateFile("+idFile+", "+newFilename+")", ex);  //NOI18N
 			return false;
 		}
 	}

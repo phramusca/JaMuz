@@ -117,6 +117,9 @@ public class DbConn {
 	 * Disconnect database
 	 */
 	public void disconnect() {
+		if (connection == null) {
+			return;
+		}
 		try {
 			connection.close();
 		} catch (SQLException ex) {

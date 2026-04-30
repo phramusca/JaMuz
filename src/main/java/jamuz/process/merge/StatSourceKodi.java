@@ -17,11 +17,12 @@
 
 package jamuz.process.merge;
 
+import java.util.logging.Level;
+
 import jamuz.database.DbInfo;
 import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.database.StatSourceSQL;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,7 +71,7 @@ public class StatSourceKodi extends StatSourceSQL {
              return true;
         } catch (SQLException ex) {
             //Proper error handling. We should not have such an error unless above code changes
-            Popup.error("StatSourceKodi, setUp", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "StatSourceKodi, setUp", ex);   //NOI18N
             return false;
         }
     }
@@ -106,7 +107,7 @@ public class StatSourceKodi extends StatSourceSQL {
                 return "";
             }
         } catch (SQLException ex) {
-            Popup.error("guessRootPath()", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "guessRootPath()", ex);   //NOI18N
             return "";
         }
         finally {

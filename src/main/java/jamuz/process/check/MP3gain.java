@@ -21,7 +21,6 @@ import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
-import jamuz.utils.Popup;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +74,7 @@ public class MP3gain {
 		if (file.isDirectory()) {
 			files = file.listFiles();
 			if (files == null) {
-				Popup.error("No files found for mp3gain in \""+path+"\"");  //NOI18N
+				Jamuz.getLogger().log(Level.SEVERE, "No files found for mp3gain in \""+path+"\"");  //NOI18N
 				return false;
 			}
 		} else {
@@ -190,7 +189,7 @@ public class MP3gain {
 									setProgress(0);
 								}
 								else if(line.startsWith("Applying mp3 gain")) {  //NOI18N
-									//Applying mp3 gain change of 1 to /home/raph/Musique/Archive-Manuel/Armelle/Led Zeppelin/Led Zeppelin IV/03 The Battle of Evermore.mp3...
+									//Applying mp3 gain change of xx to yyyy
 									// => Ensuite dans ErrorStream:
 									// 1% of 7721786 bytes written
 									progressIndex+=1;
@@ -285,7 +284,7 @@ public class MP3gain {
 			return true;
 
 		} catch (IOException | InterruptedException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}
@@ -331,14 +330,14 @@ public class MP3gain {
 				return true;
 
 			} catch (IOException | InterruptedException ex) {
-				Popup.error(ex);
+				Jamuz.getLogger().log(Level.SEVERE, null, ex);
 				return false;
 			}
 		}
 		else {
 			// This should never happen as this function
 			// will be called only if folder contains MP3 files
-			Popup.error("No MP3 files found for mp3gain in \""+path+"\"");  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "No MP3 files found for mp3gain in \""+path+"\"");  //NOI18N
 			return false;
 		}
 	}
@@ -385,14 +384,14 @@ public class MP3gain {
 				return true;
 
 			} catch (IOException | InterruptedException ex) {
-				Popup.error(ex);
+				Jamuz.getLogger().log(Level.SEVERE, null, ex);
 				return false;
 			}
 		}
 		else {
 			// This should never happen as this function
 			// will be called only if folder contains MP3 files
-			Popup.error("No MP3 files found for mp3gain in \""+path+"\"");  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "No MP3 files found for mp3gain in \""+path+"\"");  //NOI18N
 			return false;
 		}
 	}

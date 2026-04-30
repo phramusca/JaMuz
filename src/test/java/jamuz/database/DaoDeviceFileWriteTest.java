@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 raph
+ * Copyright (C) 2023 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,88 +17,161 @@
 package jamuz.database;
 
 import jamuz.FileInfoInt;
+import jamuz.Playlist;
+import jamuz.process.check.FolderInfo;
+import jamuz.process.merge.StatSource;
+import jamuz.process.sync.Device;
+import jamuz.process.sync.SyncStatus;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
+import java.util.Date;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
 /**
- *
- * @author raph
+ * Tests sur {@link DaoDeviceFileWrite} (insert batch, upsert, delete).
  */
-public class DaoDeviceFileWriteTest {
-    
-    public DaoDeviceFileWriteTest() {
+class DaoDeviceFileWriteTest {
+
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoDeviceFileWrite writer;
+    private static int deviceId = 1;
+    private static int pathId;
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoDeviceFileWrite(dbConnJaMuz.getDbConn());
+        seedPlaylistMachineDeviceAndPath();
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
+    @BeforeEach
+    void clearDeviceFileRows() throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "DELETE FROM deviceFile")) {
+            st.executeUpdate();
+        }
     }
 
-    @Before
-    public void setUp() throws Exception {
+    private static void seedPlaylistMachineDeviceAndPath() throws SQLException {
+        Playlist playlist = new Playlist(0, "plDeviceFileWrite", false, 0, Playlist.LimitUnit.Gio, false,
+                Playlist.Type.Albums, Playlist.Match.All, false, "ext");
+        dbConnJaMuz.playlist().lock().insert(playlist);
+
+        String hostname = "DaoDeviceFileWriteHost";
+        dbConnJaMuz.machine().lock().getOrInsert(hostname, new StringBuilder(), true);
+
+        Device device = new Device(-1, "dev", "src", "dst", 1, hostname, true);
+        device.setIdPlaylist(1);
+        dbConnJaMuz.device().lock().insertOrUpdate(device);
+
+        StatSource statSource = new StatSource(hostname);
+        dbConnJaMuz.statSource().lock().insertOrUpdate(statSource);
+
+        int[] keyPath = new int[1];
+        dbConnJaMuz.path().lock().insert("rel/base/", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "mbid", keyPath);
+        pathId = keyPath[0];
     }
 
-    @After
-    public void tearDown() throws Exception {
+    private static FileInfoInt insertFileRow(String filenameUnderBase) throws SQLException {
+        FileInfoInt file = new FileInfoInt("rel/base/" + filenameUnderBase, "/root");
+        file.setIdPath(pathId);
+        int[] keyFile = new int[1];
+        dbConnJaMuz.file().lock().insert(file, keyFile);
+        file.setIdFile(keyFile[0]);
+        file.setRating(0);
+        file.setStatus(SyncStatus.NEW);
+        return file;
     }
-    
-    /**
-     * Test of insertOrUpdate method, of class DaoDeviceFileWrite.
-     */
+
+    private static int countDeviceFiles(int idDev) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT COUNT(*) FROM deviceFile WHERE idDevice = ?")) {
+            st.setInt(1, idDev);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getInt(1);
+            }
+        }
+    }
+
+    private static String statusInDb(int idFile, int idDev) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT status FROM deviceFile WHERE idFile = ? AND idDevice = ?")) {
+            st.setInt(1, idFile);
+            st.setInt(2, idDev);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getString("status");
+            }
+        }
+    }
+
     @Test
-	@Ignore
-    public void testInsertOrUpdate() {
-        System.out.println("insertOrUpdate");
-        ArrayList<FileInfoInt> files = null;
-        int idDevice = 0;
-        DaoDeviceFileWrite instance = null;
-        ArrayList<FileInfoInt> expResult = null;
-        ArrayList<FileInfoInt> result = instance.insertOrUpdate(files, idDevice);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldReturnEmptyWhenInsertOrIgnoreWithNoFiles() {
+        assertTrue(writer.insertOrIgnore(new ArrayList<>(), deviceId).isEmpty());
     }
 
-    /**
-     * Test of insertOrIgnore method, of class DaoDeviceFileWrite.
-     */
     @Test
-	@Ignore
-    public void testInsertOrIgnore_ArrayList_int() {
-        System.out.println("insertOrIgnore");
-        ArrayList<FileInfoInt> files = null;
-        int idDevice = 0;
-        DaoDeviceFileWrite instance = null;
-        ArrayList<FileInfoInt> expResult = null;
-        ArrayList<FileInfoInt> result = instance.insertOrIgnore(files, idDevice);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldInsertOrIgnoreOneRowAndExposeNewStatus() throws SQLException {
+        FileInfoInt a = insertFileRow("one.ext");
+        ArrayList<FileInfoInt> batch = new ArrayList<>();
+        batch.add(a);
+
+        ArrayList<FileInfoInt> inserted = writer.insertOrIgnore(batch, deviceId);
+        assertEquals(1, inserted.size());
+        assertEquals(1, countDeviceFiles(deviceId));
+        assertEquals("NEW", statusInDb(a.getIdFile(), deviceId));
     }
 
-    /**
-     * Test of delete method, of class DaoDeviceFileWrite.
-     */
     @Test
-	@Ignore
-    public void testDelete() {
-        System.out.println("delete");
-        int idDevice = 0;
-        DaoDeviceFileWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.delete(idDevice);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldNotDuplicateRowWhenInsertOrIgnoreCalledTwice() throws SQLException {
+        FileInfoInt f = insertFileRow("dup.ext");
+        ArrayList<FileInfoInt> batch = new ArrayList<>();
+        batch.add(f);
+
+        assertEquals(1, writer.insertOrIgnore(batch, deviceId).size());
+        assertTrue(writer.insertOrIgnore(batch, deviceId).isEmpty());
+        assertEquals(1, countDeviceFiles(deviceId));
     }
-    
+
+    @Test
+    void shouldUpdateStatusOnInsertOrUpdateAfterInitialInsert() throws SQLException {
+        FileInfoInt f = insertFileRow("up.ext");
+        ArrayList<FileInfoInt> batch = new ArrayList<>();
+        batch.add(f);
+        assertFalse(writer.insertOrIgnore(batch, deviceId).isEmpty());
+
+        f.setStatus(SyncStatus.INFO);
+        ArrayList<FileInfoInt> updateBatch = new ArrayList<>();
+        updateBatch.add(f);
+        assertFalse(writer.insertOrUpdate(updateBatch, deviceId).isEmpty());
+        assertEquals("INFO", statusInDb(f.getIdFile(), deviceId));
+    }
+
+    @Test
+    void shouldRemoveAllDeviceFileRowsWhenDelete() throws SQLException {
+        FileInfoInt f1 = insertFileRow("del1.ext");
+        FileInfoInt f2 = insertFileRow("del2.ext");
+        ArrayList<FileInfoInt> batch = new ArrayList<>();
+        batch.add(f1);
+        batch.add(f2);
+        writer.insertOrIgnore(batch, deviceId);
+        assertEquals(2, countDeviceFiles(deviceId));
+
+        assertTrue(writer.delete(deviceId));
+        assertEquals(0, countDeviceFiles(deviceId));
+    }
 }
