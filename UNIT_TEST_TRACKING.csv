@@ -113,10 +113,10 @@ test;jamuz/gui/swing/TableModelTest.java;jamuz/gui/swing/TableModel.java;unit;ju
 test;jamuz/gui/swing/TableValueTest.java;jamuz/gui/swing/TableValue.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/swing/TriStateCheckBoxTest.java;jamuz/gui/swing/TriStateCheckBox.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/gui/swing/WrapLayoutTest.java;jamuz/gui/swing/WrapLayout.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/player/JMPlayerTest.java;jamuz/player/JMPlayer.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/player/JMPlayerTest.java;jamuz/player/JMPlayer.java;unit;junit5;5;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/player/MPlaybackListenerTest.java;jamuz/player/MPlaybackListener.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/player/MplayerTest.java;jamuz/player/Mplayer.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/process/book/BookTest.java;jamuz/process/book/Book.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/book/BookTest.java;jamuz/process/book/Book.java;unit;junit5;8;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/book/DbConnBookTest.java;jamuz/process/book/DbConnBook.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/book/DialogBookExportTest.java;jamuz/process/book/DialogBookExport.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/book/DialogBookOptionTest.java;jamuz/process/book/DialogBookOption.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -136,7 +136,7 @@ test;jamuz/process/check/DialogDuplicateReplaceTest.java;jamuz/process/check/Dia
 test;jamuz/process/check/DialogDuplicateTest.java;jamuz/process/check/DialogDuplicate.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/DialogScannerTest.java;jamuz/process/check/DialogScanner.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/DuplicateInfoTest.java;jamuz/process/check/DuplicateInfo.java;unit;junit5;1;0;0;0;0;clean;—;mutable fields and toString
-test;jamuz/process/check/FileInfoDisplayTest.java;jamuz/process/check/FileInfoDisplay.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/check/FileInfoDisplayTest.java;jamuz/process/check/FileInfoDisplay.java;unit;junit5;4;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/FileInfoDuplicateReplaceTest.java;jamuz/process/check/FileInfoDuplicateReplace.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/check/FolderInfoResultTest.java;jamuz/process/check/FolderInfoResult.java;unit;junit5;26;0;0;0;0;clean;—;colorField, formatNumber, error-level state machine, analyseTrack(string/year/number), equals/hashCode/toString
 test;jamuz/process/check/FolderInfoTest.java;jamuz/process/check/FolderInfo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -175,7 +175,7 @@ test;jamuz/process/sync/DeviceTest.java;jamuz/process/sync/Device.java;unit;juni
 test;jamuz/process/sync/ICallBackSyncTest.java;jamuz/process/sync/ICallBackSync.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/sync/PanelSyncTest.java;jamuz/process/sync/PanelSync.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/sync/ProcessSyncTest.java;jamuz/process/sync/ProcessSync.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/process/sync/SyncStatusTest.java;jamuz/process/sync/SyncStatus.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/sync/SyncStatusTest.java;jamuz/process/sync/SyncStatus.java;unit;junit5;3;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/ButtonOpenVideoTest.java;jamuz/process/video/ButtonOpenVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/DbConnVideoTest.java;jamuz/process/video/DbConnVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/DialogVideoCleanupConfirmTest.java;jamuz/process/video/DialogVideoCleanupConfirm.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -186,7 +186,7 @@ test;jamuz/process/video/FileInfoVideoTest.java;jamuz/process/video/FileInfoVide
 test;jamuz/process/video/IconBufferVideoTest.java;jamuz/process/video/IconBufferVideo.java;unit;junit5;1;0;0;0;0;clean;—;@Disabled live-network test
 test;jamuz/process/video/MyMovieDbTest.java;jamuz/process/video/MyMovieDb.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/MyTvShowTest.java;jamuz/process/video/MyTvShow.java;unit;junit5;6;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/process/video/MyVideoAbstractTest.java;jamuz/process/video/MyVideoAbstract.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/MyVideoAbstractTest.java;jamuz/process/video/MyVideoAbstract.java;unit;junit5;7;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/PanelVideoTest.java;jamuz/process/video/PanelVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/ProcessVideoTest.java;jamuz/process/video/ProcessVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/TableCellRendererTooltipTest.java;jamuz/process/video/TableCellRendererTooltip.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -210,7 +210,7 @@ test;jamuz/soulseek/PanelSlskTest.java;jamuz/soulseek/PanelSlsk.java;unit;junit5
 test;jamuz/soulseek/SlskTest.java;jamuz/soulseek/Slsk.java;unit;junit5;3;0;0;0;0;clean;—;getDirectory: typical/deep/2-segment paths
 test;jamuz/soulseek/SlskdClientTest.java;jamuz/soulseek/SlskdClient.java;unit;junit5;1;0;0;0;0;clean;—;ServerException message
 test;jamuz/soulseek/SlskdDockerSharedDirTest.java;jamuz/soulseek/SlskdDockerSharedDir.java;unit;junit5;5;0;0;0;0;clean;—;buildSharedDirEnvValue: empty/null/blank exclude; relative paths with prefixes; absolute under root;" skips outside root (fixed bad assertions: ""!"" prefix is intentional)"
-test;jamuz/soulseek/SlskdDockerTest.java;jamuz/soulseek/SlskdDocker.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/soulseek/SlskdDockerTest.java;jamuz/soulseek/SlskdDocker.java;unit;junit5;3;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskdDownloadDirectoryTest.java;jamuz/soulseek/SlskdDownloadDirectory.java;unit;junit5;2;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskdDownloadFileTest.java;jamuz/soulseek/SlskdDownloadFile.java;unit;junit5;3;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/soulseek/SlskdDownloadUserTest.java;jamuz/soulseek/SlskdDownloadUser.java;unit;junit5;2;0;0;0;0;clean;Opportunistic harmonization (names, style) when editing;Light review

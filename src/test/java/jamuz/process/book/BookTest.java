@@ -5,18 +5,59 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BookTest {
 
-    @Test
-    void shouldExposeBasicMetadataAndSortByTitleSort() {
-        Book a = new Book("A", "A", "2020", "x", "uuid", "p", "c", "5", "en", "auth", "f", "EPUB/PDF", "tag1/tag2");
-        Book b = new Book("B", "B", "2021", "y", "uuid2", "p2", "c2", "4", "en", "auth2", "f2", "PDF", "tag2");
+    private static Book book(String title, String titleSort) {
+        return new Book(title, titleSort, "2020", "sort-author", "uuid-1",
+                "/path/", "cover.jpg", "5", "en", "Author Name", "file.epub",
+                "EPUB/PDF", "fiction/fantasy");
+    }
 
-        assertTrue(a.getFormat().contains("epub"));
-        assertEquals("A", a.getTitle());
-        assertFalse(a.isLocal());
-        a.setLength(10);
-        assertTrue(a.isLocal());
-        assertFalse(a.getTags().isEmpty());
+    @Test
+    void constructor_exposesTitle() {
+        assertEquals("Dune", book("Dune", "Dune").getTitle());
+    }
+
+    @Test
+    void getFormat_isLowerCase() {
+        String fmt = book("X", "X").getFormat();
+        assertTrue(fmt.contains("epub") || fmt.contains("pdf"),
+                "Format should contain epub or pdf");
+    }
+
+    @Test
+    void isLocal_falseByDefault_trueAfterSetLength() {
+        Book b = book("A", "A");
+        assertFalse(b.isLocal());
+        b.setLength(100L);
+        assertTrue(b.isLocal());
+    }
+
+    @Test
+    void getTags_isNotEmpty() {
+        assertFalse(book("A", "A").getTags().isEmpty());
+    }
+
+    @Test
+    void isSelected_falseByDefault() {
+        assertFalse(book("A", "A").isSelected());
+    }
+
+    @Test
+    void setSelected_updatesState() {
+        Book b = book("A", "A");
+        b.setSelected(true);
+        assertTrue(b.isSelected());
+    }
+
+    @Test
+    void compareTo_sortsByTitleSort() {
+        Book a = book("Alpha Book", "alpha");
+        Book b = book("Beta Book", "beta");
         assertTrue(a.compareTo(b) < 0);
-        assertNotNull(a.toString());
+        assertTrue(b.compareTo(a) > 0);
+    }
+
+    @Test
+    void toString_isNotBlank() {
+        assertFalse(book("A", "A").toString().isBlank());
     }
 }
