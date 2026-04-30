@@ -19,7 +19,6 @@ package jamuz;
 import jamuz.Jamuz;
 import java.util.logging.Level;
 
-import jamuz.utils.Popup;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

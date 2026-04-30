@@ -23,7 +23,6 @@ import jamuz.Jamuz;
 import jamuz.gui.PanelLyrics;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
-import jamuz.utils.Popup;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

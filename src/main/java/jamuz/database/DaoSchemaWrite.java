@@ -20,7 +20,6 @@ import jamuz.Jamuz;
 import jamuz.gui.SchemaUpgradeProgress;
 import jamuz.utils.DateTime;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 
 import java.io.File;
 import java.io.IOException;

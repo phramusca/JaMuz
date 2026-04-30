@@ -21,7 +21,6 @@ import java.util.logging.Level;
 
 import jamuz.gui.swing.TableModelGeneric;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import java.util.ArrayList;
 import java.util.List;

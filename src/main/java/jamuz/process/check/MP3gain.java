@@ -21,7 +21,6 @@ import jamuz.Jamuz;
 import jamuz.gui.swing.ProgressBar;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
-import jamuz.utils.Popup;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

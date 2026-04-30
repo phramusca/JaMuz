@@ -20,7 +20,6 @@ import jamuz.Jamuz;
 import java.util.logging.Level;
 
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;

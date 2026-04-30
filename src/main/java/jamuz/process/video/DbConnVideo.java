@@ -21,7 +21,6 @@ import jamuz.database.DbConn;
 import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.process.video.FileInfoVideo.StreamDetails;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

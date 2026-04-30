@@ -20,7 +20,6 @@ import jamuz.Jamuz;
 import java.util.logging.Level;
 
 import jamuz.utils.ImageUtils;
-import jamuz.utils.Popup;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

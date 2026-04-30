@@ -21,7 +21,6 @@ import java.util.logging.Level;
 
 import jamuz.Jamuz;
 import jamuz.utils.ImageUtils;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.io.File;
 import java.io.IOException;

@@ -17,7 +17,6 @@
 package jamuz.soulseek;
 
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;

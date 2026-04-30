@@ -21,7 +21,6 @@ import jamuz.database.DbInfo;
 import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.database.StatSourceSQL;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

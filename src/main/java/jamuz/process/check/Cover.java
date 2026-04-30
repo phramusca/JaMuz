@@ -27,7 +27,6 @@ import fm.last.musicbrainz.coverart.impl.DefaultCoverArtArchiveClient;
 import jamuz.Jamuz;
 import jamuz.utils.ImageUtils;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.Utils;
 import java.awt.image.BufferedImage;
 import java.io.File;

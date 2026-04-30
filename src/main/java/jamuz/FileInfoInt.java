@@ -27,7 +27,6 @@ import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.DateTime;
 import jamuz.utils.ImageUtils;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;

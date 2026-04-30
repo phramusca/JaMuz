@@ -37,7 +37,6 @@ import info.movito.themoviedbapi.model.tv.TvSeason;
 import info.movito.themoviedbapi.model.tv.TvSeries;
 import jamuz.database.DbInfo;
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

@@ -32,7 +32,6 @@ import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
 import java.awt.image.BufferedImage;

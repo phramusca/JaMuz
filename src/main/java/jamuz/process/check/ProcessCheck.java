@@ -26,7 +26,6 @@ import jamuz.process.check.FolderInfo.CheckedFlag;
 import static jamuz.process.check.PanelCheck.enableRowSorter;
 import jamuz.utils.Benchmark;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import jamuz.utils.StringManager;
 import java.awt.Color;

@@ -23,7 +23,6 @@ import jamuz.database.DbInfo;
 import jamuz.Jamuz;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import java.io.File;
 import java.io.IOException;

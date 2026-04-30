@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import jamuz.database.DbConn;
 import jamuz.database.DbInfo;
 import jamuz.Jamuz;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

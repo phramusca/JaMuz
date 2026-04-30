@@ -21,7 +21,6 @@ import java.util.logging.Level;
 
 import jamuz.Jamuz;
 import jamuz.utils.OS;
-import jamuz.utils.Popup;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

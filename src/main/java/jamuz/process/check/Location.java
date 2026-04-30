@@ -20,7 +20,6 @@ import java.util.logging.Level;
 
 import jamuz.Jamuz;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import java.io.File;
 
 /**
