@@ -1,109 +1,36 @@
-/*
- * Copyright (C) 2019 phramusca ( https://github.com/phramusca/ )
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package jamuz.utils;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- *
- * @author phramusca ( https://github.com/phramusca/ )
+ * OS detection is platform-dependent; we only verify API contracts.
+ * Actual values are validated manually on each platform.
  */
-public class OSTest {
+class OSTest {
 
-	/**
-	 *
-	 */
-	public OSTest() {
-	}
+    @Test
+    void detect_recognisesCurrentPlatform() {
+        boolean recognised = OS.detect();
+        assertTrue(recognised, "OS.detect() should recognise the CI/test platform");
+    }
 
-	/**
-	 *
-	 */
-	@BeforeClass
-	public static void setUpClass() {
-	}
+    @Test
+    void getName_afterDetect_returnsNonNull() {
+        OS.detect();
+        assertNotNull(OS.getName());
+    }
 
-	/**
-	 *
-	 */
-	@AfterClass
-	public static void tearDownClass() {
-	}
+    @Test
+    void isWindowsAndIsUnix_areExclusive() {
+        OS.detect();
+        assertFalse(OS.isWindows() && OS.isUnix(), "Cannot be both Windows and Unix");
+    }
 
-	/**
-	 *
-	 */
-	@Before
-	public void setUp() {
-	}
-
-	/**
-	 *
-	 */
-	@After
-	public void tearDown() {
-	}
-
-	/**
-	 * Test of isWindows method, of class OS.
-	 */
-	@Test
-	public void testIsWindows() {
-//		boolean expResult = false;
-//		boolean result = OS.isWindows();
-//		assertEquals(expResult, result);
-		//Cannot test. Manually validated
-	}
-
-	/**
-	 * Test of isUnix method, of class OS.
-	 */
-	@Test
-	public void testIsUnix() {
-//		boolean expResult = false;
-//		boolean result = OS.isUnix();
-//		assertEquals(expResult, result);
-		//Cannot test. Manually validated
-	}
-
-	/**
-	 * Test of detect method, of class OS.
-	 */
-	@Test
-	public void testDetect() {
-//		boolean expResult = false;
-//		boolean result = OS.detect();
-//		assertEquals(expResult, result);
-		//Cannot test. Manually validated
-	}
-
-	/**
-	 * Test of getName method, of class OS.
-	 */
-	@Test
-	public void testGetName() {
-//		String expResult = "";
-//		String result = OS.getName();
-//		assertEquals(expResult, result);
-		//Cannot test. Manually validated
-	}
-
+    @Test
+    void isWindows_orIsUnix_afterDetect() {
+        OS.detect();
+        assertTrue(OS.isWindows() || OS.isUnix(),
+                "After detect(), at least one platform flag should be set (Windows or Unix/Linux)");
+    }
 }
