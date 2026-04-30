@@ -196,7 +196,7 @@ public class Slsk {
         }
     }
 
-    public Pair<String, String> getDirectory(String filename) {
+    public static Pair<String, String> getDirectory(String filename) {
         String[] split = filename.split("\\\\");
         return Pair.of(split[split.length - 2], split[split.length - 1]);
     }
