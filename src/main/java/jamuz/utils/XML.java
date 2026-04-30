@@ -16,11 +16,11 @@
  */
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,8 +50,8 @@ public class XML {
 			doc.getDocumentElement().normalize();
 			return doc;
 		} catch (ParserConfigurationException | SAXException | IOException ex) {
-			Logger.getLogger(XML.class.getName()).log(Level.SEVERE, "XML.open: {0}", filename);
-			Logger.getLogger(XML.class.getName()).log(Level.SEVERE, null, ex);
+			Jamuz.getLogger().log(Level.SEVERE, "XML.open: {0}", filename);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return null;
         }
 	}
