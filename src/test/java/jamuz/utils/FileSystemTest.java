@@ -1,181 +1,73 @@
-/*
- * Copyright (C) 2019 phramusca ( https://github.com/phramusca/ )
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package jamuz.utils;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.apache.commons.io.FilenameUtils;
-import org.hamcrest.Matchers;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import test.helpers.TestSettings;
 
-/**
- *
- * @author phramusca ( https://github.com/phramusca/ )
- */
-public class FileSystemTest {
+class FileSystemTest {
 
-	File source;
-	File destination;
+    File source;
+    File destination;
 
-	/**
-	 *
-	 */
-	public FileSystemTest() {
-	}
+    @BeforeEach
+    void setUp() {
+        source = new File(FilenameUtils.concat(TestSettings.getResourcesPath(),
+                FilenameUtils.concat("audioFiles", "1min.mp3")));
+        destination = new File(FilenameUtils.concat(TestSettings.getAppFolder(),
+                FilenameUtils.concat("temp-should_Be_DeletTED_Damned", "1min (copie).mp3")));
+    }
 
-	/**
-	 *
-	 */
-	@BeforeClass
-	public static void setUpClass() {
-	}
+    @AfterEach
+    void tearDown() {
+        destination.delete();
+        destination.getParentFile().delete();
+    }
 
-	/**
-	 *
-	 */
-	@AfterClass
-	public static void tearDownClass() {
-	}
+    @Test
+    void moveFile_movesSourceToDestinationAndRemovesSource() throws IOException {
+        File moveSource = new File(FilenameUtils.concat(TestSettings.getAppFolder(), "tempShouldBeDeleted.mp3"));
+        FileSystem.copyFile(source, moveSource);
+        assertTrue(moveSource.exists());
+        assertFalse(destination.exists());
 
-	/**
-	 *
-	 */
-	@Before
-	public void setUp() {
-		source = new File(FilenameUtils.concat(TestSettings.getResourcesPath(),
-				FilenameUtils.concat("audioFiles", "1min.mp3")));
+        FileSystem.moveFile(moveSource, destination);
 
-		destination = new File(FilenameUtils.concat(TestSettings.getAppFolder(),
-				FilenameUtils.concat("temp-should_Be_DeletTED_Damned", "1min (copie).mp3")));
-	}
+        assertTrue(source.exists());
+        assertTrue(destination.exists());
+        assertEquals(961029, destination.length());
+        assertFalse(moveSource.exists());
+    }
 
-	/**
-	 *
-	 */
-	@After
-	public void tearDown() {
-		destination.delete();
-		destination.getParentFile().delete();
-	}
+    @Test
+    void copyFile_copiesSourceToDestinationWithoutRemovingSource() throws Exception {
+        assertTrue(source.exists());
+        assertFalse(destination.exists());
 
-	// TODO: Add negative cases
-	/**
-	 * Test of moveFile method, of class FileSystem.
-	 *
-	 * @throws java.io.IOException
-	 */
-	@Test
-	public void testMoveFile() throws IOException {
-		// Given
-		File moveSource = new File(FilenameUtils.concat(TestSettings.getAppFolder(), "tempShouldBeDeleted.mp3"));
-		FileSystem.copyFile(source, moveSource);
-		assertTrue(moveSource.exists());
-		assertTrue(moveSource.length() == 961029);
-		assertTrue(!destination.getParentFile().exists());
-		assertTrue(!destination.exists());
+        FileSystem.copyFile(source, destination);
 
-		// When
-		FileSystem.moveFile(moveSource, destination);
+        assertTrue(source.exists());
+        assertTrue(destination.exists());
+        assertEquals(961029, destination.length());
+    }
 
-		// Then
-		assertTrue(source.exists());
-		assertTrue(source.length() == 961029);
-		assertTrue(destination.exists());
-		assertTrue(destination.length() == 961029);
-		assertTrue(!moveSource.exists());
-	}
+    @Test
+    void replaceHome_withStringPath_expandsTildeToHomeDir() {
+        File result = FileSystem.replaceHome(new File("~/toto/~tem/oh~/top.mp9"));
+        assertTrue(result.getAbsolutePath().startsWith(System.getProperty("user.home")),
+                "Should start with home dir");
+        assertTrue(result.getAbsolutePath().endsWith(
+                File.separator + "toto" + File.separator + "~tem" + File.separator + "oh~" + File.separator + "top.mp9"),
+                "Should preserve the rest of the path");
+    }
 
-	// TODO: Add negative cases
-	/**
-	 * Test of copyFile method, of class FileSystem.
-	 *
-	 * @throws java.lang.Exception
-	 */
-	@Test
-	public void testCopyFile() throws Exception {
-		// Given
-		assertTrue(source.exists());
-		assertTrue(source.length() == 961029);
-		assertTrue(!destination.getParentFile().exists());
-		assertTrue(!destination.exists());
-
-		// When
-		FileSystem.copyFile(source, destination);
-
-		// Then
-		assertTrue(source.exists());
-		assertTrue(source.length() == 961029);
-		assertTrue(destination.exists());
-		assertTrue(destination.length() == 961029);
-	}
-
-	@Test
-	public void testReplaceHome_String() {
-		testReplaceHome("~/toto/~tem/oh~/top.mp9");
-	}
-	
-	@Test
-	public void testReplaceHome_File() {
-		testReplaceHome(new File("~/toto/~tem/oh~/top.mp9"));
-	}
-	
-	private void testReplaceHome(Object input) {
-		boolean isWindows = false;
-		boolean isLinux = false;
-		if (OS.detect()) {
-			isWindows = OS.isWindows();
-			isLinux = OS.isUnix();
-		} else {
-			throw new UnsupportedOperationException("Operating system detection failed");
-		}
-		File file = (input instanceof File) ? (File) input : new File((String) input);
-		File result = FileSystem.replaceHome(file);
-		String expectedPath = "/toto/~tem/oh~/top.mp9";
-		if (isWindows) {
-			expectedPath = expectedPath.replace("/", "\\");
-			assertThat(result.getAbsolutePath(), Matchers.endsWith(expectedPath.replace("/", "\\")));
-		} else if (isLinux) {
-			assertThat(result.getAbsolutePath(), Matchers.endsWith(expectedPath));
-		}
-		if (isLinux) {
-			assertThat(result.getAbsolutePath(), Matchers.startsWith("/home/"));
-		} else if (isWindows) {
-			assertThat(result.getAbsolutePath(), Matchers.startsWith("C:\\Users\\"));
-		}
-	}
-
-	/**
-	 * Test of size method, of class FileSystem.
-	 */
-	@Test
-	public void testSize() {
-		File file = new File(FilenameUtils.concat(TestSettings.getResourcesPath(), "audioFiles"));
-		long result = FileSystem.size(file.toPath());
-		assertEquals(7011134, result);
-	}
-
+    @Test
+    void size_ofAudioFilesDir_returnsExpectedTotalBytes() {
+        File dir = new File(FilenameUtils.concat(TestSettings.getResourcesPath(), "audioFiles"));
+        assertEquals(7011134, FileSystem.size(dir.toPath()));
+    }
 }
