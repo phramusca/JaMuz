@@ -36,7 +36,7 @@ All completed batch history has been removed.
 Most classes now have a dedicated test, but many recent ones are intentionally lightweight contract tests.
 Next step is **selective depth**, not blanket expansion.
 
-### Done (2026-04-30)
+### Done (2026-04-30, batch 1)
 
 - **`FolderInfoResult`** — 26 tests: `colorField`, `formatNumber`, error-level state machine
   (`setKO/setWarning/setOK/restoreFolderErrorLevel`), `analyseTrack` (string / year / number),
@@ -47,14 +47,23 @@ Next step is **selective depth**, not blanket expansion.
 - **`FileInfoVideo`** — 11 tests: quality detection thresholds (HD1080 / HD720 / SD / UNKNOWN),
   `isHD`, `getVideoStreamDetails`, `getFormattedEpisodeNumber`, audio/subtitles stream details.
 
+### Done (2026-04-30, batch 2)
+
+- **`StringManager`** — 30 tests: `removeIllegal` (illegal chars, consecutive, clean input),
+  `truncate` (short / at-limit / over-limit), `getNullableText` (null / non-null / empty),
+  `humanReadableByteCount` (SI / binary / negative), `secondsToMMSS` / `secondsToHHMM` (negative
+  / zero / values), `humanReadableSeconds` (zero / seconds / minutes / hours / days),
+  `parseSlashList` (single / multiple / no-spaces), `Left` / `Right`.
+- **`VideoAbstract.Status`** — 5 tests: initial state, `set()` message content, separator
+  accumulation, multiple-set chaining.
+
 ### Remaining focus areas
 
 1. `jamuz.process.check` — still to deepen:
    - `ProcessCheck`, `FolderInfo` (DB-heavy; skip or use in-memory SQLite), `CheckDisplay` (Swing-wired; keep contract only).
 2. `jamuz.process.video` — still to deepen:
-   - `VideoAbstract` (Status transitions if any are pure), `DbConnVideo` (needs in-memory DB).
-3. `jamuz.gui` and Swing-heavy classes:
-   - Keep to non-UI-thread-safe unit checks only.
+   - `DbConnVideo` (needs in-memory DB).
+3. Other `rather_clean` utility classes with untested logic (scan CSV for `nb_tests == 1`).
 
 Definition of “enough depth”:
 

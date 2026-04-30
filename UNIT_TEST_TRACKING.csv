@@ -193,7 +193,7 @@ test;jamuz/process/video/TableCellRendererTooltipTest.java;jamuz/process/video/T
 test;jamuz/process/video/TableModelVideoTest.java;jamuz/process/video/TableModelVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/TableRowFilterVideoTest.java;jamuz/process/video/TableRowFilterVideo.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/TheMovieDbTest.java;jamuz/process/video/TheMovieDb.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/process/video/VideoAbstractTest.java;jamuz/process/video/VideoAbstract.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/process/video/VideoAbstractTest.java;jamuz/process/video/VideoAbstract.java;unit;junit5;5;0;0;0;0;clean;—;Status: initial state, set message, multiple messages accumulation
 test;jamuz/process/video/VideoMovieTest.java;jamuz/process/video/VideoMovie.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/VideoRatingTest.java;jamuz/process/video/VideoRating.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/process/video/VideoTvShowTest.java;jamuz/process/video/VideoTvShow.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
@@ -237,7 +237,7 @@ test;jamuz/utils/PopupTest.java;jamuz/utils/Popup.java;unit;junit4;7;0;0;0;0;rat
 test;jamuz/utils/ProcessAbstractTest.java;jamuz/utils/ProcessAbstract.java;unit;junit4;3;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/utils/QRCodeTest.java;jamuz/utils/QRCode.java;unit;junit4;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/utils/SSHTest.java;jamuz/utils/SSH.java;unit;junit4;5;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
-test;jamuz/utils/StringManagerTest.java;jamuz/utils/StringManager.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
+test;jamuz/utils/StringManagerTest.java;jamuz/utils/StringManager.java;unit;junit5;30;0;0;0;0;clean;—;removeIllegal, truncate, getNullableText, humanReadableByteCount, secondsToMMSS, secondsToHHMM, humanReadableSeconds, parseSlashList, Left, Right
 test;jamuz/utils/SwingTest.java;jamuz/utils/Swing.java;unit;junit4;6;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/utils/UtilsTest.java;jamuz/utils/Utils.java;unit;junit5;2;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/utils/XMLTest.java;jamuz/utils/XML.java;unit;junit5;1;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
