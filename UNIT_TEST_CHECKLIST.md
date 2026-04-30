@@ -10,11 +10,11 @@ All completed batch history has been removed.
 - Dedicated unit-test coverage for `src/main/java`: **complete**
   - `main_without_dedicated_test`: **0**
   - `main_with_dedicated_test`: **236**
-- All unit tests run with JUnit5 (no more silent JUnit4 skipping): **660 tests, 0 failures, 6 skipped** (network/GUI)
+- All unit tests run with JUnit5 (no more silent JUnit4 skipping): **666 tests, 0 failures, 3 skipped** (network/GUI)
 - Unit-test quality counters:
   - `nb_prototype_stubs`: **0**
   - `nb_fixme_test`: **0**
-  - `nb_ignore`: **0**
+  - `nb_ignore`: **0** ✅ (was 3 — AppVersionCheck @Disabled fixed with MockWebServer)
   - `nb_system_out`: **0**
 - Non-unit tests tracked separately:
   - `tests/functional/CheckNTest.java`
@@ -22,7 +22,7 @@ All completed batch history has been removed.
   - `tests/functional/MergeCheckNTest.java`
   - `tests/functional/MergeNTest.java`
 - Status distribution (test files):
-  - `clean`: **114**
+  - `clean`: **115**
   - `rather_clean`: **124** (91 are intentionally lightweight GUI/Swing files)
 
 ---

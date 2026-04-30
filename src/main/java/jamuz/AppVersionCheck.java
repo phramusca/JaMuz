@@ -36,19 +36,33 @@ import okhttp3.Response;
  */
 public class AppVersionCheck {
 
+    static final String GITHUB_RELEASES_BASE_URL =
+            "https://api.github.com/repos/phramusca/jamuz/releases";
+
     private final ICallBackVersionCheck callBackVersionCheck;
     private final AppVersion appVersion;
-    private boolean includePreRelease = false;
+    boolean includePreRelease = false;
     private ScheduledExecutorService scheduler;
+    final OkHttpClient httpClient;
+    final String releasesBaseUrl;
 
     /**
      *
      * @param callBackVersionCheck
      */
     public AppVersionCheck(ICallBackVersionCheck callBackVersionCheck) {
+        this(callBackVersionCheck, new OkHttpClient(), GITHUB_RELEASES_BASE_URL,
+                "v" + Main.class.getPackage().getImplementationVersion());
+    }
+
+    /** Package-private constructor for testing with injected client, URL and version. */
+    AppVersionCheck(ICallBackVersionCheck callBackVersionCheck,
+                    OkHttpClient httpClient,
+                    String releasesBaseUrl,
+                    String currentVersion) {
         this.callBackVersionCheck = callBackVersionCheck;
-        String version = Main.class.getPackage().getImplementationVersion();
-        String currentVersion = "v" + version;
+        this.httpClient = httpClient;
+        this.releasesBaseUrl = releasesBaseUrl;
         appVersion = new AppVersion(currentVersion, "Unknown");
         callBackVersionCheck.onCheck(appVersion, "");
     }
@@ -79,13 +93,12 @@ public class AppVersionCheck {
         }
     }
 
-    private void checkNewVersion() {
+    void checkNewVersion() {
         try {
             callBackVersionCheck.onCheck(appVersion, "Checking for new version ...");
-            OkHttpClient client = new OkHttpClient();
-            JsonArray assets = fetchReleaseAssets(client);
+            JsonArray assets = fetchReleaseAssets(httpClient);
             if (appVersion.isNewVersion()) {
-                handleNewVersion(client, assets);
+                handleNewVersion(httpClient, assets);
             } else {
                 callBackVersionCheck.onCheckResult(appVersion, "You are running the latest version.");
             }
@@ -101,7 +114,9 @@ public class AppVersionCheck {
 
     private JsonArray fetchReleaseAssets(OkHttpClient client) throws IOException {
         Request request = new Request.Builder()
-                .url(includePreRelease ? "https://api.github.com/repos/phramusca/jamuz/releases?per_page=1&page=1" : "https://api.github.com/repos/phramusca/jamuz/releases/latest")
+                .url(includePreRelease
+                        ? releasesBaseUrl + "?per_page=1&page=1"
+                        : releasesBaseUrl + "/latest")
                 .build();
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
@@ -121,7 +136,7 @@ public class AppVersionCheck {
         return new JsonArray(0);
     }
 
-    private void handleNewVersion(OkHttpClient client, JsonArray assets) throws IOException {
+    private void handleNewVersion(OkHttpClient client, JsonArray assets) throws IOException {  // client kept for download
         if (!assets.isJsonNull() && assets.size() > 0) {
             callBackVersionCheck.onCheck(appVersion, "Getting new version ...");
             String downloadURL = assets.get(0).getAsJsonObject().get("browser_download_url").getAsString();

@@ -3,7 +3,7 @@ test;tests/functional/CheckNTest.java;tests/functional/CheckN.java;functional;ju
 test;tests/functional/Merge1Test.java;tests/functional/Merge1.java;functional;junit4;1;0;0;0;0;out_of_unit_scope;Track separately (functional plan / TestPlan);—
 test;tests/functional/MergeCheckNTest.java;tests/functional/MergeCheckN.java;functional;junit4;1;0;7;0;0;out_of_unit_scope;Track separately (functional plan / TestPlan);—
 test;tests/functional/MergeNTest.java;tests/functional/MergeN.java;functional;junit4;1;0;6;0;0;out_of_unit_scope;Track separately (functional plan / TestPlan);—
-test;jamuz/AppVersionCheckTest.java;jamuz/AppVersionCheck.java;unit;junit5;2;0;0;3;0;clean;—;constructor calls onCheck once; getAppVersion non-null; 3 async tests @Disabled (need injectable OkHttpClient)
+test;jamuz/AppVersionCheckTest.java;jamuz/AppVersionCheck.java;unit;junit5;5;0;0;0;0;clean;—;constructor calls onCheck once; getAppVersion non-null; 3 async tests @Disabled (need injectable OkHttpClient)
 test;jamuz/AppVersionTest.java;jamuz/AppVersion.java;unit;junit5;12;0;0;0;0;clean;—;full JUnit5 + Mockito conversion
 test;jamuz/FileInfoIntTest.java;jamuz/FileInfoInt.java;unit;junit5;37;0;0;0;0;rather_clean;Opportunistic harmonization (names, style) when editing;Light review
 test;jamuz/FileInfoTest.java;jamuz/FileInfo.java;unit;junit5;17;0;0;0;0;clean;—;setPath decomposition, ext lowercased, setExt, setFilename, compareTo, equalsStats (same/rating/playCounter/genre)
