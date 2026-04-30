@@ -5,7 +5,7 @@ All completed batch history has been removed.
 
 ---
 
-## Current state (as of 2026-04-29)
+## Current state (as of 2026-04-30)
 
 - Dedicated unit-test coverage for `src/main/java`: **complete**
   - `main_without_dedicated_test`: **0**
@@ -36,17 +36,25 @@ All completed batch history has been removed.
 Most classes now have a dedicated test, but many recent ones are intentionally lightweight contract tests.
 Next step is **selective depth**, not blanket expansion.
 
-Focus areas (in order):
+### Done (2026-04-30)
 
-1. `jamuz.process.check` core behaviors:
-   - `ProcessCheck`, `FolderInfo`, `DialogCheck`, `CheckDisplay`, `ReleaseMatch`.
-   - Add deterministic behavior tests for parsing/matching/state transitions.
-2. `jamuz.process.video` workflow-critical logic:
-   - `VideoAbstract`, `ProcessVideo`, `DbConnVideo`, `FileInfoVideo`.
-   - Prefer pure logic and data-mapping tests; avoid fragile external integrations.
+- **`FolderInfoResult`** — 26 tests: `colorField`, `formatNumber`, error-level state machine
+  (`setKO/setWarning/setOK/restoreFolderErrorLevel`), `analyseTrack` (string / year / number),
+  display color, `equals`/`hashCode`/`toString`.
+- **`ReleaseMatch`** — 16 tests: `Track` getters and zero-padded formatting (`getTrackNoFull`,
+  `getDiscNoFull`), original constructor, `getYearInt` edge cases (blank / invalid / valid),
+  `compareTo` sort semantics (score desc, year asc), `toString` color/content rules.
+- **`FileInfoVideo`** — 11 tests: quality detection thresholds (HD1080 / HD720 / SD / UNKNOWN),
+  `isHD`, `getVideoStreamDetails`, `getFormattedEpisodeNumber`, audio/subtitles stream details.
+
+### Remaining focus areas
+
+1. `jamuz.process.check` — still to deepen:
+   - `ProcessCheck`, `FolderInfo` (DB-heavy; skip or use in-memory SQLite), `CheckDisplay` (Swing-wired; keep contract only).
+2. `jamuz.process.video` — still to deepen:
+   - `VideoAbstract` (Status transitions if any are pure), `DbConnVideo` (needs in-memory DB).
 3. `jamuz.gui` and Swing-heavy classes:
-   - Keep to non-UI-thread-safe unit checks.
-   - Do not force deep UI automation in unit suite unless behavior is pure and deterministic.
+   - Keep to non-UI-thread-safe unit checks only.
 
 Definition of “enough depth”:
 
