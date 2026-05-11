@@ -91,6 +91,18 @@ A **music** library **manager**, **player** and more, for **Linux**, **Raspberry
     - Extract 7z archive
     - Double-click `JaMuz.jar`
 
+#### Command line
+
+Alternatively, on debian-like systems, such as Raspberry, Linux Mint or Ubuntu on WSL, you can install JaMuz Desktop using command line:
+
+```bash
+sudo apt install python3 pipx 7zip openjdk-21-jre alsa-utils mplayer flac mp3gain
+pipx install lastversion
+lastversion --assets download jamuz
+7z x JaMuz_v*.7z
+java -jar JaMuz/JaMuz.jar
+```
+
 ### Features
 
 #### Sync data between audio players
