@@ -1,22 +1,22 @@
 # JaMuz change log
 
-## Tests unitaires & qualité du code
+## Unit tests & code quality
 
-### Couverture de tests étendue (+160 tests, 666 au total)
+### Extended test coverage (+160 tests, 666 total)
 
-- Conversion complète de JUnit 4 vers **JUnit 5** pour tous les tests existants
-- Couverture approfondie sur ~35 classes (`AppVersionCheck`, `ReleaseMB`, `MyVideoAbstract`, `SlskdDocker`, `Book`, `VideoMovie`, `VideoTvShow`, `IconBuffer`, `Options`, etc.)
-- Correction de bugs produit découverts lors des tests : NPE dans `ReleaseMB.getCoverList()`, imports manquants dans `Main.java`
+- Full migration from JUnit 4 to **JUnit 5** for all existing tests
+- In-depth coverage on ~35 classes (`AppVersionCheck`, `ReleaseMB`, `MyVideoAbstract`, `SlskdDocker`, `Book`, `VideoMovie`, `VideoTvShow`, `IconBuffer`, `Options`, etc.)
+- Product bug fixes discovered during testing: NPE in `ReleaseMB.getCoverList()`, missing imports in `Main.java`
 
-### Refactoring architecture : suppression des `Popup` dans les classes non-GUI
+### Architecture refactoring: removal of `Popup` from non-GUI classes
 
-- Tous les appels `Popup.error()` dans les utilitaires et services remplacés par `Jamuz.getLogger().log()`
-- Meilleure séparation des responsabilités : les popups UI restent dans les classes GUI et les tests unitaires ne sont plus bloqués par des popups UI
+- All `Popup.error()` calls in utilities and services replaced with `Jamuz.getLogger().log()`
+- Better separation of concerns: UI popups remain in GUI classes and unit tests are no longer blocked by UI popups
 
-### `AppVersionCheck` désormais pleinement testable
+### `AppVersionCheck` now fully testable
 
-- Injection de `OkHttpClient` et de l'URL de base pour les tests
-- Tests isolés via `MockWebServer` (plus de dépendance réseau, `@Disabled` supprimés)
+- Injection of `OkHttpClient` and base URL for tests
+- Isolated tests via `MockWebServer` (no network dependency, `@Disabled` removed)
 
 ## v0.7.7-beta1
 
