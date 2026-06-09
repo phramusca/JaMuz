@@ -21,7 +21,6 @@ import jamuz.database.DbInfo;
 import jamuz.FileInfo;
 import jamuz.Jamuz;
 import jamuz.database.StatSourceSQL;
-import jamuz.utils.Popup;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -74,7 +73,7 @@ public class StatSourceMixxx extends StatSourceSQL {
              return true;
         } catch (SQLException ex) {
             //Proper error handling. We should not have such an error unless above code changes
-            Popup.error("StatSourceMixxx, setUp", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "StatSourceMixxx, setUp", ex);   //NOI18N
             return false;
         }
     }
@@ -100,7 +99,7 @@ public class StatSourceMixxx extends StatSourceSQL {
             return new FileInfo(-1, -1, relativeFullPath, rating, lastPlayed, 
 					addedDate, playCounter, this.getName(), 0, bpm, "", "", "", "");
         } catch (SQLException ex) {
-            Popup.error("getStats", ex);  //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "getStats", ex);  //NOI18N
             return null;
         }
     }
@@ -137,7 +136,7 @@ public class StatSourceMixxx extends StatSourceSQL {
                 return "";
             }
         } catch (SQLException ex) {
-            Popup.error("guessRootPath()", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "guessRootPath()", ex);   //NOI18N
             return "";
         }
         finally {
@@ -173,7 +172,7 @@ public class StatSourceMixxx extends StatSourceSQL {
             }
 			return true;
         } catch (SQLException ex) {
-            Popup.error("getTags("+this.getRootPath()+getPath(file.getRelativePath())+","+file.getFilename()+")", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "getTags("+this.getRootPath()+getPath(file.getRelativePath())+","+file.getFilename()+")", ex);   //NOI18N
 			return false;
         }
 	}
@@ -245,7 +244,7 @@ public class StatSourceMixxx extends StatSourceSQL {
             return true;
 
         } catch (SQLException ex) {
-            Popup.error("deleteTagFiles("+this.getRootPath()+getPath(file.getRelativePath())+","+file.getFilename()+")", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "deleteTagFiles("+this.getRootPath()+getPath(file.getRelativePath())+","+file.getFilename()+")", ex);   //NOI18N
             return false;
         }
     }
@@ -281,7 +280,7 @@ public class StatSourceMixxx extends StatSourceSQL {
                 }
             }
         } catch (SQLException ex) {
-            Popup.error("isTag(" + tag + ")", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "isTag(" + tag + ")", ex);   //NOI18N
             return false;
         }
         finally {
@@ -343,7 +342,7 @@ public class StatSourceMixxx extends StatSourceSQL {
             }
             return true;
         } catch (SQLException ex) {
-            Popup.error("insertTagFiles("+this.getRootPath()+getPath(file.getRelativePath())+","+file.getFilename()+")", ex);   //NOI18N
+            Jamuz.getLogger().log(Level.SEVERE, "insertTagFiles("+this.getRootPath()+getPath(file.getRelativePath())+","+file.getFilename()+")", ex);   //NOI18N
             return false;
         }
     }

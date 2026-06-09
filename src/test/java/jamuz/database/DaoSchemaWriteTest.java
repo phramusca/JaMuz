@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 raph
+ * Copyright (C) 2023 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,53 +16,44 @@
  */
 package jamuz.database;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
 /**
- *
- * @author raph
+ * Exercises {@link DaoSchemaWrite#update(int)} in the no-op case (already at the target version) to
+ * avoid running GUI-driven upgrade paths in unit tests.
  */
-public class DaoSchemaWriteTest {
-    
-    public DaoSchemaWriteTest() {
+class DaoSchemaWriteTest {
+
+    private static DbConnJaMuz dbConnJaMuz;
+    private static int currentSchemaVersion;
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT version FROM versionHistory ORDER BY version DESC LIMIT 1")) {
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                currentSchemaVersion = rs.getInt(1);
+            }
+        }
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-    
-
-    /**
-     * Test of update method, of class DaoSchemaWrite.
-     */
     @Test
-    public void testUpdate() {
-        System.out.println("update");
-        int requestedVersion = 0;
-        DaoSchemaWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.update(requestedVersion);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldReportNoOpWhenDatabaseAlreadyAtRequestedVersion() {
+        assertTrue(dbConnJaMuz.schema().lock().update(currentSchemaVersion));
     }
-    
 }

@@ -17,9 +17,10 @@
 
 package jamuz.process.book;
 
+import java.util.logging.Level;
+
 import jamuz.Jamuz;
 import jamuz.utils.ImageUtils;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class IconBufferBook {
             }
             return null;
         } catch (IOException ex) {
-            Popup.error(ex);
+            Jamuz.getLogger().log(Level.SEVERE, null, ex);
             return null;
         }
     }

@@ -23,7 +23,6 @@ import jamuz.Jamuz;
 import jamuz.gui.PanelLyrics;
 import jamuz.utils.Inter;
 import jamuz.utils.OS;
-import jamuz.utils.Popup;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -304,7 +303,7 @@ public class Mplayer implements Runnable {
 			processSoundCards.waitFor();
 			readInputThread.join();
 		} catch (IOException | InterruptedException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 		}
 		return audioCards;
 	}
@@ -518,7 +517,7 @@ public class Mplayer implements Runnable {
 			synchronized (lockPlayer) {
 				lastPlaybackAttemptFailed = true;
 			}
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}
@@ -583,7 +582,7 @@ public class Mplayer implements Runnable {
 			catch (IOException | CannotReadException | TagException | ReadOnlyFileException 
 					| InterruptedException | InvalidAudioFrameException ex)
 			{
-				Popup.error(Inter.get("Error.Play")+" \""+filePath+"\"", ex);  //NOI18N
+				Jamuz.getLogger().log(Level.SEVERE, Inter.get("Error.Play")+" \""+filePath+"\"", ex);  //NOI18N
 				return "";  //NOI18N
 			} 
 		}

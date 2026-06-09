@@ -57,6 +57,40 @@ Please submit to the `master` branch.
 
 In addition to the currently supported stat sources (Guayadeque, Kodi, Media Monkey, Mixxx, MyTunes) you can add one simply by extending the jamuz.StatSourceAbstract class and adding entry to database.
 
+## Running the tests
+
+### Unit tests
+
+```bash
+mvn test
+```
+
+Pour générer et ouvrir un rapport HTML des résultats :
+
+```bash
+mvn surefire-report:report-only && xdg-open target/reports/surefire.html
+```
+
+Pour n'exécuter qu'une classe de tests en particulier :
+
+```bash
+mvn test -Dtest=NomDeLaClasseTest
+```
+
+Pour n'exécuter qu'une méthode :
+
+```bash
+mvn test -Dtest=NomDeLaClasseTest#nomDeLaMethode
+```
+
+### Tests fonctionnels
+
+Les tests fonctionnels se trouvent dans `src/test/java/tests/functional/` et nécessitent une base de données et un environnement configurés. Ils ne font pas partie de l'exécution standard `mvn test` et doivent être lancés manuellement depuis l'IDE.
+
+### État de la couverture
+
+Le fichier [`UNIT_TEST_TRACKING.csv`](UNIT_TEST_TRACKING.csv) recense le statut de couverture de chaque classe (`clean`, `rather_clean`, `new`, etc.). Le fichier [`UNIT_TEST_CHECKLIST.md`](UNIT_TEST_CHECKLIST.md) décrit les objectifs et les règles de qualité des tests.
+
 ## Release process
 
 1. **If** previous release was last year, update the constant `WELCOME_YEAR` in `src/main/java/jamuz/gui/PanelMain.java`.

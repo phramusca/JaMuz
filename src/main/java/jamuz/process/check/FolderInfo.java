@@ -32,7 +32,6 @@ import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.DateTime;
 import jamuz.utils.FileSystem;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -211,7 +210,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			modifDate = new Date(folder.lastModified());
 		}
 		catch (Exception ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 		}
 	}
     
@@ -250,7 +249,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
                 try {
                     analyse(progressBar);
                 } catch (CloneNotSupportedException ex) {
-                    Popup.error(ex); //Should never happen as Cloneable
+                    Jamuz.getLogger().log(Level.SEVERE, null, ex); //Should never happen as Cloneable
                 }
                 callback.reChecked();
 			}
@@ -696,7 +695,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
 			return true;
 
 		} catch (Exception ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}
@@ -1409,7 +1408,7 @@ public class FolderInfo implements java.lang.Comparable, Cloneable {
             }
             tagValue.setDisplay(results.get(field).analyseTrackBpm(tagValueFloat, newValue));
         } else {
-            Popup.error("Unknown class");
+            Jamuz.getLogger().log(Level.SEVERE, "Unknown class");
         }
 	}
 	

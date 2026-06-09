@@ -1,88 +1,109 @@
 package jamuz;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import java.io.IOException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.mockito.Mockito.*;
-import okhttp3.mockwebserver.MockWebServer;
+import java.util.concurrent.atomic.AtomicReference;
+import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class AppVersionCheckTest {
+/**
+ * Unit tests for {@link AppVersionCheck}.
+ *
+ * Async coverage is achieved by calling the package-private
+ * {@link AppVersionCheck#checkNewVersion()} directly (bypassing the scheduler)
+ * with an injected {@link OkHttpClient} pointed at a {@link MockWebServer}.
+ */
+class AppVersionCheckTest {
 
-    private MockWebServer mockWebServer;
-    private ICallBackVersionCheck mockCallBack;
-    private AppVersionCheck appVersionCheck;
+    private static final String CURRENT_VERSION = "v1.0.0";
 
-    @Before
-    public void setUp() throws IOException {
-        mockWebServer = new MockWebServer();
-        mockWebServer.start();
-        mockCallBack = mock(ICallBackVersionCheck.class);
-        appVersionCheck = new AppVersionCheck(mockCallBack);
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        mockWebServer.shutdown();
+    @Test
+    void constructor_callsOnCheckOnce() {
+        ICallBackVersionCheck mockCallBack = mock(ICallBackVersionCheck.class);
+        new AppVersionCheck(mockCallBack);
+        verify(mockCallBack, times(1)).onCheck(any(AppVersion.class), any(String.class));
     }
 
     @Test
-    public void testCheckNewVersion_withLatestRelease() throws IOException {
-        JsonObject releaseData = new JsonObject();
-        releaseData.addProperty("tag_name", "v2.0.0");
-        releaseData.add("assets", new JsonArray());
-        mockWebServer.enqueue(new MockResponse().setBody(releaseData.toString()).setResponseCode(200));
-
-        appVersionCheck.start(false);
-        appVersionCheck.shutdownScheduler();
-
-        verify(mockCallBack, times(1)).onCheck(any(AppVersion.class), eq("Checking for new version ..."));
-        verify(mockCallBack, times(1)).onCheckResult(any(AppVersion.class), eq("You are running the latest version."));
+    void getAppVersion_returnsNonNull() {
+        ICallBackVersionCheck mockCallBack = mock(ICallBackVersionCheck.class);
+        AppVersionCheck checker = new AppVersionCheck(mockCallBack);
+        assertNotNull(checker.getAppVersion());
     }
 
     @Test
-    public void testCheckNewVersion_withPreRelease() throws IOException {
-        JsonObject releaseData = new JsonObject();
-        releaseData.addProperty("tag_name", "v2.0.0-beta");
-        releaseData.add("assets", new JsonArray());
-        JsonArray releasesArray = new JsonArray();
-        releasesArray.add(releaseData);
-        mockWebServer.enqueue(new MockResponse().setBody(releasesArray.toString()).setResponseCode(200));
+    void checkNewVersion_withLatestRelease_upToDate_reportsNoUpdate() throws IOException {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse()
+                .setBody("{\"tag_name\":\"" + CURRENT_VERSION + "\",\"assets\":[]}")
+                .addHeader("Content-Type", "application/json"));
+        server.start();
 
-        appVersionCheck.start(true);
-        appVersionCheck.shutdownScheduler();
+        AtomicReference<String> result = new AtomicReference<>();
+        ICallBackVersionCheck cb = mock(ICallBackVersionCheck.class);
+        doAnswer(inv -> { result.set(inv.getArgument(1)); return null; })
+                .when(cb).onCheckResult(any(), anyString());
 
-        verify(mockCallBack, times(1)).onCheck(any(AppVersion.class), eq("Checking for new version ..."));
-        verify(mockCallBack, times(1)).onCheckResult(any(AppVersion.class), eq("You are running the latest version."));
+        AppVersionCheck checker = new AppVersionCheck(cb,
+                new OkHttpClient(),
+                server.url("/releases").toString().replaceAll("/$", ""),
+                CURRENT_VERSION);
+
+        checker.checkNewVersion();
+
+        assertEquals("You are running the latest version.", result.get());
+        server.shutdown();
     }
 
     @Test
-    public void testDownloadAndProcessAsset() throws IOException {
-        JsonObject asset = new JsonObject();
-        asset.addProperty("browser_download_url", mockWebServer.url("/download").toString());
-        asset.addProperty("name", "test-asset.zip");
-        asset.addProperty("size", 1024);
-        JsonArray assets = new JsonArray();
-        assets.add(asset);
-        JsonObject releaseData = new JsonObject();
-        releaseData.addProperty("tag_name", "v2.0.0");
-        releaseData.add("assets", assets);
-        mockWebServer.enqueue(new MockResponse().setBody(releaseData.toString()).setResponseCode(200));
-        okio.Buffer buffer = new okio.Buffer();
-        buffer.write(new byte[1024]);
-        mockWebServer.enqueue(new MockResponse().setBody(buffer).setResponseCode(200));
+    void checkNewVersion_withPreRelease_upToDate_reportsNoUpdate() throws IOException {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse()
+                .setBody("[{\"tag_name\":\"" + CURRENT_VERSION + "\",\"assets\":[]}]")
+                .addHeader("Content-Type", "application/json"));
+        server.start();
 
-        appVersionCheck.start(false);
-        appVersionCheck.shutdownScheduler();
+        AtomicReference<String> result = new AtomicReference<>();
+        ICallBackVersionCheck cb = mock(ICallBackVersionCheck.class);
+        doAnswer(inv -> { result.set(inv.getArgument(1)); return null; })
+                .when(cb).onCheckResult(any(), anyString());
 
-        verify(mockCallBack, times(1)).onCheck(any(AppVersion.class), eq("Getting new version ..."));
-        verify(mockCallBack, times(1)).onDownloadStart();
-        verify(mockCallBack, atLeastOnce()).onDownloadProgress(any(AppVersion.class), anyInt());
-        verify(mockCallBack, times(1)).onNewVersion(any(AppVersion.class));
+        AppVersionCheck checker = new AppVersionCheck(cb,
+                new OkHttpClient(),
+                server.url("/releases").toString().replaceAll("/$", ""),
+                CURRENT_VERSION);
+        checker.includePreRelease = true;
+
+        checker.checkNewVersion();
+
+        assertEquals("You are running the latest version.", result.get());
+        server.shutdown();
+    }
+
+    @Test
+    void checkNewVersion_withNewVersionButNoAssets_reportsNoAssetFound() throws IOException {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse()
+                .setBody("{\"tag_name\":\"v99.0.0\",\"assets\":[]}")
+                .addHeader("Content-Type", "application/json"));
+        server.start();
+
+        AtomicReference<String> result = new AtomicReference<>();
+        ICallBackVersionCheck cb = mock(ICallBackVersionCheck.class);
+        doAnswer(inv -> { result.set(inv.getArgument(1)); return null; })
+                .when(cb).onCheckResult(any(), anyString());
+
+        AppVersionCheck checker = new AppVersionCheck(cb,
+                new OkHttpClient(),
+                server.url("/releases").toString().replaceAll("/$", ""),
+                CURRENT_VERSION);
+
+        checker.checkNewVersion();
+
+        assertEquals("No asset found in release!", result.get());
+        server.shutdown();
     }
 }

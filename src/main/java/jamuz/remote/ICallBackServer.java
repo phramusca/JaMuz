@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 raph
+ * Copyright (C) 2024 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ package jamuz.remote;
 
 /**
  *
- * @author raph
+ * @author phramusca <phramusca@gmail.com>
  */
 public interface ICallBackServer {
     public void received(String action, String value);

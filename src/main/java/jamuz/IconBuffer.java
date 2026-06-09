@@ -16,8 +16,10 @@
  */
 package jamuz;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
@@ -167,7 +169,7 @@ public class IconBuffer {
 		try {
 			image = ImageIO.read(iconFile);
 		} catch (IOException ex) {
-			Popup.error(java.text.MessageFormat.format(Inter.get("Error.ReadingCover"), new Object[]{iconFile}), ex); //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, java.text.MessageFormat.format(Inter.get("Error.ReadingCover"), new Object[]{iconFile}), ex); //NOI18N
 		}
 		return image;
 	}

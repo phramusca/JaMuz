@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 raph
+ * Copyright (C) 2023 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,54 +17,117 @@
 package jamuz.database;
 
 import jamuz.FileInfoInt;
+import jamuz.process.check.FolderInfo;
+import jamuz.process.merge.StatSource;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import java.util.Date;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
-/**
- *
- * @author raph
- */
-public class DaoPlayCounterWriteTest {
-    
-    public DaoPlayCounterWriteTest() {
+/** Tests for {@link DaoPlayCounterWrite}. */
+class DaoPlayCounterWriteTest {
+
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoPlayCounterWrite writer;
+    private static DaoStatSourceWrite statWriter;
+    private static DaoFileWrite fileWriter;
+    private static final String MACHINE = "PlayCntWriteHost";
+    private static final String ROOT = "/root/pcw/";
+    private static int pathId;
+    private static int idStatSource;
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoPlayCounterWrite(dbConnJaMuz.getDbConn());
+        statWriter = new DaoStatSourceWrite(dbConnJaMuz.getDbConn());
+        fileWriter = dbConnJaMuz.file().lock();
+        dbConnJaMuz.file().setLocationLibrary(ROOT);
+
+        dbConnJaMuz.machine().lock().getOrInsert(MACHINE, new StringBuilder(), false);
+
+        StatSource ss = new StatSource(MACHINE);
+        ss.getSource().setLocation("/tmp/playcounter-unit.db");
+        ss.getSource().setName("PlayCntSrc");
+        ss.getSource().setRootPath("/music");
+        assertTrue(statWriter.insertOrUpdate(ss));
+
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT idStatSource FROM statSource WHERE name = ?")) {
+            st.setString(1, "PlayCntSrc");
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                idStatSource = rs.getInt(1);
+            }
+        }
+
+        int[] keyPath = new int[1];
+        dbConnJaMuz.path().lock().insert("rel/pcw/", new Date(), FolderInfo.CheckedFlag.UNCHECKED, "", keyPath);
+        pathId = keyPath[0];
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
+    @BeforeEach
+    void wipePlayCountersAndFiles() throws SQLException {
+        try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
+            st.executeUpdate("DELETE FROM playCounter");
+            st.executeUpdate("DELETE FROM file WHERE idPath = " + pathId);
+        }
     }
 
-    @Before
-    public void setUp() throws Exception {
+    private FileInfoInt insertFile(String name, int counter) throws SQLException {
+        FileInfoInt f = new FileInfoInt("rel/pcw/" + name, ROOT);
+        f.setIdPath(pathId);
+        int[] key = new int[1];
+        assertTrue(fileWriter.insert(f, key));
+        f.setIdFile(key[0]);
+        f.setPlayCounter(counter);
+        return f;
     }
 
-    @After
-    public void tearDown() throws Exception {
+    private int counterFor(int idFile) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT playCounter FROM playCounter WHERE idFile = ? AND idStatSource = ?")) {
+            st.setInt(1, idFile);
+            st.setInt(2, idStatSource);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getInt(1);
+            }
+        }
     }
 
-
-    /**
-     * Test of update method, of class DaoPlayCounterWrite.
-     */
     @Test
-    public void testUpdate() {
-        System.out.println("update");
-        ArrayList<? super FileInfoInt> files = null;
-        int idStatSource = 0;
-        DaoPlayCounterWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.update(files, idStatSource);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldInsertPlayCounterWhenRowMissing() throws SQLException {
+        FileInfoInt f = insertFile("a.mp3", 11);
+        ArrayList<FileInfoInt> files = new ArrayList<>();
+        files.add(f);
+        assertTrue(writer.update(files, idStatSource));
+        assertEquals(11, counterFor(f.getIdFile()));
     }
-    
+
+    @Test
+    void shouldUpdateExistingPlayCounterRow() throws SQLException {
+        FileInfoInt f = insertFile("b.mp3", 3);
+        ArrayList<FileInfoInt> files = new ArrayList<>();
+        files.add(f);
+        assertTrue(writer.update(files, idStatSource));
+
+        f.setPlayCounter(99);
+        assertTrue(writer.update(files, idStatSource));
+        assertEquals(99, counterFor(f.getIdFile()));
+    }
 }

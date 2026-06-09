@@ -17,6 +17,8 @@
 
 package jamuz.process.check;
 
+import java.util.logging.Level;
+
 //http://code.google.com/p/lastfm-java/downloads/list
 import de.umass.lastfm.Album;
 import de.umass.lastfm.Artist;
@@ -97,7 +99,7 @@ public class ReleaseLastFm {
 		} catch (Exception ex) {
 			//Sometimes LastFM bindings face a org.xml.sax.SAXParseException
 			//Adding this so we can continue the analysis anyway
-//			Popup.error("Search Last.FM", ex);
+//			Jamuz.getLogger().log(Level.SEVERE, "Search Last.FM", ex);
 		}
 		//ORDER BY score DESC
 		Collections.sort(matches);

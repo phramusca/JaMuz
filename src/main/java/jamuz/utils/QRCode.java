@@ -22,7 +22,9 @@
 
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import com.google.zxing.BarcodeFormat;
+import java.util.logging.Level;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -56,7 +58,7 @@ public class QRCode {
 			ImageIO.write(image, "png", new File(path+StringManager.removeIllegal(url)+"."+extension));
 		}
 		catch (IOException e) {
-			Popup.error(e);
+			Jamuz.getLogger().log(Level.SEVERE, null, e);
 		}
 	}
 
@@ -98,7 +100,7 @@ public class QRCode {
 			return image;
 			
 		} catch (WriterException e) {
-			Popup.error(e);
+			Jamuz.getLogger().log(Level.SEVERE, null, e);
 			return null;
 		}
 	}

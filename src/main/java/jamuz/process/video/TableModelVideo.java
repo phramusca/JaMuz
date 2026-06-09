@@ -16,9 +16,11 @@
  */
 package jamuz.process.video;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 import jamuz.gui.swing.TableModelGeneric;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.ProcessAbstract;
 import java.util.ArrayList;
 import java.util.List;
@@ -272,7 +274,7 @@ public class TableModelVideo extends TableModelGeneric {
 			try {
 				tLoadIcons.join();
 			} catch (InterruptedException ex) {
-				Popup.error(ex);
+				Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			}
 		}
 		tLoadIcons = new LoadIconsThread("Thread.TableModelVideo.loadThumbnails");
@@ -295,7 +297,7 @@ public class TableModelVideo extends TableModelGeneric {
 				}
             }
             catch (InterruptedException ex) {
-                Popup.info(Inter.get("Msg.Process.Aborted"));  //NOI18N
+                Jamuz.getLogger().log(Level.INFO, Inter.get("Msg.Process.Aborted"));  //NOI18N
             } 
 		}
 	}

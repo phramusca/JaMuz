@@ -104,9 +104,6 @@ class FileInfoIntTest {
 
     @Test
     void testGetFormattedModifDate() {
-        //FIXME TEST Test other getters and setters
-        // fileInfoIntFromDb.getFormattedAddedDate();
-
         assertEquals("2056-11-18 15:34:12", fileInfoIntFromDb.getFormattedModifDate());
         assertEquals("1970-01-01 00:00:00", fileInfoIntForScan.getFormattedModifDate());
         fileInfoIntFromDb.modifDate = new Date(1861920000000L);
@@ -115,9 +112,6 @@ class FileInfoIntTest {
 
     @Test
     void testGetLastPlayed() {
-        //FIXME TEST: Test other getters and setters
-        // fileInfoIntFromDb.getFormattedAddedDate();
-
         assertEquals(DateTime.parseSqlUtc("1956-12-25 22:08:58"), fileInfoIntFromDb.getLastPlayed());
         assertEquals(DateTime.parseSqlUtc("1970-01-01 00:00:00"), fileInfoIntForScan.getLastPlayed());
         fileInfoIntFromDb.lastPlayed = new Date(1861920000000L);
@@ -128,9 +122,6 @@ class FileInfoIntTest {
 
     @Test
     void testGetAddedDate() {
-        //FIXME TEST: Test other getters and setters
-        // fileInfoIntFromDb.getFormattedAddedDate();
-
 
         assertEquals(DateTime.parseSqlUtc("2012-04-07 12:15:28"), fileInfoIntFromDb.getAddedDate());
         assertEquals(DateTime.parseSqlUtc("1970-01-01 00:00:00"), fileInfoIntForScan.getAddedDate());
@@ -200,8 +191,8 @@ class FileInfoIntTest {
     void testGetGenre() {
         assertEquals("test genre", fileInfoIntFromDb.getGenre());
         assertEquals("", fileInfoIntForScan.getGenre());
-        fileInfoIntFromDb.genre = "n'importe quoi comme genre";
-        assertEquals("n'importe quoi comme genre", fileInfoIntFromDb.getGenre());
+        fileInfoIntFromDb.genre = "any genre";
+        assertEquals("any genre", fileInfoIntFromDb.getGenre());
     }
 
     @Test
@@ -224,32 +215,32 @@ class FileInfoIntTest {
     void testGetComment() {
         assertEquals("test comment", fileInfoIntFromDb.getComment());
         assertEquals("", fileInfoIntForScan.getComment());
-        fileInfoIntFromDb.comment = "Ceci n'est pas un commentaire";
-        assertEquals("Ceci n'est pas un commentaire", fileInfoIntFromDb.getComment());
+        fileInfoIntFromDb.comment = "This is not a comment";
+        assertEquals("This is not a comment", fileInfoIntFromDb.getComment());
     }
 
     @Test
     void testGetArtist() {
         assertEquals("test artist", fileInfoIntFromDb.getArtist());
         assertEquals("", fileInfoIntForScan.getArtist());
-        fileInfoIntFromDb.artist = "un peu n'importe quoi comme artiste";
-        assertEquals("un peu n'importe quoi comme artiste", fileInfoIntFromDb.getArtist());
+        fileInfoIntFromDb.artist = "any artist";
+        assertEquals("any artist", fileInfoIntFromDb.getArtist());
     }
 
     @Test
     void testGetAlbumArtist() {
         assertEquals("test album artist", fileInfoIntFromDb.getAlbumArtist());
         assertEquals("", fileInfoIntForScan.getAlbumArtist());
-        fileInfoIntFromDb.albumArtist = "n'importe quoi comme artiste";
-        assertEquals("n'importe quoi comme artiste", fileInfoIntFromDb.getAlbumArtist());
+        fileInfoIntFromDb.albumArtist = "any album artist";
+        assertEquals("any album artist", fileInfoIntFromDb.getAlbumArtist());
     }
 
     @Test
     void testGetAlbum() {
         assertEquals("test album", fileInfoIntFromDb.getAlbum());
         assertEquals("", fileInfoIntForScan.getAlbum());
-        fileInfoIntFromDb.album = "Modi f zefzef efaefa";
-        assertEquals("Modi f zefzef efaefa", fileInfoIntFromDb.getAlbum());
+        fileInfoIntFromDb.album = "album changed";
+        assertEquals("album changed", fileInfoIntFromDb.getAlbum());
     }
 
     @Test
@@ -288,9 +279,19 @@ class FileInfoIntTest {
         assertEquals(300, fileInfoIntFromDb.getLength());
     }
 
-    //FIXME TEST relativePath
-    //FIXME TEST filename
-    //FIXME TEST rootPath
+    @Test
+    void testRelativePathAndFilenameAndRootPath() {
+        assertEquals("path/to/", fileInfoIntFromDb.getRelativePath());
+        assertEquals("file.mp3", fileInfoIntFromDb.getFilename());
+
+        fileInfoIntFromDb.setRelativePath("new/path/");
+        fileInfoIntFromDb.setFilename("other.mp3");
+        fileInfoIntFromDb.setRootPath("/tmp/root");
+
+        assertEquals("new/path/", fileInfoIntFromDb.getRelativePath());
+        assertEquals("other.mp3", fileInfoIntFromDb.getFilename());
+        assertTrue(fileInfoIntFromDb.getFullPath().getPath().contains("/tmp/root"));
+    }
 
     @Test
     void testIdPath() {
@@ -308,13 +309,6 @@ class FileInfoIntTest {
         assertEquals(665, fileInfoIntFromDb.getIdFile());
     }
 
-    //FIXME TEST: Review above tests and check if all setters are tested
-
-    //FIXME TEST: Review the following tests, and make sure none are missing
-
-    
-
-  
     @Test
     void testGetFullPath() {
         // fileInfoIntFromDb has rootPath "test toot path" and relativeFullPath "path/to/file.mp3"
@@ -348,10 +342,6 @@ class FileInfoIntTest {
 
     @Test
     void testReadMetadataAndReplayGain() throws Exception {
-        // FIXME TEST: Extract mocking so that test is easier to read
-        // FIXME TEST: test flac, ape, ... ? usefull since it is using mocks ?
-
-
         // Mocking MP3File and AudioHeader
         MP3File mp3FileMock = mock(MP3File.class);
         AudioHeader audioHeaderMock = mock(AudioHeader.class);
@@ -444,7 +434,6 @@ class FileInfoIntTest {
     @Test
     void testFileInfoIntFromFileInfo() {
 
-        //FIXME TEST: Check if all fields are tested
         // FileInfoInt(FileInfo, float, String) uses Jamuz.getMachine().getOptionValue("location.library") for rootPath
         Machine machineMock = mock(Machine.class);
         when(machineMock.getOptionValue("location.library")).thenReturn("/test/library");

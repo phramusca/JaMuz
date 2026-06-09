@@ -269,7 +269,9 @@ public class ReleaseMB {
 	 * @return
 	 */
 	public List<Cover> getCoverList() {
-		Collections.sort(covers);
+		if (covers != null) {
+			Collections.sort(covers);
+		}
 		return covers;
 	}
 }

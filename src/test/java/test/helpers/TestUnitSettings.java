@@ -16,6 +16,9 @@
  */
 package test.helpers;
 
+import jamuz.Jamuz;
+import jamuz.Machine;
+import jamuz.Option;
 import jamuz.database.DbConnJaMuz;
 import jamuz.database.DbInfo;
 import java.io.File;
@@ -24,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +59,23 @@ public class TestUnitSettings {
 	public static DbConnJaMuz createTempDatabase(DbInfo dbInfo) throws SQLException, ClassNotFoundException, IOException {
 		DbConnJaMuz dbConnJaMuz = new DbConnJaMuz(dbInfo);
 		createTempDatabase(dbConnJaMuz);
+		setupJamuzGlobals(dbConnJaMuz);
         return dbConnJaMuz;
+	}
+
+	/**
+	 * Initialise the Jamuz singletons (db + machine) so that production code
+	 * calling {@code Jamuz.getDb()} or {@code Jamuz.getMachine()} works inside
+	 * unit tests.  A minimal Machine with a {@code location.library} option
+	 * pointing to {@code /tmp/} is registered.
+	 */
+	public static void setupJamuzGlobals(DbConnJaMuz dbConnJaMuz) {
+		Jamuz.setDb(dbConnJaMuz);
+		Machine m = new Machine("localhost");
+		ArrayList<Option> opts = new ArrayList<>();
+		opts.add(new Option("location.library", "/tmp/", 1, 1, "path"));
+		m.setOptions(opts);
+		Jamuz.setMachine(m);
 	}
 	
 	private static void executeScript(DbConnJaMuz dbConnJaMuz, String script) throws SQLException, ClassNotFoundException, IOException {

@@ -16,6 +16,8 @@
  */
 package jamuz;
 
+import jamuz.Jamuz;
+
 import jamuz.process.sync.SyncStatus;
 import jamuz.process.check.FolderInfo;
 import jamuz.process.check.FolderInfo.CheckedFlag;
@@ -25,7 +27,6 @@ import jamuz.process.check.ReplayGain.GainValues;
 import jamuz.utils.DateTime;
 import jamuz.utils.ImageUtils;
 import jamuz.utils.Inter;
-import jamuz.utils.Popup;
 import jamuz.utils.StringManager;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -540,7 +541,7 @@ public class FileInfoInt extends FileInfo {
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException ex) {
 			Jamuz.getLogger().log(Level.SEVERE, java.text.MessageFormat.format(Inter.get("Error.ReadingCover"), new Object[]{this.relativeFullPath}));
 			//Not poping anoying errors that we cannot fix
-//			Popup.error(java.text.MessageFormat.format(Inter.get("Error.ReadingCover"), new Object[] {this.relativeFullPath}), ex);  //NOI18N
+//			Jamuz.getLogger().log(Level.SEVERE, java.text.MessageFormat.format(Inter.get("Error.ReadingCover"), new Object[] {this.relativeFullPath}), ex);  //NOI18N
 		}
 
 	}
@@ -755,7 +756,7 @@ public class FileInfoInt extends FileInfo {
 				return null;
 			}
 		} catch (IOException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			file.delete();
 			return null;
 		}
@@ -816,7 +817,7 @@ public class FileInfoInt extends FileInfo {
 			}
 			return true;
 		} catch (CannotWriteException | CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException | IllegalArgumentException ex) {
-			Popup.error("Error writing tags to \"" + getFullPath() + "\"", ex);  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "Error writing tags to \"" + getFullPath() + "\"", ex);  //NOI18N
 			return false;
 		}
 	}
@@ -944,7 +945,7 @@ public class FileInfoInt extends FileInfo {
 		} catch (CannotReadException | IOException | TagException
 				| ReadOnlyFileException | InvalidAudioFrameException
 				| CannotWriteException ex) {
-			Popup.error("Error writing \"" + keyValues.toString() + "\" to \"" + getFullPath() + "\"", ex);  //NOI18N
+			Jamuz.getLogger().log(Level.SEVERE, "Error writing \"" + keyValues.toString() + "\" to \"" + getFullPath() + "\"", ex);  //NOI18N
 			return false;
 		}
 
@@ -1026,7 +1027,7 @@ public class FileInfoInt extends FileInfo {
 			}
 			return coverFileInfoInt;
 		} catch (IOException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 		}
 		return null;
 	}

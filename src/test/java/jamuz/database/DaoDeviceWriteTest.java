@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 raph
+ * Copyright (C) 2023 phramusca <phramusca@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,70 +16,104 @@
  */
 package jamuz.database;
 
+import jamuz.Jamuz;
+import jamuz.Playlist;
 import jamuz.process.sync.Device;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
 /**
- *
- * @author raph
+ * Tests sur {@link DaoDeviceWrite}.
  */
-public class DaoDeviceWriteTest {
-    
-    public DaoDeviceWriteTest() {
+class DaoDeviceWriteTest {
+
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoDeviceWrite writer;
+    private static final String HOST = "DaoDeviceWriteHost";
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoDeviceWrite(dbConnJaMuz.getDbConn());
+
+        Playlist playlist = new Playlist(0, "plDeviceWrite", false, 0, Playlist.LimitUnit.Gio, false,
+                Playlist.Type.Albums, Playlist.Match.All, false, "ext");
+        dbConnJaMuz.playlist().lock().insert(playlist);
+        dbConnJaMuz.machine().lock().getOrInsert(HOST, new StringBuilder(), true);
+        Jamuz.setDb(dbConnJaMuz);
+        Jamuz.readPlaylists();
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
+    @BeforeEach
+    void wipeDevices() throws SQLException {
+        try (Statement st = dbConnJaMuz.getDbConn().getConnection().createStatement()) {
+            st.executeUpdate("DELETE FROM deviceFile");
+            st.executeUpdate("DELETE FROM device");
+            // Reset AUTOINCREMENT counter so IDs are predictable across test methods
+            st.executeUpdate("DELETE FROM sqlite_sequence WHERE name='device'");
+        }
     }
 
-    @Before
-    public void setUp() throws Exception {
+    private static String deviceNameInDb(int idDevice) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT name FROM device WHERE idDevice = ?")) {
+            st.setInt(1, idDevice);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getString("name");
+            }
+        }
     }
 
-    @After
-    public void tearDown() throws Exception {
+    private static int deviceIdByName(String name) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT idDevice FROM device WHERE name = ?")) {
+            st.setString(1, name);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next(), "Device '" + name + "' should exist");
+                return rs.getInt(1);
+            }
+        }
     }
 
-    /**
-     * Test of insertOrUpdate method, of class DaoDeviceWrite.
-     */
     @Test
-	@Ignore
-    public void testInsertOrUpdate() {
-        System.out.println("insertOrUpdate");
-        Device device = null;
-        DaoDeviceWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.insertOrUpdate(device);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldInsertDeviceWhenIdIsUnset() throws SQLException {
+        Device d = new Device(-1, "nIns", "sIns", "dIns", 1, HOST, false);
+        assertTrue(writer.insertOrUpdate(d));
+        assertEquals("nIns", deviceNameInDb(1));
     }
 
-    /**
-     * Test of delete method, of class DaoDeviceWrite.
-     */
     @Test
-	@Ignore
-    public void testDelete() {
-        System.out.println("delete");
-        int id = 0;
-        DaoDeviceWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.delete(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldUpdateDeviceWhenIdIsSet() throws SQLException {
+        Device d = new Device(-1, "nUpd", "sUpd", "dUpd", 1, HOST, true);
+        assertTrue(writer.insertOrUpdate(d));
+        int insertedId = deviceIdByName("nUpd");
+
+        Device updated = new Device(insertedId, "nUpd2", "s2", "d2", 1, "", false);
+        assertTrue(writer.insertOrUpdate(updated));
+        assertEquals("nUpd2", deviceNameInDb(insertedId));
     }
-    
+
+    @Test
+    void shouldDeleteDeviceById() throws SQLException {
+        Device d = new Device(-1, "toDel", "s", "d", 1, HOST, true);
+        assertTrue(writer.insertOrUpdate(d));
+        int deviceId = deviceIdByName("toDel");
+        assertTrue(writer.delete(deviceId));
+        assertFalse(writer.delete(deviceId));
+    }
 }

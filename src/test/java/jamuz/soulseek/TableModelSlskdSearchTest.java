@@ -1,66 +1,62 @@
 package jamuz.soulseek;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import jamuz.gui.swing.ProgressBar;
 
 import java.util.List;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
-
-
-public class TableModelSlskdSearchTest {
+class TableModelSlskdSearchTest {
 
     private TableModelSlskdSearch tableModel;
     private SlskdSearchResponse mockResponse;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         tableModel = new TableModelSlskdSearch();
         mockResponse = mock(SlskdSearchResponse.class);
     }
 
     @Test
-    public void testAddRow() {
+    void addRow_increasesRowCount() {
         tableModel.addRow(mockResponse);
-        assertThat(tableModel.getRowCount(), is(1));
-        assertThat(tableModel.getRow(0), is(mockResponse));
+        assertEquals(1, tableModel.getRowCount());
+        assertEquals(mockResponse, tableModel.getRow(0));
     }
 
     @Test
-    public void testReplaceRow() {
+    void replaceRow_replacesAtIndex() {
         tableModel.addRow(mockResponse);
         SlskdSearchResponse newResponse = mock(SlskdSearchResponse.class);
         tableModel.replaceRow(newResponse, 0);
-        assertThat(tableModel.getRow(0), is(newResponse));
+        assertEquals(newResponse, tableModel.getRow(0));
     }
 
     @Test
-    public void testRemoveRow() {
+    void removeRow_decreasesRowCount() {
         tableModel.addRow(mockResponse);
         tableModel.removeRow(mockResponse);
-        assertThat(tableModel.getRowCount(), is(0));
+        assertEquals(0, tableModel.getRowCount());
     }
 
     @Test
-    public void testClear() {
+    void clear_removesAllRows() {
         tableModel.addRow(mockResponse);
         tableModel.clear();
-        assertThat(tableModel.getRowCount(), is(0));
+        assertEquals(0, tableModel.getRowCount());
     }
 
     @Test
-    public void testGetValueAt() {
+    void getValueAt_returnsCorrectCellValues() {
         when(mockResponse.getDate()).thenReturn("2023-10-01");
         when(mockResponse.isQueued()).thenReturn(true);
         when(mockResponse.getSearchText()).thenReturn("test search");
         when(mockResponse.getFiles()).thenReturn(List.of());
         when(mockResponse.getBitrate()).thenReturn(320.0);
         when(mockResponse.getSize()).thenReturn(1024.0);
-        when(mockResponse.getUploadSpeed()).thenReturn((double) 100);
+        when(mockResponse.getUploadSpeed()).thenReturn(100.0);
         when(mockResponse.hasFreeUploadSlot()).thenReturn(true);
         when(mockResponse.getQueueLength()).thenReturn(5);
         when(mockResponse.getUsername()).thenReturn("user");
@@ -71,27 +67,27 @@ public class TableModelSlskdSearchTest {
 
         tableModel.addRow(mockResponse);
 
-        assertThat(tableModel.getValueAt(0, 0), is("2023-10-01"));
-        assertThat(tableModel.getValueAt(0, 1), is(true));
-        assertThat(tableModel.getValueAt(0, 2), is("test search"));
-        assertThat(tableModel.getValueAt(0, 3), is(0));
-        assertThat(tableModel.getValueAt(0, 4), is(320.0));
-        assertThat(tableModel.getValueAt(0, 5), is(1024.0));
-        assertThat(tableModel.getValueAt(0, 6), is((double) 100));
-        assertThat(tableModel.getValueAt(0, 7), is(true));
-        assertThat(tableModel.getValueAt(0, 8), is(5));
-        assertThat(tableModel.getValueAt(0, 9), is("user"));
-        assertThat(tableModel.getValueAt(0, 10), is("/path/to/file"));
-        assertThat(tableModel.getValueAt(0, 11), is(progressBar));
+        assertEquals("2023-10-01", tableModel.getValueAt(0, 0));
+        assertEquals(true, tableModel.getValueAt(0, 1));
+        assertEquals("test search", tableModel.getValueAt(0, 2));
+        assertEquals(0, tableModel.getValueAt(0, 3));
+        assertEquals(320.0, tableModel.getValueAt(0, 4));
+        assertEquals(1024.0, tableModel.getValueAt(0, 5));
+        assertEquals(100.0, tableModel.getValueAt(0, 6));
+        assertEquals(true, tableModel.getValueAt(0, 7));
+        assertEquals(5, tableModel.getValueAt(0, 8));
+        assertEquals("user", tableModel.getValueAt(0, 9));
+        assertEquals("/path/to/file", tableModel.getValueAt(0, 10));
+        assertEquals(progressBar, tableModel.getValueAt(0, 11));
     }
 
     @Test
-    public void testIsCellEditable() {
-        assertThat(tableModel.isCellEditable(0, 0), is(false));
+    void isCellEditable_alwaysFalse() {
+        assertFalse(tableModel.isCellEditable(0, 0));
     }
 
     @Test
-    public void testIsCellEnabled() {
-        assertThat(tableModel.isCellEnabled(0, 0), is(true));
+    void isCellEnabled_alwaysTrue() {
+        assertTrue(tableModel.isCellEnabled(0, 0));
     }
 }

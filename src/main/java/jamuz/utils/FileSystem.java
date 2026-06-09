@@ -17,7 +17,9 @@
 
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import java.io.BufferedReader;
+import java.util.logging.Level;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,7 +59,7 @@ public class FileSystem {
             return false;
         } 
         catch (IOException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}

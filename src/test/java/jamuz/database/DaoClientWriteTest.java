@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 raph
+ * Copyright (C) 2023 phramusca
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,55 +16,115 @@
  */
 package jamuz.database;
 
-import static org.junit.Assert.*;
-
+import jamuz.Jamuz;
+import jamuz.Playlist;
+import jamuz.process.merge.StatSource;
+import jamuz.process.sync.Device;
 import jamuz.remote.ClientInfo;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
-/**
- *
- * @author raph
- */
-public class DaoClientWriteTest {
+/** SQLite-backed tests for {@link DaoClientWrite} insert/update behaviour (same setup pattern as {@link DaoClientTest}). */
+class DaoClientWriteTest {
 
-    public DaoClientWriteTest() {
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoClientWrite writer;
+
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoClientWrite(dbConnJaMuz.getDbConn(), dbConnJaMuz.device(), dbConnJaMuz.statSource());
+        seedMachinePlaylistDeviceStatSource();
+        Jamuz.setDb(dbConnJaMuz);
+        Jamuz.readPlaylists();
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
+    private static void seedMachinePlaylistDeviceStatSource() throws SQLException {
+        String hostname = "DaoClientWriteTestHost";
+        dbConnJaMuz.machine().lock().getOrInsert(hostname, new StringBuilder(), true);
+
+        Playlist playlist = new Playlist(0, "plDaoClientWrite", false, 0, Playlist.LimitUnit.Gio, false,
+                Playlist.Type.Albums, Playlist.Match.All, false, "ext");
+        dbConnJaMuz.playlist().lock().insert(playlist);
+
+        Device device = new Device(-1, "devName", "source", "dest", 1, hostname, true);
+        device.setIdPlaylist(1);
+        dbConnJaMuz.device().lock().insertOrUpdate(device);
+
+        StatSource statSource = new StatSource(hostname);
+        dbConnJaMuz.statSource().lock().insertOrUpdate(statSource);
     }
 
-    @Before
-    public void setUp() throws Exception {
+    private static ClientInfo newClientForInsert(String login) {
+        ClientInfo clientInfo = new ClientInfo(login, "pwd-" + login, "rootPath", "disp-" + login, true);
+        Device device = new Device(1, "devName", "source", "dest", 1, "", true);
+        StatSource statSource = new StatSource(login);
+        statSource.setId(1);
+        statSource.setHidden(true);
+        clientInfo.setDevice(device);
+        clientInfo.setStatSource(statSource);
+        return clientInfo;
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     * Test of insertOrUpdate method, of class DaoClientWrite.
-     */
     @Test
-    @Ignore
-    public void testInsertOrUpdate() {
-        System.out.println("insertOrUpdate");
-        ClientInfo clientInfo = null;
-        DaoClientWrite instance = null;
-        boolean expResult = false;
-        boolean result = instance.insertOrUpdate(clientInfo);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    void shouldInsertClientWhenIdIsUnset() {
+        ClientInfo clientInfo = newClientForInsert("ins-writer-1");
+        assertTrue(writer.insertOrUpdate(clientInfo));
+
+        ClientInfo fromDb = dbConnJaMuz.client().get("ins-writer-1");
+        assertEquals("disp-ins-writer-1-ins-w", fromDb.getName());
+        assertEquals("pwd-ins-writer-1", fromDb.getPwd());
+        assertTrue(fromDb.isEnabled());
     }
 
+    @Test
+    void shouldUpdateClientWhenIdIsSet() {
+        ClientInfo inserted = newClientForInsert("upd-writer-1");
+        assertTrue(writer.insertOrUpdate(inserted));
+
+        ClientInfo loaded = dbConnJaMuz.client().get("upd-writer-1");
+        Device device = new Device(1, loaded.getDevice().getName(), loaded.getDevice().getSource(),
+                loaded.getDevice().getDestination(), loaded.getDevice().getIdPlaylist(), "", loaded.getDevice().isHidden());
+        StatSource statSource = new StatSource(loaded.getLogin());
+        statSource.setId(1);
+        statSource.setHidden(true);
+
+        ClientInfo updated = new ClientInfo(loaded.getId(), "upd-writer-2", "newName", "newPwd", device, statSource, false);
+        assertTrue(writer.insertOrUpdate(updated));
+
+        ClientInfo fromDb = dbConnJaMuz.client().get("upd-writer-2");
+        // updateClient stores the name as-is (no login suffix; suffix only added on INSERT)
+        assertEquals("newName", fromDb.getName());
+        assertEquals("newPwd", fromDb.getPwd());
+        assertFalse(fromDb.isEnabled());
+    }
+
+    /** Regression: older code passed {@code java.sql.Types.INTEGER} (value 4) to {@link PreparedStatement#setInt}, persisting 4 instead of NULL. */
+    @Test
+    void shouldPersistNullDeviceAndStatSourceWhenAbsentOnInsert() throws SQLException {
+        ClientInfo bare = new ClientInfo("null-fk-client", "p", "/r", "BareName", true);
+        assertTrue(writer.insertOrUpdate(bare));
+
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT idDevice, idStatSource FROM client WHERE login = ?")) {
+            st.setString(1, "null-fk-client");
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                assertNull(rs.getObject("idDevice"));
+                assertNull(rs.getObject("idStatSource"));
+            }
+        }
+    }
 }

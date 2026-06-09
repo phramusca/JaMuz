@@ -17,85 +17,100 @@
 package jamuz.database;
 
 import jamuz.process.merge.StatSource;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import test.helpers.TestUnitSettings;
 
-/**
- *
- * @author phramusca <phramusca@gmail.com>
- */
-public class DaoStatSourceWriteTest {
-	
-	public DaoStatSourceWriteTest() {
-	}
-	
-	@BeforeClass
-	public static void setUpClass() {
-	}
-	
-	@AfterClass
-	public static void tearDownClass() {
-	}
-	
-	@Before
-	public void setUp() {
-	}
-	
-	@After
-	public void tearDown() {
-	}
+/** Tests for {@link DaoStatSourceWrite}. */
+class DaoStatSourceWriteTest {
 
-	/**
-	 * Test of insertOrUpdate method, of class DaoStatSourceWrite.
-	 */
-	@Test
-	@Ignore // Refer to DaoStatSourceTest
-	public void testInsertOrUpdate() {
-		System.out.println("insertOrUpdate");
-		StatSource statSource = null;
-		DaoStatSourceWrite instance = null;
-		boolean expResult = false;
-		boolean result = instance.insertOrUpdate(statSource);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
+    private static final String MACHINE = "StatWriteTestHost";
+    private static DbConnJaMuz dbConnJaMuz;
+    private static DaoStatSourceWrite writer;
 
-	/**
-	 * Test of updateLastMergeDate method, of class DaoStatSourceWrite.
-	 */
-	@Test
-	@Ignore // Refer to DaoStatSourceTest
-	public void testUpdateLastMergeDate() {
-		System.out.println("updateLastMergeDate");
-		int idStatSource = 0;
-		DaoStatSourceWrite instance = null;
-		String expResult = "";
-		String result = instance.updateLastMergeDate(idStatSource);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
+    @BeforeAll
+    static void setUpClass() throws SQLException, ClassNotFoundException, IOException {
+        dbConnJaMuz = TestUnitSettings.createTempDatabase();
+        writer = new DaoStatSourceWrite(dbConnJaMuz.getDbConn());
+        dbConnJaMuz.machine().lock().getOrInsert(MACHINE, new StringBuilder(), false);
+    }
 
-	/**
-	 * Test of delete method, of class DaoStatSourceWrite.
-	 */
-	@Test
-	@Ignore // Refer to DaoStatSourceTest
-	public void testDelete() {
-		System.out.println("delete");
-		int id = 0;
-		DaoStatSourceWrite instance = null;
-		boolean expResult = false;
-		boolean result = instance.delete(id);
-		assertEquals(expResult, result);
-		// TODO review the generated test code and remove the default call to fail.
-		fail("The test case is a prototype.");
-	}
-	
+    @AfterAll
+    static void tearDownClass() {
+        TestUnitSettings.cleanupTempDatabase(dbConnJaMuz);
+    }
+
+    @BeforeEach
+    void wipeStatSourcesUnderPrefix() throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "DELETE FROM statSource WHERE name LIKE ?")) {
+            st.setString(1, "StatW_%");
+            st.executeUpdate();
+        }
+    }
+
+    private StatSource newSource(String name) {
+        StatSource ss = new StatSource(MACHINE);
+        ss.getSource().setLocation("/tmp/statsource-unit-" + name + ".db");
+        ss.getSource().setName(name);
+        ss.getSource().setRootPath("/root");
+        return ss;
+    }
+
+    private int idForName(String name) throws SQLException {
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT idStatSource FROM statSource WHERE name = ?")) {
+            st.setString(1, name);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getInt(1);
+            }
+        }
+    }
+
+    @Test
+    void shouldInsertAndUpdateStatSource() throws SQLException {
+        StatSource inserted = newSource("StatW_new");
+        assertTrue(writer.insertOrUpdate(inserted));
+        int id = idForName("StatW_new");
+
+        StatSource updated = newSource("StatW_upd");
+        updated.setId(id);
+        assertTrue(writer.insertOrUpdate(updated));
+
+        try (PreparedStatement st = dbConnJaMuz.getDbConn().getConnection().prepareStatement(
+                "SELECT name FROM statSource WHERE idStatSource = ?")) {
+            st.setInt(1, id);
+            try (ResultSet rs = st.executeQuery()) {
+                assertTrue(rs.next());
+                assertEquals("StatW_upd", rs.getString("name"));
+            }
+        }
+    }
+
+    @Test
+    void shouldRefreshLastMergeDate() throws SQLException {
+        StatSource ss = newSource("StatW_merge");
+        assertTrue(writer.insertOrUpdate(ss));
+        int id = idForName("StatW_merge");
+
+        String after = writer.updateLastMergeDate(id);
+        assertFalse("1970-01-01 00:00:00".equals(after));
+    }
+
+    @Test
+    void shouldDeleteStatSource() throws SQLException {
+        StatSource ss = newSource("StatW_del");
+        assertTrue(writer.insertOrUpdate(ss));
+        int id = idForName("StatW_del");
+        assertTrue(writer.delete(id));
+        assertFalse(writer.delete(id));
+    }
 }

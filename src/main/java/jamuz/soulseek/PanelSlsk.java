@@ -234,7 +234,7 @@ public class PanelSlsk extends javax.swing.JPanel {
                                     String sourcePath = Jamuz.getFile("", "slskd", "downloads").getAbsolutePath();
                                     for (SlskdDownloadFile downloadFile : filteredFiles.values()) {
                                         // Copy file
-                                        Pair<String, String> directory = soulseek.getDirectory(downloadFile.filename);
+                                        Pair<String, String> directory = Slsk.getDirectory(downloadFile.filename);
                                         String subDirectoryName = directory.getLeft();
                                         String filename = directory.getRight();
                                         File sourceFile = new File(FilenameUtils.concat(FilenameUtils.concat(sourcePath, subDirectoryName), filename));

@@ -16,7 +16,9 @@
  */
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import java.io.File;
+import java.util.logging.Level;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -36,7 +38,7 @@ public class Desktop {
 			String uri = (url).replaceAll(" ", "+"); //NOI18N
 			openBrowser(new URI(uri));
 		} catch (URISyntaxException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 		}
 	}
 	
@@ -48,7 +50,7 @@ public class Desktop {
                     try { 
                         desktop.browse(uri); 
                     } catch (IOException ex) { 
-                        Popup.error(ex); 
+                        Jamuz.getLogger().log(Level.SEVERE, null, ex); 
                     } 
                 } 
             }
@@ -77,7 +79,7 @@ public class Desktop {
                         desktop.open(folderToOpen);
                     }
                 } catch (IllegalArgumentException | IOException ex) {
-                    Popup.error(ex);
+                    Jamuz.getLogger().log(Level.SEVERE, null, ex);
                 }
             }
         }

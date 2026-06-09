@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2023 phramusca <phramusca@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package jamuz;
 
 import java.io.BufferedWriter;
@@ -23,143 +7,127 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.*;
-import org.mockito.Mockito;
+class AppVersionTest {
 
-public class AppVersionTest {
+    private AppVersion appVersion;
 
-	private AppVersion appVersion;
+    @BeforeEach
+    void setUp() {
+        appVersion = new AppVersion("v1.0.0", "v1.0.1");
+    }
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-	}
+    @AfterEach
+    void tearDown() {
+    }
 
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
+    @Test
+    void isNewVersion_returnsTrueWhenLatestIsNewer() {
+        assertTrue(appVersion.isNewVersion());
+        appVersion.setLatestVersion("v0.9.9");
+        assertFalse(appVersion.isNewVersion());
+    }
 
-	@Before
-	public void setUp() {
-		appVersion = new AppVersion("v1.0.0", "v1.0.1");
-	}
+    @Test
+    void setAsset_storesFileAndSize() {
+        File assetFile = new File("testFile.txt");
+        appVersion.setAsset(assetFile, 100);
+        assertEquals(assetFile, appVersion.getAssetFile());
+        assertEquals(100, appVersion.getAssetSize());
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @Test
+    void setLatestVersion_updatesVersion() {
+        appVersion.setLatestVersion("v1.0.2");
+        assertEquals("v1.0.2", appVersion.getLatestVersion());
+    }
 
-	@Test
-	public void testIsNewVersion() {
-		assertTrue(appVersion.isNewVersion());
-		appVersion.setLatestVersion("v0.9.9");
-		assertFalse(appVersion.isNewVersion());
-	}
+    @Test
+    void compareVersionStrings_returnsCorrectOrdering() {
+        assertEquals(0, AppVersion.compareVersionStrings("v1.0.0", "v1.0.0"));
+        assertTrue(AppVersion.compareVersionStrings("v1.0.1", "v1.0.0") > 0);
+        assertTrue(AppVersion.compareVersionStrings("v1.0.0", "v1.0.1") < 0);
+    }
 
-	@Test
-	public void testSetAsset() {
-		File assetFile = new File("testFile.txt");
-		appVersion.setAsset(assetFile, 100);
-		assertEquals(assetFile, appVersion.getAssetFile());
-		assertEquals(100, appVersion.getAssetSize());
-	}
+    @Test
+    void toString_containsCurrentAndLatest() {
+        assertEquals("Current: v1.0.0. Latest: v1.0.1. ", appVersion.toString());
+    }
 
-	@Test
-	public void testSetLatestVersion() {
-		appVersion.setLatestVersion("v1.0.2");
-		assertEquals("v1.0.2", appVersion.getLatestVersion());
-	}
+    @Test
+    void isAssetValid_withExistingFile_returnsTrue() throws IOException {
+        File tempFile = File.createTempFile("tempFile", null);
+        appVersion.setAsset(tempFile, (int) tempFile.length());
+        assertTrue(appVersion.isAssetValid());
+    }
 
-	@Test
-	public void testCompareVersionStrings() {
-		assertEquals(0, AppVersion.compareVersionStrings("v1.0.0", "v1.0.0"));
-		assertTrue(AppVersion.compareVersionStrings("v1.0.1", "v1.0.0") > 0);
-		assertTrue(AppVersion.compareVersionStrings("v1.0.0", "v1.0.1") < 0);
-	}
+    @Test
+    void isUnzippedAssetValid_afterUnzip_returnsTrue() throws IOException {
+        File testAsset = createTestAsset();
+        appVersion.setAsset(testAsset, (int) testAsset.length());
+        appVersion.unzipAsset(Mockito.mock(ICallBackVersionCheck.class));
+        assertTrue(appVersion.isUnzippedAssetValid());
+    }
 
-	@Test
-	public void testToString() {
-		assertEquals("Current: v1.0.0. Latest: v1.0.1. ", appVersion.toString());
-	}
+    @Test
+    void unzipAsset_callsCallbackLifecycleMethods() throws IOException {
+        File testAsset = createTestAsset();
+        appVersion.setAsset(testAsset, (int) testAsset.length());
 
-	@Test
-	public void testIsAssetValid() throws IOException {
-		File tempFile = File.createTempFile("tempFile", null);
-		appVersion.setAsset(tempFile, (int) tempFile.length());
-		assertTrue(appVersion.isAssetValid());
-	}
+        ICallBackVersionCheck mockCallback = Mockito.mock(ICallBackVersionCheck.class);
+        appVersion.unzipAsset(mockCallback);
 
-	@Test
-	public void testIsUnzippedAssetValid() throws IOException {
-		File testAsset = getTestAsset();
-		appVersion.setAsset(testAsset, (int) testAsset.length());
+        verify(mockCallback, times(1)).onUnzipCount(any());
+        verify(mockCallback, times(1)).onUnzipStart();
+        verify(mockCallback, atLeastOnce()).onUnzipProgress(any(), any(), anyInt());
+    }
 
-		ICallBackVersionCheck mockCallback = Mockito.mock(ICallBackVersionCheck.class);
+    @Test
+    void getCurrentVersion_returnsConstructedVersion() {
+        assertEquals("v1.0.0", appVersion.getCurrentVersion());
+    }
 
-		appVersion.unzipAsset(Mockito.mock(ICallBackVersionCheck.class));
-		assertTrue(appVersion.isUnzippedAssetValid());
+    @Test
+    void getLatestVersion_returnsConstructedLatest() {
+        assertEquals("v1.0.1", appVersion.getLatestVersion());
+    }
 
-		verify(mockCallback, times(0)).onUnzipCount(any());
-		verify(mockCallback, times(0)).onUnzipStart();
-		verify(mockCallback, times(0)).onUnzipProgress(any(), any(), anyInt());
-	}
+    @Test
+    void getAssetFile_isNullByDefaultThenSetBySetAsset() {
+        assertNull(appVersion.getAssetFile());
+        File assetFile = new File("testFile.txt");
+        appVersion.setAsset(assetFile, 100);
+        assertEquals(assetFile, appVersion.getAssetFile());
+    }
 
-	@Test
-	public void testUnzipAsset() throws IOException {
-		File testAsset = getTestAsset();
-		appVersion.setAsset(testAsset, (int) testAsset.length());
+    @Test
+    void getAssetSize_isZeroByDefaultThenSetBySetAsset() {
+        assertEquals(0, appVersion.getAssetSize());
+        File assetFile = new File("testFile.txt");
+        appVersion.setAsset(assetFile, 100);
+        assertEquals(100, appVersion.getAssetSize());
+    }
 
-		ICallBackVersionCheck mockCallback = Mockito.mock(ICallBackVersionCheck.class);
-
-		appVersion.unzipAsset(mockCallback);
-
-		verify(mockCallback, times(1)).onUnzipCount(any());
-		verify(mockCallback, times(1)).onUnzipStart();
-		verify(mockCallback, atLeastOnce()).onUnzipProgress(any(), any(), anyInt());
-	}
-
-	private File getTestAsset() throws IOException {
-		File tempFile = File.createTempFile("tempFile", ".7z");
-		try (SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(tempFile)) {
-			File tempEntry = File.createTempFile("tempEntry1", ".txt");
-			try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempEntry))) {
-				writer.write("This is a sample text.");
-				writer.flush();
-			}
-			sevenZOutputFile.putArchiveEntry(sevenZOutputFile.createArchiveEntry(tempEntry, tempEntry.getName()));
-			sevenZOutputFile.write(Files.readAllBytes(tempEntry.toPath()));
-			sevenZOutputFile.closeArchiveEntry();
-		}
-		return tempFile;
-	}
-
-	@Test
-	public void testGetCurrentVersion() {
-		assertEquals("v1.0.0", appVersion.getCurrentVersion());
-	}
-
-	@Test
-	public void testGetLatestVersion() {
-		assertEquals("v1.0.1", appVersion.getLatestVersion());
-	}
-
-	@Test
-	public void testGetAssetFile() {
-		assertNull(appVersion.getAssetFile());
-		File assetFile = new File("testFile.txt");
-		appVersion.setAsset(assetFile, 100);
-		assertEquals(assetFile, appVersion.getAssetFile());
-	}
-
-	@Test
-	public void testGetAssetSize() {
-		assertEquals(0, appVersion.getAssetSize());
-		File assetFile = new File("testFile.txt");
-		appVersion.setAsset(assetFile, 100);
-		assertEquals(100, appVersion.getAssetSize());
-	}
+    private File createTestAsset() throws IOException {
+        File tempFile = File.createTempFile("tempFile", ".7z");
+        try (SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(tempFile)) {
+            File tempEntry = File.createTempFile("tempEntry1", ".txt");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempEntry))) {
+                writer.write("This is a sample text.");
+                writer.flush();
+            }
+            sevenZOutputFile.putArchiveEntry(sevenZOutputFile.createArchiveEntry(tempEntry, tempEntry.getName()));
+            sevenZOutputFile.write(Files.readAllBytes(tempEntry.toPath()));
+            sevenZOutputFile.closeArchiveEntry();
+        }
+        return tempFile;
+    }
 }
-

@@ -16,7 +16,9 @@
  */
 package jamuz.utils;
 
+import jamuz.Jamuz;
 import com.jcraft.jsch.Channel;
+import java.util.logging.Level;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -76,7 +78,7 @@ public class SSH {
 
 
         } catch (JSchException ex) {
-            Popup.error(ex);
+            Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return false;
         }
     }
@@ -157,7 +159,7 @@ public class SSH {
             channel.setInputStream(null);
             ((ChannelExec) channel).setErrStream(System.err); 
 //TODO: Get error stream to catch messages as :
-//mv: impossible d'évaluer «/home/raph/Vidéos/Films/American Bluff [2013].avi»: Aucun fichier ou dossier de ce type
+//mv: impossible d'évaluer «~/Vidéos/Films/American Bluff [2013].avi»: Aucun fichier ou dossier de ce type
             in = channel.getInputStream();
             channel.connect();
             byte[] tmp = new byte[1024];
@@ -178,14 +180,14 @@ public class SSH {
                 }
             }
         } catch (JSchException | IOException ex) {
-            Popup.error(ex);
+            Jamuz.getLogger().log(Level.SEVERE, null, ex);
             return 131;
         } finally {
             if(in!=null) {
                 try {
                     in.close();
                 } catch (IOException ex) {
-                    Popup.error(ex);
+                    Jamuz.getLogger().log(Level.SEVERE, null, ex);
                     return 132;
                 }
             }

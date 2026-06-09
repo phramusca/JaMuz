@@ -16,8 +16,10 @@
  */
 package jamuz;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 import jamuz.utils.ImageUtils;
-import jamuz.utils.Popup;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +83,7 @@ public class IconBufferCover {
 			}
 			return null;
 		} catch (IOException ex) {
-			Popup.error(ex);
+			Jamuz.getLogger().log(Level.SEVERE, null, ex);
 			return null;
 		}
 	}

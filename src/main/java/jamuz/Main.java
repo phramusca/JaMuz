@@ -23,6 +23,9 @@ package jamuz;
 // FIXME ! 5 Finir les derniers TO-DO
 // FIXME ! 6 Faire une release
 
+// FIXME User Jamuz.getLogger() partout (y'a des appels direct à Logger.getLogger ...)
+
+
 //----------------------------------------------------------
 // - General TODO:
 //      - TODO: manage database backups in logs

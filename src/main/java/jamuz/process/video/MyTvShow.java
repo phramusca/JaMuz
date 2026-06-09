@@ -16,6 +16,9 @@
  */
 package jamuz.process.video;
 
+import jamuz.Jamuz;
+import java.util.logging.Level;
+
 import info.movito.themoviedbapi.model.tv.TvSeries;
 import jamuz.database.DbInfo;
 import static jamuz.process.video.PanelVideo.comboRating;
@@ -48,7 +51,7 @@ public class MyTvShow extends MyVideoAbstract implements Serializable {
 //                    cal.setTime(releaseDate);
 //                    this.year = cal.get(Calendar.YEAR);
 //                } catch (ParseException ex) {
-////                    Popup.error(ex);
+////                    Jamuz.getLogger().log(Level.SEVERE, null, ex);
 //                }
 		}
 	}

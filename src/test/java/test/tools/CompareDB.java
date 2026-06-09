@@ -51,7 +51,7 @@ public class CompareDB {
 		boolean compareLastPlayed = true;
 		boolean compareBPM = true;
 
-		String rootPath = "/media/raph/Transcend/JaMuz";
+		String rootPath = "~/Transcend/JaMuz";
 		String db1 = Swing.selectFile(rootPath, Swing.FileType.SQLITE, "Select 1st database");
 		if (db1.isBlank()) {  //NOI18N
 			Popup.error("Select a db1 file");
@@ -64,7 +64,7 @@ public class CompareDB {
 			return;
 		}
 
-		String resultFile = compareDB(db1, db2, "/home/raph/Bureau/JaMuz Compare/",
+		String resultFile = compareDB(db1, db2, "~/Bureau/JaMuz Compare/",
 				comparePlayCounter, compareRating, compareAddedDate,
 				compareLastPlayed, compareBPM
 		);
