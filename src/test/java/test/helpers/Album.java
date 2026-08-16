@@ -678,13 +678,16 @@ public class Album {
 		ArrayList<FileInfo> files = new ArrayList<>();
 		int idFile = idFirstFile;
 		for (TrackTag trackTag : tracks) {
-			files.add(new FileInfo(idFile, idPath,
+			FileInfo fileInfo = new FileInfo(idFile, idPath,
 					trackTag.getRelativeFullPath(),
 					trackTag.getRating(),
 					trackTag.getFormattedLastPlayed(),
 					trackTag.getFormattedAddedDate(),
 					trackTag.getPlayCounter(), "", -1,
-					trackTag.getBPM(), "", "", "", ""));
+					trackTag.getBPM(), trackTag.getGenre(), "", "", "");
+			fileInfo.setUpdateRatingModifDate(true);
+			fileInfo.setUpdateGenreModifDate(true);
+			files.add(fileInfo);
 			idFile++;
 		}
 		return files;

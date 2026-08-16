@@ -16,7 +16,7 @@
  */
 package jamuz;
 
-// FIXME ! 1 Refaire un branche unit-tests et finir les "FIXME TEST"
+// FIXME ! 1 Finir les tests fonctionnels (voir FUNCTIONAL_TEST_PLAN.md) — tests unitaires terminés
 // FIXME ! 2 Faire une release
 // FIXME ! 3 Finir les derniers FIXME
 // FIXME ! 4 Faire une release

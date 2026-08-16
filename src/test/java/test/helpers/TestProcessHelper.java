@@ -84,13 +84,37 @@ public class TestProcessHelper {
 	 * @throws InterruptedException
 	 */
 	public static void merge() throws InterruptedException {
-		List sources = new ArrayList();
+		merge(false, false);
+	}
+
+	/**
+	 *
+	 * @param simulate
+	 * @param forceJaMuz
+	 * @throws InterruptedException
+	 */
+	public static void merge(boolean simulate, boolean forceJaMuz) throws InterruptedException {
+		List<StatSource> sources = new ArrayList<>();
 		for (StatSource statSource : Jamuz.getMachine().getStatSources()) {
 			sources.add(statSource);
 		}
-		startProcessMerge(sources, false, false);
+		startProcessMerge(sources, simulate, forceJaMuz);
+	}
 
-		//FIXME TEST Also test simulate and forceJamuz parameters
+	/**
+	 * Enqueue a folder for action processing (e.g. SAVE) in the test check process.
+	 *
+	 * @param folder
+	 */
+	public static void enqueueFolderAction(FolderInfo folder) {
+		if (processCheck == null) {
+			throw new IllegalStateException("No check process running; call a scan/check method first.");
+		}
+		if (!processCheck.actionQueue.contains(folder)) {
+			processCheck.actionQueue.add(folder);
+		}
+		PanelCheck.tableModelActionQueue.fireTableDataChanged();
+		processCheck.displayActionQueue();
 	}
 
 	/**
@@ -121,8 +145,7 @@ public class TestProcessHelper {
 		processCheck = new ProcessCheck(new ICallBackCheckPanel() {
 			@Override
 			public void addToQueueAction(FolderInfo folder) {
-				//FIXME TEST !!!
-				throw new UnsupportedOperationException("Not supported yet.");
+				enqueueFolderAction(folder);
 			}
 		});
 

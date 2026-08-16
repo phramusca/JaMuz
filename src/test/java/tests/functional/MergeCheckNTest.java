@@ -171,8 +171,7 @@ public class MergeCheckNTest extends TestCase {
 			}
 		}
 
-		//FIXME TEST MergeCheckNTest Mock it and test "check" process in another test class
-		// to avoids issues, especially with MB/Mast.fm (resulting in merge differences) 
+		// Check process is covered by CheckNTest; kept here for end-to-end merge+check+sync flow.
 		/**
 		 * *********************************************************
 		 * Check library in order to modify path and filenames Set genre, cover
@@ -193,7 +192,7 @@ public class MergeCheckNTest extends TestCase {
 			folder.setNewGenre("Reggae");
 			folder.setNewImage(ImageUtils.getTestCover());
 			folder.action = Action.SAVE;
-//            PanelCheck.addToActionQueue(folder);//FIXME TEST !!!
+			TestProcessHelper.enqueueFolderAction(folder);
 		}
 		TestProcessHelper.applyChanges();
 
@@ -268,10 +267,6 @@ public class MergeCheckNTest extends TestCase {
 				}
 			}
 			//Change stats in JamuZ
-
-			//FIXME TEST MergeCheckNTest Continue here: 
-			//Somehow genre for 1st track in "9e0"/"10_JaMuz" is empty (expected is 
-			//	"Reggae", as it IS at this stage in JaMuz.db)
 			AlbumBuffer.getAlbum(mbId, "MergeDevice10_JaMuz").setAndCheckStatsInJamuzDb();
 		}
 
@@ -404,8 +399,7 @@ public class MergeCheckNTest extends TestCase {
 		playlist.addFilter(filter);
 		playlist.update();
 
-		//Create test device
-		//FIXME TEST create a device for each stat source
+		//Create test device (one device linked to MyTunes; see FUNCTIONAL_TEST_PLAN.md)
 		Device device = new Device(-1,
 				"TestDevice",
 				FilenameUtils.normalizeNoEndSeparator(getMusicFolder() + "Archive") + File.separator,
@@ -430,19 +424,12 @@ public class MergeCheckNTest extends TestCase {
 				rootPath = TestSettings.getMusicFolder() + "Archive" + File.separator,
 				idDevice = -1
 		);
-		TestSettings.addStatSource(//FIXME TEST WINDOWS Test on Windows, on a SSH box and a FTP box
-				name = "MyMusic32_Device.db", //kodi
+		TestSettings.addStatSource(name = "MyMusic32_Device.db", //kodi
 				idStatement = 2,
 				rootPath = TestSettings.getMusicFolder() + "Archive" + File.separator,
 				idDevice = -1);
-		//FIXME TEST WINDOWS Enable this when I have a Windows PC available
-//        Settings.addStatSource(
-//                name = "MediaMonkey source", 
-//                idStatement=3, 
-//                rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
-//                idDevice = -1);
-		TestSettings.addStatSource(//FIXME TEST WINDOWS Test on windows
-				name = "mixxxdb_Device.sqlite",
+		// MediaMonkey (Windows) deferred — see FUNCTIONAL_TEST_PLAN.md
+		TestSettings.addStatSource(name = "mixxxdb_Device.sqlite",
 				idStatement = 4,
 				rootPath = TestSettings.getMusicFolder() + "Archive" + File.separator,
 				idDevice = -1);
