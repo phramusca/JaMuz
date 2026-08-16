@@ -85,7 +85,14 @@ mvn test -Dtest=NomDeLaClasseTest#nomDeLaMethode
 
 ### Tests fonctionnels
 
-Les tests fonctionnels se trouvent dans `src/test/java/tests/functional/` et nécessitent une base de données et un environnement configurés. Ils ne font pas partie de l'exécution standard `mvn test` et doivent être lancés manuellement depuis l'IDE.
+Les tests fonctionnels se trouvent dans `src/test/java/tests/functional/` et nécessitent une base de données, l'environnement `testenv/` et une GUI Swing. Ils ne font pas partie de l'exécution standard `mvn test`.
+
+**Lancement** (depuis la racine `JaMuz/`) :
+
+- **NetBeans** (recommandé pour l'UI) : clic droit sur la classe de test → Test File
+- **Cursor / VS Code** : lancer la classe JUnit 4 depuis l'IDE
+
+Voir [`FUNCTIONAL_TEST_PLAN.md`](FUNCTIONAL_TEST_PLAN.md) pour les scénarios, données ODS et prérequis.
 
 ### État de la couverture
 

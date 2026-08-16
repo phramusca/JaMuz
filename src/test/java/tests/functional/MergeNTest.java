@@ -40,7 +40,7 @@ import test.helpers.TestProcessHelper;
  */
 public class MergeNTest extends TestCase { //TODO: do we really need to extends TestCase (here and in all other places), which is from old JUnit 3 (junit.framework.TestCase)
 
-	//FIXME TEST !!!!! Refer to "TestPlan.ods"
+	// See FUNCTIONAL_TEST_PLAN.md for scenario steps and ODS reference data.
 	/**
 	 *
 	 * @throws Exception
@@ -143,11 +143,7 @@ public class MergeNTest extends TestCase { //TODO: do we really need to extends 
 								statSource.getId(),
 								playlist.getId() > 0);
 			}
-			//Change stats in JamuZ
-			//FIXME TEST !!!!!!!!!!! Update ratingModifDate & tagsModifDate 
-			// as done in Jamuz (check that)
-			//and update ratings in 6cc35892-c44f-4aa7-bfee-5f63eca70821.ods 
-			//accordingly
+			//Change stats in JamuZ (genre and *ModifDate via Album.getFiles())
 			AlbumBuffer.getAlbum(mbId, "MergeDevice5_JaMuz").setAndCheckStatsInJamuzDb();
 		}
 
@@ -204,8 +200,7 @@ public class MergeNTest extends TestCase { //TODO: do we really need to extends 
 		playlist.addFilter(filter);
 		playlist.update();
 
-		//Create test device
-		//FIXME TEST create a device for each stat source
+		//Create test device (one device linked to MyTunes; see FUNCTIONAL_TEST_PLAN.md)
 		Device device = new Device(-1,
 				"TestDevice",
 				FilenameUtils.normalizeNoEndSeparator(getMusicFolder() + "Archive") + File.separator,
@@ -230,19 +225,12 @@ public class MergeNTest extends TestCase { //TODO: do we really need to extends 
 				rootPath = TestSettings.getMusicFolder() + "Archive" + File.separator,
 				idDevice = -1
 		);
-		TestSettings.addStatSource(//FIXME TEST WINDOWS Test on Windows, on a SSH box and a FTP box
-				name = "MyMusic32_Device.db", //kodi
+		TestSettings.addStatSource(name = "MyMusic32_Device.db", //kodi
 				idStatement = 2,
 				rootPath = TestSettings.getMusicFolder() + "Archive" + File.separator,
 				idDevice = -1);
-		//FIXME TEST WINDOWS Enable this when I have a Windows PC available
-//        Settings.addStatSource(
-//                name = "MediaMonkey source", 
-//                idStatement=3, 
-//                rootPath=Settings.getMusicFolder() + "Archive" + File.separator, 
-//                idDevice = -1);
-		TestSettings.addStatSource(//FIXME TEST WINDOWS Test on windows
-				name = "mixxxdb_Device.sqlite",
+		// MediaMonkey (Windows) deferred — see FUNCTIONAL_TEST_PLAN.md
+		TestSettings.addStatSource(name = "mixxxdb_Device.sqlite",
 				idStatement = 4,
 				rootPath = TestSettings.getMusicFolder() + "Archive" + File.separator,
 				idDevice = -1);
