@@ -54,6 +54,7 @@ buildNumber.properties
 /database/JaMuz*.db*
 
 /testenv/AppFolder/data/cache/
+/testenv/AppFolder/data/system/sql/
 /testenv/AppFolder/logs/
 /testenv/AppFolder/JaMuz\.db
 /testenv/Musique/

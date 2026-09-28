@@ -5,7 +5,7 @@ Les tests fonctionnels valident les processus **Check**, **Merge** et **Sync** d
 ## Lancement
 
 - **IDE recommandé** : [NetBeans](https://netbeans.apache.org/) (historiquement utilisé pour l'UI et ces tests)
-- **Alternative** : Cursor / VS Code avec configuration JUnit 4
+- **Alternative** : Cursor / VS Code avec configuration JUnit 5
 - **Répertoire de travail** : racine du module `JaMuz/` (obligatoire — les chemins `testenv/` sont relatifs à `.`)
 - **Commande** : lancer une classe de test individuellement depuis l'IDE (pas via `mvn test`)
 
@@ -20,7 +20,11 @@ Classes :
 
 Prérequis :
 
-- `testenv/Ressources/` : base minimale, fichiers ODS album, bases stat sources
+- `testenv/Ressources/` :
+  - base minimale (`JaMuz_Minimal.db`), copiée puis migrée automatiquement au schéma courant au démarrage du test
+  - fichiers ODS album
+  - bases stat sources
+- Les scripts de migration de schéma sont copiés automatiquement depuis `target-data/data/system/sql` vers `testenv/AppFolder/data/system/sql` avant la configuration de l'application. Les scripts présents sous `target-data-local/data/system/sql` sont copiés ensuite et remplacent les fichiers de même nom.
 - `testenv/Musique/` et `testenv/StatSources/` : recréés à l'exécution (gitignored)
 - Affichage graphique disponible (GUI Swing)
 

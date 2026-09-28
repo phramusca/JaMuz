@@ -80,6 +80,8 @@ public class TestSettings {
 	 * @throws Exception
 	 */
 	public static void setupApplication() throws Exception {
+		copySchemaMigrationScripts();
+
 		//Refresh database (overwrite db test file with reference db)
 		File source = new File(getResourcesPath() + "JaMuz_Minimal.db");
 		File destination = new File(getAppFolder() + "JaMuz.db");
@@ -106,6 +108,24 @@ public class TestSettings {
 		deleteAndMakeFolderByOption("location.manual");
 
 		deleteAndMakeFolderByPath(FilenameUtils.normalizeNoEndSeparator(getMusicFolder() + "TestDevice"));
+	}
+
+	private static void copySchemaMigrationScripts() throws IOException {
+		File source = new File("target-data/data/system/sql");
+		if (!source.isDirectory()) {
+			throw new IOException("Schema migration scripts directory not found: "
+					+ source.getAbsolutePath());
+		}
+
+		File destination = new File(getAppFolder(), "data" + File.separator
+				+ "system" + File.separator + "sql");
+		FileUtils.copyDirectory(source, destination);
+
+		// Local test data follows the same precedence as target-data-local.
+		File localSource = new File("target-data-local/data/system/sql");
+		if (localSource.isDirectory()) {
+			FileUtils.copyDirectory(localSource, destination);
+		}
 	}
 
 	/**

@@ -90,9 +90,10 @@ Les tests fonctionnels se trouvent dans `src/test/java/tests/functional/` et né
 **Lancement** (depuis la racine `JaMuz/`) :
 
 - **NetBeans** (recommandé pour l'UI) : clic droit sur la classe de test → Test File
-- **Cursor / VS Code** : lancer la classe JUnit 4 depuis l'IDE
+- **Cursor / VS Code** : lancer la classe JUnit 5 depuis l'IDE
 
 Voir [`FUNCTIONAL_TEST_PLAN.md`](FUNCTIONAL_TEST_PLAN.md) pour les scénarios, données ODS et prérequis.
+Les scripts de migration de la base de test sont synchronisés automatiquement depuis `target-data/` avant sa configuration.
 
 ### État de la couverture
 
