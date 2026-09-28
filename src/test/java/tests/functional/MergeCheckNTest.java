@@ -29,11 +29,11 @@ import jamuz.utils.ImageUtils;
 import jamuz.utils.Inter;
 import java.io.File;
 import java.util.ArrayList;
-import junit.framework.TestCase;
-
 import org.apache.commons.io.FilenameUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import test.helpers.AlbumBuffer;
 import test.helpers.TestSettings;
 import static test.helpers.TestSettings.getMusicFolder;
@@ -43,7 +43,7 @@ import test.helpers.TestProcessHelper;
  *
  * @author phramusca <phramusca@gmail.com>
  */
-public class MergeCheckNTest extends TestCase {
+public class MergeCheckNTest {
 
 	/**
 	 *
@@ -245,10 +245,10 @@ public class MergeCheckNTest extends TestCase {
 		//  *2:         source vs jamuz and reverse side
 		//  *2:         1st and second run
 		ArrayList<FileInfo> errorList = TestProcessHelper.processMerge.getErrorList();
-		assertEquals("Nb errors", nbErrorsExpected, errorList.size());
+		assertEquals(nbErrorsExpected, errorList.size(), "Nb errors");
 		//None expected completed (all missing on both sides, and MyTunes has no changes)
 		ArrayList<FileInfo> completedList = TestProcessHelper.processMerge.getCompletedList();
-		assertEquals("Nb completed", 0, completedList.size());
+		assertEquals(0, completedList.size(), "Nb completed");
 		//No change expected, so using the same album version finally
 		for (String mbId : mbIds) {
 			AlbumBuffer.getAlbum(mbId, "MergeDevice9_DbOk").checkJaMuz();
@@ -278,7 +278,7 @@ public class MergeCheckNTest extends TestCase {
 		//Merge again
 		PanelMain.selectTab(Inter.get("Label.Merge"));
 		TestProcessHelper.merge();
-		assertEquals("Nb errors", nbErrorsExpected, TestProcessHelper.processMerge.getErrorList().size());
+		assertEquals(nbErrorsExpected, TestProcessHelper.processMerge.getErrorList().size(), "Nb errors");
 		for (String mbId : mbIds) {
 			AlbumBuffer.getAlbum(mbId, "MergeDevice10_New").checkJaMuz();
 			for (StatSource statSource : Jamuz.getMachine().getStatSources()) {
@@ -365,30 +365,22 @@ public class MergeCheckNTest extends TestCase {
 	}
 
 	private void checkNumberScanned(int expected) {
-		assertEquals("number of checked folders", expected, PanelCheck.tableModelActionQueue.getFolders().size());
-	}
-
-	/**
-	 *
-	 * @param testMethodName
-	 */
-	public MergeCheckNTest(String testMethodName) {
-		super(testMethodName);
+		assertEquals(expected, PanelCheck.tableModelActionQueue.getFolders().size(),
+				"number of checked folders");
 	}
 
 	/**
 	 *
 	 * @throws Exception
 	 */
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		TestSettings.setupApplication();
 
 		//Create test playlist (genre=reggae) for merge test with a device
 		Playlist playlist = new Playlist(0, "TestDevicePlaylist", false, 1, Playlist.LimitUnit.Gio, false,
 				Playlist.Type.Songs, Playlist.Match.All, false, "");
-		Assert.assertTrue("playlist creation", playlist.insert());
+		assertTrue(playlist.insert(), "playlist creation");
 
 		//Getting playlist from library (so that id is set , so we can add filter)
 		//Read created options
@@ -407,7 +399,7 @@ public class MergeCheckNTest extends TestCase {
 				1, //playlist.getId()is not set (only when retrieved from db)
 				Jamuz.getMachine().getName(), false
 		);
-		assertTrue("Device creation", Jamuz.getDb().device().lock().insertOrUpdate(device));
+		assertTrue(Jamuz.getDb().device().lock().insertOrUpdate(device), "Device creation");
 
 		//Set stat sources
 		String rootPath;
@@ -441,14 +433,5 @@ public class MergeCheckNTest extends TestCase {
 
 		//Read created options
 		Jamuz.getMachine().read();
-	}
-
-	/**
-	 *
-	 * @throws Exception
-	 */
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 }

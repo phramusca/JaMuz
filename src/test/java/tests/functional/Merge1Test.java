@@ -20,9 +20,8 @@ import jamuz.Jamuz;
 import jamuz.gui.PanelMain;
 import jamuz.utils.Inter;
 import java.io.File;
-import junit.framework.TestCase;
-
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import test.helpers.AlbumBuffer;
 import test.helpers.TestSettings;
 import test.helpers.TestProcessHelper;
@@ -31,7 +30,7 @@ import test.helpers.TestProcessHelper;
  *
  * @author phramusca <phramusca@gmail.com>
  */
-public class Merge1Test extends TestCase {
+public class Merge1Test {
 
 	/**
 	 *
@@ -116,19 +115,10 @@ public class Merge1Test extends TestCase {
 
 	/**
 	 *
-	 * @param testMethodName
-	 */
-	public Merge1Test(String testMethodName) {
-		super(testMethodName);
-	}
-
-	/**
-	 *
 	 * @throws Exception
 	 */
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		TestSettings.setupApplication();
 
 		TestSettings.addStatSource("guayadeque.db",
@@ -139,14 +129,5 @@ public class Merge1Test extends TestCase {
 
 		//Read created options
 		Jamuz.getMachine().read();
-	}
-
-	/**
-	 *
-	 * @throws Exception
-	 */
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 }

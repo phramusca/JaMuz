@@ -21,9 +21,9 @@ import jamuz.process.check.PanelCheck;
 import jamuz.process.check.ProcessCheck.Action;
 import jamuz.utils.ImageUtils;
 import java.util.ArrayList;
-import junit.framework.TestCase;
-
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import test.helpers.AlbumBuffer;
 import test.helpers.TestSettings;
 import test.helpers.TestProcessHelper;
@@ -32,7 +32,7 @@ import test.helpers.TestProcessHelper;
  *
  * @author phramusca <phramusca@gmail.com>
  */
-public class CheckNTest extends TestCase {
+public class CheckNTest {
 
 	/**
 	 *
@@ -94,34 +94,16 @@ public class CheckNTest extends TestCase {
 	}
 
 	private void checkNumberScanned(int expected) {
-		assertEquals("number of checked folders", expected,
-				PanelCheck.tableModelActionQueue.getFolders().size());
-	}
-
-	/**
-	 *
-	 * @param testMethodName
-	 */
-	public CheckNTest(String testMethodName) {
-		super(testMethodName);
+		assertEquals(expected, PanelCheck.tableModelActionQueue.getFolders().size(),
+				"number of checked folders");
 	}
 
 	/**
 	 *
 	 * @throws Exception
 	 */
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	void setUp() throws Exception {
 		TestSettings.setupApplication();
-	}
-
-	/**
-	 *
-	 * @throws Exception
-	 */
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 }
