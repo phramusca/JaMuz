@@ -57,6 +57,9 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${project.basedir}/res</additionalClasspathElement>
+                    </additionalClasspathElements>
                 </configuration>
             </plugin>
 
