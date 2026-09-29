@@ -19,6 +19,7 @@ package test.helpers;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
@@ -31,6 +32,14 @@ import org.jaudiotagger.tag.TagException;
 public class AlbumBuffer {
 
 	private static final Map<String, Album> albums = new HashMap<>();
+	private static final ThreadLocal<String> testSuite = new ThreadLocal<>();
+
+	public static void setTestSuite(String testSuite) {
+		if (testSuite == null || testSuite.isBlank()) {
+			throw new IllegalArgumentException("Test suite name must not be blank");
+		}
+		AlbumBuffer.testSuite.set(testSuite);
+	}
 
 	/**
 	 * Get Album version
@@ -45,14 +54,15 @@ public class AlbumBuffer {
 	 * @throws org.jaudiotagger.audio.exceptions.ReadOnlyFileException
 	 */
 	public static Album getAlbum(String mbId, String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		String key = mbId + "--" + version;
+		String suite = Objects.requireNonNull(testSuite.get(), "Test suite has not been set");
+		String key = suite + "--" + mbId + "--" + version;
 
 		if (albums.containsKey(key)) {
 			return albums.get(key);
 		}
 
 		//Album not found
-		Album album = new Album(mbId, version);
+		Album album = new Album(suite, mbId, version);
 		albums.put(key, album);
 
 		return album;

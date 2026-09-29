@@ -375,6 +375,7 @@ public class MergeCheckNTest {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
+		AlbumBuffer.setTestSuite("MergeCheckNTest");
 		TestSettings.setupApplication();
 
 		//Create test playlist (genre=reggae) for merge test with a device

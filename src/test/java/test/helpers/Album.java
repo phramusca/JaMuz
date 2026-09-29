@@ -42,7 +42,6 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
-import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.junit.Assert;
 import org.musicbrainz.MBWS2Exception;
@@ -54,6 +53,7 @@ import org.musicbrainz.MBWS2Exception;
 public class Album {
 
 	private final String mbId;
+	private final String testSuite;
 	private String version;
 
 	private final ArrayList<TrackTag> tracks;
@@ -76,7 +76,8 @@ public class Album {
 	 */
 	public int index = -1;
 
-	private Album(String mbId) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+	private Album(String testSuite, String mbId) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		this.testSuite = testSuite;
 		this.mbId = mbId;
 		tracks = new ArrayList<>();
 		results = new HashMap<>();
@@ -111,8 +112,8 @@ public class Album {
 	 * @throws ReadOnlyFileException
 	 * @throws InvalidAudioFrameException
 	 */
-	public Album(String mbId, String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		this(mbId);
+	public Album(String testSuite, String mbId, String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+		this(testSuite, mbId);
 		this.version = version;
 		readFromFile(version);
 	}
@@ -175,131 +176,84 @@ public class Album {
 
 	private void readFromFile(String version) throws IOException, CannotReadException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
 
-		File file = getFile();
+		File file = getFixtureFile(version);
 		if (!file.exists()) {
-			return;
+			throw new IOException("Test fixture not found: " + file.getAbsolutePath());
 		}
-		SpreadSheet spreadSheet = SpreadSheet.createFromFile(file);
-		Sheet sheet = spreadSheet.getSheet(version);
-		if (sheet == null) {
-			return;
-		}
-		int nRowCount = sheet.getRowCount();
-		int nColCount = sheet.getColumnCount();
+		FixtureYaml.Fixture fixture = FixtureYaml.readFixture(file.toPath(), mbId, version);
 		tracks.clear();
-		for (int nRowIndex = 0; nRowIndex < nRowCount; nRowIndex++) {
-			Row row = new Row(sheet, nRowIndex);
-			String key;
-			switch (row.getArg(0)) {
-				case "track":
-					String sourceFile;
-					String relativePath;
-					String filename;
-					float BPM;
-					String album;
-					String albumArtist;
-					String artist;
-					String comment;
-					int discNo;
-					int discTotal;
-					String genre;
-					int nbCovers;
-					String title;
-					int trackNo;
-					int trackTotal;
-					String year;
-					int playCounter;
-					int rating;
-					String addedDate;
-					String lastPlayed;
-					boolean deleted;
-					FolderInfo.CheckedFlag checkedFlag;
-					boolean ignore;
-					if (nColCount > 21) {
-						ignore = row.getValue(21).equals("{IGNORE}");
-					} else {
-						ignore = false;
-					}
-
-					tracks.add(new TrackTag(
-							sourceFile = row.getValue(5),
-							relativePath = mbId + File.separator,
-							filename = "Track" + nRowIndex + ".mp3",
-							BPM = Float.parseFloat(row.getValue(12)),
-							album = row.getValue(3),
-							albumArtist = row.getValue(2),
-							artist = row.getValue(1),
-							comment = row.getValue(14),
-							discNo = Integer.parseInt(row.getValue(6)),
-							discTotal = Integer.parseInt(row.getValue(7)),
-							genre = row.getValue(11),
-							nbCovers = Integer.parseInt(row.getValue(13)),
-							title = row.getValue(4),
-							trackNo = Integer.parseInt(row.getValue(8)),
-							trackTotal = Integer.parseInt(row.getValue(9)),
-							year = row.getValue(10),
-							playCounter = Integer.parseInt(row.getValue(17)),
-							rating = Integer.parseInt(row.getValue(18)),
-							addedDate = row.getValue(19),
-							lastPlayed = row.getValue(20),
-							checkedFlag = FolderInfo.CheckedFlag.valueOf(row.getValue(16)),
-							ignore
-					));
+		int trackIndex = 0;
+		for (Map<String, Object> track : fixture.tracks()) {
+			tracks.add(new TrackTag(
+					getValue(track, "sourceFile"),
+					mbId + File.separator,
+					"Track" + trackIndex++ + ".mp3",
+					Float.parseFloat(getValue(track, "BPM")),
+					getValue(track, "album"),
+					getValue(track, "albumArtist"),
+					getValue(track, "artist"),
+					getValue(track, "comment"),
+					Integer.parseInt(getValue(track, "discNo")),
+					Integer.parseInt(getValue(track, "discTotal")),
+					getValue(track, "genre"),
+					Integer.parseInt(getValue(track, "nbCovers")),
+					getValue(track, "title"),
+					Integer.parseInt(getValue(track, "trackNo")),
+					Integer.parseInt(getValue(track, "trackTotal")),
+					getValue(track, "year"),
+					Integer.parseInt(getValue(track, "playCounter")),
+					Integer.parseInt(getValue(track, "rating")),
+					getValue(track, "addedDate"),
+					getValue(track, "lastPlayed"),
+					FolderInfo.CheckedFlag.valueOf(getValue(track, "checkedFlag")),
+					Boolean.TRUE.equals(track.get("ignore"))
+			));
+		}
+		for (Map.Entry<String, FixtureYaml.ExpectedResult> entry : fixture.expectedResults().entrySet()) {
+			String key = entry.getKey();
+			FixtureYaml.ExpectedResult expected = entry.getValue();
+			setResultValue(key, expected.value());
+			switch (expected.status()) {
+				case "warning":
+					setWarning(key);
 					break;
-				case "result":
-					key = row.getValue(1);
-					setResultValue(key, row.getValue(3));
-
-					switch (row.getArg(2)) {
-						case "warning":
-							setWarning(key);
-							break;
-						case "ko":
-							setKO(key);
-							break;
-						case "ok":
-							setOK(key);
-							break;
-					}
+				case "ko":
+					setKO(key);
 					break;
-				case "process":
-					String value = row.getValue(2);
-					switch (row.getArg(1)) {
-						case "index":
-							this.index = Integer.parseInt(value);
-							break;
-						case "idpath":
-							this.idPath = Integer.parseInt(value);
-							break;
-						case "idfirstfile":
-							this.idFirstFile = Integer.parseInt(value);
-							break;
-						case "location":
-							this.location = value;
-							break;
-					}
+				case "ok":
+					setOK(key);
 					break;
+				default:
+					throw new IOException("Unknown result state for '" + key + "' in " + file);
+			}
+		}
+		for (Map.Entry<String, String> entry : fixture.process().entrySet()) {
+			String value = entry.getValue();
+			switch (entry.getKey().toLowerCase()) {
+				case "index":
+					this.index = Integer.parseInt(value);
+					break;
+				case "idpath":
+					this.idPath = Integer.parseInt(value);
+					break;
+				case "idfirstfile":
+					this.idFirstFile = Integer.parseInt(value);
+					break;
+				case "location":
+					this.location = value;
+					break;
+				default:
+					throw new IOException("Unknown process field '" + entry.getKey() + "' in " + file);
 			}
 		}
 	}
 
-	private class Row {
-
-		private final Sheet sheet;
-		private final int index;
-
-		Row(Sheet sheet, int index) {
-			this.sheet = sheet;
-			this.index = index;
+	private static String getValue(Map<String, Object> row, String key) throws IOException {
+		Object value = row.get(key);
+		if (!(value instanceof String)) {
+			throw new IOException("Missing or invalid '" + key + "' in test fixture row: " + row);
 		}
-
-		public String getArg(int colIndex) {
-			return sheet.getCellAt(colIndex, this.index).getValue().toString().toLowerCase();
-		}
-
-		public String getValue(int colIndex) {
-			return sheet.getCellAt(colIndex, this.index).getValue().toString();
-		}
+		return (String) value;
 	}
 
 	/**
@@ -613,8 +567,9 @@ public class Album {
 		return new File(TestSettings.getResourcesPath() + "albumFiles" + File.separator + mbId + ".ods");
 	}
 
-	private File getFile() {
-		return getFile(this.mbId);
+	private File getFixtureFile(String sheetName) {
+		return new File(TestSettings.getResourcesPath() + "albumFiles_yaml" + File.separator
+				+ testSuite + File.separator + sheetName + File.separator + mbId + ".yaml");
 	}
 
 	/**

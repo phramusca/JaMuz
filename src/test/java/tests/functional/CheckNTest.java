@@ -104,6 +104,7 @@ public class CheckNTest {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
+		AlbumBuffer.setTestSuite("CheckNTest");
 		TestSettings.setupApplication();
 	}
 }

@@ -119,6 +119,7 @@ public class Merge1Test {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
+		AlbumBuffer.setTestSuite("Merge1Test");
 		TestSettings.setupApplication();
 
 		TestSettings.addStatSource("guayadeque.db",
