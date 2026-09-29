@@ -22,9 +22,6 @@ albumFiles_yaml/
   REFERENCE/
     MusicBrainz_REFERENCE_DO_NOT_MODIFY/
       <release-id>.yaml
-  TEMPLATE/
-    mod.yaml
-    Feuille2.yaml
 ```
 
 Functional fixture documents use `formatVersion: 2`. After the release and
@@ -35,8 +32,8 @@ varies, is the ordered list of track metadata. Cell values remain strings to
 preserve the ODS data, except the optional per-track `ignore` flag, which is a
 boolean.
 
-The MusicBrainz reference sheets and template workbook are not test scenarios;
-the former use the same semantic fixture schema, while the template remains
-represented as raw cell rows because its worksheets do not share that schema.
-The original ODS workbooks remain alongside these YAML fixtures as read-only
-references; functional test execution loads YAML only.
+The MusicBrainz reference sheets are kept separately from test scenarios and
+use the same semantic fixture schema. The per-album ODS source workbooks and
+unused template workbook have been removed; historical ODS comparison
+worksheets remain under their archive folders. Functional test execution loads
+YAML only.

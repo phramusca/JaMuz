@@ -614,7 +614,9 @@ public class PanelCheck extends javax.swing.JPanel {
 	public static void stopActions(boolean enableDoActions) {
         
         //Abort doActions
-        processCheck.stopActions();
+        if (processCheck != null) {
+            processCheck.stopActions();
+        }
         jCheckBoxDoActions.setSelected(false); //TODO: Does not this fire event to stopActions ?
 
         //Enable OR not doActions (and optionally "Manual", that's for "Check Library")

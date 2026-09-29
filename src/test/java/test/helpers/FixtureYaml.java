@@ -71,30 +71,6 @@ final class FixtureYaml {
 		return new Fixture(List.copyOf(tracks), Map.copyOf(expectedResults), Map.copyOf(process));
 	}
 
-	static List<List<String>> readTemplateRows(Path file, String sheet) throws IOException {
-		Map<?, ?> document = readDocument(file);
-		if (!Integer.valueOf(1).equals(document.get("formatVersion"))
-				|| !"TEMPLATE".equals(document.get("workbook"))
-				|| !sheet.equals(document.get("sheet"))) {
-			throw new IOException("Template identity does not match its path: " + file);
-		}
-		List<?> rawRows = readList(document.get("rows"), "rows", file);
-		List<List<String>> rows = new ArrayList<>();
-		for (Object rawRow : rawRows) {
-			Map<?, ?> row = readMapping(rawRow, "template row", file);
-			if (!"raw".equals(row.get("type"))) {
-				throw new IOException("Expected a raw template row in " + file);
-			}
-			List<?> cells = readList(row.get("cells"), "template row cells", file);
-			List<String> values = new ArrayList<>();
-			for (Object cell : cells) {
-				values.add(readString(cell, "template cell", file));
-			}
-			rows.add(List.copyOf(values));
-		}
-		return List.copyOf(rows);
-	}
-
 	private static Map<?, ?> readDocument(Path file) throws IOException {
 		LoaderOptions options = new LoaderOptions();
 		options.setAllowDuplicateKeys(false);

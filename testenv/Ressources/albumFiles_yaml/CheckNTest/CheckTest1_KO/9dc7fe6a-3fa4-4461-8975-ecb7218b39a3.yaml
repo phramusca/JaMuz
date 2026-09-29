@@ -3,10 +3,10 @@ releaseId: "9dc7fe6a-3fa4-4461-8975-ecb7218b39a3"
 scenario: "CheckTest1_KO"
 
 process:
-  index: "-1"
+  index: "6"
   idPath: "-1"
   idFirstFile: "-1"
-  location: "location.library"
+  location: "location.add"
 
 expectedResults:
   nbFiles:

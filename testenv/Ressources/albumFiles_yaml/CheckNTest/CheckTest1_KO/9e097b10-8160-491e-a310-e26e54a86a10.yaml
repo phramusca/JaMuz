@@ -3,7 +3,7 @@ releaseId: "9e097b10-8160-491e-a310-e26e54a86a10"
 scenario: "CheckTest1_KO"
 
 process:
-  index: "0"
+  index: "7"
   idPath: "-1"
   idFirstFile: "-1"
   location: "location.add"

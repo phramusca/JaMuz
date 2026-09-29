@@ -30,6 +30,7 @@ import jamuz.utils.Inter;
 import jamuz.utils.StringManager;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -299,8 +300,10 @@ public class Album {
 		// Save the data to an ODS file and open it.
 		TableModel model = new DefaultTableModel(getData(match), columns);
 
-		if (getFile(mbId).exists()) {
-			throw new FileExistsException(getFile(mbId));
+		File outputFile = getFile(mbId);
+		Files.createDirectories(outputFile.toPath().getParent());
+		if (outputFile.exists()) {
+			throw new FileExistsException(outputFile);
 		}
 
 		SpreadSheet spreadSheet = SpreadSheet.createEmpty(model);
@@ -350,7 +353,7 @@ public class Album {
 		//Example changing title of 6th track
 //		setValue(spreadSheet, "MergeTest1_Creation", getCol("title"), 6, "CHANGED TITLE");
 //		setValue(spreadSheet, "MergeDevice1_KO", "C", getRow(match, "location"), "location.library");
-		spreadSheet.saveAs(getFile(mbId));
+		spreadSheet.saveAs(outputFile);
 //        OOUtils.open(getFile(mbId));
 	}
 
