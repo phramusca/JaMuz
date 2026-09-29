@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "be04bc1f-fc63-48f5-b1ca-2723f17d241d"
 scenario: "MergeDevice11_Sync2"
+
+process:
+  index: "4"
+  idPath: "6"
+  idFirstFile: "66"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "19"
+  hasID3v1:
+    status: "ok"
+    value: "Non"
+  isReplayGainDone:
+    status: "ok"
+    value: "Oui"
+  cover:
+    status: "ok"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{N/A}"
+  size:
+    status: "ok"
+    value: "{N/A}"
+  format:
+    status: "ok"
+    value: "{N/A}"
+  discNoFull:
+    status: "ok"
+    value: "{N/A}"
+  trackNoFull:
+    status: "ok"
+    value: "{N/A}"
+  comment:
+    status: "ok"
+    value: "{N/A}"
+  artist:
+    status: "ok"
+    value: "{N/A}"
+  title:
+    status: "ok"
+    value: "{N/A}"
+  bpm:
+    status: "ok"
+    value: "{N/A}"
+  year:
+    status: "ok"
+    value: "2015"
+  genre:
+    status: "ok"
+    value: "Reggae"
+  albumArtist:
+    status: "ok"
+    value: "Blancmange"
+  album:
+    status: "ok"
+    value: "Semi Detached"
+  duplicates:
+    status: "ok"
+    value: ""
+
 tracks:
   - artist: "Blancmange"
     albumArtist: "Blancmange"
@@ -397,66 +463,3 @@ tracks:
     addedDate: "2012-05-05 19:27:24"
     lastPlayed: "1970-01-01 00:00:00"
     ignore: true
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "19"
-  hasID3v1:
-    status: "ok"
-    value: "Non"
-  isReplayGainDone:
-    status: "ok"
-    value: "Oui"
-  cover:
-    status: "ok"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{N/A}"
-  size:
-    status: "ok"
-    value: "{N/A}"
-  format:
-    status: "ok"
-    value: "{N/A}"
-  discNoFull:
-    status: "ok"
-    value: "{N/A}"
-  trackNoFull:
-    status: "ok"
-    value: "{N/A}"
-  comment:
-    status: "ok"
-    value: "{N/A}"
-  artist:
-    status: "ok"
-    value: "{N/A}"
-  title:
-    status: "ok"
-    value: "{N/A}"
-  bpm:
-    status: "ok"
-    value: "{N/A}"
-  year:
-    status: "ok"
-    value: "2015"
-  genre:
-    status: "ok"
-    value: "Reggae"
-  albumArtist:
-    status: "ok"
-    value: "Blancmange"
-  album:
-    status: "ok"
-    value: "Semi Detached"
-  duplicates:
-    status: "ok"
-    value: ""
-process:
-  index: "4"
-  idPath: "6"
-  idFirstFile: "66"
-  location: "location.library"

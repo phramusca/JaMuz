@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "c212b71b-848c-491c-8ae7-b62a993ae194"
 scenario: "MergeDevice10_New"
+
+process:
+  index: "1"
+  idPath: "3"
+  idFirstFile: "32"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "10"
+  hasID3v1:
+    status: "ok"
+    value: "Non"
+  isReplayGainDone:
+    status: "ok"
+    value: "Oui"
+  cover:
+    status: "ok"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{N/A}"
+  size:
+    status: "ok"
+    value: "{N/A}"
+  format:
+    status: "ok"
+    value: "{N/A}"
+  discNoFull:
+    status: "ok"
+    value: "{N/A}"
+  trackNoFull:
+    status: "ok"
+    value: "{N/A}"
+  comment:
+    status: "ok"
+    value: "{N/A}"
+  artist:
+    status: "ok"
+    value: "{N/A}"
+  title:
+    status: "ok"
+    value: "{N/A}"
+  bpm:
+    status: "ok"
+    value: "{N/A}"
+  year:
+    status: "ok"
+    value: "1985"
+  genre:
+    status: "ok"
+    value: "Reggae"
+  albumArtist:
+    status: "ok"
+    value: "Los Diablitos"
+  album:
+    status: "ok"
+    value: "De verdad, verdad"
+  duplicates:
+    status: "ok"
+    value: ""
+
 tracks:
   - artist: "Los Diablitos"
     albumArtist: "Los Diablitos"
@@ -210,66 +276,3 @@ tracks:
     addedDate: "2012-05-05 19:27:24"
     lastPlayed: "1970-01-01 00:00:00"
     ignore: true
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "10"
-  hasID3v1:
-    status: "ok"
-    value: "Non"
-  isReplayGainDone:
-    status: "ok"
-    value: "Oui"
-  cover:
-    status: "ok"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{N/A}"
-  size:
-    status: "ok"
-    value: "{N/A}"
-  format:
-    status: "ok"
-    value: "{N/A}"
-  discNoFull:
-    status: "ok"
-    value: "{N/A}"
-  trackNoFull:
-    status: "ok"
-    value: "{N/A}"
-  comment:
-    status: "ok"
-    value: "{N/A}"
-  artist:
-    status: "ok"
-    value: "{N/A}"
-  title:
-    status: "ok"
-    value: "{N/A}"
-  bpm:
-    status: "ok"
-    value: "{N/A}"
-  year:
-    status: "ok"
-    value: "1985"
-  genre:
-    status: "ok"
-    value: "Reggae"
-  albumArtist:
-    status: "ok"
-    value: "Los Diablitos"
-  album:
-    status: "ok"
-    value: "De verdad, verdad"
-  duplicates:
-    status: "ok"
-    value: ""
-process:
-  index: "1"
-  idPath: "3"
-  idFirstFile: "32"
-  location: "location.library"

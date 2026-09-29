@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "8cfbb741-bd63-449f-9e48-4d234264c8d5"
 scenario: "MergeDevice3_JaMuz"
+
+process:
+  index: "1"
+  idPath: "2"
+  idFirstFile: "20"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "{IGNORE}"
+  hasID3v1:
+    status: "ok"
+    value: "{IGNORE}"
+  isReplayGainDone:
+    status: "ok"
+    value: "{IGNORE}"
+  cover:
+    status: "ko"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{IGNORE}"
+  size:
+    status: "ok"
+    value: "{IGNORE}"
+  format:
+    status: "ok"
+    value: "{IGNORE}"
+  discNoFull:
+    status: "ok"
+    value: "{IGNORE}"
+  trackNoFull:
+    status: "ok"
+    value: "{IGNORE}"
+  comment:
+    status: "ok"
+    value: "{IGNORE}"
+  artist:
+    status: "ok"
+    value: "{IGNORE}"
+  title:
+    status: "ok"
+    value: "{IGNORE}"
+  bpm:
+    status: "ok"
+    value: "{IGNORE}"
+  year:
+    status: "ok"
+    value: "{IGNORE}"
+  genre:
+    status: "ko"
+    value: "{IGNORE}"
+  albumArtist:
+    status: "ok"
+    value: "{IGNORE}"
+  album:
+    status: "ok"
+    value: "{IGNORE}"
+  duplicates:
+    status: "ok"
+    value: "{IGNORE}"
+
 tracks:
   - artist: "Blancmange"
     albumArtist: "Blancmange"
@@ -250,66 +316,3 @@ tracks:
     addedDate: "1970-01-01 00:00:00"
     lastPlayed: "1970-01-01 00:00:00"
     ignore: true
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "{IGNORE}"
-  hasID3v1:
-    status: "ok"
-    value: "{IGNORE}"
-  isReplayGainDone:
-    status: "ok"
-    value: "{IGNORE}"
-  cover:
-    status: "ko"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{IGNORE}"
-  size:
-    status: "ok"
-    value: "{IGNORE}"
-  format:
-    status: "ok"
-    value: "{IGNORE}"
-  discNoFull:
-    status: "ok"
-    value: "{IGNORE}"
-  trackNoFull:
-    status: "ok"
-    value: "{IGNORE}"
-  comment:
-    status: "ok"
-    value: "{IGNORE}"
-  artist:
-    status: "ok"
-    value: "{IGNORE}"
-  title:
-    status: "ok"
-    value: "{IGNORE}"
-  bpm:
-    status: "ok"
-    value: "{IGNORE}"
-  year:
-    status: "ok"
-    value: "{IGNORE}"
-  genre:
-    status: "ko"
-    value: "{IGNORE}"
-  albumArtist:
-    status: "ok"
-    value: "{IGNORE}"
-  album:
-    status: "ok"
-    value: "{IGNORE}"
-  duplicates:
-    status: "ok"
-    value: "{IGNORE}"
-process:
-  index: "1"
-  idPath: "2"
-  idFirstFile: "20"
-  location: "location.library"

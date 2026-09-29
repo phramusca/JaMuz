@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "8cfbb741-bd63-449f-9e48-4d234264c8d5"
 scenario: "CheckTest2_OK"
+
+process:
+  index: "-1"
+  idPath: "-1"
+  idFirstFile: "-1"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "12"
+  hasID3v1:
+    status: "ok"
+    value: "Non"
+  isReplayGainDone:
+    status: "ok"
+    value: "Oui"
+  cover:
+    status: "ko"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{N/A}"
+  size:
+    status: "ok"
+    value: "{N/A}"
+  format:
+    status: "ok"
+    value: "{N/A}"
+  discNoFull:
+    status: "ok"
+    value: "{N/A}"
+  trackNoFull:
+    status: "ok"
+    value: "{N/A}"
+  comment:
+    status: "ok"
+    value: "{N/A}"
+  artist:
+    status: "ok"
+    value: "{N/A}"
+  title:
+    status: "ok"
+    value: "{N/A}"
+  bpm:
+    status: "ok"
+    value: "{N/A}"
+  year:
+    status: "ok"
+    value: "2000"
+  genre:
+    status: "ko"
+    value: ""
+  albumArtist:
+    status: "ok"
+    value: "Blancmange"
+  album:
+    status: "ok"
+    value: "Second Helpings: The Best of Blancmange"
+  duplicates:
+    status: "ok"
+    value: ""
+
 tracks:
   - artist: "Blancmange"
     albumArtist: "Blancmange"
@@ -242,66 +308,3 @@ tracks:
     rating: "-1"
     addedDate: "1970-01-01 00:00:00"
     lastPlayed: "1970-01-01 00:00:00"
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "12"
-  hasID3v1:
-    status: "ok"
-    value: "Non"
-  isReplayGainDone:
-    status: "ok"
-    value: "Oui"
-  cover:
-    status: "ko"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{N/A}"
-  size:
-    status: "ok"
-    value: "{N/A}"
-  format:
-    status: "ok"
-    value: "{N/A}"
-  discNoFull:
-    status: "ok"
-    value: "{N/A}"
-  trackNoFull:
-    status: "ok"
-    value: "{N/A}"
-  comment:
-    status: "ok"
-    value: "{N/A}"
-  artist:
-    status: "ok"
-    value: "{N/A}"
-  title:
-    status: "ok"
-    value: "{N/A}"
-  bpm:
-    status: "ok"
-    value: "{N/A}"
-  year:
-    status: "ok"
-    value: "2000"
-  genre:
-    status: "ko"
-    value: ""
-  albumArtist:
-    status: "ok"
-    value: "Blancmange"
-  album:
-    status: "ok"
-    value: "Second Helpings: The Best of Blancmange"
-  duplicates:
-    status: "ok"
-    value: ""
-process:
-  index: "-1"
-  idPath: "-1"
-  idFirstFile: "-1"
-  location: "location.library"

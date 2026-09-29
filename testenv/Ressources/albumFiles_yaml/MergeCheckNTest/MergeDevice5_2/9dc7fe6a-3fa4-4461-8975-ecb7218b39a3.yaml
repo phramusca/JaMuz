@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "9dc7fe6a-3fa4-4461-8975-ecb7218b39a3"
 scenario: "MergeDevice5_2"
+
+process:
+  index: "4"
+  idPath: "5"
+  idFirstFile: "54"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "{IGNORE}"
+  hasID3v1:
+    status: "ok"
+    value: "{IGNORE}"
+  isReplayGainDone:
+    status: "ok"
+    value: "{IGNORE}"
+  cover:
+    status: "ko"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{IGNORE}"
+  size:
+    status: "ok"
+    value: "{IGNORE}"
+  format:
+    status: "ok"
+    value: "{IGNORE}"
+  discNoFull:
+    status: "ok"
+    value: "{IGNORE}"
+  trackNoFull:
+    status: "ok"
+    value: "{IGNORE}"
+  comment:
+    status: "ok"
+    value: "{IGNORE}"
+  artist:
+    status: "ok"
+    value: "{IGNORE}"
+  title:
+    status: "ok"
+    value: "{IGNORE}"
+  bpm:
+    status: "ok"
+    value: "{IGNORE}"
+  year:
+    status: "ok"
+    value: "{IGNORE}"
+  genre:
+    status: "ko"
+    value: "{IGNORE}"
+  albumArtist:
+    status: "ok"
+    value: "{IGNORE}"
+  album:
+    status: "ok"
+    value: "{IGNORE}"
+  duplicates:
+    status: "ok"
+    value: "{IGNORE}"
+
 tracks:
   - artist: "Tiken Jah Fakoly"
     albumArtist: "Tiken Jah Fakoly"
@@ -242,66 +308,3 @@ tracks:
     rating: "0"
     addedDate: "2012-05-05 19:27:24"
     lastPlayed: "1970-01-01 00:00:00"
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "{IGNORE}"
-  hasID3v1:
-    status: "ok"
-    value: "{IGNORE}"
-  isReplayGainDone:
-    status: "ok"
-    value: "{IGNORE}"
-  cover:
-    status: "ko"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{IGNORE}"
-  size:
-    status: "ok"
-    value: "{IGNORE}"
-  format:
-    status: "ok"
-    value: "{IGNORE}"
-  discNoFull:
-    status: "ok"
-    value: "{IGNORE}"
-  trackNoFull:
-    status: "ok"
-    value: "{IGNORE}"
-  comment:
-    status: "ok"
-    value: "{IGNORE}"
-  artist:
-    status: "ok"
-    value: "{IGNORE}"
-  title:
-    status: "ok"
-    value: "{IGNORE}"
-  bpm:
-    status: "ok"
-    value: "{IGNORE}"
-  year:
-    status: "ok"
-    value: "{IGNORE}"
-  genre:
-    status: "ko"
-    value: "{IGNORE}"
-  albumArtist:
-    status: "ok"
-    value: "{IGNORE}"
-  album:
-    status: "ok"
-    value: "{IGNORE}"
-  duplicates:
-    status: "ok"
-    value: "{IGNORE}"
-process:
-  index: "4"
-  idPath: "5"
-  idFirstFile: "54"
-  location: "location.library"

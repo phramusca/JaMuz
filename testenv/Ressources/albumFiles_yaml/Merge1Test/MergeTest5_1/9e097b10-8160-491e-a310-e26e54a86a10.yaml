@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "9e097b10-8160-491e-a310-e26e54a86a10"
 scenario: "MergeTest5_1"
+
+process:
+  index: "-1"
+  idPath: "1"
+  idFirstFile: "1"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "10"
+  hasID3v1:
+    status: "ok"
+    value: "Non"
+  isReplayGainDone:
+    status: "ok"
+    value: "Oui"
+  cover:
+    status: "ko"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{N/A}"
+  size:
+    status: "ok"
+    value: "{N/A}"
+  format:
+    status: "ok"
+    value: "{N/A}"
+  discNoFull:
+    status: "ok"
+    value: "{N/A}"
+  trackNoFull:
+    status: "ok"
+    value: "{N/A}"
+  comment:
+    status: "ok"
+    value: "{N/A}"
+  artist:
+    status: "ok"
+    value: "{N/A}"
+  title:
+    status: "ok"
+    value: "{N/A}"
+  bpm:
+    status: "ok"
+    value: "{N/A}"
+  year:
+    status: "ok"
+    value: "1980"
+  genre:
+    status: "ko"
+    value: ""
+  albumArtist:
+    status: "ok"
+    value: "Wailing Souls"
+  album:
+    status: "ok"
+    value: "Firehouse Rock"
+  duplicates:
+    status: "ok"
+    value: ""
+
 tracks:
   - artist: "Wailing Souls"
     albumArtist: "Wailing Souls"
@@ -202,66 +268,3 @@ tracks:
     rating: "5"
     addedDate: "2012-11-15 15:15:15"
     lastPlayed: "2017-03-06 20:38:2"
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "10"
-  hasID3v1:
-    status: "ok"
-    value: "Non"
-  isReplayGainDone:
-    status: "ok"
-    value: "Oui"
-  cover:
-    status: "ko"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{N/A}"
-  size:
-    status: "ok"
-    value: "{N/A}"
-  format:
-    status: "ok"
-    value: "{N/A}"
-  discNoFull:
-    status: "ok"
-    value: "{N/A}"
-  trackNoFull:
-    status: "ok"
-    value: "{N/A}"
-  comment:
-    status: "ok"
-    value: "{N/A}"
-  artist:
-    status: "ok"
-    value: "{N/A}"
-  title:
-    status: "ok"
-    value: "{N/A}"
-  bpm:
-    status: "ok"
-    value: "{N/A}"
-  year:
-    status: "ok"
-    value: "1980"
-  genre:
-    status: "ko"
-    value: ""
-  albumArtist:
-    status: "ok"
-    value: "Wailing Souls"
-  album:
-    status: "ok"
-    value: "Firehouse Rock"
-  duplicates:
-    status: "ok"
-    value: ""
-process:
-  index: "-1"
-  idPath: "1"
-  idFirstFile: "1"
-  location: "location.library"

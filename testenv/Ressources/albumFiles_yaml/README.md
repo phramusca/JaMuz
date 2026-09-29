@@ -27,11 +27,13 @@ albumFiles_yaml/
     Feuille2.yaml
 ```
 
-Functional fixture documents use `formatVersion: 2` and have three semantic
-sections: `tracks` is an ordered list of track metadata; `expectedResults`
-maps each result key to its expected status and value; `process` contains the
-scenario's test setup values. Cell values remain strings to preserve the ODS
-data, except the optional per-track `ignore` flag, which is a boolean.
+Functional fixture documents use `formatVersion: 2`. After the release and
+scenario metadata, their semantic sections appear in this order: `process`
+contains the scenario's test setup values; `expectedResults` maps each result
+key to its expected status and value; and `tracks`, last because its length
+varies, is the ordered list of track metadata. Cell values remain strings to
+preserve the ODS data, except the optional per-track `ignore` flag, which is a
+boolean.
 
 The MusicBrainz reference sheets and template workbook are not test scenarios;
 the former use the same semantic fixture schema, while the template remains

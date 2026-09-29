@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "7598d527-bc8d-4282-a72c-874f335d05ac"
 scenario: "MergeDevice10_New"
+
+process:
+  index: "6"
+  idPath: "7"
+  idFirstFile: "85"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "9"
+  hasID3v1:
+    status: "ok"
+    value: "Non"
+  isReplayGainDone:
+    status: "ok"
+    value: "Oui"
+  cover:
+    status: "ok"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{N/A}"
+  size:
+    status: "ok"
+    value: "{N/A}"
+  format:
+    status: "ok"
+    value: "{N/A}"
+  discNoFull:
+    status: "ok"
+    value: "{N/A}"
+  trackNoFull:
+    status: "ok"
+    value: "{N/A}"
+  comment:
+    status: "ok"
+    value: "{N/A}"
+  artist:
+    status: "ok"
+    value: "{N/A}"
+  title:
+    status: "ok"
+    value: "{N/A}"
+  bpm:
+    status: "ok"
+    value: "{N/A}"
+  year:
+    status: "ok"
+    value: "2015"
+  genre:
+    status: "ok"
+    value: "Reggae"
+  albumArtist:
+    status: "ok"
+    value: "KES"
+  album:
+    status: "ok"
+    value: "Kamlama"
+  duplicates:
+    status: "ok"
+    value: ""
+
 tracks:
   - artist: "KES"
     albumArtist: "KES"
@@ -188,66 +254,3 @@ tracks:
     addedDate: "2012-05-05 19:27:24"
     lastPlayed: "1970-01-01 00:00:00"
     ignore: true
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "9"
-  hasID3v1:
-    status: "ok"
-    value: "Non"
-  isReplayGainDone:
-    status: "ok"
-    value: "Oui"
-  cover:
-    status: "ok"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{N/A}"
-  size:
-    status: "ok"
-    value: "{N/A}"
-  format:
-    status: "ok"
-    value: "{N/A}"
-  discNoFull:
-    status: "ok"
-    value: "{N/A}"
-  trackNoFull:
-    status: "ok"
-    value: "{N/A}"
-  comment:
-    status: "ok"
-    value: "{N/A}"
-  artist:
-    status: "ok"
-    value: "{N/A}"
-  title:
-    status: "ok"
-    value: "{N/A}"
-  bpm:
-    status: "ok"
-    value: "{N/A}"
-  year:
-    status: "ok"
-    value: "2015"
-  genre:
-    status: "ok"
-    value: "Reggae"
-  albumArtist:
-    status: "ok"
-    value: "KES"
-  album:
-    status: "ok"
-    value: "Kamlama"
-  duplicates:
-    status: "ok"
-    value: ""
-process:
-  index: "6"
-  idPath: "7"
-  idFirstFile: "85"
-  location: "location.library"

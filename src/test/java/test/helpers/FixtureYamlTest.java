@@ -53,6 +53,21 @@ class FixtureYamlTest {
 				String scenario = fixture.getParent().getFileName().toString();
 				String releaseId = fixture.getFileName().toString().replaceFirst("\\.yaml$", "");
 				assertTrue(scenarioBelongsToSuite(suite, scenario), fixture.toString());
+				List<String> lines = Files.readAllLines(fixture);
+				assertTrue(lines.indexOf("process:") < lines.indexOf("expectedResults:")
+						&& lines.indexOf("expectedResults:") < lines.indexOf("tracks:"),
+						fixture + " should list fixed-size sections before tracks");
+				for (String section : List.of("process:", "expectedResults:", "tracks:")) {
+					int sectionIndex = lines.indexOf(section);
+					int precedingLine = sectionIndex - 1;
+					if (section.equals("process:")) {
+						assertTrue(precedingLine >= 0 && lines.get(precedingLine).isEmpty(),
+								fixture + " should separate metadata from process");
+					} else {
+						assertTrue(lines.get(precedingLine).isEmpty(),
+								fixture + " should separate top-level sections");
+					}
+				}
 				FixtureYaml.Fixture parsed = FixtureYaml.readFixture(fixture, releaseId, scenario);
 				assertFalse(parsed.tracks().isEmpty(), fixture.toString());
 				assertEquals(19, parsed.expectedResults().size(), fixture.toString());

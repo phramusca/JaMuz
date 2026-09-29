@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "9dc7fe6a-3fa4-4461-8975-ecb7218b39a3"
 scenario: "CheckTest1_KO"
+
+process:
+  index: "-1"
+  idPath: "-1"
+  idFirstFile: "-1"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "12"
+  hasID3v1:
+    status: "ok"
+    value: "Non"
+  isReplayGainDone:
+    status: "ok"
+    value: "Oui"
+  cover:
+    status: "ko"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{N/A}"
+  size:
+    status: "ok"
+    value: "{N/A}"
+  format:
+    status: "ok"
+    value: "{N/A}"
+  discNoFull:
+    status: "ok"
+    value: "{N/A}"
+  trackNoFull:
+    status: "ok"
+    value: "{N/A}"
+  comment:
+    status: "ok"
+    value: "{N/A}"
+  artist:
+    status: "ok"
+    value: "{N/A}"
+  title:
+    status: "ok"
+    value: "{N/A}"
+  bpm:
+    status: "ok"
+    value: "{N/A}"
+  year:
+    status: "ok"
+    value: "2004"
+  genre:
+    status: "ko"
+    value: ""
+  albumArtist:
+    status: "ok"
+    value: "Tiken Jah Fakoly"
+  album:
+    status: "ok"
+    value: "Coup de gueule"
+  duplicates:
+    status: "ok"
+    value: ""
+
 tracks:
   - artist: "Tiken Jah Fakoly"
     albumArtist: "Tiken Jah Fakoly"
@@ -242,66 +308,3 @@ tracks:
     rating: "-1"
     addedDate: "1970-01-01 00:00:00"
     lastPlayed: "1970-01-01 00:00:00"
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "12"
-  hasID3v1:
-    status: "ok"
-    value: "Non"
-  isReplayGainDone:
-    status: "ok"
-    value: "Oui"
-  cover:
-    status: "ko"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{N/A}"
-  size:
-    status: "ok"
-    value: "{N/A}"
-  format:
-    status: "ok"
-    value: "{N/A}"
-  discNoFull:
-    status: "ok"
-    value: "{N/A}"
-  trackNoFull:
-    status: "ok"
-    value: "{N/A}"
-  comment:
-    status: "ok"
-    value: "{N/A}"
-  artist:
-    status: "ok"
-    value: "{N/A}"
-  title:
-    status: "ok"
-    value: "{N/A}"
-  bpm:
-    status: "ok"
-    value: "{N/A}"
-  year:
-    status: "ok"
-    value: "2004"
-  genre:
-    status: "ko"
-    value: ""
-  albumArtist:
-    status: "ok"
-    value: "Tiken Jah Fakoly"
-  album:
-    status: "ok"
-    value: "Coup de gueule"
-  duplicates:
-    status: "ok"
-    value: ""
-process:
-  index: "-1"
-  idPath: "-1"
-  idFirstFile: "-1"
-  location: "location.library"

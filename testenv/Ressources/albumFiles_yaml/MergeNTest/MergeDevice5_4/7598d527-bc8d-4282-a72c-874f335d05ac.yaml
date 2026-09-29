@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "7598d527-bc8d-4282-a72c-874f335d05ac"
 scenario: "MergeDevice5_4"
+
+process:
+  index: "6"
+  idPath: "7"
+  idFirstFile: "85"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "{IGNORE}"
+  hasID3v1:
+    status: "ok"
+    value: "{IGNORE}"
+  isReplayGainDone:
+    status: "ok"
+    value: "{IGNORE}"
+  cover:
+    status: "ko"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{IGNORE}"
+  size:
+    status: "ok"
+    value: "{IGNORE}"
+  format:
+    status: "ok"
+    value: "{IGNORE}"
+  discNoFull:
+    status: "ok"
+    value: "{IGNORE}"
+  trackNoFull:
+    status: "ok"
+    value: "{IGNORE}"
+  comment:
+    status: "ok"
+    value: "{IGNORE}"
+  artist:
+    status: "ok"
+    value: "{IGNORE}"
+  title:
+    status: "ok"
+    value: "{IGNORE}"
+  bpm:
+    status: "ok"
+    value: "{IGNORE}"
+  year:
+    status: "ok"
+    value: "{IGNORE}"
+  genre:
+    status: "ko"
+    value: "{IGNORE}"
+  albumArtist:
+    status: "ok"
+    value: "{IGNORE}"
+  album:
+    status: "ok"
+    value: "{IGNORE}"
+  duplicates:
+    status: "ok"
+    value: "{IGNORE}"
+
 tracks:
   - artist: "KES"
     albumArtist: "KES"
@@ -182,66 +248,3 @@ tracks:
     rating: "0"
     addedDate: "2012-05-05 19:27:24"
     lastPlayed: "1970-01-01 00:00:00"
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "{IGNORE}"
-  hasID3v1:
-    status: "ok"
-    value: "{IGNORE}"
-  isReplayGainDone:
-    status: "ok"
-    value: "{IGNORE}"
-  cover:
-    status: "ko"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{IGNORE}"
-  size:
-    status: "ok"
-    value: "{IGNORE}"
-  format:
-    status: "ok"
-    value: "{IGNORE}"
-  discNoFull:
-    status: "ok"
-    value: "{IGNORE}"
-  trackNoFull:
-    status: "ok"
-    value: "{IGNORE}"
-  comment:
-    status: "ok"
-    value: "{IGNORE}"
-  artist:
-    status: "ok"
-    value: "{IGNORE}"
-  title:
-    status: "ok"
-    value: "{IGNORE}"
-  bpm:
-    status: "ok"
-    value: "{IGNORE}"
-  year:
-    status: "ok"
-    value: "{IGNORE}"
-  genre:
-    status: "ko"
-    value: "{IGNORE}"
-  albumArtist:
-    status: "ok"
-    value: "{IGNORE}"
-  album:
-    status: "ok"
-    value: "{IGNORE}"
-  duplicates:
-    status: "ok"
-    value: "{IGNORE}"
-process:
-  index: "6"
-  idPath: "7"
-  idFirstFile: "85"
-  location: "location.library"

@@ -1,6 +1,72 @@
 formatVersion: 2
 releaseId: "13ca98f6-1a9f-4d76-a3b3-a72a16d91916"
 scenario: "MergeDevice10_JaMuz"
+
+process:
+  index: "0"
+  idPath: "1"
+  idFirstFile: "1"
+  location: "location.library"
+
+expectedResults:
+  nbFiles:
+    status: "ok"
+    value: "19"
+  hasID3v1:
+    status: "ok"
+    value: "Non"
+  isReplayGainDone:
+    status: "ok"
+    value: "Oui"
+  cover:
+    status: "ok"
+    value: "{IGNORE}"
+  bitRate:
+    status: "ok"
+    value: "{IGNORE}"
+  length:
+    status: "ok"
+    value: "{N/A}"
+  size:
+    status: "ok"
+    value: "{N/A}"
+  format:
+    status: "ok"
+    value: "{N/A}"
+  discNoFull:
+    status: "ok"
+    value: "{N/A}"
+  trackNoFull:
+    status: "ok"
+    value: "{N/A}"
+  comment:
+    status: "ok"
+    value: "{N/A}"
+  artist:
+    status: "ok"
+    value: "{N/A}"
+  title:
+    status: "ok"
+    value: "{N/A}"
+  bpm:
+    status: "ok"
+    value: "{N/A}"
+  year:
+    status: "ok"
+    value: "2004"
+  genre:
+    status: "ok"
+    value: "Reggae"
+  albumArtist:
+    status: "ok"
+    value: "213"
+  album:
+    status: "ok"
+    value: "The Hard Way"
+  duplicates:
+    status: "ok"
+    value: ""
+
 tracks:
   - artist: "213"
     albumArtist: "213"
@@ -395,66 +461,3 @@ tracks:
     rating: "4"
     addedDate: "2012-05-05 19:27:24"
     lastPlayed: "1970-01-01 00:00:00"
-expectedResults:
-  nbFiles:
-    status: "ok"
-    value: "19"
-  hasID3v1:
-    status: "ok"
-    value: "Non"
-  isReplayGainDone:
-    status: "ok"
-    value: "Oui"
-  cover:
-    status: "ok"
-    value: "{IGNORE}"
-  bitRate:
-    status: "ok"
-    value: "{IGNORE}"
-  length:
-    status: "ok"
-    value: "{N/A}"
-  size:
-    status: "ok"
-    value: "{N/A}"
-  format:
-    status: "ok"
-    value: "{N/A}"
-  discNoFull:
-    status: "ok"
-    value: "{N/A}"
-  trackNoFull:
-    status: "ok"
-    value: "{N/A}"
-  comment:
-    status: "ok"
-    value: "{N/A}"
-  artist:
-    status: "ok"
-    value: "{N/A}"
-  title:
-    status: "ok"
-    value: "{N/A}"
-  bpm:
-    status: "ok"
-    value: "{N/A}"
-  year:
-    status: "ok"
-    value: "2004"
-  genre:
-    status: "ok"
-    value: "Reggae"
-  albumArtist:
-    status: "ok"
-    value: "213"
-  album:
-    status: "ok"
-    value: "The Hard Way"
-  duplicates:
-    status: "ok"
-    value: ""
-process:
-  index: "0"
-  idPath: "1"
-  idFirstFile: "1"
-  location: "location.library"
