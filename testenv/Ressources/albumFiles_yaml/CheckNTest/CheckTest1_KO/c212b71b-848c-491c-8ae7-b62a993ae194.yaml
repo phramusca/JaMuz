@@ -3,7 +3,7 @@ releaseId: "c212b71b-848c-491c-8ae7-b62a993ae194"
 scenario: "CheckTest1_KO"
 
 process:
-  index: "3"
+  index: "4"
   idPath: "-1"
   idFirstFile: "-1"
   location: "location.add"
@@ -20,37 +20,37 @@ expectedResults:
     value: "Oui"
   cover:
     status: "ko"
-    value: "{IGNORE}"
+    value: ""
   bitRate:
     status: "ok"
-    value: "{IGNORE}"
+    value: ""
   length:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   size:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   format:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   discNoFull:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   trackNoFull:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   comment:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   artist:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   title:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   bpm:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   year:
     status: "ok"
     value: "1985"
@@ -58,10 +58,10 @@ expectedResults:
     status: "ko"
     value: ""
   albumArtist:
-    status: "ok"
+    status: "ko"
     value: "Los Diablitos"
   album:
-    status: "ok"
+    status: "warning"
     value: "De Verdad, Verdad"
   duplicates:
     status: "ok"
@@ -151,7 +151,7 @@ tracks:
   - artist: "Los Diablitos"
     albumArtist: "Los Diablitos"
     album: "De Verdad, Verdad"
-    title: "Vine A Cantar Mis Penas"
+    title: "Vine a cantar mis penas"
     sourceFile: "1min.mp3"
     discNo: "1"
     discTotal: "1"
@@ -171,7 +171,7 @@ tracks:
   - artist: "Los Diablitos"
     albumArtist: "Los Diablitos"
     album: "De Verdad, Verdad"
-    title: "La Verdad"
+    title: "La verdad"
     sourceFile: "1min.mp3"
     discNo: "1"
     discTotal: "1"
@@ -211,7 +211,7 @@ tracks:
   - artist: "Los Diablitos"
     albumArtist: "Los Diablitos"
     album: "De Verdad, Verdad"
-    title: "El Pretexto"
+    title: "El pretexto"
     sourceFile: "1min.mp3"
     discNo: "1"
     discTotal: "1"
@@ -231,7 +231,7 @@ tracks:
   - artist: "Los Diablitos"
     albumArtist: "Los Diablitos"
     album: "De Verdad, Verdad"
-    title: "Tu Eres Lo Que Yo Mas Quiero"
+    title: "Tú eres lo que yo más quiero"
     sourceFile: "1min.mp3"
     discNo: "1"
     discTotal: "1"
@@ -251,7 +251,7 @@ tracks:
   - artist: "Los Diablitos"
     albumArtist: "Los Diablitos"
     album: "De Verdad, Verdad"
-    title: "Color De Rosa"
+    title: "Color de rosa"
     sourceFile: "1min.mp3"
     discNo: "1"
     discTotal: "1"

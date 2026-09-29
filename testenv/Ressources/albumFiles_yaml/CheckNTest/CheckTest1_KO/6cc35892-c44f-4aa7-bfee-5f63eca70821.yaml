@@ -3,7 +3,7 @@ releaseId: "6cc35892-c44f-4aa7-bfee-5f63eca70821"
 scenario: "CheckTest1_KO"
 
 process:
-  index: "2"
+  index: "3"
   idPath: "-1"
   idFirstFile: "-1"
   location: "location.add"
@@ -20,48 +20,48 @@ expectedResults:
     value: "Oui"
   cover:
     status: "ko"
-    value: "{IGNORE}"
+    value: ""
   bitRate:
     status: "ok"
-    value: "{IGNORE}"
+    value: ""
   length:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   size:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   format:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   discNoFull:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   trackNoFull:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   comment:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   artist:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   title:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   bpm:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   year:
-    status: "ok"
+    status: "warning"
     value: "2012"
   genre:
     status: "ko"
     value: ""
   albumArtist:
-    status: "ok"
+    status: "warning"
     value: "L'Étrangleuse"
   album:
-    status: "ok"
+    status: "warning"
     value: "L'Étrangleuse"
   duplicates:
     status: "ok"

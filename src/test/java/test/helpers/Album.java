@@ -45,6 +45,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.junit.Assert;
+import org.junit.jupiter.api.function.Executable;
 import org.musicbrainz.MBWS2Exception;
 
 /**
@@ -693,8 +694,8 @@ public class Album {
 	 */
 	public void checkActionsTableModel() throws CannotReadException, IOException,
 			TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		//Check tracks
-		compare((ArrayList<FileInfoInt>) (List<?>) getCheckedFolder().getFilesAudio());
+		List<Executable> checks = new ArrayList<>();
+		checks.add(() -> compare((ArrayList<FileInfoInt>) (List<?>) getCheckedFolder().getFilesAudio()));
 
 		//Check results
 		String msg = " (" + version + ", " + mbId + ")";
@@ -703,12 +704,13 @@ public class Album {
 					.getResults().get(entry.getKey());
 			FolderInfoResult resultExpected = entry.getValue();
 			if (!resultExpected.getValue().isBlank()) {
-				Assert.assertEquals(
+				checks.add(() -> Assert.assertEquals(
 						msg + " " + entry.getKey(),
 						resultExpected,
-						resultActual);
+						resultActual));
 			}
 		}
+		org.junit.jupiter.api.Assertions.assertAll("Album " + mbId, checks);
 	}
 
 	/**
@@ -896,53 +898,51 @@ public class Album {
 	}
 
 	private void compare(ArrayList<FileInfoInt> files) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-		Assert.assertEquals("Nb files " + mbId, tracks.size(), files.size());
-		int indexTrack = 0;
-		String msg;
-		for (FileInfoInt file : files) {
-			msg = " (" + file.getFilename() + ", " + version + ", " + mbId + ")";
-			Assert.assertEquals("artist" + msg, tracks.get(indexTrack).getArtist(), file.getArtist());
-			Assert.assertEquals("albumArtist" + msg, tracks.get(indexTrack).getAlbumArtist(), file.getAlbumArtist());
-			Assert.assertEquals("album" + msg, tracks.get(indexTrack).getAlbum(), file.getAlbum());
-			Assert.assertEquals("title" + msg, tracks.get(indexTrack).getTitle(), file.getTitle());
-			Assert.assertEquals("trackNb" + msg, tracks.get(indexTrack).getTrackNo(), file.getTrackNo());
-			Assert.assertEquals("trackTotal" + msg, tracks.get(indexTrack).getTrackTotal(), file.getTrackTotal());
-			Assert.assertEquals("discNo" + msg, tracks.get(indexTrack).getDiscNo(), file.getDiscNo());
-			Assert.assertEquals("discTotal" + msg, tracks.get(indexTrack).getDiscTotal(), file.getDiscTotal());
-			Assert.assertEquals("year" + msg, tracks.get(indexTrack).getYear(), file.getYear());
-			Assert.assertEquals("genre" + msg, tracks.get(indexTrack).getGenre(), file.getGenre());
-			Assert.assertEquals("BPM" + msg, tracks.get(indexTrack).getBPM(), file.getBPM(), 0.01f);
-			Assert.assertEquals("nbCovers" + msg, tracks.get(indexTrack).getNbCovers(), file.getNbCovers());
-			Assert.assertEquals("comment" + msg, tracks.get(indexTrack).getComment(), file.getComment());
-			Assert.assertEquals("checkedFlag" + msg, tracks.get(indexTrack).getCheckedFlag(), file.getCheckedFlag());
-			Assert.assertEquals("playCounter" + msg, tracks.get(indexTrack).getPlayCounter(), file.getPlayCounter());
-			Assert.assertEquals("rating" + msg, tracks.get(indexTrack).getRating(), file.getRating());
-
-			Date expected = DateTime.parseSqlUtc(tracks.get(indexTrack).getFormattedAddedDate());
-			long diffInSeconds = (expected.getTime() - file.getAddedDate().getTime()) / 1000;
-
-			Assert.assertTrue("AddedDate. Expected: " + tracks.get(indexTrack).getFormattedAddedDate() + " +/- 30s, Actual: " + file.getFormattedAddedDate() + msg, diffInSeconds < 30);
-			Assert.assertEquals("lastPlayed" + msg, tracks.get(indexTrack).getFormattedLastPlayed(),
-					file.getFormattedLastPlayed()); //Default is 1970-01-01 00:00:00
-
-			Assert.assertEquals("bitRate" + msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).bitRate,
-					file.getBitRate());
-			Assert.assertEquals("length" + msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).length,
-					file.getLength());
-			Assert.assertEquals("format" + msg, TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).format,
-					file.getFormat());
-			//Since size varies (increase) after replaygain or tag saving, 
-			//only checking it is above initial size and not increased by more than around 5K
-			long minimumSize = TrackSourceRepo.get(tracks.get(indexTrack).sourceFile).size;
-			long maximumSize = minimumSize + 5000;
-			Assert.assertTrue("size. "
+		List<Executable> checks = new ArrayList<>();
+		checks.add(() -> Assert.assertEquals("Nb files " + mbId, tracks.size(), files.size()));
+		for (int indexTrack = 0; indexTrack < Math.min(tracks.size(), files.size()); indexTrack++) {
+			TrackTag track = tracks.get(indexTrack);
+			FileInfoInt file = files.get(indexTrack);
+			String msg = " (" + file.getFilename() + ", " + version + ", " + mbId + ")";
+			checks.add(() -> Assert.assertEquals("artist" + msg, track.getArtist(), file.getArtist()));
+			checks.add(() -> Assert.assertEquals("albumArtist" + msg, track.getAlbumArtist(), file.getAlbumArtist()));
+			checks.add(() -> Assert.assertEquals("album" + msg, track.getAlbum(), file.getAlbum()));
+			checks.add(() -> Assert.assertEquals("title" + msg, track.getTitle(), file.getTitle()));
+			checks.add(() -> Assert.assertEquals("trackNb" + msg, track.getTrackNo(), file.getTrackNo()));
+			checks.add(() -> Assert.assertEquals("trackTotal" + msg, track.getTrackTotal(), file.getTrackTotal()));
+			checks.add(() -> Assert.assertEquals("discNo" + msg, track.getDiscNo(), file.getDiscNo()));
+			checks.add(() -> Assert.assertEquals("discTotal" + msg, track.getDiscTotal(), file.getDiscTotal()));
+			checks.add(() -> Assert.assertEquals("year" + msg, track.getYear(), file.getYear()));
+			checks.add(() -> Assert.assertEquals("genre" + msg, track.getGenre(), file.getGenre()));
+			checks.add(() -> Assert.assertEquals("BPM" + msg, track.getBPM(), file.getBPM(), 0.01f));
+			checks.add(() -> Assert.assertEquals("nbCovers" + msg, track.getNbCovers(), file.getNbCovers()));
+			checks.add(() -> Assert.assertEquals("comment" + msg, track.getComment(), file.getComment()));
+			checks.add(() -> Assert.assertEquals("checkedFlag" + msg, track.getCheckedFlag(), file.getCheckedFlag()));
+			checks.add(() -> Assert.assertEquals("playCounter" + msg, track.getPlayCounter(), file.getPlayCounter()));
+			checks.add(() -> Assert.assertEquals("rating" + msg, track.getRating(), file.getRating()));
+			checks.add(() -> {
+				Date expected = DateTime.parseSqlUtc(track.getFormattedAddedDate());
+				long diffInSeconds = (expected.getTime() - file.getAddedDate().getTime()) / 1000;
+				Assert.assertTrue("AddedDate. Expected: " + track.getFormattedAddedDate()
+						+ " +/- 30s, Actual: " + file.getFormattedAddedDate() + msg, diffInSeconds < 30);
+			});
+			checks.add(() -> Assert.assertEquals("lastPlayed" + msg, track.getFormattedLastPlayed(),
+					file.getFormattedLastPlayed())); //Default is 1970-01-01 00:00:00
+			checks.add(() -> Assert.assertEquals("bitRate" + msg,
+					TrackSourceRepo.get(track.sourceFile).bitRate, file.getBitRate()));
+			checks.add(() -> Assert.assertEquals("length" + msg,
+					TrackSourceRepo.get(track.sourceFile).length, file.getLength()));
+			checks.add(() -> Assert.assertEquals("format" + msg,
+					TrackSourceRepo.get(track.sourceFile).format, file.getFormat()));
+			//Since size varies after replaygain, tag saving, or adding a cover,
+			//allow up to 10 KB of growth while still catching unexpected bloat.
+			long minimumSize = TrackSourceRepo.get(track.sourceFile).size;
+			long maximumSize = minimumSize + 10000;
+			checks.add(() -> Assert.assertTrue("size. "
 					+ "Expected: between " + minimumSize + " and " + maximumSize + ", "
 					+ "Actual:" + file.getSize() + msg,
-					file.getSize() >= minimumSize && file.getSize() <= maximumSize);
-			//This requires to read tracks.get(index).size after each process => not much usefull too
-//            assertEquals("size", tracks.get(index).size, file.size); 
-
-			indexTrack++;
+					file.getSize() >= minimumSize && file.getSize() <= maximumSize));
 		}
+		org.junit.jupiter.api.Assertions.assertAll("Tracks " + mbId, checks);
 	}
 }

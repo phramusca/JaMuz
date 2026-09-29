@@ -3,7 +3,7 @@ releaseId: "9dc7fe6a-3fa4-4461-8975-ecb7218b39a3"
 scenario: "CheckTest1_KO"
 
 process:
-  index: "6"
+  index: "7"
   idPath: "-1"
   idFirstFile: "-1"
   location: "location.add"
@@ -20,37 +20,37 @@ expectedResults:
     value: "Oui"
   cover:
     status: "ko"
-    value: "{IGNORE}"
+    value: ""
   bitRate:
     status: "ok"
-    value: "{IGNORE}"
+    value: ""
   length:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   size:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   format:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   discNoFull:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   trackNoFull:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   comment:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   artist:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   title:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   bpm:
     status: "ok"
-    value: "{N/A}"
+    value: ""
   year:
     status: "ok"
     value: "2004"

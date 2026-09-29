@@ -21,8 +21,11 @@ import jamuz.process.check.PanelCheck;
 import jamuz.process.check.ProcessCheck.Action;
 import jamuz.utils.ImageUtils;
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import test.helpers.AlbumBuffer;
 import test.helpers.TestSettings;
@@ -42,9 +45,10 @@ public class CheckNTest {
 	public void test() throws Exception {
 
 		TestSettings.startGUI("Label.Check"); //Mandatory
+		List<Throwable> failures = new ArrayList<>();
 
 		ArrayList<String> mbIds = new ArrayList<>();
-		mbIds.add("9e097b10-8160-491e-a310-e26e54a86a10");
+		mbIds.add("fb9dd163-1d07-4dea-a0e3-779845d94167");
 		mbIds.add("9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
 		mbIds.add("c212b71b-848c-491c-8ae7-b62a993ae194");
 		mbIds.add("8cfbb741-bd63-449f-9e48-4d234264c8d5");
@@ -60,7 +64,8 @@ public class CheckNTest {
 		TestProcessHelper.scanNewFolder();
 		checkNumberScanned(mbIds.size());
 		for (String mbId : mbIds) {
-			AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").checkActionsTableModel();
+			checkAndCollect(failures, mbId, "first scan",
+					() -> AlbumBuffer.getAlbum(mbId, "CheckTest1_KO").checkActionsTableModel());
 
 			//Set genre, cover and SAVE action. Apply changes
 			//Note that MusiBrainz album should have been retrieved
@@ -78,7 +83,8 @@ public class CheckNTest {
 		checkNumberScanned(mbIds.size());
 
 		for (String mbId : mbIds) {
-			AlbumBuffer.getAlbum(mbId, "CheckTest2_OK").checkActionsTableModel(); //MusicBrainz + Reggae + cover => OK
+			checkAndCollect(failures, mbId, "after saving changes",
+					() -> AlbumBuffer.getAlbum(mbId, "CheckTest2_OK").checkActionsTableModel()); //MusicBrainz + Reggae + cover => OK
 		}
 
 		//OK should have been selected. Apply changes
@@ -88,9 +94,34 @@ public class CheckNTest {
 		checkNumberScanned(0);
 
 		for (String mbId : mbIds) {
-			AlbumBuffer.getAlbum(mbId, "CheckTest3_DbOk").checkDbAndFS(true); // In DB and OK
+			checkAndCollect(failures, mbId, "database and filesystem",
+					() -> AlbumBuffer.getAlbum(mbId, "CheckTest3_DbOk").checkDbAndFS(true)); // In DB and OK
 		}
 
+		List<Executable> assertions = new ArrayList<>();
+		for (Throwable failure : failures) {
+			assertions.add(() -> {
+				throw failure;
+			});
+		}
+		assertAll("CheckNTest mismatches", assertions);
+	}
+
+	private void checkAndCollect(List<Throwable> failures, String mbId,
+			String phase, CheckedAction check) {
+		try {
+			check.run();
+		} catch (Exception | AssertionError failure) {
+			AssertionError contextualFailure = new AssertionError(
+					"Album " + mbId + " failed during " + phase);
+			contextualFailure.initCause(failure);
+			failures.add(contextualFailure);
+		}
+	}
+
+	@FunctionalInterface
+	private interface CheckedAction {
+		void run() throws Exception;
 	}
 
 	private void checkNumberScanned(int expected) {

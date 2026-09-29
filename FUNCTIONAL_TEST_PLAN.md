@@ -28,12 +28,15 @@ Prérequis :
 - `testenv/Musique/` et `testenv/StatSources/` : recréés à l'exécution (gitignored)
 - Affichage graphique disponible (GUI Swing)
 
-## Données de référence (ODS)
+## Données de référence (YAML)
 
-Chaque album MusicBrainz est décrit dans `testenv/Ressources/albumFiles/<mbId>.ods`. Chaque feuille nommée (ex. `MergeDevice5_JaMuz`) définit l'état attendu des pistes et métadonnées à une étape du scénario.
+Les fixtures sont décrites dans `testenv/Ressources/albumFiles_yaml/<suite>/<scénario>/<mbId>.yaml`. Chaque fichier définit l'état attendu des pistes et métadonnées à une étape du scénario.
 
-8 albums utilisés :
+Les suites utilisent les IDs suivants. `CheckNTest` utilise désormais la release
+`fb9dd163-1d07-4dea-a0e3-779845d94167` sélectionnée par la recherche MusicBrainz ;
+`9e097b10-8160-491e-a310-e26e54a86a10` reste utilisé par les scénarios de merge.
 
+- `fb9dd163-1d07-4dea-a0e3-779845d94167` (CheckNTest)
 - `9e097b10-8160-491e-a310-e26e54a86a10`
 - `9dc7fe6a-3fa4-4461-8975-ecb7218b39a3`
 - `c212b71b-848c-491c-8ae7-b62a993ae194`

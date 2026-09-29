@@ -20,14 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FixtureYamlTest {
 
 	private static final List<String> CHECK_SCAN_ORDER = List.of(
+			"fb9dd163-1d07-4dea-a0e3-779845d94167",
 			"8cfbb741-bd63-449f-9e48-4d234264c8d5",
 			"7598d527-bc8d-4282-a72c-874f335d05ac",
 			"6cc35892-c44f-4aa7-bfee-5f63eca70821",
 			"c212b71b-848c-491c-8ae7-b62a993ae194",
 			"13ca98f6-1a9f-4d76-a3b3-a72a16d91916",
 			"be04bc1f-fc63-48f5-b1ca-2723f17d241d",
-			"9dc7fe6a-3fa4-4461-8975-ecb7218b39a3",
-			"9e097b10-8160-491e-a310-e26e54a86a10");
+			"9dc7fe6a-3fa4-4461-8975-ecb7218b39a3");
 
 	@Test
 	void loadsEveryScenarioFixtureFromItsFunctionalTestDirectory() throws Exception {
