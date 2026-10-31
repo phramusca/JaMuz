@@ -6,4 +6,4 @@ See more on the [JaMuz Official Website](https://phramusca.github.io/JaMuz/).
 
 - - -
 
-`___` [Credits](CREDITS.md) `___` [Contributing](CONTRIBUTING.md) `___` [License](LICENSE) `___`
+[Credits](CREDITS.md)
